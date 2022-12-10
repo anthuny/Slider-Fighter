@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Whirlwind
+  m_EditorClassIdentifier: 
+  curSkillType: 0
+  curSkillSelectionType: 0
+  curSkillGameType: 1
+  skillSprite: {fileID: 21300000, guid: 64cf403d00652d443a915ea14f66c22f, type: 3}
+  skillName: Whirlwind
+  skillDescr: Damage up to
+  skillPower: 150
+  skillAttackCount: 3
+  skillCooldown: 2
+  skillEnergyCost: 4
+  skillSelectionCount: 3
+  skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
