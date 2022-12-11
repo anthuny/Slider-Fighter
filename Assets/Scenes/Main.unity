@@ -5522,7 +5522,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: BACK
+  m_Text: back
 --- !u!222 &1322245825
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6018,7 +6018,6 @@ MonoBehaviour:
   - 0.4
   - 0.2
   - 0
-  energyCost: {fileID: 0}
   playerUIElement: {fileID: 1577981124}
   playerWeapon: {fileID: 17577072}
   playerWeaponBackButton: {fileID: 555260341}
