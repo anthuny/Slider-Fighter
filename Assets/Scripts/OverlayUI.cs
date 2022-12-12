@@ -24,38 +24,28 @@ public class OverlayUI : MonoBehaviour
     {
         UpdateSkillDetailsSkillName(skillName);
         UpdateSkillDetailsDesc(skillDesc, skillDescPower, skillAttackCount, skillTargetCount, attack);
-        UpdateSkillDetailsCurCD(skillCurCD);
-        UpdateSkillDetailsMaxCD(skillMaxCD);
-        UpdateSkillDetailsCDText(skillMaxCD);
         UpdateSkillPowerText(skillPower);
         UpdateSkillDetailsEnergyText(skillEnergyCost);
         UpdateSkillDetailsPowerImage(skillPowerImage);
         UpdateSkillDetailsIcon(skillIcon);
     }
 
-    public void UpdateUnitOverlayDetails(UnitFunctionality unit)
+    public void UpdateUnitOverlayEnergyUI(UnitFunctionality unit, float curEnergy, float maxEnergy)
     {
         // Update overlay energy current text
         unitOverlayCurEnergyText.text = unit.GetUnitCurEnergy().ToString();
 
-        // Update energy overlay visual
-        UpdateUnitOverlayEnergyUI(unit);
-
-        // Update overlay health current text
-        unitOverlayCurHealthText.text = unit.GetUnitCurHealth().ToString();
-
-        // Update health overlay visual
-        UpdateUnitOverlayHealthUI(unit);
-    }
-
-    void UpdateUnitOverlayEnergyUI(UnitFunctionality unit)
-    {
-        float fillAmount = unit.GetUnitCurEnergy() / unit.GetUnitMaxEnergy();
+        // Update Energy Image Fill Progress
+        float fillAmount = curEnergy / maxEnergy;
         unitOverlayCurEnergyImage.fillAmount = fillAmount;
     }
 
-    void UpdateUnitOverlayHealthUI(UnitFunctionality unit)
+    public void UpdateUnitOverlayHealthUI(UnitFunctionality unit, float curHealth, float maxHealth)
     {
+        // Update overlay health current text
+        unitOverlayCurHealthText.text = unit.GetUnitCurHealth().ToString();
+
+        // Update Unit Health Fill Progress
         float fillAmount = unit.GetUnitCurHealth() / unit.GetUnitMaxHealth();
         unitOverlayCurHealthImage.fillAmount = fillAmount;
     }
@@ -73,23 +63,10 @@ public class OverlayUI : MonoBehaviour
         else
             skillDetailsDesc.text = mainText + " " + skillTargetCount + " allies for " + skillAttackCount + " x " + power.ToString();
     }
-    private void UpdateSkillDetailsCurCD(int cd)
-    {
-        skillDetailsCurCD.text = cd.ToString();
-    }
-    private void UpdateSkillDetailsMaxCD(int cd)
-    {
-        skillDetailsMaxCD.text = cd.ToString();
-    }
 
     private void UpdateSkillPowerText(int power)
     {
         skillDetailsPower.text = power.ToString();
-    }
-
-    private void UpdateSkillDetailsCDText(int cd)
-    {
-        skillDetailsCDText.text = cd.ToString();
     }
 
     private void UpdateSkillDetailsEnergyText(int energy)

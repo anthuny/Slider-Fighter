@@ -17,6 +17,8 @@ public class EnergyCost : MonoBehaviour
     [HideInInspector]
     public UnitFunctionality unitFunctionality;
 
+    OverlayUI abilityDetailsUI = GameManager.instance.abilityDetailsUI;
+
     private void Awake()
     {
         ToggleEnergyBar(false);
@@ -92,6 +94,13 @@ public class EnergyCost : MonoBehaviour
                     energyBG.transform.SetParent(energyBGParent);
                 }
 
+                // Add Current Energy Bars
+                for (int i = 0; i < curEnergy; i++)
+                {
+                    GameObject energy = Instantiate(energyBarPrefab, energyParent);
+                    energy.transform.SetParent(energyParent);
+                }
+
                 // Display Energy Bars
                 ToggleEnergyBar(true);
                 ToggleEnergyBGBar(true);
@@ -109,9 +118,6 @@ public class EnergyCost : MonoBehaviour
 
     IEnumerator RemoveEnergyBar(int removeCount)
     {
-        // Update energy for the unit
-        GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(-removeCount);
-
         // Remove current bars
         for (int i = 0; i < removeCount; i++)
         {
@@ -120,7 +126,17 @@ public class EnergyCost : MonoBehaviour
 
             yield return new WaitForSeconds(energyBarDifferenceTime);
 
+            // Update energy for the unit
+            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(-1);
+
             Destroy(energyParent.GetChild(0).gameObject);
+
+            // Update Unit Overlay Energy
+            abilityDetailsUI.UpdateUnitOverlayEnergyUI(GameManager.instance.GetActiveUnitFunctionality(),
+                GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy(),
+                GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy());
+
+            GameManager.instance.UpdateAllSkillIconAvailability();      // Update Unit Overlay Skill Availability
 
             if (i == removeCount - 1)
             {
@@ -138,20 +154,27 @@ public class EnergyCost : MonoBehaviour
 
     IEnumerator AddEnergyBar(int addCount)
     {
-        // Update energy for the unit
-        GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(addCount);
-
         // Add Energy Bars
         for (int i = 0; i < addCount; i++)
         {
-            // If unit is at maxed energy, stop
-            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
-                yield break;
-
             yield return new WaitForSeconds(energyBarDifferenceTime);
+
+            // Update energy for the unit
+            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(1);
 
             GameObject energy = Instantiate(energyBarPrefab, energyParent);
             energy.transform.SetParent(energyParent);
+
+            // Update Unit Overlay Energy
+            abilityDetailsUI.UpdateUnitOverlayEnergyUI(GameManager.instance.GetActiveUnitFunctionality(),
+                GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy(), 
+                GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy());
+
+            GameManager.instance.UpdateAllSkillIconAvailability();      // Update Unit Overlay Skill Availability
+
+            // If unit is at maxed energy, stop
+            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
+                i = addCount;
         }
 
         yield return new WaitForSeconds(energyBarPostTime);

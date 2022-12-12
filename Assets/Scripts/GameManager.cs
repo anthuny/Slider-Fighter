@@ -161,8 +161,8 @@ public class GameManager : MonoBehaviour
             AddActiveRoomAllUnits(unit);
 
             unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-            //unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
-            UpdateActiveUnitEnergyBar(true, true, unit.startingEnergy);
+            unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+            //UpdateActiveUnitEnergyBar(true, true, unit.startingEnergy);
         }
 
         // Spawn player units
@@ -188,8 +188,8 @@ public class GameManager : MonoBehaviour
             AddActiveRoomAllUnits(unit);
 
             unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-            //unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
-            UpdateActiveUnitEnergyBar(true, true, unit.startingEnergy);
+            unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+            //UpdateActiveUnitEnergyBar(true, true, unit.startingEnergy);
         }
 
         DeselectAllUnits();
@@ -268,7 +268,9 @@ public class GameManager : MonoBehaviour
     }
     
     public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0)
-    {      
+    {
+        //Debug.Log(GetActiveUnitFunctionality().GetUnitName() + " " + GetActiveUnitFunctionality().GetUnitCurEnergy());
+
         GetActiveUnitFunctionality().energyCostImage.UpdateEnergyBar((int)GetActiveUnitFunctionality().
             GetUnitCurEnergy(), energyAmount, increasing, toggle);
     }
@@ -340,7 +342,14 @@ public class GameManager : MonoBehaviour
             skill.skillAttackCount, tempAttack, skill.skillSelectionCount, skill.skillCooldown, skill.skillCooldown, 
             skill.skillPower, skill.skillEnergyCost, skill.skillPowerIcon, skill.skillSprite);
 
-        abilityDetailsUI.UpdateUnitOverlayDetails(GetActiveUnitFunctionality());
+        UnitFunctionality activeUnit = GetActiveUnitFunctionality();
+
+        // Update Unit Overlay Energy
+        abilityDetailsUI.UpdateUnitOverlayEnergyUI(GetActiveUnitFunctionality(),
+            activeUnit.GetUnitCurEnergy(), activeUnit.GetUnitMaxEnergy());
+
+        // Update Unit Overlay Health
+        abilityDetailsUI.UpdateUnitOverlayHealthUI(activeUnit, activeUnit.GetUnitCurHealth(), activeUnit.GetUnitMaxHealth());
     }
 
     void UpdateAllSkillIconEnergyCost()
@@ -414,9 +423,6 @@ public class GameManager : MonoBehaviour
 
         // Trigger Unit Energy regen 
         UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
-
-        // Update Unit Overlay Energy/Health details
-        abilityDetailsUI.UpdateUnitOverlayDetails(GetActiveUnitFunctionality());
 
         if (GetActiveUnit().curUnitType == Unit.UnitType.PLAYER)
         {
