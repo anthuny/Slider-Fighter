@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public OverlayUI abilityDetailsUI;
     public Text curUnitsTargetedText;
     public Text maxUnitsTargetedText;
+    public UIElement endTurnButtonUI;
 
     [Header("Player Ability UI")]
     public IconUI playerIcon;
@@ -77,8 +78,24 @@ public class GameManager : MonoBehaviour
         Setup();
     }
 
-    // Toggle UI accordingly
+    public void Setup()
+    {
+        RoomManager.roomManager.ChooseRoom();
 
+        UpdateTurnOrder();
+
+        ToggleUIElement(playerWeapon, false);
+    }
+
+    public void ToggleEndTurnButton(bool toggle)
+    {
+        if (toggle)
+            endTurnButtonUI.UpdateAlpha(1);
+        else
+            endTurnButtonUI.UpdateAlpha(0); 
+    }
+
+    // Toggle UI accordingly
     // After the user strikes their weapon, remove skill details and skills UI for dmg showcase
     public void SetupPlayerPostHitUI()
     {
@@ -87,6 +104,8 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(playerWeaponBackButton, false);
         ToggleUIElement(playerAbilities, false);
         ToggleUIElement(playerAbilityDesc, false);
+
+        ToggleEndTurnButton(true);
     }
 
     public void SetupPlayerSkillsUI()
@@ -118,15 +137,10 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(playerWeaponBG, true);
         ToggleUIElement(playerWeapon, true);
         ToggleUIElement(playerWeaponBackButton, true);
+        ToggleEndTurnButton(false);
 
         Weapon.instance.StartHitLine();
         Weapon.instance.ToggleAttackButtonInteractable(true);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown("space"))
-            UpdateTurnOrder();
     }
 
     public void DisableAllSkillSelections()
@@ -150,6 +164,7 @@ public class GameManager : MonoBehaviour
             unitFunctionality.ResetPosition();
             unitFunctionality.UpdateUnitName(unit.name);
             unitFunctionality.UpdateUnitSprite(unit.unitSprite);
+            unitFunctionality.UpdateUnitColour(unit.unitColour);
             unitFunctionality.UpdateUnitType("Enemy");
             unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
             unitFunctionality.UpdateUnitPower(unit.startingPower);
@@ -177,6 +192,7 @@ public class GameManager : MonoBehaviour
             unitFunctionality.ResetPosition();
             unitFunctionality.UpdateUnitName(unit.name);
             unitFunctionality.UpdateUnitSprite(unit.unitSprite);
+            unitFunctionality.UpdateUnitColour(unit.unitColour);
             unitFunctionality.UpdateUnitType("Player");
             unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
             unitFunctionality.UpdateUnitPower(unit.startingPower);
@@ -339,7 +355,7 @@ public class GameManager : MonoBehaviour
             tempAttack = false;
 
         abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower, 
-            skill.skillAttackCount, tempAttack, skill.skillSelectionCount, skill.skillCooldown, skill.skillCooldown, 
+            skill.skillAttackCount, tempAttack, skill.skillSelectionCount, 
             skill.skillPower, skill.skillEnergyCost, skill.skillPowerIcon, skill.skillSprite);
 
         UnitFunctionality activeUnit = GetActiveUnitFunctionality();
@@ -392,7 +408,7 @@ public class GameManager : MonoBehaviour
         UpdateTurnOrder();
     }
 
-    private void UpdateTurnOrder()
+    public void UpdateTurnOrder()
     {
         UnitFunctionality unitFunctionalityMoving = GetActiveUnitFunctionality();
         activeRoomAllUnitFunctionalitys.RemoveAt(0);
@@ -403,6 +419,8 @@ public class GameManager : MonoBehaviour
         activeRoomAllUnits.Insert(activeRoomAllUnits.Count, unitMoving);
      
         UpdateTurnOrderVisual();
+
+        ToggleEndTurnButton(true);      // Toggle End Turn Button on
 
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
@@ -543,11 +561,6 @@ public class GameManager : MonoBehaviour
         return activeRoomAllUnitFunctionalitys[0];
     }
 
-    public void Setup()
-    {
-        RoomManager.roomManager.ChooseRoom();
-    }
-
     public void ToggleUIElement(UIElement uiElement, bool toggle)
     {
         if (toggle)
@@ -571,22 +584,6 @@ public class GameManager : MonoBehaviour
             activeRoomEnemies.Add(unitFunctionality);
     }
 
-    private void RemoveActiveRoomAllUnits(Unit unit)
-    {
-        activeRoomAllUnits.Remove(unit);
-    }
-    private void RemoveActiveRoomAllUnitsFunctionality(UnitFunctionality unitFunctionality)
-    {
-        activeRoomAllUnitFunctionalitys.Remove(unitFunctionality);
-
-        if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
-            activeRoomAllies.Remove(unitFunctionality);
-        else if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
-            activeRoomEnemies.Remove(unitFunctionality);
-    }
-
-
-
     private void UpdateActiveUnitTurnArrow()
     {
         // Reset all current unit turn arrows
@@ -601,15 +598,14 @@ public class GameManager : MonoBehaviour
 
     private void UpdatePlayerAbilityUI()
     {
-        // Update active player's portrait
+        // Update active player's portrait and colour
         playerIcon.UpdatePortrait(GetActiveUnitFunctionality().GetUnitSprite());
+        playerIcon.UpdateColour(GetActiveUnitFunctionality().GetUnitColour());
 
         // Update player skill portraits
         playerSkill1.UpdatePortrait(GetActiveUnit().GetSkill1().skillSprite);
         playerSkill2.UpdatePortrait(GetActiveUnit().GetSkill2().skillSprite);
         playerSkill3.UpdatePortrait(GetActiveUnit().GetSkill3().skillSprite);
-
-        // Update 
     }
 
     public void UpdateTurnOrderVisual()
@@ -628,6 +624,7 @@ public class GameManager : MonoBehaviour
 
             UnitPortraitTurnOrder unitPortrait = go.GetComponent<UnitPortraitTurnOrder>();    // Reference
             unitPortrait.UpdatePortrait(activeRoomAllUnitFunctionalitys[i].GetUnitSprite());
+            unitPortrait.UpdatePortraitColour(activeRoomAllUnitFunctionalitys[i].GetUnitColour());
             unitPortrait.UpdateIconFade(i);
 
             if (i == 0)

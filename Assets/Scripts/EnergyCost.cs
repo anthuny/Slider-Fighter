@@ -17,10 +17,12 @@ public class EnergyCost : MonoBehaviour
     [HideInInspector]
     public UnitFunctionality unitFunctionality;
 
-    OverlayUI abilityDetailsUI = GameManager.instance.abilityDetailsUI;
+    OverlayUI abilityDetailsUI;
 
     private void Awake()
     {
+        abilityDetailsUI = GameManager.instance.abilityDetailsUI;
+
         ToggleEnergyBar(false);
         ToggleEnergyBGBar(false);
     }

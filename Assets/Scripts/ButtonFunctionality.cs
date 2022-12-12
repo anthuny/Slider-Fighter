@@ -31,6 +31,12 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.instance.UpdateActiveUnitHealthBar(false);
     }
 
+    public void EndTurnButton()
+    {
+        GameManager.instance.ToggleEndTurnButton(false);
+        GameManager.instance.UpdateTurnOrder();
+    }
+
     public void ToggleSelected(bool toggle)
     {
         selected = toggle;

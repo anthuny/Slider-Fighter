@@ -20,7 +20,7 @@ public class OverlayUI : MonoBehaviour
     public Image unitOverlayCurHealthImage;
 
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int skillAttackCount, bool attack,
-        int skillTargetCount, int skillMaxCD, int skillCurCD, int skillPower, int skillEnergyCost, Sprite skillPowerImage, Sprite skillIcon)
+        int skillTargetCount, int skillPower, int skillEnergyCost, Sprite skillPowerImage, Sprite skillIcon)
     {
         UpdateSkillDetailsSkillName(skillName);
         UpdateSkillDetailsDesc(skillDesc, skillDescPower, skillAttackCount, skillTargetCount, attack);

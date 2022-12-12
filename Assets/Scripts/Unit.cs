@@ -10,6 +10,7 @@ public class Unit : ScriptableObject
     public UnitType curUnitType;
 
     public Sprite unitSprite;
+    public Color unitColour;
     public new string name;
     public int startingSpeed;
     public int startingPower;

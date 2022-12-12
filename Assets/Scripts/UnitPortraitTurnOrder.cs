@@ -19,6 +19,11 @@ public class UnitPortraitTurnOrder : MonoBehaviour
         image.sprite = sprite;
     }
 
+    public void UpdatePortraitColour(Color color)
+    {
+        image.color = color;
+    }
+
     public void UpdateNextUnitArrow(bool toggle)
     {
         nextUnitArrow.enabled = toggle;

@@ -15,4 +15,9 @@ public class IconUI : MonoBehaviour
     {
         image.sprite = sprite;
     }
+
+    public void UpdateColour(Color colour)
+    {
+        image.color = colour;
+    }
 }

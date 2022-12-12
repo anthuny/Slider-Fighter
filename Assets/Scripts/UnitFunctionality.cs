@@ -30,6 +30,16 @@ public class UnitFunctionality : MonoBehaviour
 
     private bool isSelected;
 
+    public void UpdateUnitColour(Color color)
+    {
+        image.color = color;
+    }
+
+    public Color GetUnitColour()
+    {
+        return image.color;
+    }
+
     public Sprite GetUnitSprite()
     {
         return unitSprite;
