@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     public Text curUnitsTargetedText;
     public Text maxUnitsTargetedText;
     public UIElement endTurnButtonUI;
+    public Text activeUnitNameText;
 
     [Header("Player Ability UI")]
     public IconUI playerIcon;
@@ -120,6 +121,7 @@ public class GameManager : MonoBehaviour
 
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(playerAbilityDesc, true);
+        ToggleEndTurnButton(true);
 
         UpdateUnitsSelectedText();
     }
@@ -148,6 +150,12 @@ public class GameManager : MonoBehaviour
         skill1.ToggleSelected(false);
         skill2.ToggleSelected(false);
         skill3.ToggleSelected(false);
+    }
+
+    public void ReturnEnergyToUnit()
+    {
+        UpdateActiveUnitHealthBar(false);
+        UpdateActiveUnitEnergyBar(true, true, activeSkill.skillEnergyCost);
     }
 
     public void StartRoom(Room room)
@@ -397,6 +405,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void UpdateActiveUnitNameText(string name)
+    {
+        activeUnitNameText.text = name;
+    }
+
     public void DetermineTurnOrder()
     {
         activeRoomAllUnitFunctionalitys.Sort(CompareUnitFunctionalitySpeed);
@@ -428,6 +441,7 @@ public class GameManager : MonoBehaviour
             playerUIElement.UpdateAlpha(1);
             SetupPlayerSkillsUI();
             UpdatePlayerAbilityUI();
+            UpdateActiveUnitNameText(GetActiveUnitFunctionality().GetUnitName());
         }
         else
             playerUIElement.UpdateAlpha(0);

@@ -3906,7 +3906,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 853282196}
         m_TargetAssemblyTypeName: ButtonFunctionality, Assembly-CSharp
-        m_MethodName: AttackButton
+        m_MethodName: StopWeaponHitLine
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6364,6 +6364,7 @@ MonoBehaviour:
   curUnitsTargetedText: {fileID: 1071206443}
   maxUnitsTargetedText: {fileID: 946736475}
   endTurnButtonUI: {fileID: 1374329675}
+  activeUnitNameText: {fileID: 525266937}
   playerIcon: {fileID: 803742796}
   playerSkill1: {fileID: 331525067}
   playerSkill2: {fileID: 968801509}

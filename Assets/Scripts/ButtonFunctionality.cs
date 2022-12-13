@@ -17,6 +17,9 @@ public class ButtonFunctionality : MonoBehaviour
     }
     public void WeaponBackButton()
     {
+        // Return unit energy
+        GameManager.instance.ReturnEnergyToUnit();
+
         GameManager.instance.SetupPlayerSkillsUI();
     }
 
