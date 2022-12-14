@@ -24,5 +24,5 @@ MonoBehaviour:
   basicSelectionCount: 1
   basicSkill: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}
   skill1: {fileID: 11400000, guid: 210dbf9b1bfecd54f867b0a4d6661ec8, type: 2}
-  skill2: {fileID: 11400000, guid: dd8256fe076a447499e0a7736e72c57d, type: 2}
+  skill2: {fileID: 11400000, guid: 4d0540d72a10761469b921921a9ce701, type: 2}
   skill3: {fileID: 11400000, guid: e7a970b667a73384f8266eb6ae66a8cf, type: 2}

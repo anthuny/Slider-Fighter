@@ -7,11 +7,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [SerializeField] private float postBattleTime;
     public List<Unit> activeTeam = new List<Unit>();
     public List<Unit> allPlayerClasses = new List<Unit>();
     [SerializeField] private GameObject baseUnit;
     [SerializeField] private List<Transform> enemySpawnPositions = new List<Transform>();
     [SerializeField] private List<Transform> playerSpawnPositions = new List<Transform>();
+    [SerializeField] private Transform allyPostBattlePositionTransform;
+    [SerializeField] private Transform allyDuringBattlePositionTransform;
 
     [SerializeField] private List<Unit> activeRoomAllUnits = new List<Unit>();
     [SerializeField] private List<UnitFunctionality> activeRoomAllUnitFunctionalitys = new List<UnitFunctionality>();
@@ -22,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Turn Order")]
     [SerializeField] private Transform turnOrderParent;
+    [SerializeField] private UIElement turnOrder;
     public List<float> turnOrderIconAlphas = new List<float>();
 
     [Header("Player UI")]
@@ -31,6 +35,7 @@ public class GameManager : MonoBehaviour
     public UIElement playerWeaponBG;
     public UIElement playerAbilities;
     public UIElement playerAbilityDesc;
+    public PostBattle postBattleUI;
     public OverlayUI abilityDetailsUI;
     public Text curUnitsTargetedText;
     public Text maxUnitsTargetedText;
@@ -82,10 +87,12 @@ public class GameManager : MonoBehaviour
     public void Setup()
     {
         RoomManager.roomManager.ChooseRoom();
+        ToggleUIElement(turnOrder, false);
 
         UpdateTurnOrder();
 
         ToggleUIElement(playerWeapon, false);
+        postBattleUI.TogglePostBattleUI(false);
     }
 
     public void ToggleEndTurnButton(bool toggle)
@@ -96,7 +103,34 @@ public class GameManager : MonoBehaviour
             endTurnButtonUI.UpdateAlpha(0); 
     }
 
+    IEnumerator SetupPostBattleUI(bool playerWon)
+    {
+        yield return new WaitForSeconds(postBattleTime);
+
+        SetupRoomPostBattle(playerWon);
+    }
+
+    void UpdateAllAlliesPositionPostBattle()
+    {
+        //allyPostBattlePositionTransform
+    }
+
     // Toggle UI accordingly
+    void SetupRoomPostBattle(bool playerWon)
+    {
+        // Toggle player overlay and skill ui off
+        ToggleUIElement(playerAbilities, false);
+        ToggleUIElement(playerAbilityDesc, false);
+        ToggleUIElement(endTurnButtonUI, false);
+        ToggleUIElement(turnOrder, false);
+        ResetActiveUnitTurnArrow();
+        ToggleAllAlliesHealthBar(false);
+
+
+        // Toggle post battle ui on
+        postBattleUI.TogglePostBattleUI(true);
+    }
+
     // After the user strikes their weapon, remove skill details and skills UI for dmg showcase
     public void SetupPlayerPostHitUI()
     {
@@ -128,8 +162,7 @@ public class GameManager : MonoBehaviour
 
     public void SetupPlayerWeaponUI()
     {
-        // If not enough units selected, do not allow attack
-        if (unitsSelected.Count != activeSkill.skillSelectionCount)
+        if (!CheckIfAnyUnitsSelected())
             return;
 
         Weapon.instance.DisableAlertUI();
@@ -304,6 +337,14 @@ public class GameManager : MonoBehaviour
         GetActiveUnitFunctionality().ToggleUnitHealthBar(toggle);
     }
 
+    public void ToggleAllAlliesHealthBar(bool toggle)
+    {
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].ToggleUnitHealthBar(toggle);
+        }
+    }
+
     public void UpdateAllSkillIconAvailability()
     {
         // Update all skill icon Energy text + unavailable image
@@ -394,6 +435,13 @@ public class GameManager : MonoBehaviour
         if (activeRoomAllUnitFunctionalitys.Contains(unitFunctionality))
             activeRoomAllUnitFunctionalitys.Remove(unitFunctionality);
 
+        // If this is the last enemy that got killed, queue player win post battle ui
+        if (activeRoomEnemies.Count == 0)
+            StartCoroutine(SetupPostBattleUI(true));
+        // If this is the last ally that got killed, queue player lose post battle ui
+        if (activeRoomAllies.Count == 0)
+            StartCoroutine(SetupPostBattleUI(false));
+
         // Remove unit from unit list
         for (int i = 0; i < activeRoomAllUnits.Count; i++)
         {
@@ -423,6 +471,8 @@ public class GameManager : MonoBehaviour
 
     public void UpdateTurnOrder()
     {
+        ToggleUIElement(turnOrder, true);   // Enable turn order UI
+
         UnitFunctionality unitFunctionalityMoving = GetActiveUnitFunctionality();
         activeRoomAllUnitFunctionalitys.RemoveAt(0);
         activeRoomAllUnitFunctionalitys.Insert(activeRoomAllUnitFunctionalitys.Count, unitFunctionalityMoving);
@@ -545,6 +595,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool CheckIfAnyUnitsSelected()
+    {
+        if (unitsSelected.Count == 0)
+            return false;
+        else
+            return true;
+    }
+
     public void ResetSelectedUnits()
     {
         DeselectAllUnits();
@@ -598,17 +656,24 @@ public class GameManager : MonoBehaviour
             activeRoomEnemies.Add(unitFunctionality);
     }
 
-    private void UpdateActiveUnitTurnArrow()
+    void ResetActiveUnitTurnArrow()
     {
         // Reset all current unit turn arrows
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
             activeRoomAllUnitFunctionalitys[i].curUnitTurnArrow.UpdateAlpha(0);
         }
+    }
+
+    private void UpdateActiveUnitTurnArrow()
+    {
+        ResetActiveUnitTurnArrow();
 
         // Enable active unit turn arrow
         GetActiveUnitFunctionality().curUnitTurnArrow.UpdateAlpha(1);
     }
+
+
 
     private void UpdatePlayerAbilityUI()
     {

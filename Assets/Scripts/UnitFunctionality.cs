@@ -6,13 +6,12 @@ using UnityEngine.UI;
 public class UnitFunctionality : MonoBehaviour
 {
     RectTransform rt;
-    Image image;
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
     [SerializeField] private UIElement selectionCircle;
     [SerializeField] private Transform powerUIParent;
     [SerializeField] private Image unitHealth;
-    public Sprite unitSprite;
+    public Image unitImage;
     public UIElement curUnitTurnArrow;
     public int curSpeed;
     public int curPower;
@@ -32,17 +31,17 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitColour(Color color)
     {
-        image.color = color;
+        unitImage.color = color;
     }
 
     public Color GetUnitColour()
     {
-        return image.color;
+        return unitImage.color;
     }
 
     public Sprite GetUnitSprite()
     {
-        return unitSprite;
+        return unitImage.sprite;
     }
     public void SpawnPowerUI(int power = 10)
     {
@@ -91,7 +90,6 @@ public class UnitFunctionality : MonoBehaviour
     private void Awake()
     {
         rt = GetComponent<RectTransform>();
-        image = GetComponent<Image>();
     }
 
     public void ResetPosition()
@@ -112,8 +110,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitSprite(Sprite sprite)
     {
-        image.sprite = sprite;
-        unitSprite = sprite;
+        unitImage.sprite = sprite;
     }
 
     public void UpdateUnitType(string unitType)

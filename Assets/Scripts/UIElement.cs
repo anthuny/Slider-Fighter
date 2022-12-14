@@ -20,9 +20,15 @@ public class UIElement : MonoBehaviour
 
         // Make UI element selectable/unselectable
         if (alpha == 1)
+        {
             cg.interactable = true;
+            cg.blocksRaycasts = true;
+        }
         else
+        {
             cg.interactable = false;
+            cg.blocksRaycasts = false;
+        }
     }
 
     public void DisableAlertUI()
@@ -39,6 +45,4 @@ public class UIElement : MonoBehaviour
 
         DisableAlertUI();
     }
-
-
 }

@@ -29,9 +29,19 @@ public class ButtonFunctionality : MonoBehaviour
         if (!GameManager.instance.CheckIfEnergyAvailableSkill())
             return;
 
-        // Trigger current unit's turn energy count to deplete for skill use
-        GameManager.instance.UpdateActiveUnitEnergyBar(true, false, GameManager.instance.activeSkill.skillEnergyCost);
-        GameManager.instance.UpdateActiveUnitHealthBar(false);
+        // If no units are selected, stop
+        if (!GameManager.instance.CheckIfAnyUnitsSelected())
+            return;
+
+        // If the energy DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
+        if (GameManager.instance.activeSkill.skillEnergyCost != 0)
+        {
+            // Trigger current unit's turn energy count to deplete for skill use
+            GameManager.instance.UpdateActiveUnitEnergyBar(true, false, GameManager.instance.activeSkill.skillEnergyCost);
+            GameManager.instance.UpdateActiveUnitHealthBar(false);
+        }
+        else
+            GameManager.instance.SetupPlayerWeaponUI();
     }
 
     public void EndTurnButton()

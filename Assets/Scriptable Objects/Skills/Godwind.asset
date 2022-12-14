@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
-  m_Name: Whirlwind
+  m_Name: Godwind
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
-  curSkillGameType: 1
+  curSkillGameType: 2
   skillSprite: {fileID: 21300000, guid: 64cf403d00652d443a915ea14f66c22f, type: 3}
-  skillName: Whirlwind
+  skillName: Godwind
   skillDescr: Damage up to
-  skillPower: 1500
-  skillAttackCount: 3
-  skillCooldown: 2
-  skillEnergyCost: 4
-  skillSelectionCount: 3
+  skillPower: 8500
+  skillAttackCount: 9
+  skillCooldown: 0
+  skillEnergyCost: 0
+  skillSelectionCount: 6
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
