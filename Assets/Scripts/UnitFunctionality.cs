@@ -19,15 +19,37 @@ public class UnitFunctionality : MonoBehaviour
     private int maxHealth;
     private int curEnergy;
     private int maxEnergy;
+    private int curlevel;
+    private int curExp;
+    private int maxExp;
     [HideInInspector]
     public int unitStartTurnEnergyGain;
     public EnergyCost energyCostImage;
+
+    [SerializeField] private UIElement unitExpBar;
+    [SerializeField] private Text unitLevelText;
+    [SerializeField] private Image unitExpBarImage;
+    [SerializeField] private Text unitExpGainText;
+    [SerializeField] private float fillAmountInterval;
+    [SerializeField] private float fillAmountIntervalTimeGap;
+
     [SerializeField] private UIElement healthBarUIElement;
 
     [HideInInspector]
     public GameObject prevPowerUI;
 
     private bool isSelected;
+
+
+    private void Awake()
+    {
+        rt = GetComponent<RectTransform>();
+    }
+
+    private void Start()
+    {
+        ToggleUnitExpVisual(false);
+    }
 
     public void UpdateUnitColour(Color color)
     {
@@ -87,10 +109,6 @@ public class UnitFunctionality : MonoBehaviour
         prevPowerUI = null;
     }
 
-    private void Awake()
-    {
-        rt = GetComponent<RectTransform>();
-    }
 
     public void ResetPosition()
     {
@@ -152,6 +170,122 @@ public class UnitFunctionality : MonoBehaviour
             GameManager.instance.UpdateTurnOrderVisual();
             DestroyUnit();
         }
+    }
+
+    public void UpdateUnitExp(int gainedExp)
+    {
+        StartCoroutine(UpdateUnitExpVisual(gainedExp));
+    }
+
+    IEnumerator UpdateUnitExpVisual(int gainedExp)
+    {
+        //yield return 0;
+
+        float curFillAmount = GetCurExp() / GetMaxExp();
+        //float maxFillAmount = (curEnergy + gainedExp) / maxEnergy;
+        //Debug.Log(curFillAmount);
+        // Update exp bar for current energy
+        unitExpBarImage.fillAmount = curFillAmount;
+
+        // Display exp visual
+        ToggleUnitExpVisual(true);
+
+        for (int i = 0; i < gainedExp; i++)
+        {
+            yield return new WaitForSeconds(fillAmountIntervalTimeGap);
+
+            float fillAmountIntervalTemp = (0.01f/100f) * GetMaxExp();
+            Debug.Log("Max exp = " + GetMaxExp());
+
+            if (GetCurExp() >= GetMaxExp())
+            {
+                int remainingExp = gainedExp - i;
+                Debug.Log(remainingExp + " " + gameObject.name);
+                UpdateUnitLevel(1, remainingExp);
+                yield return 0;
+            }
+            else
+            {
+                unitExpBarImage.fillAmount += fillAmountIntervalTemp;
+                IncreaseCurExp(1);
+                //Debug.Log(unitExpBarImage);
+                //Debug.Log(unitExpBarImage.fillAmount);
+            }
+        }
+
+        ToggleUnitExpVisual(false);
+    }
+
+    public void ToggleUnitExpVisual(bool toggle)
+    {
+        if (toggle)
+            unitExpBar.UpdateAlpha(1);
+        else
+            unitExpBar.UpdateAlpha(0);
+    }
+
+    public void UpdateUnitLevel(int level, int extraExp = 0)
+    {
+        curlevel += level;
+        ResetUnitExp();
+        UpdateUnitMaxExp();
+
+        if (extraExp != 0)
+        {
+            UpdateUnitExp(extraExp);
+        }
+    }
+
+    public int GetUnitLevel()
+    {
+        return curlevel;
+    }
+
+    void ResetUnitExp()
+    {
+        curExp = 0;
+    }
+
+    void IncreaseCurExp(int exp)
+    {
+        curExp += exp;
+
+        if (GetCurExp() >= GetMaxExp())
+        {
+            curExp = (int)GetMaxExp();
+        }
+    }
+
+    void UpdateUnitLevelVisual(int level)
+    {
+        unitLevelText.text = level.ToString();
+    }
+
+    public void UpdateUnitMaxExp()
+    {
+        float temp;
+        if (GetUnitLevel() != 1)
+        {
+            temp = (GameManager.instance.maxExpLevel1 + (GameManager.instance.expIncPerLv / GameManager.instance.maxExpLevel1) * 100f) * GetUnitLevel();
+            maxExp = (int)temp;
+        }
+        else
+        {
+            temp = GameManager.instance.maxExpLevel1 * GetUnitLevel();
+            maxExp = (int)temp;
+        }
+
+    }
+
+    public float GetCurExp()
+    {
+        return curExp;
+    }
+
+    public float GetMaxExp()
+    {
+        UpdateUnitMaxExp();
+        return maxExp;
     }
 
     public void UpdateUnitCurrentHealth(int newCurHealth)

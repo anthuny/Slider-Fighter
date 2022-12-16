@@ -341,7 +341,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 56.999985, y: 899}
+  m_AnchoredPosition: {x: 56.999985, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &27502675
@@ -453,7 +453,7 @@ GameObject:
   m_Component:
   - component: {fileID: 132478914}
   m_Layer: 5
-  m_Name: Player Positions
+  m_Name: Ally Positions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -475,11 +475,11 @@ RectTransform:
   - {fileID: 27502674}
   - {fileID: 1001978078}
   m_Father: {fileID: 2070354417}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -51, y: -1476}
+  m_AnchoredPosition: {x: 0, y: -761}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &136832704
@@ -4895,7 +4895,7 @@ RectTransform:
   - {fileID: 136832705}
   - {fileID: 779765221}
   m_Father: {fileID: 2070354417}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5812,7 +5812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -367, y: 899}
+  m_AnchoredPosition: {x: -367, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &991025125
@@ -5899,7 +5899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 480, y: 899}
+  m_AnchoredPosition: {x: 480, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1001978079
@@ -6527,7 +6527,7 @@ GameObject:
   - component: {fileID: 1269713159}
   - component: {fileID: 1269713158}
   m_Layer: 5
-  m_Name: Unit Positions
+  m_Name: Post Battle Unit Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6550,7 +6550,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 146}
+  m_AnchoredPosition: {x: -50, y: 71}
   m_SizeDelta: {x: 1374.509, y: 392}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1269713158
@@ -7272,7 +7272,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2070354417}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7773,8 +7773,6 @@ MonoBehaviour:
   postBattleTime: 2
   activeTeam:
   - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
-  - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
-  - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
   allPlayerClasses:
   - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
   baseUnit: {fileID: 3449260601481309960, guid: 4b5602813dffd4e40b5653f843285950, type: 3}
@@ -7789,8 +7787,9 @@ MonoBehaviour:
   - {fileID: 991025124}
   - {fileID: 27502674}
   - {fileID: 1001978078}
-  allyPostBattlePositionTransform: {fileID: 0}
-  allyDuringBattlePositionTransform: {fileID: 0}
+  allyPostBattlePositionTransform: {fileID: 1269713157}
+  allyBattlePositionTransform: {fileID: 1655616286}
+  allyPositions: {fileID: 132478914}
   activeRoomAllUnits: []
   activeRoomAllUnitFunctionalitys: []
   activeRoomAllies: []
@@ -7808,6 +7807,8 @@ MonoBehaviour:
   - 0.4
   - 0.2
   - 0
+  expIncPerLv: 20
+  maxExpLevel1: 100
   playerUIElement: {fileID: 1577981124}
   playerWeapon: {fileID: 643176410}
   playerWeaponBackButton: {fileID: 555260341}
@@ -7997,6 +7998,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1630180139}
   m_CullTransparentMesh: 1
+--- !u!1 &1655616285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1655616286}
+  m_Layer: 5
+  m_Name: Battle Player Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1655616286
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655616285}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2070354417}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -100, y: -561}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1676294773
 GameObject:
   m_ObjectHideFlags: 0
@@ -9409,6 +9446,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1655616286}
   - {fileID: 132478914}
   - {fileID: 879826736}
   - {fileID: 1383740051}

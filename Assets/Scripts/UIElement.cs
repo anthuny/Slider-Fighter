@@ -16,6 +16,7 @@ public class UIElement : MonoBehaviour
 
     public void UpdateAlpha(float alpha)
     {
+        //Debug.Log(gameObject.name);
         cg.alpha = alpha;   // Update UI Alpha
 
         // Make UI element selectable/unselectable

@@ -14,7 +14,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Transform> enemySpawnPositions = new List<Transform>();
     [SerializeField] private List<Transform> playerSpawnPositions = new List<Transform>();
     [SerializeField] private Transform allyPostBattlePositionTransform;
-    [SerializeField] private Transform allyDuringBattlePositionTransform;
+    [SerializeField] private Transform allyBattlePositionTransform;
+    [SerializeField] private Transform allyPositions;
 
     [SerializeField] private List<Unit> activeRoomAllUnits = new List<Unit>();
     [SerializeField] private List<UnitFunctionality> activeRoomAllUnitFunctionalitys = new List<UnitFunctionality>();
@@ -27,6 +28,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform turnOrderParent;
     [SerializeField] private UIElement turnOrder;
     public List<float> turnOrderIconAlphas = new List<float>();
+
+    [Header("Units")]
+    public float expIncPerLv;
+    public float maxExpLevel1;
 
     [Header("Player UI")]
     public UIElement playerUIElement;
@@ -108,11 +113,24 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(postBattleTime);
 
         SetupRoomPostBattle(playerWon);
+        UpdateAllAlliesPosition(true);
     }
 
-    void UpdateAllAlliesPositionPostBattle()
+    void UpdateAllAlliesPosition(bool postBattle)
     {
-        //allyPostBattlePositionTransform
+        if (!postBattle)
+        {
+            allyPositions.SetParent(allyBattlePositionTransform);
+            allyPositions.SetPositionAndRotation(new Vector2(0,0), Quaternion.identity);
+            allyPositions.position = allyBattlePositionTransform.position;
+
+        }
+        else
+        {
+            allyPositions.SetParent(allyPostBattlePositionTransform);
+            allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
+            allyPositions.position = allyPostBattlePositionTransform.position;
+        }
     }
 
     // Toggle UI accordingly
@@ -126,9 +144,14 @@ public class GameManager : MonoBehaviour
         ResetActiveUnitTurnArrow();
         ToggleAllAlliesHealthBar(false);
 
-
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
+
+        // Give Exp to ally units
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].UpdateUnitExp(120);
+        }
     }
 
     // After the user strikes their weapon, remove skill details and skills UI for dmg showcase
@@ -218,6 +241,7 @@ public class GameManager : MonoBehaviour
 
             unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
             unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+            unitFunctionality.UpdateUnitLevel(1);
             //UpdateActiveUnitEnergyBar(true, true, unit.startingEnergy);
         }
 
@@ -246,8 +270,12 @@ public class GameManager : MonoBehaviour
 
             unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
             unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+            unitFunctionality.UpdateUnitLevel(1);
             //UpdateActiveUnitEnergyBar(true, true, unit.startingEnergy);
         }
+
+        // Update allies into position for battle
+        UpdateAllAlliesPosition(false);
 
         DeselectAllUnits();
         DetermineTurnOrder();
