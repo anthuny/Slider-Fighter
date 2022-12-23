@@ -20,8 +20,8 @@ public class UnitFunctionality : MonoBehaviour
     private int curEnergy;
     private int maxEnergy;
     private int curlevel;
-    private int curExp;
-    private int maxExp;
+    private float curExp;
+    private float maxExp;
     [HideInInspector]
     public int unitStartTurnEnergyGain;
     public EnergyCost energyCostImage;
@@ -31,9 +31,12 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private Image unitExpBarImage;
     [SerializeField] private Text unitExpGainText;
     [SerializeField] private float fillAmountInterval;
-    [SerializeField] private float fillAmountIntervalTimeGap;
+
+    [SerializeField] private UIElement unitBg;
+
 
     [SerializeField] private UIElement healthBarUIElement;
+    [SerializeField] private UIElement unitUIElement;
 
     [HideInInspector]
     public GameObject prevPowerUI;
@@ -49,6 +52,7 @@ public class UnitFunctionality : MonoBehaviour
     private void Start()
     {
         ToggleUnitExpVisual(false);
+        ToggleUnitBG(false);
     }
 
     public void UpdateUnitColour(Color color)
@@ -177,13 +181,26 @@ public class UnitFunctionality : MonoBehaviour
         StartCoroutine(UpdateUnitExpVisual(gainedExp));
     }
 
+    void ToggleExpGainedText(bool toggle, string text)
+    {
+        unitExpGainText.gameObject.SetActive(toggle);
+        unitExpGainText.text = "+ " + text;
+    }
+
+    public void ToggleUnitBG(bool toggle)
+    {
+        if (toggle)
+            unitBg.UpdateAlpha(.1f);
+        else
+            unitBg.UpdateAlpha(0);
+    }
+
     IEnumerator UpdateUnitExpVisual(int gainedExp)
     {
-        //yield return 0;
+        ToggleExpGainedText(true, gainedExp.ToString());
 
         float curFillAmount = GetCurExp() / GetMaxExp();
-        //float maxFillAmount = (curEnergy + gainedExp) / maxEnergy;
-        //Debug.Log(curFillAmount);
+
         // Update exp bar for current energy
         unitExpBarImage.fillAmount = curFillAmount;
 
@@ -192,28 +209,23 @@ public class UnitFunctionality : MonoBehaviour
 
         for (int i = 0; i < gainedExp; i++)
         {
-            yield return new WaitForSeconds(fillAmountIntervalTimeGap);
-
-            float fillAmountIntervalTemp = (0.01f/100f) * GetMaxExp();
-            Debug.Log("Max exp = " + GetMaxExp());
+            yield return new WaitForSeconds(GameManager.instance.fillAmountIntervalTimeGap);
 
             if (GetCurExp() >= GetMaxExp())
             {
                 int remainingExp = gainedExp - i;
-                Debug.Log(remainingExp + " " + gameObject.name);
                 UpdateUnitLevel(1, remainingExp);
-                yield return 0;
+                yield break;
             }
             else
             {
-                unitExpBarImage.fillAmount += fillAmountIntervalTemp;
                 IncreaseCurExp(1);
-                //Debug.Log(unitExpBarImage);
-                //Debug.Log(unitExpBarImage.fillAmount);
+                unitExpBarImage.fillAmount = GetCurExp() / GetMaxExp();
             }
         }
 
-        ToggleUnitExpVisual(false);
+        yield return new WaitForSeconds(GameManager.instance.timePostExp);
+        //ToggleUnitExpVisual(false);
     }
 
     public void ToggleUnitExpVisual(bool toggle)
@@ -227,13 +239,21 @@ public class UnitFunctionality : MonoBehaviour
     public void UpdateUnitLevel(int level, int extraExp = 0)
     {
         curlevel += level;
+        UpdateUnitLevelVisual(GetUnitLevel());
+
         ResetUnitExp();
         UpdateUnitMaxExp();
 
         if (extraExp != 0)
         {
+            //Debug.Log(gameObject.name + " extra exp = " + extraExp);
             UpdateUnitExp(extraExp);
         }
+    }
+
+    void UpdateUnitLevelVisual(int level)
+    {
+        unitLevelText.text = level.ToString();
     }
 
     public int GetUnitLevel()
@@ -246,7 +266,7 @@ public class UnitFunctionality : MonoBehaviour
         curExp = 0;
     }
 
-    void IncreaseCurExp(int exp)
+    void IncreaseCurExp(float exp)
     {
         curExp += exp;
 
@@ -256,22 +276,19 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    void UpdateUnitLevelVisual(int level)
-    {
-        unitLevelText.text = level.ToString();
-    }
-
     public void UpdateUnitMaxExp()
     {
         float temp;
         if (GetUnitLevel() != 1)
         {
-            temp = (GameManager.instance.maxExpLevel1 + (GameManager.instance.expIncPerLv / GameManager.instance.maxExpLevel1) * 100f) * GetUnitLevel();
+            temp = GameManager.instance.maxExpStarting + (GameManager.instance.expIncPerLv * (GetUnitLevel()-1));
+            //temp = (GameManager.instance.maxExpLevel1 + ((GameManager.instance.expIncPerLv / GameManager.instance.maxExpLevel1) * 100f)) * GetUnitLevel();
             maxExp = (int)temp;
+            //Debug.Log(gameObject.name + " " + maxExp);
         }
         else
         {
-            temp = GameManager.instance.maxExpLevel1 * GetUnitLevel();
+            temp = GameManager.instance.maxExpStarting * GetUnitLevel();
             maxExp = (int)temp;
         }
 
@@ -362,14 +379,10 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitCurEnergy(int energy)
     {
-        //Debug.Log(gameObject.name + " - Energy was " + curEnergy);
-
         this.curEnergy += energy;
 
         if (curEnergy > maxEnergy)
             curEnergy = maxEnergy;
-
-    //Debug.Log("Increased units energy by " + energy + " . Current energy is now " + curEnergy + " / " + maxEnergy);
     }
 
     public void UpdateUnitStartTurnEnergy(int newUnitStartTurnEnergyGain)
@@ -384,6 +397,13 @@ public class UnitFunctionality : MonoBehaviour
 
     void DestroyUnit()
     {
-        Destroy(gameObject);
+        unitUIElement.UpdateAlpha(0);
+        //Destroy(gameObject);
+    }
+
+    public int GetUnitExpKillGained()
+    {
+        int expGained = (GetUnitLevel() * GameManager.instance.expKillGainedPerLv) + GameManager.instance.expKillGainedStarting;
+        return expGained;
     }
 }

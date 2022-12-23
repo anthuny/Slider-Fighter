@@ -31,7 +31,13 @@ public class GameManager : MonoBehaviour
 
     [Header("Units")]
     public float expIncPerLv;
-    public float maxExpLevel1;
+    public float maxExpStarting;
+    public float timePostExp;
+    public float fillAmountIntervalTimeGap;
+    public int expKillGainedPerLv;
+    public int expKillGainedStarting;
+    public int goldGainedPerUnit;
+    //public int goldGainedPerUnitLevelMult;
 
     [Header("Player UI")]
     public UIElement playerUIElement;
@@ -80,6 +86,15 @@ public class GameManager : MonoBehaviour
 
     public Skill activeSkill;
 
+    [Header("Post Battle")]
+    public Rewards rewards;
+    public DefeatedEnemies defeatedEnemies;
+
+    private Room activeRoom;
+
+    private int experienceGained;
+    private int activeRoomEnemiesKilled;
+
     private void Awake()
     {
         instance = this;
@@ -100,22 +115,6 @@ public class GameManager : MonoBehaviour
         postBattleUI.TogglePostBattleUI(false);
     }
 
-    public void ToggleEndTurnButton(bool toggle)
-    {
-        if (toggle)
-            endTurnButtonUI.UpdateAlpha(1);
-        else
-            endTurnButtonUI.UpdateAlpha(0); 
-    }
-
-    IEnumerator SetupPostBattleUI(bool playerWon)
-    {
-        yield return new WaitForSeconds(postBattleTime);
-
-        SetupRoomPostBattle(playerWon);
-        UpdateAllAlliesPosition(true);
-    }
-
     void UpdateAllAlliesPosition(bool postBattle)
     {
         if (!postBattle)
@@ -133,8 +132,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #region Setup Multiple UIs
+    IEnumerator SetupPostBattleUI(bool playerWon)
+    {
+        yield return new WaitForSeconds(postBattleTime);
+
+        StartCoroutine(SetupRoomPostBattle(playerWon));
+        UpdateAllAlliesPosition(true);
+    }
+
     // Toggle UI accordingly
-    void SetupRoomPostBattle(bool playerWon)
+    IEnumerator SetupRoomPostBattle(bool playerWon)
     {
         // Toggle player overlay and skill ui off
         ToggleUIElement(playerAbilities, false);
@@ -147,11 +155,22 @@ public class GameManager : MonoBehaviour
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
 
+        postBattleUI.TogglPostBattleConditionText(playerWon);   // Update battle condition text
+
+        defeatedEnemies.DisplayDefeatedEnemies();
+
+        yield return new WaitForSeconds(2);
+
         // Give Exp to ally units
         for (int i = 0; i < activeRoomAllies.Count; i++)
         {
-            activeRoomAllies[i].UpdateUnitExp(120);
+            activeRoomAllies[i].ToggleUnitBG(true);
+            activeRoomAllies[i].UpdateUnitExp(GetExperienceGained());
         }
+
+        yield return new WaitForSeconds(1.5f);
+
+        rewards.FillRewardsTable(GetActiveRoom().difficultyLevel);
     }
 
     // After the user strikes their weapon, remove skill details and skills UI for dmg showcase
@@ -200,13 +219,7 @@ public class GameManager : MonoBehaviour
         Weapon.instance.StartHitLine();
         Weapon.instance.ToggleAttackButtonInteractable(true);
     }
-
-    public void DisableAllSkillSelections()
-    {
-        skill1.ToggleSelected(false);
-        skill2.ToggleSelected(false);
-        skill3.ToggleSelected(false);
-    }
+    #endregion
 
     public void ReturnEnergyToUnit()
     {
@@ -216,6 +229,11 @@ public class GameManager : MonoBehaviour
 
     public void StartRoom(Room room)
     {
+        UpdateActiveRoom(room);
+
+        // Reset experience gained from killed enemies
+        ResetExperienceGained();
+
         // Spawn enemy units
         for (int i = 0; i < room.enemies.Count; i++)
         {
@@ -351,7 +369,7 @@ public class GameManager : MonoBehaviour
             UpdateUnitsSelectedText();
         }
     }
-    
+    #region Update Unit UI
     public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0)
     {
         //Debug.Log(GetActiveUnitFunctionality().GetUnitName() + " " + GetActiveUnitFunctionality().GetUnitCurEnergy());
@@ -372,7 +390,8 @@ public class GameManager : MonoBehaviour
             activeRoomAllies[i].ToggleUnitHealthBar(toggle);
         }
     }
-
+    #endregion
+    #region Update Skill Icons Overlay UI
     public void UpdateAllSkillIconAvailability()
     {
         // Update all skill icon Energy text + unavailable image
@@ -419,6 +438,20 @@ public class GameManager : MonoBehaviour
             skillIconAvailabilityImage.UpdateAlpha(0);
         }
     }
+    void UpdateAllSkillIconEnergyCost()
+    {
+        skill1IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill1().skillEnergyCost.ToString());
+        skill2IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill2().skillEnergyCost.ToString());
+        skill3IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill3().skillEnergyCost.ToString());
+    }
+
+    public void DisableAllSkillSelections()
+    {
+        skill1.ToggleSelected(false);
+        skill2.ToggleSelected(false);
+        skill3.ToggleSelected(false);
+    }
+    #endregion
 
     public void UpdateSkillDetails(Skill skill)
     {
@@ -445,12 +478,7 @@ public class GameManager : MonoBehaviour
         abilityDetailsUI.UpdateUnitOverlayHealthUI(activeUnit, activeUnit.GetUnitCurHealth(), activeUnit.GetUnitMaxHealth());
     }
 
-    void UpdateAllSkillIconEnergyCost()
-    {
-        skill1IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill1().skillEnergyCost.ToString());
-        skill2IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill2().skillEnergyCost.ToString());
-        skill3IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill3().skillEnergyCost.ToString());
-    }
+
 
     public void RemoveUnit(UnitFunctionality unitFunctionality)
     {
@@ -469,6 +497,10 @@ public class GameManager : MonoBehaviour
         // If this is the last ally that got killed, queue player lose post battle ui
         if (activeRoomAllies.Count == 0)
             StartCoroutine(SetupPostBattleUI(false));
+
+        AddExperienceGained(unitFunctionality.GetUnitExpKillGained());
+
+        UpdateEnemiesKilled(unitFunctionality);
 
         // Remove unit from unit list
         for (int i = 0; i < activeRoomAllUnits.Count; i++)
@@ -542,6 +574,21 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateActiveUnitTurnArrow();
+    }
+
+    public void AddExperienceGained(int exp)
+    {
+        experienceGained += exp;
+    }
+
+    public void ResetExperienceGained()
+    {
+        experienceGained = 0;
+    }
+
+    int GetExperienceGained()
+    {
+        return experienceGained;
     }
 
     public void UpdateUnitSelection(Skill usedSkill)
@@ -661,12 +708,37 @@ public class GameManager : MonoBehaviour
         return activeRoomAllUnitFunctionalitys[0];
     }
 
+    public void ToggleEndTurnButton(bool toggle)
+    {
+        if (toggle)
+            endTurnButtonUI.UpdateAlpha(1);
+        else
+            endTurnButtonUI.UpdateAlpha(0);
+    }
+
     public void ToggleUIElement(UIElement uiElement, bool toggle)
     {
         if (toggle)
             uiElement.UpdateAlpha(1);
         else
             uiElement.UpdateAlpha(0);
+    }
+
+    void UpdateEnemiesKilled(UnitFunctionality unit)
+    {
+        activeRoomEnemiesKilled++;
+
+        defeatedEnemies.AddDefeatedEnemies(unit);
+    }
+
+    void ResetEnemiesKilledCount()
+    {
+        activeRoomEnemiesKilled = 0;
+    }
+
+    public int GetEnemiesKilledCount()
+    {
+        return activeRoomEnemiesKilled;
     }
 
     private void AddActiveRoomAllUnits(Unit unit)
@@ -729,7 +801,7 @@ public class GameManager : MonoBehaviour
             GameObject go = Instantiate(unitIcon, turnOrderParent);
             go.transform.SetParent(turnOrderParent);
 
-            UnitPortraitTurnOrder unitPortrait = go.GetComponent<UnitPortraitTurnOrder>();    // Reference
+            UnitPortrait unitPortrait = go.GetComponent<UnitPortrait>();    // Reference
             unitPortrait.UpdatePortrait(activeRoomAllUnitFunctionalitys[i].GetUnitSprite());
             unitPortrait.UpdatePortraitColour(activeRoomAllUnitFunctionalitys[i].GetUnitColour());
             unitPortrait.UpdateIconFade(i);
@@ -807,6 +879,16 @@ public class GameManager : MonoBehaviour
             else
                 UpdateUnitsSelectedText(0, 0);
         }
+    }
+
+    public Room GetActiveRoom()
+    {
+        return activeRoom;
+    }
+
+    public void UpdateActiveRoom(Room room)
+    {
+        activeRoom = room;
     }
 
     private void UpdateUnitsSelectedText(int curUnitsSelected, int maxUnitsSelected)

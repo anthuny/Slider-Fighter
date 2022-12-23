@@ -8,10 +8,28 @@ public class UIElement : MonoBehaviour
     private CanvasGroup cg;
     private Text mainText;
 
+    [SerializeField] private Image contentImage;
+    [SerializeField] private Text contentText;
+
     private void Awake()
     {
         cg = GetComponent<CanvasGroup>();
         mainText = GetComponent<Text>();
+    }
+
+    public void UpdateContentImage(Sprite sprite)
+    {
+        contentImage.sprite = sprite;
+    }
+
+    public void UpdateContentText(string text)
+    {
+        contentText.text = text;
+    }
+
+    public void UpdateContentTextColour(Color colour)
+    {
+        contentText.color = colour;
     }
 
     public void UpdateAlpha(float alpha)

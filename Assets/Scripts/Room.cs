@@ -6,4 +6,5 @@ using UnityEngine;
 public class Room : ScriptableObject
 {
     public List<Unit> enemies = new List<Unit>();
+    public int difficultyLevel;
 }

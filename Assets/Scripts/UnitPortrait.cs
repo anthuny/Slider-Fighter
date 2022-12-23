@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitPortraitTurnOrder : MonoBehaviour
+public class UnitPortrait : MonoBehaviour
 {
-    Image image;
+    [SerializeField] private Image image;
     [SerializeField] private Image nextUnitArrow;
-    private CanvasGroup cg;
+    [SerializeField] private CanvasGroup cg;
+    [SerializeField] private CanvasGroup bgCg;
 
-    private void Awake()
+    void Start()
     {
-        image = GetComponent<Image>();
-        cg = GetComponent<CanvasGroup>();
+        Setup();
     }
+
+    public void Setup()
+    {
+        UpdateNextUnitArrow(false);
+        //ToggleBg(false);
+    }
+
     public void UpdatePortrait(Sprite sprite)
     {
         image.sprite = sprite;
@@ -32,5 +39,13 @@ public class UnitPortraitTurnOrder : MonoBehaviour
     public void UpdateIconFade(int unitIndex)
     {
         cg.alpha = GameManager.instance.turnOrderIconAlphas[unitIndex];
+    }
+
+    public void ToggleBg(bool toggle)
+    {
+        if (toggle)
+            bgCg.alpha = .05f;
+        else
+            bgCg.alpha = 0;
     }
 }

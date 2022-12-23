@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 6227928457361843291}
   - component: {fileID: 1667462900745465200}
   - component: {fileID: 6126058290207993033}
-  - component: {fileID: 8257721159161334378}
   m_Layer: 5
-  m_Name: Rewards Title Text (1)
+  m_Name: Content Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 1793103453116280806}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.30724984, y: 0.30724984, z: 0.30724984}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7476982696829516421}
@@ -37,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4, y: 61}
+  m_AnchoredPosition: {x: 0, y: 71.9}
   m_SizeDelta: {x: 693.73, y: 314.795}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6227928457361843291
@@ -70,7 +69,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: d7cffddcbc0cc8f4ebe6e28eb9804082, type: 3}
-    m_FontSize: 153
+    m_FontSize: 300
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -81,7 +80,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: GOLD
+  m_Text: 36
 --- !u!114 &6126058290207993033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,20 +94,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 10, y: -10}
+  m_EffectDistance: {x: 20, y: 20}
   m_UseGraphicAlpha: 1
---- !u!114 &8257721159161334378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793103453116280806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3833263564001360182
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,6 +107,8 @@ GameObject:
   - component: {fileID: 7476982696829516421}
   - component: {fileID: 4805481161295730894}
   - component: {fileID: 2469341955275398259}
+  - component: {fileID: 173447061637838546}
+  - component: {fileID: 7027447631017853650}
   m_Layer: 5
   m_Name: Reward
   m_TagString: Untagged
@@ -188,6 +177,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &173447061637838546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833263564001360182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contentImage: {fileID: 2853534556743554017}
+  contentText: {fileID: 1667462900745465200}
+--- !u!225 &7027447631017853650
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833263564001360182}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &6896283493261815834
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +291,7 @@ GameObject:
   - component: {fileID: 8976333382808065194}
   - component: {fileID: 2853534556743554017}
   m_Layer: 5
-  m_Name: Reward Image
+  m_Name: Content Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -299,8 +314,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -34}
-  m_SizeDelta: {x: 80.14, y: 80.14}
+  m_AnchoredPosition: {x: 0, y: -33.2}
+  m_SizeDelta: {x: 129.4746, y: 129.4746}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8976333382808065194
 CanvasRenderer:
