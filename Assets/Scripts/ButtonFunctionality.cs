@@ -15,6 +15,15 @@ public class ButtonFunctionality : MonoBehaviour
         if (buttonSelectionCG != null)
             ToggleSelected(false);
     }
+
+    public void PostBattleToMapButton()
+    {
+        // Disable post battle UI
+        GameManager.instance.postBattleUI.TogglePostBattleUI(false);
+
+        GameManager.instance.map.ToggleMapVisibility(true);
+    }
+
     public void WeaponBackButton()
     {
         // Return unit energy

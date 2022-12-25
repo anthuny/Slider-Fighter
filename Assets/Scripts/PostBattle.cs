@@ -8,6 +8,8 @@ public class PostBattle : MonoBehaviour
     [SerializeField] private UIElement postBattleConditionText;
     [SerializeField] private Color winConditionTextColour;
     [SerializeField] private Color loseConditionTextColour;
+    [SerializeField] private UIElement buttonPostBattleMap;
+    [SerializeField] private int timeToSpawnToMapButton;
     private UIElement postBattleUI;
 
     private void Awake()
@@ -35,6 +37,22 @@ public class PostBattle : MonoBehaviour
         {
             postBattleConditionText.UpdateContentText("DEFEAT");
             postBattleConditionText.UpdateContentTextColour(loseConditionTextColour);
+        }
+
+        StartCoroutine(ToggleButtonPostBattleMap(true));
+    }
+
+    public IEnumerator ToggleButtonPostBattleMap(bool toggle)
+    {
+        yield return new WaitForSeconds(timeToSpawnToMapButton);
+
+        if (toggle)
+        {
+            buttonPostBattleMap.UpdateAlpha(1);
+        }
+        else
+        {
+            buttonPostBattleMap.UpdateAlpha(0);
         }
     }
 }

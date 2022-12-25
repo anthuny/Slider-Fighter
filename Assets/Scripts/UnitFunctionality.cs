@@ -9,6 +9,7 @@ public class UnitFunctionality : MonoBehaviour
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
     [SerializeField] private UIElement selectionCircle;
+    [SerializeField] private UIElement unitVisuals;
     [SerializeField] private Transform powerUIParent;
     [SerializeField] private Image unitHealth;
     public Image unitImage;
@@ -397,7 +398,7 @@ public class UnitFunctionality : MonoBehaviour
 
     void DestroyUnit()
     {
-        unitUIElement.UpdateAlpha(0);
+        unitVisuals.UpdateAlpha(0); 
         //Destroy(gameObject);
     }
 

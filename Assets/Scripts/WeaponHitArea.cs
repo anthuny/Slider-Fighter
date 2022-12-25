@@ -1,17 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponHitArea : MonoBehaviour
 {
     public enum HitAreaType { PERFECT, GREAT, GOOD, BAD, MISS }
     public HitAreaType curHitAreaType;
 
-    private Collider2D collider;
+    private BoxCollider2D collider;
 
     private void Awake()
     {
-        collider = GetComponent<Collider2D>();
+        collider = GetComponent<BoxCollider2D>();
     }
 
     public void HitArea()
@@ -20,9 +20,12 @@ public class WeaponHitArea : MonoBehaviour
         Weapon.instance.TriggerHitAlertText(curHitAreaType);
     }
 
-    public bool CheckIfHitLineHit(Vector2 hitLinePos)
+    public bool CheckIfHitLineHit(GameObject hitLine)
     {
-        if (collider.bounds.Contains(hitLinePos))
+        // bounds = GetComponent<Image>().GetPixelAdjustedRect();
+        //Rect hitLineBounds = hitLine.GetComponent<Image>().GetPixelAdjustedRect();
+
+        if (hitLine.GetComponent<BoxCollider2D>().IsTouching(collider))
             return true;
         else
             return false;

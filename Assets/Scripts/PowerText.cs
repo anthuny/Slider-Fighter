@@ -64,7 +64,7 @@ public class PowerText : MonoBehaviour
                 mainText.color = new Color(mainText.color.r, mainText.color.g, mainText.color.b, i);
 
                 // When completely faded out, destroy it
-                if (i <= 0)
+                if (i <= 0.02f)
                     RemovePowerText();
 
                 yield return null;

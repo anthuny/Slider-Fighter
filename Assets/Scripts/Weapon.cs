@@ -22,7 +22,6 @@ public class Weapon : MonoBehaviour
     [SerializeField] private List<WeaponHitArea> weaponHitAreas = new List<WeaponHitArea>();
     [SerializeField] Image attackButton;
 
-
     [Header("Hit Alert")]
     [SerializeField] private UIElement hitAlertText;
     public string perfectHitAlertText;
@@ -49,15 +48,27 @@ public class Weapon : MonoBehaviour
     {
         instance = this;
     }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
-            ResetWeapon();
-
         if (isStopped)
             return;
 
+        if (Input.GetMouseButtonDown(1))
+            ResetWeapon();
+    }
+
+    private void FixedUpdate()
+    {
+        if (isStopped)
+            return;
+
+        MoveHitLine();
+    }
+
+    void MoveHitLine()
+    {
         if (goingUp)
             hitLine.Translate(Vector2.up * weaponLineSpeed * Time.deltaTime);
         else
@@ -102,7 +113,7 @@ public class Weapon : MonoBehaviour
 
         for (int i = 0; i < weaponHitAreas.Count; i++)
         {
-            if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.position))
+            if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
             {
                 // Power calculated here
                 weaponHitAreas[i].HitArea();
