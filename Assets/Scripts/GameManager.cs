@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject unitIcon;
 
     [Header("Map")]
-    public Map map;
+    public MapManager map;
 
     [Header("Turn Order")]
     [SerializeField] private Transform turnOrderParent;
