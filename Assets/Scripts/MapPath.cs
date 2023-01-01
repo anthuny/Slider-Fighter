@@ -6,6 +6,9 @@ public class MapPath : MonoBehaviour
 {
     private LineRenderer lr;
     public GameObject middleOfPath;
+    public RoomMapIcon startingRoom;
+    public List<RoomMapIcon> goalRooms = new List<RoomMapIcon>();
+    public bool isRevealed;
 
     private void Awake()
     {
@@ -18,5 +21,43 @@ public class MapPath : MonoBehaviour
         lr.SetPosition(1, posB);
 
         middleOfPath.transform.position = Vector2.Lerp(posA, posB, .5f);
+    }
+
+    public void UpdateStartingRoom(RoomMapIcon room)
+    {
+        startingRoom = room;
+    }
+
+    public void AddGoalRooms(RoomMapIcon room)
+    {
+        goalRooms.Add(room);
+    }
+
+    public void ToggleHiddenMode(bool toggle)
+    {
+        if (toggle)
+        {
+            lr.enabled = false;
+            isRevealed = false;
+        }
+        else
+        {
+            lr.enabled = true;
+            isRevealed = true;
+
+            for (int i = 0; i < goalRooms.Count; i++)
+            {
+                // Enable each goal room connected to this path
+                goalRooms[i].ToggleHiddenMode(false);
+
+                // Make the main room of the goal rooms the next revealed room
+                if (goalRooms[i].isMainRoom)
+                {
+                    //Debug.Log("updating revealed room to " + goalRooms[i].name);
+                    GameManager.instance.map.UpdateRevealedMainRoom(goalRooms[i]);
+                    break;
+                }
+            }
+        }
     }
 }

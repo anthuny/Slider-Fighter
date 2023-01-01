@@ -226,7 +226,7 @@ LineRenderer:
       atime5: 0
       atime6: 0
       atime7: 0
-      m_Mode: 0
+      m_Mode: 1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
@@ -236,7 +236,7 @@ LineRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 0
-  m_Loop: 1
+  m_Loop: 0
 --- !u!223 &1078556905945229597
 Canvas:
   m_ObjectHideFlags: 0

@@ -2,18 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MapManager : MonoBehaviour
 {
     [SerializeField] private List<Floor> allFloors = new List<Floor>();
 
+    public UnitMapIcon unitMapIcon;
     [SerializeField] private Image mapSpawnBounds;
     [SerializeField] private Transform roomIconsParent;
     [SerializeField] private GameObject roomPrefab;
     [SerializeField] private GameObject pathPrefab;
-    [SerializeField] private UIElement map;
+    [SerializeField] private Image scrollImage;
+    public UIElement map;
     [SerializeField] private RoomMapIcon startingRoom;
-    [SerializeField] private RoomMapIcon endingRoom;
+    public RoomMapIcon endingRoom;
     [SerializeField] private Transform leftBorder;
     [SerializeField] private Transform rightBorder;
 
@@ -22,6 +25,9 @@ public class MapManager : MonoBehaviour
     [SerializeField] private List<GameObject> spawnedAdditionalRooms = new List<GameObject>();
     [SerializeField] private List<GameObject> spawnedPaths = new List<GameObject>(); // List of spawned paths
     [SerializeField] private List<GameObject> spawnedAdditionalPaths = new List<GameObject>();
+
+    [SerializeField] private List<RoomMapIcon> rooms = new List<RoomMapIcon>();
+    [SerializeField] private List<MapPath> mapPaths = new List<MapPath>();
 
     [SerializeField] private int maxFailedAttempts = 100;
     [SerializeField] private int failedCurAttempts;
@@ -39,17 +45,25 @@ public class MapManager : MonoBehaviour
     public Sprite roomShopSprite;
     public Sprite roomBossSprite;
     public Sprite roomStartingSprite;
+
+    public Sprite detailHiddenSprite;
+
     public Vector2 roomEnemySize;
     public Vector2 roomShopSize;
     public Vector2 roomBossSize;
     public Vector2 rooomStartingSize;
+    public Vector2 roomSelectedSizeInc;
     public Color roomEnemyColour;
     public Color roomShopColour;
     public Color roomBossColour;
     public Color roomStartingColour;
+    public Color roomHiddenColour;
+    public Color roomUndiscoveredColour;
 
     [HideInInspector]
     public Floor activeFloor;
+    public RoomMapIcon revealedRoom;
+    public RoomMapIcon selectedRoom;
 
     // The minimum and maximum values for the x and y positions of the spawned objects
     private float minX;
@@ -57,17 +71,54 @@ public class MapManager : MonoBehaviour
     private float minY;
     private float maxY;
 
+    private bool storedRoomData;
+
     private void Start()
     {
-        ToggleMapVisibility(false);
+        //ToggleMapVisibility(false);
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.M))
             ToggleMapVisibility(true);
-        if (Input.GetKeyDown(KeyCode.N))
-            ResetMap();
+        if (Input.GetKeyDown(KeyCode.N) && !CheckIfAnyHiddenMainRooms())
+            ClearRoom();
+    }
+
+    void ToggleMapScroll(bool toggle)
+    {
+        scrollImage.enabled = toggle;
+    }
+
+    public bool CheckIfAnyHiddenMainRooms(int extra = 0)
+    {
+        if (rooms.Count == 0)
+            return true;
+
+        int count = 0;
+
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (!rooms[i].GetDiscovered() && !rooms[i].GetIsHidden())
+            {
+                if (rooms[i].isMainRoom)
+                {
+                    count++;
+                    continue;
+                }
+            }
+        }
+
+        if (count >= 1 + extra)
+            return true;
+        else
+            return false;
+    }
+
+    void ClearRoom()
+    {
+        UpdateNextRooms();
     }
 
     public void UpdateActiveFloor(Floor floor = null)
@@ -80,15 +131,42 @@ public class MapManager : MonoBehaviour
             ToggleMapVisibility(false);
     }
 
+    public void UpdateSelectedRoom(RoomMapIcon room)
+    {
+        ResetAllSelectedRooms();
+
+        selectedRoom = room;
+
+        selectedRoom.ToggleRoomSelected(true);
+    }
+
+    public void ResetAllSelectedRooms()
+    {
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            rooms[i].ToggleRoomSelected(false);
+        }
+
+        startingRoom.ToggleRoomSelected(false);
+    }
+
     public void ToggleMapVisibility(bool toggle)
     {
         if (toggle)
         {
             map.UpdateAlpha(1);
+            ToggleMapScroll(true);
             GenerateMap();
+
+            // Disable end turn button
+            GameManager.instance.endTurnButtonUI.UpdateAlpha(0);
         }
         else
+        {
             map.UpdateAlpha(0);
+            ToggleMapScroll(false);
+        }
+
     }
     
     Vector3 GetRoomSpawnRandomPos()
@@ -117,9 +195,12 @@ public class MapManager : MonoBehaviour
         spawnedAdditionalPaths.Clear();
         failedCurAttempts = 0;
         curRoomCount = 0;
+        curPathCount = 0;
         spawnedPaths.Clear();
         spawnedAdditionalPaths.Clear();
         spawnedRoomsA.Clear();
+
+        storedRoomData = false;
 
         foreach (Transform child in roomIconsParent)
         {
@@ -145,7 +226,86 @@ public class MapManager : MonoBehaviour
         SpawnRoomGenerationB();
         GenerationPathsB();
 
+        ToggleHiddenModeRoom(true);
+
+        UpdateStartingRoomAndPath();
+
+        StoreRooms();
+
+        // Updating unit map icon starting position
+        unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
     }
+
+    void StoreRooms()
+    {
+        if (!storedRoomData)
+        {
+            storedRoomData = true;
+
+            for (int i = 0; i < spawnedAllRooms.Count; i++)
+            {
+                rooms.Add(spawnedAllRooms[i].GetComponent<RoomMapIcon>());
+            }
+
+            rooms.Add(startingRoom);
+            rooms.Add(endingRoom);
+
+            for (int i = 0; i < spawnedPaths.Count; i++)
+            {
+                mapPaths.Add(spawnedPaths[i].GetComponent<MapPath>());
+            }
+        }
+    }
+    void UpdateStartingRoomAndPath()
+    {
+        ToggleFirstPath(true);
+        startingRoom.ToggleRoomSelected(true);
+    }
+
+    public void UpdateRevealedMainRoom(RoomMapIcon room)
+    {
+        revealedRoom = room;
+    }
+
+    public void UpdateNextRooms()
+    {
+        // Enable next paths, which then enable each of their rooms
+        List<MapPath> linkedPaths = revealedRoom.GetLinkedPaths();
+        for (int x = 0; x < linkedPaths.Count; x++)
+        {
+            // If path is already revealed, stop
+            if (linkedPaths[x].isRevealed == true)
+               continue;
+            
+            linkedPaths[x].ToggleHiddenMode(false);
+        }
+    }
+
+    void ToggleFirstPath(bool toggle)
+    {
+        MapPath startingPath = spawnedPaths[0].GetComponent<MapPath>();
+        if (toggle)
+            startingPath.ToggleHiddenMode(false);
+        else
+            startingPath.ToggleHiddenMode(true);
+
+        startingRoom.ToggleDiscovered(true);
+    }
+
+    void ToggleHiddenModeRoom(bool toggle)
+    {
+        for (int i = 0; i < spawnedAllRooms.Count; i++)
+        {
+            spawnedAllRooms[i].GetComponent<RoomMapIcon>().ToggleHiddenMode(toggle);  // toggle cover mode on
+        }
+        for (int i = 0; i < spawnedPaths.Count; i++)
+        {
+            spawnedPaths[i].GetComponent<MapPath>().ToggleHiddenMode(toggle);   // Hide all paths
+        }
+
+        endingRoom.ToggleHiddenMode(true);
+    }
+
     void SpawnRoomGenerationA()
     {
         // Calculate room count
@@ -202,6 +362,8 @@ public class MapManager : MonoBehaviour
                         spawnedAllRooms.Add(room);
                         spawnedRoomsA.Add(room);
                         curRoomCount++;
+                        room.name = "Room - Main " + curRoomCount;
+
                         continue;
                     }
                 }
@@ -290,6 +452,7 @@ public class MapManager : MonoBehaviour
                     spawnedAllRooms.Add(sideRoom);
                     spawnedAdditionalRooms.Add(sideRoom);
                     curRoomCount++;
+                    sideRoom.name = "Room - Side " + curRoomCount;
                     continue;
                 }
             }
@@ -307,10 +470,10 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < activeFloor.shopRoomCount; i++)
         {
             // Make enough shops from the additional room spawns, until enough has been hit for floor
-            int rand = Random.Range(0, spawnedAdditionalRooms.Count);
+            int rand = Random.Range(0, spawnedAdditionalRooms.Count-1);
 
             RoomMapIcon roomIcon = spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>();
-
+            
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 // If there is already a shop room, skip it and reset so it can do it again
@@ -334,60 +497,164 @@ public class MapManager : MonoBehaviour
         #endregion
     }
 
-    void UpdateRoomIconType(RoomMapIcon roomMapIcon, string roomTypeName)
+    void GenerationPathsA()
     {
-        if (roomTypeName == "enemy")
+        for (int i = 0; i < spawnedRoomsA.Count; i++)
         {
-            roomMapIcon.UpdateRoomIcon(roomEnemySprite);
-            roomMapIcon.UpdateRoomiconSize(roomEnemySize);
-            roomMapIcon.UpdateRoomIconColour(roomEnemyColour);
-            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.ENEMY);
-        }
-        else if (roomTypeName == "starting")
-        {
-            roomMapIcon.UpdateRoomIcon(roomStartingSprite);
-            roomMapIcon.UpdateRoomiconSize(rooomStartingSize);
-            roomMapIcon.UpdateRoomIconColour(roomStartingColour);
-            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.STARTING);
-        }
-        else if (roomTypeName == "shop")
-        {
-            roomMapIcon.UpdateRoomIcon(roomShopSprite);
-            roomMapIcon.UpdateRoomiconSize(roomShopSize);
-            roomMapIcon.UpdateRoomIconColour(roomShopColour);
-            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.SHOP);
-        }
-        else if (roomTypeName == "boss")
-        {
-            roomMapIcon.UpdateRoomIcon(roomBossSprite);
-            roomMapIcon.UpdateRoomiconSize(roomBossSize);
-            roomMapIcon.UpdateRoomIconColour(roomBossColour);
-            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.BOSS);
+            // dont spawn last path here
+            if (i != spawnedRoomsA.Count)
+            {
+                GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
+                spawnedPaths.Add(go);
+
+                go.transform.SetParent(roomIconsParent, true);
+                //go.transform.localScale = Vector3.one;
+                go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
+
+                curPathCount++;
+                go.name = "Path - Main " + curPathCount;
+
+                MapPath mapPath = go.GetComponent<MapPath>();
+
+                // If this is the final path of the map (to the boss level)
+                if (i == spawnedRoomsA.Count-1)
+                {
+                    mapPath.UpdateMapPath(spawnedRoomsA[i].transform.position, endingRoom.transform.position);
+                    mapPath.UpdateStartingRoom(spawnedRoomsA[i].GetComponent<RoomMapIcon>());
+                    mapPath.AddGoalRooms(endingRoom);
+
+                    RoomMapIcon curRoom = spawnedRoomsA[i].GetComponent<RoomMapIcon>();
+                    RoomMapIcon nextRoom = endingRoom;
+
+                    // Update current room and next room to reference eachother as a nearby room
+                    nextRoom.UpdateRoomMapLinks(curRoom);
+                    curRoom.UpdateRoomMapLinks(nextRoom);
+
+                    curRoom.UpdateRoomPathLinks(mapPath);
+                    nextRoom.UpdateRoomPathLinks(mapPath);
+
+                    curRoom.isMainRoom = true;
+                }
+                // If its not ^
+                else
+                {
+                    mapPath.UpdateMapPath(spawnedRoomsA[i].transform.position, spawnedRoomsA[i + 1].transform.position);
+                    mapPath.UpdateStartingRoom(spawnedRoomsA[i].GetComponent<RoomMapIcon>());
+                    mapPath.AddGoalRooms(spawnedRoomsA[i + 1].GetComponent<RoomMapIcon>());
+
+                    RoomMapIcon curRoom = spawnedRoomsA[i].GetComponent<RoomMapIcon>();
+                    RoomMapIcon nextRoom = spawnedRoomsA[i + 1].GetComponent<RoomMapIcon>();
+
+                    // Update current room and next room to reference eachother as a nearby room
+                    nextRoom.UpdateRoomMapLinks(curRoom);
+                    curRoom.UpdateRoomMapLinks(nextRoom);
+
+                    curRoom.UpdateRoomPathLinks(mapPath);
+                    nextRoom.UpdateRoomPathLinks(mapPath);
+
+                    curRoom.isMainRoom = true;
+                }
+            }
         }
 
+        // Spawn path for starting room 
+        curPathCount++;
+        GameObject startingRoomPath = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
+        startingRoomPath.name = "Path - Main " + curPathCount;
+        spawnedPaths.Add(startingRoomPath);
+        startingRoomPath.transform.SetParent(roomIconsParent, true);
+        startingRoomPath.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
+
+        MapPath mapPathStarting = startingRoomPath.GetComponent<MapPath>();
+        RoomMapIcon room = spawnedRoomsA[0].GetComponent<RoomMapIcon>();
+        mapPathStarting.UpdateMapPath(startingRoom.transform.position, spawnedRoomsA[0].transform.position);
+        mapPathStarting.UpdateStartingRoom(startingRoom.GetComponent<RoomMapIcon>());
+        mapPathStarting.AddGoalRooms(spawnedRoomsA[0].GetComponent<RoomMapIcon>());
+
+        UpdateSpawnedPaths();
+        spawnedPaths.Sort(ComparedMiddleOfPathY);
     }
 
     void GenerationPathsB()
     {
         for (int i = 0; i < spawnedAdditionalRooms.Count; i++)
         {
-            GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
-            spawnedPaths.Add(go);
-            spawnedAdditionalPaths.Add(go);
-            curPathCount++;
-            //go.transform.position = Vector2.zero;
+            // dont spawn last path here
+            if (i != spawnedAdditionalRooms.Count - 1)
+            {
+                GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
+                spawnedPaths.Add(go);
+                spawnedAdditionalPaths.Add(go);
+                curPathCount++;
+                go.name = "Path - Side " + curPathCount;
 
-            go.transform.SetParent(roomIconsParent, true);
-            //go.transform.localScale = Vector3.one;
-            go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
+                // Set Position
+                go.transform.SetParent(roomIconsParent, true);
+                go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
 
-            MapPath mapPath = go.GetComponent<MapPath>();
+                // Reference 
+                MapPath mapPath = go.GetComponent<MapPath>();
+                Transform closestRoomTrans = GetClosestRoomA(spawnedAdditionalRooms[i].transform.position);
+   
+                // Update map path using pos a: this room pos, pos b: nearest room pos
+                mapPath.UpdateMapPath(spawnedAdditionalRooms[i].transform.position, closestRoomTrans.position);
+                RoomMapIcon closestRoom = closestRoomTrans.GetComponent<RoomMapIcon>();
+                RoomMapIcon curRoom = spawnedAdditionalRooms[i].GetComponent<RoomMapIcon>();
 
-            // Update map path using pos a: this room pos, pos b: nearest room pos
-            mapPath.UpdateMapPath(spawnedAdditionalRooms[i].transform.position, GetClosestRoomA(spawnedAdditionalRooms[i].transform.position).position);
+                // Referencing
+                mapPath.UpdateStartingRoom(closestRoom);
+                mapPath.AddGoalRooms(curRoom);
+                closestRoom.UpdateRoomMapLinks(curRoom);
+                closestRoom.UpdateRoomPathLinks(mapPath);
+                curRoom.UpdateRoomMapLinks(closestRoom);
+                curRoom.UpdateRoomPathLinks(mapPath);
+            }
         }
 
         UpdateSpawnedPaths();
+        spawnedPaths.Sort(ComparedMiddleOfPathY);
+    }
+
+    public void UpdateRoomIconType(RoomMapIcon roomMapIcon, string roomTypeName)
+    {
+        if (roomTypeName == "enemy")
+        {
+            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.ENEMY);
+            roomMapIcon.UpdateRoomDetail(roomEnemySprite);
+            roomMapIcon.UpdateRoomiconSize(roomEnemySize);
+            roomMapIcon.UpdateRoomIconColour(roomEnemyColour);
+            roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomEnemySize.x, roomSelectedSizeInc.y + roomEnemySize.y));
+        }
+        else if (roomTypeName == "starting")
+        {
+            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.STARTING);
+            roomMapIcon.UpdateRoomDetail(roomStartingSprite);
+            roomMapIcon.UpdateRoomiconSize(rooomStartingSize);
+            roomMapIcon.UpdateRoomIconColour(roomStartingColour);
+            roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + rooomStartingSize.x, roomSelectedSizeInc.y + rooomStartingSize.y));
+
+        }
+        else if (roomTypeName == "shop")
+        {
+            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.SHOP);
+            roomMapIcon.UpdateRoomDetail(roomShopSprite);
+            roomMapIcon.UpdateRoomiconSize(roomShopSize);
+            roomMapIcon.UpdateRoomIconColour(roomShopColour);
+            roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomShopSize.x, roomSelectedSizeInc.y + roomShopSize.y));
+
+        }
+        else if (roomTypeName == "boss")
+        {
+            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.BOSS);
+            roomMapIcon.UpdateRoomDetail(roomBossSprite);
+            roomMapIcon.UpdateRoomiconSize(roomBossSize);
+            roomMapIcon.UpdateRoomIconColour(roomBossColour);
+            roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomBossSize.x, roomSelectedSizeInc.y + roomBossSize.y));
+        }
+        else if (roomTypeName == "undiscovered")
+        {
+            //roomMapIcon.UpdateRoomIconColour(roomUndiscoveredColour);
+        }
     }
 
     Transform GetClosestRoomA(Vector2 comparedPos)
@@ -410,49 +677,6 @@ public class MapManager : MonoBehaviour
             }
         }
         return closestRoom;
-    }
-
-    void GenerationPathsA()
-    {
-        for (int i = 0; i < spawnedAllRooms.Count; i++)
-        {
-            if (i != spawnedAllRooms.Count-1)
-            {
-                GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
-                spawnedPaths.Add(go);
-                //go.transform.position = Vector2.zero;
-
-                go.transform.SetParent(roomIconsParent, true);
-                //go.transform.localScale = Vector3.one;
-                go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
-
-                curPathCount++;
-
-                MapPath mapPath = go.GetComponent<MapPath>();
-                mapPath.UpdateMapPath(spawnedAllRooms[i].transform.position, spawnedAllRooms[i + 1].transform.position);
-            }
-        }
-
-        // Spawn path for starting room 
-        curPathCount++;
-        GameObject startingRoomPath = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
-        spawnedPaths.Add(startingRoomPath);
-        startingRoomPath.transform.SetParent(roomIconsParent, true);
-        startingRoomPath.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
-        MapPath mapPathStarting = startingRoomPath.GetComponent<MapPath>();
-        mapPathStarting.UpdateMapPath(this.startingRoom.transform.position, spawnedAllRooms[0].transform.position);
-
-
-        // Spawn path for ending room 
-        curPathCount++;
-        GameObject endingRoomPath = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
-        spawnedPaths.Add(endingRoomPath);
-        endingRoomPath.transform.SetParent(roomIconsParent, true);
-        endingRoomPath.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
-        MapPath mapPathEnding = endingRoomPath.GetComponent<MapPath>();
-        mapPathEnding.UpdateMapPath(this.endingRoom.transform.position, spawnedAllRooms[spawnedAllRooms.Count-1].transform.position);
-
-        UpdateSpawnedPaths();
     }
 
     void UpdateSpawnedPaths()
@@ -480,6 +704,15 @@ public class MapManager : MonoBehaviour
             return 1;
         else if (roomA.transform.position.y < roomB.transform.position.y)
             return -1;
+        return 0;
+    }
+
+    public int ComparedMiddleOfPathY(GameObject MapPathA, GameObject MapPathB)
+    {
+        if (MapPathA.GetComponent<MapPath>().middleOfPath.transform.position.y < MapPathB.GetComponent<MapPath>().middleOfPath.transform.position.y)
+            return -1;
+        else if (MapPathA.GetComponent<MapPath>().middleOfPath.transform.position.y > MapPathB.GetComponent<MapPath>().middleOfPath.transform.position.y)
+            return 1;
         return 0;
     }
 }

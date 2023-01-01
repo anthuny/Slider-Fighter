@@ -12,10 +12,10 @@ public class DefeatedEnemies : MonoBehaviour
 
     private void Start()
     {
-        Reset();
+        Setup();
     }
 
-    public void Reset()
+    public void Setup()
     {
         ResetDefeatedEnemies();
     }

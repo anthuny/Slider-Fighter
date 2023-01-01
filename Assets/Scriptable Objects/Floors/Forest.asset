@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorName: Forest
   floorLevel: 1
-  minRoomCount: 5
-  maxRoomCount: 7
-  sideRoomAmount: 5
+  minRoomCount: 10
+  maxRoomCount: 10
+  sideRoomAmount: 7
   shopRoomCount: 2

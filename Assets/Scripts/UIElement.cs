@@ -11,10 +11,13 @@ public class UIElement : MonoBehaviour
     [SerializeField] private Image contentImage;
     [SerializeField] private Text contentText;
 
+    private RectTransform rt;
+
     private void Awake()
     {
         cg = GetComponent<CanvasGroup>();
         mainText = GetComponent<Text>();
+        rt = GetComponent<RectTransform>();
     }
 
     public void UpdateContentImage(Sprite sprite)
@@ -32,8 +35,16 @@ public class UIElement : MonoBehaviour
         contentText.color = colour;
     }
 
+    public void UpdateRectPos(Vector2 pos)
+    {
+        rt.sizeDelta = pos;
+    }
+
     public void UpdateAlpha(float alpha)
     {
+        //Debug.Log(gameObject.name);
+        cg = GetComponent<CanvasGroup>();
+
         //Debug.Log(gameObject.name);
         cg.alpha = alpha;   // Update UI Alpha
 

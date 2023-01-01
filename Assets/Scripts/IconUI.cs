@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class IconUI : MonoBehaviour
 {
     Image image;
+    [SerializeField] private UIElement selectImage;
 
     private void Awake()
     {
@@ -19,5 +20,13 @@ public class IconUI : MonoBehaviour
     public void UpdateColour(Color colour)
     {
         image.color = colour;
+    }
+
+    public void ToggleSelectImage(bool toggle)
+    {
+        if (toggle)
+            selectImage.UpdateAlpha(1);
+        else
+            selectImage.UpdateAlpha(0);
     }
 }

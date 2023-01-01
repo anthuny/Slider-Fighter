@@ -10,9 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float postBattleTime;
     public List<Unit> activeTeam = new List<Unit>();
     public List<Unit> allPlayerClasses = new List<Unit>();
+    public UIElement currentRoom;
     [SerializeField] private GameObject baseUnit;
     [SerializeField] private List<Transform> enemySpawnPositions = new List<Transform>();
-    [SerializeField] private List<Transform> playerSpawnPositions = new List<Transform>();
+    [SerializeField] private List<Transform> allySpawnPositions = new List<Transform>();
     [SerializeField] private Transform allyPostBattlePositionTransform;
     [SerializeField] private Transform allyBattlePositionTransform;
     [SerializeField] private Transform allyPositions;
@@ -104,18 +105,90 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        Setup();
+        //Setup();
     }
 
     public void Setup()
     {
+        // Destroy previous room
+        ResetRoom();
+
         RoomManager.roomManager.ChooseRoom();
         ToggleUIElement(turnOrder, false);
 
         UpdateTurnOrder();
 
+        ToggleUIElement(currentRoom, true);
+
         ToggleUIElement(playerWeapon, false);
+        ToggleMap(false);
         postBattleUI.TogglePostBattleUI(false);
+    }
+
+    public void ResetRoom()
+    {
+        defeatedEnemies.ResetDefeatedEnemies();
+
+        if (activeRoomAllUnits.Count <= 0)
+            return;
+
+        for (int i = 0; i < enemySpawnPositions.Count; i++)
+        {
+            Destroy(enemySpawnPositions[i].transform.GetChild(0).gameObject);
+        }
+
+        //enemySpawnPositions.Clear();
+
+        for (int i = 0; i < allySpawnPositions.Count; i++)
+        {
+            Destroy(allySpawnPositions[i].transform.GetChild(0).gameObject);
+        }
+
+        //allySpawnPositions.Clear();
+
+        /*
+        for (int i = 0; i < activeRoomAllUnits.Count; i++)
+        {
+            //Destroy(activeRoomAllUnits[i].transform.GetChild(0).gameObject);
+        }
+        */
+
+        activeRoomAllUnits.Clear();
+
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            activeRoomAllUnitFunctionalitys.RemoveAt(i);
+        }
+
+        activeRoomAllUnitFunctionalitys.Clear();
+
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies.RemoveAt(i);
+        }
+
+        activeRoomAllies.Clear();
+
+        for (int i = 0; i < activeRoomEnemies.Count; i++)
+        {
+            activeRoomEnemies.RemoveAt(i);
+        }
+
+        activeRoomEnemies.Clear();
+    }
+
+    public void ToggleMap(bool toggle)
+    {
+        if (!toggle)
+        {
+            map.ToggleMapVisibility(false);
+            map.gameObject.SetActive(false);
+        }
+        else
+        {
+            map.gameObject.SetActive(true);
+            map.ToggleMapVisibility(true);
+        }
     }
 
     void UpdateAllAlliesPosition(bool postBattle)
@@ -158,7 +231,7 @@ public class GameManager : MonoBehaviour
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
 
-        postBattleUI.TogglPostBattleConditionText(playerWon);   // Update battle condition text
+        postBattleUI.TogglePostBattleConditionText(playerWon);   // Update battle condition text
 
         defeatedEnemies.DisplayDefeatedEnemies();
 
@@ -271,8 +344,8 @@ public class GameManager : MonoBehaviour
         {
             Unit unit = activeTeam[i];    // Reference
 
-            GameObject go = Instantiate(baseUnit, playerSpawnPositions[i]);
-            go.transform.SetParent(playerSpawnPositions[i]);
+            GameObject go = Instantiate(baseUnit, allySpawnPositions[i]);
+            go.transform.SetParent(allySpawnPositions[i]);
 
             UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
             unitFunctionality.ResetPosition();
@@ -788,6 +861,10 @@ public class GameManager : MonoBehaviour
         playerSkill1.UpdatePortrait(GetActiveUnit().GetSkill1().skillSprite);
         playerSkill2.UpdatePortrait(GetActiveUnit().GetSkill2().skillSprite);
         playerSkill3.UpdatePortrait(GetActiveUnit().GetSkill3().skillSprite);
+
+        playerSkill1.ToggleSelectImage(false);
+        playerSkill2.ToggleSelectImage(false);
+        playerSkill3.ToggleSelectImage(false);
     }
 
     public void UpdateTurnOrderVisual()

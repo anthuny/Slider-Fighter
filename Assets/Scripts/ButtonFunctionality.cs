@@ -8,20 +8,41 @@ public class ButtonFunctionality : MonoBehaviour
     UnitFunctionality unitFunctionality;
     [SerializeField] private CanvasGroup buttonSelectionCG;
     bool selected;
+
+    [SerializeField] private bool startDisabled;
     private void Awake()
     {
         unitFunctionality = transform.parent.GetComponent<UnitFunctionality>();
 
-        if (buttonSelectionCG != null)
+        if (startDisabled)
             ToggleSelected(false);
+        else
+            ToggleSelected(true);
     }
 
+    public void ButtonEnterRoom()
+    {
+        // Disable map UI
+        GameManager.instance.ToggleMap(false);
+
+        // Enable combat UI
+        GameManager.instance.Setup();
+    }
+
+    public void ButtonTeamPage()
+    {
+        // Disable map UI
+
+        // Enable Team Page UI
+
+    }
     public void PostBattleToMapButton()
     {
         // Disable post battle UI
         GameManager.instance.postBattleUI.TogglePostBattleUI(false);
 
-        GameManager.instance.map.ToggleMapVisibility(true);
+        GameManager.instance.ToggleMap(true);
+        //GameManager.instance.map.map.UpdateAlpha(1);
     }
 
     public void WeaponBackButton()
@@ -62,6 +83,11 @@ public class ButtonFunctionality : MonoBehaviour
     public void ToggleSelected(bool toggle)
     {
         selected = toggle;
+
+        if (buttonSelectionCG == null)
+            return;
+
+            //buttonSelectionCG = GetComponent<CanvasGroup>();
 
         if (toggle)
             buttonSelectionCG.alpha = 1;
