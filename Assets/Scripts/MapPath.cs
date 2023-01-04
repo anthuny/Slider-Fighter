@@ -60,4 +60,28 @@ public class MapPath : MonoBehaviour
             }
         }
     }
+
+    public void ToggleConnectingRoomsDiscovered(bool toggle)
+    {
+        lr.enabled = true;
+        isRevealed = true;
+
+        for (int i = 0; i < goalRooms.Count; i++)
+        {
+            //Debug.Log(this.name);
+            // Enable each goal room connected to this path
+            //goalRooms[i].ToggleHiddenMode(false);
+            if (!toggle)
+            {
+                if (goalRooms[i].GetDiscovered())
+                    continue;
+                else
+                    goalRooms[i].ToggleDiscovered(toggle);
+            }
+            else
+            {
+                goalRooms[i].ToggleDiscovered(toggle);
+            }
+        }
+    }
 }

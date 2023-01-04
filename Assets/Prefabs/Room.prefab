@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contentImage: {fileID: 0}
+  contentImage: {fileID: 7522912745729939779}
   contentText: {fileID: 0}
 --- !u!225 &8876155709448444676
 CanvasGroup:
@@ -192,9 +192,12 @@ MonoBehaviour:
   roomButton: {fileID: 7064347236713240888}
   buttonRoom: {fileID: 5521988149852552486}
   curRoomType: 0
-  isRevealed: 0
+  isHidden: 0
   isSelected: 0
+  isDiscovered: 0
   isMainRoom: 0
+  isStartingRoom: 0
+  isCompleted: 0
 --- !u!223 &8230447574900321245
 Canvas:
   m_ObjectHideFlags: 0

@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        //Setup();
+        map.Setup();
     }
 
     public void Setup()
@@ -177,17 +177,17 @@ public class GameManager : MonoBehaviour
         activeRoomEnemies.Clear();
     }
 
-    public void ToggleMap(bool toggle)
+    public void ToggleMap(bool toggle, bool generateMap = false)
     {
         if (!toggle)
         {
-            map.ToggleMapVisibility(false);
+            map.ToggleMapVisibility(false, generateMap);
             map.gameObject.SetActive(false);
         }
         else
         {
             map.gameObject.SetActive(true);
-            map.ToggleMapVisibility(true);
+            map.ToggleMapVisibility(true, generateMap);
         }
     }
 

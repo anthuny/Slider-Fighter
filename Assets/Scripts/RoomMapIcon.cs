@@ -19,10 +19,13 @@ public class RoomMapIcon : MonoBehaviour
     public bool isSelected;
     public bool isDiscovered;
     public bool isMainRoom;
+    public bool isStartingRoom;
+    public bool isCompleted;
 
     bool revealedOnce;
 
     private RectTransform rt;
+
 
     private void Awake()
     {
@@ -42,28 +45,44 @@ public class RoomMapIcon : MonoBehaviour
         // Ensure only check if room is revealed
         if (!isHidden)
         {
-            if (isMainRoom && revealedOnce)
+            GameManager.instance.map.UpdateSelectedRoom(this);
+            GameManager.instance.map.unitMapIcon.UpdateUnitPosition(transform.localPosition);
+
+            GameManager.instance.map.mapOverlay.UpdateOverlayRoomName(curRoomType);
+
+            if (!GameManager.instance.map.CheckIfAnyHiddenMainRooms(1) && !isStartingRoom && isMainRoom)
             {
-                GameManager.instance.map.UpdateSelectedRoom(this);
-                GameManager.instance.map.unitMapIcon.UpdateUnitPosition(transform.localPosition);
-                return;
-            }
-            if (!revealedOnce && !GameManager.instance.map.CheckIfAnyHiddenMainRooms(1))
-            {
-                revealedOnce = true;
-                GameManager.instance.map.UpdateSelectedRoom(this);
-                GameManager.instance.map.unitMapIcon.UpdateUnitPosition(transform.localPosition);
                 ToggleDiscovered(true);
-                // < -- Use this as button for now to complete room instantly with this after thats completed
+                GameManager.instance.map.HideConnectingRooms();
+
+                MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+
                 return;
             }
-            if (!isMainRoom)
+            else if (curRoomType == RoomType.STARTING)
             {
+                MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+            }
+            else if (!isMainRoom)
+            {
+                ToggleDiscovered(true);
                 GameManager.instance.map.UpdateSelectedRoom(this);
-                GameManager.instance.map.unitMapIcon.UpdateUnitPosition(transform.localPosition);
+
+                MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+
                 return;
             }
         }
+    }
+
+    public void UpdateIsCompleted(bool toggle)
+    {
+        isCompleted = toggle;
+    }
+
+    public bool GetIsCompleted()
+    {
+        return isCompleted;
     }
 
     public void UpdateHorizontalPos(float minX, float maxX)
@@ -127,17 +146,17 @@ public class RoomMapIcon : MonoBehaviour
 
     public void ToggleHiddenMode(bool toggle)
     {
-        // If turning cover mode ON
+        // If turning hidden ON
         if (toggle)
         {
             UpdateRoomIconColour(GameManager.instance.map.roomHiddenColour);
             UpdateRoomDetail(GameManager.instance.map.detailHiddenSprite);
             UpdateRoomiconSize(GameManager.instance.map.roomEnemySize);
         }
-        // if turning cover mode OFF
+        // if turning hidden OFF
         else
         {
-            ToggleDiscovered(false);
+            ToggleDiscovered(true);
         }
 
         UpdateIsHidden(toggle);
@@ -160,6 +179,7 @@ public class RoomMapIcon : MonoBehaviour
 
         if (!isDiscovered)
         {
+
             //UpdateRoomVisuals(curRoomType);
             UpdateRoomIconColour(GameManager.instance.map.roomUndiscoveredColour);
             UpdateRoomDetail(GameManager.instance.map.detailHiddenSprite);
@@ -167,6 +187,7 @@ public class RoomMapIcon : MonoBehaviour
         }
         else
         {
+            UpdateIsHidden(false);
             UpdateRoomVisuals(curRoomType, true);
         }
     }
@@ -196,12 +217,19 @@ public class RoomMapIcon : MonoBehaviour
         {
             isSelected = true;
             roomSelectionImage.UpdateAlpha(1);
+
+            // Reset all other selections
         }
         else
         {
             isSelected = false;
             roomSelectionImage.UpdateAlpha(0);
         }
+    }
+
+    public void UpdateRoomSelectedColour(Color colour)
+    {
+        roomSelectionImage.UpdateColour(colour);
     }
 
     public RoomType GetRoomType()

@@ -6,9 +6,13 @@ using UnityEngine.EventSystems;
 
 public class MapManager : MonoBehaviour
 {
+    public static MapManager instance;
+
     [SerializeField] private List<Floor> allFloors = new List<Floor>();
 
     public UnitMapIcon unitMapIcon;
+    public MapOverlay mapOverlay;
+    [SerializeField] private UIElement mapRoomOverlay;
     [SerializeField] private Image mapSpawnBounds;
     [SerializeField] private Transform roomIconsParent;
     [SerializeField] private GameObject roomPrefab;
@@ -60,6 +64,9 @@ public class MapManager : MonoBehaviour
     public Color roomHiddenColour;
     public Color roomUndiscoveredColour;
 
+    public Color roomSelectedClearedColour;
+    public Color roomSelectedUnclearedColour;
+
     [HideInInspector]
     public Floor activeFloor;
     public RoomMapIcon revealedRoom;
@@ -73,17 +80,22 @@ public class MapManager : MonoBehaviour
 
     private bool storedRoomData;
 
-    private void Start()
+    private void Awake()
     {
-        //ToggleMapVisibility(false);
+        instance = this;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.M))
-            ToggleMapVisibility(true);
+            ToggleMapVisibility(true, true);
         if (Input.GetKeyDown(KeyCode.N) && !CheckIfAnyHiddenMainRooms())
             ClearRoom();
+    }
+
+    public void Setup()
+    {
+        ToggleMapVisibility(true, true);
     }
 
     void ToggleMapScroll(bool toggle)
@@ -105,20 +117,29 @@ public class MapManager : MonoBehaviour
                 if (rooms[i].isMainRoom)
                 {
                     count++;
+                    Debug.Log(rooms[i]);
                     continue;
                 }
             }
         }
 
-        if (count >= 1 + extra)
+        if (count >= 2 + extra)
             return true;
         else
             return false;
     }
 
-    void ClearRoom()
+    public void ClearRoom()
     {
-        UpdateNextRooms();
+        // Do not allow room clear if selected room is the starting room
+        if (selectedRoom == startingRoom)
+            return;
+
+        selectedRoom.UpdateIsCompleted(true);
+        selectedRoom.ToggleRoomSelected(true);
+        selectedRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
+
+        ShowConnectingRooms();
     }
 
     public void UpdateActiveFloor(Floor floor = null)
@@ -136,8 +157,12 @@ public class MapManager : MonoBehaviour
         ResetAllSelectedRooms();
 
         selectedRoom = room;
-
         selectedRoom.ToggleRoomSelected(true);
+
+        if (selectedRoom.GetIsCompleted())
+            selectedRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
+        else
+            selectedRoom.UpdateRoomSelectedColour(roomSelectedUnclearedColour);
     }
 
     public void ResetAllSelectedRooms()
@@ -150,23 +175,24 @@ public class MapManager : MonoBehaviour
         startingRoom.ToggleRoomSelected(false);
     }
 
-    public void ToggleMapVisibility(bool toggle)
+    public void ToggleMapVisibility(bool toggle, bool generateMap = false)
     {
         if (toggle)
         {
             map.UpdateAlpha(1);
             ToggleMapScroll(true);
-            GenerateMap();
 
             // Disable end turn button
             GameManager.instance.endTurnButtonUI.UpdateAlpha(0);
+
+            if (generateMap)
+                GenerateMap();
         }
         else
         {
             map.UpdateAlpha(0);
             ToggleMapScroll(false);
         }
-
     }
     
     Vector3 GetRoomSpawnRandomPos()
@@ -200,6 +226,9 @@ public class MapManager : MonoBehaviour
         spawnedAdditionalPaths.Clear();
         spawnedRoomsA.Clear();
 
+        rooms.Clear();
+        mapPaths.Clear();
+
         storedRoomData = false;
 
         foreach (Transform child in roomIconsParent)
@@ -219,7 +248,6 @@ public class MapManager : MonoBehaviour
     public void GenerateMap()
     {
         ResetMap();
-
         SpawnRoomGenerationA();
         GenerationPathsA();
 
@@ -259,7 +287,13 @@ public class MapManager : MonoBehaviour
     void UpdateStartingRoomAndPath()
     {
         ToggleFirstPath(true);
+        startingRoom.UpdateIsCompleted(true);
         startingRoom.ToggleRoomSelected(true);
+        startingRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
+
+        UpdateSelectedRoom(startingRoom);
+
+        mapOverlay.UpdateOverlayRoomName(RoomMapIcon.RoomType.STARTING);
     }
 
     public void UpdateRevealedMainRoom(RoomMapIcon room)
@@ -267,17 +301,24 @@ public class MapManager : MonoBehaviour
         revealedRoom = room;
     }
 
-    public void UpdateNextRooms()
+    public void HideConnectingRooms()
     {
         // Enable next paths, which then enable each of their rooms
-        List<MapPath> linkedPaths = revealedRoom.GetLinkedPaths();
+        List<MapPath> linkedPaths = selectedRoom.GetLinkedPaths();
         for (int x = 0; x < linkedPaths.Count; x++)
         {
-            // If path is already revealed, stop
-            if (linkedPaths[x].isRevealed == true)
-               continue;
-            
-            linkedPaths[x].ToggleHiddenMode(false);
+            linkedPaths[x].ToggleConnectingRoomsDiscovered(false);
+        }
+    }
+
+    public void ShowConnectingRooms()
+    {
+        // Enable next paths, which then enable each of their rooms
+        List<MapPath> linkedPaths = selectedRoom.GetLinkedPaths();
+        for (int x = 0; x < linkedPaths.Count; x++)
+        {
+
+            linkedPaths[x].ToggleConnectingRoomsDiscovered(true);
         }
     }
 

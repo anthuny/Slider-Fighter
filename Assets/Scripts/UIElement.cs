@@ -10,6 +10,7 @@ public class UIElement : MonoBehaviour
 
     [SerializeField] private Image contentImage;
     [SerializeField] private Text contentText;
+    [SerializeField] private Text contentSubText;
 
     private RectTransform rt;
 
@@ -35,9 +36,24 @@ public class UIElement : MonoBehaviour
         contentText.color = colour;
     }
 
+    public void UpdateContentSubText(string text)
+    {
+        contentSubText.text = text;
+    }
+
+    public void UpdateContentSubTextColour(Color colour)
+    {
+        contentSubText.color = colour;
+    }
+
     public void UpdateRectPos(Vector2 pos)
     {
         rt.sizeDelta = pos;
+    }
+
+    public void UpdateColour(Color colour)
+    {
+        contentImage.color = colour;
     }
 
     public void UpdateAlpha(float alpha)
