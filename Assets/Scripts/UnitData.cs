@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "New Unit", menuName = "Unit")]
-public class Unit : ScriptableObject
+public class UnitData : ScriptableObject
 {
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
 
+    [SerializeField] private int minUnitValue;
+    [SerializeField] private int maxUnitValue;
     public Sprite unitSprite;
     public Color unitColour;
     public new string name;
@@ -38,5 +40,11 @@ public class Unit : ScriptableObject
     public Skill GetSkill3()
     {
         return skill3;
+    }
+
+    public int GetUnitValue()
+    {
+        int rand = Random.Range(minUnitValue, maxUnitValue - 1);
+        return rand;
     }
 }

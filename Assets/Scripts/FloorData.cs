@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Floor", menuName = "Floor")]
-public class Floor : ScriptableObject
+public class FloorData : ScriptableObject
 {
     public string floorName;
     public int floorLevel;
@@ -11,4 +11,7 @@ public class Floor : ScriptableObject
     public int maxRoomCount = 8;
     public int sideRoomAmount = 5;
     public int shopRoomCount = 1;
+
+    public List<UnitData> enemyUnits = new List<UnitData>();
+
 }

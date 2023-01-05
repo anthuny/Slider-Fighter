@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0dbccbbc62efc442919ffb5a44111f7, type: 3}
   m_Name: Forest
   m_EditorClassIdentifier: 
-  floorName: Forest
+  floorName: FOREST
   floorLevel: 1
   minRoomCount: 10
   maxRoomCount: 10
   sideRoomAmount: 7
   shopRoomCount: 2
+  enemyUnits:
+  - {fileID: 11400000, guid: af4c98db1fd39344c8f213210e44ae12, type: 2}
+  - {fileID: 11400000, guid: 3cc3a376c9591944b83d2e508ecd47d2, type: 2}

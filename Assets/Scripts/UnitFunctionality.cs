@@ -32,7 +32,6 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private Image unitExpBarImage;
     [SerializeField] private Text unitExpGainText;
     [SerializeField] private float fillAmountInterval;
-
     [SerializeField] private UIElement unitBg;
 
 
@@ -43,7 +42,7 @@ public class UnitFunctionality : MonoBehaviour
     public GameObject prevPowerUI;
 
     private bool isSelected;
-
+    private int unitValue;
 
     private void Awake()
     {
@@ -54,6 +53,16 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitExpVisual(false);
         ToggleUnitBG(false);
+    }
+
+    public void UpdateUnitValue(int val)
+    {
+        unitValue = val;
+    }
+
+    public int GetUnitValue()
+    {
+        return unitValue;
     }
 
     public void UpdateUnitColour(Color color)
@@ -196,7 +205,7 @@ public class UnitFunctionality : MonoBehaviour
             unitBg.UpdateAlpha(0);
     }
 
-    IEnumerator UpdateUnitExpVisual(int gainedExp)
+    public IEnumerator UpdateUnitExpVisual(int gainedExp)
     {
         ToggleExpGainedText(true, gainedExp.ToString());
 
@@ -226,7 +235,7 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         yield return new WaitForSeconds(GameManager.instance.timePostExp);
-        //ToggleUnitExpVisual(false);
+        ToggleUnitExpVisual(false);
     }
 
     public void ToggleUnitExpVisual(bool toggle)

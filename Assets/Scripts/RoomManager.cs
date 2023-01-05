@@ -1,28 +1,61 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
 {
-    public static RoomManager roomManager;
-    public List<Room> totalRooms = new List<Room>();
-    private Room activeRoom;
+    public static RoomManager instance;
+    [SerializeField] private List<FloorData> totalFloors = new List<FloorData>();
+    [SerializeField] private int startingFloorDifficulty;
+    [SerializeField] private float floorDifficultyRandomAmount;
+
+    private FloorData activeFloor;
+    private int floorCount = 0;
+    
 
     private void Awake()
     {
-        roomManager = this;
+        instance = this;
     }
 
-    private void Start()
+    public void ResetFloorCount()
     {
-        //ChooseRoom();
+        floorCount = 0;
     }
 
-    public void ChooseRoom()
+    public void SelectFloor()
     {
-        int rand = Random.Range(0, totalRooms.Count - 1);
-        activeRoom = totalRooms[rand];
+        activeFloor = totalFloors[floorCount];
+    }
 
-        GameManager.instance.StartRoom(activeRoom);
+    public void FloorCompleted()
+    {
+        IncrementFloorCount();
+        SelectFloor();
+    }
+
+    public FloorData GetActiveFloor()
+    {
+        return activeFloor;
+    }
+
+    public int GetFloorCount()
+    {
+        return floorCount;
+    }
+
+    public int GetFloorDifficulty()
+    {
+        float minA = ((floorDifficultyRandomAmount / 100f) * (float)startingFloorDifficulty);
+        float minB = startingFloorDifficulty - minA;
+        float maxB = startingFloorDifficulty + minA;
+        int rand = Random.RandomRange((int)minB, (int)maxB);
+
+
+        return rand;
+    }
+
+    void IncrementFloorCount()
+    {
+        floorCount++;
     }
 }

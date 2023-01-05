@@ -10,8 +10,13 @@ public class MapOverlay : MonoBehaviour
     [SerializeField] private UIElement buttonEnterRoom;
     [SerializeField] private UIElement buttonTeamPage;
     [SerializeField] private UIElement playerGoldText;
+    [SerializeField] private UIElement roomCountText;
     [SerializeField] private UIElement floorName;
 
+    private void Start()
+    {
+        ToggleEnterRoomButton(false);
+    }
     public void UpdateOverlayRoomName(RoomMapIcon.RoomType roomType)
     {
         if (roomType == RoomMapIcon.RoomType.ENEMY)
@@ -79,8 +84,18 @@ public class MapOverlay : MonoBehaviour
         playerGoldText.UpdateContentText(text);
     }
 
+    public void ResetPlayerGoldText()
+    {
+        playerGoldText.UpdateContentText("0");
+    }
+
     public void UpdateFloorNameText(string text)
     {
         floorName.UpdateContentText(text);
+    }
+
+    public void UpdateRoomCountText(string text)
+    {
+        roomCountText.UpdateContentText(text);
     }
 }

@@ -8,7 +8,7 @@ public class MapManager : MonoBehaviour
 {
     public static MapManager instance;
 
-    [SerializeField] private List<Floor> allFloors = new List<Floor>();
+    [SerializeField] private List<FloorData> allFloors = new List<FloorData>();
 
     public UnitMapIcon unitMapIcon;
     public MapOverlay mapOverlay;
@@ -68,7 +68,7 @@ public class MapManager : MonoBehaviour
     public Color roomSelectedUnclearedColour;
 
     [HideInInspector]
-    public Floor activeFloor;
+    public FloorData activeFloor;
     public RoomMapIcon revealedRoom;
     public RoomMapIcon selectedRoom;
 
@@ -83,6 +83,23 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+    }
+
+    void Start()
+    {
+        //ResetPlayerGold();
+    }
+
+    public void AddPlayerGold(int gold)
+    {
+        GameManager.instance.playerGold += gold;
+        mapOverlay.UpdatePlayerGoldText(GameManager.instance.playerGold.ToString());
+    }
+
+    public void ResetPlayerGold()
+    {
+        GameManager.instance.playerGold = 0;
+        mapOverlay.ResetPlayerGoldText();
     }
 
     private void Update()
@@ -139,10 +156,12 @@ public class MapManager : MonoBehaviour
         selectedRoom.ToggleRoomSelected(true);
         selectedRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
 
+        mapOverlay.ToggleEnterRoomButton(false);
+
         ShowConnectingRooms();
     }
 
-    public void UpdateActiveFloor(Floor floor = null)
+    public void UpdateActiveFloor(FloorData floor = null)
     {
         activeFloor = floor;
 
@@ -180,6 +199,7 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             map.UpdateAlpha(1);
+
             ToggleMapScroll(true);
 
             // Disable end turn button
@@ -187,6 +207,9 @@ public class MapManager : MonoBehaviour
 
             if (generateMap)
                 GenerateMap();
+
+            mapOverlay.UpdateRoomCountText(activeFloor.floorLevel.ToString());
+            mapOverlay.UpdateFloorNameText(activeFloor.floorName);
         }
         else
         {
@@ -241,9 +264,6 @@ public class MapManager : MonoBehaviour
         if (allFloors.Count != 0)
             activeFloor = allFloors[0];
     }
-
-    float distance;
-
 
     public void GenerateMap()
     {
@@ -441,6 +461,8 @@ public class MapManager : MonoBehaviour
 
                 // Check if the spawned object is too close to any other objects
                 bool isTooClose = false;
+
+                float distance;
 
                 foreach (GameObject obj in spawnedAllRooms)
                 {

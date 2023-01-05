@@ -55,20 +55,29 @@ public class RoomMapIcon : MonoBehaviour
                 ToggleDiscovered(true);
                 GameManager.instance.map.HideConnectingRooms();
 
-                MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+                if (GetIsCompleted())
+                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+                else
+                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
 
                 return;
             }
             else if (curRoomType == RoomType.STARTING)
             {
-                MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+                if (GetIsCompleted())
+                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+                else
+                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
             }
             else if (!isMainRoom)
             {
                 ToggleDiscovered(true);
                 GameManager.instance.map.UpdateSelectedRoom(this);
 
-                MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+                if (GetIsCompleted())
+                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+                else
+                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
 
                 return;
             }

@@ -28,6 +28,8 @@ public class Rewards : MonoBehaviour
 
         // Give item(s)
 
+        GameManager.instance.ResetEnemiesKilledCount();
+
     }
 
     void ResetRewardsTable()
@@ -48,6 +50,9 @@ public class Rewards : MonoBehaviour
         UIElement uiElement = go.GetComponent<UIElement>();
         uiElement.UpdateContentImage(goldSprite);
         uiElement.UpdateContentText(CalculateGoldRecieved().ToString());
+
+        MapManager.instance.AddPlayerGold(CalculateGoldRecieved());
+
     }
 
     int CalculateGoldRecieved()
