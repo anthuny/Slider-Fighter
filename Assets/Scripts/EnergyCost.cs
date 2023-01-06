@@ -27,7 +27,7 @@ public class EnergyCost : MonoBehaviour
         ToggleEnergyBGBar(false);
     }
 
-    public void UpdateEnergyBar(int curEnergy, int energyAmountMoved, bool increasing, bool toggle)
+    public void UpdateEnergyBar(int curEnergy, int energyAmountMoved, bool increasing, bool toggle, bool enemy = false)
     {
         if (toggle)
         {
@@ -68,7 +68,7 @@ public class EnergyCost : MonoBehaviour
                 ToggleEnergyBar(true);
                 ToggleEnergyBGBar(true);
 
-                StartCoroutine(RemoveEnergyBar(energyAmountMoved));
+                StartCoroutine(RemoveEnergyBar(energyAmountMoved, enemy));
             }
 
             else    // If Energy Increasing
@@ -118,7 +118,7 @@ public class EnergyCost : MonoBehaviour
         }
     }
 
-    IEnumerator RemoveEnergyBar(int removeCount)
+    IEnumerator RemoveEnergyBar(int removeCount, bool enemy)
     {
         // Remove current bars
         for (int i = 0; i < removeCount; i++)
@@ -143,7 +143,10 @@ public class EnergyCost : MonoBehaviour
             if (i == removeCount - 1)
             {
                 yield return new WaitForSeconds(energyBarPostTime);
-                GameManager.instance.SetupPlayerWeaponUI();
+
+                if (!enemy)
+                    GameManager.instance.SetupPlayerWeaponUI();
+
                 ToggleEnergyBar(false);
                 ToggleEnergyBGBar(false);
 

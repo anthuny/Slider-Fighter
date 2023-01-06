@@ -24,6 +24,7 @@ MonoBehaviour:
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
+  characterPrefab: {fileID: 1415871230302792947, guid: 0466ba9086c72924887a2160d397deed, type: 3}
   basicSkill: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}
   skill1: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}
   skill2: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}

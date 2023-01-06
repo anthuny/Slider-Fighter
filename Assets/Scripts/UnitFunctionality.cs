@@ -10,7 +10,9 @@ public class UnitFunctionality : MonoBehaviour
     public UnitType curUnitType;
     [SerializeField] private UIElement selectionCircle;
     [SerializeField] private UIElement unitVisuals;
+    [SerializeField] private Transform unitVisualsParent;
     [SerializeField] private Transform powerUIParent;
+    [SerializeField] private UIElement statUI;
     [SerializeField] private Image unitHealth;
     public Image unitImage;
     public UIElement curUnitTurnArrow;
@@ -43,6 +45,7 @@ public class UnitFunctionality : MonoBehaviour
 
     private bool isSelected;
     private int unitValue;
+    public bool idleBattle;
 
     private void Awake()
     {
@@ -53,6 +56,101 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitExpVisual(false);
         ToggleUnitBG(false);
+    }
+
+    public void ToggleIdleBattle(bool toggle)
+    {
+        idleBattle = toggle;
+    }
+
+    public void TriggerSkillAlert()
+    {
+        statUI.UpdateContentText(GameManager.instance.GetActiveSkill().skillName);
+        statUI.UpdateAlpha(1);
+    }
+
+    public bool GetIdleBattle()
+    {
+        return idleBattle;
+    }
+
+    public IEnumerator StartUnitTurn()
+    {
+        // Do unit's turn automatically if its on idle battle
+        if (GetIdleBattle())
+        {
+            yield return new WaitForSeconds(GameManager.instance.enemyThinkTime + 1);
+
+            // If unit has energy to choose a skill, choose one
+            GameManager.instance.UpdateActiveSkill(ChooseRandomSkill());
+
+            // If the energy DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
+            if (GameManager.instance.activeSkill.skillEnergyCost != 0)
+            {
+                if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.activeSkill.skillEnergyCost)
+                {
+                    // Trigger current unit's turn energy count to deplete for skill use
+                    GameManager.instance.UpdateActiveUnitEnergyBar(true, false, GameManager.instance.activeSkill.skillEnergyCost, true);
+                    GameManager.instance.UpdateActiveUnitHealthBar(false);
+                }
+                else
+                {
+                    // End turn
+                    GameManager.instance.ToggleEndTurnButton(false);
+                    GameManager.instance.UpdateTurnOrder();
+                    yield break;
+                }
+            }
+
+
+            // Select units
+            GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
+
+            TriggerSkillAlert();
+
+            yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
+
+            // Attack
+            StartCoroutine(GameManager.instance.WeaponAttackCommand(GameManager.instance.activeSkill.skillPower));
+
+            // Attack again
+            StartCoroutine(StartUnitTurn());
+
+            // If unit has energy for another attack, go back to first step
+
+                // If unit no longer has energy for any skills, end turn.
+        }
+    }
+
+    SkillData ChooseRandomSkill()
+    {
+        int rand = Random.Range(1, 4);
+
+        if (rand == 1)  // Skill 1
+        {
+            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.GetActiveUnit().GetSkill1().skillEnergyCost)
+                return GameManager.instance.GetActiveUnit().GetSkill1();
+            else
+                return GameManager.instance.GetActiveUnit().basicSkill;
+        }
+        else if (rand == 2)  // Skill 2
+        {
+            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.GetActiveUnit().GetSkill2().skillEnergyCost)
+                return GameManager.instance.GetActiveUnit().GetSkill2();
+            else
+                return GameManager.instance.GetActiveUnit().basicSkill;
+        }
+        else if (rand == 3)  // Skill 3
+        {
+            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.GetActiveUnit().GetSkill3().skillEnergyCost)
+                return GameManager.instance.GetActiveUnit().GetSkill3();
+            else
+                return GameManager.instance.GetActiveUnit().basicSkill;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void UpdateUnitValue(int val)
@@ -107,10 +205,10 @@ public class UnitFunctionality : MonoBehaviour
             powerText.UpdatePowerTextFontSize(GameManager.instance.powerHitFontSize);
 
             // Change power text colour to offense colour if the type of attack is offense
-            if (GameManager.instance.activeSkill.curSkillType == Skill.SkillType.OFFENSE)
+            if (GameManager.instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
                 powerText.UpdatePowerTextColour(GameManager.instance.damagePowerTextColour);
             // Change power text colour to support colour if the type of attack is support
-            else if (GameManager.instance.activeSkill.curSkillType == Skill.SkillType.SUPPORT)
+            else if (GameManager.instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
                 powerText.UpdatePowerTextColour(GameManager.instance.healPowerTextColour);
 
             powerText.UpdatePowerText(power.ToString());   // Update Power Text
@@ -140,9 +238,13 @@ public class UnitFunctionality : MonoBehaviour
         return gameObject.name;
     }
 
-    public void UpdateUnitSprite(Sprite sprite)
+    public void UpdateUnitSprite(GameObject go)
     {
-        unitImage.sprite = sprite;
+        Instantiate(go, unitVisualsParent);
+        //go.transform.SetParent(unitVisualsParent);
+        go.transform.localPosition = new Vector3(0, 0, 0);
+        go.transform.localScale = new Vector3(1, 1, 1);
+        //unitImage.sprite = sprite;
     }
 
     public void UpdateUnitType(string unitType)
@@ -329,6 +431,8 @@ public class UnitFunctionality : MonoBehaviour
 
     void UpdateUnitHealthVisual()
     {
+        ToggleUnitHealthBar(true);
+
         unitHealth.fillAmount = (float)curHealth / (float)maxHealth;
     }
 

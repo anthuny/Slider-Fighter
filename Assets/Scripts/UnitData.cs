@@ -21,23 +21,24 @@ public class UnitData : ScriptableObject
     public int startingUnitStartTurnEnergyGain;
     // The amount of units this unit can target at once with it's basic attack
     public int basicSelectionCount;
+    public GameObject characterPrefab;
 
-    public Skill basicSkill;
-    public Skill skill1;
-    public Skill skill2;
-    public Skill skill3;
+    public SkillData basicSkill;
+    public SkillData skill1;
+    public SkillData skill2;
+    public SkillData skill3;
 
-    public Skill GetSkill1()
+    public SkillData GetSkill1()
     {
         return skill1;
     }
 
-    public Skill GetSkill2()
+    public SkillData GetSkill2()
     {
         return skill2;
     }
 
-    public Skill GetSkill3()
+    public SkillData GetSkill3()
     {
         return skill3;
     }

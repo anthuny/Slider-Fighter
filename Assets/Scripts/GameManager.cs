@@ -88,11 +88,18 @@ public class GameManager : MonoBehaviour
     public int powerHitFontSize;
     public int powerMissFontSize;
 
-    public Skill activeSkill;
+    [Header("Skills UI")]
+    public float skillAlertAppearTime;
+
+    public SkillData activeSkill;
 
     [Header("Post Battle")]
     public Rewards rewards;
     public DefeatedEnemies defeatedEnemies;
+
+    [Header("Enemy")]
+    public float enemyAttackWaitTime = 1f;
+    public float enemyThinkTime = 1f;
 
     private int experienceGained;
     private int activeRoomEnemiesKilled;
@@ -119,9 +126,9 @@ public class GameManager : MonoBehaviour
 
         StartRoom(RoomManager.instance.GetActiveFloor());
 
-        ToggleUIElement(turnOrder, false);
+        //ToggleUIElement(turnOrder, false);
 
-        UpdateTurnOrder();
+        //UpdateTurnOrder();
 
         ToggleUIElement(currentRoom, true);
 
@@ -156,6 +163,7 @@ public class GameManager : MonoBehaviour
 
         activeRoomAllUnitFunctionalitys.Clear();
 
+        /*
         for (int i = 0; i < activeRoomAllies.Count; i++)
         {
             activeRoomAllies.RemoveAt(i);
@@ -163,6 +171,7 @@ public class GameManager : MonoBehaviour
 
         activeRoomAllies.Clear();
 
+        */
         for (int i = 0; i < activeRoomEnemies.Count; i++)
         {
             activeRoomEnemies.RemoveAt(i);
@@ -307,10 +316,8 @@ public class GameManager : MonoBehaviour
         ResetExperienceGained();
 
         // Determine enemy unit value
-
         int roomChallengeCount = (RoomManager.instance.GetFloorCount() + 1) + RoomManager.instance.GetFloorDifficulty();
-        //roomChallengeCount /= activeFloor.enemyUnits.Count;
-        Debug.Log("roomChallengeCount " + roomChallengeCount);
+
 
         int spawnEnemyPosIndex = 0;
         int spawnEnemyIndex = 0;
@@ -326,7 +333,7 @@ public class GameManager : MonoBehaviour
             UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
             unitFunctionality.ResetPosition();
             unitFunctionality.UpdateUnitName(unit.name);
-            unitFunctionality.UpdateUnitSprite(unit.unitSprite);
+            unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
             unitFunctionality.UpdateUnitColour(unit.unitColour);
             unitFunctionality.UpdateUnitType("Enemy");
             unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
@@ -347,7 +354,6 @@ public class GameManager : MonoBehaviour
             unitFunctionality.UpdateUnitValue(unitValue);
 
             i += unitValue;
-            Debug.Log("i " + i);
 
             int rand = Random.Range(0, 2);
             if (rand == 1)
@@ -377,7 +383,7 @@ public class GameManager : MonoBehaviour
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
                 unitFunctionality.ResetPosition();
                 unitFunctionality.UpdateUnitName(unit.name);
-                unitFunctionality.UpdateUnitSprite(unit.unitSprite);
+                unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
                 unitFunctionality.UpdateUnitColour(unit.unitColour);
                 unitFunctionality.UpdateUnitType("Player");
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
@@ -409,15 +415,17 @@ public class GameManager : MonoBehaviour
             return false;
     }
 
-    public void UpdateActiveSkill(Skill skill)
+    public void UpdateActiveSkill(SkillData skill)
     {
         activeSkill = skill;
     }
 
     public IEnumerator WeaponAttackCommand(int power)
     {
-        UpdateActiveUnitEnergyBar(false);
-        UpdateActiveUnitHealthBar(true);
+        //UpdateActiveUnitEnergyBar(false);
+        //UpdateActiveUnitHealthBar(true);
+
+        // Active all targets health bars
 
         // Loop as many times as power text will appear
         for (int x = 0; x < activeSkill.skillAttackCount; x++)
@@ -437,11 +445,11 @@ public class GameManager : MonoBehaviour
                         unitsSelected[i].ResetPreviousPowerUI();
 
                     // Increase health from the units current health if a support skill was casted on it
-                    if (activeSkill.curSkillType == Skill.SkillType.SUPPORT)
+                    if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
                         unitsSelected[i].UpdateUnitCurrentHealth(power);
 
                     // Decrease health from the units current health if a offense skill was casted on it
-                    if (activeSkill.curSkillType == Skill.SkillType.OFFENSE)
+                    if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
                         unitsSelected[i].UpdateUnitCurrentHealth(-power);
                 }
             }
@@ -461,10 +469,10 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(postHitWaitTime);
 
         unitsSelected.Clear();
-        SetupPlayerSkillsUI();
 
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
         {
+            SetupPlayerSkillsUI();
             UpdateSkillDetails(GetActiveUnit().basicSkill);
             UpdateAllSkillIconAvailability();
             UpdateUnitSelection(activeSkill);
@@ -472,12 +480,12 @@ public class GameManager : MonoBehaviour
         }
     }
     #region Update Unit UI
-    public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0)
+    public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0, bool enemy = false)
     {
         //Debug.Log(GetActiveUnitFunctionality().GetUnitName() + " " + GetActiveUnitFunctionality().GetUnitCurEnergy());
 
         GetActiveUnitFunctionality().energyCostImage.UpdateEnergyBar((int)GetActiveUnitFunctionality().
-            GetUnitCurEnergy(), energyAmount, increasing, toggle);
+            GetUnitCurEnergy(), energyAmount, increasing, toggle, enemy);
     }
 
     public void UpdateActiveUnitHealthBar(bool toggle)
@@ -555,13 +563,13 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public void UpdateSkillDetails(Skill skill)
+    public void UpdateSkillDetails(SkillData skill)
     {
         ToggleUIElement(playerAbilityDesc, true);
 
         bool tempAttack = false;
 
-        if (skill.curSkillType == Skill.SkillType.OFFENSE)
+        if (skill.curSkillType == SkillData.SkillType.OFFENSE)
             tempAttack = true;
         else
             tempAttack = false;
@@ -635,6 +643,8 @@ public class GameManager : MonoBehaviour
     {
         ToggleUIElement(turnOrder, true);   // Enable turn order UI
 
+        ResetSelectedUnits();
+
         UnitFunctionality unitFunctionalityMoving = GetActiveUnitFunctionality();
         activeRoomAllUnitFunctionalitys.RemoveAt(0);
         activeRoomAllUnitFunctionalitys.Insert(activeRoomAllUnitFunctionalitys.Count, unitFunctionalityMoving);
@@ -645,28 +655,38 @@ public class GameManager : MonoBehaviour
      
         UpdateTurnOrderVisual();
 
-        ToggleEndTurnButton(true);      // Toggle End Turn Button on
+        // Trigger Unit Energy regen 
+        UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
 
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
+            //activeRoomAllUnitFunctionalitys[0].StartUnitTurn();
             playerUIElement.UpdateAlpha(1);
             SetupPlayerSkillsUI();
             UpdatePlayerAbilityUI();
             UpdateActiveUnitNameText(GetActiveUnitFunctionality().GetUnitName());
+
+            // Set the basic skill to be on by default to begin with
+            activeSkill = GetActiveUnit().basicSkill;
+
+            ToggleEndTurnButton(true);      // Toggle End Turn Button on
         }
         else
+        {
+            activeRoomAllUnitFunctionalitys[0].ToggleIdleBattle(true);
             playerUIElement.UpdateAlpha(0);
 
-        // Set the basic skill to be on by default to begin with
-        activeSkill = GetActiveUnit().basicSkill;
+            ToggleEndTurnButton(false);      // Toggle End Turn Button on
+
+            StartCoroutine(activeRoomAllUnitFunctionalitys[0].StartUnitTurn());
+        }
 
         // If unit is at maxed energy, stop
         if (GetActiveUnitFunctionality().GetUnitCurEnergy() != GetActiveUnitFunctionality().GetUnitMaxEnergy())
             UpdateActiveUnitHealthBar(false);   // Disable unit health bar for unit start turn energy increase
 
-        // Trigger Unit Energy regen 
-        UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
+
 
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
         {
@@ -702,7 +722,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateUnitSelection(Skill usedSkill)
+    public void UpdateUnitSelection(SkillData usedSkill)
     {
         int selectedAmount = 0;
 
@@ -710,7 +730,7 @@ public class GameManager : MonoBehaviour
         ResetSelectedUnits();
 
         // If skill selection type is only on ENEMIES
-        if (usedSkill.curSkillSelectionType == Skill.SkillSelectionType.ENEMIES)
+        if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES)
         {
             // if the skill user is a PLAYER
             if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
@@ -730,12 +750,13 @@ public class GameManager : MonoBehaviour
             // If the skill user is an ENEMY
             else if (GetActiveUnit().curUnitType == UnitData.UnitType.ENEMY)
             {
-                // only select PLAYER units
-                for (int i = 0; i > activeRoomAllies.Count; i++)
+                // only select PLAYER units, in random fashion
+                for (int x = 0; x < activeRoomAllies.Count; x++)
                 {
                     selectedAmount++;
 
-                    SelectUnit(activeRoomAllies[i]);
+                    int rand = Random.Range(0, activeRoomAllies.Count);
+                    SelectUnit(activeRoomAllies[rand]);
 
                     // If enough units have been selected, toggle the display
                     if (selectedAmount == usedSkill.skillSelectionCount)
@@ -744,9 +765,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-
         // If skill selection type is only on ALLIES
-        if (usedSkill.curSkillSelectionType == Skill.SkillSelectionType.PLAYERS)
+        if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS)
         {
             // if the skill user is a PLAYER
             if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
@@ -812,6 +832,11 @@ public class GameManager : MonoBehaviour
     public UnitData GetActiveUnit()
     {
         return activeRoomAllUnits[0];
+    }
+
+    public SkillData GetActiveSkill()
+    {
+        return activeSkill;
     }
 
     public UnitFunctionality GetActiveUnitFunctionality()
@@ -937,19 +962,23 @@ public class GameManager : MonoBehaviour
 
     public void SelectUnit(UnitFunctionality unitFunctionality)
     {
+        /*
         // If it is not the player's turn, do not allow the selection
         if (GetActiveUnit().curUnitType == UnitData.UnitType.ENEMY)
             return;
-
-        if (activeSkill)
+        */
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            // If active skill can only select enemies, do not allow players to be selected
-            if (activeSkill.curSkillSelectionType == Skill.SkillSelectionType.ENEMIES && unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                return;
+            if (activeSkill)
+            {
+                // If active skill can only select enemies, do not allow players to be selected
+                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    return;
 
-            // If active skill can only select allies, do not allow enemies to be selected
-            if (activeSkill.curSkillSelectionType == Skill.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
-                return;
+                // If active skill can only select allies, do not allow enemies to be selected
+                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    return;
+            }
         }
 
         // If user selects a unit that is already selected, unselect it, and go a different path

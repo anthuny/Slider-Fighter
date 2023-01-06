@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "Skill")]
-public class Skill : ScriptableObject
+public class SkillData : ScriptableObject
 {
     public enum SkillType { OFFENSE, SUPPORT };
     public SkillType curSkillType;

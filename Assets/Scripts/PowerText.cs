@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PowerText : MonoBehaviour
 {
-    Text mainText;
+    TMP_Text mainText;
     [SerializeField] public float floatSpeed;
     [SerializeField] private float timeTillFadeStarts;
     [SerializeField] private float fadeDuration;
@@ -13,7 +14,7 @@ public class PowerText : MonoBehaviour
 
     private void Awake()
     {
-        mainText = GetComponent<Text>();
+        mainText = GetComponent<TextMeshProUGUI>();
     }
 
     private void Start()
