@@ -41,7 +41,7 @@ public class UIElement : MonoBehaviour
 
     public void UpdateContentText(string text)
     {
-        Debug.Log(gameObject.name);
+        //Debug.Log(gameObject.name);
 
         if (contentText == null)
             contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
@@ -92,7 +92,7 @@ public class UIElement : MonoBehaviour
 
     public void UpdateAlpha(float alpha)
     {
-        StopCoroutine(HideUIOvertime());
+        //StopCoroutine(HideUIOvertime());
 
         //Debug.Log(gameObject.name);
         cg = GetComponent<CanvasGroup>();
@@ -100,12 +100,14 @@ public class UIElement : MonoBehaviour
         //Debug.Log(gameObject.name);
         cg.alpha = alpha;   // Update UI Alpha
 
-        if (doScalePunch)
-            AnimateUI();
+
 
         // Make UI element selectable/unselectable
         if (alpha == 1)
         {
+            if (doScalePunch)
+                AnimateUI();
+
             cg.interactable = true;
             cg.blocksRaycasts = true;
         }

@@ -10116,6 +10116,10 @@ MonoBehaviour:
   expKillGainedPerLv: 5
   expKillGainedStarting: 5
   goldGainedPerUnit: 25
+  unitProjectile: {fileID: 6785902064619898189, guid: 8408dba08b0515a41bb9640161dfc029, type: 3}
+  minProjectileKillDist: 0.5
+  randomXDist: 120
+  triggerSkillAlertTime: 0.5
   playerUIElement: {fileID: 1577981124}
   playerWeapon: {fileID: 643176410}
   playerWeaponBackButton: {fileID: 555260341}
@@ -10156,8 +10160,9 @@ MonoBehaviour:
   activeSkill: {fileID: 0}
   rewards: {fileID: 1297465102}
   defeatedEnemies: {fileID: 1494310901}
-  enemyAttackWaitTime: 1
+  enemyAttackWaitTime: 0.75
   enemyThinkTime: 0.5
+  unitPowerUIWaitTime: 0.5
   playerGold: 0
 --- !u!1 &1601472882
 GameObject:

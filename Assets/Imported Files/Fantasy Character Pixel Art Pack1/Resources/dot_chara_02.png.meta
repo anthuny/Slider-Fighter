@@ -979,9 +979,9 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       dot_chara_02_5: 21300010
-      dot_chara_02_4: 21300008
+      dot_chara_02_34: 21300068
       dot_chara_02_32: 21300064
-      dot_chara_02_18: 21300036
+      dot_chara_02_4: 21300008
       dot_chara_02_3: 21300006
       dot_chara_02_9: 21300018
       dot_chara_02_31: 21300062
@@ -1011,7 +1011,7 @@ TextureImporter:
       dot_chara_02_24: 21300048
       dot_chara_02_33: 21300066
       dot_chara_02_12: 21300024
-      dot_chara_02_34: 21300068
+      dot_chara_02_18: 21300036
       dot_chara_02_22: 21300044
   spritePackingTag: 
   pSDRemoveMatte: 0

@@ -15,12 +15,13 @@ MonoBehaviour:
   curSkillType: 0
   curSkillSelectionType: 0
   curSkillGameType: 2
+  curRangedType: 1
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: TRACKING SHOT
   skillDescr: Damage up to
-  skillPower: 150
-  skillAttackCount: 2
-  skillCooldown: 2
+  skillPower: 5
+  skillAttackCount: 4
+  projectileSpeed: 12
   skillEnergyCost: 2
-  skillSelectionCount: 1
+  skillSelectionCount: 3
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}

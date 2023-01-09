@@ -15,12 +15,15 @@ public class SkillData : ScriptableObject
     public enum SkillGameType { BASIC, PRIMARY, SECONDARY, ALTERNATE }
     public SkillGameType curSkillGameType;
 
+    public enum SkillRangedType { MELEE, RANGED }
+    public SkillRangedType curRangedType;
+
     public Sprite skillSprite;
     public string skillName;
     public string skillDescr;
     public int skillPower;
     public int skillAttackCount;
-    public int skillCooldown;
+    public int projectileSpeed = 1;
     public int skillEnergyCost;
     public int skillSelectionCount;
     public Sprite skillPowerIcon;

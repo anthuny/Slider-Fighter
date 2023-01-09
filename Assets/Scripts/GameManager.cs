@@ -41,7 +41,10 @@ public class GameManager : MonoBehaviour
     public int expKillGainedPerLv;
     public int expKillGainedStarting;
     public int goldGainedPerUnit;
-    //public int goldGainedPerUnitLevelMult;
+    public GameObject unitProjectile;
+    public float minProjectileKillDist;
+    public float randomXDist;
+    public float triggerSkillAlertTime = .5f;
 
     [Header("Player UI")]
     public UIElement playerUIElement;
@@ -100,6 +103,7 @@ public class GameManager : MonoBehaviour
     [Header("Enemy")]
     public float enemyAttackWaitTime = 1f;
     public float enemyThinkTime = 1f;
+    public float unitPowerUIWaitTime = .5f;
 
     private int experienceGained;
     private int activeRoomEnemiesKilled;
@@ -353,6 +357,8 @@ public class GameManager : MonoBehaviour
 
             unitFunctionality.UpdateUnitValue(unitValue);
 
+            //unitFunctionality.UpdateUnitVisuals();
+
             i += unitValue;
 
             int rand = Random.Range(0, 2);
@@ -398,6 +404,8 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
                 unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
                 unitFunctionality.UpdateUnitLevel(1);
+
+                //unitFunctionality.UpdateUnitVisuals();
             }
         }
 
@@ -422,14 +430,35 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator WeaponAttackCommand(int power)
     {
-        //UpdateActiveUnitEnergyBar(false);
-        //UpdateActiveUnitHealthBar(true);
+        if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+        {
+            // Loop through all selected units
+            for (int z = unitsSelected.Count - 1; z >= 0; z--)
+            {
+                if (unitsSelected[z] == null)
+                    continue;
+                else
+                {
+                    for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
+                    {
+                        GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform);
+                        yield return new WaitForSeconds(0.005f);
+                    }
+                }
+            }
 
-        // Active all targets health bars
+            yield return new WaitForSeconds(unitPowerUIWaitTime);
+        }
 
         // Loop as many times as power text will appear
         for (int x = 0; x < activeSkill.skillAttackCount; x++)
         {
+            // Disable unit selection just before attack
+            for (int y = 0; y < unitsSelected.Count; y++)
+            {
+                unitsSelected[y].ToggleSelected(false);
+            }
+
             // Loop through all selected units
             for (int i = unitsSelected.Count - 1; i >= 0; i--)
             {
@@ -437,7 +466,6 @@ public class GameManager : MonoBehaviour
                     continue;
                 else
                 {
-                    //unitsSelected[i].ToggleSelected(false);
                     unitsSelected[i].SpawnPowerUI(power);
 
                     // Reset unit's prev power text for future power texts
@@ -462,13 +490,13 @@ public class GameManager : MonoBehaviour
         {
             if (unitsSelected[y].CheckIfUnitIsDead())
             {
-                unitsSelected[y].EnsureUnitIsDead();
+                StartCoroutine(unitsSelected[y].EnsureUnitIsDead());
             }
         }
 
         yield return new WaitForSeconds(postHitWaitTime);
 
-        unitsSelected.Clear();
+        //unitsSelected.Clear();
 
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
         {

@@ -28,6 +28,7 @@ public class UnitFunctionality : MonoBehaviour
     [HideInInspector]
     public int unitStartTurnEnergyGain;
     public EnergyCost energyCostImage;
+    [SerializeField] private Transform projectileParent;
 
     [SerializeField] private UIElement unitExpBar;
     [SerializeField] private Text unitLevelText;
@@ -35,7 +36,6 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private Text unitExpGainText;
     [SerializeField] private float fillAmountInterval;
     [SerializeField] private UIElement unitBg;
-
 
     [SerializeField] private UIElement healthBarUIElement;
     [SerializeField] private UIElement unitUIElement;
@@ -45,6 +45,8 @@ public class UnitFunctionality : MonoBehaviour
 
     private bool isSelected;
     private int unitValue;
+    private Animator animator;
+
     public bool idleBattle;
 
     private void Awake()
@@ -79,7 +81,7 @@ public class UnitFunctionality : MonoBehaviour
         // Do unit's turn automatically if its on idle battle
         if (GetIdleBattle())
         {
-            yield return new WaitForSeconds(GameManager.instance.enemyThinkTime + 1);
+            yield return new WaitForSeconds(GameManager.instance.enemyThinkTime + 1f);
 
             // If unit has energy to choose a skill, choose one
             GameManager.instance.UpdateActiveSkill(ChooseRandomSkill());
@@ -102,11 +104,22 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
 
-
             // Select units
             GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
 
             TriggerSkillAlert();
+
+            yield return new WaitForSeconds(GameManager.instance.triggerSkillAlertTime);
+
+            if (GameManager.instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+            {
+                animator.SetTrigger("SkillFlg");
+            }
+            else
+            {
+                animator.SetTrigger("AttackFlg");
+            }
+
 
             yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
 
@@ -213,12 +226,22 @@ public class UnitFunctionality : MonoBehaviour
 
             powerText.UpdatePowerText(power.ToString());   // Update Power Text
         }
-
     }
 
     public void ResetPreviousPowerUI()
     {
         prevPowerUI = null;
+    }
+
+    public void SpawnProjectile(Transform target)
+    {
+        GameObject go = Instantiate(GameManager.instance.unitProjectile, projectileParent);
+        go.transform.SetParent(projectileParent);
+        go.transform.localPosition = new Vector3(0, 0, 0);
+
+        Projectile projectile = go.GetComponent<Projectile>();
+        projectile.LookAtTarget(target);
+        projectile.UpdateSpeed(GameManager.instance.GetActiveSkill().projectileSpeed);
     }
 
 
@@ -238,13 +261,14 @@ public class UnitFunctionality : MonoBehaviour
         return gameObject.name;
     }
 
-    public void UpdateUnitSprite(GameObject go)
+    public void UpdateUnitSprite(GameObject spriteGO)
     {
-        Instantiate(go, unitVisualsParent);
-        //go.transform.SetParent(unitVisualsParent);
+        GameObject go = Instantiate(spriteGO, unitVisualsParent);
+
         go.transform.localPosition = new Vector3(0, 0, 0);
         go.transform.localScale = new Vector3(1, 1, 1);
-        //unitImage.sprite = sprite;
+
+        animator = go.GetComponent<Animator>();
     }
 
     public void UpdateUnitType(string unitType)
@@ -275,12 +299,16 @@ public class UnitFunctionality : MonoBehaviour
             return false;
     }
 
-    public void EnsureUnitIsDead()
+    public IEnumerator EnsureUnitIsDead()
     {
         // If unit's health is 0 or lower
         if (curHealth <= 0)
         {
             curHealth = 0;
+
+            animator.SetTrigger("DeathFlg");
+
+            yield return new WaitForSeconds(1f);
 
             GameManager.instance.RemoveUnit(this);
             GameManager.instance.UpdateTurnOrderVisual();
@@ -419,8 +447,17 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitCurrentHealth(int newCurHealth)
     {
+        if (newCurHealth < 0)
+        {
+            animator.SetTrigger("DamageFlg");
+        }
         curHealth += newCurHealth;
         UpdateUnitHealthVisual();
+    }
+
+    public void ToggleDamageAnimOff()
+    {
+        animator.SetBool("DamageFlg", false);
     }
 
     public void UpdateUnitMaxHealth(int newMaxHealth)
