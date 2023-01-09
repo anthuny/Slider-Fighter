@@ -15,7 +15,7 @@ MonoBehaviour:
   curUnitType: 0
   minUnitValue: 0
   maxUnitValue: 0
-  unitSprite: {fileID: 21300000, guid: f27e74649d41e2f46baa57d75a687cff, type: 3}
+  unitSprite: {fileID: 21300000, guid: 34d9e4090ee8996408dba62e1ccdd554, type: 2}
   unitColour: {r: 1, g: 0.98459125, b: 0.43867922, a: 1}
   name: Warrior
   startingSpeed: 10
@@ -25,7 +25,7 @@ MonoBehaviour:
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 12fddd4e16ad9ed478f41512355acf5d, type: 3}
-  basicSkill: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}
+  basicSkill: {fileID: 11400000, guid: 9f6a8465294f1d84186371c85c004e82, type: 2}
   skill1: {fileID: 11400000, guid: 210dbf9b1bfecd54f867b0a4d6661ec8, type: 2}
   skill2: {fileID: 11400000, guid: 4d0540d72a10761469b921921a9ce701, type: 2}
   skill3: {fileID: 11400000, guid: e7a970b667a73384f8266eb6ae66a8cf, type: 2}

@@ -76,6 +76,11 @@ public class UnitFunctionality : MonoBehaviour
         return idleBattle;
     }
 
+
+    public Animator GetAnimator()
+    {
+        return animator;
+    }
     public IEnumerator StartUnitTurn()
     {
         // Do unit's turn automatically if its on idle battle
@@ -109,19 +114,16 @@ public class UnitFunctionality : MonoBehaviour
 
             TriggerSkillAlert();
 
-            yield return new WaitForSeconds(GameManager.instance.triggerSkillAlertTime);
-
             if (GameManager.instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
             {
                 animator.SetTrigger("SkillFlg");
+                yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
             }
             else
             {
                 animator.SetTrigger("AttackFlg");
+                yield return new WaitForSeconds(GameManager.instance.triggerSkillAlertTime/2f);
             }
-
-
-            yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
 
             // Attack
             StartCoroutine(GameManager.instance.WeaponAttackCommand(GameManager.instance.activeSkill.skillPower));
@@ -184,6 +186,11 @@ public class UnitFunctionality : MonoBehaviour
     public Color GetUnitColour()
     {
         return unitImage.color;
+    }
+
+    public void UpdateUnitIcon(Sprite sprite)
+    {
+        unitImage.sprite = sprite;
     }
 
     public Sprite GetUnitSprite()

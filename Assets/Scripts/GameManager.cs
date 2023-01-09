@@ -338,10 +338,12 @@ public class GameManager : MonoBehaviour
             unitFunctionality.ResetPosition();
             unitFunctionality.UpdateUnitName(unit.name);
             unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
-            unitFunctionality.UpdateUnitColour(unit.unitColour);
+            //unitFunctionality.UpdateUnitColour(unit.unitColour);
             unitFunctionality.UpdateUnitType("Enemy");
             unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
             unitFunctionality.UpdateUnitPower(unit.startingPower);
+
+            unitFunctionality.UpdateUnitIcon(unit.unitSprite);
 
             unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
             unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
@@ -390,10 +392,12 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.ResetPosition();
                 unitFunctionality.UpdateUnitName(unit.name);
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
-                unitFunctionality.UpdateUnitColour(unit.unitColour);
+                //unitFunctionality.UpdateUnitColour(unit.unitColour);
                 unitFunctionality.UpdateUnitType("Player");
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
+
+                unitFunctionality.UpdateUnitIcon(unit.unitSprite);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
                 unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
@@ -432,6 +436,8 @@ public class GameManager : MonoBehaviour
     {
         if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
         {
+            GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+
             // Loop through all selected units
             for (int z = unitsSelected.Count - 1; z >= 0; z--)
             {
@@ -449,6 +455,11 @@ public class GameManager : MonoBehaviour
 
             yield return new WaitForSeconds(unitPowerUIWaitTime);
         }
+        else
+        {
+            GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
+        }
+
 
         // Loop as many times as power text will appear
         for (int x = 0; x < activeSkill.skillAttackCount; x++)

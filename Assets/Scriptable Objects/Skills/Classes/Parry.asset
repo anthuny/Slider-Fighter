@@ -15,12 +15,13 @@ MonoBehaviour:
   curSkillType: 1
   curSkillSelectionType: 0
   curSkillGameType: 3
+  curRangedType: 0
   skillSprite: {fileID: 21300000, guid: f6b8b85cbdc82ce439a41ae3d56d57ee, type: 3}
-  skillName: Parry
+  skillName: PARRY
   skillDescr: 'Parry up to '
   skillPower: 150
   skillAttackCount: 1
-  skillCooldown: 3
+  projectileSpeed: 1
   skillEnergyCost: 3
   skillSelectionCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}

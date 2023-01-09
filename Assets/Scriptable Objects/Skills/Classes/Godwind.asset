@@ -15,12 +15,13 @@ MonoBehaviour:
   curSkillType: 0
   curSkillSelectionType: 0
   curSkillGameType: 2
+  curRangedType: 0
   skillSprite: {fileID: 21300000, guid: 64cf403d00652d443a915ea14f66c22f, type: 3}
-  skillName: Godwind
+  skillName: GODWIND
   skillDescr: Damage up to
-  skillPower: 12
+  skillPower: 1255
   skillAttackCount: 5
-  skillCooldown: 0
+  projectileSpeed: 1
   skillEnergyCost: 0
   skillSelectionCount: 6
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
