@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b5ca964c25ccf542b4b722aabc76bc8, type: 3}
+  m_Name: Archer
+  m_EditorClassIdentifier: 
+  curUnitType: 0
+  minUnitValue: 0
+  maxUnitValue: 0
+  unitSprite: {fileID: -1040719728, guid: a6076953ce938e94b9aabb14d7ecaed3, type: 3}
+  unitColour: {r: 1, g: 0.98459125, b: 0.43867922, a: 1}
+  name: Archer
+  startingSpeed: 95
+  startingPower: 10
+  startingMaxHealth: 600
+  startingEnergy: 4
+  startingUnitStartTurnEnergyGain: 2
+  basicSelectionCount: 1
+  characterPrefab: {fileID: 1415871230302792947, guid: 8fc51ebc57d289c43a80806bfa3ecec8, type: 3}
+  basicSkill: {fileID: 11400000, guid: c73d0bea0f8ca6e408b0cbd7c9346939, type: 2}
+  skill1: {fileID: 11400000, guid: e591c0ea94e44dc4f966fed6cf5e0dbf, type: 2}
+  skill2: {fileID: 11400000, guid: cc318f8510e168b4388ec5807679be82, type: 2}
+  skill3: {fileID: 11400000, guid: 43bd87269e8a8af4b993f2342c6320a4, type: 2}

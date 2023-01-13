@@ -21,7 +21,7 @@ MonoBehaviour:
   skillDescr: 
   skillPower: 100
   skillAttackCount: 1
-  projectileSpeed: 0
+  projectileSpeed: 12
   skillEnergyCost: 2
   skillSelectionCount: 1
   skillPowerIcon: {fileID: 0}

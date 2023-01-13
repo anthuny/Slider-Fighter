@@ -91,14 +91,38 @@ public class UnitFunctionality : MonoBehaviour
             // If unit has energy to choose a skill, choose one
             GameManager.instance.UpdateActiveSkill(ChooseRandomSkill());
 
-            // If the energy DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
+            // If the skill DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
             if (GameManager.instance.activeSkill.skillEnergyCost != 0)
             {
+                // If unit has enough energy for skill
                 if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.activeSkill.skillEnergyCost)
                 {
                     // Trigger current unit's turn energy count to deplete for skill use
                     GameManager.instance.UpdateActiveUnitEnergyBar(true, false, GameManager.instance.activeSkill.skillEnergyCost, true);
                     GameManager.instance.UpdateActiveUnitHealthBar(false);
+
+                    // Select units
+                    GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
+
+                    TriggerSkillAlert();
+
+                    if (GameManager.instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+                    {
+                        animator.SetTrigger("SkillFlg");
+                        yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
+                    }
+                    else
+                    {
+                        animator.SetTrigger("AttackFlg");
+                        yield return new WaitForSeconds(GameManager.instance.triggerSkillAlertTime / 2f);
+                    }
+
+
+                    // Attack
+                    StartCoroutine(GameManager.instance.WeaponAttackCommand(GameManager.instance.activeSkill.skillPower));
+
+                    // Attack again
+                    AttackAgain();
                 }
                 else
                 {
@@ -109,34 +133,23 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
 
-            // Select units
-            GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
 
-            TriggerSkillAlert();
 
-            if (GameManager.instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
-            {
-                animator.SetTrigger("SkillFlg");
-                yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
-            }
-            else
-            {
-                animator.SetTrigger("AttackFlg");
-                yield return new WaitForSeconds(GameManager.instance.triggerSkillAlertTime/2f);
-            }
 
-            // Attack
-            StartCoroutine(GameManager.instance.WeaponAttackCommand(GameManager.instance.activeSkill.skillPower));
-
-            // Attack again
-            StartCoroutine(StartUnitTurn());
 
             // If unit has energy for another attack, go back to first step
 
-                // If unit no longer has energy for any skills, end turn.
+            // If unit no longer has energy for any skills, end turn.
         }
     }
 
+    void AttackAgain()
+    {
+        IEnumerator co = StartUnitTurn();
+        StopCoroutine(co);
+
+        StartCoroutine(StartUnitTurn());
+    }
     SkillData ChooseRandomSkill()
     {
         int rand = Random.Range(1, 4);
@@ -247,6 +260,11 @@ public class UnitFunctionality : MonoBehaviour
         go.transform.localPosition = new Vector3(0, 0, 0);
 
         Projectile projectile = go.GetComponent<Projectile>();
+        if (curUnitType == UnitType.PLAYER)
+            projectile.UpdateTeam(true);
+        else
+            projectile.UpdateTeam(false);
+
         projectile.LookAtTarget(target);
         projectile.UpdateSpeed(GameManager.instance.GetActiveSkill().projectileSpeed);
     }

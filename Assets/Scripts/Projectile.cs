@@ -13,6 +13,8 @@ public class Projectile : MonoBehaviour
     float randX;
     float randY;
 
+    bool isEnemyProjectile;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -72,6 +74,15 @@ public class Projectile : MonoBehaviour
         //transform.LookAt(target);
     }
 
+    bool GetTeam()
+    {
+        return isEnemyProjectile;
+    }
+
+    public void UpdateTeam(bool toggle)
+    {
+        isEnemyProjectile = toggle;
+    }
     public void MoveForward()
     {
         //transform.position = new Vector3(transform.position.x, transform.position.y, 0);
@@ -79,9 +90,11 @@ public class Projectile : MonoBehaviour
             HitTarget();
         else
         {
-            transform.Translate(-transform.up * (Time.deltaTime * speed));
+            if (!GetTeam())
+                transform.Translate(-transform.up * (Time.deltaTime * speed));
+            else
+                transform.Translate(transform.up * (Time.deltaTime * speed));
         }
-
     }
 
     bool CheckDistanceToTarget(Transform target)

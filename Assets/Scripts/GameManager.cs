@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float postBattleTime;
     public List<UnitData> activeTeam = new List<UnitData>();
-    public List<UnitData> allPlayerClasses = new List<UnitData>();
+    //public List<UnitData> allPlayerClasses = new List<UnitData>();
     public UIElement currentRoom;
     [SerializeField] private GameObject baseUnit;
     [SerializeField] private List<Transform> enemySpawnPositions = new List<Transform>();
