@@ -122,7 +122,7 @@ public class UnitFunctionality : MonoBehaviour
                     StartCoroutine(GameManager.instance.WeaponAttackCommand(GameManager.instance.activeSkill.skillPower));
 
                     // Attack again
-                    AttackAgain();
+                    StartCoroutine(AttackAgain());
                 }
                 else
                 {
@@ -143,10 +143,12 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    void AttackAgain()
+    IEnumerator AttackAgain()
     {
         IEnumerator co = StartUnitTurn();
         StopCoroutine(co);
+
+        yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
 
         StartCoroutine(StartUnitTurn());
     }

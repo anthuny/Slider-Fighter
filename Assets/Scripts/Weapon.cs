@@ -126,6 +126,7 @@ public class Weapon : MonoBehaviour
         yield return new WaitForSeconds(timePostHit);
 
         GameManager.instance.SetupPlayerPostHitUI();
+
         StartCoroutine(GameManager.instance.WeaponAttackCommand((int)calculatedPower));
     }
 

@@ -132,9 +132,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 400
-        width: 72
-        height: 100
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,10 +152,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_1
       rect:
         serializedVersion: 2
-        x: 72
-        y: 400
-        width: 72
-        height: 100
+        x: 77
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,10 +173,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_2
       rect:
         serializedVersion: 2
-        x: 144
-        y: 400
-        width: 72
-        height: 100
+        x: 154
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,10 +194,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_3
       rect:
         serializedVersion: 2
-        x: 216
-        y: 400
-        width: 72
-        height: 100
+        x: 231
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -215,10 +215,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_4
       rect:
         serializedVersion: 2
-        x: 288
-        y: 400
-        width: 72
-        height: 100
+        x: 308
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -236,10 +236,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_5
       rect:
         serializedVersion: 2
-        x: 360
-        y: 400
-        width: 72
-        height: 100
+        x: 385
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -257,10 +257,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_6
       rect:
         serializedVersion: 2
-        x: 432
-        y: 400
-        width: 72
-        height: 100
+        x: 462
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,10 +278,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_7
       rect:
         serializedVersion: 2
-        x: 504
-        y: 400
-        width: 72
-        height: 100
+        x: 539
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -299,10 +299,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_8
       rect:
         serializedVersion: 2
-        x: 576
-        y: 400
-        width: 72
-        height: 100
+        x: 616
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -320,10 +320,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_9
       rect:
         serializedVersion: 2
-        x: 648
-        y: 400
-        width: 72
-        height: 100
+        x: 693
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -341,10 +341,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_10
       rect:
         serializedVersion: 2
-        x: 720
-        y: 400
-        width: 72
-        height: 100
+        x: 770
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -362,10 +362,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_11
       rect:
         serializedVersion: 2
-        x: 792
-        y: 400
-        width: 72
-        height: 100
+        x: 847
+        y: 650
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -384,9 +384,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 300
-        width: 72
-        height: 100
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -404,10 +404,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_13
       rect:
         serializedVersion: 2
-        x: 72
-        y: 300
-        width: 72
-        height: 100
+        x: 77
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -425,10 +425,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_14
       rect:
         serializedVersion: 2
-        x: 144
-        y: 300
-        width: 72
-        height: 100
+        x: 154
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -446,10 +446,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_15
       rect:
         serializedVersion: 2
-        x: 216
-        y: 300
-        width: 72
-        height: 100
+        x: 231
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -467,10 +467,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_16
       rect:
         serializedVersion: 2
-        x: 288
-        y: 300
-        width: 72
-        height: 100
+        x: 308
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -488,10 +488,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_17
       rect:
         serializedVersion: 2
-        x: 360
-        y: 300
-        width: 72
-        height: 100
+        x: 385
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -509,10 +509,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_18
       rect:
         serializedVersion: 2
-        x: 432
-        y: 300
-        width: 72
-        height: 100
+        x: 462
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -530,10 +530,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_19
       rect:
         serializedVersion: 2
-        x: 504
-        y: 300
-        width: 72
-        height: 100
+        x: 539
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -551,10 +551,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_20
       rect:
         serializedVersion: 2
-        x: 576
-        y: 300
-        width: 72
-        height: 100
+        x: 616
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -572,10 +572,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_21
       rect:
         serializedVersion: 2
-        x: 648
-        y: 300
-        width: 72
-        height: 100
+        x: 693
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -593,10 +593,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_22
       rect:
         serializedVersion: 2
-        x: 720
-        y: 300
-        width: 72
-        height: 100
+        x: 770
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -614,10 +614,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_23
       rect:
         serializedVersion: 2
-        x: 792
-        y: 300
-        width: 72
-        height: 100
+        x: 847
+        y: 500
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -636,9 +636,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 200
-        width: 72
-        height: 100
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -656,10 +656,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_25
       rect:
         serializedVersion: 2
-        x: 72
-        y: 200
-        width: 72
-        height: 100
+        x: 77
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -677,10 +677,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_26
       rect:
         serializedVersion: 2
-        x: 144
-        y: 200
-        width: 72
-        height: 100
+        x: 154
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -698,10 +698,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_27
       rect:
         serializedVersion: 2
-        x: 216
-        y: 200
-        width: 72
-        height: 100
+        x: 231
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -719,10 +719,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_28
       rect:
         serializedVersion: 2
-        x: 288
-        y: 200
-        width: 72
-        height: 100
+        x: 308
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -740,10 +740,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_29
       rect:
         serializedVersion: 2
-        x: 360
-        y: 200
-        width: 72
-        height: 100
+        x: 385
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -761,10 +761,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_30
       rect:
         serializedVersion: 2
-        x: 432
-        y: 200
-        width: 72
-        height: 100
+        x: 462
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -782,10 +782,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_31
       rect:
         serializedVersion: 2
-        x: 504
-        y: 200
-        width: 72
-        height: 100
+        x: 539
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -803,10 +803,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_32
       rect:
         serializedVersion: 2
-        x: 576
-        y: 200
-        width: 72
-        height: 100
+        x: 616
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -824,10 +824,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_33
       rect:
         serializedVersion: 2
-        x: 648
-        y: 200
-        width: 72
-        height: 100
+        x: 693
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -845,10 +845,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_34
       rect:
         serializedVersion: 2
-        x: 720
-        y: 200
-        width: 72
-        height: 100
+        x: 770
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -866,10 +866,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_35
       rect:
         serializedVersion: 2
-        x: 792
-        y: 200
-        width: 72
-        height: 100
+        x: 847
+        y: 350
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -888,9 +888,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 100
-        width: 72
-        height: 100
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -908,10 +908,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_37
       rect:
         serializedVersion: 2
-        x: 72
-        y: 100
-        width: 72
-        height: 100
+        x: 77
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -929,10 +929,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_38
       rect:
         serializedVersion: 2
-        x: 144
-        y: 100
-        width: 72
-        height: 100
+        x: 154
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -950,10 +950,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_39
       rect:
         serializedVersion: 2
-        x: 216
-        y: 100
-        width: 72
-        height: 100
+        x: 231
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -971,10 +971,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_40
       rect:
         serializedVersion: 2
-        x: 288
-        y: 100
-        width: 72
-        height: 100
+        x: 308
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -992,10 +992,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_41
       rect:
         serializedVersion: 2
-        x: 360
-        y: 100
-        width: 72
-        height: 100
+        x: 385
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1013,10 +1013,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_42
       rect:
         serializedVersion: 2
-        x: 432
-        y: 100
-        width: 72
-        height: 100
+        x: 462
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1034,10 +1034,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_43
       rect:
         serializedVersion: 2
-        x: 504
-        y: 100
-        width: 72
-        height: 100
+        x: 539
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1055,10 +1055,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_44
       rect:
         serializedVersion: 2
-        x: 576
-        y: 100
-        width: 72
-        height: 100
+        x: 616
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1076,10 +1076,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_45
       rect:
         serializedVersion: 2
-        x: 648
-        y: 100
-        width: 72
-        height: 100
+        x: 693
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1097,10 +1097,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_46
       rect:
         serializedVersion: 2
-        x: 720
-        y: 100
-        width: 72
-        height: 100
+        x: 770
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1118,10 +1118,10 @@ TextureImporter:
       name: T_ArcherSpriteSheet_47
       rect:
         serializedVersion: 2
-        x: 792
-        y: 100
-        width: 72
-        height: 100
+        x: 847
+        y: 200
+        width: 77
+        height: 150
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1131,258 +1131,6 @@ TextureImporter:
       bones: []
       spriteID: 4c03aac8d171fcf46b81bf9878cd0dcf
       internalID: 1899186560
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_48
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a982b87245ae05a4cae245b6c8dfda73
-      internalID: -2106337930
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_49
-      rect:
-        serializedVersion: 2
-        x: 72
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 224debfbfce5f1647ac8efa2e807f9b1
-      internalID: -1774002608
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_50
-      rect:
-        serializedVersion: 2
-        x: 144
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3240afe7ea287b741acfcb75a0317f91
-      internalID: -419925906
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_51
-      rect:
-        serializedVersion: 2
-        x: 216
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dbe8bfe1d5127cf4ea2933144e8ba4c5
-      internalID: -2105999370
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_52
-      rect:
-        serializedVersion: 2
-        x: 288
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a7baa6cdcfcfe3346957a1dcafeb2e2a
-      internalID: -1265028198
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_53
-      rect:
-        serializedVersion: 2
-        x: 360
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d1a9d02edeebc4c428fe77fb1c8437b0
-      internalID: -948832497
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_54
-      rect:
-        serializedVersion: 2
-        x: 432
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4c878749968b80947ad5378d17be2fc8
-      internalID: -333038537
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_55
-      rect:
-        serializedVersion: 2
-        x: 504
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 68a8b0dac4554c34691a8581999efd0e
-      internalID: -1135552763
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_56
-      rect:
-        serializedVersion: 2
-        x: 576
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b9fe0d88ad51ea24a903a2504b3ddfcf
-      internalID: 1121901611
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_57
-      rect:
-        serializedVersion: 2
-        x: 648
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a6b21fb0c4936614fb0d27ad4075ffcb
-      internalID: 472013137
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_58
-      rect:
-        serializedVersion: 2
-        x: 720
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6e2dece86f73dbe47a91bad5630fd70e
-      internalID: 1529826789
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: T_ArcherSpriteSheet_59
-      rect:
-        serializedVersion: 2
-        x: 792
-        y: 0
-        width: 72
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8f179ccce8074d8479d95daa958cc101
-      internalID: -1402750420
       vertices: []
       indices: 
       edges: []
@@ -1402,9 +1150,7 @@ TextureImporter:
       T_ArcherSpriteSheet_22: 1858779604
       T_ArcherSpriteSheet_28: -1821635444
       T_ArcherSpriteSheet_44: -1082585049
-      T_ArcherSpriteSheet_53: -948832497
       T_ArcherSpriteSheet_12: 1568178229
-      T_ArcherSpriteSheet_57: 472013137
       T_ArcherSpriteSheet_3: 2111548661
       T_ArcherSpriteSheet_35: 1438099191
       T_ArcherSpriteSheet_39: 268587934
@@ -1414,10 +1160,8 @@ TextureImporter:
       T_ArcherSpriteSheet_6: -1479232961
       T_ArcherSpriteSheet_45: 2099559757
       T_ArcherSpriteSheet_26: -1673401472
-      T_ArcherSpriteSheet_50: -419925906
       T_ArcherSpriteSheet_37: -157092394
       T_ArcherSpriteSheet_29: -2021282444
-      T_ArcherSpriteSheet_48: -2106337930
       T_ArcherSpriteSheet_5: -1033499034
       T_ArcherSpriteSheet_1: 1055708202
       T_ArcherSpriteSheet_21: 32515058
@@ -1425,16 +1169,12 @@ TextureImporter:
       T_ArcherSpriteSheet_14: 47199464
       T_ArcherSpriteSheet_23: -835981084
       T_ArcherSpriteSheet_42: 1785938417
-      T_ArcherSpriteSheet_58: 1529826789
       T_ArcherSpriteSheet_13: -1087412563
       T_ArcherSpriteSheet_7: -85547609
-      T_ArcherSpriteSheet_56: 1121901611
       T_ArcherSpriteSheet_47: 1899186560
-      T_ArcherSpriteSheet_59: -1402750420
       T_ArcherSpriteSheet_41: 230132115
       T_ArcherSpriteSheet_40: -66886185
       T_ArcherSpriteSheet_9: 308799497
-      T_ArcherSpriteSheet_52: -1265028198
       T_ArcherSpriteSheet_43: -2006186458
       T_ArcherSpriteSheet_34: -2085854499
       T_ArcherSpriteSheet_36: -1998668003
@@ -1444,18 +1184,14 @@ TextureImporter:
       T_ArcherSpriteSheet_20: 1077744279
       T_ArcherSpriteSheet_25: 66266587
       T_ArcherSpriteSheet_30: -2128477238
-      T_ArcherSpriteSheet_55: -1135552763
       T_ArcherSpriteSheet_16: 1814172023
       T_ArcherSpriteSheet_31: -2067892328
-      T_ArcherSpriteSheet_49: -1774002608
       T_ArcherSpriteSheet_33: 203100146
       T_ArcherSpriteSheet_4: 1237767254
       T_ArcherSpriteSheet_19: 833367182
-      T_ArcherSpriteSheet_54: -333038537
       T_ArcherSpriteSheet_0: -1040719728
       T_ArcherSpriteSheet_38: -1146305341
       T_ArcherSpriteSheet_8: -1792770780
-      T_ArcherSpriteSheet_51: -2105999370
       T_ArcherSpriteSheet_24: -432369683
       T_ArcherSpriteSheet_15: 1155187977
   spritePackingTag: 

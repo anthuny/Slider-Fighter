@@ -438,7 +438,9 @@ public class GameManager : MonoBehaviour
         {
             GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
 
-            // Loop through all selected units
+            yield return new WaitForSeconds(triggerSkillAlertTime);
+
+            // Loop through all selected units, spawn projectiles
             for (int z = unitsSelected.Count - 1; z >= 0; z--)
             {
                 if (unitsSelected[z] == null)

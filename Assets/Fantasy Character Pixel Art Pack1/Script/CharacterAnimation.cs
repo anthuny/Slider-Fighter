@@ -11,7 +11,7 @@ public class CharacterAnimation : MonoBehaviour {
     public bool Front_Back;
     public bool Left_Right;
     void Start() {
-        ChangeAnimation("CA_Walk_1");
+        //ChangeAnimation("CA_Walk_1");
         On_Front_Back(Front_Back);
         ChangeRotate(Left_Right);
     }

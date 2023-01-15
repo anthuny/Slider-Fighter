@@ -10072,9 +10072,6 @@ MonoBehaviour:
   activeTeam:
   - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
   - {fileID: 11400000, guid: a59f5033ecc1b4447bb041551dbd2ea3, type: 2}
-  allPlayerClasses:
-  - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
-  - {fileID: 11400000, guid: a59f5033ecc1b4447bb041551dbd2ea3, type: 2}
   currentRoom: {fileID: 2070354419}
   baseUnit: {fileID: 3449260601481309960, guid: 4b5602813dffd4e40b5653f843285950, type: 3}
   enemySpawnPositions:
@@ -10119,7 +10116,7 @@ MonoBehaviour:
   unitProjectile: {fileID: 6785902064619898189, guid: 8408dba08b0515a41bb9640161dfc029, type: 3}
   minProjectileKillDist: 0.5
   randomXDist: 120
-  triggerSkillAlertTime: 0.5
+  triggerSkillAlertTime: 1
   playerUIElement: {fileID: 1577981124}
   playerWeapon: {fileID: 643176410}
   playerWeaponBackButton: {fileID: 555260341}
