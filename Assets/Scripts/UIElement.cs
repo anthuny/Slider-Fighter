@@ -50,6 +50,11 @@ public class UIElement : MonoBehaviour
         //AnimateUI();
     }
 
+    public void UpdateContentTextColour(TMP_ColorGradient gradient)
+    {
+        contentText.colorGradientPreset = gradient;
+    }
+
     public void AnimateUI()
     {
         if (doScalePunch)

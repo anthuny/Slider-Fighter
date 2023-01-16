@@ -10,6 +10,7 @@ public class UnitFunctionality : MonoBehaviour
     public UnitType curUnitType;
     [SerializeField] private UIElement selectionCircle;
     [SerializeField] private UIElement unitVisuals;
+    private Sprite unitIcon;
     [SerializeField] private Transform unitVisualsParent;
     [SerializeField] private Transform powerUIParent;
     [SerializeField] private UIElement statUI;
@@ -39,6 +40,8 @@ public class UnitFunctionality : MonoBehaviour
 
     [SerializeField] private UIElement healthBarUIElement;
     [SerializeField] private UIElement unitUIElement;
+    [SerializeField] private Transform effectsParent;
+    [SerializeField] private List<Effect> activeEffects = new List<Effect>();
 
     [HideInInspector]
     public GameObject prevPowerUI;
@@ -58,6 +61,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitExpVisual(false);
         ToggleUnitBG(false);
+        ResetEffects();
     }
 
     public void ToggleIdleBattle(bool toggle)
@@ -65,10 +69,20 @@ public class UnitFunctionality : MonoBehaviour
         idleBattle = toggle;
     }
 
-    public void TriggerSkillAlert()
+    public void TriggerTextAlert(string name, float alpha, bool effect)
     {
-        statUI.UpdateContentText(GameManager.instance.GetActiveSkill().skillName);
-        statUI.UpdateAlpha(1);
+        statUI.UpdateContentText(name);
+        statUI.UpdateAlpha(alpha);
+
+        // Set correct text colour gradient
+        if (effect)
+        {
+            statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectAlert);
+        }
+        else
+        {
+            statUI.UpdateContentTextColour(GameManager.instance.gradientSkillAlert);
+        }
     }
 
     public bool GetIdleBattle()
@@ -104,7 +118,7 @@ public class UnitFunctionality : MonoBehaviour
                     // Select units
                     GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
 
-                    TriggerSkillAlert();
+                    TriggerTextAlert(GameManager.instance.GetActiveSkill().skillName, 1, false);
 
                     if (GameManager.instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
                     {
@@ -183,6 +197,48 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
+    public List<Effect> GetEffects()
+    {
+        return activeEffects;
+    }
+
+    public void AddUnitEffect(EffectData addedEffect)
+    {
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (addedEffect == activeEffects[i])
+            {
+                return;
+            }
+        }
+
+        TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true);
+
+        GameObject go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+        go.transform.SetParent(effectsParent);
+        //go.transform.position = new Vector3(0,0,0);
+        go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+        go.transform.localScale = new Vector3(1, 1, 1);
+
+        Effect effect = go.GetComponent<Effect>();
+        activeEffects.Add(effect);
+        effect.Setup(addedEffect);
+    }
+
+    public void RemoveEffectCount(EffectData effect)
+    {
+
+    }
+
+    public void ResetEffects()
+    {
+        activeEffects.Clear();
+        for (int i = 0; i < effectsParent.childCount; i++)
+        {
+            Destroy(effectsParent.GetChild(i).gameObject);
+        }
+    }
+
     public void UpdateUnitValue(int val)
     {
         unitValue = val;
@@ -203,7 +259,7 @@ public class UnitFunctionality : MonoBehaviour
         return unitImage.color;
     }
 
-    public void UpdateUnitIcon(Sprite sprite)
+    public void UpdateUnitVisual(Sprite sprite)
     {
         unitImage.sprite = sprite;
     }
@@ -211,6 +267,16 @@ public class UnitFunctionality : MonoBehaviour
     public Sprite GetUnitSprite()
     {
         return unitImage.sprite;
+    }
+
+    public Sprite GetUnitIcon()
+    {
+        return unitIcon;
+    }
+
+    public void UpdateUnitIcon(Sprite sprite)
+    {
+        unitIcon = sprite;
     }
     public void SpawnPowerUI(int power = 10)
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -93,8 +94,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Skills UI")]
     public float skillAlertAppearTime;
-
     public SkillData activeSkill;
+    public TMP_ColorGradient gradientSkillAlert;
 
     [Header("Post Battle")]
     public Rewards rewards;
@@ -343,7 +344,8 @@ public class GameManager : MonoBehaviour
             unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
             unitFunctionality.UpdateUnitPower(unit.startingPower);
 
-            unitFunctionality.UpdateUnitIcon(unit.unitSprite);
+            unitFunctionality.UpdateUnitVisual(unit.unitSprite);
+            unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
             unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
             unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
@@ -397,7 +399,8 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
 
-                unitFunctionality.UpdateUnitIcon(unit.unitSprite);
+                unitFunctionality.UpdateUnitVisual(unit.unitSprite);
+                unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
                 unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
@@ -481,6 +484,23 @@ public class GameManager : MonoBehaviour
                 {
                     unitsSelected[i].SpawnPowerUI(power);
 
+                    if (unitsSelected[i].GetEffects().Count != 0)
+                    {
+                        // If this effect is not applied yet, apply it, if already applied, skip
+                        for (int c = 0; c < unitsSelected[i].GetEffects().Count; c++)
+                        {
+                            if (unitsSelected[i].GetEffects()[c].effectName != GetActiveSkill().effect.effectName)
+                            {
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        unitsSelected[i].AddUnitEffect(GetActiveSkill().effect);
+                    }
+    
                     // Reset unit's prev power text for future power texts
                     if (x == activeSkill.skillAttackCount - 1)
                         unitsSelected[i].ResetPreviousPowerUI();
@@ -955,7 +975,7 @@ public class GameManager : MonoBehaviour
     private void UpdatePlayerAbilityUI()
     {
         // Update active player's portrait and colour
-        playerIcon.UpdatePortrait(GetActiveUnitFunctionality().GetUnitSprite());
+        playerIcon.UpdatePortrait(GetActiveUnitFunctionality().GetUnitIcon());
         playerIcon.UpdateColour(GetActiveUnitFunctionality().GetUnitColour());
 
         // Update player skill portraits
@@ -983,8 +1003,8 @@ public class GameManager : MonoBehaviour
             go.transform.SetParent(turnOrderParent);
 
             UnitPortrait unitPortrait = go.GetComponent<UnitPortrait>();    // Reference
-            unitPortrait.UpdatePortrait(activeRoomAllUnitFunctionalitys[i].GetUnitSprite());
-            unitPortrait.UpdatePortraitColour(activeRoomAllUnitFunctionalitys[i].GetUnitColour());
+            unitPortrait.UpdatePortrait(activeRoomAllUnitFunctionalitys[i].GetUnitIcon());
+            //unitPortrait.UpdatePortraitColour(activeRoomAllUnitFunctionalitys[i].GetUnitColour());
             unitPortrait.UpdateIconFade(i);
 
             if (i == 0)

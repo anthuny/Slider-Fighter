@@ -763,7 +763,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -107, y: -761}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &136832704
@@ -2900,7 +2900,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &410310576
 PrefabInstance:
@@ -5285,7 +5285,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -533, y: 130}
-  m_SizeDelta: {x: 253.614, y: 253.614}
+  m_SizeDelta: {x: 218.54, y: 218.54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &772068464
 MonoBehaviour:
@@ -5621,8 +5621,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
-  m_SizeDelta: {x: 206.988, y: 206.992}
+  m_AnchoredPosition: {x: 0, y: 15.7}
+  m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &803742794
 MonoBehaviour:
@@ -5644,7 +5644,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 11be31aae4ce8cf44a822d8701888577, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 102d2b3b78a53a442a5657efab178a1e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6116,7 +6116,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -11, y: 466}
+  m_AnchoredPosition: {x: -11, y: 273}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &901399470 stripped
@@ -8944,6 +8944,57 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!1 &1347315965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1347315967}
+  - component: {fileID: 1347315966}
+  m_Layer: 0
+  m_Name: Effect Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1347315966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347315965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecb012263c03f8d45b463d8a074823bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectPrefab: {fileID: 5661914295990887010, guid: 15dc4f85bad3f184ea99396174f298e9, type: 3}
+  allEffects:
+  - {fileID: 0}
+  - {fileID: 0}
+  gradientEffectAlert: {fileID: 11400000, guid: feb9155b134028b4aa0ad5706dc107e7, type: 2}
+  gradientEffectTrigger: {fileID: 11400000, guid: 98abbe12aac7182478e01f42e25a596b, type: 2}
+  gradientEffectDeplete: {fileID: 11400000, guid: b0c899e1b8bc3e649b9964b483ac0ed5, type: 2}
+--- !u!4 &1347315967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347315965}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.1910996, y: 0.68823683, z: 123.50256}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1374329668
 GameObject:
   m_ObjectHideFlags: 0
@@ -10155,6 +10206,7 @@ MonoBehaviour:
   powerMissFontSize: 170
   skillAlertAppearTime: 1.5
   activeSkill: {fileID: 0}
+  gradientSkillAlert: {fileID: 11400000, guid: 1a7c46f59fbb53f49b6390d91c1e4be8, type: 2}
   rewards: {fileID: 1297465102}
   defeatedEnemies: {fileID: 1494310901}
   enemyAttackWaitTime: 0.75
@@ -10539,7 +10591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -134, y: -140}
+  m_AnchoredPosition: {x: -134, y: -279}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1668631603
@@ -11632,7 +11684,7 @@ Transform:
   m_Children:
   - {fileID: 1981239932}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1844406684
 GameObject:

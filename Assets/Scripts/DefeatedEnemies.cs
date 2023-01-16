@@ -49,8 +49,8 @@ public class DefeatedEnemies : MonoBehaviour
             go.transform.localScale = new Vector2(1, 1);
 
             UnitPortrait unitPortrait = go.GetComponent<UnitPortrait>();
-            unitPortrait.UpdatePortrait(defeatedEnemies[i].GetUnitSprite());
-            unitPortrait.UpdatePortraitColour(defeatedEnemies[i].GetUnitColour());
+            unitPortrait.UpdatePortrait(defeatedEnemies[i].GetUnitIcon());
+            //unitPortrait.UpdatePortraitColour(defeatedEnemies[i].GetUnitColour());
             unitPortrait.ToggleBg(true);
 
             yield return new WaitForSeconds(timeBetweenEnemiesDisplay);

@@ -26,5 +26,8 @@ public class SkillData : ScriptableObject
     public int projectileSpeed = 1;
     public int skillEnergyCost;
     public int skillSelectionCount;
+    public EffectData effect;
+    public int effectTurnLength;
+    public int effectOnTargetBonusPower;
     public Sprite skillPowerIcon;
 }

@@ -12,6 +12,7 @@ public class UnitData : ScriptableObject
     [SerializeField] private int minUnitValue;
     [SerializeField] private int maxUnitValue;
     public Sprite unitSprite;
+    public Sprite unitIcon;
     public Color unitColour;
     public new string name;
     public int startingSpeed;

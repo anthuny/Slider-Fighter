@@ -78,7 +78,7 @@ public class ButtonFunctionality : MonoBehaviour
             GameManager.instance.SetupPlayerWeaponUI();
 
         // Trigger Skill alert UI
-        GameManager.instance.GetActiveUnitFunctionality().TriggerSkillAlert();
+        GameManager.instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.instance.GetActiveSkill().skillName, 1, false);
     }
 
     public void EndTurnButton()
