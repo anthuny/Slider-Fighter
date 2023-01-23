@@ -6,16 +6,16 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "New Effect", menuName = "Effect")]
 public class EffectData : ScriptableObject
 {
-    public enum EffectTrigger {ONGOING, TURNSTART, DAMAGERECIEVED}
+    public enum EffectTrigger {ONGOING, TURNSTART, TURNEND, DAMAGERECIEVED }
     public EffectTrigger curEffectTrigger;
 
-    public enum EffectDeplete { TURNSTART, TURNEND, DAMAGERECIEVED }
-    public EffectDeplete curEffectDeplete;
+    public enum EffectType { OFFENSE, SUPPORT }
+    public EffectType curEffectType;
 
     public string effectName;
     public string effectDesc;
     public Sprite effectIcon;
-    public int effectTurnLength;
-    public int effectOnTargetBonusPower;
+    public float healthPerc;
+    public float powerAmp;
     //public Text turnsRemainingText;
 }

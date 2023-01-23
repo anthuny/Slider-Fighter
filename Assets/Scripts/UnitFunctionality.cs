@@ -19,6 +19,8 @@ public class UnitFunctionality : MonoBehaviour
     public UIElement curUnitTurnArrow;
     public int curSpeed;
     public int curPower;
+    public float curPowerInc = 1;
+    public int curArmor;
     private int curHealth;
     private int maxHealth;
     private int curEnergy;
@@ -38,9 +40,10 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private float fillAmountInterval;
     [SerializeField] private UIElement unitBg;
 
-    [SerializeField] private UIElement healthBarUIElement;
+    public UIElement healthBarUIElement;
     [SerializeField] private UIElement unitUIElement;
     [SerializeField] private Transform effectsParent;
+    public UIElement effects;
     [SerializeField] private List<Effect> activeEffects = new List<Effect>();
 
     [HideInInspector]
@@ -62,6 +65,8 @@ public class UnitFunctionality : MonoBehaviour
         ToggleUnitExpVisual(false);
         ToggleUnitBG(false);
         ResetEffects();
+
+        UpdateUnitPowerInc(1);
     }
 
     public void ToggleIdleBattle(bool toggle)
@@ -69,7 +74,7 @@ public class UnitFunctionality : MonoBehaviour
         idleBattle = toggle;
     }
 
-    public void TriggerTextAlert(string name, float alpha, bool effect)
+    public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null)
     {
         statUI.UpdateContentText(name);
         statUI.UpdateAlpha(alpha);
@@ -77,12 +82,13 @@ public class UnitFunctionality : MonoBehaviour
         // Set correct text colour gradient
         if (effect)
         {
-            statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectAlert);
+            if (gradient == "Inflict")
+                statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectAlert);
+            else if (gradient == "Trigger")
+                statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectTrigger);
         }
         else
-        {
             statUI.UpdateContentTextColour(GameManager.instance.gradientSkillAlert);
-        }
     }
 
     public bool GetIdleBattle()
@@ -157,6 +163,35 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
+    public void DecreaseEffectTurnsLeft(bool turnStart)
+    {
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (turnStart)
+            {
+                if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
+                {
+                    activeEffects[i].TriggerPowerEffect();
+                    activeEffects[i].ReduceTurnCountText();
+
+                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                    return;
+                }
+            }
+            else
+            {
+                if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
+                {
+                    activeEffects[i].TriggerPowerAdjustEffect();
+                    activeEffects[i].ReduceTurnCountText();
+
+                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Inflict");
+                    return;
+                }
+            }
+        }
+    }
+
     IEnumerator AttackAgain()
     {
         IEnumerator co = StartUnitTurn();
@@ -204,15 +239,23 @@ public class UnitFunctionality : MonoBehaviour
 
     public void AddUnitEffect(EffectData addedEffect)
     {
+        // If unit is already effected with this effect, stop
         for (int i = 0; i < activeEffects.Count; i++)
         {
-            if (addedEffect == activeEffects[i])
+            if (activeEffects[i].turnCountRemaining < activeEffects[i].maxTurnCountRemaining)
             {
+                healthBarUIElement.UpdateAlpha(0);
+                //TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true);
+                TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
+                activeEffects[i].FillTurnCountText();
                 return;
             }
+            else
+                return;
         }
 
-        TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true);
+        healthBarUIElement.UpdateAlpha(0);
+        TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
 
         GameObject go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
         go.transform.SetParent(effectsParent);
@@ -223,11 +266,6 @@ public class UnitFunctionality : MonoBehaviour
         Effect effect = go.GetComponent<Effect>();
         activeEffects.Add(effect);
         effect.Setup(addedEffect);
-    }
-
-    public void RemoveEffectCount(EffectData effect)
-    {
-
     }
 
     public void ResetEffects()
@@ -278,7 +316,18 @@ public class UnitFunctionality : MonoBehaviour
     {
         unitIcon = sprite;
     }
-    public void SpawnPowerUI(int power = 10)
+
+    public float GetUnitPowerInc()
+    {
+        return curPowerInc;
+    }
+
+    public void UpdateUnitPowerInc(float newPowerInc)
+    {
+        curPowerInc = newPowerInc;
+    }
+
+    public void SpawnPowerUI(float power = 10f, Effect effect = null)
     {
         // If this is NOT the first power text UI
         if (prevPowerUI != null)
@@ -296,24 +345,36 @@ public class UnitFunctionality : MonoBehaviour
         if (power <= 0)
         {
             powerText.UpdatePowerTextFontSize(GameManager.instance.powerMissFontSize);
-            powerText.UpdatePowerTextColour(GameManager.instance.missPowerTextColour);
+            powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillMiss);
             powerText.UpdatePowerText(GameManager.instance.missPowerText);
+            //powerText.UpdatePowerText(power.ToString());   // Update Power Text
+            return;
         }
 
         // Otherwise, display the power
-        else
-        {
-            powerText.UpdatePowerTextFontSize(GameManager.instance.powerHitFontSize);
+        powerText.UpdatePowerTextFontSize(GameManager.instance.powerHitFontSize);
 
+        if (effect == null)
+        {
             // Change power text colour to offense colour if the type of attack is offense
             if (GameManager.instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                powerText.UpdatePowerTextColour(GameManager.instance.damagePowerTextColour);
+                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillAttack);
             // Change power text colour to support colour if the type of attack is support
             else if (GameManager.instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                powerText.UpdatePowerTextColour(GameManager.instance.healPowerTextColour);
-
-            powerText.UpdatePowerText(power.ToString());   // Update Power Text
+                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillSupport);
         }
+        else
+        {
+            // Change power text colour to offense colour if the type of attack is offense
+            if (effect.curEffectType == Effect.EffectType.OFFENSE)
+                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillAttack);
+            // Change power text colour to support colour if the type of attack is support
+            else if (effect.curEffectType == Effect.EffectType.SUPPORT)
+                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillSupport);
+        }
+
+        int finalPower = (int)power;
+        powerText.UpdatePowerText(finalPower.ToString());   // Update Power Text
     }
 
     public void ResetPreviousPowerUI()
@@ -538,13 +599,16 @@ public class UnitFunctionality : MonoBehaviour
         return maxExp;
     }
 
-    public void UpdateUnitCurrentHealth(int newCurHealth)
+    public void UpdateUnitCurHealth(int power)
     {
-        if (newCurHealth < 0)
+        if (power < 0)
         {
             animator.SetTrigger("DamageFlg");
         }
-        curHealth += newCurHealth;
+        curHealth += power;
+
+        //SpawnPowerUI(power);
+
         UpdateUnitHealthVisual();
     }
 
@@ -584,9 +648,24 @@ public class UnitFunctionality : MonoBehaviour
         curPower = newPower;
     }
 
+    public void UpdateUnitArmor(int newArmor)
+    {
+        curArmor = newArmor;
+    }
+    
+    public void AddUnitArmor(int armor)
+    {
+        curArmor += armor;
+    }
+
+    public void RemoveUnitArmor(int armor)
+    {
+        curArmor -= armor;
+    }
+
     public void UpdateUnitHealth(int newCurHealth, int newMaxHealth)
     {
-        UpdateUnitCurrentHealth(newCurHealth);
+        UpdateUnitCurHealth(newCurHealth);
         UpdateUnitMaxHealth(newMaxHealth);
     }
 
@@ -623,6 +702,8 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitCurEnergy(int energy)
     {
+        effects.UpdateAlpha(1);
+
         this.curEnergy += energy;
 
         if (curEnergy > maxEnergy)

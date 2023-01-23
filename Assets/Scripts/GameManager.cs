@@ -86,9 +86,9 @@ public class GameManager : MonoBehaviour
     public float powerUIHeightLvInc;
     [SerializeField] private float postHitWaitTime;
     public string missPowerText;
-    public Color missPowerTextColour;
-    public Color damagePowerTextColour;
-    public Color healPowerTextColour;
+    public TMP_ColorGradient gradientSkillMiss;
+    public TMP_ColorGradient gradientSkillAttack;
+    public TMP_ColorGradient gradientSkillSupport;
     public int powerHitFontSize;
     public int powerMissFontSize;
 
@@ -343,6 +343,7 @@ public class GameManager : MonoBehaviour
             unitFunctionality.UpdateUnitType("Enemy");
             unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
             unitFunctionality.UpdateUnitPower(unit.startingPower);
+            unitFunctionality.UpdateUnitArmor(unit.startingArmor);
 
             unitFunctionality.UpdateUnitVisual(unit.unitSprite);
             unitFunctionality.UpdateUnitIcon(unit.unitIcon);
@@ -398,6 +399,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitType("Player");
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
+                unitFunctionality.UpdateUnitArmor(unit.startingArmor);
 
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
@@ -437,6 +439,8 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator WeaponAttackCommand(int power)
     {
+        GetActiveUnitFunctionality().effects.UpdateAlpha(0);
+
         if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
         {
             GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
@@ -465,7 +469,6 @@ public class GameManager : MonoBehaviour
             GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
         }
 
-
         // Loop as many times as power text will appear
         for (int x = 0; x < activeSkill.skillAttackCount; x++)
         {
@@ -482,36 +485,26 @@ public class GameManager : MonoBehaviour
                     continue;
                 else
                 {
-                    unitsSelected[i].SpawnPowerUI(power);
+                    // Cause power on selected unit
+                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
 
-                    if (unitsSelected[i].GetEffects().Count != 0)
-                    {
-                        // If this effect is not applied yet, apply it, if already applied, skip
-                        for (int c = 0; c < unitsSelected[i].GetEffects().Count; c++)
-                        {
-                            if (unitsSelected[i].GetEffects()[c].effectName != GetActiveSkill().effect.effectName)
-                            {
-                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect);
-                                break;
-                            }
-                        }
-                    }
-                    else
+                    if (GetActiveSkill().effect != null)
                     {
                         unitsSelected[i].AddUnitEffect(GetActiveSkill().effect);
                     }
-    
+
+  
                     // Reset unit's prev power text for future power texts
                     if (x == activeSkill.skillAttackCount - 1)
                         unitsSelected[i].ResetPreviousPowerUI();
 
                     // Increase health from the units current health if a support skill was casted on it
                     if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                        unitsSelected[i].UpdateUnitCurrentHealth(power);
+                        unitsSelected[i].UpdateUnitCurHealth(power);
 
                     // Decrease health from the units current health if a offense skill was casted on it
                     if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                        unitsSelected[i].UpdateUnitCurrentHealth(-power);
+                        unitsSelected[i].UpdateUnitCurHealth(-power);
                 }
             }
 
@@ -704,6 +697,8 @@ public class GameManager : MonoBehaviour
     {
         ToggleUIElement(turnOrder, true);   // Enable turn order UI
 
+        GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false);
+
         ResetSelectedUnits();
 
         UnitFunctionality unitFunctionalityMoving = GetActiveUnitFunctionality();
@@ -757,6 +752,9 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateActiveUnitTurnArrow();
+
+        //Trigger Start turn effects
+        GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true);
     }
 
     public void AddExperienceGained(int exp)

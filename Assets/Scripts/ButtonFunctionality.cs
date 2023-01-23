@@ -84,6 +84,7 @@ public class ButtonFunctionality : MonoBehaviour
     public void EndTurnButton()
     {
         GameManager.instance.ToggleEndTurnButton(false);
+
         GameManager.instance.UpdateTurnOrder();
     }
 

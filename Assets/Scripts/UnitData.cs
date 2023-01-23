@@ -16,6 +16,7 @@ public class UnitData : ScriptableObject
     public Color unitColour;
     public new string name;
     public int startingSpeed;
+    public int startingArmor;
     public int startingPower;
     public int startingMaxHealth;
     public int startingEnergy;

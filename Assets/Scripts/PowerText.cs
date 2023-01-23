@@ -43,9 +43,10 @@ public class PowerText : MonoBehaviour
         mainText.text = power;
     }
 
-    public void UpdatePowerTextColour(Color color)
+    public void UpdatePowerTextColour(TMP_ColorGradient gradient)
     {
-        mainText.color = color;
+        mainText.colorGradientPreset = gradient;
+        //mainText.color = color;
     }
 
     public void UpdatePowerTextFontSize(int newFontSize)
