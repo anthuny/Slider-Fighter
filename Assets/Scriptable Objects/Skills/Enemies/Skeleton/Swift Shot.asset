@@ -19,12 +19,13 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: Swift Shot
   skillDescr: Damage up to
-  skillPower: 10
-  skillAttackCount: 1
+  skillPower: 100
+  skillAttackCount: 2
   projectileSpeed: 12
   skillEnergyCost: 1
   skillSelectionCount: 1
-  effect: {fileID: 11400000, guid: 4d56bebc670b2184f90cda6ba558d462, type: 2}
-  effectTurnLength: 2
-  effectOnTargetBonusPower: 0
+  effect: {fileID: 0}
+  effectTurnLength: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}

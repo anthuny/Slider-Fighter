@@ -68,6 +68,7 @@ public class EnergyCost : MonoBehaviour
                 ToggleEnergyBar(true);
                 ToggleEnergyBGBar(true);
 
+                GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(0);
                 StartCoroutine(RemoveEnergyBar(energyAmountMoved, enemy));
             }
 
@@ -75,7 +76,10 @@ public class EnergyCost : MonoBehaviour
             {
                 // If unit is at maxed energy, stop
                 if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
+                {
+                    GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
                     return;
+                }
 
                 // Remove all potential previous energy bars
                 foreach (Transform child in energyParent)
@@ -152,6 +156,7 @@ public class EnergyCost : MonoBehaviour
 
                 // Renable the Healthbar after removing the energy bar
                 GameManager.instance.UpdateActiveUnitHealthBar(true);
+                GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
                 yield break;
             }
         }
@@ -179,16 +184,19 @@ public class EnergyCost : MonoBehaviour
 
             // If unit is at maxed energy, stop
             if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
+            {
                 i = addCount;
+            }
         }
 
-        yield return new WaitForSeconds(energyBarPostTime);
+        // Renable the Healthbar after removing the energy bar
+        GameManager.instance.UpdateActiveUnitHealthBar(true);
+        GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
 
         ToggleEnergyBar(false);
         ToggleEnergyBGBar(false);
 
-        // Renable the Healthbar after removing the energy bar
-        GameManager.instance.UpdateActiveUnitHealthBar(true);
+        yield return new WaitForSeconds(energyBarPostTime);
     }
 
     void ToggleEnergyBar(bool toggle)

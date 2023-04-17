@@ -41,12 +41,12 @@ public class ButtonFunctionality : MonoBehaviour
         // Disable post battle UI
         GameManager.instance.postBattleUI.TogglePostBattleUI(false);
 
-        GameManager.instance.ToggleMap(true, false);
-
         GameManager.instance.map.ClearRoom();
 
-
-        //GameManager.instance.map.map.UpdateAlpha(1);
+        if (!GameManager.instance.playerLost)
+            GameManager.instance.ToggleMap(true, false);
+        else
+            GameManager.instance.ToggleMap(true, true);
     }
 
     public void WeaponBackButton()
@@ -70,6 +70,8 @@ public class ButtonFunctionality : MonoBehaviour
         // If the energy DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
         if (GameManager.instance.activeSkill.skillEnergyCost != 0)
         {
+
+
             // Trigger current unit's turn energy count to deplete for skill use
             GameManager.instance.UpdateActiveUnitEnergyBar(true, false, GameManager.instance.activeSkill.skillEnergyCost);
             GameManager.instance.UpdateActiveUnitHealthBar(false);
@@ -110,7 +112,23 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void SelectUnit()
     {
-        GameManager.instance.SelectUnit(unitFunctionality);
+        if (GameManager.instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
+            if (GameManager.instance.IsEnemyTaunting().Count >= 1)
+            {
+                for (int i = 0; i < GameManager.instance.IsEnemyTaunting().Count; i++)
+                {
+                    if (GameManager.instance.IsEnemyTaunting()[i] == unitFunctionality)
+                        GameManager.instance.SelectUnit(unitFunctionality);
+                    else
+                        continue;
+                }
+
+                return;
+            }
+            else
+                GameManager.instance.SelectUnit(unitFunctionality);
+        }
     }
 
     public void SelectSkill1()
@@ -166,7 +184,6 @@ public class ButtonFunctionality : MonoBehaviour
             GameManager.instance.DisableAllSkillSelections();
             ToggleSelected(true);
         }
-
 
         // If unit doesnt have enough energy, do not allow skill to play out
         if (!GameManager.instance.CheckIfEnergyAvailableSkill())

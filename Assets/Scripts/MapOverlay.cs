@@ -89,9 +89,10 @@ public class MapOverlay : MonoBehaviour
         playerGoldText.UpdateContentText("0");
     }
 
-    public void UpdateFloorNameText(string text)
+    public void UpdateFloorNameText(string text, Color color)
     {
         floorName.UpdateContentText(text);
+        floorName.UpdateContentTextColour(color);
     }
 
     public void UpdateRoomCountText(string text)

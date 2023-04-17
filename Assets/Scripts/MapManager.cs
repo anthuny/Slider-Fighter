@@ -87,7 +87,7 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
-        //ResetPlayerGold();
+        Setup();
     }
 
     public void AddPlayerGold(int gold)
@@ -209,7 +209,7 @@ public class MapManager : MonoBehaviour
                 GenerateMap();
 
             mapOverlay.UpdateRoomCountText(activeFloor.floorLevel.ToString());
-            mapOverlay.UpdateFloorNameText(activeFloor.floorName);
+            mapOverlay.UpdateFloorNameText(activeFloor.floorName, activeFloor.floorColour);
         }
         else
         {
@@ -222,8 +222,8 @@ public class MapManager : MonoBehaviour
     {
         Bounds bounds = mapSpawnBounds.GetComponent<BoxCollider2D>().bounds;
 
-        float offsetX = Random.Range(-bounds.extents.x, bounds.extents.x);
-        float offsetY = Random.Range(-bounds.extents.y, bounds.extents.y);
+        float offsetX = Random.Range(-bounds.extents.x/2, bounds.extents.x/2);
+        float offsetY = Random.Range(-bounds.extents.y/2, bounds.extents.y/2);
 
         Vector3 newPos = bounds.center + new Vector3(offsetX, offsetY, 0);
         return newPos;
@@ -274,7 +274,7 @@ public class MapManager : MonoBehaviour
         SpawnRoomGenerationB();
         GenerationPathsB();
 
-        ToggleHiddenModeRoom(true);
+        ToggleHiddenModeRoom(false);
 
         UpdateStartingRoomAndPath();
 
@@ -385,10 +385,11 @@ public class MapManager : MonoBehaviour
                 // Set the position of the spawned object
                 room.transform.SetParent(roomIconsParent);
                 room.transform.localScale = new Vector2(1, 1);
-                //room.transform.position = new Vector3(randomPos.x, randomPos.y, 0);
+
 
                 Vector3 randomPos = GetRoomSpawnRandomPos();
                 room.transform.position = randomPos;
+                //room.transform.position = new Vector3(randomPos.x, randomPos.y, 0);
 
                 // Check if the spawned object is too close to any other objects
                 bool isTooClose = false;
@@ -571,7 +572,7 @@ public class MapManager : MonoBehaviour
                 spawnedPaths.Add(go);
 
                 go.transform.SetParent(roomIconsParent, true);
-                //go.transform.localScale = Vector3.one;
+                go.transform.localScale = Vector3.one;
                 go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
 
                 curPathCount++;
@@ -653,6 +654,7 @@ public class MapManager : MonoBehaviour
 
                 // Set Position
                 go.transform.SetParent(roomIconsParent, true);
+                go.transform.localScale = new Vector3(1, 1, 1);
                 go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
 
                 // Reference 

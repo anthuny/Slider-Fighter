@@ -10,18 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
-  m_Name: Smash 2
+  m_Name: Boulder Toss
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
-  curSkillGameType: 1
-  curRangedType: 0
+  curSkillGameType: 2
+  curRangedType: 1
   skillSprite: {fileID: 0}
-  skillName: SMASH
+  skillName: BOULDER TOSS
   skillDescr: 
-  skillPower: 100
-  skillAttackCount: 1
-  projectileSpeed: 0
+  skillPower: 150
+  skillAttackCount: 2
+  projectileSpeed: 10
   skillEnergyCost: 2
-  skillSelectionCount: 1
+  skillSelectionCount: 2
+  effect: {fileID: 0}
+  effectTurnLength: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
   skillPowerIcon: {fileID: 0}

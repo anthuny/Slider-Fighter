@@ -26,8 +26,14 @@ public class SkillData : ScriptableObject
     public int projectileSpeed = 1;
     public int skillEnergyCost;
     public int skillSelectionCount;
+    public bool isSelfCast;
     public EffectData effect;
     public int effectTurnLength;
-    public int effectOnTargetBonusPower;
+    [Tooltip("Skill has increased power to a unit with this effect")]
+    public enum SkillExtraPowerToEffect { NONE, SPEEDUP, SPEEDDOWN, BLEED, RECOVER, EXHAUST, HASTE, SLEEP, 
+        POWERUP, POWERDOWN, DEFENSEUP, DEFENSEDOWN, PARRY, TAUNT, MARK, SHADOWPARTNER}
+    public SkillExtraPowerToEffect curSkillExtraPowerToEffect;
+    [Tooltip("Percentage increase of power when targeting a unit with an effect")]
+    public int percIncPower;
     public Sprite skillPowerIcon;
 }

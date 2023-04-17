@@ -10,18 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
-  m_Name: Smash 3
+  m_Name: Taunt
   m_EditorClassIdentifier: 
-  curSkillType: 0
-  curSkillSelectionType: 0
-  curSkillGameType: 2
-  curRangedType: 0
+  curSkillType: 1
+  curSkillSelectionType: 1
+  curSkillGameType: 1
+  curRangedType: 1
   skillSprite: {fileID: 0}
-  skillName: SMASH
+  skillName: TAUNT
   skillDescr: 
-  skillPower: 100
-  skillAttackCount: 1
+  skillPower: 0
+  skillAttackCount: 0
   projectileSpeed: 0
-  skillEnergyCost: 2
+  skillEnergyCost: 3
   skillSelectionCount: 1
+  isSelfCast: 1
+  effect: {fileID: 11400000, guid: 8b7b1c1ca9a9cbc458b12df8cacf4af8, type: 2}
+  effectTurnLength: 2
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
   skillPowerIcon: {fileID: 0}

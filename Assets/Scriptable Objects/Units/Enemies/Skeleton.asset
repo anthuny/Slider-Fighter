@@ -20,8 +20,9 @@ MonoBehaviour:
   unitColour: {r: 1, g: 1, b: 1, a: 1}
   name: Skeleton
   startingSpeed: 15
-  startingPower: 6
-  startingMaxHealth: 650
+  startingArmor: 0
+  startingPower: 10
+  startingMaxHealth: 450
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1

@@ -13,15 +13,20 @@ MonoBehaviour:
   m_Name: Slime
   m_EditorClassIdentifier: 
   curUnitType: 1
+  minUnitValue: 0
+  maxUnitValue: 0
   unitSprite: {fileID: 21300000, guid: f27e74649d41e2f46baa57d75a687cff, type: 3}
+  unitIcon: {fileID: 0}
   unitColour: {r: 0.1463844, g: 0.9433962, b: 0.048949808, a: 1}
   name: Slime
   startingSpeed: 15
-  startingPower: 6
+  startingArmor: 0
+  startingPower: 10
   startingMaxHealth: 650
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
+  characterPrefab: {fileID: 0}
   basicSkill: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}
   skill1: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}
   skill2: {fileID: 11400000, guid: 276c45099a8263c45b27434715849cc9, type: 2}

@@ -10,6 +10,10 @@ public class PostBattle : MonoBehaviour
     [SerializeField] private Color loseConditionTextColour;
     [SerializeField] private UIElement buttonPostBattleMap;
     [SerializeField] private int timeToSpawnToMapButton;
+
+    [SerializeField] private UIElement expGainedUI;
+    [SerializeField] private UIElement rewardsUI;
+
     private UIElement postBattleUI;
 
     private void Awake()
@@ -19,6 +23,22 @@ public class PostBattle : MonoBehaviour
     void Start()
     {
         TogglePostBattleUI(false);
+    }
+
+    public void ToggleExpGainedUI(bool toggle)
+    {
+        if (toggle)
+            expGainedUI.UpdateAlpha(1);
+        else
+            expGainedUI.UpdateAlpha(0);
+    }
+
+    public void ToggleRewardsUI(bool toggle)
+    {
+        if (toggle)
+            rewardsUI.UpdateAlpha(1);
+        else
+            rewardsUI.UpdateAlpha(0);
     }
 
     public void TogglePostBattleUI(bool toggle)

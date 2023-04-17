@@ -49,11 +49,13 @@ public class UnitFunctionality : MonoBehaviour
     [HideInInspector]
     public GameObject prevPowerUI;
 
-    private bool isSelected;
+    public bool isSelected;
     private int unitValue;
     private Animator animator;
 
     public bool idleBattle;
+    public bool isDead;
+    public bool isTaunting;
 
     private void Awake()
     {
@@ -96,7 +98,6 @@ public class UnitFunctionality : MonoBehaviour
         return idleBattle;
     }
 
-
     public Animator GetAnimator()
     {
         return animator;
@@ -104,9 +105,9 @@ public class UnitFunctionality : MonoBehaviour
     public IEnumerator StartUnitTurn()
     {
         // Do unit's turn automatically if its on idle battle
-        if (GetIdleBattle())
+        if (GetIdleBattle() && GameManager.instance.activeRoomAllies.Count >= 1)
         {
-            yield return new WaitForSeconds(GameManager.instance.enemyThinkTime + 1f);
+            //yield return new WaitForSeconds(GameManager.instance.enemyThinkTime);
 
             // If unit has energy to choose a skill, choose one
             GameManager.instance.UpdateActiveSkill(ChooseRandomSkill());
@@ -137,12 +138,8 @@ public class UnitFunctionality : MonoBehaviour
                         yield return new WaitForSeconds(GameManager.instance.triggerSkillAlertTime / 2f);
                     }
 
-
-                    // Attack
+                    // Adjust power based on skill effect amp on target then send it 
                     StartCoroutine(GameManager.instance.WeaponAttackCommand(GameManager.instance.activeSkill.skillPower));
-
-                    // Attack again
-                    StartCoroutine(AttackAgain());
                 }
                 else
                 {
@@ -152,29 +149,33 @@ public class UnitFunctionality : MonoBehaviour
                     yield break;
                 }
             }
-
-
-
-
-
-            // If unit has energy for another attack, go back to first step
-
-            // If unit no longer has energy for any skills, end turn.
+            else
+            {
+                GameManager.instance.UpdateTurnOrder();
+                yield break;
+            }
         }
     }
 
     public void DecreaseEffectTurnsLeft(bool turnStart)
-    {
+    {       
+        // If no effects remain on the unit, stop
+        if (activeEffects.Count >= 1)
+        {
+            if (activeEffects[0] == null)
+                return;
+        }
+       
         for (int i = 0; i < activeEffects.Count; i++)
         {
             if (turnStart)
             {
                 if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
-                {
+                {              
                     activeEffects[i].TriggerPowerEffect();
+                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText();
 
-                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     return;
                 }
             }
@@ -182,20 +183,21 @@ public class UnitFunctionality : MonoBehaviour
             {
                 if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                 {
-                    activeEffects[i].TriggerPowerAdjustEffect();
+                    activeEffects[i].TriggerPowerEffect();
+                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Inflict");
                     activeEffects[i].ReduceTurnCountText();
 
-                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Inflict");
                     return;
                 }
             }
         }
     }
 
-    IEnumerator AttackAgain()
+
+    public IEnumerator AttackAgain()
     {
-        IEnumerator co = StartUnitTurn();
-        StopCoroutine(co);
+        //IEnumerator co = StartUnitTurn();
+        //StopCoroutine(co);
 
         yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
 
@@ -244,7 +246,7 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (activeEffects[i].turnCountRemaining < activeEffects[i].maxTurnCountRemaining)
             {
-                healthBarUIElement.UpdateAlpha(0);
+                //ToggleUnitHealthBar(false);
                 //TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true);
                 TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
                 activeEffects[i].FillTurnCountText();
@@ -254,7 +256,7 @@ public class UnitFunctionality : MonoBehaviour
                 return;
         }
 
-        healthBarUIElement.UpdateAlpha(0);
+        //ToggleUnitHealthBar(false);
         TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
 
         GameObject go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
@@ -327,7 +329,12 @@ public class UnitFunctionality : MonoBehaviour
         curPowerInc = newPowerInc;
     }
 
-    public void SpawnPowerUI(float power = 10f, Effect effect = null)
+    public void ToggleTaunt(bool toggle)
+    {
+        isTaunting = toggle;
+    }
+
+    public void SpawnPowerUI(float power = 10f, bool offense = false, Effect effect = null)
     {
         // If this is NOT the first power text UI
         if (prevPowerUI != null)
@@ -371,6 +378,10 @@ public class UnitFunctionality : MonoBehaviour
             // Change power text colour to support colour if the type of attack is support
             else if (effect.curEffectType == Effect.EffectType.SUPPORT)
                 powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillSupport);
+
+            if (effect.curEffectName == Effect.EffectName.HEALTHUP && offense)
+                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillAttack);
+
         }
 
         int finalPower = (int)power;
@@ -453,11 +464,13 @@ public class UnitFunctionality : MonoBehaviour
             return false;
     }
 
-    public IEnumerator EnsureUnitIsDead()
+    IEnumerator EnsureUnitIsDead()
     {
         // If unit's health is 0 or lower
-        if (curHealth <= 0)
+        if (curHealth <= 0 && !isDead)
         {
+            isDead = true;
+
             curHealth = 0;
 
             animator.SetTrigger("DeathFlg");
@@ -465,7 +478,8 @@ public class UnitFunctionality : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             GameManager.instance.RemoveUnit(this);
-            GameManager.instance.UpdateTurnOrderVisual();
+            
+
             DestroyUnit();
         }
     }
@@ -585,7 +599,6 @@ public class UnitFunctionality : MonoBehaviour
             temp = GameManager.instance.maxExpStarting * GetUnitLevel();
             maxExp = (int)temp;
         }
-
     }
 
     public float GetCurExp()
@@ -601,10 +614,14 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitCurHealth(int power)
     {
+        if (isDead)
+            return;
+
         if (power < 0)
-        {
             animator.SetTrigger("DamageFlg");
-        }
+        //else
+          //  animator.SetTrigger("SkillFlg");
+
         curHealth += power;
 
         //SpawnPowerUI(power);
@@ -628,6 +645,9 @@ public class UnitFunctionality : MonoBehaviour
         ToggleUnitHealthBar(true);
 
         unitHealth.fillAmount = (float)curHealth / (float)maxHealth;
+
+        if (CheckIfUnitIsDead())
+            StartCoroutine(EnsureUnitIsDead());
     }
 
     public void ToggleUnitHealthBar(bool toggle)
@@ -702,7 +722,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitCurEnergy(int energy)
     {
-        effects.UpdateAlpha(1);
+        //effects.UpdateAlpha(1);
 
         this.curEnergy += energy;
 
@@ -722,7 +742,8 @@ public class UnitFunctionality : MonoBehaviour
 
     void DestroyUnit()
     {
-        unitVisuals.UpdateAlpha(0); 
+        unitVisuals.UpdateAlpha(0);
+
         //Destroy(gameObject);
     }
 

@@ -54,8 +54,8 @@ public class Weapon : MonoBehaviour
     {
         if (isStopped)
             return;
-
-        if (Input.GetMouseButtonDown(1))
+        //Input.GetMouseButtonDown(1)
+        if (Input.touchCount > 0)
             ResetWeapon();
     }
 
@@ -127,6 +127,7 @@ public class Weapon : MonoBehaviour
 
         GameManager.instance.SetupPlayerPostHitUI();
 
+        // Adjust power based on skill effect amp on target then send it 
         StartCoroutine(GameManager.instance.WeaponAttackCommand((int)calculatedPower));
     }
 

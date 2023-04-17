@@ -12,10 +12,16 @@ public class EffectData : ScriptableObject
     public enum EffectType { OFFENSE, SUPPORT }
     public EffectType curEffectType;
 
+    public enum EffectName
+    {
+        BLEED, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP,
+        PARRY, TAUNT, MARK, SHADOWPARTNER
+    }
+    public EffectName curEffectName;
+
     public string effectName;
     public string effectDesc;
     public Sprite effectIcon;
-    public float healthPerc;
+    public float powerPercent;
     public float powerAmp;
-    //public Text turnsRemainingText;
 }
