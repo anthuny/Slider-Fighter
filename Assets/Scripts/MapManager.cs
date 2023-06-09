@@ -78,6 +78,8 @@ public class MapManager : MonoBehaviour
     private float minY;
     private float maxY;
 
+    private bool spawnedStartingRoom;
+
     private bool storedRoomData;
 
     private void Awake()
@@ -106,8 +108,10 @@ public class MapManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.M))
             ToggleMapVisibility(true, true);
-        if (Input.GetKeyDown(KeyCode.N) && !CheckIfAnyHiddenMainRooms())
+        if (Input.GetKeyDown(KeyCode.N) && !CheckIfAnyHiddenMainRooms() && selectedRoom != startingRoom)
             ClearRoom();
+        if (Input.GetKeyDown(KeyCode.V))
+            ResetMap();
     }
 
     public void Setup()
@@ -150,7 +154,10 @@ public class MapManager : MonoBehaviour
     {
         // Do not allow room clear if selected room is the starting room
         if (selectedRoom == startingRoom)
+        {
+            ShowConnectingRooms();
             return;
+        }
 
         selectedRoom.UpdateIsCompleted(true);
         selectedRoom.ToggleRoomSelected(true);
@@ -217,17 +224,19 @@ public class MapManager : MonoBehaviour
             ToggleMapScroll(false);
         }
     }
-    
-    Vector3 GetRoomSpawnRandomPos()
+  
+    Vector2 GetRoomSpawnRandomPos()
     {
         Bounds bounds = mapSpawnBounds.GetComponent<BoxCollider2D>().bounds;
 
-        float offsetX = Random.Range(-bounds.extents.x/2, bounds.extents.x/2);
-        float offsetY = Random.Range(-bounds.extents.y/2, bounds.extents.y/2);
+        //float offsetX = Random.Range(-bounds.extents.x/2.75f, bounds.extents.x/2.75f);
+        //float offsetY = Random.Range(-bounds.extents.y/2.75f, bounds.extents.y/2.75f);
 
-        Vector3 newPos = bounds.center + new Vector3(offsetX, offsetY, 0);
+        float offsetX = Random.Range(-bounds.extents.x, bounds.extents.x);
+        float offsetY = Random.Range(-bounds.extents.y, bounds.extents.y);
+
+        Vector2 newPos = bounds.center + new Vector3(offsetX, offsetY, 0);
         return newPos;
-
     }
 
     void UpdateStartEndRoomHorizontalPos(float minX, float maxX)
@@ -236,21 +245,26 @@ public class MapManager : MonoBehaviour
         endingRoom.UpdateHorizontalPos(minX, maxX);
     }
 
+    void UpdateRoomZPosition(Transform trans)
+    {
+        trans.localPosition = new Vector3(trans.localPosition.x, trans.localPosition.y, 0);
+    }
+
     void ResetMap()
     {
+        spawnedStartingRoom = false;
+        spawnedRoomsA.Clear();
         spawnedAllRooms.Clear();
         spawnedAdditionalRooms.Clear();
         spawnedPaths.Clear();
         spawnedAdditionalPaths.Clear();
-        failedCurAttempts = 0;
-        curRoomCount = 0;
-        curPathCount = 0;
-        spawnedPaths.Clear();
-        spawnedAdditionalPaths.Clear();
-        spawnedRoomsA.Clear();
 
         rooms.Clear();
         mapPaths.Clear();
+
+        failedCurAttempts = 0;
+        curRoomCount = 0;
+        curPathCount = 0;
 
         storedRoomData = false;
 
@@ -271,10 +285,11 @@ public class MapManager : MonoBehaviour
         SpawnRoomGenerationA();
         GenerationPathsA();
 
+        // Additional rooms / paths are booken
         SpawnRoomGenerationB();
         GenerationPathsB();
 
-        ToggleHiddenModeRoom(false);
+        ToggleHiddenModeRoom(true);
 
         UpdateStartingRoomAndPath();
 
@@ -314,6 +329,9 @@ public class MapManager : MonoBehaviour
         UpdateSelectedRoom(startingRoom);
 
         mapOverlay.UpdateOverlayRoomName(RoomMapIcon.RoomType.STARTING);
+
+        // Set starting room
+        UpdateRoomIconType(startingRoom, "starting");
     }
 
     public void UpdateRevealedMainRoom(RoomMapIcon room)
@@ -337,7 +355,6 @@ public class MapManager : MonoBehaviour
         List<MapPath> linkedPaths = selectedRoom.GetLinkedPaths();
         for (int x = 0; x < linkedPaths.Count; x++)
         {
-
             linkedPaths[x].ToggleConnectingRoomsDiscovered(true);
         }
     }
@@ -387,9 +404,10 @@ public class MapManager : MonoBehaviour
                 room.transform.localScale = new Vector2(1, 1);
 
 
-                Vector3 randomPos = GetRoomSpawnRandomPos();
+                Vector2 randomPos = GetRoomSpawnRandomPos();
                 room.transform.position = randomPos;
-                //room.transform.position = new Vector3(randomPos.x, randomPos.y, 0);
+
+                UpdateRoomZPosition(room.transform);
 
                 // Check if the spawned object is too close to any other objects
                 bool isTooClose = false;
@@ -400,6 +418,7 @@ public class MapManager : MonoBehaviour
 
                     if (distance < minDistanceBetweenSpawnedObjects)
                     {
+                        //Debug.Log(distance);
                         isTooClose = true;
                         failedCurAttempts++;
                         //Debug.Log("DIDNT Spawn FROM ROOM" + distance);
@@ -425,12 +444,18 @@ public class MapManager : MonoBehaviour
                         spawnedRoomsA.Add(room);
                         curRoomCount++;
                         room.name = "Room - Main " + curRoomCount;
-
                         continue;
                     }
                 }
+
+                //Debug.Log("Failed Current Attempts: " + failedCurAttempts);
             }
         }
+
+        spawnedRoomsA.Add(startingRoom.gameObject);
+        spawnedRoomsA.Add(endingRoom.gameObject);
+        spawnedAllRooms.Add(startingRoom.gameObject);
+        spawnedAllRooms.Add(endingRoom.gameObject);
 
         spawnedAllRooms.Sort(CompareRoomYValue);
         spawnedRoomsA.Sort(CompareRoomYValue);
@@ -459,6 +484,8 @@ public class MapManager : MonoBehaviour
 
                 Vector3 randomPos = GetRoomSpawnRandomPos();
                 sideRoom.transform.position = randomPos;
+
+                UpdateRoomZPosition(sideRoom.transform);
 
                 // Check if the spawned object is too close to any other objects
                 bool isTooClose = false;
@@ -565,115 +592,93 @@ public class MapManager : MonoBehaviour
     {
         for (int i = 0; i < spawnedRoomsA.Count; i++)
         {
-            // dont spawn last path here
-            if (i != spawnedRoomsA.Count)
+            GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
+            go.name = "Path - Main " + curPathCount;
+            spawnedPaths.Add(go);
+            UpdateSpawnedPaths();
+            go.transform.SetParent(roomIconsParent, true);
+            //go.transform.localScale = Vector3.one;
+            go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
+
+            curPathCount++;
+           
+            MapPath mapPath = go.GetComponent<MapPath>();
+
+            // If this is the final path of the map (to the boss level)
+            if (i == spawnedRoomsA.Count-1)
             {
-                GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
-                spawnedPaths.Add(go);
+                mapPath.UpdateMapPath(spawnedRoomsA[i].transform.position, endingRoom.transform.position);
+                mapPath.UpdateStartingRoom(spawnedRoomsA[i].GetComponent<RoomMapIcon>());
+                mapPath.AddGoalRooms(endingRoom);
 
-                go.transform.SetParent(roomIconsParent, true);
-                go.transform.localScale = Vector3.one;
-                go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
+                RoomMapIcon curRoom = spawnedRoomsA[i].GetComponent<RoomMapIcon>();
+                RoomMapIcon nextRoom = endingRoom;
 
-                curPathCount++;
-                go.name = "Path - Main " + curPathCount;
+                // Update current room and next room to reference eachother as a nearby room
+                nextRoom.UpdateRoomMapLinks(curRoom);
+                curRoom.UpdateRoomMapLinks(nextRoom);
 
-                MapPath mapPath = go.GetComponent<MapPath>();
+                curRoom.UpdateRoomPathLinks(mapPath);
+                nextRoom.UpdateRoomPathLinks(mapPath);
 
-                // If this is the final path of the map (to the boss level)
-                if (i == spawnedRoomsA.Count-1)
-                {
-                    mapPath.UpdateMapPath(spawnedRoomsA[i].transform.position, endingRoom.transform.position);
-                    mapPath.UpdateStartingRoom(spawnedRoomsA[i].GetComponent<RoomMapIcon>());
-                    mapPath.AddGoalRooms(endingRoom);
-
-                    RoomMapIcon curRoom = spawnedRoomsA[i].GetComponent<RoomMapIcon>();
-                    RoomMapIcon nextRoom = endingRoom;
-
-                    // Update current room and next room to reference eachother as a nearby room
-                    nextRoom.UpdateRoomMapLinks(curRoom);
-                    curRoom.UpdateRoomMapLinks(nextRoom);
-
-                    curRoom.UpdateRoomPathLinks(mapPath);
-                    nextRoom.UpdateRoomPathLinks(mapPath);
-
-                    curRoom.isMainRoom = true;
-                }
-                // If its not ^
-                else
-                {
-                    mapPath.UpdateMapPath(spawnedRoomsA[i].transform.position, spawnedRoomsA[i + 1].transform.position);
-                    mapPath.UpdateStartingRoom(spawnedRoomsA[i].GetComponent<RoomMapIcon>());
-                    mapPath.AddGoalRooms(spawnedRoomsA[i + 1].GetComponent<RoomMapIcon>());
-
-                    RoomMapIcon curRoom = spawnedRoomsA[i].GetComponent<RoomMapIcon>();
-                    RoomMapIcon nextRoom = spawnedRoomsA[i + 1].GetComponent<RoomMapIcon>();
-
-                    // Update current room and next room to reference eachother as a nearby room
-                    nextRoom.UpdateRoomMapLinks(curRoom);
-                    curRoom.UpdateRoomMapLinks(nextRoom);
-
-                    curRoom.UpdateRoomPathLinks(mapPath);
-                    nextRoom.UpdateRoomPathLinks(mapPath);
-
-                    curRoom.isMainRoom = true;
-                }
+                curRoom.isMainRoom = true;
             }
+            // If its not ^
+            else
+            {
+                mapPath.UpdateMapPath(spawnedRoomsA[i].transform.position, spawnedRoomsA[i + 1].transform.position);
+                mapPath.UpdateStartingRoom(spawnedRoomsA[i].GetComponent<RoomMapIcon>());
+                mapPath.AddGoalRooms(spawnedRoomsA[i + 1].GetComponent<RoomMapIcon>());
+
+                RoomMapIcon curRoom = spawnedRoomsA[i].GetComponent<RoomMapIcon>();
+                RoomMapIcon nextRoom = spawnedRoomsA[i + 1].GetComponent<RoomMapIcon>();
+
+                // Update current room and next room to reference eachother as a nearby room
+                nextRoom.UpdateRoomMapLinks(curRoom);
+                curRoom.UpdateRoomMapLinks(nextRoom);
+
+                curRoom.UpdateRoomPathLinks(mapPath);
+                nextRoom.UpdateRoomPathLinks(mapPath);
+
+                curRoom.isMainRoom = true;
+            }
+
+            spawnedPaths.Sort(ComparedMiddleOfPathY);
+            UpdateSpawnedPaths();
         }
-
-        // Spawn path for starting room 
-        curPathCount++;
-        GameObject startingRoomPath = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
-        startingRoomPath.name = "Path - Main " + curPathCount;
-        spawnedPaths.Add(startingRoomPath);
-        startingRoomPath.transform.SetParent(roomIconsParent, true);
-        startingRoomPath.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
-
-        MapPath mapPathStarting = startingRoomPath.GetComponent<MapPath>();
-        RoomMapIcon room = spawnedRoomsA[0].GetComponent<RoomMapIcon>();
-        mapPathStarting.UpdateMapPath(startingRoom.transform.position, spawnedRoomsA[0].transform.position);
-        mapPathStarting.UpdateStartingRoom(startingRoom.GetComponent<RoomMapIcon>());
-        mapPathStarting.AddGoalRooms(spawnedRoomsA[0].GetComponent<RoomMapIcon>());
-
-        UpdateSpawnedPaths();
-        spawnedPaths.Sort(ComparedMiddleOfPathY);
     }
 
     void GenerationPathsB()
     {
         for (int i = 0; i < spawnedAdditionalRooms.Count; i++)
         {
-            // dont spawn last path here
-            if (i != spawnedAdditionalRooms.Count - 1)
-            {
-                GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
-                spawnedPaths.Add(go);
-                spawnedAdditionalPaths.Add(go);
-                curPathCount++;
-                go.name = "Path - Side " + curPathCount;
+            GameObject go = Instantiate(pathPrefab, roomIconsParent.position, Quaternion.identity);
+            spawnedPaths.Add(go);
+            spawnedAdditionalPaths.Add(go);
+            curPathCount++;
+            go.name = "Path - Side " + curPathCount;
 
-                // Set Position
-                go.transform.SetParent(roomIconsParent, true);
-                go.transform.localScale = new Vector3(1, 1, 1);
-                go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
+            // Set Position
+            go.transform.SetParent(roomIconsParent, true);
+            //go.transform.localScale = new Vector3(1, 1, 1);
+            go.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
 
-                // Reference 
-                MapPath mapPath = go.GetComponent<MapPath>();
-                Transform closestRoomTrans = GetClosestRoomA(spawnedAdditionalRooms[i].transform.position);
-   
-                // Update map path using pos a: this room pos, pos b: nearest room pos
-                mapPath.UpdateMapPath(spawnedAdditionalRooms[i].transform.position, closestRoomTrans.position);
-                RoomMapIcon closestRoom = closestRoomTrans.GetComponent<RoomMapIcon>();
-                RoomMapIcon curRoom = spawnedAdditionalRooms[i].GetComponent<RoomMapIcon>();
+            // Reference 
+            MapPath mapPath = go.GetComponent<MapPath>();
+            Transform closestRoomTrans = GetClosestRoomA(spawnedAdditionalRooms[i].transform.position);
 
-                // Referencing
-                mapPath.UpdateStartingRoom(closestRoom);
-                mapPath.AddGoalRooms(curRoom);
-                closestRoom.UpdateRoomMapLinks(curRoom);
-                closestRoom.UpdateRoomPathLinks(mapPath);
-                curRoom.UpdateRoomMapLinks(closestRoom);
-                curRoom.UpdateRoomPathLinks(mapPath);
-            }
+            // Update map path using pos a: this room pos, pos b: nearest room pos
+            mapPath.UpdateMapPath(spawnedAdditionalRooms[i].transform.position, closestRoomTrans.position);
+            RoomMapIcon closestRoom = closestRoomTrans.GetComponent<RoomMapIcon>();
+            RoomMapIcon curRoom = spawnedAdditionalRooms[i].GetComponent<RoomMapIcon>();
+
+            // Referencing
+            mapPath.UpdateStartingRoom(closestRoom);
+            mapPath.AddGoalRooms(curRoom);
+            closestRoom.UpdateRoomMapLinks(curRoom);
+            closestRoom.UpdateRoomPathLinks(mapPath);
+            curRoom.UpdateRoomMapLinks(closestRoom);
+            curRoom.UpdateRoomPathLinks(mapPath);
         }
 
         UpdateSpawnedPaths();
@@ -750,7 +755,8 @@ public class MapManager : MonoBehaviour
         {
             //spawnedPaths[i].transform.position = Vector3.zero;
             RectTransform spawnedPath = spawnedPaths[i].GetComponent<RectTransform>();
-            spawnedPath.localPosition = new Vector3(spawnedPath.localPosition.x, spawnedPath.localPosition.y, -1);
+            spawnedPath.position = new Vector3(spawnedPath.position.x, spawnedPath.position.y, 1);
+            //spawnedPath.localScale = new Vector3(300, 300, 1);
         }
     }
 

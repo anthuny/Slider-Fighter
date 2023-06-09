@@ -394,6 +394,7 @@ public class GameManager : MonoBehaviour
             int unitValue = activeFloor.enemyUnits[spawnEnemyIndex].GetUnitValue() * (RoomManager.instance.GetFloorCount() + 1);
 
             unitFunctionality.UpdateUnitValue(unitValue);
+            unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
 
             //unitFunctionality.UpdateUnitVisuals();
 
@@ -447,7 +448,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
                 unitFunctionality.UpdateUnitLevel(1);
 
-                //unitFunctionality.UpdateUnitVisuals();
+                unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
             }
         }
 
@@ -531,32 +532,38 @@ public class GameManager : MonoBehaviour
     {
         GetActiveUnitFunctionality().effects.UpdateAlpha(1);
 
-        if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+        // If the skill is supposed to deal no power, don't spawn projectiles for it
+        if (GetActiveSkill().skillPower != 0)
         {
-            GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
-
-            yield return new WaitForSeconds(triggerSkillAlertTime);
-
-            // Loop through all selected units, spawn projectiles, if target is dead stop.
-            for (int z = unitsSelected.Count - 1; z >= 0; z--)
+            if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
             {
-                if (unitsSelected[z] == null || unitsSelected[z].isDead)
-                    continue;
-                else
+                GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+
+                yield return new WaitForSeconds(triggerSkillAlertTime);
+
+                // Loop through all selected units, spawn projectiles, if target is dead stop.
+                for (int z = unitsSelected.Count - 1; z >= 0; z--)
                 {
-                    for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
+                    if (unitsSelected[z] == null || unitsSelected[z].isDead)
+                        continue;
+                    else
                     {
-                        GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform);
-                        yield return new WaitForSeconds(0.005f);
+                        for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
+                        {
+                            GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform);
+                            yield return new WaitForSeconds(0.005f);
+                        }
                     }
                 }
+
+                yield return new WaitForSeconds(unitPowerUIWaitTime);
             }
 
-            yield return new WaitForSeconds(unitPowerUIWaitTime);
-        }
-        else
-        {
-            GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
+            else
+            {
+                yield return new WaitForSeconds(triggerSkillAlertTime / 2f);
+                GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
+            }
         }
 
         // If skill is self cast, do it here
@@ -564,52 +571,73 @@ public class GameManager : MonoBehaviour
             if (GetActiveSkill().effect != null)
                 GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect);
 
-        // Loop as many times as power text will appear
-        for (int x = 0; x < activeSkill.skillAttackCount; x++)
+        // Disable unit selection just before attack
+        for (int y = 0; y < unitsSelected.Count; y++)
         {
-            // Disable unit selection just before attack
-            for (int y = 0; y < unitsSelected.Count; y++)
-            {
-                unitsSelected[y].ToggleSelected(false);
-            }
-
-            // Loop through all selected units
-            for (int i = unitsSelected.Count - 1; i >= 0; i--)
-            {
-                power = AdjustSkillPowerTargetEffectAmp(activeSkill.skillPower);
-                if (unitsSelected[i] == null || unitsSelected[i].isDead)
-                    continue;
-                else
-                {
-                    // Cause power on selected unit
-                    if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                        unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
-                    else
-                        unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
-
-                    // If active skil has an effect AND it's not a self cast, apply it to selected targets
-                    if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                    {
-                        unitsSelected[i].AddUnitEffect(GetActiveSkill().effect);
-                    }
-
-                    // Reset unit's prev power text for future power texts
-                    if (x == activeSkill.skillAttackCount - 1)
-                        unitsSelected[i].ResetPreviousPowerUI();
-
-                    // Increase health from the units current health if a support skill was casted on it
-                    if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                        unitsSelected[i].UpdateUnitCurHealth(power);
-
-                    // Decrease health from the units current health if a offense skill was casted on it
-                    if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                        unitsSelected[i].UpdateUnitCurHealth(-power);
-                }
-            }
-
-            // Time wait in between attacks, shared across all targeted units
-            yield return new WaitForSeconds(timeBetweenPowerUIStack);
+            unitsSelected[y].ToggleSelected(false);
         }
+
+        // For no power skills
+        if (GetActiveSkill().skillPower == 0)
+        {
+            // Loop through all selected units
+            for (int x = 0; x < unitsSelected.Count; x++)
+            {
+                if (x > unitsSelected.Count)
+                    break;
+
+
+                // If active skil has an effect AND it's not a self cast, apply it to selected targets
+                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect);
+            }
+        }
+        else
+        {
+            // Loop as many times as power text will appear
+            for (int x = 0; x < activeSkill.skillAttackCount; x++)
+            {
+                // Loop through all selected units
+                for (int i = unitsSelected.Count - 1; i >= 0; i--)
+                {
+                    power = AdjustSkillPowerTargetEffectAmp(power);
+
+                    if (unitsSelected[i] == null || unitsSelected[i].isDead)
+                        continue;
+                    else
+                    {
+                        // If skill is supposed to cause power, continue
+                        if (activeSkill.skillPower != 0)
+                        {
+                            // Cause power on selected unit
+                            if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
+                            else
+                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
+
+                            // Increase health from the units current health if a support skill was casted on it
+                            if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                                unitsSelected[i].UpdateUnitCurHealth(power);
+
+                            // Decrease health from the units current health if a offense skill was casted on it
+                            if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                                unitsSelected[i].UpdateUnitCurHealth(-power);
+
+                            // Reset unit's prev power text for future power texts
+                            if (x == activeSkill.skillAttackCount - 1)
+                                unitsSelected[i].ResetPreviousPowerUI();
+                        }
+
+                        // If active skil has an effect AND it's not a self cast, apply it to selected targets
+                        if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                            unitsSelected[i].AddUnitEffect(GetActiveSkill().effect);
+                    }
+                }
+
+                // Time wait in between attacks, shared across all targeted units
+                yield return new WaitForSeconds(timeBetweenPowerUIStack);
+            }
+        }
+
 
         yield return new WaitForSeconds(postHitWaitTime);
 
@@ -975,11 +1003,26 @@ public class GameManager : MonoBehaviour
                 {
                     selectedAmount++;
 
+                    int rand = Random.Range(0, activeRoomEnemies.Count);
+
                     // If self cast, cast on self, otherwise, continue for whomever
                     if (usedSkill.isSelfCast)
                         SelectUnit(GetActiveUnitFunctionality());
                     else
-                        SelectUnit(activeRoomEnemies[i]);
+                    {
+                        if (!activeRoomEnemies[rand].IsSelected())
+                            SelectUnit(activeRoomEnemies[rand]);
+                        else
+                        {
+                            if (i != 0)
+                            {
+                                i--;
+
+                                if (selectedAmount != 0)
+                                    selectedAmount--;
+                            }
+                        }
+                    }
 
                     // If enough units have been selected, toggle the display
                     if (selectedAmount == usedSkill.skillSelectionCount)
@@ -1148,44 +1191,43 @@ public class GameManager : MonoBehaviour
 
     public void SelectUnit(UnitFunctionality unitFunctionality)
     {
-        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        /*
+        if (activeSkill)
+        {
+            // If active skill can only select enemies, do not allow players to be selected
+            if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                return;
+
+            // If active skill can only select allies, do not allow enemies to be selected
+            if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                return;
+        }
+        */
+
+        // If the selection is maxed, replaced a unit selected with the new one.
+        if (unitsSelected.Count != 0)
         {
             if (activeSkill)
             {
-                // If active skill can only select enemies, do not allow players to be selected
-                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                    return;
-
-                // If active skill can only select allies, do not allow enemies to be selected
-                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
-                    return;
+                if (unitsSelected.Count == activeSkill.skillSelectionCount)
+                    UnSelectUnit(unitsSelected[0]);
             }
-
-            // If the selection is maxed, replaced a unit selected with the new one.
-            if (unitsSelected.Count != 0)
+            else
             {
-                if (activeSkill)
-                {
-                    if (unitsSelected.Count == activeSkill.skillSelectionCount)
-                        UnSelectUnit(unitsSelected[0]);
-                }
-                else
-                {
-                    if (unitsSelected.Count == GetActiveUnit().basicSelectionCount)
-                        UnSelectUnit(unitsSelected[0]);
-                }
-            }
-            // If user selects a unit that is already selected, unselect it, and go a different path
-            if (unitFunctionality.IsSelected())
-            {
-                UnSelectUnit(unitFunctionality);
-
-                UpdateUnitsSelectedText();
-                return;
+                if (unitsSelected.Count == GetActiveUnit().basicSelectionCount)
+                    UnSelectUnit(unitsSelected[0]);
             }
         }
+        // If user selects a unit that is already selected, unselect it, and go a different path
+        if (unitFunctionality.IsSelected())
+        {
+            UnSelectUnit(unitFunctionality);
 
-        if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+            UpdateUnitsSelectedText();
+            return;
+        }
+
+        if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
             // If enemies are taunting, do not allow selection if this unit to select is not taunting also
             if (IsEnemyTaunting().Count >= 1)
@@ -1209,7 +1251,7 @@ public class GameManager : MonoBehaviour
                 UpdateUnitsSelectedText();
             }
         }
-        else
+        else 
         {
             // Select targeted unit
             unitsSelected.Add(unitFunctionality);

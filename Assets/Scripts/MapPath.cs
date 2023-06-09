@@ -10,6 +10,8 @@ public class MapPath : MonoBehaviour
     public List<RoomMapIcon> goalRooms = new List<RoomMapIcon>();
     public bool isRevealed;
 
+    public GameObject display;
+
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -21,6 +23,17 @@ public class MapPath : MonoBehaviour
         lr.SetPosition(1, posB);
 
         middleOfPath.transform.position = Vector2.Lerp(posA, posB, .5f);
+        
+        /*
+        GameObject Go = Instantiate(display, posA, Quaternion.identity);
+        GameObject Go2 = Instantiate(display, posB, Quaternion.identity);
+        Go.transform.SetParent(this.gameObject.transform);
+        Go2.transform.SetParent(this.gameObject.transform);
+        Go.transform.position = posA;
+        Go2.transform.position = posB;
+        Go.transform.localScale = Vector2.one;
+        Go2.transform.localScale = Vector2.one;
+        */
     }
 
     public void UpdateStartingRoom(RoomMapIcon room)

@@ -178,7 +178,7 @@ public class Effect : MonoBehaviour
         if (curEffectName == EffectName.BLEED)
             GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(-power);
         else if (curEffectName == EffectName.RECOVER)
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(-power);
+            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(power);
 
         if (curEffectName == EffectName.BLEED || curEffectName == EffectName.RECOVER)
             GameManager.instance.GetActiveUnitFunctionality().SpawnPowerUI(power, this);

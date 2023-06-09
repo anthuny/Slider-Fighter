@@ -54,9 +54,16 @@ public class Weapon : MonoBehaviour
     {
         if (isStopped)
             return;
-        //Input.GetMouseButtonDown(1)
-        if (Input.touchCount > 0)
-            ResetWeapon();
+
+        // If user is on mobile, detect input differently then it would otherwise
+        if (SystemInfo.deviceType == DeviceType.Handheld)
+        {
+            if (Input.touchCount > 0)
+                ResetWeapon();
+        }
+        else 
+            if (Input.GetMouseButton(0))
+                ResetWeapon();
     }
 
     private void FixedUpdate()

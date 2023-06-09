@@ -32,7 +32,7 @@ public class UnitFunctionality : MonoBehaviour
     public int unitStartTurnEnergyGain;
     public EnergyCost energyCostImage;
     [SerializeField] private Transform projectileParent;
-
+    [SerializeField] private Sprite projectileSprite;
     [SerializeField] private UIElement unitExpBar;
     [SerializeField] private Text unitLevelText;
     [SerializeField] private Image unitExpBarImage;
@@ -175,20 +175,34 @@ public class UnitFunctionality : MonoBehaviour
                     activeEffects[i].TriggerPowerEffect();
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText();
+                }
+                /*
+                else if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
+                {
+                    activeEffects[i].TriggerPowerEffect();
+                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                    activeEffects[i].ReduceTurnCountText();
 
                     return;
                 }
+                */
             }
             else
             {
                 if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                 {
                     activeEffects[i].TriggerPowerEffect();
+                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                    activeEffects[i].ReduceTurnCountText();
+                }
+                /*
+                else if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
+                {
+                    activeEffects[i].TriggerPowerEffect();
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Inflict");
                     activeEffects[i].ReduceTurnCountText();
-
-                    return;
                 }
+                */
             }
         }
     }
@@ -244,16 +258,23 @@ public class UnitFunctionality : MonoBehaviour
         // If unit is already effected with this effect, stop
         for (int i = 0; i < activeEffects.Count; i++)
         {
-            if (activeEffects[i].turnCountRemaining < activeEffects[i].maxTurnCountRemaining)
+            if (addedEffect.effectName == activeEffects[i].effectName)
             {
-                //ToggleUnitHealthBar(false);
-                //TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true);
                 TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
                 activeEffects[i].FillTurnCountText();
                 return;
             }
+            /*
+            if (activeEffects[i].turnCountRemaining < activeEffects[i].maxTurnCountRemaining)
+            {
+                //ToggleUnitHealthBar(false);
+                //TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true);
+
+                return;
+            }
             else
                 return;
+                */
         }
 
         //ToggleUnitHealthBar(false);
@@ -277,6 +298,11 @@ public class UnitFunctionality : MonoBehaviour
         {
             Destroy(effectsParent.GetChild(i).gameObject);
         }
+    }
+
+    public void UpdateUnitProjectileSprite(Sprite sprite)
+    {
+        projectileSprite = sprite;
     }
 
     public void UpdateUnitValue(int val)
@@ -400,6 +426,8 @@ public class UnitFunctionality : MonoBehaviour
         go.transform.localPosition = new Vector3(0, 0, 0);
 
         Projectile projectile = go.GetComponent<Projectile>();
+        projectile.UpdateProjectileSprite(projectileSprite);
+
         if (curUnitType == UnitType.PLAYER)
             projectile.UpdateTeam(true);
         else

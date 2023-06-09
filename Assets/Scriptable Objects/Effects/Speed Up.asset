@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 0
   curEffectType: 1
+  curEffectName: 6
   effectName: SPEEDUP
   effectDesc: 
   effectIcon: {fileID: 21300000, guid: bd342816b57b5e84ba38a25226148b7a, type: 3}
-  healthPerc: 0
+  powerPercent: 0
   powerAmp: 0

@@ -17,8 +17,9 @@ MonoBehaviour:
   floorLevel: 1
   minRoomCount: 10
   maxRoomCount: 10
-  sideRoomAmount: 7
+  sideRoomAmount: 5
   shopRoomCount: 2
   enemyUnits:
-  - {fileID: 11400000, guid: af4c98db1fd39344c8f213210e44ae12, type: 2}
   - {fileID: 11400000, guid: 3cc3a376c9591944b83d2e508ecd47d2, type: 2}
+  - {fileID: 11400000, guid: af4c98db1fd39344c8f213210e44ae12, type: 2}
+  - {fileID: 11400000, guid: eb1ecd658a1af71459cae8dd2020afa2, type: 2}

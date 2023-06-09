@@ -19,7 +19,7 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: 102d2b3b78a53a442a5657efab178a1e, type: 3}
   unitColour: {r: 1, g: 0.98459125, b: 0.43867922, a: 1}
   name: Archer
-  startingSpeed: 30
+  startingSpeed: 45
   startingArmor: 0
   startingPower: 10
   startingMaxHealth: 2500
@@ -27,6 +27,7 @@ MonoBehaviour:
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 8fc51ebc57d289c43a80806bfa3ecec8, type: 3}
+  projectileSprite: {fileID: 21300000, guid: 9643bfb5474702d4caedeed7875ae076, type: 3}
   basicSkill: {fileID: 11400000, guid: c73d0bea0f8ca6e408b0cbd7c9346939, type: 2}
   skill1: {fileID: 11400000, guid: e591c0ea94e44dc4f966fed6cf5e0dbf, type: 2}
   skill2: {fileID: 11400000, guid: cc318f8510e168b4388ec5807679be82, type: 2}

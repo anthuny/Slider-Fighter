@@ -226,10 +226,10 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void StopWeaponHitLine()
      {
+        Weapon.instance.StartCoroutine(Weapon.instance.StopHitLine());
+
         //GameManager.instance.UpdateUnitCurrentEnergy();
         GameManager.instance.UpdateActiveUnitEnergyBar(false);
-
-        Weapon.instance.StartCoroutine(Weapon.instance.StopHitLine());
 
         GameManager.instance.DisableAllSkillSelections();
     }

@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Projectile : MonoBehaviour
 {
     private Transform target;
+    private Image image;
     private float speed = 1;
 
     private float rotationAllowedTimer;
@@ -15,7 +17,17 @@ public class Projectile : MonoBehaviour
 
     bool isEnemyProjectile;
 
+    public void UpdateProjectileSprite(Sprite sprite)
+    {
+        this.image.sprite = sprite;
+    }
+
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        image = GetComponent<Image>();
+    }
     void Start()
     {
         rotationAllowedTimer = 0;

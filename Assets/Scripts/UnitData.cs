@@ -24,6 +24,7 @@ public class UnitData : ScriptableObject
     // The amount of units this unit can target at once with it's basic attack
     public int basicSelectionCount;
     public GameObject characterPrefab;
+    public Sprite projectileSprite;
 
     public SkillData basicSkill;
     public SkillData skill1;

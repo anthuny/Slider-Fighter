@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 5809257815195215671}
   - component: {fileID: 4008564147376620509}
   - component: {fileID: 4546448096699334182}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Active Unit Turn Order Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7080726626037052008}
-  m_RootOrder: 11
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -817,9 +817,9 @@ RectTransform:
   - {fileID: 4728988879681953271}
   - {fileID: 4453001358552379465}
   - {fileID: 640572916926459131}
+  - {fileID: 5012568738026933311}
   - {fileID: 3984316296362089940}
   - {fileID: 4104500692334119862}
-  - {fileID: 5012568738026933311}
   m_Father: {fileID: 3449260601481309961}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1178,6 +1178,7 @@ GameObject:
   - component: {fileID: 5701082605030911750}
   - component: {fileID: 7414491478435158705}
   - component: {fileID: 7922562286248162540}
+  - component: {fileID: 1202359404528564017}
   m_Layer: 5
   m_Name: Unit
   m_TagString: Untagged
@@ -1193,7 +1194,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3449260601481309960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 29.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1245,6 +1246,7 @@ MonoBehaviour:
   unitStartTurnEnergyGain: 0
   energyCostImage: {fileID: 1915120964295476734}
   projectileParent: {fileID: 599644548073673327}
+  projectileSprite: {fileID: 0}
   unitExpBar: {fileID: 1440977378408158252}
   unitLevelText: {fileID: 75042433592892090}
   unitExpBarImage: {fileID: 4813719621330373362}
@@ -1260,6 +1262,7 @@ MonoBehaviour:
   isSelected: 0
   idleBattle: 0
   isDead: 0
+  isTaunting: 0
 --- !u!114 &7414491478435158705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1293,6 +1296,17 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!210 &1202359404528564017
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3449260601481309960}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 63
 --- !u!1 &4401602157500841055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,7 +1339,7 @@ RectTransform:
   - {fileID: 2665638174542951473}
   - {fileID: 5341080730306811498}
   m_Father: {fileID: 7080726626037052008}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1425,7 +1439,7 @@ RectTransform:
   - {fileID: 5318916574417633253}
   - {fileID: 734285317511770387}
   m_Father: {fileID: 7080726626037052008}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
