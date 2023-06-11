@@ -45,6 +45,7 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private Transform effectsParent;
     public UIElement effects;
     [SerializeField] private List<Effect> activeEffects = new List<Effect>();
+    public int curRecieveDamageAmp = 100;
 
     [HideInInspector]
     public GameObject prevPowerUI;
@@ -56,6 +57,8 @@ public class UnitFunctionality : MonoBehaviour
     public bool idleBattle;
     public bool isDead;
     public bool isTaunting;
+    public bool isParrying;
+    public bool attacked;
 
     private void Awake()
     {
@@ -157,35 +160,36 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void DecreaseEffectTurnsLeft(bool turnStart)
+    public void DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
     {       
         // If no effects remain on the unit, stop
         if (activeEffects.Count >= 1)
         {
             if (activeEffects[0] == null)
                 return;
-        }
-       
+        }      
+
         for (int i = 0; i < activeEffects.Count; i++)
         {
+            if (parry)
+            {
+                if (activeEffects[i].curEffectName == Effect.EffectName.PARRY)
+                {
+                    activeEffects[i].TriggerPowerEffect();
+                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                    activeEffects[i].ReduceTurnCountText(this);
+                    return;
+                }
+            }
+
             if (turnStart)
             {
                 if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
                 {              
                     activeEffects[i].TriggerPowerEffect();
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
-                    activeEffects[i].ReduceTurnCountText();
+                    activeEffects[i].ReduceTurnCountText(this);
                 }
-                /*
-                else if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
-                {
-                    activeEffects[i].TriggerPowerEffect();
-                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
-                    activeEffects[i].ReduceTurnCountText();
-
-                    return;
-                }
-                */
             }
             else
             {
@@ -193,16 +197,8 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     activeEffects[i].TriggerPowerEffect();
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
-                    activeEffects[i].ReduceTurnCountText();
+                    activeEffects[i].ReduceTurnCountText(this);
                 }
-                /*
-                else if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
-                {
-                    activeEffects[i].TriggerPowerEffect();
-                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Inflict");
-                    activeEffects[i].ReduceTurnCountText();
-                }
-                */
             }
         }
     }
@@ -253,7 +249,7 @@ public class UnitFunctionality : MonoBehaviour
         return activeEffects;
     }
 
-    public void AddUnitEffect(EffectData addedEffect)
+    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit)
     {
         // If unit is already effected with this effect, stop
         for (int i = 0; i < activeEffects.Count; i++)
@@ -264,17 +260,6 @@ public class UnitFunctionality : MonoBehaviour
                 activeEffects[i].FillTurnCountText();
                 return;
             }
-            /*
-            if (activeEffects[i].turnCountRemaining < activeEffects[i].maxTurnCountRemaining)
-            {
-                //ToggleUnitHealthBar(false);
-                //TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true);
-
-                return;
-            }
-            else
-                return;
-                */
         }
 
         //ToggleUnitHealthBar(false);
@@ -288,7 +273,7 @@ public class UnitFunctionality : MonoBehaviour
 
         Effect effect = go.GetComponent<Effect>();
         activeEffects.Add(effect);
-        effect.Setup(addedEffect);
+        effect.Setup(addedEffect, targetUnit);
     }
 
     public void ResetEffects()
@@ -360,7 +345,7 @@ public class UnitFunctionality : MonoBehaviour
         isTaunting = toggle;
     }
 
-    public void SpawnPowerUI(float power = 10f, bool offense = false, Effect effect = null)
+    public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null)
     {
         // If this is NOT the first power text UI
         if (prevPowerUI != null)
@@ -374,6 +359,14 @@ public class UnitFunctionality : MonoBehaviour
 
         PowerText powerText = prevPowerUI.GetComponent<PowerText>();
 
+        if (isParrying)
+        {
+            powerText.UpdatePowerTextFontSize(GameManager.instance.powerSkillParryFontSize);
+            powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillParry);
+            powerText.UpdatePowerText(GameManager.instance.parryPowerText);
+            return;
+        }
+
         // If power is 0, display that it missed
         if (power <= 0)
         {
@@ -383,6 +376,8 @@ public class UnitFunctionality : MonoBehaviour
             //powerText.UpdatePowerText(power.ToString());   // Update Power Text
             return;
         }
+
+
 
         // Otherwise, display the power
         powerText.UpdatePowerTextFontSize(GameManager.instance.powerHitFontSize);
@@ -506,8 +501,7 @@ public class UnitFunctionality : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             GameManager.instance.RemoveUnit(this);
-            
-
+                        
             DestroyUnit();
         }
     }
@@ -640,19 +634,29 @@ public class UnitFunctionality : MonoBehaviour
         return maxExp;
     }
 
-    public void UpdateUnitCurHealth(int power)
+    public void UpdateUnitCurHealth(int power, bool damaging = false)
     {
         if (isDead)
             return;
 
+        float absPower = Mathf.Abs((float)power);
+
         if (power < 0)
             animator.SetTrigger("DamageFlg");
         //else
-          //  animator.SetTrigger("SkillFlg");
+        //  animator.SetTrigger("SkillFlg");
 
-        curHealth += power;
-
-        //SpawnPowerUI(power);
+        // Damaging
+        if (damaging)
+        {
+            //float tempPower;
+            //tempPower = (curRecieveDamageAmp / 100f) * absPower;
+            //float newPower = absPower + tempPower;
+            curHealth -= (int)absPower; 
+        }
+        // Healing
+        else
+            curHealth += (int)absPower;
 
         UpdateUnitHealthVisual();
     }
@@ -771,7 +775,7 @@ public class UnitFunctionality : MonoBehaviour
     void DestroyUnit()
     {
         unitVisuals.UpdateAlpha(0);
-
+        //GameManager.instance.UpdateTurnOrder();
         //Destroy(gameObject);
     }
 

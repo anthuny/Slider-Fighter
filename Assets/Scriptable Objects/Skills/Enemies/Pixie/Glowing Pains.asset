@@ -21,7 +21,7 @@ MonoBehaviour:
   skillDescr: 'Heal a targeted ally for '
   skillPower: 125
   skillAttackCount: 2
-  projectileSpeed: 9
+  projectileSpeed: 13
   skillEnergyCost: 2
   skillSelectionCount: 1
   isSelfCast: 0

@@ -88,11 +88,14 @@ public class GameManager : MonoBehaviour
     public float powerUIHeightLvInc;
     [SerializeField] private float postHitWaitTime;
     public string missPowerText;
+    public string parryPowerText;
     public TMP_ColorGradient gradientSkillMiss;
+    public TMP_ColorGradient gradientSkillParry;
     public TMP_ColorGradient gradientSkillAttack;
     public TMP_ColorGradient gradientSkillSupport;
     public int powerHitFontSize;
     public int powerMissFontSize;
+    public int powerSkillParryFontSize;
 
     [Header("Skills UI")]
     public float skillAlertAppearTime;
@@ -395,6 +398,7 @@ public class GameManager : MonoBehaviour
 
             unitFunctionality.UpdateUnitValue(unitValue);
             unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
+            //unitFunctionality.curRecieveDamageAmp = unit.curReci
 
             //unitFunctionality.UpdateUnitVisuals();
 
@@ -455,7 +459,7 @@ public class GameManager : MonoBehaviour
         // Update allies into position for battle
         UpdateAllAlliesPosition(false);
         ResetSelectedUnits();
-        DetermineTurnOrder();
+        DetermineTurnOrder(true);
     }
 
     public bool CheckIfEnergyAvailableSkill()
@@ -530,6 +534,8 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator WeaponAttackCommand(int power)
     {
+        UnitFunctionality castingUnit = GetActiveUnitFunctionality();
+
         GetActiveUnitFunctionality().effects.UpdateAlpha(1);
 
         // If the skill is supposed to deal no power, don't spawn projectiles for it
@@ -569,7 +575,7 @@ public class GameManager : MonoBehaviour
         // If skill is self cast, do it here
         if (GetActiveSkill().isSelfCast)
             if (GetActiveSkill().effect != null)
-                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect);
+                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality());
 
         // Disable unit selection just before attack
         for (int y = 0; y < unitsSelected.Count; y++)
@@ -586,50 +592,126 @@ public class GameManager : MonoBehaviour
                 if (x > unitsSelected.Count)
                     break;
 
-
                 // If active skil has an effect AND it's not a self cast, apply it to selected targets
-                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect);
+                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x]);
             }
         }
         else
         {
+            for (int z = 0; z < activeRoomAllUnitFunctionalitys.Count; z++)
+            {
+                activeRoomAllUnitFunctionalitys[z].attacked = false;
+            }
+
             // Loop as many times as power text will appear
             for (int x = 0; x < activeSkill.skillAttackCount; x++)
             {
                 // Loop through all selected units
                 for (int i = unitsSelected.Count - 1; i >= 0; i--)
                 {
+                    bool parrying = false;
+
                     power = AdjustSkillPowerTargetEffectAmp(power);
 
                     if (unitsSelected[i] == null || unitsSelected[i].isDead)
                         continue;
                     else
                     {
-                        // If skill is supposed to cause power, continue
-                        if (activeSkill.skillPower != 0)
+                        if (unitsSelected[i].isParrying)
                         {
-                            // Cause power on selected unit
+                            parrying = true;
+
+                            float absPower = Mathf.Abs(power);
+                            float tempPower = (unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
+                            float newPower = absPower + tempPower;
+
+                            // Cause power on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
+                                GetActiveUnitFunctionality().SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower);
+                            else
+                                GetActiveUnitFunctionality().SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
+
+                            // Increase health on casting unit
+                            if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                                GetActiveUnitFunctionality().UpdateUnitCurHealth(power);
+
+                            // Decrease health on casting unit
+                            if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                                GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newPower, true);
+
+                            // Reset unit's prev power text for future power texts
+                            if (x == activeSkill.skillAttackCount - 1)
+                                GetActiveUnitFunctionality().ResetPreviousPowerUI();
+
+                            // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                            if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality());
+
+                            // ATTACKING A PARRYING UNIT
+                            // If skill is supposed to cause power, continue
+                            if (activeSkill.skillPower != 0)
+                            {
+
+                                float absPower2 = Mathf.Abs(power);
+                                float tempPower2 = (unitsSelected[i].curRecieveDamageAmp / 100f) * absPower2;
+                                float newPower2 = absPower2 + tempPower2;
+
+                                // Cause power on selected unit
+                                if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower2, parrying);
+                                else
+                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power, parrying);
+
+                                // Increase health from the units current health if a support skill was casted on it
+                                if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                                    unitsSelected[i].UpdateUnitCurHealth(power);
+
+                                if (!parrying)
+                                {
+                                    // Decrease health from the units current health if a offense skill was casted on it
+                                    if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                                        unitsSelected[i].UpdateUnitCurHealth((int)newPower2, true);
+                                }
+
+                                // Reset unit's prev power text for future power texts
+                                if (x == activeSkill.skillAttackCount - 1)
+                                    unitsSelected[i].ResetPreviousPowerUI();
+
+                                // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                                if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i]);
+                            }
+                        }
+
+                        // Attacking a non parrying unit
+                        else
+                        {
+                            float absPower = Mathf.Abs(power);
+                            float tempPower = (unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
+                            float newPower = absPower + tempPower;
+
+                            // Cause power on casting unit
+                            if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower);
                             else
                                 unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
 
-                            // Increase health from the units current health if a support skill was casted on it
+                            // Increase health on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
                                 unitsSelected[i].UpdateUnitCurHealth(power);
 
-                            // Decrease health from the units current health if a offense skill was casted on it
+                            // Decrease health on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                                unitsSelected[i].UpdateUnitCurHealth(-power);
+                                unitsSelected[i].UpdateUnitCurHealth((int)newPower, true);
 
                             // Reset unit's prev power text for future power texts
                             if (x == activeSkill.skillAttackCount - 1)
                                 unitsSelected[i].ResetPreviousPowerUI();
-                        }
 
-                        // If active skil has an effect AND it's not a self cast, apply it to selected targets
-                        if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                            unitsSelected[i].AddUnitEffect(GetActiveSkill().effect);
+                            // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                            if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i]);
+                        }
                     }
                 }
 
@@ -638,13 +720,22 @@ public class GameManager : MonoBehaviour
             }
         }
 
-
         yield return new WaitForSeconds(postHitWaitTime);
+
+        //GameManager.instance.UpdateTurnOrder();
 
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
             SetupPlayerUI();
         else
-            StartCoroutine(GetActiveUnitFunctionality().AttackAgain());  // Attack again
+        {
+            if (castingUnit.GetUnitCurHealth() <= 0)
+            {
+                //UpdateTurnOrder();
+                yield break;
+            }
+            else
+                StartCoroutine(GetActiveUnitFunctionality().AttackAgain());  // Attack again
+        }
     }
 
     public void SetupPlayerUI()
@@ -796,10 +887,9 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
-        //UpdateTurnOrderVisual();
 
-        if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
-            UpdateTurnOrder(true);
+        //if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
+        UpdateTurnOrder(true);
     }
 
     public void UpdateActiveUnitNameText(string name)
@@ -807,7 +897,7 @@ public class GameManager : MonoBehaviour
         activeUnitNameText.text = name;
     }
 
-    public void DetermineTurnOrder()
+    public void DetermineTurnOrder(bool roundStart = false)
     {
         activeRoomAllUnitFunctionalitys.Sort(CompareUnitFunctionalitySpeed);
         activeRoomAllUnitFunctionalitys.Reverse();
@@ -815,20 +905,49 @@ public class GameManager : MonoBehaviour
         activeRoomAllUnits.Sort(CompareUnitSpeed);
         activeRoomAllUnits.Reverse();
 
-        UpdateTurnOrder();
+        UpdateTurnOrder(false, roundStart);
     }
 
-    public void UpdateTurnOrder(bool unitDied = false)
+    public void SpeedAdjustTurnOrderFix()
+    {
+        // loop through each unit in room
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            // loop through each effect on each unit
+            for (int x = 0; x < activeRoomAllUnitFunctionalitys[i].GetEffects().Count; x++)
+            {
+                // If unit has speed up effect
+                if (activeRoomAllUnitFunctionalitys[i].GetEffects()[x].curEffectName == Effect.EffectName.SPEEDUP)
+                {
+                    // units current speed
+                    float curSpeed = activeRoomAllUnitFunctionalitys[i].curSpeed;
+                    // units new speed
+                    float newSpeed = curSpeed + ((activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent / 100f) * curSpeed);
+
+                    // updating new speed
+                    activeRoomAllUnitFunctionalitys[i].UpdateUnitSpeed((int)newSpeed);
+                }
+            }
+        }
+
+        activeRoomAllUnitFunctionalitys.Sort(CompareUnitFunctionalitySpeed);
+        activeRoomAllUnitFunctionalitys.Reverse();
+
+        activeRoomAllUnits.Sort(CompareUnitSpeed);
+        activeRoomAllUnits.Reverse();
+
+        UpdateTurnOrderVisual();
+    }
+
+    public void UpdateTurnOrder(bool unitDied = false, bool roundStart = false)
     {
         ToggleUIElement(turnOrder, true);   // Enable turn order UI
 
-        GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false);
-
         ResetSelectedUnits();
 
-        if (unitDied)
-            return;
-        else
+        GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false);
+
+        if (!unitDied && !roundStart)
         {
             UnitFunctionality unitFunctionalityMoving = GetActiveUnitFunctionality();
             activeRoomAllUnitFunctionalitys.RemoveAt(0);
@@ -842,7 +961,8 @@ public class GameManager : MonoBehaviour
         UpdateTurnOrderVisual();
 
         //Trigger Start turn effects
-        GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true);
+        GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false);
+
         // Trigger Unit Energy regen 
         UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
 
@@ -1191,18 +1311,25 @@ public class GameManager : MonoBehaviour
 
     public void SelectUnit(UnitFunctionality unitFunctionality)
     {
-        /*
         if (activeSkill)
         {
-            // If active skill can only select enemies, do not allow players to be selected
-            if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
+            // Dont select other units if its a self cast
+            if (activeSkill.isSelfCast && unitFunctionality != GetActiveUnitFunctionality())
                 return;
 
             // If active skill can only select allies, do not allow enemies to be selected
-            if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
-                return;
+            //if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
+            //  return;
+
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    return;
+
+                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    return;
+            }
         }
-        */
 
         // If the selection is maxed, replaced a unit selected with the new one.
         if (unitsSelected.Count != 0)
@@ -1293,6 +1420,7 @@ public class GameManager : MonoBehaviour
             return -1;
         else if (unitA.curSpeed > unitB.curSpeed)
             return 1;
-        return 0;
+        else
+            return 0;
     }
 }

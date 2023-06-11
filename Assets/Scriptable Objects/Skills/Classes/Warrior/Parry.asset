@@ -13,15 +13,20 @@ MonoBehaviour:
   m_Name: Parry
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 0
+  curSkillSelectionType: 1
   curSkillGameType: 3
-  curRangedType: 0
+  curRangedType: 1
   skillSprite: {fileID: 21300000, guid: f6b8b85cbdc82ce439a41ae3d56d57ee, type: 3}
   skillName: PARRY
   skillDescr: 'Parry up to '
-  skillPower: 150
-  skillAttackCount: 1
-  projectileSpeed: 1
+  skillPower: 0
+  skillAttackCount: 0
+  projectileSpeed: 10
   skillEnergyCost: 3
-  skillSelectionCount: 0
-  skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
+  skillSelectionCount: 1
+  isSelfCast: 1
+  effect: {fileID: 11400000, guid: ba3e291f280756b4b982e633fcd1332e, type: 2}
+  effectTurnLength: 2
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  skillPowerIcon: {fileID: 21300000, guid: bb67b03c2969d104caba950c446f8c8d, type: 3}

@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 598ab766c50009b43b7f087a0dd359a1, type: 3}
-  m_Name: Speed Up
+  m_Name: Mark
   m_EditorClassIdentifier: 
-  curEffectTrigger: 2
-  curEffectType: 1
-  curEffectName: 6
-  effectName: SPEED UP
-  effectDesc: 
-  effectIcon: {fileID: 21300000, guid: bd342816b57b5e84ba38a25226148b7a, type: 3}
+  curEffectTrigger: 1
+  curEffectType: 0
+  curEffectName: 13
+  effectName: MARK
+  effectDesc: Inflict Mark on target enemy for
+  effectIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   powerPercent: 20
   powerAmp: 0

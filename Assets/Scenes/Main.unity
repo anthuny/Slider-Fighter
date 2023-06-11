@@ -10270,11 +10270,14 @@ MonoBehaviour:
   powerUIHeightLvInc: 0.44
   postHitWaitTime: 1
   missPowerText: MISS
+  parryPowerText: PARRY
   gradientSkillMiss: {fileID: 11400000, guid: 690deed414bc3fd4f86a2e82e3142c05, type: 2}
+  gradientSkillParry: {fileID: 11400000, guid: 9e2804ac73892744ca72ffb7693accbb, type: 2}
   gradientSkillAttack: {fileID: 11400000, guid: 1a7c46f59fbb53f49b6390d91c1e4be8, type: 2}
   gradientSkillSupport: {fileID: 11400000, guid: 696aa21cb3a0fde429fc06920eeeb3fc, type: 2}
   powerHitFontSize: 200
   powerMissFontSize: 165
+  powerSkillParryFontSize: 140
   skillAlertAppearTime: 1.5
   activeSkill: {fileID: 0}
   gradientSkillAlert: {fileID: 11400000, guid: 1a7c46f59fbb53f49b6390d91c1e4be8, type: 2}
