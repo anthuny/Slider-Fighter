@@ -17,6 +17,6 @@ MonoBehaviour:
   curEffectName: 2
   effectName: HEALTH DOWN
   effectDesc: 'Heal '
-  effectIcon: {fileID: 21300002, guid: e969b0c0a2203ee4c846eaf2203e00af, type: 3}
+  effectIcon: {fileID: 21300000, guid: 98911c7a4b834b541917dfd18841a6f9, type: 3}
   powerPercent: 0
   powerAmp: 0
