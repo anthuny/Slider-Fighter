@@ -103,9 +103,9 @@ public class Projectile : MonoBehaviour
         else
         {
             if (!GetTeam())
-                transform.Translate(-transform.up * (Time.deltaTime * speed));
-            else
                 transform.Translate(transform.up * (Time.deltaTime * speed));
+            else
+                transform.Translate(-transform.up * (Time.deltaTime * speed));
         }
     }
 

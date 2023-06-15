@@ -205,6 +205,15 @@ public class MapManager : MonoBehaviour
     {
         if (toggle)
         {
+            ShopManager.Instance.ClearShopItems();
+
+            // Disable unit's post battle bg
+            int count = GameManager.instance.activeRoomAllies.Count;
+            for (int i = 0; i < count; i++)
+            {
+                GameManager.instance.activeRoomAllies[i].ToggleUnitBG(false);
+            }
+
             map.UpdateAlpha(1);
 
             ToggleMapScroll(true);

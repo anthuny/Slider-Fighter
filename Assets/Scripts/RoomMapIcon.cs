@@ -60,6 +60,9 @@ public class RoomMapIcon : MonoBehaviour
                 else
                     MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
 
+                // Update GameManager active room
+                GameManager.instance.UpdateActiveRoom(this);
+
                 return;
             }
             else if (curRoomType == RoomType.STARTING)
@@ -68,6 +71,9 @@ public class RoomMapIcon : MonoBehaviour
                     MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
                     MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+
+                // Update GameManager active room
+                GameManager.instance.UpdateActiveRoom(this);
             }
             else if (!isMainRoom)
             {
@@ -78,6 +84,9 @@ public class RoomMapIcon : MonoBehaviour
                     MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
                     MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+
+                // Update GameManager active room
+                GameManager.instance.UpdateActiveRoom(this);
 
                 return;
             }
