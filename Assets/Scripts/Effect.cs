@@ -92,9 +92,9 @@ public class Effect : MonoBehaviour
         }
 
         UpdateEffectIcon(effect);
-        UpdateTurnCountText(GameManager.instance.GetActiveSkill().effectTurnLength);
+        UpdateTurnCountText(GameManager.Instance.GetActiveSkill().effectTurnLength);
 
-        maxTurnCountRemaining = GameManager.instance.GetActiveSkill().effectTurnLength;
+        maxTurnCountRemaining = GameManager.Instance.GetActiveSkill().effectTurnLength;
 
         EffectApply(targetUnit);
     }
@@ -112,8 +112,8 @@ public class Effect : MonoBehaviour
 
     public void RemoveEffect(UnitFunctionality unit)
     {
-        if (GameManager.instance.GetActiveUnitFunctionality().GetEffects().Count >= 1)
-            GameManager.instance.GetActiveUnitFunctionality().ResetEffects();
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetEffects().Count >= 1)
+            GameManager.Instance.GetActiveUnitFunctionality().ResetEffects();
 
         EffectRemove(unit);
         Destroy(gameObject);
@@ -140,24 +140,24 @@ public class Effect : MonoBehaviour
         {
             initialUse = true;
 
-            tempAddedHealth = (powerPercent / 100f) * GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
-            float newMaxHealth = GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)tempAddedHealth);
-            GameManager.instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, false, this);
+            tempAddedHealth = (powerPercent / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
+            float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)tempAddedHealth);
+            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, false, this);
         }
 
         if (curEffectName == EffectName.TAUNT)
-            GameManager.instance.GetActiveUnitFunctionality().ToggleTaunt(true);
+            GameManager.Instance.GetActiveUnitFunctionality().ToggleTaunt(true);
 
         else if (curEffectName == EffectName.POWERUP)
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(1 * powerAmp);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(1 * powerAmp);
         else if (curEffectName == EffectName.POWERDOWN)
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(1 * -powerAmp);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(1 * -powerAmp);
         else if (curEffectName == EffectName.PARRY)
-            GameManager.instance.GetActiveUnitFunctionality().isParrying = true;
+            GameManager.Instance.GetActiveUnitFunctionality().isParrying = true;
         else if (curEffectName == EffectName.SPEEDUP)
-            GameManager.instance.SpeedAdjustTurnOrderFix();
+            GameManager.Instance.SpeedAdjustTurnOrderFix();
         else if (curEffectName == EffectName.MARK)
         {
             // Toggle mark effect on the target
@@ -169,13 +169,13 @@ public class Effect : MonoBehaviour
     {
         if (curEffectName == EffectName.HEALTHUP)
         {
-            float newMaxHealth = GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxHealth() - tempAddedHealth;
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)-tempAddedHealth, true);
-            GameManager.instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, true, this);
+            float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() - tempAddedHealth;
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)-tempAddedHealth, true);
+            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, true, this);
         }
         else if (curEffectName == EffectName.TAUNT)
-            GameManager.instance.GetActiveUnitFunctionality().ToggleTaunt(false);
+            GameManager.Instance.GetActiveUnitFunctionality().ToggleTaunt(false);
         else if (curEffectName == EffectName.PARRY)
         {
             unit.isParrying = false;
@@ -196,19 +196,19 @@ public class Effect : MonoBehaviour
     {
         // Trigger effect alert
         // Do effect
-        int unitMaxHealth = (int)GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
+        int unitMaxHealth = (int)GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
         float tempPower = (powerPercent / 100f) * unitMaxHealth;
         int power = (int)tempPower;
 
         // Make bleed scale with recover buff // TODO
 
         if (curEffectName == EffectName.BLEED)
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(-power, true);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(-power, true);
         else if (curEffectName == EffectName.RECOVER)
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(power);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(power);
 
         if (curEffectName == EffectName.BLEED || curEffectName == EffectName.RECOVER)
-            GameManager.instance.GetActiveUnitFunctionality().SpawnPowerUI(power, false, false, this);
+            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(power, false, false, this);
 
         if (curEffectName ==  EffectName.PARRY)
         { }

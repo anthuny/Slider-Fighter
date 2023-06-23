@@ -110,6 +110,7 @@ public class Weapon : MonoBehaviour
     public void StartHitLine()
     {
         isStopped = false;
+        GameManager.Instance.UpdateEnemyPosition(false);
     }
     public IEnumerator StopHitLine()
     {
@@ -132,10 +133,10 @@ public class Weapon : MonoBehaviour
 
         yield return new WaitForSeconds(timePostHit);
 
-        GameManager.instance.SetupPlayerPostHitUI();
+        GameManager.Instance.SetupPlayerPostHitUI();
 
         // Adjust power based on skill effect amp on target then send it 
-        StartCoroutine(GameManager.instance.WeaponAttackCommand((int)calculatedPower));
+        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower));
     }
 
     public void DisableAlertUI()
@@ -145,18 +146,18 @@ public class Weapon : MonoBehaviour
 
     public void CalculatePower(WeaponHitArea.HitAreaType curHitAreaType)
     {
-        float currentPower = GameManager.instance.GetActiveUnitFunctionality().curPower;
+        float currentPower = GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
         if (curHitAreaType == WeaponHitArea.HitAreaType.PERFECT)
-            calculatedPower = perfectMultiplier * (GameManager.instance.activeSkill.skillPower * (currentPower / 100f));
+            calculatedPower = perfectMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         else if (curHitAreaType == WeaponHitArea.HitAreaType.GREAT)
-            calculatedPower = greatMultiplier * (GameManager.instance.activeSkill.skillPower * (currentPower / 100f));
+            calculatedPower = greatMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         else if(curHitAreaType == WeaponHitArea.HitAreaType.GOOD)
-            calculatedPower = goodMultiplier * (GameManager.instance.activeSkill.skillPower * (currentPower / 100f));
+            calculatedPower = goodMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         else if(curHitAreaType == WeaponHitArea.HitAreaType.BAD)
-            calculatedPower = badMultiplier * (GameManager.instance.activeSkill.skillPower * (currentPower / 100f));
+            calculatedPower = badMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         else if(curHitAreaType == WeaponHitArea.HitAreaType.MISS)
-            calculatedPower = missMultiplier * (GameManager.instance.activeSkill.skillPower * (currentPower / 100f));
+            calculatedPower = missMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
 
         calculatedPower *= 10;
         

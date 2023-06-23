@@ -12,6 +12,8 @@ public class RoomMapIcon : MonoBehaviour
     public UIElement roomSelectionImage;
     [SerializeField] private Button roomButton;
     [SerializeField] private ButtonRoom buttonRoom;
+    [SerializeField] private List<Item> shopRoomItems = new List<Item>();
+    [SerializeField] private List<Item> ownedShopItems = new List<Item>();
     public enum RoomType { ENEMY, SHOP, BOSS, STARTING}
     public RoomType curRoomType;
 
@@ -21,6 +23,7 @@ public class RoomMapIcon : MonoBehaviour
     public bool isMainRoom;
     public bool isStartingRoom;
     public bool isCompleted;
+    public bool isVisited;
 
     bool revealedOnce;
 
@@ -40,53 +43,89 @@ public class RoomMapIcon : MonoBehaviour
         buttonRoom.room = this;
     }
 
+    public void AddOwnedShopItems(Item item)
+    {
+        ownedShopItems.Add(item);
+    }
+
+    public List<Item> GetOwnedShopItems()
+    {
+        return ownedShopItems;
+    }
+
+    public void AddShopRoomItems(Item item)
+    {
+        // If item is already stored in room data, dont store
+        //if (shopRoomItems.Contains(item))
+          //  return;
+
+        shopRoomItems.Add(item);
+    }
+
+    public void ClearShopRoomItems()
+    {
+        shopRoomItems.Clear();
+    }
+
+    public List<Item> GetShopRoomItems()
+    {
+        return shopRoomItems;
+    }
+
     public void SelectRoom()
     {
         // Ensure only check if room is revealed
         if (!isHidden)
         {
-            GameManager.instance.map.UpdateSelectedRoom(this);
-            GameManager.instance.map.unitMapIcon.UpdateUnitPosition(transform.localPosition);
+            GameManager.Instance.map.UpdateSelectedRoom(this);
+            GameManager.Instance.map.unitMapIcon.UpdateUnitPosition(transform.localPosition);
 
-            GameManager.instance.map.mapOverlay.UpdateOverlayRoomName(curRoomType);
+            GameManager.Instance.map.mapOverlay.UpdateOverlayRoomName(curRoomType);
 
-            if (!GameManager.instance.map.CheckIfAnyHiddenMainRooms(1) && !isStartingRoom && isMainRoom)
+            if (!GameManager.Instance.map.CheckIfAnyHiddenMainRooms(1) && !isStartingRoom && isMainRoom)
             {
                 ToggleDiscovered(true);
-                GameManager.instance.map.HideConnectingRooms();
+                GameManager.Instance.map.HideConnectingRooms();
 
                 if (GetIsCompleted())
-                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
-                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
 
                 // Update GameManager active room
-                GameManager.instance.UpdateActiveRoom(this);
+                RoomManager.Instance.UpdateActiveRoom(this);
 
                 return;
             }
             else if (curRoomType == RoomType.STARTING)
             {
                 if (GetIsCompleted())
-                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
-                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
 
                 // Update GameManager active room
-                GameManager.instance.UpdateActiveRoom(this);
+                RoomManager.Instance.UpdateActiveRoom(this);
+            }
+            else if (curRoomType == RoomType.SHOP)
+            {
+                MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
+
+                // Update GameManager active room
+                RoomManager.Instance.UpdateActiveRoom(this);
             }
             else if (!isMainRoom)
             {
                 ToggleDiscovered(true);
-                GameManager.instance.map.UpdateSelectedRoom(this);
+                GameManager.Instance.map.UpdateSelectedRoom(this);
 
                 if (GetIsCompleted())
-                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(false);
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
-                    MapManager.instance.mapOverlay.ToggleEnterRoomButton(true);
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
 
                 // Update GameManager active room
-                GameManager.instance.UpdateActiveRoom(this);
+                RoomManager.Instance.UpdateActiveRoom(this);
 
                 return;
             }
@@ -101,6 +140,16 @@ public class RoomMapIcon : MonoBehaviour
     public bool GetIsCompleted()
     {
         return isCompleted;
+    }
+
+    public void UpdateIsVisited(bool toggle)
+    {
+        isVisited = toggle;
+    }
+
+    public bool GetIsVisited()
+    {
+        return isVisited;
     }
 
     public void UpdateHorizontalPos(float minX, float maxX)
@@ -167,9 +216,9 @@ public class RoomMapIcon : MonoBehaviour
         // If turning hidden ON
         if (toggle)
         {
-            UpdateRoomIconColour(GameManager.instance.map.roomHiddenColour);
-            UpdateRoomDetail(GameManager.instance.map.detailHiddenSprite);
-            UpdateRoomiconSize(GameManager.instance.map.roomEnemySize);
+            UpdateRoomIconColour(GameManager.Instance.map.roomHiddenColour);
+            UpdateRoomDetail(GameManager.Instance.map.detailHiddenSprite);
+            UpdateRoomiconSize(GameManager.Instance.map.roomEnemySize);
         }
         // if turning hidden OFF
         else
@@ -199,9 +248,9 @@ public class RoomMapIcon : MonoBehaviour
         {
 
             //UpdateRoomVisuals(curRoomType);
-            UpdateRoomIconColour(GameManager.instance.map.roomUndiscoveredColour);
-            UpdateRoomDetail(GameManager.instance.map.detailHiddenSprite);
-            UpdateRoomiconSize(GameManager.instance.map.roomEnemySize);
+            UpdateRoomIconColour(GameManager.Instance.map.roomUndiscoveredColour);
+            UpdateRoomDetail(GameManager.Instance.map.detailHiddenSprite);
+            UpdateRoomiconSize(GameManager.Instance.map.roomEnemySize);
         }
         else
         {
@@ -220,13 +269,13 @@ public class RoomMapIcon : MonoBehaviour
         curRoomType = roomType;
 
         if (curRoomType == RoomType.ENEMY)
-            GameManager.instance.map.UpdateRoomIconType(this, "enemy");
+            GameManager.Instance.map.UpdateRoomIconType(this, "enemy");
         else if (curRoomType == RoomType.SHOP)
-            GameManager.instance.map.UpdateRoomIconType(this, "shop");
+            GameManager.Instance.map.UpdateRoomIconType(this, "shop");
         else if (curRoomType == RoomType.BOSS)
-            GameManager.instance.map.UpdateRoomIconType(this, "boss");
+            GameManager.Instance.map.UpdateRoomIconType(this, "boss");
         else if (curRoomType == RoomType.STARTING)
-            GameManager.instance.map.UpdateRoomIconType(this, "starting");
+            GameManager.Instance.map.UpdateRoomIconType(this, "starting");
     }
 
     public void ToggleRoomSelected(bool toggle)

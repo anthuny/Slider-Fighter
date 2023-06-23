@@ -6,7 +6,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance;
 
     [SerializeField] private float postBattleTime;
     public List<UnitData> activeTeam = new List<UnitData>();
@@ -23,12 +23,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<UnitFunctionality> activeRoomAllUnitFunctionalitys = new List<UnitFunctionality>();
     public List<UnitFunctionality> activeRoomAllies = new List<UnitFunctionality>();
     [SerializeField] private List<UnitFunctionality> activeRoomEnemies = new List<UnitFunctionality>();
-    [SerializeField] private RoomMapIcon activeRoom;
 
     [SerializeField] private GameObject unitIcon;
 
     [Header("Map")]
-    public MapManager map;  
+    public MapManager map;
+
+    [Header("Shop")]
+    [SerializeField] private float shopRemoveSelectTime = 1.5f;
 
     [Header("Turn Order")]
     [SerializeField] private Transform turnOrderParent;
@@ -114,21 +116,40 @@ public class GameManager : MonoBehaviour
 
     private int experienceGained;
     private int activeRoomEnemiesKilled;
-    [HideInInspector]
-    public int playerGold;
+    [SerializeField] private Transform enemyPositionMainCombatTrans;
+    [SerializeField] private Transform enemyPositionPlayerTurnTrans;
+    [SerializeField] private Transform enemyPositionsCurrent;
+
     public bool playerLost;
+
+    private bool allowSelection;
+    bool hasBeenLuckyHit;
+
+    bool firstTimeRoomStart = true;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
     private void Start()
     {
         Application.targetFrameRate = 60;
 
         //map.Setup();
-        playerGold = 0;
+        ShopManager.Instance.UpdatePlayerGold(0);
         map.mapOverlay.ResetPlayerGoldText();
+    }
+
+    public void UpdateEnemyPosition(bool playerTurn)
+    {
+        if (playerTurn)
+        {
+            enemyPositionsCurrent.position = enemyPositionPlayerTurnTrans.position;
+        }
+        else
+        {
+            enemyPositionsCurrent.position = enemyPositionMainCombatTrans.position;
+        }
     }
 
     public void Setup()
@@ -136,9 +157,9 @@ public class GameManager : MonoBehaviour
         // Destroy previous room
         ResetRoom();
 
-        RoomManager.instance.SelectFloor();
+        RoomManager.Instance.SelectFloor();
 
-        StartRoom(activeRoom, RoomManager.instance.GetActiveFloor());
+        StartRoom(RoomManager.Instance.GetActiveRoom(), RoomManager.Instance.GetActiveFloor());
 
         //ToggleUIElement(turnOrder, false);
 
@@ -149,11 +170,6 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(playerWeapon, false);
         ToggleMap(false);
         postBattleUI.TogglePostBattleUI(false);
-    }
-
-    public void UpdateActiveRoom(RoomMapIcon room)
-    {
-        activeRoom = room;
     }
 
     public void ResetRoom()
@@ -184,7 +200,7 @@ public class GameManager : MonoBehaviour
 
         activeRoomAllUnitFunctionalitys.Clear();
 
-        /*
+        
         for (int i = 0; i < activeRoomAllies.Count; i++)
         {
             activeRoomAllies.RemoveAt(i);
@@ -192,7 +208,7 @@ public class GameManager : MonoBehaviour
 
         activeRoomAllies.Clear();
 
-        */
+        
         for (int i = 0; i < activeRoomEnemies.Count; i++)
         {
             activeRoomEnemies.RemoveAt(i);
@@ -310,7 +326,7 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(playerAbilities, false);
         ToggleUIElement(playerAbilityDesc, false);
 
-        ToggleEndTurnButton(true);
+        ToggleEndTurnButton(false);
     }
 
     public void SetupPlayerSkillsUI()
@@ -328,6 +344,8 @@ public class GameManager : MonoBehaviour
         ToggleEndTurnButton(true);
 
         UpdateUnitsSelectedText();
+
+        UpdateEnemyPosition(true);
     }
 
     public void SetupPlayerWeaponUI()
@@ -355,6 +373,11 @@ public class GameManager : MonoBehaviour
         UpdateActiveUnitEnergyBar(true, true, activeSkill.skillEnergyCost);
     }
 
+    public void ClearRoom()
+    {
+
+    }
+
     public void StartRoom(RoomMapIcon room, FloorData activeFloor)
     {
         // Reset experience gained from killed enemies
@@ -364,7 +387,7 @@ public class GameManager : MonoBehaviour
         if (room.curRoomType ==  RoomMapIcon.RoomType.ENEMY)
         {
             // Determine enemy unit value
-            int roomChallengeCount = (RoomManager.instance.GetFloorCount() + 1) + RoomManager.instance.GetFloorDifficulty();
+            int roomChallengeCount = (RoomManager.Instance.GetFloorCount() + 1) + RoomManager.Instance.GetFloorDifficulty();
 
             int spawnEnemyPosIndex = 0;
             int spawnEnemyIndex = 0;
@@ -400,7 +423,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
                 unitFunctionality.UpdateUnitLevel(1);
 
-                int unitValue = activeFloor.enemyUnits[spawnEnemyIndex].GetUnitValue() * (RoomManager.instance.GetFloorCount() + 1);
+                int unitValue = activeFloor.enemyUnits[spawnEnemyIndex].GetUnitValue() * (RoomManager.Instance.GetFloorCount() + 1);
 
                 unitFunctionality.UpdateUnitValue(unitValue);
                 unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
@@ -426,40 +449,44 @@ public class GameManager : MonoBehaviour
             }
 
             // Spawn player units
-            for (int i = 0; i < activeTeam.Count; i++)
+            if (activeRoomAllies.Count == 0)
             {
-                UnitData unit = activeTeam[i];    // Reference
+                for (int i = 0; i < activeTeam.Count; i++)
+                {
+                    UnitData unit = activeTeam[i];    // Reference
 
-                GameObject go = Instantiate(baseUnit, allySpawnPositions[i]);
-                go.transform.SetParent(allySpawnPositions[i]);
+                    GameObject go = Instantiate(baseUnit, allySpawnPositions[i]);
+                    go.transform.SetParent(allySpawnPositions[i]);
 
-                UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
-                unitFunctionality.ResetPosition();
-                unitFunctionality.UpdateUnitName(unit.name);
-                unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
-                //unitFunctionality.UpdateUnitColour(unit.unitColour);
-                unitFunctionality.UpdateUnitType("Player");
-                unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
-                unitFunctionality.UpdateUnitPower(unit.startingPower);
-                unitFunctionality.UpdateUnitArmor(unit.startingArmor);
+                    UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
+                    unitFunctionality.ResetPosition();
+                    unitFunctionality.UpdateUnitName(unit.name);
+                    unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
+                    //unitFunctionality.UpdateUnitColour(unit.unitColour);
+                    unitFunctionality.UpdateUnitType("Player");
+                    unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
+                    unitFunctionality.UpdateUnitPower(unit.startingPower);
+                    unitFunctionality.UpdateUnitArmor(unit.startingArmor);
 
-                unitFunctionality.UpdateUnitVisual(unit.unitSprite);
-                unitFunctionality.UpdateUnitIcon(unit.unitIcon);
+                    unitFunctionality.UpdateUnitVisual(unit.unitSprite);
+                    unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
-                unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
-                unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
+                    unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
+                    unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
 
-                AddActiveRoomAllUnitsFunctionality(unitFunctionality);
-                AddActiveRoomAllUnits(unit);
+                    AddActiveRoomAllUnitsFunctionality(unitFunctionality);
+                    AddActiveRoomAllUnits(unit);
 
-                unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-                unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
-                unitFunctionality.UpdateUnitLevel(1);
+                    unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
+                    unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+                    unitFunctionality.UpdateUnitLevel(1);
 
-                unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
+                    unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
+                }
             }
 
             ShopManager.Instance.ClearShopItems();
+            ToggleAllowSelection(true);
 
             playerUIElement.UpdateAlpha(1);     // Enable player UI
             DetermineTurnOrder(true);
@@ -511,6 +538,7 @@ public class GameManager : MonoBehaviour
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
             ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
+            ToggleAllowSelection(false);
 
             ShopManager.Instance.FillShopItems();
         }
@@ -708,14 +736,23 @@ public class GameManager : MonoBehaviour
                             // If skill is supposed to cause power, continue
                             if (activeSkill.skillPower != 0)
                             {
-
                                 float absPower2 = Mathf.Abs(power);
                                 float tempPower2 = (unitsSelected[i].curRecieveDamageAmp / 100f) * absPower2;
                                 float newPower2 = absPower2 + tempPower2;
 
                                 // Cause power on selected unit
                                 if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower2, parrying);
+                                {
+                                    int orderCount = 2;
+                                    if (hasBeenLuckyHit)
+                                    {
+                                        hasBeenLuckyHit = false;
+                                        orderCount--;
+                                    }
+                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower2, true, false, null, x + orderCount);
+
+                                    CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                                }
                                 else
                                     unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power, parrying);
 
@@ -747,9 +784,19 @@ public class GameManager : MonoBehaviour
                             float tempPower = (unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
                             float newPower = absPower + tempPower;
 
-                            // Cause power on casting unit
+                            // Cause power
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower);
+                            {
+                                int orderCount = 2;
+                                if (hasBeenLuckyHit)
+                                {
+                                    hasBeenLuckyHit = false;
+                                    orderCount--;
+                                }
+                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower, false, false, null, x + orderCount);
+
+                                CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                            }
                             else
                                 unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
 
@@ -792,6 +839,47 @@ public class GameManager : MonoBehaviour
             }
             else
                 StartCoroutine(GetActiveUnitFunctionality().AttackAgain());  // Attack again
+        }
+    }
+
+    private void CheckAttackForItem(UnitFunctionality unitTarget, UnitFunctionality unitCaster, int power, int xCount, int orderCount)
+    {
+        // If the unit has lucky dice, roll for another attack
+        List<Item> items = GetActiveUnitFunctionality().GetEquipItems();
+        int count = GetActiveUnitFunctionality().GetEquipItems().Count;
+
+        for (int g = 0; g < count; g++)
+        {
+            int procChance = items[g].procChance;
+
+            power = AdjustSkillPowerTargetEffectAmp(power);
+            float absPowerLucky = Mathf.Abs(power);
+            float tempPowerLucky = (unitTarget.curRecieveDamageAmp / 100f) * absPowerLucky;
+            float newPowerLucky = absPowerLucky + tempPowerLucky;
+
+            if (items[g].itemName == "Lucky Dice")
+            {
+                if (CheckItemHitChance(GetActiveUnitFunctionality().GetEquipItemCount("Lucky Dice"), procChance))
+                {
+                    hasBeenLuckyHit = true;
+                    unitTarget.SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPowerLucky, false, false, null, xCount + orderCount + 1, true);
+                    unitTarget.UpdateUnitCurHealth((int)newPowerLucky, true);
+                    continue;
+                }
+            }
+
+            else if (items[g].itemName == "Blood Tip Dagger")
+            {
+                if (CheckItemHitChance(GetActiveUnitFunctionality().GetEquipItemCount("Blood Tip Dagger"), procChance))
+                {
+                    // Calculate to heal for 5% of the caster's max health
+                    float newPower = (items[g].power / 100f) * GetActiveUnitFunctionality().GetUnitMaxHealth();
+
+                    unitCaster.SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower, false, false, null, xCount + orderCount + 1, false, true);
+                    unitCaster.UpdateUnitCurHealth((int)newPower, false);
+                    continue;
+                }
+            }
         }
     }
 
@@ -1060,9 +1148,10 @@ public class GameManager : MonoBehaviour
             UpdateSkillDetails(activeSkill);
             UpdateAllSkillIconAvailability();
             UpdateUnitSelection(activeSkill);
-        }
+            UpdateEnemyPosition(true);
 
-        UpdateActiveUnitTurnArrow();
+            UpdateActiveUnitTurnArrow();
+        }
     }
 
     public void AddExperienceGained(int exp)
@@ -1359,19 +1448,55 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UnSelectUnit(UnitFunctionality unitFunctionality)
+    public void UnSelectUnit(UnitFunctionality unit, bool shop = false)
     {
-        unitFunctionality.ToggleSelected(false);
+        // Enable exit button until player has selected ally with item
+        if (shop)
+        {
+            MapManager.Instance.exitShopRoom.UpdateAlpha(1);
+            ShopManager.Instance.selectAlly = false;
+        }
 
-        unitsSelected.Remove(unitFunctionality);
+        unit.ToggleSelected(false);
+        unitsSelected.Remove(unit);
     }
 
-    public void SelectUnit(UnitFunctionality unitFunctionality)
+    public void ToggleAllowSelection(bool toggle)
     {
+        allowSelection = toggle;
+    }
+
+    public bool GetAllowSelection()
+    {
+        return allowSelection;
+    }
+
+    IEnumerator WaitTimeThenDeselect(float time, UnitFunctionality unit)
+    {
+        yield return new WaitForSeconds(time);
+
+        UnSelectUnit(unit, true);
+    }
+    public void SelectUnit(UnitFunctionality unit)
+    {
+        if (!GetAllowSelection())
+            return;
+
+        // If current room is a shop
+        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP)
+        {
+            ToggleAllowSelection(false);
+            ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
+
+            unit.AddOwnedItems(ShopManager.Instance.GetUnassignedItem());
+            ShopManager.Instance.UpdateUnAssignedItem(null);
+            StartCoroutine(WaitTimeThenDeselect(shopRemoveSelectTime, unit));            
+        }
+
         if (activeSkill)
         {
             // Dont select other units if its a self cast
-            if (activeSkill.isSelfCast && unitFunctionality != GetActiveUnitFunctionality())
+            if (activeSkill.isSelfCast && unit != GetActiveUnitFunctionality())
                 return;
 
             // If active skill can only select allies, do not allow enemies to be selected
@@ -1380,10 +1505,10 @@ public class GameManager : MonoBehaviour
 
             if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             {
-                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
                     return;
 
-                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
                     return;
             }
         }
@@ -1403,26 +1528,26 @@ public class GameManager : MonoBehaviour
             }
         }
         // If user selects a unit that is already selected, unselect it, and go a different path
-        if (unitFunctionality.IsSelected())
+        if (unit.IsSelected())
         {
-            UnSelectUnit(unitFunctionality);
+            UnSelectUnit(unit);
 
             UpdateUnitsSelectedText();
             return;
         }
 
-        if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
             // If enemies are taunting, do not allow selection if this unit to select is not taunting also
             if (IsEnemyTaunting().Count >= 1)
             {
                 for (int i = 0; i < IsEnemyTaunting().Count; i++)
                 {
-                    if (IsEnemyTaunting()[i] == unitFunctionality)
+                    if (IsEnemyTaunting()[i] == unit)
                     {
                         // Select targeted unit
-                        unitsSelected.Add(unitFunctionality);
-                        unitFunctionality.ToggleSelected(true);
+                        unitsSelected.Add(unit);
+                        unit.ToggleSelected(true);
                         UpdateUnitsSelectedText();
                     }
                 }
@@ -1430,16 +1555,16 @@ public class GameManager : MonoBehaviour
             else // If no enemies are taunting
             {
                 // Select targeted unit
-                unitsSelected.Add(unitFunctionality);
-                unitFunctionality.ToggleSelected(true);
+                unitsSelected.Add(unit);
+                unit.ToggleSelected(true);
                 UpdateUnitsSelectedText();
             }
         }
         else 
         {
             // Select targeted unit
-            unitsSelected.Add(unitFunctionality);
-            unitFunctionality.ToggleSelected(true);
+            unitsSelected.Add(unit);
+            unit.ToggleSelected(true);
             UpdateUnitsSelectedText();
         }
     }
@@ -1479,5 +1604,16 @@ public class GameManager : MonoBehaviour
             return 1;
         else
             return 0;
+    }
+
+    private bool CheckItemHitChance(int itemCount, int itemProcChance)
+    {
+        int luckyDice = itemCount * itemProcChance;
+        int rand = Random.Range(1, 101);
+
+        if (luckyDice >= rand)
+            return true;
+        else
+            return false;
     }
 }

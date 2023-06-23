@@ -28,7 +28,7 @@ public class Rewards : MonoBehaviour
 
         // Give item(s)
 
-        GameManager.instance.ResetEnemiesKilledCount();
+        GameManager.Instance.ResetEnemiesKilledCount();
 
     }
 
@@ -51,13 +51,13 @@ public class Rewards : MonoBehaviour
         uiElement.UpdateContentImage(goldSprite);
         uiElement.UpdateContentText(CalculateGoldRecieved().ToString());
 
-        MapManager.instance.AddPlayerGold(CalculateGoldRecieved());
+        MapManager.Instance.AddPlayerGold(CalculateGoldRecieved());
 
     }
 
     int CalculateGoldRecieved()
     {
-        int gold = (GameManager.instance.goldGainedPerUnit * GameManager.instance.GetEnemiesKilledCount());
+        int gold = (GameManager.Instance.goldGainedPerUnit * GameManager.Instance.GetEnemiesKilledCount());
         return gold;
     }
 }

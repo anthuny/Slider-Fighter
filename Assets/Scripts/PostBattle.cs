@@ -43,7 +43,7 @@ public class PostBattle : MonoBehaviour
 
     public void TogglePostBattleUI(bool toggle)
     {
-        GameManager.instance.ToggleUIElement(postBattleUI, toggle);
+        GameManager.Instance.ToggleUIElement(postBattleUI, toggle);
     }
 
     public void TogglePostBattleConditionText(bool playerWin)

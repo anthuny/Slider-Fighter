@@ -17,6 +17,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private bool startHidden;
 
     [SerializeField] private bool doScalePunch;
+    [SerializeField] private bool dieAfterDisplay;
     [SerializeField] private float scaleIncSize = 1;
     [SerializeField] private float scaleIncTime = .25f;
     [SerializeField] private int vibrato = 5;
@@ -60,7 +61,8 @@ public class UIElement : MonoBehaviour
         if (doScalePunch)
             contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 
-        StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.instance.skillAlertAppearTime));
+        if (!dieAfterDisplay)
+            StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime));
     }
 
     IEnumerator HideUIOvertime(float time = 0)

@@ -11,15 +11,22 @@ public class PowerText : MonoBehaviour
     [SerializeField] private float timeTillFadeStarts;
     [SerializeField] private float fadeDuration;
     [SerializeField] private float fadeSpeed;
+    [SerializeField] private Canvas canvas;
 
     private void Awake()
     {
         mainText = GetComponent<TextMeshProUGUI>();
+        canvas = GetComponent<Canvas>();
     }
 
     private void Start()
     {
         StartCoroutine(StartFadeCountdown());
+    }
+
+    public void UpdateSortingOrder(int newSortingOrder)
+    {
+        canvas.sortingOrder = 30 + newSortingOrder;
     }
 
     IEnumerator StartFadeCountdown()

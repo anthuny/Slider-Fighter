@@ -47,6 +47,8 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private List<Effect> activeEffects = new List<Effect>();
     public int curRecieveDamageAmp = 100;
 
+    [SerializeField] private List<Item> equipItems = new List<Item>();
+
     [HideInInspector]
     public GameObject prevPowerUI;
 
@@ -74,6 +76,31 @@ public class UnitFunctionality : MonoBehaviour
         UpdateUnitPowerInc(1);
     }
 
+    public void AddOwnedItems(Item item)
+    {
+        equipItems.Add(item);   
+    }
+
+    public List<Item> GetEquipItems()
+    {
+        return equipItems;
+    }
+
+    public int GetEquipItemCount(string itemName)
+    {
+        int amountOfItems = 0;
+
+        for (int i = 0; i < GetEquipItems().Count; i++)
+        {
+            if (GetEquipItems()[i].itemName == itemName)
+            {
+                amountOfItems++;
+            }
+        }
+
+        return amountOfItems;
+    }
+
     public void ToggleIdleBattle(bool toggle)
     {
         idleBattle = toggle;
@@ -93,7 +120,7 @@ public class UnitFunctionality : MonoBehaviour
                 statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectTrigger);
         }
         else
-            statUI.UpdateContentTextColour(GameManager.instance.gradientSkillAlert);
+            statUI.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
     }
 
     public bool GetIdleBattle()
@@ -108,53 +135,53 @@ public class UnitFunctionality : MonoBehaviour
     public IEnumerator StartUnitTurn()
     {
         // Do unit's turn automatically if its on idle battle
-        if (GetIdleBattle() && GameManager.instance.activeRoomAllies.Count >= 1)
+        if (GetIdleBattle() && GameManager.Instance.activeRoomAllies.Count >= 1)
         {
             //yield return new WaitForSeconds(GameManager.instance.enemyThinkTime);
 
             // If unit has energy to choose a skill, choose one
-            GameManager.instance.UpdateActiveSkill(ChooseRandomSkill());
+            GameManager.Instance.UpdateActiveSkill(ChooseRandomSkill());
 
             // If the skill DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
-            if (GameManager.instance.activeSkill.skillEnergyCost != 0)
+            if (GameManager.Instance.activeSkill.skillEnergyCost != 0)
             {
                 // If unit has enough energy for skill
-                if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.activeSkill.skillEnergyCost)
+                if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.activeSkill.skillEnergyCost)
                 {
                     // Trigger current unit's turn energy count to deplete for skill use
-                    GameManager.instance.UpdateActiveUnitEnergyBar(true, false, GameManager.instance.activeSkill.skillEnergyCost, true);
-                    GameManager.instance.UpdateActiveUnitHealthBar(false);
+                    GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost, true);
+                    GameManager.Instance.UpdateActiveUnitHealthBar(false);
 
                     // Select units
-                    GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
+                    GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
 
-                    TriggerTextAlert(GameManager.instance.GetActiveSkill().skillName, 1, false);
+                    TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
 
-                    if (GameManager.instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+                    if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
                     {
                         animator.SetTrigger("SkillFlg");
-                        yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
+                        yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
                     }
                     else
                     {
                         animator.SetTrigger("AttackFlg");
-                        yield return new WaitForSeconds(GameManager.instance.triggerSkillAlertTime / 2f);
+                        yield return new WaitForSeconds(GameManager.Instance.triggerSkillAlertTime / 2f);
                     }
 
                     // Adjust power based on skill effect amp on target then send it 
-                    StartCoroutine(GameManager.instance.WeaponAttackCommand(GameManager.instance.activeSkill.skillPower));
+                    StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower));
                 }
                 else
                 {
                     // End turn
-                    GameManager.instance.ToggleEndTurnButton(false);
-                    GameManager.instance.UpdateTurnOrder();
+                    GameManager.Instance.ToggleEndTurnButton(false);
+                    GameManager.Instance.UpdateTurnOrder();
                     yield break;
                 }
             }
             else
             {
-                GameManager.instance.UpdateTurnOrder();
+                GameManager.Instance.UpdateTurnOrder();
                 yield break;
             }
         }
@@ -209,7 +236,7 @@ public class UnitFunctionality : MonoBehaviour
         //IEnumerator co = StartUnitTurn();
         //StopCoroutine(co);
 
-        yield return new WaitForSeconds(GameManager.instance.enemyAttackWaitTime);
+        yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
 
         StartCoroutine(StartUnitTurn());
     }
@@ -219,24 +246,24 @@ public class UnitFunctionality : MonoBehaviour
 
         if (rand == 1)  // Skill 1
         {
-            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.GetActiveUnit().GetSkill1().skillEnergyCost)
-                return GameManager.instance.GetActiveUnit().GetSkill1();
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.GetActiveUnit().GetSkill1().skillEnergyCost)
+                return GameManager.Instance.GetActiveUnit().GetSkill1();
             else
-                return GameManager.instance.GetActiveUnit().basicSkill;
+                return GameManager.Instance.GetActiveUnit().basicSkill;
         }
         else if (rand == 2)  // Skill 2
         {
-            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.GetActiveUnit().GetSkill2().skillEnergyCost)
-                return GameManager.instance.GetActiveUnit().GetSkill2();
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.GetActiveUnit().GetSkill2().skillEnergyCost)
+                return GameManager.Instance.GetActiveUnit().GetSkill2();
             else
-                return GameManager.instance.GetActiveUnit().basicSkill;
+                return GameManager.Instance.GetActiveUnit().basicSkill;
         }
         else if (rand == 3)  // Skill 3
         {
-            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.instance.GetActiveUnit().GetSkill3().skillEnergyCost)
-                return GameManager.instance.GetActiveUnit().GetSkill3();
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.GetActiveUnit().GetSkill3().skillEnergyCost)
+                return GameManager.Instance.GetActiveUnit().GetSkill3();
             else
-                return GameManager.instance.GetActiveUnit().basicSkill;
+                return GameManager.Instance.GetActiveUnit().basicSkill;
         }
         else
         {
@@ -256,14 +283,14 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (addedEffect.effectName == activeEffects[i].effectName)
             {
-                TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
+                TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
                 activeEffects[i].FillTurnCountText();
                 return;
             }
         }
 
         //ToggleUnitHealthBar(false);
-        TriggerTextAlert(GameManager.instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
+        TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
 
         GameObject go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
         go.transform.SetParent(effectsParent);
@@ -345,14 +372,19 @@ public class UnitFunctionality : MonoBehaviour
         isTaunting = toggle;
     }
 
-    public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null)
+    public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, int powerUICount = 1, bool isLuckyHit = false, bool isHeal = false)
     {
-        // If this is NOT the first power text UI
-        if (prevPowerUI != null)
-            prevPowerUI = Instantiate(GameManager.instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.instance.powerUIHeightLvInc), Quaternion.identity);
-        // If this IS the first power text UI
+        if (!isLuckyHit)
+        {
+            // If this is NOT the first power text UI
+            if (prevPowerUI != null)
+                prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity);
+            // If this IS the first power text UI
+            else
+                prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
+        }
         else
-            prevPowerUI = Instantiate(GameManager.instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
+            prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity);
 
         prevPowerUI.transform.SetParent(powerUIParent);
         prevPowerUI.transform.localScale = Vector2.one;
@@ -361,47 +393,56 @@ public class UnitFunctionality : MonoBehaviour
 
         if (isParrying)
         {
-            powerText.UpdatePowerTextFontSize(GameManager.instance.powerSkillParryFontSize);
-            powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillParry);
-            powerText.UpdatePowerText(GameManager.instance.parryPowerText);
+            powerText.UpdatePowerTextFontSize(GameManager.Instance.powerSkillParryFontSize);
+            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillParry);
+            powerText.UpdatePowerText(GameManager.Instance.parryPowerText);
             return;
         }
 
         // If power is 0, display that it missed
         if (power <= 0)
         {
-            powerText.UpdatePowerTextFontSize(GameManager.instance.powerMissFontSize);
-            powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillMiss);
-            powerText.UpdatePowerText(GameManager.instance.missPowerText);
+            powerText.UpdatePowerTextFontSize(GameManager.Instance.powerMissFontSize);
+            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillMiss);
+            powerText.UpdatePowerText(GameManager.Instance.missPowerText);
             //powerText.UpdatePowerText(power.ToString());   // Update Power Text
             return;
         }
 
-
+        powerText.UpdateSortingOrder(powerUICount);
 
         // Otherwise, display the power
-        powerText.UpdatePowerTextFontSize(GameManager.instance.powerHitFontSize);
+        powerText.UpdatePowerTextFontSize(GameManager.Instance.powerHitFontSize);
 
         if (effect == null)
         {
-            // Change power text colour to offense colour if the type of attack is offense
-            if (GameManager.instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillAttack);
-            // Change power text colour to support colour if the type of attack is support
-            else if (GameManager.instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillSupport);
+            if (!isHeal)
+            {
+                // Change power text colour to offense colour if the type of attack is offense
+                if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
+                // Change power text colour to support colour if the type of attack is support
+                else if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+            }
+            else
+            {
+                // Change power text colour to support colour if the type of attack is support
+                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+            }
+
         }
         else
         {
             // Change power text colour to offense colour if the type of attack is offense
             if (effect.curEffectType == Effect.EffectType.OFFENSE)
-                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillAttack);
+                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
             // Change power text colour to support colour if the type of attack is support
             else if (effect.curEffectType == Effect.EffectType.SUPPORT)
-                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillSupport);
+                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
 
             if (effect.curEffectName == Effect.EffectName.HEALTHUP && offense)
-                powerText.UpdatePowerTextColour(GameManager.instance.gradientSkillAttack);
+                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
 
         }
 
@@ -416,7 +457,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void SpawnProjectile(Transform target)
     {
-        GameObject go = Instantiate(GameManager.instance.unitProjectile, projectileParent);
+        GameObject go = Instantiate(GameManager.Instance.unitProjectile, projectileParent);
         go.transform.SetParent(projectileParent);
         go.transform.localPosition = new Vector3(0, 0, 0);
 
@@ -429,7 +470,7 @@ public class UnitFunctionality : MonoBehaviour
             projectile.UpdateTeam(false);
 
         projectile.LookAtTarget(target);
-        projectile.UpdateSpeed(GameManager.instance.GetActiveSkill().projectileSpeed);
+        projectile.UpdateSpeed(GameManager.Instance.GetActiveSkill().projectileSpeed);
     }
 
 
@@ -500,7 +541,7 @@ public class UnitFunctionality : MonoBehaviour
 
             yield return new WaitForSeconds(1f);
 
-            GameManager.instance.RemoveUnit(this);
+            GameManager.Instance.RemoveUnit(this);
                         
             DestroyUnit();
         }
@@ -539,7 +580,7 @@ public class UnitFunctionality : MonoBehaviour
 
         for (int i = 0; i < gainedExp; i++)
         {
-            yield return new WaitForSeconds(GameManager.instance.fillAmountIntervalTimeGap);
+            yield return new WaitForSeconds(GameManager.Instance.fillAmountIntervalTimeGap);
 
             if (GetCurExp() >= GetMaxExp())
             {
@@ -554,7 +595,7 @@ public class UnitFunctionality : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(GameManager.instance.timePostExp);
+        yield return new WaitForSeconds(GameManager.Instance.timePostExp);
         ToggleUnitExpVisual(false);
     }
 
@@ -611,14 +652,14 @@ public class UnitFunctionality : MonoBehaviour
         float temp;
         if (GetUnitLevel() != 1)
         {
-            temp = GameManager.instance.maxExpStarting + (GameManager.instance.expIncPerLv * (GetUnitLevel()-1));
+            temp = GameManager.Instance.maxExpStarting + (GameManager.Instance.expIncPerLv * (GetUnitLevel()-1));
             //temp = (GameManager.instance.maxExpLevel1 + ((GameManager.instance.expIncPerLv / GameManager.instance.maxExpLevel1) * 100f)) * GetUnitLevel();
             maxExp = (int)temp;
             //Debug.Log(gameObject.name + " " + maxExp);
         }
         else
         {
-            temp = GameManager.instance.maxExpStarting * GetUnitLevel();
+            temp = GameManager.Instance.maxExpStarting * GetUnitLevel();
             maxExp = (int)temp;
         }
     }
@@ -641,18 +682,14 @@ public class UnitFunctionality : MonoBehaviour
 
         float absPower = Mathf.Abs((float)power);
 
-        if (power < 0)
-            animator.SetTrigger("DamageFlg");
-        //else
-        //  animator.SetTrigger("SkillFlg");
-
         // Damaging
         if (damaging)
         {
             //float tempPower;
             //tempPower = (curRecieveDamageAmp / 100f) * absPower;
             //float newPower = absPower + tempPower;
-            curHealth -= (int)absPower; 
+            curHealth -= (int)absPower;
+            animator.SetTrigger("DamageFlg");
         }
         // Healing
         else
@@ -781,7 +818,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public int GetUnitExpKillGained()
     {
-        int expGained = (GetUnitLevel() * GameManager.instance.expKillGainedPerLv) + GameManager.instance.expKillGainedStarting;
+        int expGained = (GetUnitLevel() * GameManager.Instance.expKillGainedPerLv) + GameManager.Instance.expKillGainedStarting;
         return expGained;
     }
 }

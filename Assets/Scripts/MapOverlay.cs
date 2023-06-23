@@ -22,25 +22,25 @@ public class MapOverlay : MonoBehaviour
         if (roomType == RoomMapIcon.RoomType.ENEMY)
         {
             UpdateRoomTypeText("ENEMY");
-            UpdateRoomTypeTextColour(MapManager.instance.roomEnemyColour);
+            UpdateRoomTypeTextColour(MapManager.Instance.roomEnemyColour);
             UpdateRoomSubText("ROOM");
         }
         else if (roomType == RoomMapIcon.RoomType.SHOP)
         {
             UpdateRoomTypeText("SHOP");
-            UpdateRoomTypeTextColour(MapManager.instance.roomShopColour);
+            UpdateRoomTypeTextColour(MapManager.Instance.roomShopColour);
             UpdateRoomSubText("ROOM");
         }
         else if (roomType == RoomMapIcon.RoomType.BOSS)
         {
             UpdateRoomTypeText("BOSS");
-            UpdateRoomTypeTextColour(MapManager.instance.roomBossColour);
+            UpdateRoomTypeTextColour(MapManager.Instance.roomBossColour);
             UpdateRoomSubText("ROOM");
         }
         else
         {
             UpdateRoomTypeText("");
-            UpdateRoomTypeTextColour(MapManager.instance.roomEnemyColour);
+            UpdateRoomTypeTextColour(MapManager.Instance.roomEnemyColour);
             UpdateRoomSubText("");
         }
     }

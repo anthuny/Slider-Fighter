@@ -19,9 +19,14 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: ee40d72ece864764f9d17d015aedb524, type: 3}
   skillName: ARROW RAIN
   skillDescr: Damage up to
-  skillPower: 200
+  skillPower: 125
   skillAttackCount: 4
   projectileSpeed: 12
-  skillEnergyCost: 3
+  skillEnergyCost: 0
   skillSelectionCount: 4
+  isSelfCast: 0
+  effect: {fileID: 0}
+  effectTurnLength: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}

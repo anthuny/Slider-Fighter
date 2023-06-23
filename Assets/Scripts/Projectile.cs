@@ -43,7 +43,7 @@ public class Projectile : MonoBehaviour
 
     void PickRandomisedVariables()
     {
-        float randomX = GameManager.instance.randomXDist;
+        float randomX = GameManager.Instance.randomXDist;
         randStartTimer = Random.Range(0, .04f);
         randX = Random.Range(transform.position.x - randomX, transform.position.x + randomX);
         randY = Random.Range(transform.position.y - randomX, transform.position.y + randomX);
@@ -111,7 +111,7 @@ public class Projectile : MonoBehaviour
 
     bool CheckDistanceToTarget(Transform target)
     {
-        if (Vector2.Distance(transform.position, target.position) <= GameManager.instance.minProjectileKillDist)
+        if (Vector2.Distance(transform.position, target.position) <= GameManager.Instance.minProjectileKillDist)
         {
             return true;
         }

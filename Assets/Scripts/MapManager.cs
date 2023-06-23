@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class MapManager : MonoBehaviour
 {
-    public static MapManager instance;
+    public static MapManager Instance;
 
     [SerializeField] private List<FloorData> allFloors = new List<FloorData>();
 
@@ -72,6 +72,8 @@ public class MapManager : MonoBehaviour
     public RoomMapIcon revealedRoom;
     public RoomMapIcon selectedRoom;
 
+    public UIElement exitShopRoom;
+
     // The minimum and maximum values for the x and y positions of the spawned objects
     private float minX;
     private float maxX;
@@ -84,7 +86,7 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     void Start()
@@ -94,13 +96,13 @@ public class MapManager : MonoBehaviour
 
     public void AddPlayerGold(int gold)
     {
-        GameManager.instance.playerGold += gold;
-        mapOverlay.UpdatePlayerGoldText(GameManager.instance.playerGold.ToString());
+        ShopManager.Instance.UpdatePlayerGold(gold);
+        mapOverlay.UpdatePlayerGoldText(ShopManager.Instance.GetPlayerGold().ToString());
     }
 
     public void ResetPlayerGold()
     {
-        GameManager.instance.playerGold = 0;
+        ShopManager.Instance.ResetPlayerGold();
         mapOverlay.ResetPlayerGoldText();
     }
 
@@ -206,12 +208,13 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             ShopManager.Instance.ClearShopItems();
+            exitShopRoom.UpdateAlpha(0);
 
             // Disable unit's post battle bg
-            int count = GameManager.instance.activeRoomAllies.Count;
+            int count = GameManager.Instance.activeRoomAllies.Count;
             for (int i = 0; i < count; i++)
             {
-                GameManager.instance.activeRoomAllies[i].ToggleUnitBG(false);
+                GameManager.Instance.activeRoomAllies[i].ToggleUnitBG(false);
             }
 
             map.UpdateAlpha(1);
@@ -219,7 +222,7 @@ public class MapManager : MonoBehaviour
             ToggleMapScroll(true);
 
             // Disable end turn button
-            GameManager.instance.endTurnButtonUI.UpdateAlpha(0);
+            GameManager.Instance.endTurnButtonUI.UpdateAlpha(0);
 
             if (generateMap)
                 GenerateMap();

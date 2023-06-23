@@ -9,6 +9,8 @@ public class ButtonFunctionality : MonoBehaviour
     [SerializeField] private CanvasGroup buttonSelectionCG;
     bool selected;
 
+    private ShopItem shopItem;
+
     [SerializeField] private bool startDisabled;
     private void Awake()
     {
@@ -23,10 +25,37 @@ public class ButtonFunctionality : MonoBehaviour
     public void ButtonEnterRoom()
     {
         // Disable map UI
-        GameManager.instance.ToggleMap(false);
+        GameManager.Instance.ToggleMap(false);
 
         // Enable combat UI
-        GameManager.instance.Setup();
+        GameManager.Instance.Setup();
+    }
+
+    public void ButtonOpenMap()
+    {
+        //GameManager.Instance.ResetRoom();
+        GameManager.Instance.ToggleMap(true, false);
+    }
+
+    public void PurchaseShopItem()
+    {
+        // Get access to root parent of gameobject
+        shopItem = transform.parent.parent.GetComponent<ShopItem>();
+
+        List<Item> items = new List<Item>();
+        items = ShopManager.Instance.GetShopItems();
+        int count = items.Count;
+
+        // Search for the item
+        for (int i = 0; i < count; i++)
+        {
+            if (shopItem.GetShopItemName() == items[i].itemName)
+            {
+                // unit purchased the item
+                shopItem.PurchaseShopItem();
+                return;
+            }
+        }
     }
 
     public void ButtonTeamPage()
@@ -39,55 +68,56 @@ public class ButtonFunctionality : MonoBehaviour
     public void PostBattleToMapButton()
     {
         // Disable post battle UI
-        GameManager.instance.postBattleUI.TogglePostBattleUI(false);
+        GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
-        GameManager.instance.map.ClearRoom();
+        GameManager.Instance.map.ClearRoom();
 
-        if (!GameManager.instance.playerLost)
-            GameManager.instance.ToggleMap(true, false);
+        if (!GameManager.Instance.playerLost)
+            GameManager.Instance.ToggleMap(true, false);
         else
-            GameManager.instance.ToggleMap(true, true);
+            GameManager.Instance.ToggleMap(true, true);
     }
 
     public void WeaponBackButton()
     {
         // Return unit energy
-        GameManager.instance.ReturnEnergyToUnit();
+        GameManager.Instance.ReturnEnergyToUnit();
 
-        GameManager.instance.SetupPlayerSkillsUI();
+        GameManager.Instance.SetupPlayerSkillsUI();
+
+        GameManager.Instance.UpdateEnemyPosition(true);
     }
 
     public void AttackButton()
     {
         // If unit doesnt have enough energy, do not allow skill to play out
-        if (!GameManager.instance.CheckIfEnergyAvailableSkill())
+        if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
             return;
 
         // If no units are selected, stop
-        if (!GameManager.instance.CheckIfAnyUnitsSelected())
+        if (!GameManager.Instance.CheckIfAnyUnitsSelected())
             return;
 
         // If the energy DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
-        if (GameManager.instance.activeSkill.skillEnergyCost != 0)
+        if (GameManager.Instance.activeSkill.skillEnergyCost != 0)
         {
-
-
             // Trigger current unit's turn energy count to deplete for skill use
-            GameManager.instance.UpdateActiveUnitEnergyBar(true, false, GameManager.instance.activeSkill.skillEnergyCost);
-            GameManager.instance.UpdateActiveUnitHealthBar(false);
+            GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost);
+            GameManager.Instance.UpdateActiveUnitHealthBar(false);
         }
         else
-            GameManager.instance.SetupPlayerWeaponUI();
+            GameManager.Instance.SetupPlayerWeaponUI();
 
         // Trigger Skill alert UI
-        GameManager.instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.instance.GetActiveSkill().skillName, 1, false);
+        GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
     }
 
     public void EndTurnButton()
     {
-        GameManager.instance.ToggleEndTurnButton(false);
+        GameManager.Instance.ToggleEndTurnButton(false);
+        GameManager.Instance.UpdateEnemyPosition(false);
 
-        GameManager.instance.UpdateTurnOrder();
+        GameManager.Instance.UpdateTurnOrder();
     }
 
     public void ToggleSelected(bool toggle)
@@ -112,14 +142,14 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void SelectUnit()
     {
-        if (GameManager.instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            if (GameManager.instance.IsEnemyTaunting().Count >= 1)
+            if (GameManager.Instance.IsEnemyTaunting().Count >= 1)
             {
-                for (int i = 0; i < GameManager.instance.IsEnemyTaunting().Count; i++)
+                for (int i = 0; i < GameManager.Instance.IsEnemyTaunting().Count; i++)
                 {
-                    if (GameManager.instance.IsEnemyTaunting()[i] == unitFunctionality)
-                        GameManager.instance.SelectUnit(unitFunctionality);
+                    if (GameManager.Instance.IsEnemyTaunting()[i] == unitFunctionality)
+                        GameManager.Instance.SelectUnit(unitFunctionality);
                     else
                         continue;
                 }
@@ -127,101 +157,101 @@ public class ButtonFunctionality : MonoBehaviour
                 return;
             }
             else
-                GameManager.instance.SelectUnit(unitFunctionality);
+                GameManager.Instance.SelectUnit(unitFunctionality);
         }
     }
 
     public void SelectSkill1()
     {
-        GameManager.instance.ResetSelectedUnits();
-        GameManager.instance.UpdateAllSkillIconAvailability();
+        GameManager.Instance.ResetSelectedUnits();
+        GameManager.Instance.UpdateAllSkillIconAvailability();
 
-        GameManager.instance.UpdateActiveSkill(GameManager.instance.GetActiveUnit().skill1);
-        GameManager.instance.UpdateSkillDetails(GameManager.instance.GetActiveUnit().skill1);
+        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill1);
+        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill1);
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
         {
-            GameManager.instance.DisableAllSkillSelections();
+            GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.instance.UpdateActiveSkill(GameManager.instance.GetActiveUnit().basicSkill);
-            GameManager.instance.UpdateSkillDetails(GameManager.instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().basicSkill);
         }
         // If skill not already selected, select it and proceed
         else
         {
-            GameManager.instance.DisableAllSkillSelections();
+            GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(true);
         }
 
         // If unit doesnt have enough energy, do not allow skill to play out
-        if (!GameManager.instance.CheckIfEnergyAvailableSkill())
+        if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
             return;
 
-        GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
-        GameManager.instance.UpdateUnitsSelectedText();
+        GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+        GameManager.Instance.UpdateUnitsSelectedText();
     }
 
     public void SelectSkill2()
     {
-        GameManager.instance.ResetSelectedUnits();
-        GameManager.instance.UpdateAllSkillIconAvailability();
+        GameManager.Instance.ResetSelectedUnits();
+        GameManager.Instance.UpdateAllSkillIconAvailability();
 
-        GameManager.instance.UpdateActiveSkill(GameManager.instance.GetActiveUnit().skill2);
-        GameManager.instance.UpdateSkillDetails(GameManager.instance.GetActiveUnit().skill2);
+        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill2);
+        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill2);
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
         {
-            GameManager.instance.DisableAllSkillSelections();
+            GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.instance.UpdateActiveSkill(GameManager.instance.GetActiveUnit().basicSkill);
-            GameManager.instance.UpdateSkillDetails(GameManager.instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().basicSkill);
         }
         // If skill not already selected, select it and proceed
         else
         {
-            GameManager.instance.DisableAllSkillSelections();
+            GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(true);
         }
 
         // If unit doesnt have enough energy, do not allow skill to play out
-        if (!GameManager.instance.CheckIfEnergyAvailableSkill())
+        if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
             return;
 
-        GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
-        GameManager.instance.UpdateUnitsSelectedText();
+        GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+        GameManager.Instance.UpdateUnitsSelectedText();
     }
 
     public void SelectSkill3()
     {
-        GameManager.instance.ResetSelectedUnits();
-        GameManager.instance.UpdateAllSkillIconAvailability();
+        GameManager.Instance.ResetSelectedUnits();
+        GameManager.Instance.UpdateAllSkillIconAvailability();
 
-        GameManager.instance.UpdateActiveSkill(GameManager.instance.GetActiveUnit().skill3);
-        GameManager.instance.UpdateSkillDetails(GameManager.instance.GetActiveUnit().skill3);
+        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill3);
+        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill3);
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
         {
-            GameManager.instance.DisableAllSkillSelections();
+            GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.instance.UpdateActiveSkill(GameManager.instance.GetActiveUnit().basicSkill);
-            GameManager.instance.UpdateSkillDetails(GameManager.instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().basicSkill);
         }
         // If skill not already selected, select it and proceed
         else
         {
-            GameManager.instance.DisableAllSkillSelections();
+            GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(true);
         }
 
         // If unit doesnt have enough energy, do not allow skill to play out
-        if (!GameManager.instance.CheckIfEnergyAvailableSkill())
+        if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
             return;
 
-        GameManager.instance.UpdateUnitSelection(GameManager.instance.activeSkill);
-        GameManager.instance.UpdateUnitsSelectedText();
+        GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+        GameManager.Instance.UpdateUnitsSelectedText();
     }
 
     public void StopWeaponHitLine()
@@ -229,8 +259,8 @@ public class ButtonFunctionality : MonoBehaviour
         Weapon.instance.StartCoroutine(Weapon.instance.StopHitLine());
 
         //GameManager.instance.UpdateUnitCurrentEnergy();
-        GameManager.instance.UpdateActiveUnitEnergyBar(false);
+        GameManager.Instance.UpdateActiveUnitEnergyBar(false);
 
-        GameManager.instance.DisableAllSkillSelections();
+        GameManager.Instance.DisableAllSkillSelections();
     }
 }

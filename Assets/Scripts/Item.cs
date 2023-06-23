@@ -9,6 +9,11 @@ public class Item : ScriptableObject
     public Sprite itemSprite;
     public int basePrice;
 
+    public bool purchased;
+
+    public int procChance;
+    public int power;
+
     // Start is called before the first frame update
     void Start()
     {

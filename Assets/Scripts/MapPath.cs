@@ -67,7 +67,7 @@ public class MapPath : MonoBehaviour
                 if (goalRooms[i].isMainRoom)
                 {
                     //Debug.Log("updating revealed room to " + goalRooms[i].name);
-                    GameManager.instance.map.UpdateRevealedMainRoom(goalRooms[i]);
+                    GameManager.Instance.map.UpdateRevealedMainRoom(goalRooms[i]);
                     break;
                 }
             }

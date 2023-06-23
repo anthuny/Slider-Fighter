@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class RoomManager : MonoBehaviour
 {
-    public static RoomManager instance;
+    public static RoomManager Instance;
     [SerializeField] private List<FloorData> totalFloors = new List<FloorData>();
     [SerializeField] private int startingFloorDifficulty;
     [SerializeField] private float floorDifficultyRandomAmount;
+    [SerializeField] private RoomMapIcon activeRoom;
 
     private FloorData activeFloor;
     private int floorCount = 0;
@@ -14,7 +15,17 @@ public class RoomManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
+    }
+
+    public void UpdateActiveRoom(RoomMapIcon room)
+    {
+        activeRoom = room;
+    }
+
+    public RoomMapIcon GetActiveRoom()
+    {
+        return activeRoom;
     }
 
     public void ResetFloorCount()

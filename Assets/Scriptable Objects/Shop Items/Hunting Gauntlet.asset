@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Hunting Gauntlet
   itemSprite: {fileID: 21300000, guid: 2c1d270743de1584dbb493c4e575dd23, type: 3}
-  basePrice: 30
+  basePrice: 0

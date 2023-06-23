@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Meat
   itemSprite: {fileID: 21300000, guid: 6e3335baeff247a47b286f0a8948a7df, type: 3}
-  basePrice: 30
+  basePrice: 0

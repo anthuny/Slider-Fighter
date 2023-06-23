@@ -21,7 +21,7 @@ public class EnergyCost : MonoBehaviour
 
     private void Awake()
     {
-        abilityDetailsUI = GameManager.instance.abilityDetailsUI;
+        abilityDetailsUI = GameManager.Instance.abilityDetailsUI;
 
         ToggleEnergyBar(false);
         ToggleEnergyBGBar(false);
@@ -34,7 +34,7 @@ public class EnergyCost : MonoBehaviour
             if (!increasing)    // If Energy Decreasing
             {
                 // If unit is at 0 energy, stop
-                if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == 0)
+                if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == 0)
                     return;
 
                 // Remove all potential previous energy bars
@@ -47,7 +47,7 @@ public class EnergyCost : MonoBehaviour
                     Destroy(child.gameObject);
                 }
 
-                int maxEnergy = (int)GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy();
+                int maxEnergy = (int)GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxEnergy();
 
                 // Add BG
                 for (int i = 0; i < maxEnergy; i++)
@@ -68,16 +68,16 @@ public class EnergyCost : MonoBehaviour
                 ToggleEnergyBar(true);
                 ToggleEnergyBGBar(true);
 
-                GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(0);
+                GameManager.Instance.GetActiveUnitFunctionality().effects.UpdateAlpha(0);
                 StartCoroutine(RemoveEnergyBar(energyAmountMoved, enemy));
             }
 
             else    // If Energy Increasing
             {
                 // If unit is at maxed energy, stop
-                if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
+                if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
                 {
-                    GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
+                    GameManager.Instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
                     return;
                 }
 
@@ -91,7 +91,7 @@ public class EnergyCost : MonoBehaviour
                     Destroy(child.gameObject);
                 }
 
-                int maxEnergy = (int)GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy();
+                int maxEnergy = (int)GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxEnergy();
 
                 // Add BG
                 for (int i = 0; i < maxEnergy; i++)
@@ -133,30 +133,30 @@ public class EnergyCost : MonoBehaviour
             yield return new WaitForSeconds(energyBarDifferenceTime);
 
             // Update energy for the unit
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(-1);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(-1);
 
             Destroy(energyParent.GetChild(0).gameObject);
 
             // Update Unit Overlay Energy
-            abilityDetailsUI.UpdateUnitOverlayEnergyUI(GameManager.instance.GetActiveUnitFunctionality(),
-                GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy(),
-                GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy());
+            abilityDetailsUI.UpdateUnitOverlayEnergyUI(GameManager.Instance.GetActiveUnitFunctionality(),
+                GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy(),
+                GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxEnergy());
 
-            GameManager.instance.UpdateAllSkillIconAvailability();      // Update Unit Overlay Skill Availability
+            GameManager.Instance.UpdateAllSkillIconAvailability();      // Update Unit Overlay Skill Availability
 
             if (i == removeCount - 1)
             {
                 yield return new WaitForSeconds(energyBarPostTime);
 
                 if (!enemy)
-                    GameManager.instance.SetupPlayerWeaponUI();
+                    GameManager.Instance.SetupPlayerWeaponUI();
 
                 ToggleEnergyBar(false);
                 ToggleEnergyBGBar(false);
 
                 // Renable the Healthbar after removing the energy bar
-                GameManager.instance.UpdateActiveUnitHealthBar(true);
-                GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
+                GameManager.Instance.UpdateActiveUnitHealthBar(true);
+                GameManager.Instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
                 yield break;
             }
         }
@@ -170,28 +170,28 @@ public class EnergyCost : MonoBehaviour
             yield return new WaitForSeconds(energyBarDifferenceTime);
 
             // Update energy for the unit
-            GameManager.instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(1);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(1);
 
             GameObject energy = Instantiate(energyBarPrefab, energyParent);
             energy.transform.SetParent(energyParent);
 
             // Update Unit Overlay Energy
-            abilityDetailsUI.UpdateUnitOverlayEnergyUI(GameManager.instance.GetActiveUnitFunctionality(),
-                GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy(), 
-                GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy());
+            abilityDetailsUI.UpdateUnitOverlayEnergyUI(GameManager.Instance.GetActiveUnitFunctionality(),
+                GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy(), 
+                GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxEnergy());
 
-            GameManager.instance.UpdateAllSkillIconAvailability();      // Update Unit Overlay Skill Availability
+            GameManager.Instance.UpdateAllSkillIconAvailability();      // Update Unit Overlay Skill Availability
 
             // If unit is at maxed energy, stop
-            if (GameManager.instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() == GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxEnergy())
             {
                 i = addCount;
             }
         }
 
         // Renable the Healthbar after removing the energy bar
-        GameManager.instance.UpdateActiveUnitHealthBar(true);
-        GameManager.instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
+        GameManager.Instance.UpdateActiveUnitHealthBar(true);
+        GameManager.Instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
 
         ToggleEnergyBar(false);
         ToggleEnergyBGBar(false);

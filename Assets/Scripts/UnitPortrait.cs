@@ -38,7 +38,7 @@ public class UnitPortrait : MonoBehaviour
 
     public void UpdateIconFade(int unitIndex)
     {
-        cg.alpha = GameManager.instance.turnOrderIconAlphas[unitIndex];
+        cg.alpha = GameManager.Instance.turnOrderIconAlphas[unitIndex];
     }
 
     public void ToggleBg(bool toggle)
