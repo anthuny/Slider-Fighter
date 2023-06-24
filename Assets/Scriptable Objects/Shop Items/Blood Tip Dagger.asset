@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Blood Tip Dagger
   m_EditorClassIdentifier: 
   itemName: Blood Tip Dagger
-  itemSprite: {fileID: 21300000, guid: ce7519d0d0e102c4b8e156ba8c7f9e88, type: 3}
+  itemSprite: {fileID: 21300000, guid: 22ecdccef7e7fc740b9edb842475025e, type: 3}
   basePrice: 0
   purchased: 1
   procChance: 12

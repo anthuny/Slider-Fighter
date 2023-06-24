@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Lucky Dice
   m_EditorClassIdentifier: 
   itemName: Lucky Dice
-  itemSprite: {fileID: 21300008, guid: e969b0c0a2203ee4c846eaf2203e00af, type: 3}
+  itemSprite: {fileID: 21300000, guid: 35c5b0a8ef5beee4e96f449ec272925b, type: 3}
   basePrice: 0
   purchased: 0
   procChance: 12
+  power: 0
