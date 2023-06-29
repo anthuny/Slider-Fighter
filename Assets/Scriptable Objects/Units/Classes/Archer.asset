@@ -17,7 +17,7 @@ MonoBehaviour:
   maxUnitValue: 0
   unitSprite: {fileID: -1040719728, guid: a6076953ce938e94b9aabb14d7ecaed3, type: 3}
   unitIcon: {fileID: 21300000, guid: 102d2b3b78a53a442a5657efab178a1e, type: 3}
-  unitColour: {r: 1, g: 0.98459125, b: 0.43867922, a: 1}
+  unitColour: {r: 0.29519406, g: 0.6792453, b: 0.21466713, a: 1}
   name: Archer
   startingSpeed: 30
   startingArmor: 0

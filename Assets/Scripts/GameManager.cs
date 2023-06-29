@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject unitIcon;
 
+    [Header("Team Setup")]
+    [SerializeField] private UIElement teamSetup;
+    public UIElement toMapButton;
+    [SerializeField] private Transform teamSetupAllyPosition;
+    [SerializeField] private UIElement allyNameText;
+
     [Header("Map")]
     public MapManager map;
 
@@ -170,6 +176,71 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(playerWeapon, false);
         ToggleMap(false);
         postBattleUI.TogglePostBattleUI(false);
+    }
+
+    private void SpawnAllies(bool allAllies = true)
+    {
+        // Spawn player units
+        if (activeRoomAllies.Count == 0)
+        {
+            for (int i = 0; i < activeTeam.Count; i++)
+            {
+                UnitData unit = activeTeam[i];    // Reference
+
+                GameObject go = Instantiate(baseUnit, allySpawnPositions[i]);
+                go.transform.SetParent(allySpawnPositions[i]);
+
+                UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
+                unitFunctionality.ResetPosition();
+                unitFunctionality.UpdateUnitName(unit.name);
+                unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
+                unitFunctionality.UpdateUnitColour(unit.unitColour);
+                unitFunctionality.UpdateUnitType("Player");
+                unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
+                unitFunctionality.UpdateUnitPower(unit.startingPower);
+                unitFunctionality.UpdateUnitArmor(unit.startingArmor);
+
+                unitFunctionality.UpdateUnitVisual(unit.unitSprite);
+                unitFunctionality.UpdateUnitIcon(unit.unitIcon);
+
+                unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
+                unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
+
+                AddActiveRoomAllUnitsFunctionality(unitFunctionality);
+                AddActiveRoomAllUnits(unit);
+
+                unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
+                unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+                unitFunctionality.UpdateUnitLevel(1);
+
+                unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
+
+                // If not spawning all alies for combat, stop at one spawned ally.
+                if (!allAllies)
+                {
+                    // reposition ally to team setup position
+                    go.transform.position = teamSetupAllyPosition.position;
+                    ToggleAllowSelection(false);
+                    unitFunctionality.ToggleUnitHealthBar(false);
+                    allyNameText.UpdateContentText(unitFunctionality.GetUnitName());
+                    allyNameText.UpdateContentTextColour(unitFunctionality.GetUnitColour());
+                    break;
+                }
+            }
+        }
+    }
+    public void ToggleTeamSetup(bool toggle)
+    {
+        if (toggle)
+        {
+            teamSetup.UpdateAlpha(1);
+            SpawnAllies(false);
+
+        }
+        else
+            teamSetup.UpdateAlpha(0);
+
+
     }
 
     public void ResetRoom()
@@ -390,11 +461,12 @@ public class GameManager : MonoBehaviour
             int roomChallengeCount = (RoomManager.Instance.GetFloorCount() + 1) + RoomManager.Instance.GetFloorDifficulty();
 
             int spawnEnemyPosIndex = 0;
-            int spawnEnemyIndex = 0;
 
             // Spawn enemy type
             for (int i = 0; i < roomChallengeCount; i++)
             {
+                int spawnEnemyIndex = Random.Range(0, activeFloor.enemyUnits.Count);
+
                 UnitData unit = activeFloor.enemyUnits[spawnEnemyIndex];  // Reference
 
                 GameObject go = Instantiate(baseUnit, enemySpawnPositions[spawnEnemyPosIndex]);
@@ -427,20 +499,8 @@ public class GameManager : MonoBehaviour
 
                 unitFunctionality.UpdateUnitValue(unitValue);
                 unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
-                //unitFunctionality.curRecieveDamageAmp = unit.curReci
-
-                //unitFunctionality.UpdateUnitVisuals();
 
                 i += unitValue;
-
-                int rand = Random.Range(0, 2);
-                if (rand == 1)
-                {
-                    if (spawnEnemyIndex < activeFloor.enemyUnits.Count - 1)
-                        spawnEnemyIndex++;
-                    else
-                        spawnEnemyIndex = 0;
-                }
 
                 if (spawnEnemyPosIndex < enemySpawnPositions.Count - 1)
                     spawnEnemyPosIndex++;
@@ -448,42 +508,7 @@ public class GameManager : MonoBehaviour
                     break;
             }
 
-            // Spawn player units
-            if (activeRoomAllies.Count == 0)
-            {
-                for (int i = 0; i < activeTeam.Count; i++)
-                {
-                    UnitData unit = activeTeam[i];    // Reference
-
-                    GameObject go = Instantiate(baseUnit, allySpawnPositions[i]);
-                    go.transform.SetParent(allySpawnPositions[i]);
-
-                    UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
-                    unitFunctionality.ResetPosition();
-                    unitFunctionality.UpdateUnitName(unit.name);
-                    unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
-                    //unitFunctionality.UpdateUnitColour(unit.unitColour);
-                    unitFunctionality.UpdateUnitType("Player");
-                    unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
-                    unitFunctionality.UpdateUnitPower(unit.startingPower);
-                    unitFunctionality.UpdateUnitArmor(unit.startingArmor);
-
-                    unitFunctionality.UpdateUnitVisual(unit.unitSprite);
-                    unitFunctionality.UpdateUnitIcon(unit.unitIcon);
-
-                    unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
-                    unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
-
-                    AddActiveRoomAllUnitsFunctionality(unitFunctionality);
-                    AddActiveRoomAllUnits(unit);
-
-                    unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-                    unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
-                    unitFunctionality.UpdateUnitLevel(1);
-
-                    unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
-                }
-            }
+            SpawnAllies(true);
 
             ShopManager.Instance.ClearShopItems();
             ToggleAllowSelection(true);

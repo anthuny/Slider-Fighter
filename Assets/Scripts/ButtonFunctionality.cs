@@ -33,7 +33,9 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void ButtonOpenMap()
     {
-        //GameManager.Instance.ResetRoom();
+        // Disable to map button
+        GameManager.Instance.toMapButton.UpdateAlpha(0);
+        // Toggle Map back on
         GameManager.Instance.ToggleMap(true, false);
     }
 
@@ -61,9 +63,13 @@ public class ButtonFunctionality : MonoBehaviour
     public void ButtonTeamPage()
     {
         // Disable map UI
+        GameManager.Instance.ToggleMap(false);
 
-        // Enable Team Page UI
+        // Enable combat UI
+        GameManager.Instance.ToggleTeamSetup(true);
 
+        // Enable To Map Button
+        GameManager.Instance.toMapButton.UpdateAlpha(1);
     }
     public void PostBattleToMapButton()
     {
