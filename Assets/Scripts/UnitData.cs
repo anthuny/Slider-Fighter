@@ -31,6 +31,10 @@ public class UnitData : ScriptableObject
     public SkillData skill2;
     public SkillData skill3;
 
+    [Header("Mastery Tree")]
+    [SerializeField] private List<Mastery> masteries = new List<Mastery>();
+
+
     public SkillData GetSkill1()
     {
         return skill1;
@@ -50,5 +54,10 @@ public class UnitData : ScriptableObject
     {
         int rand = Random.Range(minUnitValue, maxUnitValue - 1);
         return rand;
+    }
+
+    public List<Mastery> GetMasteries()
+    {
+        return masteries;
     }
 }

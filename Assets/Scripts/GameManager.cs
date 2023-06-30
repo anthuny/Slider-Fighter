@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
                 unitFunctionality.UpdateUnitArmor(unit.startingArmor);
-
+                unitFunctionality.UpdateMasteries(unit.GetMasteries());
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
@@ -235,12 +235,10 @@ public class GameManager : MonoBehaviour
         {
             teamSetup.UpdateAlpha(1);
             SpawnAllies(false);
-
+            TeamSetup.Instance.SetupTeamSetup(GetActiveUnitFunctionality());
         }
         else
             teamSetup.UpdateAlpha(0);
-
-
     }
 
     public void ResetRoom()
@@ -1435,7 +1433,6 @@ public class GameManager : MonoBehaviour
     {
         // Update active player's portrait and colour
         playerIcon.UpdatePortrait(GetActiveUnitFunctionality().GetUnitIcon());
-        playerIcon.UpdateColour(GetActiveUnitFunctionality().GetUnitColour());
 
         // Update player skill portraits
         playerSkill1.UpdatePortrait(GetActiveUnit().GetSkill1().skillSprite);

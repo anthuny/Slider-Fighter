@@ -23,6 +23,8 @@ public class UIElement : MonoBehaviour
     [SerializeField] private int vibrato = 5;
     [SerializeField] private float elasticity = .25f;
 
+    [SerializeField] private bool selectable;
+
     private RectTransform rt;
 
     private void Awake()
@@ -40,12 +42,22 @@ public class UIElement : MonoBehaviour
         contentImage.sprite = sprite;
     }
 
+    public bool GetIsSelectable()
+    {
+        return selectable;
+    }
+
+    public void ToggleSelected(bool toggle)
+    {
+        
+    }
+
     public void UpdateContentText(string text)
     {
         //Debug.Log(gameObject.name);
 
-        if (contentText == null)
-            contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
+        //if (contentText == null)
+        //    contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
 
         contentText.text = text;
         //AnimateUI();

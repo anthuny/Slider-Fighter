@@ -46,8 +46,11 @@ public class UnitFunctionality : MonoBehaviour
     public UIElement effects;
     [SerializeField] private List<Effect> activeEffects = new List<Effect>();
     public int curRecieveDamageAmp = 100;
+    [SerializeField] private Color unitColour;
 
     [SerializeField] private List<Item> equipItems = new List<Item>();
+
+    [SerializeField] private List<Mastery> masteries = new List<Mastery>();
 
     [HideInInspector]
     public GameObject prevPowerUI;
@@ -84,6 +87,16 @@ public class UnitFunctionality : MonoBehaviour
     public List<Item> GetEquipItems()
     {
         return equipItems;
+    }
+
+    public void UpdateMasteries(List<Mastery> masteries)
+    {
+        this.masteries = masteries;
+    }
+
+    public Mastery GetMastery(int count)
+    {
+        return masteries[count];
     }
 
     public int GetEquipItemCount(string itemName)
@@ -329,12 +342,12 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitColour(Color color)
     {
-        unitImage.color = color;
+        unitColour = color;
     }
 
     public Color GetUnitColour()
     {
-        return unitImage.color;
+        return unitColour;
     }
 
     public void UpdateUnitVisual(Sprite sprite)

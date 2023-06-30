@@ -5,11 +5,14 @@ using UnityEngine.UI;
 
 public class ButtonFunctionality : MonoBehaviour
 {
+    public enum MasteryType { L1, L2, L3, L4, R1, R2, R3, R4 };
+    public MasteryType curMasteryType;
     UnitFunctionality unitFunctionality;
     [SerializeField] private CanvasGroup buttonSelectionCG;
     bool selected;
 
     private ShopItem shopItem;
+
 
     [SerializeField] private bool startDisabled;
     private void Awake()
@@ -37,8 +40,47 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.toMapButton.UpdateAlpha(0);
         // Toggle Map back on
         GameManager.Instance.ToggleMap(true, false);
+
+        GameManager.Instance.ToggleTeamSetup(false);
     }
 
+    public void Mastery()
+    {
+        UnitFunctionality unit = GameManager.Instance.GetActiveUnitFunctionality();
+
+        if (curMasteryType == MasteryType.L1)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(0));
+        }
+        else if (curMasteryType == MasteryType.L2)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(1));
+        }
+        else if (curMasteryType == MasteryType.L3)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(2));
+        }
+        else if (curMasteryType == MasteryType.L4)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(3));
+        }
+        else if (curMasteryType == MasteryType.R1)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(4));
+        }
+        else if (curMasteryType == MasteryType.R2)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(5));
+        }
+        else if (curMasteryType == MasteryType.R3)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(6));
+        }
+        else if (curMasteryType == MasteryType.R4)
+        {
+            TeamSetup.Instance.UpdateMasteryDescription(unit.GetMastery(7));
+        }
+    }
     public void PurchaseShopItem()
     {
         // Get access to root parent of gameobject
@@ -65,7 +107,6 @@ public class ButtonFunctionality : MonoBehaviour
         // Disable map UI
         GameManager.Instance.ToggleMap(false);
 
-        // Enable combat UI
         GameManager.Instance.ToggleTeamSetup(true);
 
         // Enable To Map Button

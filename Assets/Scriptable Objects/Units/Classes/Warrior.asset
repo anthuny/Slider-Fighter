@@ -32,3 +32,12 @@ MonoBehaviour:
   skill1: {fileID: 11400000, guid: 210dbf9b1bfecd54f867b0a4d6661ec8, type: 2}
   skill2: {fileID: 11400000, guid: dd8256fe076a447499e0a7736e72c57d, type: 2}
   skill3: {fileID: 11400000, guid: e7a970b667a73384f8266eb6ae66a8cf, type: 2}
+  masteries:
+  - {fileID: 11400000, guid: fdf0c68db62dd474caaf51d65fe216ea, type: 2}
+  - {fileID: 11400000, guid: e52e74694f2458e47a62ff598acbdf56, type: 2}
+  - {fileID: 11400000, guid: d6c1f3cc1690fcf48b8bac2f3e171a64, type: 2}
+  - {fileID: 11400000, guid: 34cd39750134a7342b53b8aa1e919adf, type: 2}
+  - {fileID: 11400000, guid: 0e34bffa746ab0248a27e019db52fb3f, type: 2}
+  - {fileID: 11400000, guid: 117ba4dfb582d7a4ea5013ed5f71dab8, type: 2}
+  - {fileID: 11400000, guid: ef3d228c13c6c364fafb5ecae597cf54, type: 2}
+  - {fileID: 11400000, guid: bd194d42354a32f478c514d65f8e4129, type: 2}
