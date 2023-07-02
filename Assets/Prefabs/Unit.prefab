@@ -116,6 +116,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &4444033931527604417
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -306,6 +307,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &4008564147376620509
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -547,6 +549,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &619721373086330152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -782,6 +785,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!1 &2684574198724301495
 GameObject:
   m_ObjectHideFlags: 0
@@ -854,6 +858,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &8156271047608237152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1027,6 +1032,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &2430314267277946098
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1172,6 +1178,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!1 &3449260601481309960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,6 +1193,7 @@ GameObject:
   - component: {fileID: 7414491478435158705}
   - component: {fileID: 7922562286248162540}
   - component: {fileID: 1202359404528564017}
+  - component: {fileID: 1143275966945344469}
   m_Layer: 5
   m_Name: Unit
   m_TagString: Untagged
@@ -1266,7 +1274,9 @@ MonoBehaviour:
   effects: {fileID: 5901711136548537919}
   activeEffects: []
   curRecieveDamageAmp: 100
+  unitColour: {r: 0, g: 0, b: 0, a: 0}
   equipItems: []
+  masteries: []
   prevPowerUI: {fileID: 0}
   isSelected: 0
   idleBattle: 0
@@ -1296,6 +1306,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &7922562286248162540
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1319,6 +1330,27 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 63
+--- !u!223 &1143275966945344469
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3449260601481309960}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 45
+  m_TargetDisplay: 0
 --- !u!1 &4401602157500841055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1504,6 +1536,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &1794062198011368397
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1934,6 +1967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46f1c888366cfe4495487314158c65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
   startDisabled: 0
 --- !u!225 &1727944501489654778
@@ -2259,6 +2293,7 @@ MonoBehaviour:
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
 --- !u!225 &6745684401537078587
 CanvasGroup:
   m_ObjectHideFlags: 0

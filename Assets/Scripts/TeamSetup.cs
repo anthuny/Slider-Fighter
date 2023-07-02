@@ -6,15 +6,15 @@ public class TeamSetup : MonoBehaviour
 {
     public static TeamSetup Instance;
 
-    [SerializeField] private UIElement masteryL1;
-    [SerializeField] private UIElement masteryL2;
-    [SerializeField] private UIElement masteryL3;
-    [SerializeField] private UIElement masteryL4;
+    public UIElement masteryL1;
+    public UIElement masteryL2;
+    public UIElement masteryL3;
+    public UIElement masteryL4;
 
-    [SerializeField] private UIElement masteryR1;
-    [SerializeField] private UIElement masteryR2;
-    [SerializeField] private UIElement masteryR3;
-    [SerializeField] private UIElement masteryR4;
+    public UIElement masteryR1;
+    public UIElement masteryR2;
+    public UIElement masteryR3;
+    public UIElement masteryR4;
 
     [SerializeField] private UIElement masteryDesc;
     [SerializeField] private UIElement masteryFillAmount;
@@ -35,6 +35,16 @@ public class TeamSetup : MonoBehaviour
         masteryR2.UpdateContentImage(unit.GetMastery(5).masteryIcon);
         masteryR3.UpdateContentImage(unit.GetMastery(6).masteryIcon);
         masteryR4.UpdateContentImage(unit.GetMastery(7).masteryIcon);
+
+        masteryL1.UpdateContentSubText(" / " + unit.GetMastery(0).masteryMaxAmount);
+        masteryL2.UpdateContentSubText(" / " + unit.GetMastery(1).masteryMaxAmount);
+        masteryL3.UpdateContentSubText(" / " + unit.GetMastery(2).masteryMaxAmount);
+        masteryL4.UpdateContentSubText(" / " + unit.GetMastery(3).masteryMaxAmount);
+
+        masteryR1.UpdateContentSubText(" / " + unit.GetMastery(4).masteryMaxAmount);
+        masteryR2.UpdateContentSubText(" / " + unit.GetMastery(5).masteryMaxAmount);
+        masteryR3.UpdateContentSubText(" / " + unit.GetMastery(6).masteryMaxAmount);
+        masteryR4.UpdateContentSubText(" / " + unit.GetMastery(7).masteryMaxAmount);
     }
 
 
