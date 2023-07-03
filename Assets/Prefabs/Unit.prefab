@@ -117,6 +117,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &4444033931527604417
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -308,6 +310,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &4008564147376620509
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -550,6 +554,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &619721373086330152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -786,6 +792,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!1 &2684574198724301495
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,6 +867,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &8156271047608237152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1033,6 +1043,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &2430314267277946098
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1179,6 +1191,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!1 &3449260601481309960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1307,6 +1321,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &7922562286248162540
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1349,7 +1365,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 45
+  m_SortingOrder: 165
   m_TargetDisplay: 0
 --- !u!1 &4401602157500841055
 GameObject:
@@ -1537,6 +1553,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &1794062198011368397
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2294,6 +2312,8 @@ MonoBehaviour:
   vibrato: 5
   elasticity: 0.25
   selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
 --- !u!225 &6745684401537078587
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -235,6 +235,7 @@ public class GameManager : MonoBehaviour
         {
             teamSetup.UpdateAlpha(1);
             SpawnAllies(false);
+            TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
             TeamSetup.Instance.SetupTeamSetup(GetActiveUnitFunctionality());
         }
         else
@@ -245,8 +246,8 @@ public class GameManager : MonoBehaviour
     {
         defeatedEnemies.ResetDefeatedEnemies();
 
-        if (activeRoomEnemies.Count <= 0 || activeRoomEnemies[0] == null)
-            return;
+        //if (activeRoomEnemies.Count <= 0 || activeRoomEnemies[0] == null)
+            //return;
 
         activeRoomAllUnits.Clear();
 
@@ -444,7 +445,7 @@ public class GameManager : MonoBehaviour
 
     public void ClearRoom()
     {
-
+        //ResetRoom
     }
 
     public void StartRoom(RoomMapIcon room, FloorData activeFloor)
