@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3c515bbf9fa0bc4d9bd8e0baa75a0b8, type: 3}
-  m_Name: Warrior_L4
+  m_Name: Warrior_Utility_R4
   m_EditorClassIdentifier: 
   masteryIcon: {fileID: 21300000, guid: 22ecdccef7e7fc740b9edb842475025e, type: 3}
-  masteryName: Enhance Bleed
-  masteryDesc: Each Inflicted Bleed lasts 1 additional turn
+  masteryName: 'Whirlwind: Critical Bleed'
+  masteryDesc: Whirlwind units hit increases by 1. Each crit dealt, inflicts garenteed
+    Bleed on enemies for 1 turn
   masteryMaxAmount: 1

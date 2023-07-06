@@ -50,7 +50,12 @@ public class UnitFunctionality : MonoBehaviour
 
     [SerializeField] private List<Item> equipItems = new List<Item>();
 
-    [SerializeField] private List<Mastery> masteries = new List<Mastery>();
+    [SerializeField] private List<Mastery> currentMasteries = new List<Mastery>();
+
+    [SerializeField] private List<UIElement> offenseMasteries = new List<UIElement>();
+    [SerializeField] private List<UIElement> defenseMasteries = new List<UIElement>();
+    [SerializeField] private List<UIElement> utilityMasteries = new List<UIElement>();
+    //[SerializeField] private List<UIElement> currentMasteries = new List<UIElement>();
 
     [HideInInspector]
     public GameObject prevPowerUI;
@@ -89,14 +94,65 @@ public class UnitFunctionality : MonoBehaviour
         return equipItems;
     }
 
-    public void UpdateMasteries(List<Mastery> masteries)
+    public void UpdateCurrentMasteries(List<Mastery> masteries)
     {
-        this.masteries = masteries;
+        this.currentMasteries = masteries;
     }
 
-    public Mastery GetMastery(int count)
+    public void UpdateOffenseMasteries(List<UIElement> masteries)
     {
-        return masteries[count];
+        this.offenseMasteries = masteries;
+    }
+
+    public void UpdateDefenseMasteries(List<UIElement> masteries)
+    {
+        this.defenseMasteries = masteries;
+    }
+
+    public void UpdateUtilityMasteries(List<UIElement> masteries)
+    {
+        this.utilityMasteries = masteries;
+    }
+
+    public Mastery GetCurrentMastery(int count)
+    {
+        return currentMasteries[count];
+    }
+    public UIElement GetOffensiveMastery(int count)
+    {
+        return offenseMasteries[count];
+    }
+    public UIElement GetDefenseMastery(int count)
+    {
+        return defenseMasteries[count];
+    }
+    public UIElement GetUtilityMastery(int count)
+    {
+        return utilityMasteries[count];
+    }
+
+    public List<Mastery> GetAllCurrentMasteries()
+    {
+        return currentMasteries;
+    }
+    public List<UIElement> GetAllOffenseMastery()
+    {
+        return offenseMasteries;
+    }
+    public List<UIElement> GetAllDefenseMastery()
+    {
+        return defenseMasteries;
+    }
+    public List<UIElement> GetAllUtilityMastery()
+    {
+        return utilityMasteries;
+    }
+
+    public void ClearMasteries()
+    {
+        currentMasteries.Clear();
+        defenseMasteries.Clear();
+        utilityMasteries.Clear();
     }
 
     public int GetEquipItemCount(string itemName)

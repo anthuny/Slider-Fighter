@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3c515bbf9fa0bc4d9bd8e0baa75a0b8, type: 3}
-  m_Name: Warrior_L2
+  m_Name: Warrior_Utility_R1
   m_EditorClassIdentifier: 
   masteryIcon: {fileID: 21300000, guid: 22ecdccef7e7fc740b9edb842475025e, type: 3}
-  masteryName: 'Whirlwind: Enlarge'
-  masteryDesc: Whirlwind units hit increases by 2
-  masteryMaxAmount: 1
+  masteryName: Lucky Pike
+  masteryDesc: Increase Crit Rate by 5%/10%/15%/20%
+  masteryMaxAmount: 4

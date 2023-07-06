@@ -6,6 +6,9 @@ public class TeamSetup : MonoBehaviour
 {
     public static TeamSetup Instance;
 
+    public enum ActiveMasteryType { OFFENSE, DEFENSE, UTILITY };
+    public ActiveMasteryType activeMasteryType;
+
     [SerializeField] private int masterPointsPerLv = 2;
 
     public UIElement masteryL1;
@@ -23,20 +26,165 @@ public class TeamSetup : MonoBehaviour
     [SerializeField] private UIElement unitLevelText;
     [SerializeField] private UIElement unspentPointsText;
 
+    [SerializeField] private UIElement masteryTreeType;
+    [SerializeField] private Color offenseTitleColour;
+    [SerializeField] private Color defenseTitleColour;
+    [SerializeField] private Color utilityTitleColour;
+
     [SerializeField] private UnitFunctionality activeUnit;
     [SerializeField] private UIElement selectedMastery;
     [SerializeField] private Mastery activeMastery;
 
-    private int spentMasteryPoints = 0;
+    private int spentMasteryTotalPoints = 0;
+    private int spentOffenseMasteryPoints = 0;
+    private int spentDefenseMasteryPoints = 0;
+    private int spentUtilityMasteryPoints = 0;
+
+    private int masteryCount;
+
+    public int masteryOffenseL1AddedCount;
+    public int masteryOffenseL2AddedCount;
+    public int masteryOffenseL3AddedCount;
+    public int masteryOffenseL4AddedCount;
+
+    public int masteryOffenseR1AddedCount;
+    public int masteryOffenseR2AddedCount;
+    public int masteryOffenseR3AddedCount;
+    public int masteryOffenseR4AddedCount;
+
+
+    public int masteryDefenseL1AddedCount;
+    public int masteryDefenseL2AddedCount;
+    public int masteryDefenseL3AddedCount;
+    public int masteryDefenseL4AddedCount;
+
+    public int masteryDefenseR1AddedCount;
+    public int masteryDefenseR2AddedCount;
+    public int masteryDefenseR3AddedCount;
+    public int masteryDefenseR4AddedCount;
+
+
+    public int masteryUtilityL1AddedCount;
+    public int masteryUtilityL2AddedCount;
+    public int masteryUtilityL3AddedCount;
+    public int masteryUtilityL4AddedCount;
+
+    public int masteryUtilityR1AddedCount;
+    public int masteryUtilityR2AddedCount;
+    public int masteryUtilityR3AddedCount;
+    public int masteryUtilityR4AddedCount;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    public int GetSpendMasteryPoints()
+    public void ChangeMasteryType(bool inc)
     {
-        return spentMasteryPoints;
+        int prevMasteryCount = masteryCount;
+
+        if (inc)
+        {
+            masteryCount++;
+        }
+        else
+        {
+            masteryCount--;
+        }
+        
+        // FORWARD
+        // Moving from offense to defense
+        if (prevMasteryCount == 0 && masteryCount == 1)  // Change from Offense to Defense
+            UpdateMasteryPage(ActiveMasteryType.DEFENSE);
+        // Moving from defense to utility
+        if (prevMasteryCount == 1 && masteryCount == 2)
+            UpdateMasteryPage(ActiveMasteryType.UTILITY);
+        // Moving from defense back to offense
+        if (prevMasteryCount == 1 && masteryCount == 0)
+            UpdateMasteryPage(ActiveMasteryType.OFFENSE);
+
+        // Moving from utility to offense
+        if (prevMasteryCount == 2 && masteryCount == 3)
+            UpdateMasteryPage(ActiveMasteryType.OFFENSE);
+        // Moving from utility back to defense
+        if (prevMasteryCount == 2 && masteryCount == 1)
+            UpdateMasteryPage(ActiveMasteryType.DEFENSE);
+
+
+        //BACKWARD
+        // Moving from offense to utility
+        if (prevMasteryCount == 0 && masteryCount == -1)
+            UpdateMasteryPage(ActiveMasteryType.UTILITY);
+
+        // moving from utility to defense
+        if (prevMasteryCount == -1 && masteryCount == -2)
+            UpdateMasteryPage(ActiveMasteryType.DEFENSE);
+        // Moving from utility back to offense
+        if (prevMasteryCount == -1 && masteryCount == 0)
+            UpdateMasteryPage(ActiveMasteryType.OFFENSE);
+
+        // moving from defense to offense
+        if (prevMasteryCount == -2 && masteryCount == -3)
+            UpdateMasteryPage(ActiveMasteryType.OFFENSE);
+        // moving from defense back to utility
+        if (prevMasteryCount == -2 && masteryCount == -1)
+            UpdateMasteryPage(ActiveMasteryType.UTILITY);
+
+        if (masteryCount == 3 || masteryCount == -3)
+            masteryCount = 0;
+    }
+
+    public void UpdateMasteryPage(ActiveMasteryType masteryType)
+    {
+        string masteryTypeName = "";
+
+        if (masteryType == ActiveMasteryType.OFFENSE)
+        {
+            activeMasteryType = ActiveMasteryType.OFFENSE;
+            masteryTypeName = "OFFENSE";
+        }
+        else if (masteryType == ActiveMasteryType.DEFENSE)
+        {
+            activeMasteryType = ActiveMasteryType.DEFENSE;
+            masteryTypeName = "DEFENSE";
+        }
+        else if (masteryType == ActiveMasteryType.UTILITY)
+        {
+            masteryTypeName = "UTILITY";
+            activeMasteryType = ActiveMasteryType.UTILITY;
+        }
+
+        masteryTreeType.UpdateContentText(masteryTypeName);
+
+        //masteryOffenseL1AddedCount = masteryL1.GetMasteryPointsAdded();
+
+        UnitFunctionality unit = GetActiveUnit();
+        UnitData unitData = GameManager.Instance.GetUnitData(0);
+
+        if (masteryType == ActiveMasteryType.OFFENSE)
+        {
+            //unit.UpdateOffenseMasteries(masteryL1)
+            masteryTreeType.UpdateContentTextColour(offenseTitleColour);
+            unit.UpdateCurrentMasteries(unitData.GetOffenseMasteries());
+            SetupTeamSetup(unit, ActiveMasteryType.OFFENSE);
+        }
+        else if (masteryType == ActiveMasteryType.DEFENSE)
+        {
+            masteryTreeType.UpdateContentTextColour(defenseTitleColour);
+            unit.UpdateCurrentMasteries(unitData.GetDefenseMasteries());
+            SetupTeamSetup(unit, ActiveMasteryType.DEFENSE);
+        }
+        else if (masteryType == ActiveMasteryType.UTILITY)
+        {
+            masteryTreeType.UpdateContentTextColour(utilityTitleColour);
+            unit.UpdateCurrentMasteries(unitData.GetUtilityMasteries());
+            SetupTeamSetup(unit, ActiveMasteryType.UTILITY);
+        }
+    }
+
+    void UpdateUnitLevelText(string text)
+    {
+        unitLevelText.UpdateContentSubText("LV " + text);
     }
 
     public void ResetTeamSetup()
@@ -54,83 +202,107 @@ public class TeamSetup : MonoBehaviour
         masteryR4.UpdateMasteryPoindsAdded(true, true);
 
         UnitFunctionality unit = GetActiveUnit();
-        SetupTeamSetup(unit);
+
+        UpdateMasteryPage(ActiveMasteryType.OFFENSE);
     }
 
-    public void SetupTeamSetup(UnitFunctionality unit)
+    public void SetupTeamSetup(UnitFunctionality unit, ActiveMasteryType masteryType)
     {
         UpdateActiveUnit(unit);
+        //UpdateMasteryPage(masteryType);
 
         UpdateUnitLevelText(GetActiveUnit().GetUnitLevel().ToString());
 
         ResetMasterySelection();
         UpdateMasteryDescription();
-        UpdateUnspentPointsText(CalculateUnspentPoints());
 
-        masteryL1.UpdateContentImage(unit.GetMastery(0).masteryIcon);
-        masteryL2.UpdateContentImage(unit.GetMastery(1).masteryIcon);
-        masteryL3.UpdateContentImage(unit.GetMastery(2).masteryIcon);
-        masteryL4.UpdateContentImage(unit.GetMastery(3).masteryIcon);
-
-        masteryR1.UpdateContentImage(unit.GetMastery(4).masteryIcon);
-        masteryR2.UpdateContentImage(unit.GetMastery(5).masteryIcon);
-        masteryR3.UpdateContentImage(unit.GetMastery(6).masteryIcon);
-        masteryR4.UpdateContentImage(unit.GetMastery(7).masteryIcon);
-
-        masteryL1.UpdateContentSubText(masteryL1.GetMasteryPointsAdded() + " / " + unit.GetMastery(0).masteryMaxAmount);
-        masteryL2.UpdateContentSubText(masteryL2.GetMasteryPointsAdded() + " / " + unit.GetMastery(1).masteryMaxAmount);
-        masteryL3.UpdateContentSubText(masteryL3.GetMasteryPointsAdded() + " / " + unit.GetMastery(2).masteryMaxAmount);
-        masteryL4.UpdateContentSubText(masteryL4.GetMasteryPointsAdded() + " / " + unit.GetMastery(3).masteryMaxAmount);
-
-        masteryR1.UpdateContentSubText(masteryR1.GetMasteryPointsAdded() + " / " + unit.GetMastery(4).masteryMaxAmount);
-        masteryR2.UpdateContentSubText(masteryR2.GetMasteryPointsAdded() + " / " + unit.GetMastery(5).masteryMaxAmount);
-        masteryR3.UpdateContentSubText(masteryR3.GetMasteryPointsAdded() + " / " + unit.GetMastery(6).masteryMaxAmount);
-        masteryR4.UpdateContentSubText(masteryR4.GetMasteryPointsAdded() + " / " + unit.GetMastery(7).masteryMaxAmount);
-        
-        // Select L1 when setting up
-        UpdateMasteryDescription(unit.GetMastery(0));
-        ToggleMasterySelection(masteryL1, true);
-        masteryL1.UpdateContentSubText(masteryL1.GetMasteryPointsAdded().ToString() + " / " + unit.GetMastery(0).masteryMaxAmount);
-
-        activeMastery = unit.GetMastery(0);
+        activeMastery = unit.GetCurrentMastery(0);
         selectedMastery = masteryL1;
 
-        // Check if mastery should be locked or not
-        masteryL1.CheckIfThreshholdPassed(true);
-        masteryL2.CheckIfThreshholdPassed(true);
-        masteryL3.CheckIfThreshholdPassed(true);
-        masteryL4.CheckIfThreshholdPassed(true);
+        if (masteryType == ActiveMasteryType.OFFENSE)
+        {
+            masteryL1.UpdateMasteryPoindsAdded(true, false, masteryOffenseL1AddedCount, true, "OFFENSE");
+            masteryL2.UpdateMasteryPoindsAdded(true, false, masteryOffenseL2AddedCount, true, "OFFENSE");
+            masteryL3.UpdateMasteryPoindsAdded(true, false, masteryOffenseL3AddedCount, true, "OFFENSE");
+            masteryL4.UpdateMasteryPoindsAdded(true, false, masteryOffenseL4AddedCount, true, "OFFENSE");
+            masteryR1.UpdateMasteryPoindsAdded(true, false, masteryOffenseR1AddedCount, true, "OFFENSE");
+            masteryR2.UpdateMasteryPoindsAdded(true, false, masteryOffenseR2AddedCount, true, "OFFENSE");
+            masteryR3.UpdateMasteryPoindsAdded(true, false, masteryOffenseR3AddedCount, true, "OFFENSE");
+            masteryR4.UpdateMasteryPoindsAdded(true, false, masteryOffenseR4AddedCount, true, "OFFENSE");
+        }
+        else if (masteryType == ActiveMasteryType.DEFENSE)
+        {
+            masteryL1.UpdateMasteryPoindsAdded(true, false, masteryDefenseL1AddedCount, true, "DEFENSE");
+            masteryL2.UpdateMasteryPoindsAdded(true, false, masteryDefenseL2AddedCount, true, "DEFENSE");
+            masteryL3.UpdateMasteryPoindsAdded(true, false, masteryDefenseL3AddedCount, true, "DEFENSE");
+            masteryL4.UpdateMasteryPoindsAdded(true, false, masteryDefenseL4AddedCount, true, "DEFENSE");
+            masteryR1.UpdateMasteryPoindsAdded(true, false, masteryDefenseR1AddedCount, true, "DEFENSE");
+            masteryR2.UpdateMasteryPoindsAdded(true, false, masteryDefenseR2AddedCount, true, "DEFENSE");
+            masteryR3.UpdateMasteryPoindsAdded(true, false, masteryDefenseR3AddedCount, true, "DEFENSE");
+            masteryR4.UpdateMasteryPoindsAdded(true, false, masteryDefenseR4AddedCount, true, "DEFENSE");
+        }
+        else if (masteryType == ActiveMasteryType.UTILITY)
+        {
+            masteryL1.UpdateMasteryPoindsAdded(true, false, masteryUtilityL1AddedCount, true, "UTILITY");
+            masteryL2.UpdateMasteryPoindsAdded(true, false, masteryUtilityL2AddedCount, true, "UTILITY");
+            masteryL3.UpdateMasteryPoindsAdded(true, false, masteryUtilityL3AddedCount, true, "UTILITY");
+            masteryL4.UpdateMasteryPoindsAdded(true, false, masteryUtilityL4AddedCount, true, "UTILITY");
+            masteryR1.UpdateMasteryPoindsAdded(true, false, masteryUtilityR1AddedCount, true, "UTILITY");
+            masteryR2.UpdateMasteryPoindsAdded(true, false, masteryUtilityR2AddedCount, true, "UTILITY");
+            masteryR3.UpdateMasteryPoindsAdded(true, false, masteryUtilityR3AddedCount, true, "UTILITY");
+            masteryR4.UpdateMasteryPoindsAdded(true, false, masteryUtilityR4AddedCount, true, "UTILITY");
+        }
 
-        masteryR1.CheckIfThreshholdPassed(true);
-        masteryR2.CheckIfThreshholdPassed(true);
-        masteryR3.CheckIfThreshholdPassed(true);
-        masteryR4.CheckIfThreshholdPassed(true);
-    }
 
-    void UpdateUnitLevelText(string text)
-    {
-        unitLevelText.UpdateContentSubText("LV " + text);
+        UpdateUnspentPointsText(CalculateUnspentPoints());
+         
+        masteryL1.UpdateContentImage(unit.GetCurrentMastery(0).masteryIcon);
+        masteryL2.UpdateContentImage(unit.GetCurrentMastery(1).masteryIcon);
+        masteryL3.UpdateContentImage(unit.GetCurrentMastery(2).masteryIcon);
+        masteryL4.UpdateContentImage(unit.GetCurrentMastery(3).masteryIcon);
+
+        masteryR1.UpdateContentImage(unit.GetCurrentMastery(4).masteryIcon);
+        masteryR2.UpdateContentImage(unit.GetCurrentMastery(5).masteryIcon);
+        masteryR3.UpdateContentImage(unit.GetCurrentMastery(6).masteryIcon);
+        masteryR4.UpdateContentImage(unit.GetCurrentMastery(7).masteryIcon);
+
+        masteryL1.UpdateContentSubText(masteryL1.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(0).masteryMaxAmount);
+        masteryL2.UpdateContentSubText(masteryL2.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(1).masteryMaxAmount);
+        masteryL3.UpdateContentSubText(masteryL3.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(2).masteryMaxAmount);
+        masteryL4.UpdateContentSubText(masteryL4.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(3).masteryMaxAmount);
+
+        masteryR1.UpdateContentSubText(masteryR1.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(4).masteryMaxAmount);
+        masteryR2.UpdateContentSubText(masteryR2.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(5).masteryMaxAmount);
+        masteryR3.UpdateContentSubText(masteryR3.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(6).masteryMaxAmount);
+        masteryR4.UpdateContentSubText(masteryR4.GetMasteryPointsAdded() + " / " + unit.GetCurrentMastery(7).masteryMaxAmount);
+
+        // Select L1 when setting up
+        UpdateMasteryDescription(unit.GetCurrentMastery(0));
+        ToggleMasterySelection(masteryL1, true);
+        masteryL1.UpdateContentSubText(masteryL1.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(0).masteryMaxAmount);
+
+        CheckIfMasteryShouldBeLocked();
     }
 
     public Mastery GetActiveMastery()
     {
         if (GetSelectedMastery() == masteryL1)
-            return GetActiveUnit().GetMastery(0);
+            return GetActiveUnit().GetCurrentMastery(0);
         else if (GetSelectedMastery() == masteryL2)
-            return GetActiveUnit().GetMastery(1);
+            return GetActiveUnit().GetCurrentMastery(1);
         else if (GetSelectedMastery() == masteryL3)
-            return GetActiveUnit().GetMastery(2);
+            return GetActiveUnit().GetCurrentMastery(2);
         else if (GetSelectedMastery() == masteryL4)
-            return GetActiveUnit().GetMastery(3);
+            return GetActiveUnit().GetCurrentMastery(3);
 
         else if (GetSelectedMastery() == masteryR1)
-            return GetActiveUnit().GetMastery(4);
+            return GetActiveUnit().GetCurrentMastery(4);
         else if (GetSelectedMastery() == masteryR2)
-            return GetActiveUnit().GetMastery(5);
+            return GetActiveUnit().GetCurrentMastery(5);
         else if (GetSelectedMastery() == masteryR3)
-            return GetActiveUnit().GetMastery(6);
+            return GetActiveUnit().GetCurrentMastery(6);
         else if (GetSelectedMastery() == masteryR4)
-            return GetActiveUnit().GetMastery(7);
+            return GetActiveUnit().GetCurrentMastery(7);
         else
             return null;
     }
@@ -149,9 +321,24 @@ public class TeamSetup : MonoBehaviour
         if (GetSelectedMastery().GetMasteryPointsAdded() >= maxAmount)
             return;
 
-        GetSelectedMastery().UpdateMasteryPoindsAdded(true);
+        string activeMasteryType2 = "";
+
+
+        if (activeMasteryType == ActiveMasteryType.OFFENSE)
+            activeMasteryType2 = "OFFENSE";
+        else if (activeMasteryType == ActiveMasteryType.DEFENSE)
+            activeMasteryType2 = "DEFENSE";
+        else if (activeMasteryType == ActiveMasteryType.UTILITY)
+            activeMasteryType2 = "UTILITY";
+
+        GetSelectedMastery().UpdateMasteryPoindsAdded(true, false, 0, false, activeMasteryType2);
         GetSelectedMastery().UpdateContentSubText(GetSelectedMastery().GetMasteryPointsAdded().ToString() + " / " + maxAmount);
 
+        CheckIfMasteryShouldBeLocked();
+    }
+
+    public void CheckIfMasteryShouldBeLocked()
+    {
         // Check if mastery should be locked or not
         masteryL1.CheckIfThreshholdPassed(true);
         masteryL2.CheckIfThreshholdPassed(true);
@@ -251,43 +438,43 @@ public class TeamSetup : MonoBehaviour
         if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.L1)
         {
             selectedMastery = masteryL1;
-            activeMastery = GetActiveUnit().GetMastery(0);
+            activeMastery = GetActiveUnit().GetCurrentMastery(0);
         }
         else if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.L2)
         {
             selectedMastery = masteryL2;
-            activeMastery = GetActiveUnit().GetMastery(1);
+            activeMastery = GetActiveUnit().GetCurrentMastery(1);
         }
         else if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.L3)
         {
             selectedMastery = masteryL3;
-            activeMastery = GetActiveUnit().GetMastery(2);
+            activeMastery = GetActiveUnit().GetCurrentMastery(2);
         }
         else if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.L4)
         {
             selectedMastery = masteryL4;
-            activeMastery = GetActiveUnit().GetMastery(3);
+            activeMastery = GetActiveUnit().GetCurrentMastery(3);
         }
 
         else if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.R1)
         {
             selectedMastery = masteryR1;
-            activeMastery = GetActiveUnit().GetMastery(4);
+            activeMastery = GetActiveUnit().GetCurrentMastery(4);
         }
         else if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.R2)
         {
             selectedMastery = masteryR2;
-            activeMastery = GetActiveUnit().GetMastery(5);
+            activeMastery = GetActiveUnit().GetCurrentMastery(5);
         }
         else if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.R3)
         {
             selectedMastery = masteryR3;
-            activeMastery = GetActiveUnit().GetMastery(6);
+            activeMastery = GetActiveUnit().GetCurrentMastery(6);
         }
         else if (masteryButton.curMasteryType == ButtonFunctionality.MasteryType.R4)
         {
             selectedMastery = masteryR4;
-            activeMastery = GetActiveUnit().GetMastery(7);
+            activeMastery = GetActiveUnit().GetCurrentMastery(7);
         }
     }
 
@@ -352,23 +539,85 @@ public class TeamSetup : MonoBehaviour
     public void UpdateUnspentMasteryPoints(bool toggle)
     {
         if (toggle)
-            spentMasteryPoints++;
+        {
+            spentMasteryTotalPoints++;
+
+            if (activeMasteryType == ActiveMasteryType.OFFENSE)
+                UpdateSpentOffenseMasteryPoints(1);
+            else if (activeMasteryType == ActiveMasteryType.DEFENSE)
+                UpdateSpentDefenseMasteryPoints(1);
+            else if (activeMasteryType == ActiveMasteryType.UTILITY)
+                UpdateSpentUtilityMasteryPoints(1);
+        }
+
         else
-            spentMasteryPoints--;
+        {
+            spentMasteryTotalPoints--;
+
+            if (activeMasteryType == ActiveMasteryType.OFFENSE)
+                UpdateSpentOffenseMasteryPoints(-1);
+            else if (activeMasteryType == ActiveMasteryType.DEFENSE)
+                UpdateSpentDefenseMasteryPoints(-1);
+            else if (activeMasteryType == ActiveMasteryType.UTILITY)
+                UpdateSpentUtilityMasteryPoints(-1);
+        }
 
         if (GetSelectedMastery().GetMasteryPointsAdded() > GetActiveMastery().masteryMaxAmount)
-            spentMasteryPoints--;
+            spentMasteryTotalPoints--;
 
         UpdateUnspentPointsText(CalculateUnspentPoints());
     }
 
-    int GetSpentMasteryPoints()
+    public int GetSpentMasteryPoints()
     {
-        return spentMasteryPoints;
+        return spentMasteryTotalPoints;
+    }
+
+    public int GetActiveMasteryTypeSpentPoints()
+    {
+        if (activeMasteryType == ActiveMasteryType.OFFENSE)
+            return GetSpentOffenseMasteryPoints();
+        else if (activeMasteryType == ActiveMasteryType.DEFENSE)
+            return GetSpentDefenseMasteryPoints();
+        else
+            return GetSpentUtilityMasteryPoints();
+    }
+
+    public int GetSpentOffenseMasteryPoints()
+    {
+        return spentOffenseMasteryPoints;
+    }
+
+    public int GetSpentDefenseMasteryPoints()
+    {
+        return spentDefenseMasteryPoints;
+    }
+
+    public int GetSpentUtilityMasteryPoints()
+    {
+        return spentUtilityMasteryPoints;
+    }
+
+    public void UpdateSpentOffenseMasteryPoints(int pointsAdded)
+    {
+        spentOffenseMasteryPoints += pointsAdded;
+    }
+
+    public void UpdateSpentDefenseMasteryPoints(int pointsAdded)
+    {
+        spentDefenseMasteryPoints += pointsAdded;
+    }
+
+    public void UpdateSpentUtilityMasteryPoints(int pointsAdded)
+    {
+        spentUtilityMasteryPoints += pointsAdded;
     }
 
     void ResetSpendMasteryPoints()
     {
-        spentMasteryPoints = 0;
+        spentMasteryTotalPoints = 0;
+        spentOffenseMasteryPoints = 0;
+        spentDefenseMasteryPoints = 0;
+        spentUtilityMasteryPoints = 0;
     }
 }

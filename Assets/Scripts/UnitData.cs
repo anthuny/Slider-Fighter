@@ -32,7 +32,9 @@ public class UnitData : ScriptableObject
     public SkillData skill3;
 
     [Header("Mastery Tree")]
-    [SerializeField] private List<Mastery> masteries = new List<Mastery>();
+    [SerializeField] private List<Mastery> offenseMasteries = new List<Mastery>();
+    [SerializeField] private List<Mastery> defenseMasteries = new List<Mastery>();
+    [SerializeField] private List<Mastery> utilityMasteries = new List<Mastery>();
 
 
     public SkillData GetSkill1()
@@ -56,8 +58,18 @@ public class UnitData : ScriptableObject
         return rand;
     }
 
-    public List<Mastery> GetMasteries()
+    public List<Mastery> GetOffenseMasteries()
     {
-        return masteries;
+        return offenseMasteries;
+    }
+
+    public List<Mastery> GetDefenseMasteries()
+    {
+        return defenseMasteries;
+    }
+
+    public List<Mastery> GetUtilityMasteries()
+    {
+        return utilityMasteries;
     }
 }

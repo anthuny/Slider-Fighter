@@ -146,6 +146,11 @@ public class GameManager : MonoBehaviour
         map.mapOverlay.ResetPlayerGoldText();
     }
 
+    public UnitData GetUnitData(int count)
+    {
+        return activeTeam[count];
+    }
+
     public void UpdateEnemyPosition(bool playerTurn)
     {
         if (playerTurn)
@@ -199,7 +204,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
                 unitFunctionality.UpdateUnitArmor(unit.startingArmor);
-                unitFunctionality.UpdateMasteries(unit.GetMasteries());
+                unitFunctionality.UpdateCurrentMasteries(unit.GetOffenseMasteries());
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
@@ -236,7 +241,8 @@ public class GameManager : MonoBehaviour
             teamSetup.UpdateAlpha(1);
             SpawnAllies(false);
             TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
-            TeamSetup.Instance.SetupTeamSetup(GetActiveUnitFunctionality());
+            TeamSetup.Instance.UpdateMasteryPage(TeamSetup.ActiveMasteryType.OFFENSE);
+            //TeamSetup.Instance.SetupTeamSetup(GetActiveUnitFunctionality(), TeamSetup.ActiveMasteryType.OFFENSE);
         }
         else
             teamSetup.UpdateAlpha(0);

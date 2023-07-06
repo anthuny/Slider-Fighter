@@ -13,6 +13,9 @@ public class UIElement : MonoBehaviour
     public enum MasteryType { L1, L2, L3, L4, R1, R2, R3, R4, BG };
     public MasteryType curMasteryType;
 
+    public enum ActiveMasteryType { OFFENSE, DEFENSE, UTILITY };
+    public ActiveMasteryType activeMasteryType;
+
     [SerializeField] private Image contentImage;
     [SerializeField] private TextMeshProUGUI contentText;
     [SerializeField] private Text contentSubText;
@@ -70,7 +73,7 @@ public class UIElement : MonoBehaviour
         if (GetIsSelectable())
         {
             // If locked, display as locked
-            if (TeamSetup.Instance.GetSpendMasteryPoints() < GetMasteryPointThreshhold())
+            if (TeamSetup.Instance.GetActiveMasteryTypeSpentPoints() < GetMasteryPointThreshhold())
                 UpdateIsLocked(true);
             else
             {
@@ -83,11 +86,11 @@ public class UIElement : MonoBehaviour
         }
     }
 
-    public void UpdateMasteryPoindsAdded(bool adding, bool isReset = false)
+    public void UpdateMasteryPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false, string masteryType = "OFFENSE")
     {
         if (isReset)
         {
-            if (TeamSetup.Instance.GetSpendMasteryPoints() < GetMasteryPointThreshhold())
+            if (TeamSetup.Instance.GetSpentMasteryPoints() < GetMasteryPointThreshhold())
                 ToggleLockedImage(true);
             else
                 ToggleLockedImage(false);
@@ -101,19 +104,85 @@ public class UIElement : MonoBehaviour
             if (TeamSetup.Instance.CalculateUnspentPoints() <= 0)
                 return;
 
-            masteryPointsAdded++;
-            TeamSetup.Instance.UpdateUnspentMasteryPoints(true);
-
-            if (TeamSetup.Instance.GetSpendMasteryPoints() < GetMasteryPointThreshhold())
-                ToggleLockedImage(true);
+            // If bulk adding,
+            if (bulkAdding)
+                masteryPointsAdded = bulkPointsAdding;
             else
-                ToggleLockedImage(false);
+            {
+                masteryPointsAdded++;
+                TeamSetup.Instance.UpdateUnspentMasteryPoints(true);
+            }
+
+            // Adds
+            if (masteryType == "OFFENSE")
+            {
+                if (curMasteryType == MasteryType.L1)
+                    TeamSetup.Instance.masteryOffenseL1AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L2)
+                    TeamSetup.Instance.masteryOffenseL2AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L3)
+                    TeamSetup.Instance.masteryOffenseL3AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L4)
+                    TeamSetup.Instance.masteryOffenseL4AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R1)
+                    TeamSetup.Instance.masteryOffenseR1AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R2)
+                    TeamSetup.Instance.masteryOffenseR2AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R3)
+                    TeamSetup.Instance.masteryOffenseR3AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R4)
+                    TeamSetup.Instance.masteryOffenseR4AddedCount = GetMasteryPointsAdded();
+            }
+            else if (masteryType == "DEFENSE")
+            {
+                if (curMasteryType == MasteryType.L1)
+                    TeamSetup.Instance.masteryDefenseL1AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L2)
+                    TeamSetup.Instance.masteryDefenseL2AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L3)
+                    TeamSetup.Instance.masteryDefenseL3AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L4)
+                    TeamSetup.Instance.masteryDefenseL4AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R1)
+                    TeamSetup.Instance.masteryDefenseR1AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R2)
+                    TeamSetup.Instance.masteryDefenseR2AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R3)
+                    TeamSetup.Instance.masteryDefenseR3AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R4)
+                    TeamSetup.Instance.masteryDefenseR4AddedCount = GetMasteryPointsAdded();
+            }
+            else if (masteryType == "UTILITY")
+            {
+                if (curMasteryType == MasteryType.L1)
+                    TeamSetup.Instance.masteryUtilityL1AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L2)
+                    TeamSetup.Instance.masteryUtilityL2AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L3)
+                    TeamSetup.Instance.masteryUtilityL3AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.L4)
+                    TeamSetup.Instance.masteryUtilityL4AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R1)
+                    TeamSetup.Instance.masteryUtilityR1AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R2)
+                    TeamSetup.Instance.masteryUtilityR2AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R3)
+                    TeamSetup.Instance.masteryUtilityR3AddedCount = GetMasteryPointsAdded();
+                else if (curMasteryType == MasteryType.R4)
+                    TeamSetup.Instance.masteryUtilityR4AddedCount = GetMasteryPointsAdded();
+            }
         }
         else
         {
             masteryPointsAdded--;
             TeamSetup.Instance.UpdateUnspentMasteryPoints(false);
         }
+
+        if (TeamSetup.Instance.GetSpentMasteryPoints() < GetMasteryPointThreshhold())
+            ToggleLockedImage(true);
+        else
+            ToggleLockedImage(false);
+
     }
 
     public void ToggleLockedImage(bool toggle)
