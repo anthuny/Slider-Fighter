@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
     [Header("Player UI")]
     public UIElement playerUIElement;
     public UIElement playerWeapon;
+    public UIElement playerWeaponChild;
     public UIElement playerWeaponBackButton;
     public UIElement playerWeaponBG;
     public UIElement playerAbilities;
@@ -144,6 +145,7 @@ public class GameManager : MonoBehaviour
         //map.Setup();
         ShopManager.Instance.UpdatePlayerGold(0);
         map.mapOverlay.ResetPlayerGoldText();
+        ToggleTeamSetup(false);
     }
 
     public UnitData GetUnitData(int count)
@@ -179,6 +181,7 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(currentRoom, true);
 
         ToggleUIElement(playerWeapon, false);
+
         ToggleMap(false);
         postBattleUI.TogglePostBattleUI(false);
     }
@@ -236,13 +239,14 @@ public class GameManager : MonoBehaviour
     }
     public void ToggleTeamSetup(bool toggle)
     {
+        TeamSetup.Instance.masteryScrollView.SetActive(toggle);
+
         if (toggle)
         {
             teamSetup.UpdateAlpha(1);
             SpawnAllies(false);
             TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
             TeamSetup.Instance.UpdateMasteryPage(TeamSetup.ActiveMasteryType.OFFENSE);
-            //TeamSetup.Instance.SetupTeamSetup(GetActiveUnitFunctionality(), TeamSetup.ActiveMasteryType.OFFENSE);
         }
         else
             teamSetup.UpdateAlpha(0);
@@ -398,6 +402,7 @@ public class GameManager : MonoBehaviour
     {
         ToggleUIElement(playerWeaponBG, false);
         ToggleUIElement(playerWeapon, false);
+        ToggleUIElementFull(playerWeaponChild, false);
         ToggleUIElement(playerWeaponBackButton, false);
         ToggleUIElement(playerAbilities, false);
         ToggleUIElement(playerAbilityDesc, false);
@@ -405,15 +410,19 @@ public class GameManager : MonoBehaviour
         ToggleEndTurnButton(false);
     }
 
-    public void SetupPlayerSkillsUI()
+    public void SetupPlayerSkillsUI(SkillData activeSkill = null)
     {
         ToggleUIElement(playerWeaponBG, false);
         ToggleUIElement(playerWeapon, false);
+        ToggleUIElementFull(playerWeaponChild, false);
         ToggleUIElement(playerWeaponBackButton, false);
 
         Weapon.instance.ToggleAttackButtonInteractable(false);
 
-        activeSkill = GetActiveUnit().basicSkill;
+        if (activeSkill != null)
+            this.activeSkill = activeSkill;
+        else
+            this.activeSkill = GetActiveUnit().basicSkill;
 
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(playerAbilityDesc, true);
@@ -434,6 +443,7 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(playerAbilityDesc, false);
 
         ToggleUIElement(playerWeaponBG, true);
+        ToggleUIElementFull(playerWeaponChild, true);
         ToggleUIElement(playerWeapon, true);
         ToggleUIElement(playerWeaponBackButton, true);
         ToggleEndTurnButton(false);
@@ -1385,6 +1395,11 @@ public class GameManager : MonoBehaviour
             uiElement.UpdateAlpha(1);
         else
             uiElement.UpdateAlpha(0);
+    }
+
+    public void ToggleUIElementFull(UIElement uiElement, bool toggle)
+    {
+        uiElement.gameObject.SetActive(toggle);
     }
 
     void UpdateEnemiesKilled(UnitFunctionality unit)

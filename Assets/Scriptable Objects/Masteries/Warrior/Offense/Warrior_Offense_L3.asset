@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   masteryIcon: {fileID: 21300000, guid: 22ecdccef7e7fc740b9edb842475025e, type: 3}
   masteryName: 'Whirlwind: Bleed'
-  masteryDesc: Each of Whirlwind's attacks have a 2.5%5%/7.5%/10% to inflict bleed
-    for 1 turn
+  masteryDesc: Each of Whirlwind's attacks have a 2.5% | 5% | 7.5% | 10% to inflict
+    bleed for 1 turn
   masteryMaxAmount: 4

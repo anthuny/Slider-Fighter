@@ -39,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 275}
+  m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4189505620165860144
 CanvasRenderer:
@@ -106,15 +106,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
+  activeMasteryType: 0
   contentImage: {fileID: 7522912745729939779}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
+  dieAfterDisplay: 0
   scaleIncSize: 1
   scaleIncTime: 0.25
   vibrato: 5
   elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
+  lockedImage: {fileID: 0}
+  masteryPointsThreshhold: 0
+  isLocked: 0
 --- !u!225 &8876155709448444676
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -169,7 +178,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -1200}
-  m_SizeDelta: {x: 250, y: 250}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1486126478527104543
 CanvasRenderer:
@@ -198,6 +207,8 @@ MonoBehaviour:
   roomSelectionImage: {fileID: 8348246555786662233}
   roomButton: {fileID: 7064347236713240888}
   buttonRoom: {fileID: 5521988149852552486}
+  shopRoomItems: []
+  ownedShopItems: []
   curRoomType: 0
   isHidden: 0
   isSelected: 0
@@ -205,6 +216,7 @@ MonoBehaviour:
   isMainRoom: 0
   isStartingRoom: 0
   isCompleted: 0
+  isVisited: 0
 --- !u!223 &8230447574900321245
 Canvas:
   m_ObjectHideFlags: 0
@@ -293,7 +305,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 175, y: 175}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3728792723633632831
 MonoBehaviour:

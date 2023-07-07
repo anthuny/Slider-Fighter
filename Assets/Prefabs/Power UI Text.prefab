@@ -64,6 +64,7 @@ MonoBehaviour:
   timeTillFadeStarts: 1
   fadeDuration: 1
   fadeSpeed: 2
+  canvas: {fileID: 0}
 --- !u!114 &2757922822252655850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,5 +173,5 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 35
+  m_SortingOrder: 200
   m_TargetDisplay: 0

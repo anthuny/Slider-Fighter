@@ -224,7 +224,7 @@ public class ButtonFunctionality : MonoBehaviour
         // Return unit energy
         GameManager.Instance.ReturnEnergyToUnit();
 
-        GameManager.Instance.SetupPlayerSkillsUI();
+        GameManager.Instance.SetupPlayerSkillsUI(GameManager.Instance.GetActiveSkill());
 
         GameManager.Instance.UpdateEnemyPosition(true);
     }

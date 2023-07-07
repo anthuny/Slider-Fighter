@@ -26,7 +26,7 @@ public class PowerText : MonoBehaviour
 
     public void UpdateSortingOrder(int newSortingOrder)
     {
-        canvas.sortingOrder = 30 + newSortingOrder;
+        canvas.sortingOrder = 190 + newSortingOrder;
     }
 
     IEnumerator StartFadeCountdown()

@@ -119,6 +119,9 @@ public class MapManager : MonoBehaviour
     public void Setup()
     {
         ToggleMapVisibility(true, true);
+
+        // Disable player weapon input 
+        GameManager.Instance.ToggleUIElementFull(GameManager.Instance.playerWeaponChild, false);
     }
 
     void ToggleMapScroll(bool toggle)
@@ -298,8 +301,8 @@ public class MapManager : MonoBehaviour
         GenerationPathsA();
 
         // Additional rooms / paths are booken
-        SpawnRoomGenerationB();
-        GenerationPathsB();
+        //SpawnRoomGenerationB();
+        //GenerationPathsB();
 
         ToggleHiddenModeRoom(true);
 
@@ -565,7 +568,7 @@ public class MapManager : MonoBehaviour
         spawnedAdditionalRooms.Sort(CompareRoomYValue);
 
         // Set starting room
-        UpdateRoomIconType(startingRoom, "starting");
+        //UpdateRoomIconType(startingRoom, "starting");
 
         failedCurAttempts = 0;
 

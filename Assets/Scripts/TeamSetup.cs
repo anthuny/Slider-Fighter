@@ -35,6 +35,8 @@ public class TeamSetup : MonoBehaviour
     [SerializeField] private UIElement selectedMastery;
     [SerializeField] private Mastery activeMastery;
 
+    public GameObject masteryScrollView;
+
     private int spentMasteryTotalPoints = 0;
     private int spentOffenseMasteryPoints = 0;
     private int spentDefenseMasteryPoints = 0;
