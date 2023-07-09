@@ -135,7 +135,8 @@ public class EnergyCost : MonoBehaviour
             // Update energy for the unit
             GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurEnergy(-1);
 
-            Destroy(energyParent.GetChild(0).gameObject);
+            if (GameManager.Instance.GetActiveUnitType())
+                Destroy(energyParent.GetChild(0).gameObject);
 
             // Update Unit Overlay Energy
             abilityDetailsUI.UpdateUnitOverlayEnergyUI(GameManager.Instance.GetActiveUnitFunctionality(),
@@ -149,7 +150,10 @@ public class EnergyCost : MonoBehaviour
                 yield return new WaitForSeconds(energyBarPostTime);
 
                 if (!enemy)
+                {
+                    Weapon.instance.StartHitLine();
                     GameManager.Instance.SetupPlayerWeaponUI();
+                }
 
                 ToggleEnergyBar(false);
                 ToggleEnergyBGBar(false);
@@ -189,14 +193,14 @@ public class EnergyCost : MonoBehaviour
             }
         }
 
+        yield return new WaitForSeconds(energyBarPostTime);
+
         // Renable the Healthbar after removing the energy bar
         GameManager.Instance.UpdateActiveUnitHealthBar(true);
         GameManager.Instance.GetActiveUnitFunctionality().effects.UpdateAlpha(1);
 
         ToggleEnergyBar(false);
         ToggleEnergyBGBar(false);
-
-        yield return new WaitForSeconds(energyBarPostTime);
     }
 
     void ToggleEnergyBar(bool toggle)

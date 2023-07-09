@@ -14,6 +14,7 @@ public class ButtonFunctionality : MonoBehaviour
     private MasteryType masteryType;
 
     private ShopItem shopItem;
+    [SerializeField] private bool disabled;
 
 
     [SerializeField] private bool startDisabled;
@@ -206,6 +207,12 @@ public class ButtonFunctionality : MonoBehaviour
         // Enable To Map Button
         GameManager.Instance.toMapButton.UpdateAlpha(1);
     }
+
+    public void MasteryChangeUnit()
+    {
+
+    }
+
     public void PostBattleToMapButton()
     {
         // Disable post battle UI
@@ -216,17 +223,33 @@ public class ButtonFunctionality : MonoBehaviour
         if (!GameManager.Instance.playerLost)
             GameManager.Instance.ToggleMap(true, false);
         else
-            GameManager.Instance.ToggleMap(true, true);
+            GameManager.Instance.ToggleMap(true, true);          
     }
 
     public void WeaponBackButton()
     {
+        // Prevent players from backing out of attacking before the final damage is finalised.
+        if (disabled)
+            return;
+
         // Return unit energy
         GameManager.Instance.ReturnEnergyToUnit();
+
+        GameManager.Instance.ResetButton(GameManager.Instance.attackButton);    // Allow attack button clicks
 
         GameManager.Instance.SetupPlayerSkillsUI(GameManager.Instance.GetActiveSkill());
 
         GameManager.Instance.UpdateEnemyPosition(true);
+    }
+
+    public void ResetDisabled()
+    {
+        disabled = false;
+    }
+
+    public void DisableButton()
+    {
+        disabled = true;
     }
 
     public void AttackButton()
@@ -239,6 +262,16 @@ public class ButtonFunctionality : MonoBehaviour
         if (!GameManager.Instance.CheckIfAnyUnitsSelected())
             return;
 
+        if (!disabled)
+            disabled = true;
+        else
+            return;
+
+        GameManager.Instance.DisableButton(GameManager.Instance.endTurnButton);
+        GameManager.Instance.DisableButton(GameManager.Instance.skill1Button);
+        GameManager.Instance.DisableButton(GameManager.Instance.skill2Button);
+        GameManager.Instance.DisableButton(GameManager.Instance.skill3Button);
+
         // If the energy DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
         if (GameManager.Instance.activeSkill.skillEnergyCost != 0)
         {
@@ -247,7 +280,10 @@ public class ButtonFunctionality : MonoBehaviour
             GameManager.Instance.UpdateActiveUnitHealthBar(false);
         }
         else
+        {
+            Weapon.instance.StartHitLine();
             GameManager.Instance.SetupPlayerWeaponUI();
+        }
 
         // Trigger Skill alert UI
         GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
@@ -255,6 +291,9 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void EndTurnButton()
     {
+        if (disabled)
+            return;
+
         GameManager.Instance.ToggleEndTurnButton(false);
         GameManager.Instance.UpdateEnemyPosition(false);
 
@@ -304,6 +343,9 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void SelectSkill1()
     {
+        if (disabled)
+            return;
+
         GameManager.Instance.ResetSelectedUnits();
         GameManager.Instance.UpdateAllSkillIconAvailability();
 
@@ -335,6 +377,9 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void SelectSkill2()
     {
+        if (disabled)
+            return;
+
         GameManager.Instance.ResetSelectedUnits();
         GameManager.Instance.UpdateAllSkillIconAvailability();
 
@@ -366,6 +411,9 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void SelectSkill3()
     {
+        if (disabled)
+            return;
+
         GameManager.Instance.ResetSelectedUnits();
         GameManager.Instance.UpdateAllSkillIconAvailability();
 
@@ -397,9 +445,11 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void StopWeaponHitLine()
      {
+        GameManager.Instance.ResetButton(GameManager.Instance.attackButton);    // Allow attack button clicks
+        GameManager.Instance.DisableButton(GameManager.Instance.weaponBackButton);
+
         Weapon.instance.StartCoroutine(Weapon.instance.StopHitLine());
 
-        //GameManager.instance.UpdateUnitCurrentEnergy();
         GameManager.Instance.UpdateActiveUnitEnergyBar(false);
 
         GameManager.Instance.DisableAllSkillSelections();

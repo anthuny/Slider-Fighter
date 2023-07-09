@@ -27,6 +27,7 @@ public class SkillData : ScriptableObject
     public int skillEnergyCost;
     public int skillSelectionCount;
     public bool isSelfCast;
+    public bool special;
     public EffectData effect;
     public int effectTurnLength;
     [Tooltip("Skill has increased power to a unit with this effect")]

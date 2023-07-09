@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 public class OverlayUI : MonoBehaviour
 {
+    [SerializeField] private string targetCountTextColour;
+    [SerializeField] private string damagingTextColour;
+    [SerializeField] private string healingTextColour;
+    [SerializeField] private string damageWordTextColour;
+    [SerializeField] private string healWordTextColour;
+    [SerializeField] private string skillMultihitColour;
+
     public Text skillDetailsName;
     public Text skillDetailsDesc;
     public Text skillDetailsCurCD;
@@ -11,6 +18,7 @@ public class OverlayUI : MonoBehaviour
     public Text skillDetailsPower;
     public Text skillDetailsCDText;
     public Text skillDetailsEnergyCostText;
+    public Text skillDetailsMutlihitCountText;
     public Image skillDetailsPowerIcon;
     public Image skillDetailsIcon;
 
@@ -20,12 +28,13 @@ public class OverlayUI : MonoBehaviour
     public Image unitOverlayCurHealthImage;
 
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int skillAttackCount, bool attack,
-        int skillTargetCount, int skillPower, int skillEnergyCost, Sprite skillPowerImage, Sprite skillIcon)
+        int skillTargetCount, int skillPower, int skillEnergyCost, int multihitCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
     {
         UpdateSkillDetailsSkillName(skillName);
-        UpdateSkillDetailsDesc(skillDesc, skillDescPower, skillAttackCount, skillTargetCount, attack);
+        UpdateSkillDetailsDesc(skillDesc, skillDescPower, skillAttackCount, skillTargetCount, attack, special);
         UpdateSkillPowerText(skillPower);
         UpdateSkillDetailsEnergyText(skillEnergyCost);
+        UpdateSkillDetailsMutlihitCountText(multihitCount);
         UpdateSkillDetailsPowerImage(skillPowerImage);
         UpdateSkillDetailsIcon(skillIcon);
     }
@@ -56,12 +65,39 @@ public class OverlayUI : MonoBehaviour
         skillDetailsName.text = text;
     }
 
-    private void UpdateSkillDetailsDesc(string mainText, int power, int skillAttackCount, int skillTargetCount, bool attack)
+    private void UpdateSkillDetailsDesc(string mainText, int power, int skillAttackCount, int skillTargetCount, bool attack, bool special = false)
     {
+        string targetType = "";
+        string targetType2 = "";
         if (attack)
-            skillDetailsDesc.text = mainText + " " + skillTargetCount + " enemies for " + skillAttackCount + " x " + power.ToString();
+        {
+            if (skillTargetCount == 1)
+                targetType = "enemy";
+            else
+                targetType = "enemies";
+
+            targetType2 = "DAMAGING";
+        }
         else
-            skillDetailsDesc.text = mainText + " " + skillTargetCount + " allies for " + skillAttackCount + " x " + power.ToString();
+        {
+            if (skillTargetCount == 1)
+                targetType = "ally";
+            else
+                targetType = "allies";
+
+            targetType2 = "HEALING";
+        }
+
+        if (special)
+        {
+            skillDetailsDesc.text = mainText;
+            return;
+        }
+
+        if (attack)
+            skillDetailsDesc.text = $"{mainText}<color={targetCountTextColour}> {skillTargetCount}</color> <color={damageWordTextColour}>{targetType}</color>,<color={damageWordTextColour}> {targetType2}</color> for<color={damagingTextColour}> {power}</color> x <color={skillMultihitColour}>{skillAttackCount}</color>";
+        else
+            skillDetailsDesc.text = $"{mainText}<color={targetCountTextColour}> {skillTargetCount}</color> <color={healWordTextColour}>{targetType}</color>,<color={healWordTextColour}> {targetType2}</color> for<color={healingTextColour}> {power}</color> x <color={skillMultihitColour}>{skillAttackCount}</color>";
     }
 
     private void UpdateSkillPowerText(int power)
@@ -72,6 +108,11 @@ public class OverlayUI : MonoBehaviour
     private void UpdateSkillDetailsEnergyText(int energy)
     {
         skillDetailsEnergyCostText.text = energy.ToString();
+    }
+
+    private void UpdateSkillDetailsMutlihitCountText(int count)
+    {
+        skillDetailsMutlihitCountText.text = count.ToString();
     }
 
     private void UpdateSkillDetailsPowerImage(Sprite sprite)

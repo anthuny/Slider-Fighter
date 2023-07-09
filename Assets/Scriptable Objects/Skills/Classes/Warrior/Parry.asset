@@ -18,13 +18,14 @@ MonoBehaviour:
   curRangedType: 1
   skillSprite: {fileID: 21300000, guid: f6b8b85cbdc82ce439a41ae3d56d57ee, type: 3}
   skillName: PARRY
-  skillDescr: 'Parry up to '
+  skillDescr: Cast Parry on self for 0/1/2/3 turns
   skillPower: 0
   skillAttackCount: 0
   projectileSpeed: 10
   skillEnergyCost: 3
   skillSelectionCount: 1
   isSelfCast: 1
+  special: 1
   effect: {fileID: 11400000, guid: ba3e291f280756b4b982e633fcd1332e, type: 2}
   effectTurnLength: 2
   curSkillExtraPowerToEffect: 0

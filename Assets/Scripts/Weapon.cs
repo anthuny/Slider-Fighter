@@ -86,7 +86,7 @@ public class Weapon : MonoBehaviour
 
     void ResetWeapon()
     {
-        isStopped = false;
+        isStopped = true;
     }
 
     public void ToggleAttackButtonInteractable(bool toggle)
@@ -110,14 +110,18 @@ public class Weapon : MonoBehaviour
     public void StartHitLine()
     {
         isStopped = false;
+
         GameManager.Instance.UpdateEnemyPosition(false);
+
+        GameManager.Instance.ResetButton(GameManager.Instance.skill1Button);
+        GameManager.Instance.ResetButton(GameManager.Instance.skill2Button);
+        GameManager.Instance.ResetButton(GameManager.Instance.skill3Button);
+        GameManager.Instance.ResetButton(GameManager.Instance.endTurnButton);
     }
     public IEnumerator StopHitLine()
     {
-        if (isStopped)
+        if (!isStopped)
             yield break;
-
-        isStopped = true;
 
         for (int i = 0; i < weaponHitAreas.Count; i++)
         {
@@ -134,6 +138,10 @@ public class Weapon : MonoBehaviour
         yield return new WaitForSeconds(timePostHit);
 
         GameManager.Instance.SetupPlayerPostHitUI();
+
+        GameManager.Instance.ResetButton(GameManager.Instance.weaponBackButton);    // Enable weapon back button only when damage has gone through
+
+        isStopped = false;  // Resume attack bar 
 
         // Adjust power based on skill effect amp on target then send it 
         StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower));

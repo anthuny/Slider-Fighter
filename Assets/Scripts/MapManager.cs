@@ -228,7 +228,10 @@ public class MapManager : MonoBehaviour
             GameManager.Instance.endTurnButtonUI.UpdateAlpha(0);
 
             if (generateMap)
+            {
+                GameManager.Instance.ResetRoom();
                 GenerateMap();
+            }
 
             mapOverlay.UpdateRoomCountText(activeFloor.floorLevel.ToString());
             mapOverlay.UpdateFloorNameText(activeFloor.floorName, activeFloor.floorColour);

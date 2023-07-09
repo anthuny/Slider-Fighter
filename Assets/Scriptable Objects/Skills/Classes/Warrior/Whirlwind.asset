@@ -18,13 +18,14 @@ MonoBehaviour:
   curRangedType: 0
   skillSprite: {fileID: 21300000, guid: 64cf403d00652d443a915ea14f66c22f, type: 3}
   skillName: WHIRLWIND
-  skillDescr: Damage up to
-  skillPower: 150
+  skillDescr: Target up to
+  skillPower: 75
   skillAttackCount: 3
   projectileSpeed: 1
   skillEnergyCost: 3
   skillSelectionCount: 3
   isSelfCast: 0
+  special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
   curSkillExtraPowerToEffect: 0

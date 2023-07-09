@@ -21,8 +21,8 @@ MonoBehaviour:
   name: Warrior
   startingSpeed: 25
   startingArmor: 0
-  startingPower: 10
-  startingMaxHealth: 7000
+  startingPower: 3
+  startingMaxHealth: 1800
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1

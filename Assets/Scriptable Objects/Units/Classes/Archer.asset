@@ -21,8 +21,8 @@ MonoBehaviour:
   name: Archer
   startingSpeed: 30
   startingArmor: 0
-  startingPower: 10
-  startingMaxHealth: 7000
+  startingPower: 4
+  startingMaxHealth: 1450
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
@@ -32,3 +32,30 @@ MonoBehaviour:
   skill1: {fileID: 11400000, guid: e591c0ea94e44dc4f966fed6cf5e0dbf, type: 2}
   skill2: {fileID: 11400000, guid: cc318f8510e168b4388ec5807679be82, type: 2}
   skill3: {fileID: 11400000, guid: 43bd87269e8a8af4b993f2342c6320a4, type: 2}
+  offenseMasteries:
+  - {fileID: 11400000, guid: 6444f95a92396194a9572969abe63e7e, type: 2}
+  - {fileID: 11400000, guid: 72508cd8e0e634b4ab72ae5afbe8bdd7, type: 2}
+  - {fileID: 11400000, guid: d251f2cc5a0af0045b0bc82b09498cc7, type: 2}
+  - {fileID: 11400000, guid: 00ec126cbb8f66b48a2bf3f2d7730e93, type: 2}
+  - {fileID: 11400000, guid: f27adcbc7355b464c9eef43611851d3a, type: 2}
+  - {fileID: 11400000, guid: 5df50c2734a6fa9429500c1e469fd742, type: 2}
+  - {fileID: 11400000, guid: cb4cd78e54b953d40a572f4efb8d58e0, type: 2}
+  - {fileID: 11400000, guid: cde5b5e6f39dd694c991e5f7f21160e2, type: 2}
+  defenseMasteries:
+  - {fileID: 11400000, guid: 283e388a17ebb7e4da23b47bb72e1425, type: 2}
+  - {fileID: 11400000, guid: 50bb471bf0c9cfe40b2347779a01885f, type: 2}
+  - {fileID: 11400000, guid: b0bf82a44c1aa0c4a88914558b7b44b9, type: 2}
+  - {fileID: 11400000, guid: a674ab2b67cc7fc44b992faedf5839e2, type: 2}
+  - {fileID: 11400000, guid: b47a5544d6ce4cd4f8fe75f97667d1a0, type: 2}
+  - {fileID: 11400000, guid: a720cbe4bfa775f47a31a3096e45919f, type: 2}
+  - {fileID: 11400000, guid: 57ee411870eef4c488eb159deeada162, type: 2}
+  - {fileID: 11400000, guid: d03c48a9b41ddd84881d793bf21cb03e, type: 2}
+  utilityMasteries:
+  - {fileID: 11400000, guid: 41043c742f5be7c48921f9167ae13ae0, type: 2}
+  - {fileID: 11400000, guid: c98f192dbdb09f54faec8886352de51e, type: 2}
+  - {fileID: 11400000, guid: 4f71a0916824daf48ac5aeaca9a5e1d1, type: 2}
+  - {fileID: 11400000, guid: 732e96c8d8b46184fba6b2f1d0d841c2, type: 2}
+  - {fileID: 11400000, guid: fa5aaad3b8a0cd447bf96236f16009d7, type: 2}
+  - {fileID: 11400000, guid: 44d4421d83769a04d8d571c6721caa6f, type: 2}
+  - {fileID: 11400000, guid: 79e18cb3aced3a24c91eab54e04a81d7, type: 2}
+  - {fileID: 11400000, guid: 105922e6af04c9445ab0e717c34b60dd, type: 2}

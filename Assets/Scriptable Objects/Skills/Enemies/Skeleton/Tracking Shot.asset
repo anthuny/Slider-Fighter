@@ -19,12 +19,15 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: Tracking Shot
   skillDescr: Damage up to
-  skillPower: 75
+  skillPower: 50
   skillAttackCount: 3
   projectileSpeed: 12
   skillEnergyCost: 2
   skillSelectionCount: 1
+  isSelfCast: 0
+  special: 0
   effect: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
   effectTurnLength: 2
-  effectOnTargetBonusPower: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}

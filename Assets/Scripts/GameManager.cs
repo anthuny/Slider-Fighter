@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Transform> enemySpawnPositions = new List<Transform>();
     [SerializeField] private List<Transform> allySpawnPositions = new List<Transform>();
     [SerializeField] private Transform allyPostBattlePositionTransform;
-    [SerializeField] private Transform allyBattlePositionTransform;
+    [SerializeField] private Transform allyTurnPositionTransform;
+    [SerializeField] private Transform enemyTurnPositionTransform;
     [SerializeField] private Transform allyPositions;
 
     [SerializeField] private List<UnitData> activeRoomAllUnits = new List<UnitData>();
@@ -121,6 +122,13 @@ public class GameManager : MonoBehaviour
     public float enemyThinkTime = 1f;
     public float unitPowerUIWaitTime = .5f;
 
+    public ButtonFunctionality attackButton;
+    public ButtonFunctionality weaponBackButton;
+    public ButtonFunctionality endTurnButton;
+    public ButtonFunctionality skill1Button;
+    public ButtonFunctionality skill2Button;
+    public ButtonFunctionality skill3Button;
+
     private int experienceGained;
     private int activeRoomEnemiesKilled;
     [SerializeField] private Transform enemyPositionMainCombatTrans;
@@ -153,6 +161,15 @@ public class GameManager : MonoBehaviour
         return activeTeam[count];
     }
 
+    public void ResetButton(ButtonFunctionality button)
+    {
+        button.ResetDisabled();
+    }
+
+    public void DisableButton(ButtonFunctionality button)
+    {
+        button.DisableButton();
+    }
     public void UpdateEnemyPosition(bool playerTurn)
     {
         if (playerTurn)
@@ -315,14 +332,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void UpdateAllAlliesPosition(bool postBattle)
+    void UpdateAllAlliesPosition(bool postBattle, bool playersTurn = true)
     {
         if (!postBattle)
         {
-            allyPositions.SetParent(allyBattlePositionTransform);
-            allyPositions.SetPositionAndRotation(new Vector2(0,0), Quaternion.identity);
-            allyPositions.position = allyBattlePositionTransform.position;
-
+            if (playersTurn)
+            {
+                allyPositions.SetParent(allyTurnPositionTransform);
+                allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
+                allyPositions.position = allyTurnPositionTransform.position;
+            }
+            else
+            {
+                allyPositions.SetParent(enemyTurnPositionTransform);
+                allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
+                allyPositions.position = enemyTurnPositionTransform.position;
+            }
         }
         else
         {
@@ -584,7 +609,18 @@ public class GameManager : MonoBehaviour
         }
 
         // Update allies into position for battle/shop
-        UpdateAllAlliesPosition(false);
+        UpdateAllAlliesPosition(false, GetActiveUnitType());
+    }
+
+    public bool GetActiveUnitType()
+    {
+        bool toggle = false;
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            toggle = true;
+        else
+            toggle = false;
+        
+        return toggle;
     }
 
     public bool CheckIfEnergyAvailableSkill()
@@ -769,8 +805,8 @@ public class GameManager : MonoBehaviour
                                 GetActiveUnitFunctionality().ResetPreviousPowerUI();
 
                             // If active skill has an effect AND it's not a self cast, apply it to selected targets
-                            if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality());
+                            //if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                                //GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality());
 
                             // ATTACKING A PARRYING UNIT
                             // If skill is supposed to cause power, continue
@@ -793,8 +829,6 @@ public class GameManager : MonoBehaviour
 
                                     CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                                 }
-                                else
-                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power, parrying);
 
                                 // Increase health from the units current health if a support skill was casted on it
                                 if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
@@ -824,10 +858,12 @@ public class GameManager : MonoBehaviour
                             float tempPower = (unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
                             float newPower = absPower + tempPower;
 
+                            int orderCount;
+
                             // Cause power
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
                             {
-                                int orderCount = 2;
+                                orderCount = 2;
                                 if (hasBeenLuckyHit)
                                 {
                                     hasBeenLuckyHit = false;
@@ -838,7 +874,17 @@ public class GameManager : MonoBehaviour
                                 CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                             }
                             else
-                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power);
+                            {
+                                orderCount = 2;
+                                if (hasBeenLuckyHit)
+                                {
+                                    hasBeenLuckyHit = false;
+                                    orderCount--;
+                                }
+
+                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power, false, false, null, x + orderCount);
+                            }
+
 
                             // Increase health on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
@@ -865,20 +911,40 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(postHitWaitTime);
-
-        //GameManager.instance.UpdateTurnOrder();
-
+    
+        // If active unit is player, setup player UI
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
             SetupPlayerUI();
-        else
+        else   // If active unit is enemy, check whether to attack again or end turn
         {
-            if (castingUnit.GetUnitCurHealth() <= 0)
+            // If enemy kills all allies in selection, end it's turn
+            if (unitsSelected.Count == 0)
             {
-                //UpdateTurnOrder();
-                yield break;
+                for (int i = 0; i < unitsSelected.Count; i++)
+                {
+                    if (unitsSelected[i] == null)
+                    {
+                        if (i == unitsSelected.Count - 1)
+                        {
+                            // End turn
+                            ToggleEndTurnButton(false);
+                            UpdateTurnOrder();
+
+                            break;
+                        }
+
+                        continue;
+                    }
+                    else
+                        break;
+                }
             }
+            // If enemy didnt kill selection, attack again
             else
+            {
                 StartCoroutine(GetActiveUnitFunctionality().AttackAgain());  // Attack again
+                yield return 0;
+            }        
         }
     }
 
@@ -1029,7 +1095,7 @@ public class GameManager : MonoBehaviour
 
         abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower, 
             skill.skillAttackCount, tempAttack, skill.skillSelectionCount, 
-            skill.skillPower, skill.skillEnergyCost, skill.skillPowerIcon, skill.skillSprite);
+            skill.skillPower, skill.skillEnergyCost, skill.skillAttackCount, skill.skillPowerIcon, skill.skillSprite, skill.special);
 
         UnitFunctionality activeUnit = GetActiveUnitFunctionality();
 
@@ -1181,8 +1247,6 @@ public class GameManager : MonoBehaviour
         if (GetActiveUnitFunctionality().GetUnitCurEnergy() != GetActiveUnitFunctionality().GetUnitMaxEnergy())
             UpdateActiveUnitHealthBar(false);   // Disable unit health bar for unit start turn energy increase
 
-
-
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
         {
             UpdateSkillDetails(activeSkill);
@@ -1192,7 +1256,12 @@ public class GameManager : MonoBehaviour
 
             UpdateActiveUnitTurnArrow();
         }
+
+        // Update allies into position for battle/shop
+        UpdateAllAlliesPosition(false, GetActiveUnitType());
     }
+
+    // If something casts taunt, ally buff skills cant be used - bug
 
     public void AddExperienceGained(int exp)
     {
@@ -1587,12 +1656,24 @@ public class GameManager : MonoBehaviour
             {
                 for (int i = 0; i < IsEnemyTaunting().Count; i++)
                 {
-                    if (IsEnemyTaunting()[i] == unit)
+                    // If active unit is ally, and is selecting enemies, consider enemies parrying
+                    if (GetActiveSkill().curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES)
+                    {
+                        if (IsEnemyTaunting()[i] == unit)
+                        {
+                            // Select targeted unit
+                            unitsSelected.Add(unit);
+                            unit.ToggleSelected(true);
+                            UpdateUnitsSelectedText();
+                        }
+                    }
+                    else  // If active unit is ally, and is selecting allies, disregard parry, and continue
                     {
                         // Select targeted unit
                         unitsSelected.Add(unit);
                         unit.ToggleSelected(true);
                         UpdateUnitsSelectedText();
+                        break;
                     }
                 }
             }

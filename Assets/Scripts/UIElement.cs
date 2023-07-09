@@ -38,6 +38,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] bool isLocked;
 
     private RectTransform rt;
+    private float originalScale;
 
     private void Awake()
     {
@@ -50,6 +51,8 @@ public class UIElement : MonoBehaviour
 
         if (selectable)
             UpdateIsLocked(true);
+
+        originalScale = transform.GetComponent<RectTransform>().localScale.x;
     }
 
     public bool GetIsLocked()
@@ -248,10 +251,17 @@ public class UIElement : MonoBehaviour
 
     IEnumerator HideUIOvertime(float time = 0)
     {
+        ResetAnimateScale();
+
         yield return new WaitForSeconds(time);
 
         UpdateAlpha(0);
 
+    }
+
+    public void ResetAnimateScale()
+    {
+        contentText.gameObject.transform.localScale = new Vector3(originalScale, originalScale);
     }
     public void UpdateContentTextColour(Color colour)
     {
