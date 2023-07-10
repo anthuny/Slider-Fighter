@@ -23,12 +23,15 @@ public class MapManager : MonoBehaviour
     public RoomMapIcon endingRoom;
     [SerializeField] private Transform leftBorder;
     [SerializeField] private Transform rightBorder;
+    [SerializeField] private Transform botBorder;
+    [SerializeField] private Transform topBorder;
 
     [SerializeField] private List<GameObject> spawnedRoomsA = new List<GameObject>();
     [SerializeField] private List<GameObject> spawnedAllRooms = new List<GameObject>(); // List of spawned objects
     [SerializeField] private List<GameObject> spawnedAdditionalRooms = new List<GameObject>();
     [SerializeField] private List<GameObject> spawnedPaths = new List<GameObject>(); // List of spawned paths
     [SerializeField] private List<GameObject> spawnedAdditionalPaths = new List<GameObject>();
+    [SerializeField] private List<GameObject> spawnedShopRooms = new List<GameObject>();
 
     [SerializeField] private List<RoomMapIcon> rooms = new List<RoomMapIcon>();
     [SerializeField] private List<MapPath> mapPaths = new List<MapPath>();
@@ -75,6 +78,7 @@ public class MapManager : MonoBehaviour
     public UIElement exitShopRoom;
     [SerializeField] private UIElement mapManager;
 
+
     // The minimum and maximum values for the x and y positions of the spawned objects
     private float minX;
     private float maxX;
@@ -84,6 +88,8 @@ public class MapManager : MonoBehaviour
     private bool spawnedStartingRoom;
 
     private bool storedRoomData;
+
+    bool resetOnce;
 
     private void Awake()
     {
@@ -251,15 +257,15 @@ public class MapManager : MonoBehaviour
   
     Vector2 GetRoomSpawnRandomPos()
     {
-        Bounds bounds = mapSpawnBounds.GetComponent<BoxCollider2D>().bounds;
-
+        //Bounds bounds = mapSpawnBounds.GetComponent<BoxCollider2D>().bounds;
+        //Debug.Log(bounds);
         //float offsetX = Random.Range(-bounds.extents.x/2.75f, bounds.extents.x/2.75f);
         //float offsetY = Random.Range(-bounds.extents.y/2.75f, bounds.extents.y/2.75f);
 
-        float offsetX = Random.Range(-bounds.extents.x, bounds.extents.x);
-        float offsetY = Random.Range(-bounds.extents.y, bounds.extents.y);
+        float offsetX = Random.Range(leftBorder.position.x, rightBorder.position.x);
+        float offsetY = Random.Range(botBorder.gameObject.transform.position.y, topBorder.gameObject.transform.position.y);
 
-        Vector2 newPos = bounds.center + new Vector3(offsetX, offsetY, 0);
+        Vector2 newPos = new Vector3(offsetX, offsetY, 0);
         return newPos;
     }
 
@@ -284,6 +290,13 @@ public class MapManager : MonoBehaviour
         spawnedAdditionalRooms.Clear();
         spawnedPaths.Clear();
         spawnedAdditionalPaths.Clear();
+        spawnedShopRooms.Clear();
+
+        startingRoom.ResetLinkedPaths();
+        startingRoom.ResetLinkedRooms();
+
+        endingRoom.ResetLinkedPaths();
+        endingRoom.ResetLinkedRooms();
 
         rooms.Clear();
         mapPaths.Clear();
@@ -315,14 +328,58 @@ public class MapManager : MonoBehaviour
         SpawnRoomGenerationB();
         GenerationPathsB();
 
+        StoreRooms();
+
+        // Check if map is impossible
+        CheckIfMapIsPossible();
+
         ToggleHiddenModeRoom(true);
 
         UpdateStartingRoomAndPath();
 
-        StoreRooms();
+        //CheckIfMapIsPossible();
 
         // Updating unit map icon starting position
         unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
+
+        /*
+        if (!resetOnce)
+        {
+            resetOnce = true;
+            CheckIfMapIsPossible();
+        }
+        */
+    }
+
+    void CheckIfMapIsPossible()
+    {
+        // If there is not enough shops on the floor, remake it
+        if (spawnedShopRooms.Count < activeFloor.shopRoomCount)
+        {
+            ResetMap();
+            ToggleMapVisibility(true, true);
+            return;
+        }
+
+        for (int i = 0; i < startingRoom.GetLinkedRooms().Count; i++)
+        {
+            if (startingRoom.GetLinkedRooms()[i].curRoomType == RoomMapIcon.RoomType.SHOP)
+            {
+                ResetMap();
+                ToggleMapVisibility(true, true);
+                return;
+            }
+        }
+
+        for (int i = 0; i < endingRoom.GetLinkedRooms().Count; i++)
+        {
+            if (endingRoom.GetLinkedRooms()[i].curRoomSize == RoomMapIcon.RoomSize.SIDE)
+            {
+                ResetMap();
+                ToggleMapVisibility(true, true);
+                return;
+            }
+        }
     }
 
     void StoreRooms()
@@ -420,6 +477,10 @@ public class MapManager : MonoBehaviour
         // Spawn RoomGenerationA
         for (int i = 0; i < roomSpawnCount; i++)
         {
+            // Check if the spawned object is too close to any other objects
+            bool isTooClose = false;
+            float distance = 0;
+
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 // Instantiate the object prefab
@@ -429,18 +490,14 @@ public class MapManager : MonoBehaviour
                 room.transform.SetParent(roomIconsParent);
                 room.transform.localScale = new Vector2(1, 1);
 
-
                 Vector2 randomPos = GetRoomSpawnRandomPos();
                 room.transform.position = randomPos;
 
                 UpdateRoomZPosition(room.transform);
 
-                // Check if the spawned object is too close to any other objects
-                bool isTooClose = false;
-
                 foreach (GameObject obj in spawnedAllRooms)
                 {
-                    float distance = Vector2.Distance(obj.transform.position, randomPos);
+                    distance = Vector2.Distance(obj.transform.position, randomPos);
 
                     if (distance < minDistanceBetweenSpawnedObjects)
                     {
@@ -459,19 +516,18 @@ public class MapManager : MonoBehaviour
                 // If the spawned object is not too close to any other objects, spawn another till capped
                 if (!isTooClose)
                 {
-                    if (curRoomCount < activeFloor.maxRoomCount + activeFloor.sideRoomAmount)
-                    {
-                        // Update Room Icon 
-                        RoomMapIcon roomMapIcon = room.GetComponent<RoomMapIcon>();
-                        UpdateRoomIconType(roomMapIcon, "enemy");
+                    Debug.Log(room.gameObject.name + " " + distance);
+                    // Update Room Icon 
+                    RoomMapIcon roomMapIcon = room.GetComponent<RoomMapIcon>();
+                    UpdateRoomIconType(roomMapIcon, "enemy");
 
-                        // Add the spawned object to the list
-                        spawnedAllRooms.Add(room);
-                        spawnedRoomsA.Add(room);
-                        curRoomCount++;
-                        room.name = "Room - Main " + curRoomCount;
-                        continue;
-                    }
+                    // Add the spawned object to the list
+                    spawnedAllRooms.Add(room);
+                    spawnedRoomsA.Add(room);
+                    curRoomCount++;
+                    room.name = "Room - Main " + curRoomCount;
+                    roomMapIcon.UpdateRoomSize(RoomMapIcon.RoomSize.MAIN);
+                    continue;
                 }
 
                 //Debug.Log("Failed Current Attempts: " + failedCurAttempts);
@@ -496,10 +552,12 @@ public class MapManager : MonoBehaviour
 
         RoomMapIcon roomMapIcon;
 
+        Debug.Log(failedCurAttempts);
         for (int i = 0; i < roomSpawnRoundB; i++)
         {
             if (failedCurAttempts <= maxFailedAttempts)
             {
+                Debug.Log(failedCurAttempts);
                 // Instantiate the object prefab
                 GameObject sideRoom = Instantiate(roomPrefab);
 
@@ -508,7 +566,7 @@ public class MapManager : MonoBehaviour
                 sideRoom.transform.localScale = new Vector2(1, 1);
                 //room.transform.position = new Vector3(randomPos.x, randomPos.y, 0);
 
-                Vector3 randomPos = GetRoomSpawnRandomPos();
+                Vector2 randomPos = GetRoomSpawnRandomPos();
                 sideRoom.transform.position = randomPos;
 
                 UpdateRoomZPosition(sideRoom.transform);
@@ -531,7 +589,7 @@ public class MapManager : MonoBehaviour
                             i--;
 
                         Destroy(sideRoom);
-                        break;
+                        return;
                     }
                 }
 
@@ -570,6 +628,7 @@ public class MapManager : MonoBehaviour
                     spawnedAdditionalRooms.Add(sideRoom);
                     curRoomCount++;
                     sideRoom.name = "Room - Side " + curRoomCount;
+                    roomMapIcon.UpdateRoomSize(RoomMapIcon.RoomSize.SIDE);
                     continue;
                 }
             }
@@ -606,6 +665,7 @@ public class MapManager : MonoBehaviour
                 // If room is not a shop, make it a shop
                 roomIcon.UpdateRoomType(RoomMapIcon.RoomType.SHOP);
                 UpdateRoomIconType(spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>(), "shop");
+                spawnedShopRooms.Add(spawnedAdditionalRooms[rand]);
             }
         }
 

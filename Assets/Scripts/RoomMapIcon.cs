@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class RoomMapIcon : MonoBehaviour
 {
+    public enum RoomType { ENEMY, SHOP, BOSS, STARTING }
+    public RoomType curRoomType;
+
+    public enum RoomSize { MAIN, SIDE }
+    public RoomSize curRoomSize;
+
     [SerializeField] private List<RoomMapIcon> linkedRooms = new List<RoomMapIcon>();
     [SerializeField] private List<MapPath> linkedPaths = new List<MapPath>();
     [SerializeField] private Image roomIconImage;
@@ -14,8 +20,6 @@ public class RoomMapIcon : MonoBehaviour
     [SerializeField] private ButtonRoom buttonRoom;
     [SerializeField] private List<Item> shopRoomItems = new List<Item>();
     [SerializeField] private List<Item> ownedShopItems = new List<Item>();
-    public enum RoomType { ENEMY, SHOP, BOSS, STARTING}
-    public RoomType curRoomType;
 
     public bool isHidden;
     public bool isSelected;
@@ -187,6 +191,11 @@ public class RoomMapIcon : MonoBehaviour
         return linkedPaths;
     }
 
+    public List<RoomMapIcon> GetLinkedRooms()
+    {
+        return linkedRooms;
+    }
+
     public void UpdateRoomDetail(Sprite sprite = null)
     {
         if (sprite != null)
@@ -302,6 +311,16 @@ public class RoomMapIcon : MonoBehaviour
     public RoomType GetRoomType()
     {
         return curRoomType;
+    }
+
+    public RoomSize GetRoomSize()
+    {
+        return curRoomSize;
+    }
+
+    public void UpdateRoomSize(RoomSize roomSize)
+    {
+        curRoomSize = roomSize;
     }
 
 }
