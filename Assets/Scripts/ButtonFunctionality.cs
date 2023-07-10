@@ -35,6 +35,16 @@ public class ButtonFunctionality : MonoBehaviour
 
         // Enable combat UI
         GameManager.Instance.Setup();
+
+        // Face left for combat
+
+        // Make all allies face left for combat
+        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        {
+            GameManager.Instance.activeRoomAllies[i].UpdateFacingDirection(false);
+        }
+
+        GameManager.Instance.UpdateAllysPositionCombat();
     }
 
     public void ButtonOpenMap()
@@ -43,6 +53,8 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.toMapButton.UpdateAlpha(0);
         // Toggle Map back on
         GameManager.Instance.ToggleMap(true, false);
+
+        GameManager.Instance.activeRoomAllUnitFunctionalitys = GameManager.Instance.oldActiveRoomAllUnitFunctionalitys;
 
         GameManager.Instance.ToggleTeamSetup(false);
 
@@ -204,13 +216,19 @@ public class ButtonFunctionality : MonoBehaviour
 
         GameManager.Instance.ToggleTeamSetup(true);
 
+        GameManager.Instance.UpdateAllyVisibility(true, true);
+
         // Enable To Map Button
         GameManager.Instance.toMapButton.UpdateAlpha(1);
     }
 
     public void MasteryChangeUnit()
     {
+        TeamSetup.Instance.GetActiveUnit().UpdateLastOpenedMastery(TeamSetup.Instance.activeMasteryType);
 
+        GameManager.Instance.UpdateMasteryAllyPosition();
+
+        GameManager.Instance.ToggleTeamSetup(true);
     }
 
     public void PostBattleToMapButton()
@@ -287,6 +305,15 @@ public class ButtonFunctionality : MonoBehaviour
 
         // Trigger Skill alert UI
         GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
+    }
+
+    public void MinusEnemyHPButton()
+    {
+        GameManager.Instance.ReduceAllEnemyHealth();
+    }
+    public void MinusAllyHPButton()
+    {
+        GameManager.Instance.ReduceAllPlayerHealth();
     }
 
     public void EndTurnButton()

@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform allyPositions;
 
     [SerializeField] private List<UnitData> activeRoomAllUnits = new List<UnitData>();
-    [SerializeField] private List<UnitFunctionality> activeRoomAllUnitFunctionalitys = new List<UnitFunctionality>();
+    public List<UnitFunctionality> activeRoomAllUnitFunctionalitys = new List<UnitFunctionality>();
+    public List<UnitFunctionality> oldActiveRoomAllUnitFunctionalitys = new List<UnitFunctionality>();
     public List<UnitFunctionality> activeRoomAllies = new List<UnitFunctionality>();
     [SerializeField] private List<UnitFunctionality> activeRoomEnemies = new List<UnitFunctionality>();
 
@@ -31,7 +32,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIElement teamSetup;
     public UIElement toMapButton;
     [SerializeField] private Transform teamSetupAllyPosition;
-    [SerializeField] private UIElement allyNameText;
 
     [Header("Map")]
     public MapManager map;
@@ -142,9 +142,13 @@ public class GameManager : MonoBehaviour
 
     bool firstTimeRoomStart = true;
 
+
+
     private void Awake()
     {
         Instance = this;
+
+        SpawnAllies(true);
     }
     private void Start()
     {
@@ -240,16 +244,63 @@ public class GameManager : MonoBehaviour
 
                 unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
 
-                // If not spawning all alies for combat, stop at one spawned ally.
-                if (!allAllies)
+                // reposition ally to team setup position
+                //go.transform.position = teamSetupAllyPosition.position;
+                ToggleAllowSelection(false);
+                unitFunctionality.ToggleUnitHealthBar(false);
+
+                unitFunctionality.unitData = unit;
+
+                if (i == 0)
+                    TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
+            }
+        }
+        
+    }
+
+    public void UpdateMasteryAllyPosition()
+    {
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            if (i == 1)
+            {
+                UnitFunctionality oldUnit = activeRoomAllUnitFunctionalitys[0];
+                activeRoomAllUnitFunctionalitys[0] = activeRoomAllUnitFunctionalitys[1];
+                activeRoomAllUnitFunctionalitys[1] = oldUnit;
+
+
+            }
+            else if (i == 2)
+            {
+                UnitFunctionality oldUnit = activeRoomAllUnitFunctionalitys[1];
+                activeRoomAllUnitFunctionalitys[1] = activeRoomAllUnitFunctionalitys[2];
+                activeRoomAllUnitFunctionalitys[2] = oldUnit;
+            }
+
+            // Update position 1 to be visiible, rest not
+            activeRoomAllUnitFunctionalitys[0].UpdateIsVisible(true);
+            activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0).transform.position;
+            if (i != 0)
+                activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(false);
+        }
+    }
+
+    public void UpdateAllysPositionCombat()
+    {
+        if (activeRoomAllUnitFunctionalitys.Count >= 1)
+        {
+            activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0).transform.position;
+            activeRoomAllUnitFunctionalitys[0].ResetPosition();
+
+            if (activeRoomAllUnitFunctionalitys.Count >= 2)
+            {
+                activeRoomAllUnitFunctionalitys[1].transform.position = allyPositions.GetChild(1).transform.position;
+                activeRoomAllUnitFunctionalitys[1].ResetPosition();
+
+                if (activeRoomAllUnitFunctionalitys.Count >= 3)
                 {
-                    // reposition ally to team setup position
-                    go.transform.position = teamSetupAllyPosition.position;
-                    ToggleAllowSelection(false);
-                    unitFunctionality.ToggleUnitHealthBar(false);
-                    allyNameText.UpdateContentText(unitFunctionality.GetUnitName());
-                    allyNameText.UpdateContentTextColour(unitFunctionality.GetUnitColour());
-                    break;
+                    activeRoomAllUnitFunctionalitys[2].transform.position = allyPositions.GetChild(2).transform.position;
+                    activeRoomAllUnitFunctionalitys[2].ResetPosition();
                 }
             }
         }
@@ -261,57 +312,119 @@ public class GameManager : MonoBehaviour
         if (toggle)
         {
             teamSetup.UpdateAlpha(1);
-            SpawnAllies(false);
+            //SpawnAllies(false);
+
+            UpdateAllAlliesPosition(false, true, true);
             TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
-            TeamSetup.Instance.UpdateMasteryPage(TeamSetup.ActiveMasteryType.OFFENSE);
+
+            oldActiveRoomAllUnitFunctionalitys = activeRoomAllUnitFunctionalitys;
+
+            // Track the last mastery type from the active unit
+            TeamSetup.ActiveMasteryType masteryType = TeamSetup.ActiveMasteryType.OFFENSE;
+            if (TeamSetup.Instance.GetActiveUnit().GetLastOpenedMastery() == UnitFunctionality.LastOpenedMastery.OFFENSE)
+                masteryType = TeamSetup.ActiveMasteryType.OFFENSE;
+            else if (TeamSetup.Instance.GetActiveUnit().GetLastOpenedMastery() == UnitFunctionality.LastOpenedMastery.DEFENSE)
+                masteryType = TeamSetup.ActiveMasteryType.DEFENSE;
+            else if (TeamSetup.Instance.GetActiveUnit().GetLastOpenedMastery() == UnitFunctionality.LastOpenedMastery.UTILITY)
+                masteryType = TeamSetup.ActiveMasteryType.UTILITY;
+
+            TeamSetup.Instance.UpdateMasteryPage(masteryType);
+
+            TeamSetup.Instance.UpdateAllyNameText();
         }
         else
+        {
             teamSetup.UpdateAlpha(0);
+        }
     }
 
-    public void ResetRoom()
+    public void UpdateAllyVisibility(bool toggle, bool teamPage)
+    {   
+        //  If enabling
+        if (toggle)
+        {
+            if (teamPage)   // Team page
+            {
+                // Toggle ally visibility
+                for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+                {
+                    activeRoomAllUnitFunctionalitys[0].UpdateIsVisible(true);
+                    activeRoomAllUnitFunctionalitys[0].ToggleUnitHealthBar(false);
+
+                    activeRoomAllUnitFunctionalitys[0].gameObject.transform.position = allyPositions.GetChild(0).transform.position;
+
+                    activeRoomAllUnitFunctionalitys[i].UpdateFacingDirection(true);
+
+                    if (i != 0)
+                    {
+                        activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(false);
+                    }
+                }
+            }
+            else    // Combat
+            {
+                // Toggle ally visibility
+                for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+                {
+                    activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(true);
+                    activeRoomAllUnitFunctionalitys[i].ToggleUnitHealthBar(true);
+                }
+            }
+        }
+        else    // if disabling
+        {
+            // Toggle ally visibility
+            for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(toggle);
+            }
+        }
+    }
+
+    public void ResetRoom(bool enemies = true)
     {
         defeatedEnemies.ResetDefeatedEnemies();
 
-        //if (activeRoomEnemies.Count <= 0 || activeRoomEnemies[0] == null)
-            //return;
-
-        activeRoomAllUnits.Clear();
-
-        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        if (!enemies)
         {
-            activeRoomAllUnitFunctionalitys.RemoveAt(i);
-        }
-        
-        for (int i = 0; i < enemySpawnPositions.Count; i++)
-        {
-            if (enemySpawnPositions[i].childCount >= 1)
-                Destroy(enemySpawnPositions[i].transform.GetChild(0).gameObject);
-        }
-              
-        for (int i = 0; i < allySpawnPositions.Count; i++)
-        {
-            if (allySpawnPositions[i].childCount >= 1)
-                Destroy(allySpawnPositions[i].transform.GetChild(0).gameObject);
-        }      
+            activeRoomAllUnits.Clear();
 
-        activeRoomAllUnitFunctionalitys.Clear();
+            for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                activeRoomAllUnitFunctionalitys.RemoveAt(i);
+            }
 
-        
-        for (int i = 0; i < activeRoomAllies.Count; i++)
-        {
-            activeRoomAllies.RemoveAt(i);
+            for (int i = 0; i < allySpawnPositions.Count; i++)
+            {
+                if (allySpawnPositions[i].childCount >= 1)
+                    Destroy(allySpawnPositions[i].transform.GetChild(0).gameObject);
+            }
+
+            activeRoomAllUnitFunctionalitys.Clear();
+
+            for (int i = 0; i < activeRoomAllies.Count; i++)
+            {
+                activeRoomAllies.RemoveAt(i);
+            }
+
+            activeRoomAllies.Clear();
         }
 
-        activeRoomAllies.Clear();
-
-        
-        for (int i = 0; i < activeRoomEnemies.Count; i++)
+        if (enemies)
         {
-            activeRoomEnemies.RemoveAt(i);
-        }
+            for (int i = 0; i < enemySpawnPositions.Count; i++)
+            {
+                if (enemySpawnPositions[i].childCount >= 1)
+                    Destroy(enemySpawnPositions[i].transform.GetChild(0).gameObject);
+            }
 
-        activeRoomEnemies.Clear();
+            for (int i = 0; i < activeRoomEnemies.Count; i++)
+            {
+                activeRoomEnemies.RemoveAt(i);
+            }
+
+            activeRoomEnemies.Clear();
+        }
     }
 
     public void ToggleMap(bool toggle, bool generateMap = false)
@@ -332,10 +445,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void UpdateAllAlliesPosition(bool postBattle, bool playersTurn = true)
+    void UpdateAllAlliesPosition(bool postBattle, bool playersTurn = true, bool masteryPosition = false)
     {
         if (!postBattle)
         {
+            if (masteryPosition)
+            {
+                allyPositions.SetParent(TeamSetup.Instance.masteryAllyPosTrans);
+                allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
+                allyPositions.position = TeamSetup.Instance.masteryAllyPosTrans.position;
+
+                return;
+            }
+
             if (playersTurn)
             {
                 allyPositions.SetParent(allyTurnPositionTransform);
@@ -495,7 +617,7 @@ public class GameManager : MonoBehaviour
         ResetExperienceGained();
 
         // If room type is enemy, spawn enemy room
-        if (room.curRoomType ==  RoomMapIcon.RoomType.ENEMY)
+        if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
         {
             // Determine enemy unit value
             int roomChallengeCount = (RoomManager.Instance.GetFloorCount() + 1) + RoomManager.Instance.GetFloorDifficulty();
@@ -513,11 +635,11 @@ public class GameManager : MonoBehaviour
                 go.transform.SetParent(enemySpawnPositions[spawnEnemyPosIndex]);
 
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
+                unitFunctionality.UpdateUnitType("Enemy");
                 unitFunctionality.ResetPosition();
                 unitFunctionality.UpdateUnitName(unit.name);
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
                 //unitFunctionality.UpdateUnitColour(unit.unitColour);
-                unitFunctionality.UpdateUnitType("Enemy");
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
                 unitFunctionality.UpdateUnitArmor(unit.startingArmor);
@@ -539,6 +661,7 @@ public class GameManager : MonoBehaviour
 
                 unitFunctionality.UpdateUnitValue(unitValue);
                 unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
+                //unitFunctionality.toggle
 
                 i += unitValue;
 
@@ -548,7 +671,8 @@ public class GameManager : MonoBehaviour
                     break;
             }
 
-            SpawnAllies(true);
+            UpdateAllyVisibility(true, false);
+            //SpawnAllies(true);
 
             ShopManager.Instance.ClearShopItems();
             ToggleAllowSelection(true);
@@ -693,7 +817,7 @@ public class GameManager : MonoBehaviour
         return units;
     }
 
-    public IEnumerator WeaponAttackCommand(int power)
+    public IEnumerator WeaponAttackCommand(int power, int hitMultCount = 0)
     {
         UnitFunctionality castingUnit = GetActiveUnitFunctionality();
 
@@ -733,11 +857,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // If skill is self cast, do it here
-        if (GetActiveSkill().isSelfCast)
-            if (GetActiveSkill().effect != null)
-                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality());
-
         // Disable unit selection just before attack
         for (int y = 0; y < unitsSelected.Count; y++)
         {
@@ -754,7 +873,8 @@ public class GameManager : MonoBehaviour
                     break;
 
                 // If active skil has an effect AND it's not a self cast, apply it to selected targets
-                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x]);
+                if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                    unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], hitMultCount);
             }
         }
         else
@@ -847,7 +967,7 @@ public class GameManager : MonoBehaviour
 
                                 // If active skill has an effect AND it's not a self cast, apply it to selected targets
                                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i]);
+                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], hitMultCount);
                             }
                         }
 
@@ -900,7 +1020,7 @@ public class GameManager : MonoBehaviour
 
                             // If active skill has an effect AND it's not a self cast, apply it to selected targets
                             if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i]);
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], hitMultCount);
                         }
                     }
                 }
@@ -909,6 +1029,11 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenPowerUIStack);
             }
         }
+
+        // If skill is self cast, do it here
+        if (GetActiveSkill().isSelfCast)
+            if (GetActiveSkill().effect != null)
+                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), hitMultCount);
 
         yield return new WaitForSeconds(postHitWaitTime);
     
@@ -929,10 +1054,8 @@ public class GameManager : MonoBehaviour
                             // End turn
                             ToggleEndTurnButton(false);
                             UpdateTurnOrder();
-
                             break;
                         }
-
                         continue;
                     }
                     else
@@ -1710,6 +1833,28 @@ public class GameManager : MonoBehaviour
     {
         curUnitsTargetedText.text = curUnitsSelected.ToString();
         maxUnitsTargetedText.text = maxUnitsSelected.ToString();
+    }
+
+    public void ReduceAllEnemyHealth()
+    {
+        if (activeRoomEnemies.Count == 0)
+            return;
+
+        for (int i = 0; i < activeRoomEnemies.Count; i++)
+        {
+            activeRoomEnemies[i].UpdateUnitMaxHealth(1);
+        }
+    }
+
+    public void ReduceAllPlayerHealth()
+    {
+        if (activeRoomAllies.Count == 0)
+            return;
+
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].UpdateUnitMaxHealth(1);
+        }
     }
 
     private int CompareUnitSpeed(UnitData unitA, UnitData unitB)

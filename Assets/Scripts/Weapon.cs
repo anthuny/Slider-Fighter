@@ -49,6 +49,11 @@ public class Weapon : MonoBehaviour
         instance = this;
     }
 
+    public void UpdateHitAreaType(HitAreaType hitAreaType)
+    {
+        curHitAreaType = hitAreaType;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -144,7 +149,20 @@ public class Weapon : MonoBehaviour
         isStopped = false;  // Resume attack bar 
 
         // Adjust power based on skill effect amp on target then send it 
-        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower));
+
+        int hitMulticount = 1;
+        if (curHitAreaType == HitAreaType.PERFECT)
+            hitMulticount = 4;
+        else if (curHitAreaType == HitAreaType.GREAT)
+            hitMulticount = 3;
+        else if (curHitAreaType == HitAreaType.GOOD)
+            hitMulticount = 2;
+        else if (curHitAreaType == HitAreaType.BAD)
+            hitMulticount = 1;
+        else if (curHitAreaType == HitAreaType.MISS)
+            hitMulticount = 0;
+
+        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, hitMulticount));
     }
 
     public void DisableAlertUI()
@@ -167,8 +185,7 @@ public class Weapon : MonoBehaviour
         else if(curHitAreaType == WeaponHitArea.HitAreaType.MISS)
             calculatedPower = missMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
 
-        calculatedPower *= 10;
-        
+        calculatedPower *= 10;      
     }
 
     public void TriggerHitAlertText(WeaponHitArea.HitAreaType curHitAreaType)

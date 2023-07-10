@@ -36,7 +36,7 @@ public class Effect : MonoBehaviour
     {
         effectIconImage = GetComponent<Image>();
     }
-    public void Setup(EffectData effect, UnitFunctionality targetUnit)
+    public void Setup(EffectData effect, UnitFunctionality targetUnit, int turnDuration = 1)
     {
         if (effect.curEffectTrigger == EffectData.EffectTrigger.TURNSTART)
             curEffectTrigger = EffectTrigger.TURNSTART;
@@ -92,9 +92,9 @@ public class Effect : MonoBehaviour
         }
 
         UpdateEffectIcon(effect);
-        UpdateTurnCountText(GameManager.Instance.GetActiveSkill().effectTurnLength);
+        AddTurnCountText(turnDuration);
 
-        maxTurnCountRemaining = GameManager.Instance.GetActiveSkill().effectTurnLength;
+        //maxTurnCountRemaining = GameManager.Instance.GetActiveSkill().effectTurnLength;
 
         EffectApply(targetUnit);
     }
@@ -104,9 +104,9 @@ public class Effect : MonoBehaviour
         effectIconImage.sprite = effect.effectIcon;
     }
 
-    void UpdateTurnCountText(int turns)
+    public void AddTurnCountText(int turns)
     {
-        turnCountRemaining = turns;
+        turnCountRemaining += turns;
         effectTurnCountText.text = turnCountRemaining.ToString();
     }
 
@@ -125,12 +125,6 @@ public class Effect : MonoBehaviour
             RemoveEffect(unit);
 
         turnCountRemaining--;
-        effectTurnCountText.text = turnCountRemaining.ToString();
-    }
-
-    public void FillTurnCountText()
-    {
-        turnCountRemaining = maxTurnCountRemaining;
         effectTurnCountText.text = turnCountRemaining.ToString();
     }
 

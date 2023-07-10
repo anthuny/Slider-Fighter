@@ -27,12 +27,15 @@ public class OverlayUI : MonoBehaviour
     public Image unitOverlayCurEnergyImage;
     public Image unitOverlayCurHealthImage;
 
+    [SerializeField] private Color powerDamageColour;
+    [SerializeField] private Color powerHealColour;
+
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int skillAttackCount, bool attack,
         int skillTargetCount, int skillPower, int skillEnergyCost, int multihitCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
     {
         UpdateSkillDetailsSkillName(skillName);
         UpdateSkillDetailsDesc(skillDesc, skillDescPower, skillAttackCount, skillTargetCount, attack, special);
-        UpdateSkillPowerText(skillPower);
+        UpdateSkillPowerText(skillPower, attack);
         UpdateSkillDetailsEnergyText(skillEnergyCost);
         UpdateSkillDetailsMutlihitCountText(multihitCount);
         UpdateSkillDetailsPowerImage(skillPowerImage);
@@ -100,9 +103,14 @@ public class OverlayUI : MonoBehaviour
             skillDetailsDesc.text = $"{mainText}<color={targetCountTextColour}> {skillTargetCount}</color> <color={healWordTextColour}>{targetType}</color>,<color={healWordTextColour}> {targetType2}</color> for<color={healingTextColour}> {power}</color> x <color={skillMultihitColour}>{skillAttackCount}</color>";
     }
 
-    private void UpdateSkillPowerText(int power)
+    private void UpdateSkillPowerText(int power, bool damaging = true)
     {
         skillDetailsPower.text = power.ToString();
+
+        if (damaging)
+            skillDetailsPower.color = powerDamageColour;
+        else
+            skillDetailsPower.color = powerHealColour;
     }
 
     private void UpdateSkillDetailsEnergyText(int energy)

@@ -8,6 +8,10 @@ public class UnitFunctionality : MonoBehaviour
     RectTransform rt;
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
+
+    public enum LastOpenedMastery { OFFENSE, DEFENSE, UTILITY };
+    public LastOpenedMastery lastOpenedMastery;
+
     [SerializeField] private UIElement selectionCircle;
     [SerializeField] private UIElement unitVisuals;
     private Sprite unitIcon;
@@ -56,6 +60,7 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private List<UIElement> defenseMasteries = new List<UIElement>();
     [SerializeField] private List<UIElement> utilityMasteries = new List<UIElement>();
     //[SerializeField] private List<UIElement> currentMasteries = new List<UIElement>();
+    public UnitData unitData;
 
     [HideInInspector]
     public GameObject prevPowerUI;
@@ -64,11 +69,49 @@ public class UnitFunctionality : MonoBehaviour
     private int unitValue;
     private Animator animator;
 
+    public int masteryOffenseL1AddedCount;
+    public int masteryOffenseL2AddedCount;
+    public int masteryOffenseL3AddedCount;
+    public int masteryOffenseL4AddedCount;
+
+    public int masteryOffenseR1AddedCount;
+    public int masteryOffenseR2AddedCount;
+    public int masteryOffenseR3AddedCount;
+    public int masteryOffenseR4AddedCount;
+
+
+    public int masteryDefenseL1AddedCount;
+    public int masteryDefenseL2AddedCount;
+    public int masteryDefenseL3AddedCount;
+    public int masteryDefenseL4AddedCount;
+
+    public int masteryDefenseR1AddedCount;
+    public int masteryDefenseR2AddedCount;
+    public int masteryDefenseR3AddedCount;
+    public int masteryDefenseR4AddedCount;
+
+
+    public int masteryUtilityL1AddedCount;
+    public int masteryUtilityL2AddedCount;
+    public int masteryUtilityL3AddedCount;
+    public int masteryUtilityL4AddedCount;
+
+    public int masteryUtilityR1AddedCount;
+    public int masteryUtilityR2AddedCount;
+    public int masteryUtilityR3AddedCount;
+    public int masteryUtilityR4AddedCount;
+
+    private int spentMasteryTotalPoints = 0;
+    public int spentOffenseMasteryPoints = 0;
+    public int spentDefenseMasteryPoints = 0;
+    public int spentUtilityMasteryPoints = 0;
+
     public bool idleBattle;
     public bool isDead;
     public bool isTaunting;
     public bool isParrying;
     public bool attacked;
+    public bool isVisible;
 
     private void Awake()
     {
@@ -82,8 +125,50 @@ public class UnitFunctionality : MonoBehaviour
         ResetEffects();
 
         UpdateUnitPowerInc(1);
+
+        UpdateIsVisible(false);
     }
 
+    public void UpdateLastOpenedMastery(TeamSetup.ActiveMasteryType masteryType)
+    {
+        if (masteryType == TeamSetup.ActiveMasteryType.OFFENSE)
+            lastOpenedMastery = LastOpenedMastery.OFFENSE;
+        else if (masteryType == TeamSetup.ActiveMasteryType.DEFENSE)
+            lastOpenedMastery = LastOpenedMastery.DEFENSE;
+        else if (masteryType == TeamSetup.ActiveMasteryType.UTILITY)
+            lastOpenedMastery = LastOpenedMastery.UTILITY;
+    }
+
+    public LastOpenedMastery GetLastOpenedMastery()
+    {
+        return lastOpenedMastery;
+    }
+
+    public void UpdateFacingDirection(bool right = true)
+    {
+        if (right)
+            gameObject.transform.localScale = new Vector3(-1, gameObject.transform.localScale.y);
+        else
+            gameObject.transform.localScale = new Vector3(1, gameObject.transform.localScale.y);
+    }
+
+    public void UpdateIsVisible(bool toggle)
+    {
+        isVisible = toggle;
+
+        if (curUnitType == UnitType.PLAYER)
+        {
+            if (isVisible)
+                unitUIElement.UpdateAlpha(1);
+            else
+                unitUIElement.UpdateAlpha(0);
+        }
+    }
+
+    public bool GetIsVisible()
+    {
+        return isVisible;
+    }
     public void AddOwnedItems(Item item)
     {
         equipItems.Add(item);   
@@ -201,6 +286,25 @@ public class UnitFunctionality : MonoBehaviour
     {
         return animator;
     }
+
+    public int GetSpentMasteryPoints()
+    {
+        return spentMasteryTotalPoints;
+    }
+
+    public void UpdateSpentMasteryPoints(int add)
+    {
+        spentMasteryTotalPoints += add;
+    }
+
+    public void ResetSpentMasteryPoints()
+    {
+        spentMasteryTotalPoints = 0;
+        spentOffenseMasteryPoints = 0;
+        spentDefenseMasteryPoints = 0;
+        spentUtilityMasteryPoints = 0;
+    }
+
     public IEnumerator StartUnitTurn()
     {
         // Do unit's turn automatically if its on idle battle
@@ -238,7 +342,7 @@ public class UnitFunctionality : MonoBehaviour
                     }
 
                     // Adjust power based on skill effect amp on target then send it 
-                    StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower));
+                    StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.effectTurnLength));
                 }
                 else
                 {
@@ -345,7 +449,7 @@ public class UnitFunctionality : MonoBehaviour
         return activeEffects;
     }
 
-    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit)
+    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1)
     {
         // If unit is already effected with this effect, stop
         for (int i = 0; i < activeEffects.Count; i++)
@@ -353,7 +457,7 @@ public class UnitFunctionality : MonoBehaviour
             if (addedEffect.effectName == activeEffects[i].effectName)
             {
                 TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
-                activeEffects[i].FillTurnCountText();
+                activeEffects[i].AddTurnCountText(turnDuration);
                 return;
             }
         }
@@ -369,7 +473,7 @@ public class UnitFunctionality : MonoBehaviour
 
         Effect effect = go.GetComponent<Effect>();
         activeEffects.Add(effect);
-        effect.Setup(addedEffect, targetUnit);
+        effect.Setup(addedEffect, targetUnit, turnDuration);
     }
 
     public void ResetEffects()
@@ -775,6 +879,10 @@ public class UnitFunctionality : MonoBehaviour
     public void UpdateUnitMaxHealth(int newMaxHealth)
     {
         maxHealth = newMaxHealth;
+
+        if (curHealth > maxHealth)
+            curHealth = maxHealth;
+
         UpdateUnitHealthVisual();
     }
 

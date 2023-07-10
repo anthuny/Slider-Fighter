@@ -25,6 +25,7 @@ MonoBehaviour:
   skillEnergyCost: 3
   skillSelectionCount: 1
   isSelfCast: 1
+  special: 0
   effect: {fileID: 11400000, guid: fef5ba97b42f6a749ae6ad86060c3224, type: 2}
   effectTurnLength: 2
   curSkillExtraPowerToEffect: 0

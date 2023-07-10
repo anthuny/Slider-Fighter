@@ -73,6 +73,7 @@ public class MapManager : MonoBehaviour
     public RoomMapIcon selectedRoom;
 
     public UIElement exitShopRoom;
+    [SerializeField] private UIElement mapManager;
 
     // The minimum and maximum values for the x and y positions of the spawned objects
     private float minX;
@@ -206,6 +207,11 @@ public class MapManager : MonoBehaviour
         startingRoom.ToggleRoomSelected(false);
     }
 
+    public void ResetMapYPosition()
+    {
+        mapManager.ResetYPosition();
+    }
+
     public void ToggleMapVisibility(bool toggle, bool generateMap = false)
     {
         if (toggle)
@@ -229,7 +235,7 @@ public class MapManager : MonoBehaviour
 
             if (generateMap)
             {
-                GameManager.Instance.ResetRoom();
+                GameManager.Instance.ResetRoom(true);
                 GenerateMap();
             }
 
@@ -270,6 +276,8 @@ public class MapManager : MonoBehaviour
 
     void ResetMap()
     {
+        ResetMapYPosition();
+
         spawnedStartingRoom = false;
         spawnedRoomsA.Clear();
         spawnedAllRooms.Clear();
@@ -304,8 +312,8 @@ public class MapManager : MonoBehaviour
         GenerationPathsA();
 
         // Additional rooms / paths are booken
-        //SpawnRoomGenerationB();
-        //GenerationPathsB();
+        SpawnRoomGenerationB();
+        GenerationPathsB();
 
         ToggleHiddenModeRoom(true);
 

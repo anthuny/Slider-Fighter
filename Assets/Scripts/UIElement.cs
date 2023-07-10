@@ -39,6 +39,7 @@ public class UIElement : MonoBehaviour
 
     private RectTransform rt;
     private float originalScale;
+    private float originalYPos;
 
     private void Awake()
     {
@@ -53,6 +54,8 @@ public class UIElement : MonoBehaviour
             UpdateIsLocked(true);
 
         originalScale = transform.GetComponent<RectTransform>().localScale.x;
+
+        GetOriginalYPosition();
     }
 
     public bool GetIsLocked()
@@ -69,6 +72,16 @@ public class UIElement : MonoBehaviour
     void Start()
     {
         CheckIfThreshholdPassed();
+    }
+
+    public void ResetYPosition()
+    {
+        gameObject.GetComponent<RectTransform>().localPosition = new Vector3(gameObject.GetComponent<RectTransform>().localPosition.x, originalYPos);
+    }
+
+    public void GetOriginalYPosition()
+    {
+        originalYPos = gameObject.GetComponent<RectTransform>().localPosition.y;
     }
 
     public void CheckIfThreshholdPassed(bool toggle = false)
@@ -93,7 +106,7 @@ public class UIElement : MonoBehaviour
     {
         if (isReset)
         {
-            if (TeamSetup.Instance.GetSpentMasteryPoints() < GetMasteryPointThreshhold())
+            if (TeamSetup.Instance.GetActiveUnit().GetSpentMasteryPoints() < GetMasteryPointThreshhold())
                 ToggleLockedImage(true);
             else
                 ToggleLockedImage(false);
@@ -120,59 +133,59 @@ public class UIElement : MonoBehaviour
             if (masteryType == "OFFENSE")
             {
                 if (curMasteryType == MasteryType.L1)
-                    TeamSetup.Instance.masteryOffenseL1AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL1AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L2)
-                    TeamSetup.Instance.masteryOffenseL2AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL2AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L3)
-                    TeamSetup.Instance.masteryOffenseL3AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL3AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L4)
-                    TeamSetup.Instance.masteryOffenseL4AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL4AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R1)
-                    TeamSetup.Instance.masteryOffenseR1AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR1AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R2)
-                    TeamSetup.Instance.masteryOffenseR2AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR2AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R3)
-                    TeamSetup.Instance.masteryOffenseR3AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR3AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R4)
-                    TeamSetup.Instance.masteryOffenseR4AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR4AddedCount = GetMasteryPointsAdded();
             }
             else if (masteryType == "DEFENSE")
             {
                 if (curMasteryType == MasteryType.L1)
-                    TeamSetup.Instance.masteryDefenseL1AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL1AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L2)
-                    TeamSetup.Instance.masteryDefenseL2AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL2AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L3)
-                    TeamSetup.Instance.masteryDefenseL3AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL3AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L4)
-                    TeamSetup.Instance.masteryDefenseL4AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL4AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R1)
-                    TeamSetup.Instance.masteryDefenseR1AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR1AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R2)
-                    TeamSetup.Instance.masteryDefenseR2AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR2AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R3)
-                    TeamSetup.Instance.masteryDefenseR3AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR3AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R4)
-                    TeamSetup.Instance.masteryDefenseR4AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR4AddedCount = GetMasteryPointsAdded();
             }
             else if (masteryType == "UTILITY")
             {
                 if (curMasteryType == MasteryType.L1)
-                    TeamSetup.Instance.masteryUtilityL1AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL1AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L2)
-                    TeamSetup.Instance.masteryUtilityL2AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL2AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L3)
-                    TeamSetup.Instance.masteryUtilityL3AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL3AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.L4)
-                    TeamSetup.Instance.masteryUtilityL4AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL4AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R1)
-                    TeamSetup.Instance.masteryUtilityR1AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR1AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R2)
-                    TeamSetup.Instance.masteryUtilityR2AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR2AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R3)
-                    TeamSetup.Instance.masteryUtilityR3AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR3AddedCount = GetMasteryPointsAdded();
                 else if (curMasteryType == MasteryType.R4)
-                    TeamSetup.Instance.masteryUtilityR4AddedCount = GetMasteryPointsAdded();
+                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR4AddedCount = GetMasteryPointsAdded();
             }
         }
         else
@@ -181,7 +194,7 @@ public class UIElement : MonoBehaviour
             TeamSetup.Instance.UpdateUnspentMasteryPoints(false);
         }
 
-        if (TeamSetup.Instance.GetSpentMasteryPoints() < GetMasteryPointThreshhold())
+        if (TeamSetup.Instance.GetActiveUnit().GetSpentMasteryPoints() < GetMasteryPointThreshhold())
             ToggleLockedImage(true);
         else
             ToggleLockedImage(false);

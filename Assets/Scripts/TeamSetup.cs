@@ -34,47 +34,13 @@ public class TeamSetup : MonoBehaviour
     [SerializeField] private UnitFunctionality activeUnit;
     [SerializeField] private UIElement selectedMastery;
     [SerializeField] private Mastery activeMastery;
+    [SerializeField] private UIElement allyNameText;
+
+    public Transform masteryAllyPosTrans;
 
     public GameObject masteryScrollView;
 
-    private int spentMasteryTotalPoints = 0;
-    private int spentOffenseMasteryPoints = 0;
-    private int spentDefenseMasteryPoints = 0;
-    private int spentUtilityMasteryPoints = 0;
-
     private int masteryCount;
-
-    public int masteryOffenseL1AddedCount;
-    public int masteryOffenseL2AddedCount;
-    public int masteryOffenseL3AddedCount;
-    public int masteryOffenseL4AddedCount;
-
-    public int masteryOffenseR1AddedCount;
-    public int masteryOffenseR2AddedCount;
-    public int masteryOffenseR3AddedCount;
-    public int masteryOffenseR4AddedCount;
-
-
-    public int masteryDefenseL1AddedCount;
-    public int masteryDefenseL2AddedCount;
-    public int masteryDefenseL3AddedCount;
-    public int masteryDefenseL4AddedCount;
-
-    public int masteryDefenseR1AddedCount;
-    public int masteryDefenseR2AddedCount;
-    public int masteryDefenseR3AddedCount;
-    public int masteryDefenseR4AddedCount;
-
-
-    public int masteryUtilityL1AddedCount;
-    public int masteryUtilityL2AddedCount;
-    public int masteryUtilityL3AddedCount;
-    public int masteryUtilityL4AddedCount;
-
-    public int masteryUtilityR1AddedCount;
-    public int masteryUtilityR2AddedCount;
-    public int masteryUtilityR3AddedCount;
-    public int masteryUtilityR4AddedCount;
 
     private void Awake()
     {
@@ -158,10 +124,8 @@ public class TeamSetup : MonoBehaviour
 
         masteryTreeType.UpdateContentText(masteryTypeName);
 
-        //masteryOffenseL1AddedCount = masteryL1.GetMasteryPointsAdded();
-
         UnitFunctionality unit = GetActiveUnit();
-        UnitData unitData = GameManager.Instance.GetUnitData(0);
+        UnitData unitData = unit.unitData;
 
         if (masteryType == ActiveMasteryType.OFFENSE)
         {
@@ -182,6 +146,12 @@ public class TeamSetup : MonoBehaviour
             unit.UpdateCurrentMasteries(unitData.GetUtilityMasteries());
             SetupTeamSetup(unit, ActiveMasteryType.UTILITY);
         }
+    }
+
+    public void UpdateAllyNameText()
+    {
+        allyNameText.UpdateContentText(GetActiveUnit().GetUnitName());
+        allyNameText.UpdateContentTextColour(GetActiveUnit().GetUnitColour());
     }
 
     void UpdateUnitLevelText(string text)
@@ -211,6 +181,8 @@ public class TeamSetup : MonoBehaviour
     public void SetupTeamSetup(UnitFunctionality unit, ActiveMasteryType masteryType)
     {
         UpdateActiveUnit(unit);
+        // active unit face right
+
         //UpdateMasteryPage(masteryType);
 
         UpdateUnitLevelText(GetActiveUnit().GetUnitLevel().ToString());
@@ -223,38 +195,37 @@ public class TeamSetup : MonoBehaviour
 
         if (masteryType == ActiveMasteryType.OFFENSE)
         {
-            masteryL1.UpdateMasteryPoindsAdded(true, false, masteryOffenseL1AddedCount, true, "OFFENSE");
-            masteryL2.UpdateMasteryPoindsAdded(true, false, masteryOffenseL2AddedCount, true, "OFFENSE");
-            masteryL3.UpdateMasteryPoindsAdded(true, false, masteryOffenseL3AddedCount, true, "OFFENSE");
-            masteryL4.UpdateMasteryPoindsAdded(true, false, masteryOffenseL4AddedCount, true, "OFFENSE");
-            masteryR1.UpdateMasteryPoindsAdded(true, false, masteryOffenseR1AddedCount, true, "OFFENSE");
-            masteryR2.UpdateMasteryPoindsAdded(true, false, masteryOffenseR2AddedCount, true, "OFFENSE");
-            masteryR3.UpdateMasteryPoindsAdded(true, false, masteryOffenseR3AddedCount, true, "OFFENSE");
-            masteryR4.UpdateMasteryPoindsAdded(true, false, masteryOffenseR4AddedCount, true, "OFFENSE");
+            masteryL1.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseL1AddedCount, true, "OFFENSE");
+            masteryL2.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseL2AddedCount, true, "OFFENSE");
+            masteryL3.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseL3AddedCount, true, "OFFENSE");
+            masteryL4.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseL4AddedCount, true, "OFFENSE");
+            masteryR1.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseR1AddedCount, true, "OFFENSE");
+            masteryR2.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseR2AddedCount, true, "OFFENSE");
+            masteryR3.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseR3AddedCount, true, "OFFENSE");
+            masteryR4.UpdateMasteryPoindsAdded(true, false, unit.masteryOffenseR4AddedCount, true, "OFFENSE");
         }
         else if (masteryType == ActiveMasteryType.DEFENSE)
         {
-            masteryL1.UpdateMasteryPoindsAdded(true, false, masteryDefenseL1AddedCount, true, "DEFENSE");
-            masteryL2.UpdateMasteryPoindsAdded(true, false, masteryDefenseL2AddedCount, true, "DEFENSE");
-            masteryL3.UpdateMasteryPoindsAdded(true, false, masteryDefenseL3AddedCount, true, "DEFENSE");
-            masteryL4.UpdateMasteryPoindsAdded(true, false, masteryDefenseL4AddedCount, true, "DEFENSE");
-            masteryR1.UpdateMasteryPoindsAdded(true, false, masteryDefenseR1AddedCount, true, "DEFENSE");
-            masteryR2.UpdateMasteryPoindsAdded(true, false, masteryDefenseR2AddedCount, true, "DEFENSE");
-            masteryR3.UpdateMasteryPoindsAdded(true, false, masteryDefenseR3AddedCount, true, "DEFENSE");
-            masteryR4.UpdateMasteryPoindsAdded(true, false, masteryDefenseR4AddedCount, true, "DEFENSE");
+            masteryL1.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseL1AddedCount, true, "DEFENSE");
+            masteryL2.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseL2AddedCount, true, "DEFENSE");
+            masteryL3.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseL3AddedCount, true, "DEFENSE");
+            masteryL4.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseL4AddedCount, true, "DEFENSE");
+            masteryR1.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseR1AddedCount, true, "DEFENSE");
+            masteryR2.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseR2AddedCount, true, "DEFENSE");
+            masteryR3.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseR3AddedCount, true, "DEFENSE");
+            masteryR4.UpdateMasteryPoindsAdded(true, false, unit.masteryDefenseR4AddedCount, true, "DEFENSE");
         }
         else if (masteryType == ActiveMasteryType.UTILITY)
         {
-            masteryL1.UpdateMasteryPoindsAdded(true, false, masteryUtilityL1AddedCount, true, "UTILITY");
-            masteryL2.UpdateMasteryPoindsAdded(true, false, masteryUtilityL2AddedCount, true, "UTILITY");
-            masteryL3.UpdateMasteryPoindsAdded(true, false, masteryUtilityL3AddedCount, true, "UTILITY");
-            masteryL4.UpdateMasteryPoindsAdded(true, false, masteryUtilityL4AddedCount, true, "UTILITY");
-            masteryR1.UpdateMasteryPoindsAdded(true, false, masteryUtilityR1AddedCount, true, "UTILITY");
-            masteryR2.UpdateMasteryPoindsAdded(true, false, masteryUtilityR2AddedCount, true, "UTILITY");
-            masteryR3.UpdateMasteryPoindsAdded(true, false, masteryUtilityR3AddedCount, true, "UTILITY");
-            masteryR4.UpdateMasteryPoindsAdded(true, false, masteryUtilityR4AddedCount, true, "UTILITY");
+            masteryL1.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityL1AddedCount, true, "UTILITY");
+            masteryL2.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityL2AddedCount, true, "UTILITY");
+            masteryL3.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityL3AddedCount, true, "UTILITY");
+            masteryL4.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityL4AddedCount, true, "UTILITY");
+            masteryR1.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityR1AddedCount, true, "UTILITY");
+            masteryR2.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityR2AddedCount, true, "UTILITY");
+            masteryR3.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityR3AddedCount, true, "UTILITY");
+            masteryR4.UpdateMasteryPoindsAdded(true, false, unit.masteryUtilityR4AddedCount, true, "UTILITY");
         }
-
 
         UpdateUnspentPointsText(CalculateUnspentPoints());
          
@@ -324,7 +295,6 @@ public class TeamSetup : MonoBehaviour
             return;
 
         string activeMasteryType2 = "";
-
 
         if (activeMasteryType == ActiveMasteryType.OFFENSE)
             activeMasteryType2 = "OFFENSE";
@@ -489,7 +459,7 @@ public class TeamSetup : MonoBehaviour
         activeUnit = unit;
     }
 
-    UnitFunctionality GetActiveUnit()
+    public UnitFunctionality GetActiveUnit()
     {
         return activeUnit;
     }
@@ -534,7 +504,7 @@ public class TeamSetup : MonoBehaviour
 
     public int CalculateUnspentPoints()
     {
-        int points = (GetActiveUnit().GetUnitLevel() * masterPointsPerLv) - GetSpentMasteryPoints();
+        int points = (GetActiveUnit().GetUnitLevel() * masterPointsPerLv) - GetActiveUnit().GetSpentMasteryPoints();
         return points;
     }
 
@@ -542,7 +512,7 @@ public class TeamSetup : MonoBehaviour
     {
         if (toggle)
         {
-            spentMasteryTotalPoints++;
+            GetActiveUnit().UpdateSpentMasteryPoints(1);
 
             if (activeMasteryType == ActiveMasteryType.OFFENSE)
                 UpdateSpentOffenseMasteryPoints(1);
@@ -551,10 +521,9 @@ public class TeamSetup : MonoBehaviour
             else if (activeMasteryType == ActiveMasteryType.UTILITY)
                 UpdateSpentUtilityMasteryPoints(1);
         }
-
         else
         {
-            spentMasteryTotalPoints--;
+            GetActiveUnit().UpdateSpentMasteryPoints(-1);
 
             if (activeMasteryType == ActiveMasteryType.OFFENSE)
                 UpdateSpentOffenseMasteryPoints(-1);
@@ -565,14 +534,9 @@ public class TeamSetup : MonoBehaviour
         }
 
         if (GetSelectedMastery().GetMasteryPointsAdded() > GetActiveMastery().masteryMaxAmount)
-            spentMasteryTotalPoints--;
+            GetActiveUnit().UpdateSpentMasteryPoints(-1);
 
         UpdateUnspentPointsText(CalculateUnspentPoints());
-    }
-
-    public int GetSpentMasteryPoints()
-    {
-        return spentMasteryTotalPoints;
     }
 
     public int GetActiveMasteryTypeSpentPoints()
@@ -587,39 +551,39 @@ public class TeamSetup : MonoBehaviour
 
     public int GetSpentOffenseMasteryPoints()
     {
-        return spentOffenseMasteryPoints;
+        return GetActiveUnit().spentOffenseMasteryPoints;
     }
 
     public int GetSpentDefenseMasteryPoints()
     {
-        return spentDefenseMasteryPoints;
+        return GetActiveUnit().spentDefenseMasteryPoints;
     }
 
     public int GetSpentUtilityMasteryPoints()
     {
-        return spentUtilityMasteryPoints;
+        return GetActiveUnit().spentUtilityMasteryPoints;
     }
 
     public void UpdateSpentOffenseMasteryPoints(int pointsAdded)
     {
-        spentOffenseMasteryPoints += pointsAdded;
+        GetActiveUnit().spentOffenseMasteryPoints += pointsAdded;
     }
 
     public void UpdateSpentDefenseMasteryPoints(int pointsAdded)
     {
-        spentDefenseMasteryPoints += pointsAdded;
+        GetActiveUnit().spentDefenseMasteryPoints += pointsAdded;
     }
 
     public void UpdateSpentUtilityMasteryPoints(int pointsAdded)
     {
-        spentUtilityMasteryPoints += pointsAdded;
+        GetActiveUnit().spentUtilityMasteryPoints += pointsAdded;
     }
 
     void ResetSpendMasteryPoints()
     {
-        spentMasteryTotalPoints = 0;
-        spentOffenseMasteryPoints = 0;
-        spentDefenseMasteryPoints = 0;
-        spentUtilityMasteryPoints = 0;
+        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        {
+            GameManager.Instance.activeRoomAllies[i].ResetSpentMasteryPoints();
+        }
     }
 }
