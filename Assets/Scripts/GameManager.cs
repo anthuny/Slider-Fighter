@@ -338,7 +338,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateAllyVisibility(bool toggle, bool teamPage)
+    public void UpdateAllyVisibility(bool toggle, bool teamPage = false)
     {   
         //  If enabling
         if (toggle)
@@ -685,44 +685,6 @@ public class GameManager : MonoBehaviour
         // If room type is shop, spawn shop room
         else if (room.curRoomType == RoomMapIcon.RoomType.SHOP)
         {
-            // Spawn allies
-            if (activeRoomAllies.Count == 0)
-            {
-                // Spawn player units
-                for (int i = 0; i < activeTeam.Count; i++)
-                {
-                    UnitData unit = activeTeam[i];    // Reference
-
-                    GameObject go = Instantiate(baseUnit, allySpawnPositions[i]);
-                    go.transform.SetParent(allySpawnPositions[i]);
-
-                    UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
-                    unitFunctionality.ResetPosition();
-                    unitFunctionality.UpdateUnitName(unit.name);
-                    unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
-                    //unitFunctionality.UpdateUnitColour(unit.unitColour);
-                    unitFunctionality.UpdateUnitType("Player");
-                    unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
-                    unitFunctionality.UpdateUnitPower(unit.startingPower);
-                    unitFunctionality.UpdateUnitArmor(unit.startingArmor);
-
-                    unitFunctionality.UpdateUnitVisual(unit.unitSprite);
-                    unitFunctionality.UpdateUnitIcon(unit.unitIcon);
-
-                    unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
-                    unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
-
-                    AddActiveRoomAllUnitsFunctionality(unitFunctionality);
-                    AddActiveRoomAllUnits(unit);
-
-                    unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-                    unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
-                    unitFunctionality.UpdateUnitLevel(1);
-
-                    unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
-                }
-            }
-
             playerUIElement.UpdateAlpha(0);     // Disable player UI
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
@@ -730,6 +692,8 @@ public class GameManager : MonoBehaviour
             ToggleAllowSelection(false);
 
             ShopManager.Instance.FillShopItems();
+
+            UpdateAllyVisibility(true, false);
         }
 
         // Update allies into position for battle/shop
@@ -816,7 +780,7 @@ public class GameManager : MonoBehaviour
 
         return units;
     }
-
+        
     public IEnumerator WeaponAttackCommand(int power, int hitMultCount = 0)
     {
         UnitFunctionality castingUnit = GetActiveUnitFunctionality();
@@ -874,7 +838,9 @@ public class GameManager : MonoBehaviour
 
                 // If active skil has an effect AND it's not a self cast, apply it to selected targets
                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                    unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], hitMultCount);
+                    unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], GetActiveSkill().effectTurnLength);
+
+                Vibration.Vibrate(30);
             }
         }
         else
@@ -967,7 +933,8 @@ public class GameManager : MonoBehaviour
 
                                 // If active skill has an effect AND it's not a self cast, apply it to selected targets
                                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], hitMultCount);
+                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength);
+
                             }
                         }
 
@@ -1020,10 +987,12 @@ public class GameManager : MonoBehaviour
 
                             // If active skill has an effect AND it's not a self cast, apply it to selected targets
                             if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], hitMultCount);
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength);
                         }
                     }
                 }
+
+                Vibration.Vibrate(15);
 
                 // Time wait in between attacks, shared across all targeted units
                 yield return new WaitForSeconds(timeBetweenPowerUIStack);
@@ -1033,7 +1002,10 @@ public class GameManager : MonoBehaviour
         // If skill is self cast, do it here
         if (GetActiveSkill().isSelfCast)
             if (GetActiveSkill().effect != null)
-                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), hitMultCount);
+            {
+                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), GetActiveSkill().effectTurnLength);
+                Vibration.Vibrate(15);
+            }
 
         yield return new WaitForSeconds(postHitWaitTime);
     

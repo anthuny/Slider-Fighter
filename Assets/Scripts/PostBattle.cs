@@ -13,6 +13,7 @@ public class PostBattle : MonoBehaviour
 
     [SerializeField] private UIElement expGainedUI;
     [SerializeField] private UIElement rewardsUI;
+    [SerializeField] private ButtonFunctionality toMapButton;
 
     private UIElement postBattleUI;
 
@@ -41,8 +42,16 @@ public class PostBattle : MonoBehaviour
             rewardsUI.UpdateAlpha(0);
     }
 
+    void ToggleToMapButtonInteractable(bool toggle)
+    {
+        toMapButton.ToggleButton(toggle);
+        Handheld.Vibrate();
+    }
+
     public void TogglePostBattleUI(bool toggle)
     {
+        ToggleToMapButtonInteractable(toggle);
+
         GameManager.Instance.ToggleUIElement(postBattleUI, toggle);
     }
 

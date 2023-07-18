@@ -14,9 +14,11 @@ public class ShopManager : MonoBehaviour
 
     [SerializeField] private Transform shopItemsParent;
     [SerializeField] private GameObject shopItemPrefab;
+    public UIElement shop;
     public UIElement shopSelectAllyPrompt;
     public bool selectAlly;
     [SerializeField] private Item unassigedItem;
+    [SerializeField] private ButtonFunctionality buttonExitShop;
 
     //public float luckyDiceTimeWait;
 
@@ -45,6 +47,14 @@ public class ShopManager : MonoBehaviour
     public Item GetUnassignedItem()
     {
         return unassigedItem;
+    }
+
+    public void ToggleShopVisibility(bool toggle)
+    {
+        if (toggle)
+            shop.UpdateAlpha(1);
+        else
+            shop.UpdateAlpha(0);
     }
 
     public void ResetPlayerGold()
@@ -92,6 +102,11 @@ public class ShopManager : MonoBehaviour
         return items;
     }
 
+    public void CloseShop()
+    {
+        ClearShopItems();
+    }
+
     public void ClearShopItems()
     {
         // Clear previous items
@@ -99,11 +114,22 @@ public class ShopManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        ToggleShopVisibility(false);
     }
     
+    public void ToggleExitShopButton(bool toggle)
+    {
+        buttonExitShop.ToggleButton(toggle);
+    }
+
     public void FillShopItems()
     {
+        ToggleExitShopButton(true);
+
         ClearShopItems();
+
+        ToggleShopVisibility(true);
 
         MapManager.Instance.exitShopRoom.UpdateAlpha(1);
 

@@ -15,6 +15,7 @@ public class ButtonFunctionality : MonoBehaviour
 
     private ShopItem shopItem;
     [SerializeField] private bool disabled;
+    [SerializeField] private UIElement UIbutton;
 
 
     [SerializeField] private bool startDisabled;
@@ -22,14 +23,25 @@ public class ButtonFunctionality : MonoBehaviour
     {
         unitFunctionality = transform.parent.GetComponent<UnitFunctionality>();
 
+        if (UIbutton == null)
+            return;
+
         if (startDisabled)
+        {
+            ToggleButton(false);
             ToggleSelected(false);
+        }
         else
+        {
+            ToggleButton(true);
             ToggleSelected(true);
+        }
     }
 
     public void ButtonEnterRoom()
     {
+        GameManager.Instance.UpdateAllyVisibility(true);
+
         // Disable map UI
         GameManager.Instance.ToggleMap(false);
 
@@ -51,14 +63,20 @@ public class ButtonFunctionality : MonoBehaviour
     {
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
+
+        ShopManager.Instance.ToggleExitShopButton(false);
+
+        GameManager.Instance.UpdateAllyVisibility(false);
+
         // Toggle Map back on
         GameManager.Instance.ToggleMap(true, false);
 
-        GameManager.Instance.activeRoomAllUnitFunctionalitys = GameManager.Instance.oldActiveRoomAllUnitFunctionalitys;
+        //GameManager.Instance.activeRoomAllUnitFunctionalitys = GameManager.Instance.oldActiveRoomAllUnitFunctionalitys;
 
         GameManager.Instance.ToggleTeamSetup(false);
 
-        GameManager.Instance.ResetRoom();
+        // Reset room, enemes only
+        GameManager.Instance.ResetRoom(true);
     }
 
     public void ResetMasteryTree()
@@ -340,6 +358,18 @@ public class ButtonFunctionality : MonoBehaviour
             buttonSelectionCG.alpha = 1;
         else
             buttonSelectionCG.alpha = 0;
+    }
+
+    public void ToggleButton(bool toggle)
+    {
+        if (toggle)
+            UIbutton.UpdateAlpha(1);
+        else
+            UIbutton.UpdateAlpha(0);
+
+        UIbutton.gameObject.GetComponent<CanvasGroup>().interactable = toggle;
+        UIbutton.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+        gameObject.GetComponent<Button>().interactable = toggle;
     }
 
     bool GetIfSelected()

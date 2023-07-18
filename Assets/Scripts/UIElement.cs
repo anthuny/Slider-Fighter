@@ -241,8 +241,9 @@ public class UIElement : MonoBehaviour
     {
         //Debug.Log(gameObject.name);
 
-        //if (contentText == null)
-        //    contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
+        // Shit fix for rewards finding their content text
+        if (contentText == null)
+            contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
 
         contentText.text = text;
         //AnimateUI();

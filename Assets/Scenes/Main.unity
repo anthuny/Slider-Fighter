@@ -1206,6 +1206,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 63247095}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &63247101
 CanvasRenderer:
@@ -1267,9 +1268,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.003921569}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1421,9 +1422,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4425,7 +4426,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &372785357
 GameObject:
@@ -5393,6 +5394,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!114 &508925869
 MonoBehaviour:
@@ -5751,6 +5753,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 514001603}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &514001609
 CanvasRenderer:
@@ -5825,7 +5828,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: d7cffddcbc0cc8f4ebe6e28eb9804082, type: 3}
-    m_FontSize: 293
+    m_FontSize: 198
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
@@ -6671,6 +6674,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &555260339
 CanvasRenderer:
@@ -8229,6 +8233,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 680458711}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &680458710
 CanvasRenderer:
@@ -9011,6 +9016,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 733716289}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &733716295
 CanvasRenderer:
@@ -10097,6 +10103,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 853282195}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!114 &853282197
 MonoBehaviour:
@@ -11743,6 +11750,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1010347744}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &1010347743
 CanvasRenderer:
@@ -12128,6 +12136,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1020894920}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &1020894924
 CanvasRenderer:
@@ -12686,8 +12695,8 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 300, y: 300}
-  m_Spacing: {x: 225, y: 400}
+  m_CellSize: {x: 250, y: 225}
+  m_Spacing: {x: 105, y: 400}
   m_Constraint: 2
   m_ConstraintCount: 2
 --- !u!1 &1062680617
@@ -13835,9 +13844,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 25ba2187ecf64474185e24f8d1fd5ee8, type: 2}
   shopItemsParent: {fileID: 1062344650}
   shopItemPrefab: {fileID: 637818662133636789, guid: ecb64ef162d730a4aa0ea39b32d5b4ed, type: 3}
+  shop: {fileID: 2102685938}
   shopSelectAllyPrompt: {fileID: 526713632}
   selectAlly: 0
   unassigedItem: {fileID: 0}
+  buttonExitShop: {fileID: 1904497098}
 --- !u!4 &1217768208
 Transform:
   m_ObjectHideFlags: 0
@@ -13851,7 +13862,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1223677177
 GameObject:
@@ -14347,6 +14358,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1247990907}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &1247990911
 CanvasRenderer:
@@ -15598,7 +15610,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1374329668
 GameObject:
@@ -15747,6 +15759,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &1374329673
 CanvasRenderer:
@@ -15813,6 +15826,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1374329674}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!1 &1378228316 stripped
 GameObject:
@@ -16105,6 +16119,8 @@ GameObject:
   - component: {fileID: 1394847952}
   - component: {fileID: 1394847951}
   - component: {fileID: 1394847950}
+  - component: {fileID: 1394847957}
+  - component: {fileID: 1394847958}
   m_Layer: 5
   m_Name: Button - To Map
   m_TagString: Untagged
@@ -16191,7 +16207,8 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1394847950}
   disabled: 0
-  startDisabled: 0
+  UIbutton: {fileID: 1394847951}
+  startDisabled: 1
 --- !u!114 &1394847953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16293,6 +16310,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
   disabled: 0
+  UIbutton: {fileID: 1394847951}
   startDisabled: 0
 --- !u!222 &1394847956
 CanvasRenderer:
@@ -16302,6 +16320,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1394847948}
   m_CullTransparentMesh: 1
+--- !u!223 &1394847957
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394847948}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 250
+  m_TargetDisplay: 0
+--- !u!114 &1394847958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394847948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1399830293
 GameObject:
   m_ObjectHideFlags: 0
@@ -16351,8 +16407,8 @@ CanvasGroup:
   m_GameObject: {fileID: 1399830293}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1399830296
 MonoBehaviour:
@@ -17425,6 +17481,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1585528941}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!222 &1585528947
 CanvasRenderer:
@@ -17672,6 +17729,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601472882}
   m_CullTransparentMesh: 1
+--- !u!1 &1608397978
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1608397979}
+  m_Layer: 0
+  m_Name: Vibration Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1608397979
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608397978}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1609198652
 GameObject:
   m_ObjectHideFlags: 0
@@ -18382,6 +18470,7 @@ MonoBehaviour:
   timeToSpawnToMapButton: 0
   expGainedUI: {fileID: 1081090204}
   rewardsUI: {fileID: 1297465103}
+  toMapButton: {fileID: 1394847955}
 --- !u!114 &1676294776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19040,6 +19129,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!114 &1714429121
 MonoBehaviour:
@@ -19816,6 +19906,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1766605088}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!225 &1766605088
 CanvasGroup:
@@ -20197,7 +20288,7 @@ Transform:
   m_Children:
   - {fileID: 1981239932}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1835581120
 GameObject:
@@ -20740,7 +20831,7 @@ GameObject:
   - component: {fileID: 1904497093}
   - component: {fileID: 1904497092}
   m_Layer: 5
-  m_Name: Button - Exit Room Button
+  m_Name: Button - Exit Shop Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20755,17 +20846,17 @@ RectTransform:
   m_GameObject: {fileID: 1904497090}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.99871105, y: 0.99871105, z: 0.99871105}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 521020256}
   m_Father: {fileID: 2102685936}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 357, y: -585.6998}
-  m_SizeDelta: {x: 577.7, y: 254.6}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -420, y: 239}
+  m_SizeDelta: {x: 300, y: 175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1904497092
 MonoBehaviour:
@@ -20784,7 +20875,7 @@ MonoBehaviour:
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
-  startHidden: 0
+  startHidden: 1
   doScalePunch: 0
   dieAfterDisplay: 0
   scaleIncSize: 0
@@ -20845,7 +20936,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 251
   m_TargetDisplay: 0
 --- !u!114 &1904497096
 MonoBehaviour:
@@ -20948,7 +21039,8 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 1904497093}
   disabled: 0
-  startDisabled: 0
+  UIbutton: {fileID: 1904497092}
+  startDisabled: 1
 --- !u!222 &1904497099
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -21437,6 +21529,7 @@ MonoBehaviour:
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!114 &1954434718
 MonoBehaviour:
@@ -23328,6 +23421,7 @@ MonoBehaviour:
   curMasteryType: 8
   buttonSelectionCG: {fileID: 5259889020430555870}
   disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!114 &5259889020430555866
 MonoBehaviour:

@@ -342,7 +342,7 @@ public class UnitFunctionality : MonoBehaviour
                     }
 
                     // Adjust power based on skill effect amp on target then send it 
-                    StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.effectTurnLength));
+                    StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.skillAttackCount));
                 }
                 else
                 {
@@ -451,7 +451,11 @@ public class UnitFunctionality : MonoBehaviour
 
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1)
     {
+        int rand = Random.Range(0, 100);
+        //Debug.Log(rand);
+
         // If unit is already effected with this effect, stop
+        
         for (int i = 0; i < activeEffects.Count; i++)
         {
             if (addedEffect.effectName == activeEffects[i].effectName)
@@ -461,6 +465,11 @@ public class UnitFunctionality : MonoBehaviour
                 return;
             }
         }
+        
+        // Determining whether the effect hits, If it fails, stop
+
+        if (rand < GameManager.Instance.GetActiveSkill().effectHitChance)
+            return;
 
         //ToggleUnitHealthBar(false);
         TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");

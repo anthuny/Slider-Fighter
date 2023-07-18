@@ -150,7 +150,7 @@ public class MapManager : MonoBehaviour
                 if (rooms[i].isMainRoom)
                 {
                     count++;
-                    Debug.Log(rooms[i]);
+                    //Debug.Log(rooms[i]);
                     continue;
                 }
             }
@@ -222,8 +222,9 @@ public class MapManager : MonoBehaviour
     {
         if (toggle)
         {
-            ShopManager.Instance.ClearShopItems();
-            exitShopRoom.UpdateAlpha(0);
+            ShopManager.Instance.CloseShop();
+
+            GameManager.Instance.UpdateAllyVisibility(false);
 
             // Disable unit's post battle bg
             int count = GameManager.Instance.activeRoomAllies.Count;
@@ -250,6 +251,8 @@ public class MapManager : MonoBehaviour
         }
         else
         {
+            GameManager.Instance.UpdateAllyVisibility(true);
+
             map.UpdateAlpha(0);
             ToggleMapScroll(false);
         }
@@ -516,7 +519,7 @@ public class MapManager : MonoBehaviour
                 // If the spawned object is not too close to any other objects, spawn another till capped
                 if (!isTooClose)
                 {
-                    Debug.Log(room.gameObject.name + " " + distance);
+                    //Debug.Log(room.gameObject.name + " " + distance);
                     // Update Room Icon 
                     RoomMapIcon roomMapIcon = room.GetComponent<RoomMapIcon>();
                     UpdateRoomIconType(roomMapIcon, "enemy");
@@ -552,12 +555,12 @@ public class MapManager : MonoBehaviour
 
         RoomMapIcon roomMapIcon;
 
-        Debug.Log(failedCurAttempts);
+        //Debug.Log(failedCurAttempts);
         for (int i = 0; i < roomSpawnRoundB; i++)
         {
             if (failedCurAttempts <= maxFailedAttempts)
             {
-                Debug.Log(failedCurAttempts);
+                //Debug.Log(failedCurAttempts);
                 // Instantiate the object prefab
                 GameObject sideRoom = Instantiate(roomPrefab);
 

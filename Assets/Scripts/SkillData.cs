@@ -30,6 +30,7 @@ public class SkillData : ScriptableObject
     public bool special;
     public EffectData effect;
     public int effectTurnLength;
+    public float effectHitChance;
     [Tooltip("Skill has increased power to a unit with this effect")]
     public enum SkillExtraPowerToEffect { NONE, SPEEDUP, SPEEDDOWN, BLEED, RECOVER, EXHAUST, HASTE, SLEEP, 
         POWERUP, POWERDOWN, DEFENSEUP, DEFENSEDOWN, PARRY, TAUNT, MARK, SHADOWPARTNER}
