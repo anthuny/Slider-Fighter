@@ -114,7 +114,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 11
+  m_SortingOrder: 15
   m_TargetDisplay: 0
 --- !u!114 &8794929255593247012
 MonoBehaviour:
@@ -185,11 +185,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7735770237705966025, guid: 404a399b86ffc144c96529575b23e6f8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.49616
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7735770237705966025, guid: 404a399b86ffc144c96529575b23e6f8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.49616
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7735770237705966025, guid: 404a399b86ffc144c96529575b23e6f8, type: 3}
       propertyPath: m_LocalScale.z

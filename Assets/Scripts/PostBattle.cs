@@ -45,7 +45,7 @@ public class PostBattle : MonoBehaviour
     void ToggleToMapButtonInteractable(bool toggle)
     {
         toMapButton.ToggleButton(toggle);
-        Handheld.Vibrate();
+        //Handheld.Vibrate();
     }
 
     public void TogglePostBattleUI(bool toggle)

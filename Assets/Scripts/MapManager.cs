@@ -243,6 +243,7 @@ public class MapManager : MonoBehaviour
             if (generateMap)
             {
                 GameManager.Instance.ResetRoom(true);
+                GameManager.Instance.ResetRoom(false);
                 GenerateMap();
             }
 
@@ -323,6 +324,9 @@ public class MapManager : MonoBehaviour
 
     public void GenerateMap()
     {
+        GameManager.Instance.SpawnAllies();
+
+        ShopManager.Instance.ResetPlayerGold();
         ResetMap();
         SpawnRoomGenerationA();
         GenerationPathsA();

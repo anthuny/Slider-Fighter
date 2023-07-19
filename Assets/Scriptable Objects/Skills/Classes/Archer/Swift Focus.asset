@@ -16,7 +16,7 @@ MonoBehaviour:
   curSkillSelectionType: 1
   curSkillGameType: 2
   curRangedType: 1
-  skillSprite: {fileID: 21300000, guid: ee40d72ece864764f9d17d015aedb524, type: 3}
+  skillSprite: {fileID: 21300000, guid: 6960c6bd5088317429f7e0e033bee813, type: 3}
   skillName: SWIFT FOCUS
   skillDescr: Buff all allies with Speed up for 0/1/2/3 turns
   skillPower: 0
@@ -28,6 +28,7 @@ MonoBehaviour:
   special: 1
   effect: {fileID: 11400000, guid: 0abfc7040d3eb7e4da2698486445dc5a, type: 2}
   effectTurnLength: 2
+  effectHitChance: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
-  skillPowerIcon: {fileID: 21300000, guid: bb67b03c2969d104caba950c446f8c8d, type: 3}
+  skillPowerIcon: {fileID: 21300000, guid: 6960c6bd5088317429f7e0e033bee813, type: 3}

@@ -16,7 +16,7 @@ MonoBehaviour:
   curSkillSelectionType: 1
   curSkillGameType: 2
   curRangedType: 1
-  skillSprite: {fileID: 21300000, guid: ee40d72ece864764f9d17d015aedb524, type: 3}
+  skillSprite: {fileID: 21300000, guid: bb67b03c2969d104caba950c446f8c8d, type: 3}
   skillName: DIVINE HEAL
   skillDescr: Target up to
   skillPower: 200
@@ -25,8 +25,10 @@ MonoBehaviour:
   skillEnergyCost: 2
   skillSelectionCount: 1
   isSelfCast: 0
+  special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
+  effectHitChance: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 21300000, guid: bb67b03c2969d104caba950c446f8c8d, type: 3}

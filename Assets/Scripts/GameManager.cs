@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        SpawnAllies(true);
+        //SpawnAllies(true);
     }
     private void Start()
     {
@@ -207,7 +207,7 @@ public class GameManager : MonoBehaviour
         postBattleUI.TogglePostBattleUI(false);
     }
 
-    private void SpawnAllies(bool allAllies = true)
+    public void SpawnAllies(bool allAllies = true)
     {
         // Spawn player units
         if (activeRoomAllies.Count == 0)
@@ -671,6 +671,16 @@ public class GameManager : MonoBehaviour
                     break;
             }
 
+            for (int x = 0; x < activeRoomAllies.Count; x++)
+            {
+                activeRoomAllies[x].ResetIsDead();
+
+                // Reset effects, health, and energy at start of battle
+                activeRoomAllies[x].ResetEffects();
+                activeRoomAllies[x].UpdateUnitCurEnergy((int)activeRoomAllies[x].GetUnitMaxEnergy());
+                activeRoomAllies[x].UpdateUnitCurHealth((int)activeRoomAllies[x].GetUnitMaxHealth(), false, true);
+            }
+
             UpdateAllyVisibility(true, false);
             //SpawnAllies(true);
 
@@ -781,7 +791,7 @@ public class GameManager : MonoBehaviour
         return units;
     }
         
-    public IEnumerator WeaponAttackCommand(int power, int hitMultCount = 0)
+    public IEnumerator WeaponAttackCommand(int power, int hitMultCount = 0, int effectHitAcc = -1)
     {
         UnitFunctionality castingUnit = GetActiveUnitFunctionality();
 
@@ -838,9 +848,9 @@ public class GameManager : MonoBehaviour
 
                 // If active skil has an effect AND it's not a self cast, apply it to selected targets
                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                    unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], GetActiveSkill().effectTurnLength);
+                    unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], GetActiveSkill().effectTurnLength, effectHitAcc);
 
-                Vibration.Vibrate(30);
+                Vibration.Vibrate(15);
             }
         }
         else
@@ -933,7 +943,7 @@ public class GameManager : MonoBehaviour
 
                                 // If active skill has an effect AND it's not a self cast, apply it to selected targets
                                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength);
+                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength, effectHitAcc);
 
                             }
                         }
@@ -987,7 +997,7 @@ public class GameManager : MonoBehaviour
 
                             // If active skill has an effect AND it's not a self cast, apply it to selected targets
                             if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength);
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength, effectHitAcc);
                         }
                     }
                 }
@@ -1348,9 +1358,9 @@ public class GameManager : MonoBehaviour
             UpdateAllSkillIconAvailability();
             UpdateUnitSelection(activeSkill);
             UpdateEnemyPosition(true);
-
-            UpdateActiveUnitTurnArrow();
         }
+
+        UpdateActiveUnitTurnArrow();
 
         // Update allies into position for battle/shop
         UpdateAllAlliesPosition(false, GetActiveUnitType());

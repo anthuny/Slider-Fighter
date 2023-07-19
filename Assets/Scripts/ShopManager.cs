@@ -39,6 +39,10 @@ public class ShopManager : MonoBehaviour
         playerGold += goldAdded;
     }
 
+    public void ResetPlayerGold()
+    {
+        playerGold = 0;
+    }
     public void UpdateUnAssignedItem(Item item)
     {
         unassigedItem = item;
@@ -55,11 +59,6 @@ public class ShopManager : MonoBehaviour
             shop.UpdateAlpha(1);
         else
             shop.UpdateAlpha(0);
-    }
-
-    public void ResetPlayerGold()
-    {
-        playerGold = 0;
     }
 
     public RoomMapIcon GetActiveRoom()

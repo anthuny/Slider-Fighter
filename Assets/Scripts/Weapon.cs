@@ -42,6 +42,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float greatMultiplier = 1;
     [SerializeField] private float perfectMultiplier = 1;
 
+    public HitAreaManager hitAreaManager;
+
     public float calculatedPower;
 
     private void Awake()
@@ -114,6 +116,8 @@ public class Weapon : MonoBehaviour
     }
     public void StartHitLine()
     {
+        hitAreaManager.UpdateHitAreaPos();
+
         isStopped = false;
 
         GameManager.Instance.UpdateEnemyPosition(false);
@@ -162,7 +166,8 @@ public class Weapon : MonoBehaviour
         else if (curHitAreaType == HitAreaType.MISS)
             hitMulticount = 0;
 
-        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, hitMulticount));
+        int hitCount = GameManager.Instance.GetActiveSkill().skillAttackCount;
+        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, hitCount, hitMulticount));
     }
 
     public void DisableAlertUI()

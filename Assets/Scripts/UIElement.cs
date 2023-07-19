@@ -71,7 +71,7 @@ public class UIElement : MonoBehaviour
 
     void Start()
     {
-        CheckIfThreshholdPassed();
+        //CheckIfThreshholdPassed();
     }
 
     public void ResetYPosition()
@@ -305,15 +305,9 @@ public class UIElement : MonoBehaviour
 
     public void UpdateAlpha(float alpha)
     {
-        //StopCoroutine(HideUIOvertime());
-
-        //Debug.Log(gameObject.name);
         cg = GetComponent<CanvasGroup>();
 
-        //Debug.Log(gameObject.name);
         cg.alpha = alpha;   // Update UI Alpha
-
-
 
         // Make UI element selectable/unselectable
         if (alpha == 1)

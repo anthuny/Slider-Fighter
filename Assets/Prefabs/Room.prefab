@@ -200,6 +200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373f128ec0f58434989a516b9f0c054f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curRoomType: 0
+  curRoomSize: 0
   linkedRooms: []
   linkedPaths: []
   roomIconImage: {fileID: 148450952090831315}
@@ -209,7 +211,6 @@ MonoBehaviour:
   buttonRoom: {fileID: 5521988149852552486}
   shopRoomItems: []
   ownedShopItems: []
-  curRoomType: 0
   isHidden: 0
   isSelected: 0
   isDiscovered: 0
@@ -236,7 +237,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 7
   m_TargetDisplay: 0
 --- !u!225 &5690197334166295081
 CanvasGroup:

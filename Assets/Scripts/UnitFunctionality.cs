@@ -449,40 +449,56 @@ public class UnitFunctionality : MonoBehaviour
         return activeEffects;
     }
 
-    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1)
+    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1)
     {
-        int rand = Random.Range(0, 100);
-        //Debug.Log(rand);
+        // Determining whether the effect hits, If it fails, stop
+        if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
+        {
+            int rand = Random.Range(0, 100);
+            if (rand < GameManager.Instance.GetActiveSkill().effectHitChance)
+                return;
+        }
 
-        // If unit is already effected with this effect, stop
-        
+        // If player miss, do not apply effect
+        if (effectHitAcc == 0)
+            return;
+
+        // If unit is already effected with this effect, add to the effect
         for (int i = 0; i < activeEffects.Count; i++)
         {
             if (addedEffect.effectName == activeEffects[i].effectName)
             {
                 TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
-                activeEffects[i].AddTurnCountText(turnDuration);
+
+                for (int x = 0; x < effectHitAcc; x++)
+                {
+                    activeEffects[i].AddTurnCountText(turnDuration);
+                }
+
                 return;
             }
         }
-        
-        // Determining whether the effect hits, If it fails, stop
 
-        if (rand < GameManager.Instance.GetActiveSkill().effectHitChance)
-            return;
-
-        //ToggleUnitHealthBar(false);
         TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
 
+        // Spawn new effect on target unit
         GameObject go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
         go.transform.SetParent(effectsParent);
-        //go.transform.position = new Vector3(0,0,0);
         go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
         go.transform.localScale = new Vector3(1, 1, 1);
 
         Effect effect = go.GetComponent<Effect>();
         activeEffects.Add(effect);
         effect.Setup(addedEffect, targetUnit, turnDuration);
+
+        // If effect was used through a weapon hit attack, add counts to that effect
+        if (effectHitAcc != -1)
+        {
+            for (int x = 0; x < effectHitAcc-1; x++)
+            {
+                activeEffects[0].AddTurnCountText(1);
+            }
+        }
     }
 
     public void ResetEffects()
@@ -707,7 +723,14 @@ public class UnitFunctionality : MonoBehaviour
             return true;
         }
         else
+        {
             return false;
+        }
+    }
+
+    public void ResetIsDead()
+    {
+        isDead = false;
     }
 
     IEnumerator EnsureUnitIsDead()
@@ -857,25 +880,30 @@ public class UnitFunctionality : MonoBehaviour
         return maxExp;
     }
 
-    public void UpdateUnitCurHealth(int power, bool damaging = false)
+    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false)
     {
         if (isDead)
             return;
 
         float absPower = Mathf.Abs((float)power);
 
-        // Damaging
-        if (damaging)
+        if (!setHealth)
         {
-            //float tempPower;
-            //tempPower = (curRecieveDamageAmp / 100f) * absPower;
-            //float newPower = absPower + tempPower;
-            curHealth -= (int)absPower;
-            animator.SetTrigger("DamageFlg");
+            // Damaging
+            if (damaging)
+            {
+                //float tempPower;
+                //tempPower = (curRecieveDamageAmp / 100f) * absPower;
+                //float newPower = absPower + tempPower;
+                curHealth -= (int)absPower;
+                animator.SetTrigger("DamageFlg");
+            }
+            // Healing
+            else
+                curHealth += (int)absPower;
         }
-        // Healing
         else
-            curHealth += (int)absPower;
+            curHealth = (int)absPower;
 
         UpdateUnitHealthVisual();
     }
