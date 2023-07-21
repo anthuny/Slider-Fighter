@@ -106,6 +106,11 @@ public class UnitFunctionality : MonoBehaviour
     public int spentDefenseMasteryPoints = 0;
     public int spentUtilityMasteryPoints = 0;
 
+    [SerializeField] private int skill0CurCooldown = 0;
+    [SerializeField] private int skill1CurCooldown = 0;
+    [SerializeField] private int skill2CurCooldown = 0;
+    [SerializeField] private int skill3CurCooldown = 0;
+
     public bool idleBattle;
     public bool isDead;
     public bool isTaunting;
@@ -255,10 +260,7 @@ public class UnitFunctionality : MonoBehaviour
         return amountOfItems;
     }
 
-    public void ToggleIdleBattle(bool toggle)
-    {
-        idleBattle = toggle;
-    }
+
 
     public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null)
     {
@@ -275,6 +277,11 @@ public class UnitFunctionality : MonoBehaviour
         }
         else
             statUI.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
+    }
+
+    public void ToggleIdleBattle(bool toggle)
+    {
+        idleBattle = toggle;
     }
 
     public bool GetIdleBattle()
@@ -315,48 +322,35 @@ public class UnitFunctionality : MonoBehaviour
             // If unit has energy to choose a skill, choose one
             GameManager.Instance.UpdateActiveSkill(ChooseRandomSkill());
 
-            // If the skill DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
-            if (GameManager.Instance.activeSkill.skillEnergyCost != 0)
+            // Trigger current unit's turn energy count to deplete for skill use
+            //GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost, true);
+            //GameManager.Instance.UpdateActiveUnitHealthBar(false);
+
+            // Select units
+            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+
+            TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
+
+            if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
             {
-                // If unit has enough energy for skill
-                if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.activeSkill.skillEnergyCost)
-                {
-                    // Trigger current unit's turn energy count to deplete for skill use
-                    GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost, true);
-                    GameManager.Instance.UpdateActiveUnitHealthBar(false);
-
-                    // Select units
-                    GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-
-                    TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
-
-                    if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
-                    {
-                        animator.SetTrigger("SkillFlg");
-                        yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
-                    }
-                    else
-                    {
-                        animator.SetTrigger("AttackFlg");
-                        yield return new WaitForSeconds(GameManager.Instance.triggerSkillAlertTime / 2f);
-                    }
-
-                    // Adjust power based on skill effect amp on target then send it 
-                    StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.skillAttackCount));
-                }
-                else
-                {
-                    // End turn
-                    GameManager.Instance.ToggleEndTurnButton(false);
-                    GameManager.Instance.UpdateTurnOrder();
-                    yield break;
-                }
+                animator.SetTrigger("SkillFlg");
+                yield return new WaitForSeconds(GameManager.Instance.triggerSkillAlertTime);
             }
             else
             {
-                GameManager.Instance.UpdateTurnOrder();
-                yield break;
+                animator.SetTrigger("AttackFlg");
+                yield return new WaitForSeconds(GameManager.Instance.triggerSkillAlertTime);
             }
+
+            // Adjust power based on skill effect amp on target then send it 
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.skillAttackCount));
+
+            /*
+            // End turn
+            GameManager.Instance.ToggleEndTurnButton(false);
+            GameManager.Instance.UpdateTurnOrder();
+            yield break;
+            */
         }
     }
 
@@ -404,39 +398,134 @@ public class UnitFunctionality : MonoBehaviour
     }
 
 
-    public IEnumerator AttackAgain()
+    public IEnumerator UnitEndTurn()
     {
-        //IEnumerator co = StartUnitTurn();
-        //StopCoroutine(co);
-
         yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
 
-        StartCoroutine(StartUnitTurn());
+        // End turn
+        GameManager.Instance.UpdateTurnOrder();
     }
+
+    public int GetSkill0CurCooldown()
+    {
+        return skill0CurCooldown;
+    }
+    public int GetSkill1CurCooldown()
+    {
+        return skill1CurCooldown;
+    }
+    public int GetSkill2CurCooldown()
+    {
+        return skill2CurCooldown;
+    }
+    public int GetSkill3CurCooldown()
+    {
+        return skill3CurCooldown;
+    }
+
+    public void ResetSkill0Cooldown()
+    {
+        skill0CurCooldown = 0;
+        //GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
+    }
+    public void ResetSkill1Cooldown()
+    {
+        skill1CurCooldown = 0;
+        GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill1CurCooldown.ToString());
+    }
+    public void ResetSkill2Cooldown()
+    {
+        skill2CurCooldown = 0;
+        GameManager.Instance.skill2IconCooldownUIText.UpdateUIText(skill2CurCooldown.ToString());
+    }
+    public void ResetSkill3Cooldown()
+    {
+        skill3CurCooldown = 0;
+        GameManager.Instance.skill3IconCooldownUIText.UpdateUIText(skill3CurCooldown.ToString());
+    }
+
+    public void SetSkill0CooldownMax()
+    {
+        skill0CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill0().skillCooldown;
+        //GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
+    }
+    public void SetSkill1CooldownMax()
+    {
+        skill1CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill1().skillCooldown+1;
+        GameManager.Instance.skill1IconCooldownUIText.UpdateUIText((skill1CurCooldown).ToString());
+    }
+    public void SetSkill2CooldownMax()
+    {
+        skill2CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill2().skillCooldown+1;
+        GameManager.Instance.skill2IconCooldownUIText.UpdateUIText((skill2CurCooldown).ToString());
+    }
+    public void SetSkill3CooldownMax()
+    {
+        skill3CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill3().skillCooldown+1;
+        GameManager.Instance.skill3IconCooldownUIText.UpdateUIText((skill3CurCooldown).ToString());
+    }
+
+    public void DecreaseSkill0Cooldown()
+    {
+        skill0CurCooldown--;
+
+        if (skill0CurCooldown <= 0)
+            skill0CurCooldown = 0;
+
+        //GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill1CurCooldown.ToString());
+    }
+    public void DecreaseSkill1Cooldown()
+    {
+        skill1CurCooldown--;
+
+        if (skill1CurCooldown <= 0)
+            skill1CurCooldown = 0;
+
+        GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill1CurCooldown.ToString());
+    }
+    public void DecreaseSkill2Cooldown()
+    {
+        skill2CurCooldown--;
+
+        if (skill2CurCooldown <= 0)
+            skill2CurCooldown = 0;
+
+        GameManager.Instance.skill2IconCooldownUIText.UpdateUIText(skill2CurCooldown.ToString());
+    }
+    public void DecreaseSkill3Cooldown()
+    {
+        skill3CurCooldown--;
+
+        if (skill3CurCooldown <= 0)
+            skill3CurCooldown = 0;
+
+        GameManager.Instance.skill3IconCooldownUIText.UpdateUIText(skill3CurCooldown.ToString());
+    }
+
     SkillData ChooseRandomSkill()
     {
         int rand = Random.Range(1, 4);
 
         if (rand == 1)  // Skill 1
         {
-            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.GetActiveUnit().GetSkill1().skillEnergyCost)
+            if (skill1CurCooldown > 0)
                 return GameManager.Instance.GetActiveUnit().GetSkill1();
             else
-                return GameManager.Instance.GetActiveUnit().basicSkill;
+                return GameManager.Instance.GetActiveUnit().skill0;
         }
         else if (rand == 2)  // Skill 2
         {
-            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.GetActiveUnit().GetSkill2().skillEnergyCost)
+            if (skill2CurCooldown > 0)
                 return GameManager.Instance.GetActiveUnit().GetSkill2();
             else
-                return GameManager.Instance.GetActiveUnit().basicSkill;
+                return GameManager.Instance.GetActiveUnit().skill0;
         }
         else if (rand == 3)  // Skill 3
         {
-            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitCurEnergy() >= GameManager.Instance.GetActiveUnit().GetSkill3().skillEnergyCost)
+            if (skill3CurCooldown > 0)
                 return GameManager.Instance.GetActiveUnit().GetSkill3();
             else
-                return GameManager.Instance.GetActiveUnit().basicSkill;
+                return GameManager.Instance.GetActiveUnit().skill0;
         }
         else
         {
@@ -982,16 +1071,7 @@ public class UnitFunctionality : MonoBehaviour
         return maxHealth;
     }
 
-    public float GetUnitCurEnergy()
-    {
-        return curEnergy;
-    }
-
-    public float GetUnitMaxEnergy()
-    {
-        return maxEnergy;
-    }
-
+    /*
     public void UpdateUnitEnergy(int curEnergy, int maxEnergy)
     {
         this.curEnergy = curEnergy;
@@ -1002,7 +1082,9 @@ public class UnitFunctionality : MonoBehaviour
     {
         this.maxEnergy = maxEnergy;
     }
+    */
 
+    /*
     public void UpdateUnitCurEnergy(int energy)
     {
         //effects.UpdateAlpha(1);
@@ -1012,11 +1094,14 @@ public class UnitFunctionality : MonoBehaviour
         if (curEnergy > maxEnergy)
             curEnergy = maxEnergy;
     }
+    */
 
+    /*
     public void UpdateUnitStartTurnEnergy(int newUnitStartTurnEnergyGain)
     {
         unitStartTurnEnergyGain = newUnitStartTurnEnergyGain;
     }
+    */
 
     public bool IsSelected()
     {

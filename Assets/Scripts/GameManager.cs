@@ -85,9 +85,9 @@ public class GameManager : MonoBehaviour
     public UIElement skill1IconUnavailableImage;
     public UIElement skill2IconUnavailableImage;
     public UIElement skill3IconUnavailableImage;
-    public UIText skill1IconEnergyCostUIText;
-    public UIText skill2IconEnergyCostUIText;
-    public UIText skill3IconEnergyCostUIText;
+    public UIText skill1IconCooldownUIText;
+    public UIText skill2IconCooldownUIText;
+    public UIText skill3IconCooldownUIText;
 
     public List<UnitFunctionality> unitsSelected = new List<UnitFunctionality>();
 
@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
 
     public ButtonFunctionality attackButton;
     public ButtonFunctionality weaponBackButton;
-    public ButtonFunctionality endTurnButton;
+    //public ButtonFunctionality endTurnButton;
     public ButtonFunctionality skill1Button;
     public ButtonFunctionality skill2Button;
     public ButtonFunctionality skill3Button;
@@ -167,12 +167,17 @@ public class GameManager : MonoBehaviour
 
     public void ResetButton(ButtonFunctionality button)
     {
-        button.ResetDisabled();
+        button.EnableButton();
     }
 
     public void DisableButton(ButtonFunctionality button)
     {
         button.DisableButton();
+    }
+
+    public void EnableButton(ButtonFunctionality button)
+    {
+        button.EnableButton();
     }
     public void UpdateEnemyPosition(bool playerTurn)
     {
@@ -233,13 +238,13 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
-                unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
+                //unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
                 AddActiveRoomAllUnits(unit);
 
-                unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-                unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+                //unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
+                //unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
                 unitFunctionality.UpdateUnitLevel(1);
 
                 unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
@@ -569,7 +574,7 @@ public class GameManager : MonoBehaviour
         if (activeSkill != null)
             this.activeSkill = activeSkill;
         else
-            this.activeSkill = GetActiveUnit().basicSkill;
+            this.activeSkill = GetActiveUnit().skill0;
 
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(playerAbilityDesc, true);
@@ -586,6 +591,9 @@ public class GameManager : MonoBehaviour
             return;
 
         Weapon.instance.DisableAlertUI();
+        Weapon.instance.ToggleEnabled(true);
+        Weapon.instance.StartHitLine();
+
         ToggleUIElement(playerAbilities, false);
         ToggleUIElement(playerAbilityDesc, false);
 
@@ -595,16 +603,17 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(playerWeaponBackButton, true);
         ToggleEndTurnButton(false);
 
-        Weapon.instance.StartHitLine();
         Weapon.instance.ToggleAttackButtonInteractable(true);
     }
     #endregion
 
+    /*
     public void ReturnEnergyToUnit()
     {
         UpdateActiveUnitHealthBar(false);
         UpdateActiveUnitEnergyBar(true, true, activeSkill.skillEnergyCost);
     }
+    */
 
     public void ClearRoom()
     {
@@ -648,13 +657,13 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
-                unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
+                //unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
                 AddActiveRoomAllUnits(unit);
 
-                unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-                unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
+                //unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
+                //unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
                 unitFunctionality.UpdateUnitLevel(1);
 
                 int unitValue = activeFloor.enemyUnits[spawnEnemyIndex].GetUnitValue() * (RoomManager.Instance.GetFloorCount() + 1);
@@ -671,14 +680,17 @@ public class GameManager : MonoBehaviour
                     break;
             }
 
-            for (int x = 0; x < activeRoomAllies.Count; x++)
+            for (int x = 0; x < activeRoomAllUnitFunctionalitys.Count; x++)
             {
-                activeRoomAllies[x].ResetIsDead();
+                activeRoomAllUnitFunctionalitys[x].ResetIsDead();
 
                 // Reset effects, health, and energy at start of battle
-                activeRoomAllies[x].ResetEffects();
-                activeRoomAllies[x].UpdateUnitCurEnergy((int)activeRoomAllies[x].GetUnitMaxEnergy());
-                activeRoomAllies[x].UpdateUnitCurHealth((int)activeRoomAllies[x].GetUnitMaxHealth(), false, true);
+                activeRoomAllUnitFunctionalitys[x].ResetEffects();
+                activeRoomAllUnitFunctionalitys[x].ResetSkill0Cooldown();
+                activeRoomAllUnitFunctionalitys[x].ResetSkill1Cooldown();
+                activeRoomAllUnitFunctionalitys[x].ResetSkill2Cooldown();
+                activeRoomAllUnitFunctionalitys[x].ResetSkill3Cooldown();
+                activeRoomAllUnitFunctionalitys[x].UpdateUnitCurHealth((int)activeRoomAllUnitFunctionalitys[x].GetUnitMaxHealth(), false, true);
             }
 
             UpdateAllyVisibility(true, false);
@@ -721,6 +733,7 @@ public class GameManager : MonoBehaviour
         return toggle;
     }
 
+    /*
     public bool CheckIfEnergyAvailableSkill()
     {
         if (GetActiveUnitFunctionality().GetUnitCurEnergy() >= activeSkill.skillEnergyCost)
@@ -728,6 +741,7 @@ public class GameManager : MonoBehaviour
         else
             return false;
     }
+    */
 
     public void UpdateActiveSkill(SkillData skill)
     {
@@ -982,7 +996,6 @@ public class GameManager : MonoBehaviour
                                 unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * power, false, false, null, x + orderCount);
                             }
 
-
                             // Increase health on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
                                 unitsSelected[i].UpdateUnitCurHealth(power);
@@ -1013,17 +1026,30 @@ public class GameManager : MonoBehaviour
         if (GetActiveSkill().isSelfCast)
             if (GetActiveSkill().effect != null)
             {
-                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), GetActiveSkill().effectTurnLength);
+                GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), GetActiveSkill().effectTurnLength, effectHitAcc);
                 Vibration.Vibrate(15);
             }
+
+        if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.BASIC)
+            GetActiveUnitFunctionality().SetSkill0CooldownMax();
+        else if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.PRIMARY)
+            GetActiveUnitFunctionality().SetSkill1CooldownMax();
+        else if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.SECONDARY)
+            GetActiveUnitFunctionality().SetSkill2CooldownMax();
+        else if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.ALTERNATE)
+            GetActiveUnitFunctionality().SetSkill3CooldownMax();
 
         yield return new WaitForSeconds(postHitWaitTime);
     
         // If active unit is player, setup player UI
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
-            SetupPlayerUI();
+        {
+            //SetupPlayerUI();
+            StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
+        }
         else   // If active unit is enemy, check whether to attack again or end turn
         {
+            /*
             // If enemy kills all allies in selection, end it's turn
             if (unitsSelected.Count == 0)
             {
@@ -1035,7 +1061,7 @@ public class GameManager : MonoBehaviour
                         {
                             // End turn
                             ToggleEndTurnButton(false);
-                            UpdateTurnOrder();
+                            StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());
                             break;
                         }
                         continue;
@@ -1044,12 +1070,11 @@ public class GameManager : MonoBehaviour
                         break;
                 }
             }
+            */
             // If enemy didnt kill selection, attack again
-            else
-            {
-                StartCoroutine(GetActiveUnitFunctionality().AttackAgain());  // Attack again
-                yield return 0;
-            }        
+
+                //yield return new WaitForSeconds(postHitWaitTime*3);
+            StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
         }
     }
 
@@ -1097,7 +1122,7 @@ public class GameManager : MonoBehaviour
     public void SetupPlayerUI()
     {
         SetupPlayerSkillsUI();
-        UpdateSkillDetails(GetActiveUnit().basicSkill);
+        UpdateSkillDetails(GetActiveUnit().skill0);
         UpdateAllSkillIconAvailability();
         UpdateUnitSelection(activeSkill);
         UpdateUnitsSelectedText();
@@ -1105,11 +1130,11 @@ public class GameManager : MonoBehaviour
     #region Update Unit UI
     public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0, bool enemy = false)
     {
-        GetActiveUnitFunctionality().effects.UpdateAlpha(0);
+        //GetActiveUnitFunctionality().effects.UpdateAlpha(0);
         //Debug.Log(GetActiveUnitFunctionality().GetUnitName() + " " + GetActiveUnitFunctionality().GetUnitCurEnergy());
 
-        GetActiveUnitFunctionality().energyCostImage.UpdateEnergyBar((int)GetActiveUnitFunctionality().
-            GetUnitCurEnergy(), energyAmount, increasing, toggle, enemy);
+        //GetActiveUnitFunctionality().energyCostImage.UpdateEnergyBar((int)GetActiveUnitFunctionality().
+           //GetUnitCurEnergy(), energyAmount, increasing, toggle, enemy);
     }
 
     public void UpdateActiveUnitHealthBar(bool toggle)
@@ -1129,54 +1154,89 @@ public class GameManager : MonoBehaviour
     public void UpdateAllSkillIconAvailability()
     {
         // Update all skill icon Energy text + unavailable image
-
-        if (GetActiveUnitFunctionality().GetUnitCurEnergy() >= GetActiveUnit().GetSkill1().skillEnergyCost)
+        if (GetActiveUnitFunctionality().GetSkill1CurCooldown() > 0)
         {
-            UpdateSkillIconAvailability(skill1IconUnavailableImage, skill1IconEnergyCostUIText, GetActiveUnit().GetSkill1().skillEnergyCost.ToString(), false);
+            //GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
+
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill1IconUnavailableImage, skill1IconCooldownUIText, GetActiveUnit().GetSkill1().skillCooldown.ToString(), false);
+                DisableButton(skill1Button);
+                skill1IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill1CurCooldown().ToString());
+            }
         }
         else
         {
-            UpdateSkillIconAvailability(skill1IconUnavailableImage, skill1IconEnergyCostUIText, GetActiveUnit().GetSkill1().skillEnergyCost.ToString(), true);
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill1IconUnavailableImage, skill1IconCooldownUIText, GetActiveUnit().GetSkill1().skillCooldown.ToString(), true);
+                EnableButton(skill1Button);
+                skill1IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill1CurCooldown().ToString());
+            }
         }
 
-        if (GetActiveUnitFunctionality().GetUnitCurEnergy() >= GetActiveUnit().GetSkill2().skillEnergyCost)
+        if (GetActiveUnitFunctionality().GetSkill2CurCooldown() > 0)
         {
-            UpdateSkillIconAvailability(skill2IconUnavailableImage, skill2IconEnergyCostUIText, GetActiveUnit().GetSkill2().skillEnergyCost.ToString(), false);
+            //GetActiveUnitFunctionality().DecreaseSkill2Cooldown();
+
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill2IconUnavailableImage, skill2IconCooldownUIText, GetActiveUnit().GetSkill2().skillCooldown.ToString(), false);
+                DisableButton(skill2Button);
+                skill2IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill2CurCooldown().ToString());
+            }
         }
         else
         {
-            UpdateSkillIconAvailability(skill2IconUnavailableImage, skill2IconEnergyCostUIText, GetActiveUnit().GetSkill2().skillEnergyCost.ToString(), true);
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill2IconUnavailableImage, skill2IconCooldownUIText, GetActiveUnit().GetSkill2().skillCooldown.ToString(), true);
+                EnableButton(skill2Button);
+                skill2IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill2CurCooldown().ToString());
+            }
         }
 
-        if (GetActiveUnitFunctionality().GetUnitCurEnergy() >= GetActiveUnit().GetSkill3().skillEnergyCost)
+        if (GetActiveUnitFunctionality().GetSkill3CurCooldown() > 0)
         {
-            UpdateSkillIconAvailability(skill3IconUnavailableImage, skill3IconEnergyCostUIText, GetActiveUnit().GetSkill3().skillEnergyCost.ToString(), false);
+            //GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
+
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill3IconUnavailableImage, skill3IconCooldownUIText, GetActiveUnit().GetSkill3().skillCooldown.ToString(), false);
+                DisableButton(skill3Button);
+                skill3IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill3CurCooldown().ToString());
+            }
         }
         else
         {
-            UpdateSkillIconAvailability(skill3IconUnavailableImage, skill3IconEnergyCostUIText, GetActiveUnit().GetSkill3().skillEnergyCost.ToString(), true);
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill3IconUnavailableImage, skill3IconCooldownUIText, GetActiveUnit().GetSkill3().skillCooldown.ToString(), true);
+                EnableButton(skill3Button);
+                skill3IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill3CurCooldown().ToString());
+            }
         }
 
-        UpdateAllSkillIconEnergyCost();        
+        //UpdateAllSkillIconCooldown();        
     }
 
-    public void UpdateSkillIconAvailability(UIElement skillIconAvailabilityImage, UIText skillIconEnergyCost, string skillEnergyCost, bool toggle)
+    public void UpdateSkillIconAvailability(UIElement skillIconAvailabilityImage, UIText skillIconCooldown, string skillCooldown, bool toggle)
     {
-        if (toggle)
+        if (!toggle)
         {
             skillIconAvailabilityImage.UpdateAlpha(1);
-            skillIconEnergyCost.UpdateUIText(skillEnergyCost);
+            skillIconCooldown.UpdateUIText(skillCooldown);
         }
         else
         {
             skillIconAvailabilityImage.UpdateAlpha(0);
         }
     }
-    void UpdateAllSkillIconEnergyCost()
+    void UpdateAllSkillIconCooldown()
     {
-        skill1IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill1().skillEnergyCost.ToString());
-        skill2IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill2().skillEnergyCost.ToString());
-        skill3IconEnergyCostUIText.UpdateUIText(GetActiveUnit().GetSkill3().skillEnergyCost.ToString());
+        skill1IconCooldownUIText.UpdateUIText(GetActiveUnit().GetSkill1().skillCooldown.ToString());
+        skill2IconCooldownUIText.UpdateUIText(GetActiveUnit().GetSkill2().skillCooldown.ToString());
+        skill3IconCooldownUIText.UpdateUIText(GetActiveUnit().GetSkill3().skillCooldown.ToString());
     }
 
     public void DisableAllSkillSelections()
@@ -1200,13 +1260,15 @@ public class GameManager : MonoBehaviour
 
         abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower, 
             skill.skillAttackCount, tempAttack, skill.skillSelectionCount, 
-            skill.skillPower, skill.skillEnergyCost, skill.skillAttackCount, skill.skillPowerIcon, skill.skillSprite, skill.special);
+            skill.skillPower, skill.skillCooldown, skill.skillAttackCount, skill.skillPowerIcon, skill.skillSprite, skill.special);
 
         UnitFunctionality activeUnit = GetActiveUnitFunctionality();
 
+        /*
         // Update Unit Overlay Energy
         abilityDetailsUI.UpdateUnitOverlayEnergyUI(GetActiveUnitFunctionality(),
             activeUnit.GetUnitCurEnergy(), activeUnit.GetUnitMaxEnergy());
+        */
 
         // Update Unit Overlay Health
         abilityDetailsUI.UpdateUnitOverlayHealthUI(activeUnit, activeUnit.GetUnitCurHealth(), activeUnit.GetUnitMaxHealth());
@@ -1245,7 +1307,7 @@ public class GameManager : MonoBehaviour
         }
 
         //if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
-        UpdateTurnOrder(true);
+        //UpdateTurnOrder(true);
     }
 
     public void UpdateActiveUnitNameText(string name)
@@ -1301,6 +1363,13 @@ public class GameManager : MonoBehaviour
 
         ResetSelectedUnits();
 
+        GetActiveUnitFunctionality().DecreaseSkill0Cooldown();
+        GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
+        GetActiveUnitFunctionality().DecreaseSkill2Cooldown();
+        GetActiveUnitFunctionality().DecreaseSkill3Cooldown();
+
+        UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
+
         GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false);
 
         if (!unitDied && !roundStart)
@@ -1316,46 +1385,50 @@ public class GameManager : MonoBehaviour
 
         UpdateTurnOrderVisual();
 
+        UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
+
+
+
         //Trigger Start turn effects
         GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false);
 
         // Trigger Unit Energy regen 
-        UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
+        //UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
+
+       
 
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            //activeRoomAllUnitFunctionalitys[0].StartUnitTurn();
             playerUIElement.UpdateAlpha(1);
+            SetupPlayerUI();
             SetupPlayerSkillsUI();
+
             UpdatePlayerAbilityUI();
             UpdateActiveUnitNameText(GetActiveUnitFunctionality().GetUnitName());
 
             // Set the basic skill to be on by default to begin with
-            activeSkill = GetActiveUnit().basicSkill;
+            activeSkill = GetActiveUnit().skill0;
 
             ToggleEndTurnButton(true);      // Toggle End Turn Button on
         }
         else
         {
-            activeRoomAllUnitFunctionalitys[0].ToggleIdleBattle(true);
+            GetActiveUnitFunctionality().ToggleIdleBattle(true);
+            //StartCoroutine(activeRoomAllUnitFunctionalitys[0].StartUnitTurn());
             playerUIElement.UpdateAlpha(0);
 
             ToggleEndTurnButton(false);      // Toggle End Turn Button on
 
             // If no allies remain, do not resume enemies turn
             if (activeRoomAllies.Count >= 1)
-                StartCoroutine(activeRoomAllUnitFunctionalitys[0].AttackAgain());
+                StartCoroutine(activeRoomAllUnitFunctionalitys[0].StartUnitTurn());
         }
-
-        // If unit is at maxed energy, stop
-        if (GetActiveUnitFunctionality().GetUnitCurEnergy() != GetActiveUnitFunctionality().GetUnitMaxEnergy())
-            UpdateActiveUnitHealthBar(false);   // Disable unit health bar for unit start turn energy increase
 
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
         {
             UpdateSkillDetails(activeSkill);
-            UpdateAllSkillIconAvailability();
+            
             UpdateUnitSelection(activeSkill);
             UpdateEnemyPosition(true);
         }
@@ -1804,10 +1877,7 @@ public class GameManager : MonoBehaviour
         // If a skill is selected
         if (activeSkill != null)
         {
-            if (GetActiveUnitFunctionality().GetUnitCurEnergy() >= activeSkill.skillEnergyCost)
-                UpdateUnitsSelectedText(unitsSelected.Count, activeSkill.skillSelectionCount);
-            else
-                UpdateUnitsSelectedText(0, 0);
+            UpdateUnitsSelectedText(unitsSelected.Count, activeSkill.skillSelectionCount);
         }
     }
 

@@ -45,10 +45,16 @@ public class Weapon : MonoBehaviour
     public HitAreaManager hitAreaManager;
 
     public float calculatedPower;
+    private bool enabled;
 
     private void Awake()
     {
         instance = this;
+    }
+
+    public void ToggleEnabled(bool toggle)
+    {
+        enabled = toggle;
     }
 
     public void UpdateHitAreaType(HitAreaType hitAreaType)
@@ -59,18 +65,21 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isStopped)
-            return;
-
-        // If user is on mobile, detect input differently then it would otherwise
-        if (SystemInfo.deviceType == DeviceType.Handheld)
+        if (enabled)
         {
-            if (Input.touchCount > 0)
+            if (isStopped)
+                return;
+
+            // If user is on mobile, detect input differently then it would otherwise
+            if (SystemInfo.deviceType == DeviceType.Handheld)
+            {
+                if (Input.touchCount > 0)
+                    ResetWeapon();
+            }
+            else
+                if (Input.GetMouseButton(0))
                 ResetWeapon();
         }
-        else 
-            if (Input.GetMouseButton(0))
-                ResetWeapon();
     }
 
     private void FixedUpdate()
@@ -116,16 +125,15 @@ public class Weapon : MonoBehaviour
     }
     public void StartHitLine()
     {
-        hitAreaManager.UpdateHitAreaPos();
-
         isStopped = false;
 
+        hitAreaManager.UpdateHitAreaPos();
         GameManager.Instance.UpdateEnemyPosition(false);
 
         GameManager.Instance.ResetButton(GameManager.Instance.skill1Button);
         GameManager.Instance.ResetButton(GameManager.Instance.skill2Button);
         GameManager.Instance.ResetButton(GameManager.Instance.skill3Button);
-        GameManager.Instance.ResetButton(GameManager.Instance.endTurnButton);
+        //GameManager.Instance.ResetButton(GameManager.Instance.endTurnButton);
     }
     public IEnumerator StopHitLine()
     {
@@ -154,20 +162,20 @@ public class Weapon : MonoBehaviour
 
         // Adjust power based on skill effect amp on target then send it 
 
-        int hitMulticount = 1;
+        int hitAccuracy = 1;
         if (curHitAreaType == HitAreaType.PERFECT)
-            hitMulticount = 4;
+            hitAccuracy = 4;
         else if (curHitAreaType == HitAreaType.GREAT)
-            hitMulticount = 3;
+            hitAccuracy = 3;
         else if (curHitAreaType == HitAreaType.GOOD)
-            hitMulticount = 2;
+            hitAccuracy = 2;
         else if (curHitAreaType == HitAreaType.BAD)
-            hitMulticount = 1;
+            hitAccuracy = 1;
         else if (curHitAreaType == HitAreaType.MISS)
-            hitMulticount = 0;
+            hitAccuracy = 0;
 
         int hitCount = GameManager.Instance.GetActiveSkill().skillAttackCount;
-        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, hitCount, hitMulticount));
+        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, hitCount, hitAccuracy));
     }
 
     public void DisableAlertUI()

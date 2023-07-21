@@ -379,6 +379,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
+  disabled: 0
+  UIbutton: {fileID: 0}
   startDisabled: 0
 --- !u!225 &7270212666006155310
 CanvasGroup:
@@ -678,7 +680,7 @@ GameObject:
   - component: {fileID: 7270212666810450646}
   - component: {fileID: 7270212666810450648}
   m_Layer: 5
-  m_Name: Skill Icon Energy Cost Text
+  m_Name: Skill Icon Cooldown Cost Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -770,7 +772,7 @@ GameObject:
   - component: {fileID: 7270212668023562990}
   - component: {fileID: 7270212668023562991}
   m_Layer: 5
-  m_Name: Skill Icon Energy Cost BG
+  m_Name: Skill Icon Cooldown Cost BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -26,7 +26,7 @@ public class EnergyCost : MonoBehaviour
         ToggleEnergyBar(false);
         ToggleEnergyBGBar(false);
     }
-
+    /*
     public void UpdateEnergyBar(int curEnergy, int energyAmountMoved, bool increasing, bool toggle, bool enemy = false)
     {
         if (toggle)
@@ -121,7 +121,9 @@ public class EnergyCost : MonoBehaviour
             ToggleEnergyBGBar(false);
         }
     }
+    */
 
+    /*
     IEnumerator RemoveEnergyBar(int removeCount, bool enemy)
     {
         // Remove current bars
@@ -165,7 +167,9 @@ public class EnergyCost : MonoBehaviour
             }
         }
     }
+    */
 
+    /*
     IEnumerator AddEnergyBar(int addCount)
     {
         // Add Energy Bars
@@ -202,7 +206,7 @@ public class EnergyCost : MonoBehaviour
         ToggleEnergyBar(false);
         ToggleEnergyBGBar(false);
     }
-
+    */
     void ToggleEnergyBar(bool toggle)
     {
         if (toggle)

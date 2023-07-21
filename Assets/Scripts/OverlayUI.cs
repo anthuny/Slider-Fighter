@@ -17,7 +17,7 @@ public class OverlayUI : MonoBehaviour
     public Text skillDetailsMaxCD;
     public Text skillDetailsPower;
     public Text skillDetailsCDText;
-    public Text skillDetailsEnergyCostText;
+    public Text skillDetailsCooldownText;
     public Text skillDetailsMutlihitCountText;
     public Image skillDetailsPowerIcon;
     public Image skillDetailsIcon;
@@ -31,17 +31,18 @@ public class OverlayUI : MonoBehaviour
     [SerializeField] private Color powerHealColour;
 
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int skillAttackCount, bool attack,
-        int skillTargetCount, int skillPower, int skillEnergyCost, int multihitCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
+        int skillTargetCount, int skillPower, int skillCooldown, int multihitCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
     {
         UpdateSkillDetailsSkillName(skillName);
         UpdateSkillDetailsDesc(skillDesc, skillDescPower, skillAttackCount, skillTargetCount, attack, special);
         UpdateSkillPowerText(skillPower, attack);
-        UpdateSkillDetailsEnergyText(skillEnergyCost);
+        UpdateSkillDetailsCooldownText(skillCooldown);
         UpdateSkillDetailsMutlihitCountText(multihitCount);
         UpdateSkillDetailsPowerImage(skillPowerImage);
         UpdateSkillDetailsIcon(skillIcon);
     }
 
+    /*
     public void UpdateUnitOverlayEnergyUI(UnitFunctionality unit, float curEnergy, float maxEnergy)
     {
         // Update overlay energy current text
@@ -51,6 +52,7 @@ public class OverlayUI : MonoBehaviour
         float fillAmount = curEnergy / maxEnergy;
         unitOverlayCurEnergyImage.fillAmount = fillAmount;
     }
+    */
 
     public void UpdateUnitOverlayHealthUI(UnitFunctionality unit, float curHealth, float maxHealth)
     {
@@ -113,9 +115,9 @@ public class OverlayUI : MonoBehaviour
             skillDetailsPower.color = powerHealColour;
     }
 
-    private void UpdateSkillDetailsEnergyText(int energy)
+    public void UpdateSkillDetailsCooldownText(int cooldown)
     {
-        skillDetailsEnergyCostText.text = energy.ToString();
+        skillDetailsCooldownText.text = cooldown.ToString();
     }
 
     private void UpdateSkillDetailsMutlihitCountText(int count)

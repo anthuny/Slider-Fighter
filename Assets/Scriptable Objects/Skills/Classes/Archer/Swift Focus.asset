@@ -22,7 +22,7 @@ MonoBehaviour:
   skillPower: 0
   skillAttackCount: 0
   projectileSpeed: 10
-  skillEnergyCost: 3
+  skillCooldown: 3
   skillSelectionCount: 3
   isSelfCast: 0
   special: 1
@@ -31,4 +31,4 @@ MonoBehaviour:
   effectHitChance: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
-  skillPowerIcon: {fileID: 21300000, guid: 6960c6bd5088317429f7e0e033bee813, type: 3}
+  skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}

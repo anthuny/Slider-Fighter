@@ -26,7 +26,7 @@ public class UnitData : ScriptableObject
     public GameObject characterPrefab;
     public Sprite projectileSprite;
 
-    public SkillData basicSkill;
+    public SkillData skill0;
     public SkillData skill1;
     public SkillData skill2;
     public SkillData skill3;
@@ -36,6 +36,10 @@ public class UnitData : ScriptableObject
     [SerializeField] private List<Mastery> defenseMasteries = new List<Mastery>();
     [SerializeField] private List<Mastery> utilityMasteries = new List<Mastery>();
 
+    public SkillData GetSkill0()
+    {
+        return skill0;
+    }
 
     public SkillData GetSkill1()
     {

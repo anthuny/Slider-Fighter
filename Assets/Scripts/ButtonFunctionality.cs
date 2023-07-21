@@ -269,7 +269,7 @@ public class ButtonFunctionality : MonoBehaviour
             return;
 
         // Return unit energy
-        GameManager.Instance.ReturnEnergyToUnit();
+        //GameManager.Instance.ReturnEnergyToUnit();
 
         GameManager.Instance.ResetButton(GameManager.Instance.attackButton);    // Allow attack button clicks
 
@@ -278,7 +278,7 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.UpdateEnemyPosition(true);
     }
 
-    public void ResetDisabled()
+    public void EnableButton()
     {
         disabled = false;
     }
@@ -290,9 +290,11 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void AttackButton()
     {
+        /*
         // If unit doesnt have enough energy, do not allow skill to play out
         if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
             return;
+        */
 
         // If no units are selected, stop
         if (!GameManager.Instance.CheckIfAnyUnitsSelected())
@@ -303,26 +305,24 @@ public class ButtonFunctionality : MonoBehaviour
         else
             return;
 
-        GameManager.Instance.DisableButton(GameManager.Instance.endTurnButton);
+        //GameManager.Instance.DisableButton(GameManager.Instance.endTurnButton);
         GameManager.Instance.DisableButton(GameManager.Instance.skill1Button);
         GameManager.Instance.DisableButton(GameManager.Instance.skill2Button);
         GameManager.Instance.DisableButton(GameManager.Instance.skill3Button);
 
-        // If the energy DOESNT cost any energy, make energy cost ui appear on casting unit DOESNT APPEAR
-        if (GameManager.Instance.activeSkill.skillEnergyCost != 0)
-        {
-            // Trigger current unit's turn energy count to deplete for skill use
-            GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost);
-            GameManager.Instance.UpdateActiveUnitHealthBar(false);
-        }
-        else
-        {
-            Weapon.instance.StartHitLine();
-            GameManager.Instance.SetupPlayerWeaponUI();
-        }
+
+        GameManager.Instance.UpdateActiveUnitHealthBar(false);
 
         // Trigger Skill alert UI
         GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
+
+        StartCoroutine(AttackButtonCont());
+    }
+
+    IEnumerator AttackButtonCont()
+    {
+        yield return new WaitForSeconds(GameManager.Instance.skillAlertAppearTime/2);
+        GameManager.Instance.SetupPlayerWeaponUI();
     }
 
     public void MinusEnemyHPButton()
@@ -400,11 +400,17 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void SelectSkill1()
     {
+        //GameManager.Instance.UpdateAllSkillIconAvailability();
+
         if (disabled)
             return;
 
+        // If skill is on cooldown, stop
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill1CurCooldown() > 0)
+            return;
+
         GameManager.Instance.ResetSelectedUnits();
-        GameManager.Instance.UpdateAllSkillIconAvailability();
+
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill1);
         GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill1);
@@ -414,8 +420,8 @@ public class ButtonFunctionality : MonoBehaviour
         {
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().basicSkill);
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill0);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill0);
         }
         // If skill not already selected, select it and proceed
         else
@@ -423,10 +429,6 @@ public class ButtonFunctionality : MonoBehaviour
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(true);
         }
-
-        // If unit doesnt have enough energy, do not allow skill to play out
-        if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
-            return;
 
         GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
         GameManager.Instance.UpdateUnitsSelectedText();
@@ -437,8 +439,12 @@ public class ButtonFunctionality : MonoBehaviour
         if (disabled)
             return;
 
+        // If skill is on cooldown, stop
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill2CurCooldown() > 0)
+            return;
+
         GameManager.Instance.ResetSelectedUnits();
-        GameManager.Instance.UpdateAllSkillIconAvailability();
+        //GameManager.Instance.UpdateAllSkillIconAvailability();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill2);
         GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill2);
@@ -448,8 +454,8 @@ public class ButtonFunctionality : MonoBehaviour
         {
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().basicSkill);
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill0);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill0);
         }
         // If skill not already selected, select it and proceed
         else
@@ -457,10 +463,6 @@ public class ButtonFunctionality : MonoBehaviour
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(true);
         }
-
-        // If unit doesnt have enough energy, do not allow skill to play out
-        if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
-            return;
 
         GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
         GameManager.Instance.UpdateUnitsSelectedText();
@@ -471,8 +473,12 @@ public class ButtonFunctionality : MonoBehaviour
         if (disabled)
             return;
 
+        // If skill is on cooldown, stop
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill3CurCooldown() > 0)
+            return;
+
         GameManager.Instance.ResetSelectedUnits();
-        GameManager.Instance.UpdateAllSkillIconAvailability();
+        //GameManager.Instance.UpdateAllSkillIconAvailability();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill3);
         GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill3);
@@ -482,8 +488,8 @@ public class ButtonFunctionality : MonoBehaviour
         {
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().basicSkill);
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().basicSkill);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill0);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill0);
         }
         // If skill not already selected, select it and proceed
         else
@@ -491,10 +497,6 @@ public class ButtonFunctionality : MonoBehaviour
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(true);
         }
-
-        // If unit doesnt have enough energy, do not allow skill to play out
-        if (!GameManager.Instance.CheckIfEnergyAvailableSkill())
-            return;
 
         GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
         GameManager.Instance.UpdateUnitsSelectedText();
@@ -506,8 +508,8 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.DisableButton(GameManager.Instance.weaponBackButton);
 
         Weapon.instance.StartCoroutine(Weapon.instance.StopHitLine());
-
-        GameManager.Instance.UpdateActiveUnitEnergyBar(false);
+        Weapon.instance.ToggleEnabled(false);
+        //GameManager.Instance.UpdateActiveUnitEnergyBar(false);
 
         GameManager.Instance.DisableAllSkillSelections();
     }

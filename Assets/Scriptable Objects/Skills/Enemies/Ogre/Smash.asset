@@ -19,15 +19,16 @@ MonoBehaviour:
   skillSprite: {fileID: 0}
   skillName: SMASH
   skillDescr: 
-  skillPower: 50
+  skillPower: 100
   skillAttackCount: 1
   projectileSpeed: 12
-  skillEnergyCost: 2
+  skillCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
+  effectHitChance: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 0}

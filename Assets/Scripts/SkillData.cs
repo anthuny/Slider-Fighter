@@ -24,7 +24,7 @@ public class SkillData : ScriptableObject
     public int skillPower;
     public int skillAttackCount;
     public int projectileSpeed = 1;
-    public int skillEnergyCost;
+    public int skillCooldown;
     public int skillSelectionCount;
     public bool isSelfCast;
     public bool special;

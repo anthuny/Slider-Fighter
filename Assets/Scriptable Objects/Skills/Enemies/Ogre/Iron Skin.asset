@@ -22,12 +22,13 @@ MonoBehaviour:
   skillPower: 0
   skillAttackCount: 0
   projectileSpeed: 0
-  skillEnergyCost: 3
+  skillCooldown: 2
   skillSelectionCount: 1
   isSelfCast: 1
   special: 0
   effect: {fileID: 11400000, guid: fef5ba97b42f6a749ae6ad86060c3224, type: 2}
   effectTurnLength: 2
+  effectHitChance: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 0}

@@ -28,7 +28,7 @@ MonoBehaviour:
   basicSelectionCount: 2
   characterPrefab: {fileID: 1415871230302792947, guid: f199157f90703b44f9044ed2c757a02d, type: 3}
   projectileSprite: {fileID: 21300000, guid: 76072c13e8f104c408568746bd873877, type: 3}
-  basicSkill: {fileID: 11400000, guid: 3990cbdcd4db34b4d9daa74123af21e6, type: 2}
+  skill0: {fileID: 11400000, guid: 3990cbdcd4db34b4d9daa74123af21e6, type: 2}
   skill1: {fileID: 11400000, guid: dea070939dac73d4097d7ec16fdd2c91, type: 2}
   skill2: {fileID: 11400000, guid: ff6dd9c436887b84b86b518627cc09a3, type: 2}
   skill3: {fileID: 11400000, guid: d5eb76a2123ceb34eb288d50fc856cc6, type: 2}
