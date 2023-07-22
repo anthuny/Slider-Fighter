@@ -23,7 +23,7 @@ public class UnitFunctionality : MonoBehaviour
     public UIElement curUnitTurnArrow;
     public int curSpeed;
     public int curPower;
-    public float curPowerInc = 1;
+    public float curPowerInc = 0;
     public int curArmor;
     private int curHealth;
     private int maxHealth;
@@ -262,7 +262,7 @@ public class UnitFunctionality : MonoBehaviour
 
 
 
-    public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null)
+    public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null, bool levelUp = false)
     {
         statUI.UpdateContentText(name);
         statUI.UpdateAlpha(alpha);
@@ -277,6 +277,9 @@ public class UnitFunctionality : MonoBehaviour
         }
         else
             statUI.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
+
+        if (levelUp)
+            statUI.UpdateContentTextColour(GameManager.Instance.gradientLevelUpAlert);
     }
 
     public void ToggleIdleBattle(bool toggle)
@@ -314,10 +317,12 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator StartUnitTurn()
     {
+        yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
+
         // Do unit's turn automatically if its on idle battle
         if (GetIdleBattle() && GameManager.Instance.activeRoomAllies.Count >= 1)
         {
-            //yield return new WaitForSeconds(GameManager.instance.enemyThinkTime);
+            yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
 
             // If unit has energy to choose a skill, choose one
             GameManager.Instance.UpdateActiveSkill(ChooseRandomSkill());
@@ -372,7 +377,7 @@ public class UnitFunctionality : MonoBehaviour
                     activeEffects[i].TriggerPowerEffect();
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
-                    return;
+                    //return;
                 }
             }
 
@@ -504,33 +509,40 @@ public class UnitFunctionality : MonoBehaviour
 
     SkillData ChooseRandomSkill()
     {
-        int rand = Random.Range(1, 4);
+        int unitEnemyIntelligence = 10;
+        for (int i = 0; i < unitEnemyIntelligence; i++)
+        {
+            int rand = Random.Range(1, 5);
+            Debug.Log(rand);
+            if (rand == 1)  // Skill 1
+            {
+                if (skill1CurCooldown == 0)
+                    return GameManager.Instance.GetActiveUnit().GetSkill1();
+                else
+                    continue;                  
+            }
+            else if (rand == 2)  // Skill 2
+            {
+                if (skill2CurCooldown == 0)
+                    return GameManager.Instance.GetActiveUnit().GetSkill2();
+                else
+                    continue;
+            }
+            else if (rand == 3)  // Skill 3
+            {
+                if (skill3CurCooldown == 0)
+                    return GameManager.Instance.GetActiveUnit().GetSkill3();
+                else
+                    continue;
+            }
 
-        if (rand == 1)  // Skill 1
-        {
-            if (skill1CurCooldown > 0)
-                return GameManager.Instance.GetActiveUnit().GetSkill1();
-            else
-                return GameManager.Instance.GetActiveUnit().skill0;
+            else if (rand == 4)
+            {
+                return GameManager.Instance.GetActiveUnit().GetSkill0();
+            }
         }
-        else if (rand == 2)  // Skill 2
-        {
-            if (skill2CurCooldown > 0)
-                return GameManager.Instance.GetActiveUnit().GetSkill2();
-            else
-                return GameManager.Instance.GetActiveUnit().skill0;
-        }
-        else if (rand == 3)  // Skill 3
-        {
-            if (skill3CurCooldown > 0)
-                return GameManager.Instance.GetActiveUnit().GetSkill3();
-            else
-                return GameManager.Instance.GetActiveUnit().skill0;
-        }
-        else
-        {
-            return null;
-        }
+
+        return GameManager.Instance.GetActiveUnit().skill0;
     }
 
     public List<Effect> GetEffects()
@@ -651,7 +663,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitPowerInc(float newPowerInc)
     {
-        curPowerInc = newPowerInc;
+        curPowerInc += newPowerInc;
     }
 
     public void ToggleTaunt(bool toggle)
@@ -876,10 +888,15 @@ public class UnitFunctionality : MonoBehaviour
         {
             yield return new WaitForSeconds(GameManager.Instance.fillAmountIntervalTimeGap);
 
+            // If unit leveled up
             if (GetCurExp() >= GetMaxExp())
             {
                 int remainingExp = gainedExp - i;
                 UpdateUnitLevel(1, remainingExp);
+
+                TriggerTextAlert("LEVEL UP!", 1, false, "", true);
+
+                UpdateUnitCurHealth((int)GetUnitMaxHealth(), false, true);
                 yield break;
             }
             else
@@ -890,7 +907,7 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         yield return new WaitForSeconds(GameManager.Instance.timePostExp);
-        ToggleUnitExpVisual(false);
+        //ToggleUnitExpVisual(false);
     }
 
     public void ToggleUnitExpVisual(bool toggle)

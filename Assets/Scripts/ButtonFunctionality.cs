@@ -311,7 +311,7 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.DisableButton(GameManager.Instance.skill3Button);
 
 
-        GameManager.Instance.UpdateActiveUnitHealthBar(false);
+        //GameManager.Instance.UpdateActiveUnitHealthBar(false);
 
         // Trigger Skill alert UI
         GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);

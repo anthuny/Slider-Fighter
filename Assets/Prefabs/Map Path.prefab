@@ -106,7 +106,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 165
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 1, y: 0, z: 1}
@@ -184,7 +184,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 165
   m_TargetDisplay: 0
 --- !u!1001 &3924684827729153571
 PrefabInstance:

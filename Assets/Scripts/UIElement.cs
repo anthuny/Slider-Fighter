@@ -256,6 +256,8 @@ public class UIElement : MonoBehaviour
 
     public void AnimateUI()
     {
+        ResetAnimateScale();
+
         if (doScalePunch)
             contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 

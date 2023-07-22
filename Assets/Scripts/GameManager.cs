@@ -112,6 +112,7 @@ public class GameManager : MonoBehaviour
     public float skillAlertAppearTime;
     public SkillData activeSkill;
     public TMP_ColorGradient gradientSkillAlert;
+    public TMP_ColorGradient gradientLevelUpAlert;
 
     [Header("Post Battle")]
     public Rewards rewards;
@@ -119,7 +120,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Enemy")]
     public float enemyAttackWaitTime = 1f;
-    public float enemyThinkTime = 1f;
+    public float enemyEffectWaitTime = 1f;
+    public float enemySkillThinkTime = 1f;
     public float unitPowerUIWaitTime = .5f;
 
     public ButtonFunctionality attackButton;
@@ -491,16 +493,20 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(SetupRoomPostBattle(playerWon));
         UpdateAllAlliesPosition(true);
+
+        RoomManager.Instance.ToggleInteractable(false);
     }
 
     // Toggle UI accordingly
     IEnumerator SetupRoomPostBattle(bool playerWon)
     {
         // Remove ally unit's effects
+        /*
         for (int i = 0; i < activeRoomAllies.Count; i++)
         {
             activeRoomAllies[i].ResetEffects();
         }
+        */
 
         // Toggle player overlay and skill ui off
         ToggleUIElement(playerAbilities, false);
@@ -508,7 +514,7 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(endTurnButtonUI, false);
         ToggleUIElement(turnOrder, false);
         ResetActiveUnitTurnArrow();
-        ToggleAllAlliesHealthBar(false);
+        ToggleAllAlliesHealthBar(true);
 
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
@@ -685,13 +691,15 @@ public class GameManager : MonoBehaviour
                 activeRoomAllUnitFunctionalitys[x].ResetIsDead();
 
                 // Reset effects, health, and energy at start of battle
-                activeRoomAllUnitFunctionalitys[x].ResetEffects();
-                activeRoomAllUnitFunctionalitys[x].ResetSkill0Cooldown();
-                activeRoomAllUnitFunctionalitys[x].ResetSkill1Cooldown();
-                activeRoomAllUnitFunctionalitys[x].ResetSkill2Cooldown();
-                activeRoomAllUnitFunctionalitys[x].ResetSkill3Cooldown();
-                activeRoomAllUnitFunctionalitys[x].UpdateUnitCurHealth((int)activeRoomAllUnitFunctionalitys[x].GetUnitMaxHealth(), false, true);
+                //activeRoomAllUnitFunctionalitys[x].ResetEffects();
+                //activeRoomAllUnitFunctionalitys[x].ResetSkill0Cooldown();
+                //activeRoomAllUnitFunctionalitys[x].ResetSkill1Cooldown();
+                //activeRoomAllUnitFunctionalitys[x].ResetSkill2Cooldown();
+                //activeRoomAllUnitFunctionalitys[x].ResetSkill3Cooldown();
+                //activeRoomAllUnitFunctionalitys[x].UpdateUnitCurHealth((int)activeRoomAllUnitFunctionalitys[x].GetUnitMaxHealth(), false, true);
             }
+
+            RoomManager.Instance.ToggleInteractable(true);
 
             UpdateAllyVisibility(true, false);
             //SpawnAllies(true);
@@ -771,7 +779,7 @@ public class GameManager : MonoBehaviour
     {
         float powerToRandomise = ((randomPerc / 100f) * power);
         int powerToRandomiseInt = (int)powerToRandomise;
-        float randPower = Random.Range(power - powerToRandomiseInt, (power + powerToRandomiseInt) + 1);
+        float randPower = Random.Range(power - powerToRandomiseInt, (power + powerToRandomiseInt+1));
         return (int)randPower;
     }
 
@@ -877,6 +885,9 @@ public class GameManager : MonoBehaviour
             // Loop as many times as power text will appear
             for (int x = 0; x < activeSkill.skillAttackCount; x++)
             {
+                if (unitsSelected[0] == null || unitsSelected[0].isDead)
+                    continue;
+
                 // Loop through all selected units
                 for (int i = unitsSelected.Count - 1; i >= 0; i--)
                 {
@@ -1387,15 +1398,12 @@ public class GameManager : MonoBehaviour
 
         UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
 
-
-
         //Trigger Start turn effects
         GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false);
 
         // Trigger Unit Energy regen 
         //UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
 
-       
 
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
@@ -1422,7 +1430,10 @@ public class GameManager : MonoBehaviour
 
             // If no allies remain, do not resume enemies turn
             if (activeRoomAllies.Count >= 1)
+            {
                 StartCoroutine(activeRoomAllUnitFunctionalitys[0].StartUnitTurn());
+            }
+
         }
 
         if (GetActiveUnit().curUnitType == UnitData.UnitType.PLAYER)
@@ -1554,9 +1565,25 @@ public class GameManager : MonoBehaviour
                 // only select ENEMY units
                 for (int i = 0; i < activeRoomEnemies.Count; i++)
                 {
-                    selectedAmount++;
-
                     int rand = Random.Range(0, activeRoomEnemies.Count);
+
+                    // If skill requires only 1 unit selection - (full team target wont work without this)
+                    if (usedSkill.skillSelectionCount == 1)
+                    {
+                        // If enemy chooses itself for ally attack, reselect to target any other ally 
+                        if (activeRoomEnemies[rand] == GetActiveUnitFunctionality())
+                        {
+                            if (i != 0)
+                            {
+                                i--;
+                                continue;
+                            }
+                            else
+                                continue;
+                        }
+                    }
+
+                    selectedAmount++;
 
                     // If self cast, cast on self, otherwise, continue for whomever
                     if (usedSkill.isSelfCast)

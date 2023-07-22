@@ -32,6 +32,8 @@ public class Effect : MonoBehaviour
     bool initialUse;
     private float tempAddedHealth;
 
+    private float storedPowerAmp;
+
     private void Awake()
     {
         effectIconImage = GetComponent<Image>();
@@ -112,8 +114,8 @@ public class Effect : MonoBehaviour
 
     public void RemoveEffect(UnitFunctionality unit)
     {
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetEffects().Count >= 1)
-            GameManager.Instance.GetActiveUnitFunctionality().ResetEffects();
+     //   if (GameManager.Instance.GetActiveUnitFunctionality().GetEffects().Count >= 1)
+     //     GameManager.Instance.GetActiveUnitFunctionality().ResetEffects();
 
         EffectRemove(unit);
         Destroy(gameObject);
@@ -140,14 +142,15 @@ public class Effect : MonoBehaviour
             GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)tempAddedHealth);
             GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, false, this);
         }
-
-        if (curEffectName == EffectName.TAUNT)
+        else if (curEffectName == EffectName.TAUNT)
             GameManager.Instance.GetActiveUnitFunctionality().ToggleTaunt(true);
-
         else if (curEffectName == EffectName.POWERUP)
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(1 * powerAmp);
+        {
+            storedPowerAmp = powerAmp;
+            targetUnit.UpdateUnitPowerInc(storedPowerAmp);       
+        }
         else if (curEffectName == EffectName.POWERDOWN)
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(1 * -powerAmp);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(-storedPowerAmp);
         else if (curEffectName == EffectName.PARRY)
             GameManager.Instance.GetActiveUnitFunctionality().isParrying = true;
         else if (curEffectName == EffectName.SPEEDUP)
@@ -183,6 +186,21 @@ public class Effect : MonoBehaviour
         {
             // Toggle mark effect off the target
             unit.curRecieveDamageAmp -= (int)powerPercent;
+        }
+        else if (curEffectName == EffectName.POWERUP)
+        {
+            // Toggle mark effect off the target
+            unit.UpdateUnitPowerInc(-storedPowerAmp);
+        }
+        else if (curEffectName == EffectName.POWERDOWN)
+        {
+            // Toggle mark effect off the target
+            unit.UpdateUnitPowerInc(storedPowerAmp);
+        }
+
+        if (unit.GetEffects()[unit.GetEffects().IndexOf(this)])
+        {
+            unit.GetEffects().Remove(this);
         }
     }
 

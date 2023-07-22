@@ -9,13 +9,22 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private float floorDifficultyRandomAmount;
     [SerializeField] private RoomMapIcon activeRoom;
 
+    private CanvasGroup cg;
+
     private FloorData activeFloor;
-    private int floorCount = 0;
-    
+    private int floorCount = 0;   
 
     private void Awake()
     {
         Instance = this;
+
+        cg = gameObject.GetComponent<CanvasGroup>();
+    }
+
+    public void ToggleInteractable(bool toggle)
+    {
+        cg.interactable = toggle;
+        cg.blocksRaycasts = toggle;
     }
 
     public void UpdateActiveRoom(RoomMapIcon room)
