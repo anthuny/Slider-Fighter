@@ -452,8 +452,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void UpdateAllAlliesPosition(bool postBattle, bool playersTurn = true, bool masteryPosition = false)
+    void UpdateAllAlliesPosition(bool postBattle, bool playersTurn = true, bool masteryPosition = false, bool shopPosition = false)
     {
+        if (shopPosition)
+        {
+            allyPositions.SetParent(ShopManager.Instance.unitsPositionShopTrans);
+            allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
+            allyPositions.position = ShopManager.Instance.unitsPositionShopTrans.position;
+            return;
+        }
         if (!postBattle)
         {
             if (masteryPosition)
@@ -634,6 +641,9 @@ public class GameManager : MonoBehaviour
         // If room type is enemy, spawn enemy room
         if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
         {
+            // Update background
+            BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetCombatForest());
+
             // Determine enemy unit value
             int roomChallengeCount = (RoomManager.Instance.GetFloorCount() + 1) + RoomManager.Instance.GetFloorDifficulty();
 
@@ -710,11 +720,17 @@ public class GameManager : MonoBehaviour
             playerUIElement.UpdateAlpha(1);     // Enable player UI
             DetermineTurnOrder(true);
             ToggleUIElement(turnOrder, true);  // Enable turn order
+
+            // Update allies into position for battle
+            UpdateAllAlliesPosition(false, GetActiveUnitType());
         }
 
         // If room type is shop, spawn shop room
         else if (room.curRoomType == RoomMapIcon.RoomType.SHOP)
         {
+            // Update background
+            BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetShopForest());
+
             playerUIElement.UpdateAlpha(0);     // Disable player UI
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
@@ -724,10 +740,11 @@ public class GameManager : MonoBehaviour
             ShopManager.Instance.FillShopItems();
 
             UpdateAllyVisibility(true, false);
-        }
 
-        // Update allies into position for battle/shop
-        UpdateAllAlliesPosition(false, GetActiveUnitType());
+            // Update allies into position for shop
+            UpdateAllAlliesPosition(false, GetActiveUnitType(), false, true);
+            return;
+        }
     }
 
     public bool GetActiveUnitType()

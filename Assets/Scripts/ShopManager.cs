@@ -9,16 +9,30 @@ public class ShopManager : MonoBehaviour
     [HideInInspector]
     public int playerGold;
 
-    [SerializeField] private int maxShopItems = 3;
-    [SerializeField] private List<Item> shopItems = new List<Item>();
+    [SerializeField] private int shopMaxCombatItems = 3;
+    [SerializeField] private int shopMaxHealthItems = 3;
+    [SerializeField] private List<Item> shopHealthItems = new List<Item>();
+    [SerializeField] private List<Item> shopCombatItems = new List<Item>();
 
-    [SerializeField] private Transform shopItemsParent;
+    [SerializeField] private Transform itemsParent;
+
+    [SerializeField] private Transform shopItem1Parent;
+    [SerializeField] private Transform shopItem2Parent;
+    [SerializeField] private Transform shopItem3Parent;
+    [SerializeField] private Transform shopItem4Parent;
+    [SerializeField] private Transform shopItem5Parent;
+    [SerializeField] private Transform shopItem6Parent;
+    [SerializeField] private Transform shopItem7Parent;
+    [SerializeField] private Transform shopItem8Parent;
+    [SerializeField] private Transform refreshItemParent;
+
     [SerializeField] private GameObject shopItemPrefab;
     public UIElement shop;
     public UIElement shopSelectAllyPrompt;
     public bool selectAlly;
     [SerializeField] private Item unassigedItem;
     [SerializeField] private ButtonFunctionality buttonExitShop;
+    public Transform unitsPositionShopTrans;
 
     //public float luckyDiceTimeWait;
 
@@ -71,31 +85,61 @@ public class ShopManager : MonoBehaviour
         activeRoom = room;
     }
 
-    public List<Item> GetShopItems()
+    public List<Item> GetShopCombatItems()
     {
-        return shopItems;
+        return shopCombatItems;
+    }
+    public List<Item> GetShopHealthItems()
+    {
+        return shopHealthItems;
     }
 
-    Item GetRandomShopItem()
+    Item GetRandomShopItem(bool combatItem)
     {
-        int rand = Random.Range(0, shopItems.Count);
-
-        return shopItems[rand];
+        int rand = 0;
+        if (combatItem)
+        {
+            rand = Random.Range(0, shopCombatItems.Count);
+            return shopCombatItems[rand];
+        }
+        else
+        {
+            rand = Random.Range(0, shopHealthItems.Count);
+            return shopHealthItems[rand];
+        }
     }
 
-    List<Item> ChooseItems()
+    List<Item> ChooseItems(bool combatItem)
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < maxShopItems; i++)
+
+        if (combatItem)
         {
-            Item item = GetRandomShopItem();
-            if (items.Contains(item))
+            for (int i = 0; i < shopCombatItems.Count; i++)
             {
-                if (i != 0)
-                    i--;
+                Item item = GetRandomShopItem(combatItem);
+                if (items.Contains(item))
+                {
+                    if (i != 0)
+                        i--;
+                }
+                else
+                    items.Add(item);
             }
-            else
-                items.Add(item);
+        }
+        else
+        {
+            for (int n = 0; n < shopHealthItems.Count; n++)
+            {
+                Item item = GetRandomShopItem(combatItem);
+                if (items.Contains(item))
+                {
+                    if (n != 0)
+                        n--;
+                }
+                else
+                    items.Add(item);
+            }
         }
 
         return items;
@@ -108,11 +152,21 @@ public class ShopManager : MonoBehaviour
 
     public void ClearShopItems()
     {
+        /*
         // Clear previous items
-        foreach (Transform child in shopItemsParent)
+        if (shopItem1Parent.childCount >= 1)
         {
-            Destroy(child.gameObject);
+            Destroy(shopItem1Parent.GetChild(0).gameObject);
+            Destroy(shopItem2Parent.GetChild(0).gameObject);
+            Destroy(shopItem3Parent.GetChild(0).gameObject);
+            Destroy(shopItem4Parent.GetChild(0).gameObject);
+            Destroy(shopItem5Parent.GetChild(0).gameObject);
+            Destroy(shopItem6Parent.GetChild(0).gameObject);
+            Destroy(shopItem7Parent.GetChild(0).gameObject);
+            Destroy(shopItem8Parent.GetChild(0).gameObject);
+
         }
+        */
 
         ToggleShopVisibility(false);
     }
@@ -135,15 +189,27 @@ public class ShopManager : MonoBehaviour
         SetActiveRoom(RoomManager.Instance.GetActiveRoom());
 
         Item item = null;
-        List<Item> items = new List<Item>();
-        items = ChooseItems();
 
-        for (int i = 0; i < maxShopItems; i++)
+        // Spawn Combat Items
+        for (int i = 0; i < shopCombatItems.Count; i++)
         {
             // Spawn items
-            GameObject go = Instantiate(shopItemPrefab, shopItemsParent);
-            go.transform.SetParent(shopItemsParent);
+            GameObject go = Instantiate(shopItemPrefab, itemsParent);
+            if (i == 0)
+                go.transform.SetParent(shopItem1Parent);
+            else if (i == 1)
+                go.transform.SetParent(shopItem2Parent);
+            else if (i == 2)
+                go.transform.SetParent(shopItem3Parent);
+            else if (i == 3)
+                go.transform.SetParent(shopItem4Parent);
+            else if (i == 4)
+                go.transform.SetParent(shopItem5Parent);
+            else if (i == 5)
+                go.transform.SetParent(shopItem6Parent);
+
             go.transform.localScale = new Vector2(1, 1);
+            go.transform.localPosition = Vector2.zero;
 
             // Update price and sprite
             ShopItem shopItem = go.GetComponent<ShopItem>();
@@ -152,7 +218,7 @@ public class ShopManager : MonoBehaviour
 
             // If shop room has not been opened before, spawn new ones
             if (!activeRoom.GetIsVisited())
-                item = items[i];
+                item = shopCombatItems[i];
             else if (activeRoom.GetIsVisited())
             {
                 item = activeRoom.GetShopRoomItems()[i];
@@ -183,9 +249,71 @@ public class ShopManager : MonoBehaviour
             // If active room has not been visited yet, store shop items to room
             if (!activeRoom.GetIsVisited())
                 activeRoom.AddShopRoomItems(item);
+
         }
+
+        Item item2 = null;
+
+        // Spawn Health Items
+        for (int y = 0; y < shopHealthItems.Count; y++)
+        {
+            // Spawn items
+            GameObject go = Instantiate(shopItemPrefab, itemsParent);
+
+            if (y == 0)
+                go.transform.SetParent(shopItem7Parent);
+            else if (y == 1)
+                go.transform.SetParent(shopItem8Parent);
+
+            go.transform.localScale = new Vector2(1, 1);
+            go.transform.localPosition = Vector2.zero;
+
+            // Update price and sprite
+            ShopItem shopItem = go.GetComponent<ShopItem>();
+
+            Item tempItem = null;
+
+            // If shop room has not been opened before, spawn new ones
+            if (!activeRoom.GetIsVisited())
+                item2 = shopHealthItems[y];
+            else if (activeRoom.GetIsVisited())
+            {
+                item2 = activeRoom.GetShopRoomItems()[y];
+                tempItem = activeRoom.GetShopRoomItems()[y];
+            }
+
+            // If item hasn't been purchased from this shop before
+            shopItem.UpdateShopItemName(item2.itemName);
+            shopItem.UpdatePriceText(item2.basePrice.ToString());
+            shopItem.UpdateShopItemSprite(item2.itemSprite);
+            shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
+            shopItem.itemButton.enabled = true;
+
+            // If player owns an item from this shop
+            for (int x = 0; x < activeRoom.GetOwnedShopItems().Count; x++)
+            {
+                // If item is already purchased from shop, make it invisible
+                if (activeRoom.GetOwnedShopItems().Contains(tempItem))// && !invisItems.Contains(tempItem))
+                {
+                    shopItem.UpdateShopItemName("");
+                    shopItem.UpdatePriceText("");
+                    shopItem.UpdateShopItemSprite(null);
+                    shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(0);
+                    shopItem.itemButton.enabled = false;
+                    shopItem.purchased = true;
+                }
+            }
+            // If active room has not been visited yet, store shop items to room
+            if (!activeRoom.GetIsVisited())
+                activeRoom.AddShopRoomItems(item2);
+        }
+            
+
+        //shopMaxHealthItems
+        //shopMaxHealthItems
 
         // After filling shop items, room is now considered Visited.
         activeRoom.UpdateIsVisited(true);
     }
+
 }

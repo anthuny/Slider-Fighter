@@ -42,7 +42,7 @@ public class ShopItem : MonoBehaviour
         return shopItemName;
     }
 
-    public void PurchaseShopItem()
+    public void PurchaseShopItem(bool shopCombatItem)
     {
         // If the player must first select an ally to give an item, do not allow purchase of another item.
         if (ShopManager.Instance.selectAlly)
@@ -56,25 +56,51 @@ public class ShopItem : MonoBehaviour
         imageUI.UpdateAlpha(0);
         textUI.UpdateAlpha(0);
 
-        int count = ShopManager.Instance.GetShopItems().Count;
-        for (int i = 0; i < count; i++)
-        {
-            if (shopItemName == ShopManager.Instance.GetShopItems()[i].itemName)
-            {
-                // Disable exit button until player has selected ally with item
-                MapManager.Instance.exitShopRoom.UpdateAlpha(0);
 
-                Item item = ShopManager.Instance.GetShopItems()[i];
-                ShopManager.Instance.GetActiveRoom().AddOwnedShopItems(item);
-                ShopManager.Instance.UpdateUnAssignedItem(item);
-                // Prompt player on who to give item
-                GameManager.Instance.ToggleAllowSelection(true);
-                ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
-                ShopManager.Instance.selectAlly = true;
-                return;
+        // Combat Item
+        if (shopCombatItem)
+        {
+            int combatCount = ShopManager.Instance.GetShopCombatItems().Count;
+            for (int i = 0; i < combatCount; i++)
+            {
+                if (shopItemName == ShopManager.Instance.GetShopCombatItems()[i].itemName)
+                {
+                    // Disable exit button until player has selected ally with item
+                    MapManager.Instance.exitShopRoom.UpdateAlpha(0);
+
+                    Item item = ShopManager.Instance.GetShopCombatItems()[i];
+                    ShopManager.Instance.GetActiveRoom().AddOwnedShopItems(item);
+                    ShopManager.Instance.UpdateUnAssignedItem(item);
+                    // Prompt player on who to give item
+                    GameManager.Instance.ToggleAllowSelection(true);
+                    ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
+                    ShopManager.Instance.selectAlly = true;
+                    return;
+                }
             }
         }
+        // Health Item
+        else
+        {
+            int healthCount = ShopManager.Instance.GetShopHealthItems().Count;
+            for (int i = 0; i < healthCount; i++)
+            {
+                if (shopItemName == ShopManager.Instance.GetShopHealthItems()[i].itemName)
+                {
+                    // Disable exit button until player has selected ally with item
+                    MapManager.Instance.exitShopRoom.UpdateAlpha(0);
 
+                    Item item = ShopManager.Instance.GetShopHealthItems()[i];
+                    ShopManager.Instance.GetActiveRoom().AddOwnedShopItems(item);
+                    ShopManager.Instance.UpdateUnAssignedItem(item);
+                    // Prompt player on who to give item
+                    GameManager.Instance.ToggleAllowSelection(true);
+                    ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
+                    ShopManager.Instance.selectAlly = true;
+                    return;
+                }
+            }
+        }
 
     }
 }

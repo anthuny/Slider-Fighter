@@ -211,17 +211,34 @@ public class ButtonFunctionality : MonoBehaviour
         // Get access to root parent of gameobject
         shopItem = transform.parent.parent.GetComponent<ShopItem>();
 
-        List<Item> items = new List<Item>();
-        items = ShopManager.Instance.GetShopItems();
-        int count = items.Count;
+        // Combat Item
+        List<Item> shopCombatItems = new List<Item>();
+        shopCombatItems = ShopManager.Instance.GetShopCombatItems();
+        int shopCombatCount = shopCombatItems.Count;
 
         // Search for the item
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < shopCombatCount; i++)
         {
-            if (shopItem.GetShopItemName() == items[i].itemName)
+            if (shopItem.GetShopItemName() == shopCombatItems[i].itemName)
             {
                 // unit purchased the item
-                shopItem.PurchaseShopItem();
+                shopItem.PurchaseShopItem(true);
+                return;
+            }
+        }
+
+        // Health Item
+        List<Item> shopHealthItems = new List<Item>();
+        shopHealthItems = ShopManager.Instance.GetShopHealthItems();
+        int shopItemCount = shopHealthItems.Count;
+
+        // Search for the item
+        for (int x = 0; x < shopItemCount; x++)
+        {
+            if (shopItem.GetShopItemName() == shopHealthItems[x].itemName)
+            {
+                // unit purchased the item
+                shopItem.PurchaseShopItem(false);
                 return;
             }
         }

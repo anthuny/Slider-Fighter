@@ -53,9 +53,11 @@ public class UIElement : MonoBehaviour
         if (selectable)
             UpdateIsLocked(true);
 
-        originalScale = transform.GetComponent<RectTransform>().localScale.x;
-
-        GetOriginalYPosition();
+        if (gameObject.GetComponent<RectTransform>() != null)
+        {
+            originalScale = transform.GetComponent<RectTransform>().localScale.x;
+            GetOriginalYPosition();
+        }
     }
 
     public bool GetIsLocked()
