@@ -101,17 +101,7 @@ public class MapManager : MonoBehaviour
         Setup();
     }
 
-    public void AddPlayerGold(int gold)
-    {
-        ShopManager.Instance.UpdatePlayerGold(gold);
-        mapOverlay.UpdatePlayerGoldText(ShopManager.Instance.GetPlayerGold().ToString());
-    }
 
-    public void ResetPlayerGold()
-    {
-        ShopManager.Instance.ResetPlayerGold();
-        mapOverlay.ResetPlayerGoldText();
-    }
 
     private void Update()
     {
@@ -222,8 +212,6 @@ public class MapManager : MonoBehaviour
     {
         if (toggle)
         {
-            ShopManager.Instance.CloseShop();
-
             GameManager.Instance.UpdateAllyVisibility(false);
 
             // Disable unit's post battle bg
@@ -326,7 +314,7 @@ public class MapManager : MonoBehaviour
     {
         GameManager.Instance.SpawnAllies();
 
-        ShopManager.Instance.ResetPlayerGold();
+        //ShopManager.Instance.ResetPlayerGold();
         ResetMap();
         SpawnRoomGenerationA();
         GenerationPathsA();

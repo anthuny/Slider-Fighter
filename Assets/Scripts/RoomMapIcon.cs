@@ -18,8 +18,9 @@ public class RoomMapIcon : MonoBehaviour
     public UIElement roomSelectionImage;
     [SerializeField] private Button roomButton;
     [SerializeField] private ButtonRoom buttonRoom;
-    [SerializeField] private List<Item> shopRoomItems = new List<Item>();
-    [SerializeField] private List<Item> ownedShopItems = new List<Item>();
+    [SerializeField] private List<Item> shopRoomCombatItems = new List<Item>();
+    [SerializeField] private List<Item> shopRoomHealthItems = new List<Item>();
+    [SerializeField] private List<Item> purchasedItems = new List<Item>();
 
     public bool isHidden;
     public bool isSelected;
@@ -28,6 +29,8 @@ public class RoomMapIcon : MonoBehaviour
     public bool isStartingRoom;
     public bool isCompleted;
     public bool isVisited;
+
+    public bool hasEntered;
 
     bool revealedOnce;
 
@@ -47,35 +50,87 @@ public class RoomMapIcon : MonoBehaviour
         buttonRoom.room = this;
     }
 
-    public void AddOwnedShopItems(Item item)
+    public void AddPurchasedItems(Item item)
     {
-        ownedShopItems.Add(item);
+        purchasedItems.Add(item);
     }
 
-    public List<Item> GetOwnedShopItems()
+    public List<Item> GetPurchasedItems()
     {
-        return ownedShopItems;
+        return purchasedItems;
     }
 
-    public void AddShopRoomItems(Item item)
+    public void ClearPurchasedItems()
     {
-        // If item is already stored in room data, dont store
-        //if (shopRoomItems.Contains(item))
-          //  return;
-
-        shopRoomItems.Add(item);
+        purchasedItems.Clear();
     }
 
-    public void ClearShopRoomItems()
+    // Combat Items
+    public void AddShopRoomCombatItems(Item item)
     {
-        shopRoomItems.Clear();
+        shopRoomCombatItems.Add(item);
     }
 
-    public List<Item> GetShopRoomItems()
+    public void ClearShopRoomCombatItems()
     {
-        return shopRoomItems;
+        shopRoomCombatItems.Clear();
     }
 
+    public List<Item> GetShopRoomCombatItems()
+    {
+        return shopRoomCombatItems;
+    }
+
+    public int GetShopRoomCombatItemsAmount(string itemName)
+    {
+        int count = 0;
+        for (int i = 0; i < GetShopRoomCombatItems().Count; i++)
+        {
+            if (itemName == GetShopRoomCombatItems()[i].itemName)
+                count++;
+        }
+
+        return count;
+    }
+
+    public int GetShopRoomPurchasedItemsAmount(string itemName)
+    {
+        int count = 0;
+        for (int i = 0; i < GetPurchasedItems().Count; i++)
+        {
+            if (itemName == GetPurchasedItems()[i].itemName)
+                count++;
+        }
+
+        return count;
+    }
+    // Health Items
+    public void AddShopRoomHealthItems(Item item)
+    {
+        shopRoomHealthItems.Add(item);
+    }
+
+    public void ClearShopRoomHealthItems()
+    {
+        shopRoomHealthItems.Clear();
+    }
+
+    public List<Item> GetShopRoomHealthItems()
+    {
+        return shopRoomHealthItems;
+    }
+
+    public int GetShopRoomHealthItemsAmount(string itemName)
+    {
+        int count = 0;
+        for (int i = 0; i < GetShopRoomHealthItems().Count; i++)
+        {
+            if (itemName == GetShopRoomHealthItems()[i].itemName)
+                count++;
+        }
+
+        return count;
+    }
     public void SelectRoom()
     {
         // Ensure only check if room is revealed

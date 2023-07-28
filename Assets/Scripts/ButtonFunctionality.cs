@@ -63,13 +63,14 @@ public class ButtonFunctionality : MonoBehaviour
     {
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
-
-        ShopManager.Instance.ToggleExitShopButton(false);
-
         GameManager.Instance.UpdateAllyVisibility(false);
+        ShopManager.Instance.ToggleExitShopButton(false);
+        ShopManager.Instance.ToggleRandomiser(false);
 
         // Toggle Map back on
         GameManager.Instance.ToggleMap(true, false);
+
+        ShopManager.Instance.CloseShop();
 
         //GameManager.Instance.activeRoomAllUnitFunctionalitys = GameManager.Instance.oldActiveRoomAllUnitFunctionalitys;
 
@@ -205,6 +206,26 @@ public class ButtonFunctionality : MonoBehaviour
             TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryR4, true);
             TeamSetup.Instance.masteryR4.UpdateContentSubText(TeamSetup.Instance.masteryR4.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(7).masteryMaxAmount);
         }
+    }
+
+    public void RefreshShop()
+    {
+        //  Go to purchase it like a normal item
+
+        int playerGold = ShopManager.Instance.GetPlayerGold();
+
+        if (playerGold < ShopManager.Instance.GetRefreshShopPrice())    // If player cannot afford the item, cancel.
+            return;
+        else
+            ShopManager.Instance.UpdatePlayerGold(-ShopManager.Instance.GetRefreshShopPrice());
+
+        ShopManager.Instance.GetActiveRoom().hasEntered = false;
+        ShopManager.Instance.GetActiveRoom().ClearPurchasedItems();
+        ShopManager.Instance.FillShopItems(true, false);
+
+
+
+        // refresh item price
     }
     public void PurchaseShopItem()
     {

@@ -51,7 +51,7 @@ public class Rewards : MonoBehaviour
         uiElement.UpdateContentImage(goldSprite);
         uiElement.UpdateContentText(CalculateGoldRecieved().ToString());
 
-        MapManager.Instance.AddPlayerGold(CalculateGoldRecieved());
+        ShopManager.Instance.UpdatePlayerGold(CalculateGoldRecieved());
 
     }
 

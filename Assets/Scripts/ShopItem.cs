@@ -11,13 +11,28 @@ public class ShopItem : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private UIElement imageUI;
     [SerializeField] private UIElement textUI;
+    [SerializeField] private Animator animator;
 
 
     public Button itemButton;
 
     private int price;
-    public bool purchased;
+    private bool purchased;
 
+    public void UpdateAnimatorController(RuntimeAnimatorController ac)
+    {
+        animator.runtimeAnimatorController = ac;
+    }
+
+    public void UpdatePurchased(bool toggle)
+    {
+        purchased = toggle;
+    }
+
+    public bool GetPurchased()
+    {
+        return purchased;
+    }
 
     public void UpdatePriceText(string priceText)
     {
@@ -42,6 +57,8 @@ public class ShopItem : MonoBehaviour
         return shopItemName;
     }
 
+    // Make item bob
+
     public void PurchaseShopItem(bool shopCombatItem)
     {
         // If the player must first select an ally to give an item, do not allow purchase of another item.
@@ -51,11 +68,12 @@ public class ShopItem : MonoBehaviour
         int playerGold = ShopManager.Instance.GetPlayerGold();
         if (playerGold < price)     // If player cannot afford the item, cancel.
             return;
+        else
+            ShopManager.Instance.UpdatePlayerGold(-price);
 
         // Purchase the item
         imageUI.UpdateAlpha(0);
         textUI.UpdateAlpha(0);
-
 
         // Combat Item
         if (shopCombatItem)
@@ -69,12 +87,15 @@ public class ShopItem : MonoBehaviour
                     MapManager.Instance.exitShopRoom.UpdateAlpha(0);
 
                     Item item = ShopManager.Instance.GetShopCombatItems()[i];
-                    ShopManager.Instance.GetActiveRoom().AddOwnedShopItems(item);
+                    ShopManager.Instance.GetActiveRoom().AddPurchasedItems(item);
                     ShopManager.Instance.UpdateUnAssignedItem(item);
                     // Prompt player on who to give item
                     GameManager.Instance.ToggleAllowSelection(true);
                     ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
                     ShopManager.Instance.selectAlly = true;
+            
+                    UpdatePurchased(true);
+
                     return;
                 }
             }
@@ -91,12 +112,15 @@ public class ShopItem : MonoBehaviour
                     MapManager.Instance.exitShopRoom.UpdateAlpha(0);
 
                     Item item = ShopManager.Instance.GetShopHealthItems()[i];
-                    ShopManager.Instance.GetActiveRoom().AddOwnedShopItems(item);
+                    ShopManager.Instance.GetActiveRoom().AddPurchasedItems(item);
                     ShopManager.Instance.UpdateUnAssignedItem(item);
                     // Prompt player on who to give item
                     GameManager.Instance.ToggleAllowSelection(true);
                     ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
                     ShopManager.Instance.selectAlly = true;
+
+                    UpdatePurchased(true);
+
                     return;
                 }
             }

@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
 
         //map.Setup();
-        ShopManager.Instance.UpdatePlayerGold(0);
+        //ShopManager.Instance.UpdatePlayerGold(0);
         map.mapOverlay.ResetPlayerGoldText();
         ToggleTeamSetup(false);
     }
@@ -714,7 +714,7 @@ public class GameManager : MonoBehaviour
             UpdateAllyVisibility(true, false);
             //SpawnAllies(true);
 
-            ShopManager.Instance.ClearShopItems();
+            //ShopManager.Instance.ClearShopItems();
             ToggleAllowSelection(true);
 
             playerUIElement.UpdateAlpha(1);     // Enable player UI
@@ -734,10 +734,11 @@ public class GameManager : MonoBehaviour
             playerUIElement.UpdateAlpha(0);     // Disable player UI
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
-            ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
+            //ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
             ToggleAllowSelection(false);
 
-            ShopManager.Instance.FillShopItems();
+
+            ShopManager.Instance.FillShopItems(false, true);
 
             UpdateAllyVisibility(true, false);
 
@@ -1824,7 +1825,17 @@ public class GameManager : MonoBehaviour
             ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
 
             unit.AddOwnedItems(ShopManager.Instance.GetUnassignedItem());
+
+            if (ShopManager.Instance.GetUnassignedItem().healthItem)
+            {
+                float healthToRegen = (ShopManager.Instance.GetUnassignedItem().power / 100f) * unit.GetUnitMaxHealth();
+                unit.SpawnPowerUI(healthToRegen, false, false, null, 1, false, true);
+                unit.UpdateUnitCurHealth((int)healthToRegen, false, false);
+            }
+
             ShopManager.Instance.UpdateUnAssignedItem(null);
+
+            // If item is health item, do the effect of it
             StartCoroutine(WaitTimeThenDeselect(shopRemoveSelectTime, unit));            
         }
 

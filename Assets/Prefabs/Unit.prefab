@@ -292,7 +292,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 159
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!1 &354740284743406894
 GameObject:
@@ -528,7 +528,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 160
+  m_SortingOrder: 6
   m_TargetDisplay: 0
 --- !u!1 &1119712860357674039
 GameObject:
