@@ -14,7 +14,7 @@ public class UnitData : ScriptableObject
     public Sprite unitSprite;
     public Sprite unitIcon;
     public Color unitColour;
-    public new string name;
+    public new string unitName;
     public int startingSpeed;
     public int startingArmor;
     public int startingPower;
@@ -35,6 +35,18 @@ public class UnitData : ScriptableObject
     [SerializeField] private List<Mastery> offenseMasteries = new List<Mastery>();
     [SerializeField] private List<Mastery> defenseMasteries = new List<Mastery>();
     [SerializeField] private List<Mastery> utilityMasteries = new List<Mastery>();
+
+    private int curAttackChargeTurnStart;
+
+    public void UpdateUnitCurAttackCharge(int newCharge)
+    {
+        curAttackChargeTurnStart = newCharge;
+    }
+
+    public int GetCurAttackChargeTurnStart()
+    {
+        return curAttackChargeTurnStart;
+    }
 
     public SkillData GetSkill0()
     {

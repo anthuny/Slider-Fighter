@@ -314,6 +314,10 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.SetupPlayerSkillsUI(GameManager.Instance.GetActiveSkill());
 
         GameManager.Instance.UpdateEnemyPosition(true);
+
+        GameManager.Instance.ToggleSelectingUnits(true);
+        GameManager.Instance.ToggleAllowSelection(true);
+        //GameManager.Instance.ResetSelectedUnits();
     }
 
     public void EnableButton()
@@ -343,16 +347,7 @@ public class ButtonFunctionality : MonoBehaviour
         else
             return;
 
-        //GameManager.Instance.DisableButton(GameManager.Instance.endTurnButton);
-        GameManager.Instance.DisableButton(GameManager.Instance.skill1Button);
-        GameManager.Instance.DisableButton(GameManager.Instance.skill2Button);
-        GameManager.Instance.DisableButton(GameManager.Instance.skill3Button);
-
-
-        //GameManager.Instance.UpdateActiveUnitHealthBar(false);
-
-        // Trigger Skill alert UI
-        GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
+        GameManager.Instance.PlayerAttack();
 
         StartCoroutine(AttackButtonCont());
     }
@@ -450,16 +445,16 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.ResetSelectedUnits();
 
 
-        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill1);
-        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill1);
+        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill1);
+        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill1);
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
         {
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill0);
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill0);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
         }
         // If skill not already selected, select it and proceed
         else
@@ -484,16 +479,16 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.ResetSelectedUnits();
         //GameManager.Instance.UpdateAllSkillIconAvailability();
 
-        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill2);
-        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill2);
+        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill2);
+        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill2);
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
         {
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill0);
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill0);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
         }
         // If skill not already selected, select it and proceed
         else
@@ -518,16 +513,16 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.ResetSelectedUnits();
         //GameManager.Instance.UpdateAllSkillIconAvailability();
 
-        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill3);
-        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill3);
+        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill3);
+        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill3);
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
         {
             GameManager.Instance.DisableAllSkillSelections();
             ToggleSelected(false);
-            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnit().skill0);
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnit().skill0);
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
         }
         // If skill not already selected, select it and proceed
         else

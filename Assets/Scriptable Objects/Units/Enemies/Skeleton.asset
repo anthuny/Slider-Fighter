@@ -18,11 +18,11 @@ MonoBehaviour:
   unitSprite: {fileID: 21300000, guid: f11188ccb9d85fd4c8b84e0006d1887c, type: 2}
   unitIcon: {fileID: 21300000, guid: df752b2cbf803d140a3ba55bca3f9e84, type: 3}
   unitColour: {r: 1, g: 1, b: 1, a: 1}
-  name: Skeleton
-  startingSpeed: 13
+  unitName: Skeleton
+  startingSpeed: 15
   startingArmor: 0
   startingPower: 3
-  startingMaxHealth: 650
+  startingMaxHealth: 500
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1

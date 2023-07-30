@@ -75,6 +75,9 @@ public class ShopItem : MonoBehaviour
         imageUI.UpdateAlpha(0);
         textUI.UpdateAlpha(0);
 
+        MapManager.Instance.UpdateMapGoldText();
+        ShopManager.Instance.ToggleShopGoldText(true);
+
         // Combat Item
         if (shopCombatItem)
         {

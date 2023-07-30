@@ -18,7 +18,11 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private Transform unitVisualsParent;
     [SerializeField] private Transform powerUIParent;
     [SerializeField] private UIElement statUI;
-    [SerializeField] private Image unitHealth;
+    [SerializeField] private Image unitHealthBar;
+    [SerializeField] private Image unitAttackBar;
+    public UIElement healthBarUIElement;
+    public UIElement attackBarUIElement;
+
     public Image unitImage;
     public UIElement curUnitTurnArrow;
     public int curSpeed;
@@ -27,8 +31,6 @@ public class UnitFunctionality : MonoBehaviour
     public int curArmor;
     private int curHealth;
     private int maxHealth;
-    private int curEnergy;
-    private int maxEnergy;
     private int curlevel;
     private float curExp;
     private float maxExp;
@@ -43,8 +45,6 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private Text unitExpGainText;
     [SerializeField] private float fillAmountInterval;
     [SerializeField] private UIElement unitBg;
-
-    public UIElement healthBarUIElement;
     [SerializeField] private UIElement unitUIElement;
     [SerializeField] private Transform effectsParent;
     public UIElement effects;
@@ -118,6 +118,14 @@ public class UnitFunctionality : MonoBehaviour
     public bool attacked;
     public bool isVisible;
 
+
+    private int curAttackCharge;
+    private int attackChargeTurnStart;
+    private int maxAttackCharge = 100;
+
+    private float oldCurSpeed = 0;
+    public bool isSpeedUp;
+
     private void Awake()
     {
         rt = GetComponent<RectTransform>();
@@ -176,7 +184,7 @@ public class UnitFunctionality : MonoBehaviour
     }
     public void AddOwnedItems(Item item)
     {
-        equipItems.Add(item);   
+        equipItems.Add(item);
     }
 
     public List<Item> GetEquipItems()
@@ -315,12 +323,20 @@ public class UnitFunctionality : MonoBehaviour
         spentUtilityMasteryPoints = 0;
     }
 
+    public void ToggleHideEffects(bool toggle)
+    {
+        if (toggle)
+            effects.UpdateAlpha(1);
+        else
+            effects.UpdateAlpha(0);
+    }
+
     public IEnumerator StartUnitTurn()
     {
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         // Do unit's turn automatically if its on idle battle
-        if (GetIdleBattle() && GameManager.Instance.activeRoomAllies.Count >= 1)
+        if (GetIdleBattle() && GameManager.Instance.activeRoomAllies.Count >= 1 && !isDead)
         {
             yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
 
@@ -360,13 +376,13 @@ public class UnitFunctionality : MonoBehaviour
     }
 
     public void DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
-    {       
+    {
         // If no effects remain on the unit, stop
         if (activeEffects.Count >= 1)
         {
             if (activeEffects[0] == null)
                 return;
-        }      
+        }
 
         for (int i = 0; i < activeEffects.Count; i++)
         {
@@ -384,7 +400,7 @@ public class UnitFunctionality : MonoBehaviour
             if (turnStart)
             {
                 if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
-                {              
+                {
                     activeEffects[i].TriggerPowerEffect();
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
@@ -451,22 +467,22 @@ public class UnitFunctionality : MonoBehaviour
 
     public void SetSkill0CooldownMax()
     {
-        skill0CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill0().skillCooldown;
+        skill0CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill0().skillCooldown;
         //GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
     }
     public void SetSkill1CooldownMax()
     {
-        skill1CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill1().skillCooldown+1;
+        skill1CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill1().skillCooldown + 1;
         GameManager.Instance.skill1IconCooldownUIText.UpdateUIText((skill1CurCooldown).ToString());
     }
     public void SetSkill2CooldownMax()
     {
-        skill2CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill2().skillCooldown+1;
+        skill2CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill2().skillCooldown + 1;
         GameManager.Instance.skill2IconCooldownUIText.UpdateUIText((skill2CurCooldown).ToString());
     }
     public void SetSkill3CooldownMax()
     {
-        skill3CurCooldown = GameManager.Instance.GetActiveUnit().GetSkill3().skillCooldown+1;
+        skill3CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill3().skillCooldown + 1;
         GameManager.Instance.skill3IconCooldownUIText.UpdateUIText((skill3CurCooldown).ToString());
     }
 
@@ -517,32 +533,32 @@ public class UnitFunctionality : MonoBehaviour
             if (rand == 1)  // Skill 1
             {
                 if (skill1CurCooldown == 0)
-                    return GameManager.Instance.GetActiveUnit().GetSkill1();
+                    return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill1();
                 else
-                    continue;                  
+                    continue;
             }
             else if (rand == 2)  // Skill 2
             {
                 if (skill2CurCooldown == 0)
-                    return GameManager.Instance.GetActiveUnit().GetSkill2();
+                    return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill2();
                 else
                     continue;
             }
             else if (rand == 3)  // Skill 3
             {
                 if (skill3CurCooldown == 0)
-                    return GameManager.Instance.GetActiveUnit().GetSkill3();
+                    return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill3();
                 else
                     continue;
             }
 
             else if (rand == 4)
             {
-                return GameManager.Instance.GetActiveUnit().GetSkill0();
+                return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill0();
             }
         }
 
-        return GameManager.Instance.GetActiveUnit().skill0;
+        return GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0;
     }
 
     public List<Effect> GetEffects()
@@ -595,7 +611,7 @@ public class UnitFunctionality : MonoBehaviour
         // If effect was used through a weapon hit attack, add counts to that effect
         if (effectHitAcc != -1)
         {
-            for (int x = 0; x < effectHitAcc-1; x++)
+            for (int x = 0; x < effectHitAcc - 1; x++)
             {
                 activeEffects[0].AddTurnCountText(1);
             }
@@ -810,12 +826,18 @@ public class UnitFunctionality : MonoBehaviour
     public void ToggleSelected(bool toggle)
     {
         isSelected = toggle;
-        
+
         if (toggle)
             selectionCircle.UpdateAlpha(1);
         else
             selectionCircle.UpdateAlpha(0);
     }
+
+    public bool IsSelected()
+    {
+        return isSelected;
+    }
+
     public bool CheckIfUnitIsDead()
     {
         // If unit's health is 0 or lower
@@ -848,7 +870,7 @@ public class UnitFunctionality : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             GameManager.Instance.RemoveUnit(this);
-                        
+
             DestroyUnit();
         }
     }
@@ -963,7 +985,7 @@ public class UnitFunctionality : MonoBehaviour
         float temp;
         if (GetUnitLevel() != 1)
         {
-            temp = GameManager.Instance.maxExpStarting + (GameManager.Instance.expIncPerLv * (GetUnitLevel()-1));
+            temp = GameManager.Instance.maxExpStarting + (GameManager.Instance.expIncPerLv * (GetUnitLevel() - 1));
             //temp = (GameManager.instance.maxExpLevel1 + ((GameManager.instance.expIncPerLv / GameManager.instance.maxExpLevel1) * 100f)) * GetUnitLevel();
             maxExp = (int)temp;
             //Debug.Log(gameObject.name + " " + maxExp);
@@ -1033,10 +1055,43 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitHealthBar(true);
 
-        unitHealth.fillAmount = (float)curHealth / (float)maxHealth;
+        unitHealthBar.fillAmount = (float)curHealth / (float)maxHealth;
 
         if (CheckIfUnitIsDead())
             StartCoroutine(EnsureUnitIsDead());
+    }
+
+    public int GetCurAttackCharge()
+    {
+        return curAttackCharge;
+    }
+
+    public void CalculateUnitAttackChargeTurnStart()
+    {
+        attackChargeTurnStart = curSpeed;
+    }
+
+    public void ResetUnitCurAttackCharge()
+    {
+        curAttackCharge = 0;
+
+        UpdateUnitAttackBarVisual();
+    }
+    public void UpdateUnitCurAttackCharge()
+    {
+        curAttackCharge += attackChargeTurnStart;
+
+        if (curAttackCharge > 100)
+            curAttackCharge = 100;
+
+        UpdateUnitAttackBarVisual();
+    }
+
+    void UpdateUnitAttackBarVisual()
+    {
+        ToggleUnitAttackBar(true);
+
+        unitAttackBar.fillAmount = (float)curAttackCharge / 100f;
     }
 
     public void ToggleUnitHealthBar(bool toggle)
@@ -1047,11 +1102,47 @@ public class UnitFunctionality : MonoBehaviour
             healthBarUIElement.UpdateAlpha(0);  
     }
 
+    public void ToggleUnitAttackBar(bool toggle)
+    {
+        if (toggle)
+            attackBarUIElement.UpdateAlpha(1);
+        else
+            attackBarUIElement.UpdateAlpha(0);
+    }
+
     public void UpdateUnitSpeed(int newSpeed)
     {
         curSpeed = newSpeed;
     }
-    
+
+    public void UpdateUnitOldSpeed(int oldSpeed)
+    {
+        oldCurSpeed = oldSpeed;
+    }
+
+    public float GetOldSpeed()
+    {
+        return oldCurSpeed;
+    }
+
+    public void ResetOldSpeed()
+    {
+        oldCurSpeed = 0;
+    }  
+
+    public bool GetIsSpeedUp()
+    {
+        return isSpeedUp;
+    }
+
+    public void ToggleIsSpeedUp(bool toggle)
+    {
+        if (toggle)
+            isSpeedUp = true;
+        else
+            isSpeedUp = false;
+    }
+
     public void UpdateUnitPower(int newPower)
     {
         curPower = newPower;
@@ -1119,11 +1210,6 @@ public class UnitFunctionality : MonoBehaviour
         unitStartTurnEnergyGain = newUnitStartTurnEnergyGain;
     }
     */
-
-    public bool IsSelected()
-    {
-        return isSelected;
-    }
 
     void DestroyUnit()
     {

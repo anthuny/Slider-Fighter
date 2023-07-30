@@ -154,7 +154,7 @@ public class Effect : MonoBehaviour
         else if (curEffectName == EffectName.PARRY)
             GameManager.Instance.GetActiveUnitFunctionality().isParrying = true;
         else if (curEffectName == EffectName.SPEEDUP)
-            GameManager.Instance.SpeedAdjustTurnOrderFix();
+            GameManager.Instance.AddSpeedBuffUnit();
         else if (curEffectName == EffectName.MARK)
         {
             // Toggle mark effect on the target
@@ -180,7 +180,7 @@ public class Effect : MonoBehaviour
         }
         else if (curEffectName == EffectName.SPEEDUP)
         {
-            // TODO
+            GameManager.Instance.RemoveSpeedBuffUnit(unit);
         }
         else if (curEffectName == EffectName.MARK)
         {

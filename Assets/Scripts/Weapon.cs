@@ -133,6 +133,9 @@ public class Weapon : MonoBehaviour
         GameManager.Instance.ResetButton(GameManager.Instance.skill1Button);
         GameManager.Instance.ResetButton(GameManager.Instance.skill2Button);
         GameManager.Instance.ResetButton(GameManager.Instance.skill3Button);
+
+        GameManager.Instance.ToggleAllowSelection(false);
+
         //GameManager.Instance.ResetButton(GameManager.Instance.endTurnButton);
     }
     public IEnumerator StopHitLine()
@@ -153,6 +156,8 @@ public class Weapon : MonoBehaviour
         ToggleAttackButtonInteractable(false);
 
         yield return new WaitForSeconds(timePostHit);
+
+        GameManager.Instance.ToggleAllowSelection(true);
 
         GameManager.Instance.SetupPlayerPostHitUI();
 

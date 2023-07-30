@@ -101,7 +101,14 @@ public class MapManager : MonoBehaviour
         Setup();
     }
 
+    public void UpdateMapGoldText()
+    {
+        string goldString = ShopManager.Instance.GetPlayerGold().ToString();
 
+        // Update shop and Map overlay gold counts
+        //totalGoldText.UpdateContentText(goldString);
+        mapOverlay.UpdatePlayerGoldText(goldString);
+    }
 
     private void Update()
     {
@@ -231,7 +238,7 @@ public class MapManager : MonoBehaviour
             if (generateMap)
             {
                 GameManager.Instance.ResetRoom(true);
-                GameManager.Instance.ResetRoom(false);
+                //GameManager.Instance.ResetRoom(false);
                 GenerateMap();
             }
 

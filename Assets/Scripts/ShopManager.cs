@@ -8,6 +8,7 @@ public class ShopManager : MonoBehaviour
 
     //[HideInInspector]
     public int playerGold;
+    public int playerStartingGold;
 
     [SerializeField] private int shopMaxCombatItems = 3;
     [SerializeField] private int shopMaxHealthItems = 3;
@@ -34,7 +35,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private Item unassigedItem;
     [SerializeField] private ButtonFunctionality buttonExitShop;
     public Transform unitsPositionShopTrans;
-    [SerializeField] private UIElement totalGoldText;
+    public UIElement totalGoldText;
     [SerializeField] private UIElement refreshItem;
     private int refreshShopPrice;
     public int refreshShopStartingCost;
@@ -55,11 +56,13 @@ public class ShopManager : MonoBehaviour
     {
         totalGoldText.UpdateAlpha(0);
         refreshItem.UpdateAlpha(0);
+
+        UpdatePlayerGold(playerStartingGold);
     }
 
     public void CloseShop()
     {
-        ToggleTotalGoldText(false);
+        ToggleShopGoldText(false);
         ToggleRefreshItem(false);
     }
 
@@ -86,14 +89,18 @@ public class ShopManager : MonoBehaviour
         return refreshShopPrice;
     }
 
-    public void ToggleTotalGoldText(bool toggle)
+    public void ToggleShopGoldText(bool toggle)
     {
         if (toggle)
             totalGoldText.UpdateAlpha(1);
         else
             totalGoldText.UpdateAlpha(0);
 
-        totalGoldText.UpdateContentText(GetPlayerGold().ToString());
+        string goldString = GetPlayerGold().ToString();
+
+        // Update shop and Map overlay gold counts
+        totalGoldText.UpdateContentText(goldString);
+        MapManager.Instance.mapOverlay.UpdatePlayerGoldText(goldString);
     }
 
     public void AddShopItems(ShopItem shopItem)
@@ -119,10 +126,12 @@ public class ShopManager : MonoBehaviour
     public void UpdatePlayerGold(int goldAdded)
     {
         playerGold += goldAdded;
-        
+
+        string goldString = GetPlayerGold().ToString();
+
         // Update gold visual for shop 
-        totalGoldText.UpdateContentText(GetPlayerGold().ToString());
-        //MapManager.Instance.update
+        totalGoldText.UpdateContentText(goldString);
+        MapManager.Instance.mapOverlay.UpdatePlayerGoldText(goldString);
     }
 
     public void ResetPlayerGold()
@@ -284,18 +293,17 @@ public class ShopManager : MonoBehaviour
         SetActiveRoom(RoomManager.Instance.GetActiveRoom());
 
         ToggleRandomiser(true);
-
         ToggleExitShopButton(true);
 
-        //if (GetActiveRoom().hasEntered)
-            ClearShopItems(clearItems);
+        ClearShopItems(clearItems);
 
         ToggleShopVisibility(true);
-
-        ToggleTotalGoldText(true);
+        ToggleShopGoldText(true);
         ToggleRefreshItem(true);
 
         MapManager.Instance.exitShopRoom.UpdateAlpha(1);
+
+        GameManager.Instance.ResetActiveUnitTurnArrow();
 
         ShopItem shopItem = null;
 
