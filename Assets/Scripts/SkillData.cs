@@ -38,4 +38,7 @@ public class SkillData : ScriptableObject
     [Tooltip("Percentage increase of power when targeting a unit with an effect")]
     public int percIncPower;
     public Sprite skillPowerIcon;
+    public Sprite skillProjectile;
+    public bool projectileAllowSpin;
+    public RuntimeAnimatorController projectileAC;
 }

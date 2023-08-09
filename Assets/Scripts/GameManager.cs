@@ -69,21 +69,25 @@ public class GameManager : MonoBehaviour
     public Text curUnitsTargetedText;
     public Text maxUnitsTargetedText;
     public UIElement endTurnButtonUI;
-    public Text activeUnitNameText;
+    public TextMeshProUGUI activeUnitNameText;
 
     [Header("Player Ability UI")]
     public IconUI playerIcon;
+    public IconUI playerSkill0;
     public IconUI playerSkill1;
     public IconUI playerSkill2;
     public IconUI playerSkill3;
 
     [Header("Skill Buttons")]
+    public ButtonFunctionality skill0;
     public ButtonFunctionality skill1;
     public ButtonFunctionality skill2;
     public ButtonFunctionality skill3;
+    public UIElement skill0IconUnavailableImage;
     public UIElement skill1IconUnavailableImage;
     public UIElement skill2IconUnavailableImage;
     public UIElement skill3IconUnavailableImage;
+    public UIText skill0IconCooldownUIText;
     public UIText skill1IconCooldownUIText;
     public UIText skill2IconCooldownUIText;
     public UIText skill3IconCooldownUIText;
@@ -95,6 +99,7 @@ public class GameManager : MonoBehaviour
     public float randomPerc;
     public GameObject powerUITextPrefab;
     [SerializeField] private float timeBetweenPowerUIStack;
+    [SerializeField] private float timeBetweenProjectile;
     public float powerUIHeightLvInc;
     [SerializeField] private float postHitWaitTime;
     public string missPowerText;
@@ -126,6 +131,7 @@ public class GameManager : MonoBehaviour
     public ButtonFunctionality attackButton;
     public ButtonFunctionality weaponBackButton;
     //public ButtonFunctionality endTurnButton;
+    public ButtonFunctionality skill0Button;
     public ButtonFunctionality skill1Button;
     public ButtonFunctionality skill2Button;
     public ButtonFunctionality skill3Button;
@@ -248,7 +254,7 @@ public class GameManager : MonoBehaviour
                 //unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
                 unitFunctionality.UpdateUnitLevel(1);
 
-                unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
+                //unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
 
                 // reposition ally to team setup position
                 //go.transform.position = teamSetupAllyPosition.position;
@@ -523,8 +529,7 @@ public class GameManager : MonoBehaviour
         ToggleUIElement(turnOrder, false);
         ResetActiveUnitTurnArrow();
         ToggleAllAlliesStatBar(true);
-        
-
+       
 
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
@@ -689,8 +694,7 @@ public class GameManager : MonoBehaviour
                 int unitValue = activeFloor.enemyUnits[spawnEnemyIndex].GetUnitValue() * (RoomManager.Instance.GetFloorCount() + 1);
 
                 unitFunctionality.UpdateUnitValue(unitValue);
-                unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
-                //unitFunctionality.toggle
+                //unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
 
                 i += unitValue;
 
@@ -706,7 +710,7 @@ public class GameManager : MonoBehaviour
             {
                 activeRoomAllUnitFunctionalitys[x].ResetIsDead();
 
-                activeRoomAllUnitFunctionalitys[x].ToggleHideEffects(true);
+                activeRoomAllUnitFunctionalitys[x].ToggleHideEffects(false);
                 activeRoomAllUnitFunctionalitys[x].ResetUnitCurAttackCharge();
 
                 activeRoomAllUnitFunctionalitys[x].CalculateUnitAttackChargeTurnStart();
@@ -859,19 +863,20 @@ public class GameManager : MonoBehaviour
 
                 yield return new WaitForSeconds(triggerSkillAlertTime);
 
-                // Loop through all selected units, spawn projectiles, if target is dead stop.
-                for (int z = unitsSelected.Count - 1; z >= 0; z--)
+                for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
                 {
-                    if (unitsSelected[z] == null || unitsSelected[z].isDead)
-                        continue;
-                    else
+                    // Loop through all selected units, spawn projectiles, if target is dead stop.
+                    for (int z = unitsSelected.Count - 1; z >= 0; z--)
                     {
-                        for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
+                        if (unitsSelected[z] == null || unitsSelected[z].isDead)
+                            continue;
+                        else
                         {
                             GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform);
-                            yield return new WaitForSeconds(0.005f);
                         }
                     }
+
+                    yield return new WaitForSeconds(timeBetweenProjectile);
                 }
 
                 yield return new WaitForSeconds(unitPowerUIWaitTime);
@@ -882,12 +887,6 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(triggerSkillAlertTime / 2f);
                 GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
             }
-        }
-
-        // Disable unit selection just before attack
-        for (int y = 0; y < unitsSelected.Count; y++)
-        {
-            unitsSelected[y].ToggleSelected(false);
         }
 
         // For no power skills
@@ -1072,6 +1071,12 @@ public class GameManager : MonoBehaviour
                 Vibration.Vibrate(15);
             }
 
+        // Disable unit selection just before attack
+        for (int y = 0; y < unitsSelected.Count; y++)
+        {
+            unitsSelected[y].ToggleSelected(false);
+        }
+
         if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.BASIC)
             GetActiveUnitFunctionality().SetSkill0CooldownMax();
         else if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.PRIMARY)
@@ -1168,6 +1173,7 @@ public class GameManager : MonoBehaviour
         UpdateAllSkillIconAvailability();
         UpdateUnitSelection(activeSkill);
         UpdateUnitsSelectedText();
+        EnableSkill0Selection();
     }
     #region Update Unit UI
     public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0, bool enemy = false)
@@ -1197,6 +1203,28 @@ public class GameManager : MonoBehaviour
     #region Update Skill Icons Overlay UI
     public void UpdateAllSkillIconAvailability()
     {
+        // Update all skill icon Energy text + unavailable image
+        if (GetActiveUnitFunctionality().GetSkill0CurCooldown() > 0)
+        {
+            //GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
+
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill0IconUnavailableImage, skill0IconCooldownUIText, GetActiveUnitFunctionality().unitData.GetSkill0().skillCooldown.ToString(), false);
+                DisableButton(skill0Button);
+                skill0IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill1CurCooldown().ToString());
+            }
+        }
+        else
+        {
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateSkillIconAvailability(skill0IconUnavailableImage, skill0IconCooldownUIText, GetActiveUnitFunctionality().unitData.GetSkill0().skillCooldown.ToString(), true);
+                EnableButton(skill0Button);
+                skill0IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill0CurCooldown().ToString());
+            }
+        }
+
         // Update all skill icon Energy text + unavailable image
         if (GetActiveUnitFunctionality().GetSkill1CurCooldown() > 0)
         {
@@ -1283,13 +1311,27 @@ public class GameManager : MonoBehaviour
         skill3IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().unitData.GetSkill3().skillCooldown.ToString());
     }
 
-    public void DisableAllSkillSelections()
+    public void DisableAllSkillSelections(bool ignoreSkill0 = false)
     {
-        skill1.ToggleSelected(false);
-        skill2.ToggleSelected(false);
-        skill3.ToggleSelected(false);
+        if (ignoreSkill0)
+        {
+            skill1.ToggleSelected(false);
+            skill2.ToggleSelected(false);
+            skill3.ToggleSelected(false);
+        }
+        else
+        {
+            skill0.ToggleSelected(false);
+            skill1.ToggleSelected(false);
+            skill2.ToggleSelected(false);
+            skill3.ToggleSelected(false);
+        }
     }
 
+    public void EnableSkill0Selection()
+    {
+        skill0.ToggleSelected(true);
+    }
 
     #endregion
 
@@ -1590,14 +1632,14 @@ public class GameManager : MonoBehaviour
                 // only select PLAYER units, in random fashion
                 for (int x = 0; x < 20; x++)
                 {
-                    selectedAmount++;
-
                     int rand = Random.Range(0, activeRoomAllies.Count);
 
                     if (activeRoomAllies[rand].IsSelected())
                         continue;
+                    else
+                        SelectUnit(activeRoomAllies[rand]);
 
-                    SelectUnit(activeRoomAllies[rand]);
+                    selectedAmount++;
 
                     // If enough units have been selected, toggle the display
                     if (selectedAmount == usedSkill.skillSelectionCount)
@@ -1794,13 +1836,15 @@ public class GameManager : MonoBehaviour
     private void UpdatePlayerAbilityUI()
     {
         // Update active player's portrait and colour
-        playerIcon.UpdatePortrait(GetActiveUnitFunctionality().GetUnitIcon());
+        //playerIcon.UpdatePortrait(GetActiveUnitFunctionality().GetUnitIcon());
 
         // Update player skill portraits
+        playerSkill0.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill0().skillSprite);
         playerSkill1.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill1().skillSprite);
         playerSkill2.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill2().skillSprite);
         playerSkill3.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill3().skillSprite);
 
+        //playerSkill0.ToggleSelectImage(false);
         playerSkill1.ToggleSelectImage(false);
         playerSkill2.ToggleSelectImage(false);
         playerSkill3.ToggleSelectImage(false);
@@ -1947,6 +1991,10 @@ public class GameManager : MonoBehaviour
                     {
                         if (IsEnemyTaunting()[i] == unit)
                         {
+                            // remove previous target
+                            if (unitsSelected.Count == GetActiveSkill().skillSelectionCount)
+                                ResetSelectedUnits();
+
                             // Select targeted unit
                             unitsSelected.Add(unit);
                             unit.ToggleSelected(true);
@@ -1955,6 +2003,10 @@ public class GameManager : MonoBehaviour
                     }
                     else  // If active unit is ally, and is selecting allies, disregard parry, and continue
                     {
+                        // remove previous target
+                        if (unitsSelected.Count == GetActiveSkill().skillSelectionCount)
+                            ResetSelectedUnits();
+
                         // Select targeted unit
                         unitsSelected.Add(unit);
                         unit.ToggleSelected(true);

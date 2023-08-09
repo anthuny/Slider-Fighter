@@ -32,3 +32,6 @@ MonoBehaviour:
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 0}
+  skillProjectile: {fileID: 0}
+  projectileAllowSpin: 0
+  projectileInvisColour: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 0}

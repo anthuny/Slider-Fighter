@@ -5,8 +5,17 @@ using UnityEngine.UI;
 
 public class Projectile : MonoBehaviour
 {
+    [SerializeField] private int spawnRotation;
+    [SerializeField] private bool allowRandomSpawnRotation;
+    [SerializeField] private bool allowRandomSpawnPosition;
+    [SerializeField] private Image projectileImage;
+    [SerializeField] private UIElement projectileSpinImageUI;
+    private Color projectileInvisColor;
+    private bool allowAnimate;
+    [SerializeField] private float spinSpeed;
+
     private Transform target;
-    private Image image;
+
     private float speed = 1;
 
     private float rotationAllowedTimer;
@@ -17,23 +26,56 @@ public class Projectile : MonoBehaviour
 
     bool isEnemyProjectile;
 
+    bool spinningLeft;
+    private Animator animator;
+
     public void UpdateProjectileSprite(Sprite sprite)
     {
-        this.image.sprite = sprite;
+        Debug.Log(sprite.name);
+        this.projectileImage.sprite = sprite;
+    }
+
+    public void UpdateProjectileInvisColour(Color colour)
+    {
+        projectileInvisColor = colour;
+    }
+
+    public void UpdateProjectileAnimator(RuntimeAnimatorController ac)
+    {
+        if (ac == null)
+            return;
+
+        Animator animator = GetComponent<Animator>();
+        animator.runtimeAnimatorController = ac;
     }
 
     // Start is called before the first frame update
 
     private void Awake()
     {
-        image = GetComponent<Image>();
+        animator = GetComponent<Animator>();
+
+        // Flip sprite 
+        if (allowAnimate)
+        {
+            int rand = Random.Range(0, 2);
+            if (rand == 1)
+                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+            else
+                transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
+        }
     }
+
     void Start()
     {
         rotationAllowedTimer = 0;
         PickRandomisedVariables();
-        RandomizeRotation();
-        RandomizeXY();
+
+        if (allowRandomSpawnRotation)
+            RandomizeRotation();
+
+        if (allowRandomSpawnPosition) 
+            RandomizeXY();
     }
 
     void IncrementRotationAllowedTimer()
@@ -51,7 +93,7 @@ public class Projectile : MonoBehaviour
 
     void RandomizeRotation()
     {
-        float rand = Random.Range(-360, 361);
+        float rand = Random.Range(-spawnRotation, spawnRotation);
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, rand);
     }
 
@@ -70,9 +112,22 @@ public class Projectile : MonoBehaviour
     {
         IncrementRotationAllowedTimer();
         MoveForward();
+        //Spin();
 
+        // If projectile has a target, and animation is not playing, look at target
         if (target != null)
             LookAtTarget(target);
+    }
+
+    public void ToggleAllowSpin(bool toggle)
+    {
+        allowAnimate = toggle;
+
+        if (allowAnimate)
+        {
+            animator = GetComponent<Animator>();
+            animator.SetTrigger("idle");
+        }
     }
 
     public void LookAtTarget(Transform newTarget)
@@ -81,7 +136,7 @@ public class Projectile : MonoBehaviour
 
         Vector3 difference = newTarget.position - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ+90);
+        transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, rotationZ+90);
 
         //transform.LookAt(target);
     }

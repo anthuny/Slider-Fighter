@@ -38,7 +38,7 @@ public class UnitFunctionality : MonoBehaviour
     public int unitStartTurnEnergyGain;
     public EnergyCost energyCostImage;
     [SerializeField] private Transform projectileParent;
-    [SerializeField] private Sprite projectileSprite;
+    //s[SerializeField] private Sprite projectileSprite;
     [SerializeField] private UIElement unitExpBar;
     [SerializeField] private Text unitLevelText;
     [SerializeField] private Image unitExpBarImage;
@@ -325,7 +325,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void ToggleHideEffects(bool toggle)
     {
-        if (toggle)
+        if (!toggle)
             effects.UpdateAlpha(1);
         else
             effects.UpdateAlpha(0);
@@ -608,12 +608,14 @@ public class UnitFunctionality : MonoBehaviour
         activeEffects.Add(effect);
         effect.Setup(addedEffect, targetUnit, turnDuration);
 
+        int index = activeEffects.IndexOf(effect);
+
         // If effect was used through a weapon hit attack, add counts to that effect
         if (effectHitAcc != -1)
         {
             for (int x = 0; x < effectHitAcc - 1; x++)
             {
-                activeEffects[0].AddTurnCountText(1);
+                activeEffects[index].AddTurnCountText(1);
             }
         }
     }
@@ -627,11 +629,12 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
+    /*
     public void UpdateUnitProjectileSprite(Sprite sprite)
     {
         projectileSprite = sprite;
     }
-
+    */
     public void UpdateUnitValue(int val)
     {
         unitValue = val;
@@ -774,10 +777,17 @@ public class UnitFunctionality : MonoBehaviour
     {
         GameObject go = Instantiate(GameManager.Instance.unitProjectile, projectileParent);
         go.transform.SetParent(projectileParent);
-        go.transform.localPosition = new Vector3(0, 0, 0);
+
+        // Set projectile to scale
+        go.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 400);
+
+        go.transform.transform.localPosition = new Vector3(0, 0, 0);
+        //go.transform.localScale = new Vector3(.75f, .75f);
 
         Projectile projectile = go.GetComponent<Projectile>();
-        projectile.UpdateProjectileSprite(projectileSprite);
+        projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveSkill().skillProjectile);
+        projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
+        projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowSpin);
 
         if (curUnitType == UnitType.PLAYER)
             projectile.UpdateTeam(true);
@@ -867,7 +877,7 @@ public class UnitFunctionality : MonoBehaviour
 
             animator.SetTrigger("DeathFlg");
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.2f);
 
             GameManager.Instance.RemoveUnit(this);
 
@@ -1024,6 +1034,8 @@ public class UnitFunctionality : MonoBehaviour
                 //tempPower = (curRecieveDamageAmp / 100f) * absPower;
                 //float newPower = absPower + tempPower;
                 curHealth -= (int)absPower;
+
+                //if (curHealth > 0)
                 animator.SetTrigger("DamageFlg");
             }
             // Healing

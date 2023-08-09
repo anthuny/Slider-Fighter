@@ -15,7 +15,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private List<Item> shopHealthItems = new List<Item>();
     [SerializeField] private List<Item> shopCombatItems = new List<Item>();
 
-    [SerializeField] private Transform itemsParent;
+    [SerializeField] private UIElement itemsParent;
     [SerializeField] private UIElement randomiser;
 
     [SerializeField] private Transform shopItem1Parent;
@@ -64,6 +64,8 @@ public class ShopManager : MonoBehaviour
     {
         ToggleShopGoldText(false);
         ToggleRefreshItem(false);
+
+        itemsParent.UpdateAlpha(0);
     }
 
     void ToggleRefreshItem(bool toggle)
@@ -301,6 +303,8 @@ public class ShopManager : MonoBehaviour
         ToggleShopGoldText(true);
         ToggleRefreshItem(true);
 
+        itemsParent.UpdateAlpha(1);
+
         MapManager.Instance.exitShopRoom.UpdateAlpha(1);
 
         GameManager.Instance.ResetActiveUnitTurnArrow();
@@ -313,7 +317,7 @@ public class ShopManager : MonoBehaviour
         for (int i = 0; i < shopMaxCombatItems; i++)
         {
             // Spawn items
-            GameObject go = Instantiate(shopItemPrefab, itemsParent);
+            GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
 
             if (i == 0)
                 go.transform.SetParent(shopItem1Parent);
@@ -336,10 +340,10 @@ public class ShopManager : MonoBehaviour
 
             AddShopItems(shopItem);
 
-            int rand = Random.Range(0, shopCombatItems.Count);
+            int randInt = Random.Range(0, shopCombatItems.Count);
             // If shop room has not been opened before, spawn new ones
             if (!activeRoom.hasEntered)
-                itemCombat = shopCombatItems[rand];
+                itemCombat = shopCombatItems[randInt];
             else if (activeRoom.hasEntered)
             {
                 itemCombat = activeRoom.GetShopRoomCombatItems()[i];
@@ -366,7 +370,7 @@ public class ShopManager : MonoBehaviour
         for (int y = 0; y < shopMaxHealthItems; y++)
         {
             // Spawn items
-            GameObject go = Instantiate(shopItemPrefab, itemsParent);
+            GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
 
             if (y == 0)
                 go.transform.SetParent(shopItem7Parent);
