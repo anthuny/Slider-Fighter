@@ -18,9 +18,9 @@ public class CharacterAnimation : MonoBehaviour {
     public void On_Front_Back(bool flg) {
         Front_Back = flg;
         if (flg) {
-            ChangeAnimation("CA_Walk_1");
+            //ChangeAnimation("CA_Walk_1");
         } else {
-            ChangeAnimation("CA_Walk_2");
+            //ChangeAnimation("CA_Walk_2");
         }
     }
     public void On_Left_Right(bool flg) {

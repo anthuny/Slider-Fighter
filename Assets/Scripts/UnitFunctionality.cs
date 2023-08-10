@@ -352,16 +352,18 @@ public class UnitFunctionality : MonoBehaviour
 
             TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
 
-            if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+            
+            if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED && GameManager.Instance.GetActiveSkill().skillPower != 0)
             {
-                animator.SetTrigger("SkillFlg");
-                yield return new WaitForSeconds(GameManager.Instance.triggerSkillAlertTime);
+                animator.SetTrigger("AttackFlg");
+                yield return new WaitForSeconds(GameManager.Instance.enemyRangedSkillWaitTime);
             }
             else
             {
                 animator.SetTrigger("AttackFlg");
-                yield return new WaitForSeconds(GameManager.Instance.triggerSkillAlertTime);
+                yield return new WaitForSeconds(GameManager.Instance.enemyMeleeSkillWaitTime);
             }
+
 
             // Adjust power based on skill effect amp on target then send it 
             StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.skillAttackCount));

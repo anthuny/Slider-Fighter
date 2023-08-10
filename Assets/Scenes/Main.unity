@@ -2926,7 +2926,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -459.8, y: -10.2}
+  m_AnchoredPosition: {x: -459.8, y: -19.599945}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &32337050
@@ -29149,7 +29149,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2361349576035413292, guid: d01c14f5fef08fd44ab9a0adf4414692, type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8929885256485058258, guid: d01c14f5fef08fd44ab9a0adf4414692, type: 3}
       propertyPath: m_RootOrder
@@ -66182,7 +66182,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -462.99997, y: -63.60016}
+  m_AnchoredPosition: {x: -462.99997, y: -73}
   m_SizeDelta: {x: 155.1, y: 257.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1052528018
@@ -88240,7 +88240,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1399830294
 RectTransform:
   m_ObjectHideFlags: 0
@@ -88273,8 +88273,8 @@ CanvasGroup:
   m_GameObject: {fileID: 1399830293}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!114 &1399830296
 MonoBehaviour:
@@ -97503,7 +97503,6 @@ MonoBehaviour:
   activeTeam:
   - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
   - {fileID: 11400000, guid: a59f5033ecc1b4447bb041551dbd2ea3, type: 2}
-  - {fileID: 11400000, guid: a59f5033ecc1b4447bb041551dbd2ea3, type: 2}
   currentRoom: {fileID: 2070354419}
   baseUnit: {fileID: 3449260601481309960, guid: 4b5602813dffd4e40b5653f843285950, type: 3}
   enemySpawnPositions:
@@ -97553,7 +97552,10 @@ MonoBehaviour:
   unitProjectile: {fileID: 6785902064619898189, guid: 8408dba08b0515a41bb9640161dfc029, type: 3}
   minProjectileKillDist: 0.5
   randomXDist: 120
-  triggerSkillAlertTime: 0.5
+  allyMeleeSkillWaitTime: 1.3
+  allyRangedSkillWaitTime: 0.75
+  enemyMeleeSkillWaitTime: 1
+  enemyRangedSkillWaitTime: 0
   playerUIElement: {fileID: 1577981124}
   playerWeapon: {fileID: 643176410}
   playerWeaponChild: {fileID: 1680537522}
@@ -97609,7 +97611,7 @@ MonoBehaviour:
   enemyAttackWaitTime: 0.6
   enemyEffectWaitTime: 0.75
   enemySkillThinkTime: 0.15
-  unitPowerUIWaitTime: 0.5
+  unitPowerUIWaitTime: 0.1
   attackButton: {fileID: 1766605087}
   weaponBackButton: {fileID: 555260338}
   skill0Button: {fileID: 1985599977}
@@ -132309,11 +132311,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 583963705439797479, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 583963705439797479, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 300
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 583963705439797479, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -132345,11 +132347,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 583963705439797479, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1926
+      value: 1811.8
       objectReference: {fileID: 0}
     - target: {fileID: 583963705439797479, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -58.7
       objectReference: {fileID: 0}
     - target: {fileID: 583963705439797479, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -132366,6 +132368,14 @@ PrefabInstance:
     - target: {fileID: 583963705439797498, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 887806865522320355, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -24.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 887806865522320355, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 140.7
       objectReference: {fileID: 0}
     - target: {fileID: 8794929255593247012, guid: 8011d2e59bcc4bc4dad2f8279c5826eb, type: 3}
       propertyPath: rt
@@ -132655,7 +132665,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5607282123391418563, guid: b723443e5f5dfca449c1a98bf28099f3, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b723443e5f5dfca449c1a98bf28099f3, type: 3}
@@ -133262,7 +133272,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2361349576035413292, guid: d01c14f5fef08fd44ab9a0adf4414692, type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8929885256485058258, guid: d01c14f5fef08fd44ab9a0adf4414692, type: 3}
       propertyPath: m_RootOrder

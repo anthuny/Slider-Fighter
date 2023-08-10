@@ -54,7 +54,10 @@ public class GameManager : MonoBehaviour
     public GameObject unitProjectile;
     public float minProjectileKillDist;
     public float randomXDist;
-    public float triggerSkillAlertTime = .5f;
+    public float allyMeleeSkillWaitTime = .5f;
+    public float allyRangedSkillWaitTime;
+    public float enemyMeleeSkillWaitTime = .5f;
+    public float enemyRangedSkillWaitTime;
 
     [Header("Player UI")]
     public UIElement playerUIElement;
@@ -861,7 +864,7 @@ public class GameManager : MonoBehaviour
             {
                 GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
 
-                yield return new WaitForSeconds(triggerSkillAlertTime);
+                yield return new WaitForSeconds(allyRangedSkillWaitTime);
 
                 for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
                 {
@@ -881,13 +884,19 @@ public class GameManager : MonoBehaviour
 
                 yield return new WaitForSeconds(unitPowerUIWaitTime);
             }
-
             else
             {
-                yield return new WaitForSeconds(triggerSkillAlertTime / 2f);
                 GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
+                yield return new WaitForSeconds(allyMeleeSkillWaitTime / 2f);
             }
         }
+
+        /*
+        if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+            yield return new WaitForSeconds(rangedSkillWaitTime);
+        else
+            yield return new WaitForSeconds(meleeSkillWaitTime);
+        */
 
         // For no power skills
         if (GetActiveSkill().skillPower == 0)
