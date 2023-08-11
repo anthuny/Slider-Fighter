@@ -353,11 +353,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateAllyVisibility(bool toggle, bool teamPage = false)
+    public void UpdateAllyVisibility(bool toggle, bool teamPage = false, bool shop = false)
     {   
         //  If enabling
         if (toggle)
         {
+            if (shop)
+            {
+                // Toggle ally visibility
+                for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+                {
+                    activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(true);
+                    activeRoomAllUnitFunctionalitys[i].ToggleUnitHealthBar(true);
+                    activeRoomAllUnitFunctionalitys[i].ToggleUnitAttackBar(false);
+                }
+            }
             if (teamPage)   // Team page
             {
                 // Toggle ally visibility
@@ -404,20 +414,11 @@ public class GameManager : MonoBehaviour
 
         if (!enemies)
         {
-            //activeRoomAllUnits.Clear();
-
-            for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
-            {
-                activeRoomAllUnitFunctionalitys.RemoveAt(i);
-            }
-
             for (int i = 0; i < allySpawnPositions.Count; i++)
             {
                 if (allySpawnPositions[i].childCount >= 1)
                     Destroy(allySpawnPositions[i].transform.GetChild(0).gameObject);
             }
-
-            activeRoomAllUnitFunctionalitys.Clear();
 
             for (int i = 0; i < activeRoomAllies.Count; i++)
             {
@@ -429,6 +430,13 @@ public class GameManager : MonoBehaviour
 
         if (enemies)
         {
+            for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    activeRoomAllUnitFunctionalitys.RemoveAt(i);
+            }
+            //activeRoomAllUnitFunctionalitys.Clear();
+
             for (int i = 0; i < enemySpawnPositions.Count; i++)
             {
                 if (enemySpawnPositions[i].childCount >= 1)
@@ -711,6 +719,9 @@ public class GameManager : MonoBehaviour
 
             for (int x = 0; x < activeRoomAllUnitFunctionalitys.Count; x++)
             {
+                // Update unit energy bar on
+                UpdateActiveUnitStatBar(activeRoomAllUnitFunctionalitys[x], true, true);
+
                 activeRoomAllUnitFunctionalitys[x].ResetIsDead();
 
                 activeRoomAllUnitFunctionalitys[x].ToggleHideEffects(false);
@@ -751,6 +762,14 @@ public class GameManager : MonoBehaviour
             // Update background
             BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetShopForest());
 
+            UpdateAllyVisibility(true, false);
+
+            // Update unit energy bar off
+            for (int i = 0; i < activeRoomAllies.Count; i++)
+            {
+                UpdateActiveUnitStatBar(activeRoomAllies[i], true, false);
+            }
+
             playerUIElement.UpdateAlpha(0);     // Disable player UI
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
@@ -760,7 +779,7 @@ public class GameManager : MonoBehaviour
 
             ShopManager.Instance.FillShopItems(false, true);
 
-            UpdateAllyVisibility(true, false);
+
 
             // Update allies into position for shop
             UpdateAllAlliesPosition(false, GetActiveUnitType(), false, true);
@@ -901,6 +920,8 @@ public class GameManager : MonoBehaviour
         // For no power skills
         if (GetActiveSkill().skillPower == 0)
         {
+            GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+
             // Loop through all selected units
             for (int x = 0; x < unitsSelected.Count; x++)
             {
@@ -1194,10 +1215,12 @@ public class GameManager : MonoBehaviour
            //GetUnitCurEnergy(), energyAmount, increasing, toggle, enemy);
     }
 
-    public void UpdateActiveUnitStatBar(bool toggle)
+    public void UpdateActiveUnitStatBar(UnitFunctionality unit, bool attackBar, bool toggle)
     {
-        GetActiveUnitFunctionality().ToggleUnitHealthBar(toggle);
-        GetActiveUnitFunctionality().ToggleUnitAttackBar(toggle);
+        if (attackBar)
+            unit.ToggleUnitAttackBar(toggle);
+        else
+            unit.ToggleUnitHealthBar(toggle);
     }
 
     public void ToggleAllAlliesStatBar(bool toggle)

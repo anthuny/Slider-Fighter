@@ -40,7 +40,7 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void ButtonEnterRoom()
     {
-        GameManager.Instance.UpdateAllyVisibility(true);
+        //GameManager.Instance.UpdateAllyVisibility(true);
 
         // Disable map UI
         GameManager.Instance.ToggleMap(false);

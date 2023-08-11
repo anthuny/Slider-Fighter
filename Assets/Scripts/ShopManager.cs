@@ -56,8 +56,6 @@ public class ShopManager : MonoBehaviour
     {
         totalGoldText.UpdateAlpha(0);
         refreshItem.UpdateAlpha(0);
-
-        UpdatePlayerGold(playerStartingGold);
     }
 
     public void CloseShop()
@@ -139,6 +137,10 @@ public class ShopManager : MonoBehaviour
     public void ResetPlayerGold()
     {
         playerGold = 0;
+
+        // Update gold visual for shop 
+        totalGoldText.UpdateContentText(playerGold.ToString());
+        MapManager.Instance.mapOverlay.UpdatePlayerGoldText(playerGold.ToString());
     }
     public void UpdateUnAssignedItem(Item item)
     {

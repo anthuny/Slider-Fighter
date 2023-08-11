@@ -355,15 +355,18 @@ public class UnitFunctionality : MonoBehaviour
             
             if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED && GameManager.Instance.GetActiveSkill().skillPower != 0)
             {
-                animator.SetTrigger("AttackFlg");
-                yield return new WaitForSeconds(GameManager.Instance.enemyRangedSkillWaitTime);
+                animator.SetTrigger("SkillFlg");
+                //yield return new WaitForSeconds(GameManager.Instance.enemyRangedSkillWaitTime);
+            }
+            else if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED && GameManager.Instance.GetActiveSkill().skillPower == 0)
+            {
+                animator.SetTrigger("SkillFlg");
             }
             else
             {
                 animator.SetTrigger("AttackFlg");
-                yield return new WaitForSeconds(GameManager.Instance.enemyMeleeSkillWaitTime);
+                //yield return new WaitForSeconds(GameManager.Instance.enemyMeleeSkillWaitTime);
             }
-
 
             // Adjust power based on skill effect amp on target then send it 
             StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.skillAttackCount));
@@ -879,9 +882,11 @@ public class UnitFunctionality : MonoBehaviour
 
             animator.SetTrigger("DeathFlg");
 
+            GameManager.Instance.RemoveUnit(this);
+
             yield return new WaitForSeconds(1.2f);
 
-            GameManager.Instance.RemoveUnit(this);
+
 
             DestroyUnit();
         }

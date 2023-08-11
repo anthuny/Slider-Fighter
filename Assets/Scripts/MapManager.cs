@@ -238,7 +238,6 @@ public class MapManager : MonoBehaviour
             if (generateMap)
             {
                 GameManager.Instance.ResetRoom(true);
-                //GameManager.Instance.ResetRoom(false);
                 GenerateMap();
             }
 
@@ -247,7 +246,7 @@ public class MapManager : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.UpdateAllyVisibility(true);
+            //GameManager.Instance.UpdateAllyVisibility(true);
 
             map.UpdateAlpha(0);
             ToggleMapScroll(false);
@@ -319,6 +318,10 @@ public class MapManager : MonoBehaviour
 
     public void GenerateMap()
     {
+        ShopManager.Instance.ResetPlayerGold();
+
+        ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.playerStartingGold);
+
         GameManager.Instance.SpawnAllies();
 
         //ShopManager.Instance.ResetPlayerGold();
