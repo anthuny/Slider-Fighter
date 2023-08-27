@@ -10,11 +10,11 @@ public class UIElement : MonoBehaviour
     private CanvasGroup cg;
     private Text mainText;
 
-    public enum MasteryType { L1, L2, L3, L4, R1, R2, R3, R4, BG };
-    public MasteryType curMasteryType;
+    public enum StatType { STATSTANDARD1, STATSTANDARD2, STATSTANDARD3, STATSTANDARD4, STATSTANDARD5, STATADVANCED1, STATADVANCED2, STATADVANCED3, STATADVANCED4, BG };
+    public StatType curStatType;
 
-    public enum ActiveMasteryType { OFFENSE, DEFENSE, UTILITY };
-    public ActiveMasteryType activeMasteryType;
+    public enum ActiveMasteryType { STANDARD, ADVANCED };
+    public ActiveMasteryType activeStatType;
 
     [SerializeField] private Image contentImage;
     [SerializeField] private TextMeshProUGUI contentText;
@@ -31,10 +31,10 @@ public class UIElement : MonoBehaviour
 
     [SerializeField] private bool selectable;
     [SerializeField] private UIElement selectBorder;
-    [SerializeField] private int masteryPointsAdded;
+    [SerializeField] private int statPointsAdded;
 
     [SerializeField] private UIElement lockedImage;
-    [SerializeField] private int masteryPointsThreshhold;
+    [SerializeField] private int statPointsThreshhold;
     [SerializeField] bool isLocked;
 
     private RectTransform rt;
@@ -76,14 +76,16 @@ public class UIElement : MonoBehaviour
         //CheckIfThreshholdPassed();
     }
 
-    public void ResetYPosition()
+    public void SetYPosition()
     {
-        gameObject.GetComponent<RectTransform>().localPosition = new Vector3(gameObject.GetComponent<RectTransform>().localPosition.x, originalYPos);
+        //gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0, originalYPos);
+        //gameObject.transform.position = new Vector3(0, originalYPos, transform.position.z);
     }
 
     public void GetOriginalYPosition()
     {
-        originalYPos = gameObject.GetComponent<RectTransform>().localPosition.y;
+        //originalYPos = gameObject.GetComponent<RectTransform>().localPosition.y;
+        originalYPos = gameObject.transform.position.y;
     }
 
     public void CheckIfThreshholdPassed(bool toggle = false)
@@ -91,7 +93,7 @@ public class UIElement : MonoBehaviour
         if (GetIsSelectable())
         {
             // If locked, display as locked
-            if (TeamSetup.Instance.GetActiveMasteryTypeSpentPoints() < GetMasteryPointThreshhold())
+            if (TeamSetup.Instance.GetActiveStatTypeSpentPoints() < GetMasteryPointThreshhold())
                 UpdateIsLocked(true);
             else
             {
@@ -104,7 +106,7 @@ public class UIElement : MonoBehaviour
         }
     }
 
-    public void UpdateMasteryPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false, string masteryType = "OFFENSE")
+    public void UpdateStatPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false, string statType = "OFFENSE")
     {
         if (isReset)
         {
@@ -113,87 +115,72 @@ public class UIElement : MonoBehaviour
             else
                 ToggleLockedImage(false);
 
-            masteryPointsAdded = 0;
+            statPointsAdded = 0;
             return;
         }
 
         if (adding)
         {
-            if (TeamSetup.Instance.CalculateUnspentPoints() <= 0)
+            if (TeamSetup.Instance.CalculateUnspentStatPoints() <= 0)
                 return;
 
             // If bulk adding,
             if (bulkAdding)
-                masteryPointsAdded = bulkPointsAdding;
+                statPointsAdded = bulkPointsAdding;
             else
             {
-                masteryPointsAdded++;
-                TeamSetup.Instance.UpdateUnspentMasteryPoints(true);
+                statPointsAdded++;
+                TeamSetup.Instance.UpdateUnspentStatPoints(true);
             }
 
             // Adds
-            if (masteryType == "OFFENSE")
+            if (statType == "STANDARD")
             {
-                if (curMasteryType == MasteryType.L1)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL1AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L2)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL2AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L3)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL3AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L4)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseL4AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R1)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR1AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R2)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR2AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R3)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR3AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R4)
-                    TeamSetup.Instance.GetActiveUnit().masteryOffenseR4AddedCount = GetMasteryPointsAdded();
+                if (curStatType == StatType.STATSTANDARD1)
+                    TeamSetup.Instance.GetActiveUnit().statsBase1Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD2)
+                    TeamSetup.Instance.GetActiveUnit().statsBase2Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD3)
+                    TeamSetup.Instance.GetActiveUnit().statsBase3Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD4)
+                    TeamSetup.Instance.GetActiveUnit().statsBase4Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD5)
+                    TeamSetup.Instance.GetActiveUnit().statsBase5Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATADVANCED1)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv1Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD2)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv2Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD3)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv3Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD4)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv4Added = GetStatPointsAdded();
             }
-            else if (masteryType == "DEFENSE")
+            else if (statType == "ADVANCED")
             {
-                if (curMasteryType == MasteryType.L1)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL1AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L2)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL2AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L3)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL3AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L4)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseL4AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R1)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR1AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R2)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR2AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R3)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR3AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R4)
-                    TeamSetup.Instance.GetActiveUnit().masteryDefenseR4AddedCount = GetMasteryPointsAdded();
-            }
-            else if (masteryType == "UTILITY")
-            {
-                if (curMasteryType == MasteryType.L1)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL1AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L2)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL2AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L3)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL3AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.L4)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityL4AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R1)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR1AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R2)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR2AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R3)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR3AddedCount = GetMasteryPointsAdded();
-                else if (curMasteryType == MasteryType.R4)
-                    TeamSetup.Instance.GetActiveUnit().masteryUtilityR4AddedCount = GetMasteryPointsAdded();
+                if (curStatType == StatType.STATSTANDARD1)
+                    TeamSetup.Instance.GetActiveUnit().statsBase1Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD2)
+                    TeamSetup.Instance.GetActiveUnit().statsBase2Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD3)
+                    TeamSetup.Instance.GetActiveUnit().statsBase3Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD4)
+                    TeamSetup.Instance.GetActiveUnit().statsBase4Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD5)
+                    TeamSetup.Instance.GetActiveUnit().statsBase5Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATADVANCED1)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv1Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD2)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv2Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD3)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv3Added = GetStatPointsAdded();
+                else if (curStatType == StatType.STATSTANDARD4)
+                    TeamSetup.Instance.GetActiveUnit().statsAdv4Added = GetStatPointsAdded();
             }
         }
         else
         {
-            masteryPointsAdded--;
-            TeamSetup.Instance.UpdateUnspentMasteryPoints(false);
+            statPointsAdded--;
+            TeamSetup.Instance.UpdateUnspentStatPoints(false);
         }
 
         if (TeamSetup.Instance.GetActiveUnit().GetSpentMasteryPoints() < GetMasteryPointThreshhold())
@@ -213,12 +200,12 @@ public class UIElement : MonoBehaviour
 
     public int GetMasteryPointThreshhold()
     {
-        return masteryPointsThreshhold;
+        return statPointsThreshhold;
     }
 
-    public int GetMasteryPointsAdded()
+    public int GetStatPointsAdded()
     {
-        return masteryPointsAdded;
+        return statPointsAdded;
     }
 
     public void UpdateContentImage(Sprite sprite)
@@ -263,7 +250,7 @@ public class UIElement : MonoBehaviour
         if (doScalePunch)
             contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 
-        if (!dieAfterDisplay)
+        if (dieAfterDisplay)
             StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime));
     }
 

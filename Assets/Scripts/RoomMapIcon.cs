@@ -141,6 +141,8 @@ public class RoomMapIcon : MonoBehaviour
 
             GameManager.Instance.map.mapOverlay.UpdateOverlayRoomName(curRoomType);
 
+            MapManager.Instance.RefocusCamera();
+
             if (!GameManager.Instance.map.CheckIfAnyHiddenMainRooms(1) && !isStartingRoom && isMainRoom)
             {
                 ToggleDiscovered(true);
@@ -149,7 +151,10 @@ public class RoomMapIcon : MonoBehaviour
                 if (GetIsCompleted())
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
+                {
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
+                    MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
+                }
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
@@ -161,7 +166,10 @@ public class RoomMapIcon : MonoBehaviour
                 if (GetIsCompleted())
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
+                {
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
+                    MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
+                }
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
@@ -169,6 +177,7 @@ public class RoomMapIcon : MonoBehaviour
             else if (curRoomType == RoomType.SHOP)
             {
                 MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
+                MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
@@ -181,12 +190,31 @@ public class RoomMapIcon : MonoBehaviour
                 if (GetIsCompleted())
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
+                {
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
+                    MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
+                }
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
 
                 return;
+            }
+            else if (curRoomType == RoomType.BOSS)
+            {
+                ToggleDiscovered(true);
+                GameManager.Instance.map.UpdateSelectedRoom(this);
+
+                if (GetIsCompleted())
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
+                else
+                {
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
+                    MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
+                }
+                    
+                // Update GameManager active room
+                RoomManager.Instance.UpdateActiveRoom(this);
             }
         }
     }

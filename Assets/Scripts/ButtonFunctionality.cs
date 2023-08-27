@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ButtonFunctionality : MonoBehaviour
 {
-    public enum MasteryType { L1, L2, L3, L4, R1, R2, R3, R4, BG };
+    public enum MasteryType { STATSTANDARD1, STATSTANDARD2, STATSTANDARD3, STATSTANDARD4, STATSTANDARD5, STATADVANCED1, STATADVANCED2, STATADVANCED3, STATADVANCED4, BG };
     public MasteryType curMasteryType;
     UnitFunctionality unitFunctionality;
     [SerializeField] private CanvasGroup buttonSelectionCG;
@@ -92,44 +92,46 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void MasteryRemovePoint()
     {
-        if (TeamSetup.Instance.GetSelectedMastery() == null)
+        if (TeamSetup.Instance.GetSelectedStat() == null)
             return;
 
+        /*
         UIElement.MasteryType masteryType = TeamSetup.Instance.GetSelectedMastery().curMasteryType;
 
         if (masteryType == UIElement.MasteryType.L1 || masteryType == UIElement.MasteryType.R1)
         {
-            if (TeamSetup.Instance.masteryL2.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR2.GetMasteryPointsAdded() != 0)
+            if (TeamSetup.Instance.statsBase2.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR2.GetMasteryPointsAdded() != 0)
                 return;
-            else if (TeamSetup.Instance.masteryL3.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR3.GetMasteryPointsAdded() != 0)
+            else if (TeamSetup.Instance.statsBase3.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR3.GetMasteryPointsAdded() != 0)
                 return;
-            else if (TeamSetup.Instance.masteryL4.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR4.GetMasteryPointsAdded() != 0)
+            else if (TeamSetup.Instance.statsBase4.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR4.GetMasteryPointsAdded() != 0)
                 return;
         }
         else if (masteryType == UIElement.MasteryType.L2 || masteryType == UIElement.MasteryType.R2)
         {
-            if (TeamSetup.Instance.masteryL3.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR3.GetMasteryPointsAdded() != 0)
+            if (TeamSetup.Instance.statsBase3.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR3.GetMasteryPointsAdded() != 0)
                 return;
-            else if (TeamSetup.Instance.masteryL4.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR4.GetMasteryPointsAdded() != 0)
+            else if (TeamSetup.Instance.statsBase4.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR4.GetMasteryPointsAdded() != 0)
                 return;
         }
         else if (masteryType == UIElement.MasteryType.L3 || masteryType == UIElement.MasteryType.R3)
         {
-            if (TeamSetup.Instance.masteryL4.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR4.GetMasteryPointsAdded() != 0)
+            if (TeamSetup.Instance.statsBase4.GetMasteryPointsAdded() != 0 || TeamSetup.Instance.masteryR4.GetMasteryPointsAdded() != 0)
                 return;
         }
+        */
 
-        TeamSetup.Instance.MasteryRemovePoint();
+        TeamSetup.Instance.StatRemovePoint();
     }
 
     public void MasteryPageChangeInc()
     {
-        TeamSetup.Instance.ChangeMasteryType(true);
+        TeamSetup.Instance.ChangeStatPage(true);
     }
 
     public void MasteryPageChangeDec()
     {
-        TeamSetup.Instance.ChangeMasteryType(false);
+        TeamSetup.Instance.ChangeStatPage(false);
     }
 
     public void Mastery()
@@ -141,70 +143,77 @@ public class ButtonFunctionality : MonoBehaviour
         UnitFunctionality unit = GameManager.Instance.GetActiveUnitFunctionality();
         UnitData unitData = GameManager.Instance.GetUnitData(0);
 
-        TeamSetup.Instance.UpdateSelectedMastery(this);
+        TeamSetup.Instance.UpdateSelectedStat(this);
 
         // If this mastery is locked, stop
-        if (TeamSetup.Instance.GetSelectedMastery().GetIsLocked())
+        if (TeamSetup.Instance.GetSelectedStat().GetIsLocked())
         {
             return;
         }
 
 
-        else if (curMasteryType == MasteryType.L1)
+        else if (curMasteryType == MasteryType.STATSTANDARD1)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(0));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryL1, true);
-            TeamSetup.Instance.masteryL1.UpdateContentSubText(TeamSetup.Instance.masteryL1.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(0).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(0));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsBase1, true);
+            TeamSetup.Instance.statsBase1.UpdateContentSubText(TeamSetup.Instance.statsBase1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(0).statMaxAmount);
         }
-        else if (curMasteryType == MasteryType.L2)
+        else if (curMasteryType == MasteryType.STATSTANDARD2)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(1));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryL2, true);
-            TeamSetup.Instance.masteryL2.UpdateContentSubText(TeamSetup.Instance.masteryL2.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(1).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(1));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsBase2, true);
+            TeamSetup.Instance.statsBase2.UpdateContentSubText(TeamSetup.Instance.statsBase2.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(1).statMaxAmount);
         }
-        else if (curMasteryType == MasteryType.L3)
+        else if (curMasteryType == MasteryType.STATSTANDARD3)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(2));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryL3, true);
-            TeamSetup.Instance.masteryL3.UpdateContentSubText(TeamSetup.Instance.masteryL3.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(2).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(2));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsBase3, true);
+            TeamSetup.Instance.statsBase3.UpdateContentSubText(TeamSetup.Instance.statsBase3.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(2).statMaxAmount);
         }
-        else if (curMasteryType == MasteryType.L4)
+        else if (curMasteryType == MasteryType.STATSTANDARD4)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(3));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryL4, true);
-            TeamSetup.Instance.masteryL4.UpdateContentSubText(TeamSetup.Instance.masteryL4.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(3).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(3));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsBase4, true);
+            TeamSetup.Instance.statsBase4.UpdateContentSubText(TeamSetup.Instance.statsBase4.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(3).statMaxAmount);
         }
-        else if (curMasteryType == MasteryType.R1)
+        else if (curMasteryType == MasteryType.STATSTANDARD5)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(4));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryR1, true);
-            TeamSetup.Instance.masteryR1.UpdateContentSubText(TeamSetup.Instance.masteryR1.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(4).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(4));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsBase5, true);
+            TeamSetup.Instance.statsBase5.UpdateContentSubText(TeamSetup.Instance.statsBase5.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(4).statMaxAmount);
         }
-        else if (curMasteryType == MasteryType.R2)
+        else if (curMasteryType == MasteryType.STATADVANCED1)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(5));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryR2, true);
-            TeamSetup.Instance.masteryR2.UpdateContentSubText(TeamSetup.Instance.masteryR2.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(5).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(5));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsAdvanced1, true);
+            TeamSetup.Instance.statsAdvanced1.UpdateContentSubText(TeamSetup.Instance.statsAdvanced1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(4).statMaxAmount);
         }
-        else if (curMasteryType == MasteryType.R3)
+        else if (curMasteryType == MasteryType.STATADVANCED2)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(6));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryR3, true);
-            TeamSetup.Instance.masteryR3.UpdateContentSubText(TeamSetup.Instance.masteryR3.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(6).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(6));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsAdvanced2, true);
+            TeamSetup.Instance.statsAdvanced2.UpdateContentSubText(TeamSetup.Instance.statsAdvanced2.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(5).statMaxAmount);
         }
-        else if (curMasteryType == MasteryType.R4)
+        else if (curMasteryType == MasteryType.STATADVANCED3)
         {
-            TeamSetup.Instance.ResetMasterySelection();
-            TeamSetup.Instance.UpdateMasteryDescription(unit.GetCurrentMastery(7));
-            TeamSetup.Instance.ToggleMasterySelection(TeamSetup.Instance.masteryR4, true);
-            TeamSetup.Instance.masteryR4.UpdateContentSubText(TeamSetup.Instance.masteryR4.GetMasteryPointsAdded().ToString() + " / " + unit.GetCurrentMastery(7).masteryMaxAmount);
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(7));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsAdvanced3, true);
+            TeamSetup.Instance.statsAdvanced3.UpdateContentSubText(TeamSetup.Instance.statsAdvanced3.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(6).statMaxAmount);
+        }
+        else if (curMasteryType == MasteryType.STATADVANCED4)
+        {
+            TeamSetup.Instance.ResetStatSelection();
+            TeamSetup.Instance.UpdateStatDescription(unit.GetCurrentStat(8));
+            TeamSetup.Instance.ToggleStatSelection(TeamSetup.Instance.statsAdvanced4, true);
+            TeamSetup.Instance.statsAdvanced4.UpdateContentSubText(TeamSetup.Instance.statsAdvanced4.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(7).statMaxAmount);
         }
     }
 
@@ -274,13 +283,15 @@ public class ButtonFunctionality : MonoBehaviour
 
         GameManager.Instance.UpdateAllyVisibility(true, true);
 
+        MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
+
         // Enable To Map Button
         GameManager.Instance.toMapButton.UpdateAlpha(1);
     }
 
     public void MasteryChangeUnit()
     {
-        TeamSetup.Instance.GetActiveUnit().UpdateLastOpenedMastery(TeamSetup.Instance.activeMasteryType);
+        TeamSetup.Instance.GetActiveUnit().UpdateLastOpenedMastery(TeamSetup.Instance.activeStatType);
 
         GameManager.Instance.UpdateMasteryAllyPosition();
 
@@ -293,11 +304,6 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
         GameManager.Instance.map.ClearRoom();
-
-        if (!GameManager.Instance.playerLost)
-            GameManager.Instance.ToggleMap(true, false);
-        else
-            GameManager.Instance.ToggleMap(true, true);          
     }
 
     public void WeaponBackButton()
@@ -578,17 +584,13 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.UpdateUnitsSelectedText();
     }
 
-    public void StopWeaponHitLine()
-     {
-        GameManager.Instance.ResetButton(GameManager.Instance.attackButton);    // Allow attack button clicks
-        GameManager.Instance.DisableButton(GameManager.Instance.weaponBackButton);
+    public void MapUpArrow()
+    {
+        Debug.Log("up");
+    }
 
-        Weapon.instance.StartCoroutine(Weapon.instance.StopHitLine());
-        Weapon.instance.ToggleEnabled(false);
-        //GameManager.Instance.UpdateActiveUnitEnergyBar(false);
-
-        GameManager.Instance.EnableSkill0Selection();
-
-        GameManager.Instance.DisableAllSkillSelections(true);
+    public void MapDownArrow()
+    {
+        Debug.Log("down");
     }
 }

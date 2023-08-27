@@ -12,8 +12,11 @@ public class Effect : MonoBehaviour
     public enum EffectType { OFFENSE, SUPPORT }
     public EffectType curEffectType;
 
-    public enum EffectName { BLEED, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
-    PARRY, TAUNT, MARK, SHADOWPARTNER }
+    public enum EffectName 
+    { 
+        BLEED, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
+        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN 
+    }
     public EffectName curEffectName;
 
     public string effectName;
@@ -82,6 +85,10 @@ public class Effect : MonoBehaviour
             curEffectName = EffectName.SHADOWPARTNER;
         else if (effect.curEffectName == EffectData.EffectName.PARRY)
             curEffectName = EffectName.PARRY;
+        else if (effect.curEffectName == EffectData.EffectName.DEFENSEUP)
+            curEffectName = EffectName.DEFENSEUP;
+        else if (effect.curEffectName == EffectData.EffectName.DEFENSEDOWN)
+            curEffectName = EffectName.DEFENSEDOWN;
 
         effectName = effect.effectName; 
         effectDesc = effect.effectDesc;
@@ -160,6 +167,11 @@ public class Effect : MonoBehaviour
             // Toggle mark effect on the target
             targetUnit.curRecieveDamageAmp += (int)powerPercent;
         }
+        else if (curEffectName == EffectName.DEFENSEUP)
+            GameManager.Instance.AdjustUnitDefense(true);
+        else if (curEffectName == EffectName.DEFENSEDOWN)
+            GameManager.Instance.AdjustUnitDefense(false);
+
     }
 
     public void EffectRemove(UnitFunctionality unit)
@@ -180,7 +192,15 @@ public class Effect : MonoBehaviour
         }
         else if (curEffectName == EffectName.SPEEDUP)
         {
-            GameManager.Instance.RemoveSpeedBuffUnit(unit);
+            GameManager.Instance.RemoveSpeedEffectUnit(unit);
+        }
+        else if (curEffectName == EffectName.DEFENSEUP)
+        {
+            GameManager.Instance.RemoveDefenseUpEffectUnit(unit);
+        }
+        else if (curEffectName == EffectName.DEFENSEDOWN)
+        {
+            GameManager.Instance.RemoveDefenseDownEffectUnit(unit);
         }
         else if (curEffectName == EffectName.MARK)
         {

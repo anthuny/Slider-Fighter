@@ -6,6 +6,8 @@ public class RoomManager : MonoBehaviour
     public static RoomManager Instance;
     [SerializeField] private List<FloorData> totalFloors = new List<FloorData>();
     [SerializeField] private int startingFloorDifficulty;
+    public int floorMaxRoomCount;
+    public int floorMaxShopRoomCount;
     [SerializeField] private float floorDifficultyRandomAmount;
     [SerializeField] private RoomMapIcon activeRoom;
 
@@ -13,6 +15,8 @@ public class RoomManager : MonoBehaviour
 
     private FloorData activeFloor;
     private int floorCount = 0;   
+    private int minRoomCountBonus;
+    private int maxRoomCountBonus;
 
     private void Awake()
     {
@@ -39,18 +43,41 @@ public class RoomManager : MonoBehaviour
 
     public void ResetFloorCount()
     {
-        floorCount = 0;
+        floorCount = 1;
     }
 
     public void SelectFloor()
     {
-        activeFloor = totalFloors[floorCount];
+        // If a floor remains, select it
+        if (GetFloorCount() < totalFloors.Count - 1)
+            activeFloor = totalFloors[floorCount];
+        // If no floor remains, repeat the last floor
+        else
+            activeFloor = totalFloors[totalFloors.Count - 1];
     }
 
     public void FloorCompleted()
     {
         IncrementFloorCount();
         SelectFloor();
+
+        IncreaseMaxRoomCount();
+    }
+
+    public void IncreaseMaxRoomCount()
+    {
+        minRoomCountBonus++;
+        maxRoomCountBonus++;
+    }
+
+    public int GetMinRoomCountBonus()
+    {
+        return minRoomCountBonus;
+    }
+
+    public int GetMaxRoomCountBonus()
+    {
+        return maxRoomCountBonus;
     }
 
     public FloorData GetActiveFloor()
@@ -69,7 +96,6 @@ public class RoomManager : MonoBehaviour
         float minB = startingFloorDifficulty - minA;
         float maxB = startingFloorDifficulty + minA;
         int rand = Random.RandomRange((int)minB, (int)maxB);
-
 
         return rand;
     }

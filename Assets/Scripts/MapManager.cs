@@ -17,7 +17,9 @@ public class MapManager : MonoBehaviour
     [SerializeField] private Transform roomIconsParent;
     [SerializeField] private GameObject roomPrefab;
     [SerializeField] private GameObject pathPrefab;
-    [SerializeField] private Image scrollImage;
+    [SerializeField] private GameObject cameraFocusPoint;
+    [SerializeField] private float cameraMoveDist;
+    //[SerializeField] private Image scrollImage;
     public UIElement map;
     [SerializeField] private RoomMapIcon startingRoom;
     public RoomMapIcon endingRoom;
@@ -91,14 +93,37 @@ public class MapManager : MonoBehaviour
 
     bool resetOnce;
 
+    private float originalYPos;
+    private RectTransform rt;
+    private float roomDistance;
+
     private void Awake()
     {
         Instance = this;
+
+        rt = GetComponent<RectTransform>();
+        originalYPos = transform.position.y;
+    }
+
+    void ResetMapYPos()
+    {
+        transform.position = new Vector3(transform.position.x, originalYPos, transform.position.z);     
     }
 
     void Start()
     {
         Setup();
+    }
+
+    public void RefocusCamera()
+    {
+        //Debug.Log(selectedRoom.name);
+        //transform.position = new Vector3(transform.position.x, selectedRoom.transform.position.y, transform.position.z);
+    }
+
+    float GetDistanceBetweenMovingRoom()
+    {
+        return 0;
     }
 
     public void UpdateMapGoldText()
@@ -112,8 +137,10 @@ public class MapManager : MonoBehaviour
 
     private void Update()
     {
+        // Reset Game
         if (Input.GetKeyDown(KeyCode.M))
             ToggleMapVisibility(true, true);
+        // Complete Room
         if (Input.GetKeyDown(KeyCode.N) && !CheckIfAnyHiddenMainRooms() && selectedRoom != startingRoom)
             ClearRoom();
         if (Input.GetKeyDown(KeyCode.V))
@@ -126,11 +153,6 @@ public class MapManager : MonoBehaviour
 
         // Disable player weapon input 
         GameManager.Instance.ToggleUIElementFull(GameManager.Instance.playerWeaponChild, false);
-    }
-
-    void ToggleMapScroll(bool toggle)
-    {
-        scrollImage.enabled = toggle;
     }
 
     public bool CheckIfAnyHiddenMainRooms(int extra = 0)
@@ -168,13 +190,31 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        selectedRoom.UpdateIsCompleted(true);
         selectedRoom.ToggleRoomSelected(true);
         selectedRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
 
-        mapOverlay.ToggleEnterRoomButton(false);
+        //mapOverlay.ToggleEnterRoomButton(false);
 
         ShowConnectingRooms();
+
+        // If player won
+        if (!GameManager.Instance.playerLost)
+        {
+            if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
+            {
+                RoomManager.Instance.FloorCompleted();
+                GameManager.Instance.ToggleMap(true, true, true);
+            }
+            else
+            {
+                selectedRoom.UpdateIsCompleted(true);
+                GameManager.Instance.ToggleMap(true, false);
+            }
+
+        }
+        // If player lost
+        else
+            GameManager.Instance.ToggleMap(true, true);
     }
 
     public void UpdateActiveFloor(FloorData floor = null)
@@ -189,10 +229,26 @@ public class MapManager : MonoBehaviour
 
     public void UpdateSelectedRoom(RoomMapIcon room)
     {
+        if (selectedRoom != null)
+        {
+            if (selectedRoom.gameObject.transform.position.y > room.transform.position.y)
+            {
+                roomDistance = Mathf.Abs(selectedRoom.gameObject.transform.position.y - room.transform.position.y);
+            }
+            else
+            {
+                roomDistance = Mathf.Abs(room.transform.position.y - selectedRoom.gameObject.transform.position.y);
+            }
+        }
+
         ResetAllSelectedRooms();
 
         selectedRoom = room;
         selectedRoom.ToggleRoomSelected(true);
+
+        // If selected room is not the starting room, refocus cam
+       //if (room.GetRoomType() != RoomMapIcon.RoomType.STARTING)
+        //RefocusCamera();
 
         if (selectedRoom.GetIsCompleted())
             selectedRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
@@ -212,10 +268,10 @@ public class MapManager : MonoBehaviour
 
     public void ResetMapYPosition()
     {
-        mapManager.ResetYPosition();
+        mapManager.SetYPosition();
     }
 
-    public void ToggleMapVisibility(bool toggle, bool generateMap = false)
+    public void ToggleMapVisibility(bool toggle, bool generateMap = false, bool increaseFloor = false)
     {
         if (toggle)
         {
@@ -230,7 +286,8 @@ public class MapManager : MonoBehaviour
 
             map.UpdateAlpha(1);
 
-            ToggleMapScroll(true);
+
+            //ToggleMapScroll(true);
 
             // Disable end turn button
             GameManager.Instance.endTurnButtonUI.UpdateAlpha(0);
@@ -238,10 +295,27 @@ public class MapManager : MonoBehaviour
             if (generateMap)
             {
                 GameManager.Instance.ResetRoom(true);
-                GenerateMap();
+                GenerateMap(!increaseFloor);
             }
 
-            mapOverlay.UpdateRoomCountText(activeFloor.floorLevel.ToString());
+            // Toggle Map bottom overlay buttons
+            if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING)
+            {
+                mapOverlay.ToggleEnterRoomButton(false);
+                mapOverlay.ToggleTeamPageButton(true);
+            }            
+            else
+                mapOverlay.ToggleTeamPageButton(true);
+
+            if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.ENEMY && !RoomManager.Instance.GetActiveRoom().GetIsCompleted())
+                mapOverlay.ToggleEnterRoomButton(true);
+            else if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.ENEMY && RoomManager.Instance.GetActiveRoom().GetIsCompleted())
+                mapOverlay.ToggleEnterRoomButton(false);
+            else if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.SHOP)
+                mapOverlay.ToggleEnterRoomButton(true);
+
+            int diffCount = 1 + RoomManager.Instance.GetFloorCount();
+            mapOverlay.UpdateRoomCountText(diffCount.ToString());
             mapOverlay.UpdateFloorNameText(activeFloor.floorName, activeFloor.floorColour);
         }
         else
@@ -249,7 +323,7 @@ public class MapManager : MonoBehaviour
             //GameManager.Instance.UpdateAllyVisibility(true);
 
             map.UpdateAlpha(0);
-            ToggleMapScroll(false);
+            //ToggleMapScroll(false);
         }
     }
   
@@ -281,6 +355,8 @@ public class MapManager : MonoBehaviour
     void ResetMap()
     {
         ResetMapYPosition();
+
+        ResetMapYPos();
 
         spawnedStartingRoom = false;
         spawnedRoomsA.Clear();
@@ -316,13 +392,18 @@ public class MapManager : MonoBehaviour
             activeFloor = allFloors[0];
     }
 
-    public void GenerateMap()
+    public void GenerateMap(bool resetting = true)
     {
-        ShopManager.Instance.ResetPlayerGold();
-
-        ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.playerStartingGold);
-
-        GameManager.Instance.SpawnAllies();
+        // Player lost / Game start
+        if (resetting)
+        {
+            GameManager.Instance.SpawnAllies();
+            ShopManager.Instance.ResetPlayerGold();
+            ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.playerStartingGold);
+        }
+        // Beat the floor, resetting into floor increase
+        //else
+            //oomManager.Instance.IncreaseMaxRoomCount();
 
         //ShopManager.Instance.ResetPlayerGold();
         ResetMap();
@@ -336,33 +417,23 @@ public class MapManager : MonoBehaviour
         StoreRooms();
 
         // Check if map is impossible
-        CheckIfMapIsPossible();
+        CheckIfMapIsPossible(resetting);
 
         ToggleHiddenModeRoom(true);
 
         UpdateStartingRoomAndPath();
 
-        //CheckIfMapIsPossible();
-
         // Updating unit map icon starting position
         unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
-
-        /*
-        if (!resetOnce)
-        {
-            resetOnce = true;
-            CheckIfMapIsPossible();
-        }
-        */
     }
 
-    void CheckIfMapIsPossible()
+    void CheckIfMapIsPossible(bool resetting = true)
     {
         // If there is not enough shops on the floor, remake it
         if (spawnedShopRooms.Count < activeFloor.shopRoomCount)
         {
-            ResetMap();
-            ToggleMapVisibility(true, true);
+            //ResetMap();
+            ToggleMapVisibility(true, true, resetting);
             return;
         }
 
@@ -370,8 +441,8 @@ public class MapManager : MonoBehaviour
         {
             if (startingRoom.GetLinkedRooms()[i].curRoomType == RoomMapIcon.RoomType.SHOP)
             {
-                ResetMap();
-                ToggleMapVisibility(true, true);
+                //ResetMap();
+                ToggleMapVisibility(true, true, resetting);
                 return;
             }
         }
@@ -380,8 +451,8 @@ public class MapManager : MonoBehaviour
         {
             if (endingRoom.GetLinkedRooms()[i].curRoomSize == RoomMapIcon.RoomSize.SIDE)
             {
-                ResetMap();
-                ToggleMapVisibility(true, true);
+                //ResetMap();
+                ToggleMapVisibility(true, true, resetting);
                 return;
             }
         }
@@ -417,6 +488,8 @@ public class MapManager : MonoBehaviour
         UpdateSelectedRoom(startingRoom);
 
         mapOverlay.UpdateOverlayRoomName(RoomMapIcon.RoomType.STARTING);
+
+        RoomManager.Instance.UpdateActiveRoom(startingRoom);
 
         // Set starting room
         UpdateRoomIconType(startingRoom, "starting");
@@ -475,7 +548,12 @@ public class MapManager : MonoBehaviour
     void SpawnRoomGenerationA()
     {
         // Calculate room count
-        int roomSpawnCount = Random.Range(activeFloor.minRoomCount, activeFloor.maxRoomCount - 1);
+        int min = activeFloor.minRoomCount + RoomManager.Instance.GetMinRoomCountBonus();
+        int max = activeFloor.maxRoomCount + RoomManager.Instance.GetMaxRoomCountBonus();
+        int roomSpawnCount = Random.Range(min, max);
+
+        if (roomSpawnCount > RoomManager.Instance.floorMaxRoomCount)
+            roomSpawnCount = RoomManager.Instance.floorMaxRoomCount;
 
         UpdateStartEndRoomHorizontalPos(leftBorder.position.x, rightBorder.position.x);
 
@@ -539,6 +617,8 @@ public class MapManager : MonoBehaviour
             }
         }
 
+        //Debug.Log("Gen A " + failedCurAttempts);
+
         spawnedRoomsA.Add(startingRoom.gameObject);
         spawnedRoomsA.Add(endingRoom.gameObject);
         spawnedAllRooms.Add(startingRoom.gameObject);
@@ -553,7 +633,10 @@ public class MapManager : MonoBehaviour
         #region Spawn Side Rooms
         failedCurAttempts = 0;
 
-        int roomSpawnRoundB = activeFloor.sideRoomAmount;
+        int roomSpawnRoundB = activeFloor.sideRoomAmount + RoomManager.Instance.GetFloorCount();
+
+        if (roomSpawnRoundB > RoomManager.Instance.floorMaxRoomCount-2)
+            roomSpawnRoundB = RoomManager.Instance.floorMaxRoomCount-2;
 
         RoomMapIcon roomMapIcon;
 
@@ -639,6 +722,8 @@ public class MapManager : MonoBehaviour
             }
         }
 
+        //Debug.Log("Gen B " + failedCurAttempts);
+
         spawnedAllRooms.Sort(CompareRoomYValue);
         spawnedAdditionalRooms.Sort(CompareRoomYValue);
 
@@ -647,8 +732,13 @@ public class MapManager : MonoBehaviour
 
         failedCurAttempts = 0;
 
+        int shopRoomCount = Random.Range(activeFloor.shopRoomCount, activeFloor.shopRoomCount + (RoomManager.Instance.GetFloorCount() - 1));
+
+        if (shopRoomCount > RoomManager.Instance.floorMaxShopRoomCount)
+            shopRoomCount = RoomManager.Instance.floorMaxShopRoomCount;
+
         // Set shop rooms
-        for (int i = 0; i < activeFloor.shopRoomCount; i++)
+        for (int i = 0; i < shopRoomCount; i++)
         {
             // Make enough shops from the additional room spawns, until enough has been hit for floor
             int rand = Random.Range(0, spawnedAdditionalRooms.Count-1);

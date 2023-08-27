@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 110195810008617025}
   - component: {fileID: 2757922822252655850}
   - component: {fileID: 3956417071979305242}
+  - component: {fileID: 5281712220397754197}
+  - component: {fileID: 1515476202474137150}
   m_Layer: 5
   m_Name: Power UI Text
   m_TagString: Untagged
@@ -60,10 +62,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee02fd979da8f2049b5f09b998bd476c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floatSpeed: 0.2
+  floatSpeed: 0.45
   timeTillFadeStarts: 1
   fadeDuration: 1
-  fadeSpeed: 2
+  fadeSpeed: 0.75
   canvas: {fileID: 0}
 --- !u!114 &2757922822252655850
 MonoBehaviour:
@@ -175,3 +177,45 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 200
   m_TargetDisplay: 0
+--- !u!114 &5281712220397754197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5226432504194166279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curMasteryType: 0
+  activeMasteryType: 0
+  contentImage: {fileID: 0}
+  contentText: {fileID: 2757922822252655850}
+  contentSubText: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 1
+  dieAfterDisplay: 0
+  scaleIncSize: 0.6
+  scaleIncTime: 0.25
+  vibrato: 1
+  elasticity: 1
+  selectable: 0
+  selectBorder: {fileID: 0}
+  masteryPointsAdded: 0
+  lockedImage: {fileID: 0}
+  masteryPointsThreshhold: 0
+  isLocked: 0
+--- !u!225 &1515476202474137150
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5226432504194166279}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

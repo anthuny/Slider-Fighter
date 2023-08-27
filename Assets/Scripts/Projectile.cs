@@ -31,7 +31,7 @@ public class Projectile : MonoBehaviour
 
     public void UpdateProjectileSprite(Sprite sprite)
     {
-        Debug.Log(sprite.name);
+        //Debug.Log(sprite.name);
         this.projectileImage.sprite = sprite;
     }
 

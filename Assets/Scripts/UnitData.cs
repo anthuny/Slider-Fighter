@@ -9,14 +9,13 @@ public class UnitData : ScriptableObject
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
 
-    [SerializeField] private int minUnitValue;
-    [SerializeField] private int maxUnitValue;
+    [SerializeField] private int unitValue;
     public Sprite unitSprite;
     public Sprite unitIcon;
     public Color unitColour;
     public new string unitName;
     public int startingSpeed;
-    public int startingArmor;
+    public int startingDefense;
     public int startingPower;
     public int startingMaxHealth;
     public int startingEnergy;
@@ -32,9 +31,8 @@ public class UnitData : ScriptableObject
     public SkillData skill3;
 
     [Header("Mastery Tree")]
-    [SerializeField] private List<Mastery> offenseMasteries = new List<Mastery>();
-    [SerializeField] private List<Mastery> defenseMasteries = new List<Mastery>();
-    [SerializeField] private List<Mastery> utilityMasteries = new List<Mastery>();
+    [SerializeField] private List<Stat> standardStats = new List<Stat>();
+    [SerializeField] private List<Stat> advancedStats = new List<Stat>();
 
     private int curAttackChargeTurnStart;
 
@@ -70,22 +68,17 @@ public class UnitData : ScriptableObject
 
     public int GetUnitValue()
     {
-        int rand = Random.Range(minUnitValue, maxUnitValue - 1);
-        return rand;
+        //int rand = Random.Range(unitValue, maxUnitValue - 1);
+        return unitValue;
     }
 
-    public List<Mastery> GetOffenseMasteries()
+    public List<Stat> GetStandardStats()
     {
-        return offenseMasteries;
+        return standardStats;
     }
 
-    public List<Mastery> GetDefenseMasteries()
+    public List<Stat> GetAdvancedStats()
     {
-        return defenseMasteries;
-    }
-
-    public List<Mastery> GetUtilityMasteries()
-    {
-        return utilityMasteries;
+        return advancedStats;
     }
 }

@@ -156,7 +156,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 17
+  m_SortingOrder: 170
   m_TargetDisplay: 0
 --- !u!1 &7270212666006155305
 GameObject:
@@ -360,7 +360,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 16
+  m_SortingOrder: 165
   m_TargetDisplay: 0
 --- !u!114 &829049813872207331
 MonoBehaviour:

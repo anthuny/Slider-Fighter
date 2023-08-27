@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
-  curSkillGameType: 3
+  curSkillGameType: 1
   curRangedType: 1
   skillSprite: {fileID: 0}
   skillName: IRON SKIN
@@ -22,11 +22,11 @@ MonoBehaviour:
   skillPower: 0
   skillAttackCount: 0
   projectileSpeed: 0
-  skillCooldown: 2
+  skillCooldown: 3
   skillSelectionCount: 1
   isSelfCast: 1
   special: 0
-  effect: {fileID: 11400000, guid: fef5ba97b42f6a749ae6ad86060c3224, type: 2}
+  effect: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
   effectTurnLength: 2
   effectHitChance: 0
   curSkillExtraPowerToEffect: 0
@@ -34,4 +34,4 @@ MonoBehaviour:
   skillPowerIcon: {fileID: 0}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
-  projectileInvisColour: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 0}
+  projectileAC: {fileID: 0}

@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour
     public enum HitAreaType { PERFECT, GREAT, GOOD, BAD, MISS }
     public HitAreaType curHitAreaType;
 
-    public static Weapon instance;
+    public static Weapon Instance;
 
     [SerializeField] private Transform hitLine;
     [SerializeField] private float minDistanceBorderTrigger;
@@ -49,7 +49,7 @@ public class Weapon : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     public void ToggleEnabled(bool toggle)
@@ -74,11 +74,11 @@ public class Weapon : MonoBehaviour
             if (SystemInfo.deviceType == DeviceType.Handheld)
             {
                 if (Input.touchCount > 0)
-                    ResetWeapon();
+                    StopWeapon();
             }
             else
                 if (Input.GetMouseButton(0))
-                ResetWeapon();
+                    StopWeapon();
         }
     }
 
@@ -100,9 +100,11 @@ public class Weapon : MonoBehaviour
         FlipHitLineDirection();
     }
 
-    void ResetWeapon()
+    public void StopWeapon()
     {
         isStopped = true;
+
+        StartCoroutine(StopHitLine());
     }
 
     public void ToggleAttackButtonInteractable(bool toggle)
@@ -140,8 +142,15 @@ public class Weapon : MonoBehaviour
     }
     public IEnumerator StopHitLine()
     {
-        if (!isStopped)
-            yield break;
+        GameManager.Instance.ResetButton(GameManager.Instance.attackButton);    // Allow attack button clicks
+        GameManager.Instance.DisableButton(GameManager.Instance.weaponBackButton);
+
+        ToggleEnabled(false);
+        //GameManager.Instance.UpdateActiveUnitEnergyBar(false);
+
+        GameManager.Instance.EnableSkill0Selection();
+
+        GameManager.Instance.DisableAllSkillSelections(true);
 
         for (int i = 0; i < weaponHitAreas.Count; i++)
         {

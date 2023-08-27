@@ -22,7 +22,7 @@ MonoBehaviour:
   startingSpeed: 20
   startingArmor: 0
   startingPower: 3
-  startingMaxHealth: 700
+  startingMaxHealth: 1400
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1

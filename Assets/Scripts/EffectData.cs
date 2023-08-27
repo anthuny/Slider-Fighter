@@ -15,7 +15,7 @@ public class EffectData : ScriptableObject
     public enum EffectName
     {
         BLEED, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP,
-        PARRY, TAUNT, MARK, SHADOWPARTNER
+        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN
     }
     public EffectName curEffectName;
 

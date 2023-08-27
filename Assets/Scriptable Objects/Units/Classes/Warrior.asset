@@ -13,16 +13,15 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: 
   curUnitType: 0
-  minUnitValue: 0
-  maxUnitValue: 0
+  unitValue: 0
   unitSprite: {fileID: 21300000, guid: 34d9e4090ee8996408dba62e1ccdd554, type: 2}
   unitIcon: {fileID: 21300000, guid: 3f6f62c001d44cd42a0eecfdcc2d3128, type: 3}
   unitColour: {r: 0.9716981, g: 0.9505435, b: 0.21542363, a: 1}
   unitName: Warrior
   startingSpeed: 15
-  startingArmor: 0
+  startingDefense: 0
   startingPower: 3
-  startingMaxHealth: 800
+  startingMaxHealth: 1600
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
@@ -32,30 +31,14 @@ MonoBehaviour:
   skill1: {fileID: 11400000, guid: 210dbf9b1bfecd54f867b0a4d6661ec8, type: 2}
   skill2: {fileID: 11400000, guid: dd8256fe076a447499e0a7736e72c57d, type: 2}
   skill3: {fileID: 11400000, guid: e7a970b667a73384f8266eb6ae66a8cf, type: 2}
-  offenseMasteries:
+  standardStats:
   - {fileID: 11400000, guid: fdf0c68db62dd474caaf51d65fe216ea, type: 2}
   - {fileID: 11400000, guid: e52e74694f2458e47a62ff598acbdf56, type: 2}
   - {fileID: 11400000, guid: d6c1f3cc1690fcf48b8bac2f3e171a64, type: 2}
   - {fileID: 11400000, guid: 34cd39750134a7342b53b8aa1e919adf, type: 2}
   - {fileID: 11400000, guid: 0e34bffa746ab0248a27e019db52fb3f, type: 2}
-  - {fileID: 11400000, guid: 117ba4dfb582d7a4ea5013ed5f71dab8, type: 2}
-  - {fileID: 11400000, guid: ef3d228c13c6c364fafb5ecae597cf54, type: 2}
-  - {fileID: 11400000, guid: bd194d42354a32f478c514d65f8e4129, type: 2}
-  defenseMasteries:
+  advancedStats:
   - {fileID: 11400000, guid: c3c492cbcc9a1284ea5db3e44a23180b, type: 2}
   - {fileID: 11400000, guid: 80774dd74ddd2844287bfb357ed02509, type: 2}
   - {fileID: 11400000, guid: c709aed9547d46d4e8adda8052194396, type: 2}
   - {fileID: 11400000, guid: 8d52d5e1d27a25d469c7e34bee031112, type: 2}
-  - {fileID: 11400000, guid: e788a14235b11ad4387b8c73bfe63767, type: 2}
-  - {fileID: 11400000, guid: 46676a6fe6929fd42ba1391903c0013c, type: 2}
-  - {fileID: 11400000, guid: 3965ab4818ae04a428e21cbdab783548, type: 2}
-  - {fileID: 11400000, guid: b56a0333dc85ad14fba5d029bb81f4b1, type: 2}
-  utilityMasteries:
-  - {fileID: 11400000, guid: 4b66fbaa7315c7e4580505c50944f1fa, type: 2}
-  - {fileID: 11400000, guid: cdc7bba9752cb0c46b6d9285b58198ea, type: 2}
-  - {fileID: 11400000, guid: 68f9f262ba07b124b9f8b04d85c1af98, type: 2}
-  - {fileID: 11400000, guid: 81a9298198cd451428760ae66e0651ac, type: 2}
-  - {fileID: 11400000, guid: ac8ede192b22fc14c88f61f0f75987ce, type: 2}
-  - {fileID: 11400000, guid: 899db086382867741b3b31b8d4d9b526, type: 2}
-  - {fileID: 11400000, guid: 36c7776b4ba93794ca54500657705da8, type: 2}
-  - {fileID: 11400000, guid: e6b97e522a07cea47b32dfbc9dfac3e2, type: 2}

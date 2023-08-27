@@ -17,6 +17,10 @@ public class PowerText : MonoBehaviour
     {
         mainText = GetComponent<TextMeshProUGUI>();
         canvas = GetComponent<Canvas>();
+
+        GameManager.Instance.powerUISpawnCount++;
+
+        UpdateSortingOrder(GameManager.Instance.powerUISpawnCount);
     }
 
     private void Start()
@@ -24,7 +28,7 @@ public class PowerText : MonoBehaviour
         StartCoroutine(StartFadeCountdown());
     }
 
-    public void UpdateSortingOrder(int newSortingOrder)
+    void UpdateSortingOrder(int newSortingOrder)
     {
         canvas.sortingOrder = 190 + newSortingOrder;
     }

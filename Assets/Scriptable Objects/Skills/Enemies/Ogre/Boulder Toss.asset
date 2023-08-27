@@ -20,8 +20,8 @@ MonoBehaviour:
   skillName: BOULDER TOSS
   skillDescr: 
   skillPower: 50
-  skillAttackCount: 2
-  projectileSpeed: 8
+  skillAttackCount: 4
+  projectileSpeed: 12
   skillCooldown: 1
   skillSelectionCount: 2
   isSelfCast: 0

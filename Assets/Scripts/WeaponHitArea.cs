@@ -17,18 +17,18 @@ public class WeaponHitArea : MonoBehaviour
     public void HitArea()
     {
         if (curHitAreaType == HitAreaType.PERFECT)
-            Weapon.instance.UpdateHitAreaType(Weapon.HitAreaType.PERFECT);
+            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.PERFECT);
         else if (curHitAreaType == HitAreaType.GREAT)
-            Weapon.instance.UpdateHitAreaType(Weapon.HitAreaType.GREAT);
+            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.GREAT);
         else if (curHitAreaType == HitAreaType.GOOD)
-            Weapon.instance.UpdateHitAreaType(Weapon.HitAreaType.GOOD);
+            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.GOOD);
         else if (curHitAreaType == HitAreaType.BAD)
-            Weapon.instance.UpdateHitAreaType(Weapon.HitAreaType.BAD);
+            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.BAD);
         else if (curHitAreaType == HitAreaType.MISS)
-            Weapon.instance.UpdateHitAreaType(Weapon.HitAreaType.MISS);
+            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.MISS);
 
-        Weapon.instance.CalculatePower(curHitAreaType);
-        Weapon.instance.TriggerHitAlertText(curHitAreaType);
+        Weapon.Instance.CalculatePower(curHitAreaType);
+        Weapon.Instance.TriggerHitAlertText(curHitAreaType);
     }
 
     public bool CheckIfHitLineHit(GameObject hitLine)

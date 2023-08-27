@@ -20,7 +20,7 @@ MonoBehaviour:
   skillName: LIGHT TOUCH
   skillDescr: Damage up to
   skillPower: 25
-  skillAttackCount: 2
+  skillAttackCount: 4
   projectileSpeed: 10
   skillCooldown: 0
   skillSelectionCount: 2

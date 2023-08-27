@@ -9,8 +9,8 @@ public class UnitFunctionality : MonoBehaviour
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
 
-    public enum LastOpenedMastery { OFFENSE, DEFENSE, UTILITY };
-    public LastOpenedMastery lastOpenedMastery;
+    public enum LastOpenedMastery { STANDARD, ADVANCED };
+    public LastOpenedMastery lastOpenedStatPage;
 
     [SerializeField] private UIElement selectionCircle;
     [SerializeField] private UIElement unitVisuals;
@@ -28,8 +28,8 @@ public class UnitFunctionality : MonoBehaviour
     public int curSpeed;
     public int curPower;
     public float curPowerInc = 0;
-    public int curArmor;
-    private int curHealth;
+    public int curDefense;
+    [SerializeField] private int curHealth;
     private int maxHealth;
     private int curlevel;
     private float curExp;
@@ -52,14 +52,13 @@ public class UnitFunctionality : MonoBehaviour
     public int curRecieveDamageAmp = 100;
     [SerializeField] private Color unitColour;
 
-    [SerializeField] private List<Item> equipItems = new List<Item>();
+    [SerializeField] private List<Item> equiptItems = new List<Item>();
 
-    [SerializeField] private List<Mastery> currentMasteries = new List<Mastery>();
+    [SerializeField] private List<Stat> curStatPage = new List<Stat>();
 
-    [SerializeField] private List<UIElement> offenseMasteries = new List<UIElement>();
-    [SerializeField] private List<UIElement> defenseMasteries = new List<UIElement>();
-    [SerializeField] private List<UIElement> utilityMasteries = new List<UIElement>();
-    //[SerializeField] private List<UIElement> currentMasteries = new List<UIElement>();
+    [SerializeField] private List<UIElement> standardMasteries = new List<UIElement>();
+    [SerializeField] private List<UIElement> advancedMasteries = new List<UIElement>();
+
     public UnitData unitData;
 
     [HideInInspector]
@@ -69,42 +68,21 @@ public class UnitFunctionality : MonoBehaviour
     private int unitValue;
     private Animator animator;
 
-    public int masteryOffenseL1AddedCount;
-    public int masteryOffenseL2AddedCount;
-    public int masteryOffenseL3AddedCount;
-    public int masteryOffenseL4AddedCount;
+    // Team Stat Page
+    public int statsBase1Added;
+    public int statsBase2Added;
+    public int statsBase3Added;
+    public int statsBase4Added;
+    public int statsBase5Added;
 
-    public int masteryOffenseR1AddedCount;
-    public int masteryOffenseR2AddedCount;
-    public int masteryOffenseR3AddedCount;
-    public int masteryOffenseR4AddedCount;
-
-
-    public int masteryDefenseL1AddedCount;
-    public int masteryDefenseL2AddedCount;
-    public int masteryDefenseL3AddedCount;
-    public int masteryDefenseL4AddedCount;
-
-    public int masteryDefenseR1AddedCount;
-    public int masteryDefenseR2AddedCount;
-    public int masteryDefenseR3AddedCount;
-    public int masteryDefenseR4AddedCount;
-
-
-    public int masteryUtilityL1AddedCount;
-    public int masteryUtilityL2AddedCount;
-    public int masteryUtilityL3AddedCount;
-    public int masteryUtilityL4AddedCount;
-
-    public int masteryUtilityR1AddedCount;
-    public int masteryUtilityR2AddedCount;
-    public int masteryUtilityR3AddedCount;
-    public int masteryUtilityR4AddedCount;
+    public int statsAdv1Added;
+    public int statsAdv2Added;
+    public int statsAdv3Added;
+    public int statsAdv4Added;
 
     private int spentMasteryTotalPoints = 0;
-    public int spentOffenseMasteryPoints = 0;
-    public int spentDefenseMasteryPoints = 0;
-    public int spentUtilityMasteryPoints = 0;
+    public int statsSpentBasePoints = 0;
+    public int statsSpentAdvPoints = 0;
 
     [SerializeField] private int skill0CurCooldown = 0;
     [SerializeField] private int skill1CurCooldown = 0;
@@ -124,7 +102,10 @@ public class UnitFunctionality : MonoBehaviour
     private int maxAttackCharge = 100;
 
     private float oldCurSpeed = 0;
+    private float oldCurDefense = 0;
     public bool isSpeedUp;
+    public bool isDefenseUp;
+    public bool isDefenseDown;
 
     private void Awake()
     {
@@ -142,19 +123,17 @@ public class UnitFunctionality : MonoBehaviour
         UpdateIsVisible(false);
     }
 
-    public void UpdateLastOpenedMastery(TeamSetup.ActiveMasteryType masteryType)
+    public void UpdateLastOpenedMastery(TeamSetup.ActiveStatType masteryType)
     {
-        if (masteryType == TeamSetup.ActiveMasteryType.OFFENSE)
-            lastOpenedMastery = LastOpenedMastery.OFFENSE;
-        else if (masteryType == TeamSetup.ActiveMasteryType.DEFENSE)
-            lastOpenedMastery = LastOpenedMastery.DEFENSE;
-        else if (masteryType == TeamSetup.ActiveMasteryType.UTILITY)
-            lastOpenedMastery = LastOpenedMastery.UTILITY;
+        if (masteryType == TeamSetup.ActiveStatType.STANDARD)
+            lastOpenedStatPage = LastOpenedMastery.STANDARD;
+        else if (masteryType == TeamSetup.ActiveStatType.ADVANCED)
+            lastOpenedStatPage = LastOpenedMastery.ADVANCED;
     }
 
     public LastOpenedMastery GetLastOpenedMastery()
     {
-        return lastOpenedMastery;
+        return lastOpenedStatPage;
     }
 
     public void UpdateFacingDirection(bool right = true)
@@ -184,73 +163,59 @@ public class UnitFunctionality : MonoBehaviour
     }
     public void AddOwnedItems(Item item)
     {
-        equipItems.Add(item);
+        equiptItems.Add(item);
     }
 
     public List<Item> GetEquipItems()
     {
-        return equipItems;
+        return equiptItems;
     }
 
-    public void UpdateCurrentMasteries(List<Mastery> masteries)
+    public void UpdateCurrentMasteries(List<Stat> masteries)
     {
-        this.currentMasteries = masteries;
+        this.curStatPage = masteries;
     }
 
     public void UpdateOffenseMasteries(List<UIElement> masteries)
     {
-        this.offenseMasteries = masteries;
+        this.standardMasteries = masteries;
     }
 
     public void UpdateDefenseMasteries(List<UIElement> masteries)
     {
-        this.defenseMasteries = masteries;
+        this.advancedMasteries = masteries;
     }
 
-    public void UpdateUtilityMasteries(List<UIElement> masteries)
+    public Stat GetCurrentStat(int count)
     {
-        this.utilityMasteries = masteries;
-    }
-
-    public Mastery GetCurrentMastery(int count)
-    {
-        return currentMasteries[count];
+        return curStatPage[count];
     }
     public UIElement GetOffensiveMastery(int count)
     {
-        return offenseMasteries[count];
+        return standardMasteries[count];
     }
     public UIElement GetDefenseMastery(int count)
     {
-        return defenseMasteries[count];
-    }
-    public UIElement GetUtilityMastery(int count)
-    {
-        return utilityMasteries[count];
+        return advancedMasteries[count];
     }
 
-    public List<Mastery> GetAllCurrentMasteries()
+    public List<Stat> GetAllCurrentMasteries()
     {
-        return currentMasteries;
+        return curStatPage;
     }
     public List<UIElement> GetAllOffenseMastery()
     {
-        return offenseMasteries;
+        return standardMasteries;
     }
     public List<UIElement> GetAllDefenseMastery()
     {
-        return defenseMasteries;
-    }
-    public List<UIElement> GetAllUtilityMastery()
-    {
-        return utilityMasteries;
+        return advancedMasteries;
     }
 
     public void ClearMasteries()
     {
-        currentMasteries.Clear();
-        defenseMasteries.Clear();
-        utilityMasteries.Clear();
+        curStatPage.Clear();
+        advancedMasteries.Clear();
     }
 
     public int GetEquipItemCount(string itemName)
@@ -268,7 +233,11 @@ public class UnitFunctionality : MonoBehaviour
         return amountOfItems;
     }
 
-
+    public void SetPositionAndParent(Transform parent)
+    {
+        transform.SetParent(parent);
+        transform.localPosition = new Vector3(0, 0, 0);
+    }
 
     public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null, bool levelUp = false)
     {
@@ -315,12 +284,11 @@ public class UnitFunctionality : MonoBehaviour
         spentMasteryTotalPoints += add;
     }
 
-    public void ResetSpentMasteryPoints()
+    public void ResetSpentStatPoints()
     {
         spentMasteryTotalPoints = 0;
-        spentOffenseMasteryPoints = 0;
-        spentDefenseMasteryPoints = 0;
-        spentUtilityMasteryPoints = 0;
+        statsSpentBasePoints = 0;
+        statsSpentAdvPoints = 0;
     }
 
     public void ToggleHideEffects(bool toggle)
@@ -534,7 +502,7 @@ public class UnitFunctionality : MonoBehaviour
         for (int i = 0; i < unitEnemyIntelligence; i++)
         {
             int rand = Random.Range(1, 5);
-            Debug.Log(rand);
+            //Debug.Log(rand);
             if (rand == 1)  // Skill 1
             {
                 if (skill1CurCooldown == 0)
@@ -573,6 +541,49 @@ public class UnitFunctionality : MonoBehaviour
 
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1)
     {
+        // If player miss, do not apply effect
+        if (effectHitAcc == 0 || targetUnit.isParrying)
+            return;
+
+        // If unit is already effected with this effect, add to the effect
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (addedEffect.effectName == activeEffects[i].effectName)
+            {
+                // If skill came from an enemy, with no hit accuracy
+                if (effectHitAcc == -1)
+                {
+                    // Determining whether the effect hits, If it fails, stop
+                    if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
+                    {
+                        int rand = Random.Range(0, 100);
+                        if (rand > GameManager.Instance.GetActiveSkill().effectHitChance)
+                            return;
+                    }
+
+                    // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+                    if (GameManager.Instance.GetActiveUnitFunctionality() != this)
+                        TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
+                    activeEffects[i].AddTurnCountText(turnDuration);
+                    return;
+                }
+                    
+                for (int x = 0; x < effectHitAcc; x++)
+                {
+                    // Determining whether the effect hits, If it fails, stop
+                    if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
+                    {
+                        int rand = Random.Range(0, 100);
+                        if (rand > GameManager.Instance.GetActiveSkill().effectHitChance)
+                            return;
+                    }
+
+                    activeEffects[i].AddTurnCountText(turnDuration);
+                }
+                return;
+            }
+        }
+
         // Determining whether the effect hits, If it fails, stop
         if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
         {
@@ -581,27 +592,9 @@ public class UnitFunctionality : MonoBehaviour
                 return;
         }
 
-        // If player miss, do not apply effect
-        if (effectHitAcc == 0)
-            return;
-
-        // If unit is already effected with this effect, add to the effect
-        for (int i = 0; i < activeEffects.Count; i++)
-        {
-            if (addedEffect.effectName == activeEffects[i].effectName)
-            {
-                TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
-
-                for (int x = 0; x < effectHitAcc; x++)
-                {
-                    activeEffects[i].AddTurnCountText(turnDuration);
-                }
-
-                return;
-            }
-        }
-
-        TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
+        // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+        if (GameManager.Instance.GetActiveUnitFunctionality() != this)
+            TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
 
         // Spawn new effect on target unit
         GameObject go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
@@ -695,13 +688,36 @@ public class UnitFunctionality : MonoBehaviour
         isTaunting = toggle;
     }
 
+    int healCount = 0;
+    int damageCount = 0;
+
+    public void ResetPowerUI()
+    {
+        damageCount = 0;
+        healCount = 0;
+    }
     public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, int powerUICount = 1, bool isLuckyHit = false, bool isHeal = false)
     {
+        if (offense)
+            damageCount++;
+        else
+            healCount++;
+
         if (!isLuckyHit)
         {
             // If this is NOT the first power text UI
             if (prevPowerUI != null)
-                prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity);
+            {
+                // If power UI count has been reached from heal / damage, reset back to original Y position.
+                if (healCount >= GameManager.Instance.maxPowerUICount+1 || damageCount >= GameManager.Instance.maxPowerUICount+1)
+                {
+                    prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
+                    healCount = 0;
+                    damageCount = 0;
+                }
+                else
+                    prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity); 
+            }
             // If this IS the first power text UI
             else
                 prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
@@ -732,11 +748,18 @@ public class UnitFunctionality : MonoBehaviour
             return;
         }
 
-        powerText.UpdateSortingOrder(powerUICount);
+        // Make Animate
+        powerText.GetComponent<UIElement>().UpdateAlpha(1);
+
+        float Randx = Random.Range(-GameManager.Instance.powerHorizontalRandomness, GameManager.Instance.powerHorizontalRandomness);
+        prevPowerUI.transform.localPosition = new Vector2(Randx, prevPowerUI.transform.localPosition.y);
+
+        //powerText.UpdateSortingOrder(powerUICount);
 
         // Otherwise, display the power
         powerText.UpdatePowerTextFontSize(GameManager.Instance.powerHitFontSize);
 
+        // Update Text Colour
         if (effect == null)
         {
             if (!isHeal)
@@ -766,7 +789,6 @@ public class UnitFunctionality : MonoBehaviour
 
             if (effect.curEffectName == Effect.EffectName.HEALTHUP && offense)
                 powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-
         }
 
         int finalPower = (int)power;
@@ -1030,6 +1052,8 @@ public class UnitFunctionality : MonoBehaviour
         if (isDead)
             return;
 
+        //Debug.Log(gameObject.name + " " + power);
+
         float absPower = Mathf.Abs((float)power);
 
         if (!setHealth)
@@ -1040,17 +1064,44 @@ public class UnitFunctionality : MonoBehaviour
                 //float tempPower;
                 //tempPower = (curRecieveDamageAmp / 100f) * absPower;
                 //float newPower = absPower + tempPower;
-                curHealth -= (int)absPower;
+
+                if (curHealth > 0)
+                {
+                    // Damage formula - Defense 
+                    float temp = (curDefense / 100f) * absPower;
+                    float powerIncArmor = absPower - temp;
+
+                    curHealth -= (int)powerIncArmor;
+                }
+
+
+                if (curHealth < 0)
+                    curHealth = 0;
 
                 //if (curHealth > 0)
                 animator.SetTrigger("DamageFlg");
             }
             // Healing
             else
-                curHealth += (int)absPower;
+            {
+                if (curHealth < maxHealth)
+                    curHealth += (int)absPower;
+
+                if (curHealth > maxHealth)
+                    curHealth = maxHealth;
+            }
         }
         else
+        {
             curHealth = (int)absPower;
+
+            if (curHealth > maxHealth)
+                curHealth = maxHealth;
+
+            if (curHealth < 0)
+                curHealth = 0;
+        }
+
 
         UpdateUnitHealthVisual();
     }
@@ -1060,9 +1111,12 @@ public class UnitFunctionality : MonoBehaviour
         animator.SetBool("DamageFlg", false);
     }
 
-    public void UpdateUnitMaxHealth(int newMaxHealth)
+    public void UpdateUnitMaxHealth(int newMaxHealth, bool set = false)
     {
         maxHealth = newMaxHealth;
+
+        if (set)
+            curHealth = maxHealth;
 
         if (curHealth > maxHealth)
             curHealth = maxHealth;
@@ -1147,11 +1201,52 @@ public class UnitFunctionality : MonoBehaviour
     public void ResetOldSpeed()
     {
         oldCurSpeed = 0;
-    }  
+    }
+
+    public void UpdateUnitOldDefense(int def)
+    {
+        oldCurDefense = def;
+    }
+
+    public float GetOldDefense()
+    {
+        return oldCurDefense;
+    }
+
+    public void ResetOldDefense()
+    {
+        oldCurDefense = 0;
+    }
 
     public bool GetIsSpeedUp()
     {
         return isSpeedUp;
+    }
+
+    public bool GetIsDefenseUp()
+    {
+        return isDefenseUp;
+    }
+
+    public bool GetIsDefenseDown()
+    {
+        return isDefenseDown;
+    }
+
+    public void ToggleIsDefenseUp(bool toggle)
+    {
+        if (toggle)
+            isDefenseUp = true;
+        else
+            isDefenseUp = false;
+    }
+
+    public void ToggleIsDefenseDown(bool toggle)
+    {
+        if (toggle)
+            isDefenseDown = true;
+        else
+            isDefenseDown = false;
     }
 
     public void ToggleIsSpeedUp(bool toggle)
@@ -1167,25 +1262,32 @@ public class UnitFunctionality : MonoBehaviour
         curPower = newPower;
     }
 
-    public void UpdateUnitArmor(int newArmor)
+    public void UpdateUnitDefense(int newArmor)
     {
-        curArmor = newArmor;
+        curDefense = newArmor;
+    }
+
+    public int GetCurDefense()
+    {
+        return curDefense;
     }
     
-    public void AddUnitArmor(int armor)
+    /*
+    public void AddUnitDefense(int armor)
     {
-        curArmor += armor;
+        curDefense += armor;
     }
 
     public void RemoveUnitArmor(int armor)
     {
-        curArmor -= armor;
+        curDefense -= armor;
     }
+    */
 
     public void UpdateUnitHealth(int newCurHealth, int newMaxHealth)
     {
-        UpdateUnitCurHealth(newCurHealth);
-        UpdateUnitMaxHealth(newMaxHealth);
+        UpdateUnitMaxHealth(newMaxHealth, true);
+        UpdateUnitCurHealth(newCurHealth, false, true);
     }
 
     public float GetUnitCurHealth()

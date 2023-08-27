@@ -16,7 +16,7 @@ MonoBehaviour:
   floorColour: {r: 0.17595254, g: 0.7735849, b: 0, a: 1}
   floorLevel: 1
   minRoomCount: 3
-  maxRoomCount: 5
+  maxRoomCount: 3
   sideRoomAmount: 2
   shopRoomCount: 1
   enemyUnits:

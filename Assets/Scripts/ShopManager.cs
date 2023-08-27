@@ -442,7 +442,7 @@ public class ShopManager : MonoBehaviour
         }
 
         // After filling shop items, room is now considered Visited.
-        activeRoom.UpdateIsVisited(true);
+        //activeRoom.UpdateIsVisited(true);
 
         ToggleActiveRoomEntered(true);
     }
