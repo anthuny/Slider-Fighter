@@ -158,11 +158,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  activeStatType: 0
   contentImage: {fileID: 5259889019705451123}
   contentText: {fileID: 0}
   contentSubText: {fileID: 8027093156247203098}
+  buttonCG: {fileID: 5259889019705451127}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -172,9 +173,9 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 1
   selectBorder: {fileID: 1636042355342586031}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 8995928786012618700}
-  masteryPointsThreshhold: 0
+  statPointsThreshhold: 0
   isLocked: 0
 --- !u!1 &2826383016593343593
 GameObject:
@@ -300,11 +301,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  activeStatType: 0
   contentImage: {fileID: 6242035304590209217}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  buttonCG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -314,9 +316,9 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 0}
-  masteryPointsThreshhold: 0
+  statPointsThreshhold: 0
   isLocked: 0
 --- !u!1 &3263367111173051638
 GameObject:
@@ -424,7 +426,7 @@ RectTransform:
   m_GameObject: {fileID: 3666851542265818222}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 0.13379, y: 0.13379, z: 0.13379}
+  m_LocalScale: {x: 0.1444263, y: 0.1444263, z: 0.1444263}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8253756689484850455}
@@ -432,8 +434,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -82.7, y: -49.3}
-  m_SizeDelta: {x: 707.3, y: 492}
+  m_AnchoredPosition: {x: -19.6, y: 25.03}
+  m_SizeDelta: {x: 831.71, y: 533.47}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2400379176422156155
 CanvasRenderer:
@@ -476,7 +478,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0 / 0
+  m_Text: 10 / 10
 --- !u!114 &6376363875855536422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -489,11 +491,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  activeStatType: 0
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 8027093156247203098}
+  buttonCG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -503,9 +506,9 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 0}
-  masteryPointsThreshhold: 0
+  statPointsThreshhold: 0
   isLocked: 0
 --- !u!223 &3665519638951356069
 Canvas:
@@ -649,11 +652,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  activeStatType: 0
   contentImage: {fileID: 6273495911193870239}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  buttonCG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -663,9 +667,9 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 0}
-  masteryPointsThreshhold: 0
+  statPointsThreshhold: 0
   isLocked: 0
 --- !u!225 &3936564060558501167
 CanvasGroup:
@@ -898,11 +902,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  activeStatType: 0
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  buttonCG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -912,9 +917,9 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 0}
-  masteryPointsThreshhold: 0
+  statPointsThreshhold: 0
   isLocked: 0
 --- !u!1 &5259889021125643383
 GameObject:

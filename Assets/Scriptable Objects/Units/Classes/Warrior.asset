@@ -32,11 +32,11 @@ MonoBehaviour:
   skill2: {fileID: 11400000, guid: dd8256fe076a447499e0a7736e72c57d, type: 2}
   skill3: {fileID: 11400000, guid: e7a970b667a73384f8266eb6ae66a8cf, type: 2}
   standardStats:
-  - {fileID: 11400000, guid: fdf0c68db62dd474caaf51d65fe216ea, type: 2}
-  - {fileID: 11400000, guid: e52e74694f2458e47a62ff598acbdf56, type: 2}
-  - {fileID: 11400000, guid: d6c1f3cc1690fcf48b8bac2f3e171a64, type: 2}
-  - {fileID: 11400000, guid: 34cd39750134a7342b53b8aa1e919adf, type: 2}
-  - {fileID: 11400000, guid: 0e34bffa746ab0248a27e019db52fb3f, type: 2}
+  - {fileID: 11400000, guid: ce26da470586c444caa187d08a02f8c3, type: 2}
+  - {fileID: 11400000, guid: 33207496edcf52149a75a2403398c7e7, type: 2}
+  - {fileID: 11400000, guid: 436ac72f8595e84479408250d581c101, type: 2}
+  - {fileID: 11400000, guid: ae02d8f5421f45d4faa41b2b501b2779, type: 2}
+  - {fileID: 11400000, guid: d0820387e8bbbb349884ffd6cc2a33be, type: 2}
   advancedStats:
   - {fileID: 11400000, guid: c3c492cbcc9a1284ea5db3e44a23180b, type: 2}
   - {fileID: 11400000, guid: 80774dd74ddd2844287bfb357ed02509, type: 2}

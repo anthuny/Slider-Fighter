@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c515bbf9fa0bc4d9bd8e0baa75a0b8, type: 3}
   m_Name: Warrior_Stat_Advanced_2
   m_EditorClassIdentifier: 
-  masteryIcon: {fileID: 21300000, guid: 22ecdccef7e7fc740b9edb842475025e, type: 3}
-  masteryName: 'Whirlwind: Enlarge'
-  masteryDesc: Whirlwind units hit increases by 2
-  masteryMaxAmount: 1
+  statIcon: {fileID: 21300000, guid: 3f6f62c001d44cd42a0eecfdcc2d3128, type: 3}
+  statName: Additinal Heal
+  statDesc: Recieve +1 Line Of Healing
+  statMaxAmount: 10

@@ -56,8 +56,8 @@ public class UnitFunctionality : MonoBehaviour
 
     [SerializeField] private List<Stat> curStatPage = new List<Stat>();
 
-    [SerializeField] private List<UIElement> standardMasteries = new List<UIElement>();
-    [SerializeField] private List<UIElement> advancedMasteries = new List<UIElement>();
+    [SerializeField] private List<Stat> standardMasteries = new List<Stat>();
+    [SerializeField] private List<Stat> advancedMasteries = new List<Stat>();
 
     public UnitData unitData;
 
@@ -125,10 +125,14 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateLastOpenedMastery(TeamSetup.ActiveStatType masteryType)
     {
+        /*
         if (masteryType == TeamSetup.ActiveStatType.STANDARD)
             lastOpenedStatPage = LastOpenedMastery.STANDARD;
         else if (masteryType == TeamSetup.ActiveStatType.ADVANCED)
             lastOpenedStatPage = LastOpenedMastery.ADVANCED;
+         */
+
+        lastOpenedStatPage = LastOpenedMastery.STANDARD;
     }
 
     public LastOpenedMastery GetLastOpenedMastery()
@@ -176,12 +180,11 @@ public class UnitFunctionality : MonoBehaviour
         this.curStatPage = masteries;
     }
 
-    public void UpdateOffenseMasteries(List<UIElement> masteries)
+    public void UpdateStandardMasteries(List<Stat> masteries)
     {
         this.standardMasteries = masteries;
     }
-
-    public void UpdateDefenseMasteries(List<UIElement> masteries)
+    public void UpdateAdvancedMasteries(List<Stat> masteries)
     {
         this.advancedMasteries = masteries;
     }
@@ -190,11 +193,11 @@ public class UnitFunctionality : MonoBehaviour
     {
         return curStatPage[count];
     }
-    public UIElement GetOffensiveMastery(int count)
+    public Stat GetStandardMastery(int count)
     {
         return standardMasteries[count];
     }
-    public UIElement GetDefenseMastery(int count)
+    public Stat GetAdvancedMastery(int count)
     {
         return advancedMasteries[count];
     }
@@ -203,11 +206,11 @@ public class UnitFunctionality : MonoBehaviour
     {
         return curStatPage;
     }
-    public List<UIElement> GetAllOffenseMastery()
+    public List<Stat> GetAllStandardMasteries()
     {
         return standardMasteries;
     }
-    public List<UIElement> GetAllDefenseMastery()
+    public List<Stat> GetAllAdvancedMasteries()
     {
         return advancedMasteries;
     }

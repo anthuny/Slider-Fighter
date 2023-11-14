@@ -46,6 +46,51 @@ public class TeamSetup : MonoBehaviour
         Instance = this;
     }
 
+    public void ToggleMasteryPage(bool standard, bool toggle)
+    {
+        if (standard)
+        {
+            if (toggle)
+            {
+                statsBase1.UpdateAlpha(1);
+                statsBase2.UpdateAlpha(1);
+                statsBase3.UpdateAlpha(1);
+                statsBase4.UpdateAlpha(1);
+                statsBase5.UpdateAlpha(1);
+            }
+            else
+            {
+                statsBase1.UpdateAlpha(0);
+                statsBase2.UpdateAlpha(0);
+                statsBase3.UpdateAlpha(0);
+                statsBase4.UpdateAlpha(0);
+                statsBase5.UpdateAlpha(0);
+            }
+        }
+        else
+        {
+            if (toggle)
+            {
+                statsAdvanced1.UpdateAlpha(1);
+                statsAdvanced2.UpdateAlpha(1);
+                statsAdvanced3.UpdateAlpha(1);
+                statsAdvanced4.UpdateAlpha(1);
+            }
+            else
+            {
+                statsAdvanced1.UpdateAlpha(0);
+                statsAdvanced2.UpdateAlpha(0);
+                statsAdvanced3.UpdateAlpha(0);
+                statsAdvanced4.UpdateAlpha(0);
+            }
+        }
+    }
+
+    public void ResetStatPageCount()
+    {
+        statPageCount = 0;
+    }
+
     public void ChangeStatPage(bool inc)
     {     
         int prevStatCount = statPageCount;
@@ -65,7 +110,7 @@ public class TeamSetup : MonoBehaviour
         if (prevStatCount == 0 && statPageCount == -1)
             UpdateStatPage(ActiveStatType.ADVANCED);
 
-        // RETURNING TO MIDDLE
+        // RETURNING TO STANDARD
         if (statPageCount == 0)
             UpdateStatPage(ActiveStatType.STANDARD);
 
@@ -74,6 +119,21 @@ public class TeamSetup : MonoBehaviour
         {
             statPageCount = 0;
             UpdateStatPage(ActiveStatType.STANDARD);
+        }
+
+        if (activeStatType == ActiveStatType.STANDARD)
+        {
+            // Toggle all advanced masteries OFF when standard page is ON
+            ToggleMasteryPage(false, false);
+
+            ToggleMasteryPage(true, true);
+        }
+        else
+        {
+            // Toggle all standard masteries OFF when advanced page is ON
+            ToggleMasteryPage(true, false);
+
+            ToggleMasteryPage(false, true);
         }
     }
 
@@ -101,13 +161,19 @@ public class TeamSetup : MonoBehaviour
         {
             //unit.UpdateOffenseMasteries(masteryL1)
             statTreeType.UpdateContentTextColour(offenseTitleColour);
+
+            unit.UpdateStandardMasteries(unitData.GetStandardStats());
             unit.UpdateCurrentMasteries(unitData.GetStandardStats());
+
             SetupTeamSetup(unit, ActiveStatType.STANDARD);
         }
         else if (statType == ActiveStatType.ADVANCED)
         {
             statTreeType.UpdateContentTextColour(defenseTitleColour);
+
+            unit.UpdateAdvancedMasteries(unitData.GetAdvancedStats());
             unit.UpdateCurrentMasteries(unitData.GetAdvancedStats());
+
             SetupTeamSetup(unit, ActiveStatType.ADVANCED);
         }
     }
@@ -155,8 +221,8 @@ public class TeamSetup : MonoBehaviour
         ResetStatSelection();
         UpdateStatDescription();
 
-        activeStat = unit.GetCurrentStat(0);
-        selectedStat = statsBase1;
+        //activeStat = unit.GetCurrentStat(0);
+        //selectedStat = statsBase1;
 
         if (statType == ActiveStatType.STANDARD)
         {
@@ -178,10 +244,33 @@ public class TeamSetup : MonoBehaviour
             statsBase4.UpdateContentSubText(statsBase4.GetStatPointsAdded() + " / " + unit.GetCurrentStat(3).statMaxAmount);
             statsBase5.UpdateContentSubText(statsBase4.GetStatPointsAdded() + " / " + unit.GetCurrentStat(4).statMaxAmount);
 
-            //statsAdvanced1.UpdateMasteryPoindsAdded(true, false, unit.statsAdv1Added, true, "STANDARD");
-            //statsAdvanced2.UpdateMasteryPoindsAdded(true, false, unit.statsAdv2Added, true, "STANDARD");
-            //statsAdvanced3.UpdateMasteryPoindsAdded(true, false, unit.statsAdv3Added, true, "STANDARD");
-            //statsAdvanced4.UpdateMasteryPoindsAdded(true, false, unit.statsAdv4Added, true, "STANDARD");
+            statsBase1.ToggleButton(true);
+            statsBase2.ToggleButton(true);
+            statsBase3.ToggleButton(true);
+            statsBase4.ToggleButton(true);
+            statsBase5.ToggleButton(true);
+
+            statsAdvanced1.ToggleButton(false);
+            statsAdvanced2.ToggleButton(false);
+            statsAdvanced3.ToggleButton(false);
+            statsAdvanced4.ToggleButton(false);
+
+            statsAdvanced1.UpdateAlpha(0);
+            statsAdvanced2.UpdateAlpha(0);
+            statsAdvanced3.UpdateAlpha(0);
+            statsAdvanced4.UpdateAlpha(0);
+
+            statsBase1.UpdateAlpha(1);
+            statsBase2.UpdateAlpha(1);
+            statsBase3.UpdateAlpha(1);
+            statsBase4.UpdateAlpha(1);
+            statsBase5.UpdateAlpha(1);
+
+            // Select Standard default when setting up
+            UpdateStatDescription(unit.GetCurrentStat(0));
+            ToggleStatSelection(statsBase1, true);
+            //statsBase1.UpdateContentSubText(statsBase1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(0).statMaxAmount);
+
         }
         else if (statType == ActiveStatType.ADVANCED)
         {
@@ -190,31 +279,45 @@ public class TeamSetup : MonoBehaviour
             statsAdvanced3.UpdateStatPoindsAdded(true, false, unit.statsAdv3Added, true, "ADVANCED");
             statsAdvanced4.UpdateStatPoindsAdded(true, false, unit.statsAdv4Added, true, "ADVANCED");
 
-            statsAdvanced1.UpdateContentImage(unit.GetCurrentStat(5).statIcon);
-            statsAdvanced1.UpdateContentImage(unit.GetCurrentStat(6).statIcon);
-            statsAdvanced1.UpdateContentImage(unit.GetCurrentStat(7).statIcon);
-            statsAdvanced1.UpdateContentImage(unit.GetCurrentStat(8).statIcon);
+            statsAdvanced1.UpdateContentImage(unit.GetCurrentStat(0).statIcon);
+            statsAdvanced2.UpdateContentImage(unit.GetCurrentStat(1).statIcon);
+            statsAdvanced3.UpdateContentImage(unit.GetCurrentStat(2).statIcon);
+            statsAdvanced4.UpdateContentImage(unit.GetCurrentStat(3).statIcon);
 
-            statsAdvanced1.UpdateContentSubText(statsAdvanced1.GetStatPointsAdded() + " / " + unit.GetCurrentStat(4).statMaxAmount);
-            statsAdvanced2.UpdateContentSubText(statsAdvanced1.GetStatPointsAdded() + " / " + unit.GetCurrentStat(4).statMaxAmount);
-            statsAdvanced3.UpdateContentSubText(statsAdvanced1.GetStatPointsAdded() + " / " + unit.GetCurrentStat(4).statMaxAmount);
-            statsAdvanced4.UpdateContentSubText(statsAdvanced1.GetStatPointsAdded() + " / " + unit.GetCurrentStat(4).statMaxAmount);
+            statsAdvanced1.UpdateContentSubText(statsAdvanced1.GetStatPointsAdded() + " / " + unit.GetCurrentStat(0).statMaxAmount);
+            statsAdvanced2.UpdateContentSubText(statsAdvanced2.GetStatPointsAdded() + " / " + unit.GetCurrentStat(1).statMaxAmount);
+            statsAdvanced3.UpdateContentSubText(statsAdvanced3.GetStatPointsAdded() + " / " + unit.GetCurrentStat(2).statMaxAmount);
+            statsAdvanced4.UpdateContentSubText(statsAdvanced4.GetStatPointsAdded() + " / " + unit.GetCurrentStat(3).statMaxAmount);
 
-            //statsBase1.UpdateMasteryPoindsAdded(true, false, unit.statsBase1Added, true, "STANDARD");
-            //statsBase2.UpdateMasteryPoindsAdded(true, false, unit.statsBase2Added, true, "STANDARD");
-            //statsBase3.UpdateMasteryPoindsAdded(true, false, unit.statsBase3Added, true, "STANDARD");
-            //statsBase4.UpdateMasteryPoindsAdded(true, false, unit.statsBase4Added, true, "STANDARD");
-            //statsBase5.UpdateMasteryPoindsAdded(true, false, unit.statsBase5Added, true, "STANDARD");
+            statsAdvanced1.ToggleButton(true);
+            statsAdvanced2.ToggleButton(true);
+            statsAdvanced3.ToggleButton(true);
+            statsAdvanced4.ToggleButton(true);
+
+            statsBase1.ToggleButton(false);
+            statsBase2.ToggleButton(false);
+            statsBase3.ToggleButton(false);
+            statsBase4.ToggleButton(false);
+            statsBase5.ToggleButton(false);
+
+            statsBase1.UpdateAlpha(0);
+            statsBase2.UpdateAlpha(0);
+            statsBase3.UpdateAlpha(0);
+            statsBase4.UpdateAlpha(0);
+            statsBase5.UpdateAlpha(0);
+
+            statsAdvanced1.UpdateAlpha(1);
+            statsAdvanced2.UpdateAlpha(1);
+            statsAdvanced3.UpdateAlpha(1);
+            statsAdvanced4.UpdateAlpha(1);
+
+            // Select Advanced default when setting up
+            UpdateStatDescription(unit.GetCurrentStat(0));
+            ToggleStatSelection(statsAdvanced1, true);
+            //statsAdvanced1.UpdateContentSubText(statsAdvanced1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(0).statMaxAmount);
         }
 
         UpdateUnspentPointsText(CalculateUnspentStatPoints());
-         
-        // Select L1 when setting up
-        UpdateStatDescription(unit.GetCurrentStat(0));
-        ToggleStatSelection(statsBase1, true);
-        statsBase1.UpdateContentSubText(statsBase1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(0).statMaxAmount);
-
-        CheckIfStatShouldBeLocked();
     }
 
     public Stat GetActiveStat()
@@ -231,13 +334,13 @@ public class TeamSetup : MonoBehaviour
             return GetActiveUnit().GetCurrentStat(4);
 
         else if (GetSelectedStat() == statsAdvanced1)
-            return GetActiveUnit().GetCurrentStat(4);
-        else if (GetSelectedStat() == statsAdvanced1)
-            return GetActiveUnit().GetCurrentStat(5);
-        else if (GetSelectedStat() == statsAdvanced1)
-            return GetActiveUnit().GetCurrentStat(6);
-        else if (GetSelectedStat() == statsAdvanced1)
-            return GetActiveUnit().GetCurrentStat(7);
+            return GetActiveUnit().GetCurrentStat(0);
+        else if (GetSelectedStat() == statsAdvanced2)
+            return GetActiveUnit().GetCurrentStat(1);
+        else if (GetSelectedStat() == statsAdvanced3)
+            return GetActiveUnit().GetCurrentStat(2);
+        else if (GetSelectedStat() == statsAdvanced4)
+            return GetActiveUnit().GetCurrentStat(3);
         else
             return null;
     }
@@ -266,7 +369,7 @@ public class TeamSetup : MonoBehaviour
         GetSelectedStat().UpdateStatPoindsAdded(true, false, 0, false, activeMasteryType2);
         GetSelectedStat().UpdateContentSubText(GetSelectedStat().GetStatPointsAdded().ToString() + " / " + maxAmount);
 
-        CheckIfStatShouldBeLocked();
+        //CheckIfStatShouldBeLocked();
     }
 
     public void CheckIfStatShouldBeLocked()
@@ -379,48 +482,48 @@ public class TeamSetup : MonoBehaviour
         if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATSTANDARD1)
         {
             selectedStat = statsBase1;
-            activeStat = GetActiveUnit().GetCurrentStat(0);
+            activeStat = GetActiveUnit().GetStandardMastery(0);
         }
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATSTANDARD2)
         {
             selectedStat = statsBase2;
-            activeStat = GetActiveUnit().GetCurrentStat(1);
+            activeStat = GetActiveUnit().GetStandardMastery(1);
         }
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATSTANDARD3)
         {
             selectedStat = statsBase3;
-            activeStat = GetActiveUnit().GetCurrentStat(2);
+            activeStat = GetActiveUnit().GetStandardMastery(2);
         }
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATSTANDARD4)
         {
             selectedStat = statsBase4;
-            activeStat = GetActiveUnit().GetCurrentStat(3);
+            activeStat = GetActiveUnit().GetStandardMastery(3);
         }
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATSTANDARD5)
         {
             selectedStat = statsBase5;
-            activeStat = GetActiveUnit().GetCurrentStat(4);
+            activeStat = GetActiveUnit().GetStandardMastery(4);
         }
 
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATADVANCED1)
         {
             selectedStat = statsAdvanced1;
-            activeStat = GetActiveUnit().GetCurrentStat(5);
+            activeStat = GetActiveUnit().GetAdvancedMastery(0);
         }
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATADVANCED2)
         {
             selectedStat = statsAdvanced2;
-            activeStat = GetActiveUnit().GetCurrentStat(6);
+            activeStat = GetActiveUnit().GetAdvancedMastery(1);
         }
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATADVANCED3)
         {
             selectedStat = statsAdvanced3;
-            activeStat = GetActiveUnit().GetCurrentStat(7);
+            activeStat = GetActiveUnit().GetAdvancedMastery(2);
         }
         else if (statButton.curMasteryType == ButtonFunctionality.MasteryType.STATADVANCED4)
         {
             selectedStat = statsAdvanced4;
-            activeStat = GetActiveUnit().GetCurrentStat(8);
+            activeStat = GetActiveUnit().GetAdvancedMastery(3);
         }
     }
 
@@ -469,7 +572,7 @@ public class TeamSetup : MonoBehaviour
 
         statDesc.UpdateContentText(stat.statName);
         statDesc.UpdateContentSubText(stat.statDesc);
-        statFillAmount.UpdateContentSubText(" / " + stat.statMaxAmount.ToString());
+        //statFillAmount.UpdateContentSubText(" / " + stat.statMaxAmount.ToString());
     }
 
     public void UpdateUnspentPointsText(int count)

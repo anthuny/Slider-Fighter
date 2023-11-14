@@ -19,6 +19,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private Image contentImage;
     [SerializeField] private TextMeshProUGUI contentText;
     [SerializeField] private Text contentSubText;
+    [SerializeField] private CanvasGroup buttonCG;
 
     [SerializeField] private bool startHidden;
 
@@ -50,9 +51,11 @@ public class UIElement : MonoBehaviour
         if (startHidden)
             UpdateAlpha(0);
 
+        /*
         if (selectable)
             UpdateIsLocked(true);
-
+        */
+        
         if (gameObject.GetComponent<RectTransform>() != null)
         {
             originalScale = transform.GetComponent<RectTransform>().localScale.x;
@@ -67,8 +70,10 @@ public class UIElement : MonoBehaviour
 
     public void UpdateIsLocked(bool toggle)
     {
+        /*
         isLocked = toggle;
         ToggleLockedImage(toggle);
+        */
     }
 
     void Start()
@@ -146,34 +151,16 @@ public class UIElement : MonoBehaviour
                     TeamSetup.Instance.GetActiveUnit().statsBase4Added = GetStatPointsAdded();
                 else if (curStatType == StatType.STATSTANDARD5)
                     TeamSetup.Instance.GetActiveUnit().statsBase5Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATADVANCED1)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv1Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD2)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv2Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD3)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv3Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD4)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv4Added = GetStatPointsAdded();
             }
             else if (statType == "ADVANCED")
             {
-                if (curStatType == StatType.STATSTANDARD1)
-                    TeamSetup.Instance.GetActiveUnit().statsBase1Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD2)
-                    TeamSetup.Instance.GetActiveUnit().statsBase2Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD3)
-                    TeamSetup.Instance.GetActiveUnit().statsBase3Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD4)
-                    TeamSetup.Instance.GetActiveUnit().statsBase4Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD5)
-                    TeamSetup.Instance.GetActiveUnit().statsBase5Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATADVANCED1)
+                if (curStatType == StatType.STATADVANCED1)
                     TeamSetup.Instance.GetActiveUnit().statsAdv1Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD2)
+                else if (curStatType == StatType.STATADVANCED2)
                     TeamSetup.Instance.GetActiveUnit().statsAdv2Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD3)
+                else if (curStatType == StatType.STATADVANCED3)
                     TeamSetup.Instance.GetActiveUnit().statsAdv3Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD4)
+                else if (curStatType == StatType.STATADVANCED4)
                     TeamSetup.Instance.GetActiveUnit().statsAdv4Added = GetStatPointsAdded();
             }
         }
@@ -314,6 +301,11 @@ public class UIElement : MonoBehaviour
             cg.interactable = false;
             cg.blocksRaycasts = false;
         }
+    }
+
+    public void ToggleButton(bool toggle)
+    {
+        buttonCG.blocksRaycasts = toggle;
     }
 
     public void DisableAlertUI()
