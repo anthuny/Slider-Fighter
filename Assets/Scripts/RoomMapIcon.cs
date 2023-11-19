@@ -159,6 +159,9 @@ public class RoomMapIcon : MonoBehaviour
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
 
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
                 return;
             }
             else if (curRoomType == RoomType.STARTING)
@@ -173,6 +176,10 @@ public class RoomMapIcon : MonoBehaviour
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
             }
             else if (curRoomType == RoomType.SHOP)
             {
@@ -181,6 +188,9 @@ public class RoomMapIcon : MonoBehaviour
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
             }
             else if (!isMainRoom)
             {
@@ -197,6 +207,9 @@ public class RoomMapIcon : MonoBehaviour
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
 
                 return;
             }
@@ -215,6 +228,9 @@ public class RoomMapIcon : MonoBehaviour
                     
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
             }
         }
     }

@@ -19,6 +19,11 @@ public class ButtonFunctionality : MonoBehaviour
 
 
     [SerializeField] private bool startDisabled;
+    [SerializeField] private bool playMapMusic;
+
+    private bool settingsOpened = false;
+
+
     private void Awake()
     {
         unitFunctionality = transform.parent.GetComponent<UnitFunctionality>();
@@ -38,8 +43,46 @@ public class ButtonFunctionality : MonoBehaviour
         }
     }
 
+    public void AdjustMusicVolume()
+    {
+        float val = GetComponent<Slider>().value;
+
+        AudioManager.Instance.AdjustMusicTrackVolume(val);
+    }
+
+    public void AdjustSFXVolume()
+    {
+        float val = GetComponent<Slider>().value;
+
+        AudioManager.Instance.AdjustSFXVolume(val);
+    }
+
+    public void ToggleSfxVolume()
+    {
+        SettingsManager.Instance.ToggleSFX();
+    }
+
+    public void ToggleMusicVolume()
+    {
+        SettingsManager.Instance.ToggleMusic();
+    }
+
+    public void ToggleSettingsTab()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        SettingsManager.Instance.ToggleSettingsTab();
+    }
+
     public void ButtonEnterRoom()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        // Map Close SFX
+        AudioManager.Instance.Play("Map_Close");
+
         //GameManager.Instance.UpdateAllyVisibility(true);
 
         // Disable map UI
@@ -61,6 +104,15 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void ButtonOpenMap()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        // Map open SFX
+        AudioManager.Instance.Play("Map_Open");
+
+        if (playMapMusic)
+            AudioManager.Instance.PauseMapMusic(false);
+
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
         GameManager.Instance.UpdateAllyVisibility(false);
@@ -68,7 +120,7 @@ public class ButtonFunctionality : MonoBehaviour
         ShopManager.Instance.ToggleRandomiser(false);
 
         // Toggle Map back on
-        GameManager.Instance.ToggleMap(true, false);
+        GameManager.Instance.ToggleMap(true, false, false, false);
 
         ShopManager.Instance.CloseShop();
 
@@ -145,13 +197,15 @@ public class ButtonFunctionality : MonoBehaviour
 
         TeamSetup.Instance.UpdateSelectedStat(this);
 
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         // If this mastery is locked, stop
         if (TeamSetup.Instance.GetSelectedStat().GetIsLocked())
         {
             Debug.Log("locked");
             return;
         }
-
         else if (curMasteryType == MasteryType.STATSTANDARD1)
         {
             TeamSetup.Instance.ResetStatSelection();
@@ -228,6 +282,9 @@ public class ButtonFunctionality : MonoBehaviour
         else
             ShopManager.Instance.UpdatePlayerGold(-ShopManager.Instance.GetRefreshShopPrice());
 
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         ShopManager.Instance.GetActiveRoom().hasEntered = false;
         ShopManager.Instance.GetActiveRoom().ClearPurchasedItems();
         ShopManager.Instance.FillShopItems(true, false);
@@ -276,6 +333,9 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void ButtonTeamPage()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         TeamSetup.Instance.ResetStatPageCount();
 
         // Disable map UI
@@ -287,12 +347,17 @@ public class ButtonFunctionality : MonoBehaviour
 
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
 
+        GameManager.Instance.ToggleSkillVisibility(false);
+
         // Enable To Map Button
         GameManager.Instance.toMapButton.UpdateAlpha(1);
     }
 
     public void MasteryChangeUnit()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         TeamSetup.Instance.ResetStatPageCount();
 
         TeamSetup.Instance.GetActiveUnit().UpdateLastOpenedMastery(TeamSetup.Instance.activeStatType);
@@ -304,6 +369,12 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void PostBattleToMapButton()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        // Map open SFX
+        AudioManager.Instance.Play("Map_Open");
+
         // Disable post battle UI
         GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
@@ -315,6 +386,9 @@ public class ButtonFunctionality : MonoBehaviour
         // Prevent players from backing out of attacking before the final damage is finalised.
         if (disabled)
             return;
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
 
         // Return unit energy
         //GameManager.Instance.ReturnEnergyToUnit();
@@ -357,6 +431,9 @@ public class ButtonFunctionality : MonoBehaviour
         else
             return;
 
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         GameManager.Instance.PlayerAttack();
 
         StartCoroutine(AttackButtonCont());
@@ -370,10 +447,16 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void MinusEnemyHPButton()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         GameManager.Instance.ReduceAllEnemyHealth();
     }
     public void MinusAllyHPButton()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         GameManager.Instance.ReduceAllPlayerHealth();
     }
 
@@ -381,6 +464,9 @@ public class ButtonFunctionality : MonoBehaviour
     {
         if (disabled)
             return;
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.ToggleEndTurnButton(false);
         GameManager.Instance.UpdateEnemyPosition(false);
@@ -395,7 +481,7 @@ public class ButtonFunctionality : MonoBehaviour
         if (buttonSelectionCG == null)
             return;
 
-            //buttonSelectionCG = GetComponent<CanvasGroup>();
+        //buttonSelectionCG = GetComponent<CanvasGroup>();
 
         if (toggle)
             buttonSelectionCG.alpha = 1;
@@ -424,6 +510,9 @@ public class ButtonFunctionality : MonoBehaviour
     {
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
             if (GameManager.Instance.IsEnemyTaunting().Count >= 1)
             {
                 for (int i = 0; i < GameManager.Instance.IsEnemyTaunting().Count; i++)
@@ -456,8 +545,10 @@ public class ButtonFunctionality : MonoBehaviour
         if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill0CurCooldown() > 0)
             return;
 
-        GameManager.Instance.ResetSelectedUnits();
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
 
+        GameManager.Instance.ResetSelectedUnits();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
         GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0);
@@ -492,8 +583,10 @@ public class ButtonFunctionality : MonoBehaviour
         if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill1CurCooldown() > 0)
             return;
 
-        GameManager.Instance.ResetSelectedUnits();
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
 
+        GameManager.Instance.ResetSelectedUnits();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill1);
         GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().unitData.skill1);
@@ -526,6 +619,9 @@ public class ButtonFunctionality : MonoBehaviour
         // If skill is on cooldown, stop
         if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill2CurCooldown() > 0)
             return;
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.ResetSelectedUnits();
         //GameManager.Instance.UpdateAllSkillIconAvailability();
@@ -561,6 +657,9 @@ public class ButtonFunctionality : MonoBehaviour
         // If skill is on cooldown, stop
         if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill3CurCooldown() > 0)
             return;
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.ResetSelectedUnits();
         //GameManager.Instance.UpdateAllSkillIconAvailability();

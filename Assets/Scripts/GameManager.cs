@@ -28,6 +28,16 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject unitIcon;
 
+    [Header("Combat - Unit Levels")]
+    [SerializeField] private Color easyDiffEnemyLvColour;
+    [SerializeField] private Color mediumDiffEnemyLvColour;
+    [SerializeField] private Color hardDiffEnemyLvColour;
+    [SerializeField] private Color chaosDiffEnemyLvColour;
+    [SerializeField] private int easydiffEnemyLvDifference;
+    [SerializeField] private int mediumdiffEnemyLvDifference;
+    [SerializeField] private int harddiffEnemyLvDifference;
+    [SerializeField] private int chaosdiffEnemyLvDifference;
+
     [Header("Team Setup")]
     [SerializeField] private UIElement teamSetup;
     public UIElement toMapButton;
@@ -123,6 +133,10 @@ public class GameManager : MonoBehaviour
     public SkillData activeSkill;
     public TMP_ColorGradient gradientSkillAlert;
     public TMP_ColorGradient gradientLevelUpAlert;
+    [SerializeField] private CanvasGroup skill0CG;
+    [SerializeField] private CanvasGroup skill1CG;
+    [SerializeField] private CanvasGroup skill2CG;
+    [SerializeField] private CanvasGroup skill3CG;
 
     [Header("Post Battle")]
     public Rewards rewards;
@@ -172,6 +186,69 @@ public class GameManager : MonoBehaviour
         //ShopManager.Instance.UpdatePlayerGold(0);
         //map.mapOverlay.ResetPlayerGoldText();
         ToggleTeamSetup(false);
+
+        // Map music
+        AudioManager.Instance.Play("MapLoop");
+    }
+
+    public void UpdateAllAlliesLevelColour()
+    {
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].UpdateUnitLevelColour(easyDiffEnemyLvColour);
+        }
+    }
+
+    public void UpdateAllEnemiesLevelColour()
+    {
+        int enemyLvTotal = 0;
+        int allyLvTotal = 0;
+
+        int levelDiff = 0;
+
+        // Determine the total level difference between all allies and enemies in combat
+        for (int j = 0; j < activeRoomAllies.Count; j++)
+        {
+            allyLvTotal += activeRoomAllies[j].GetUnitLevel();
+        }
+        for (int x = 0; x < activeRoomEnemies.Count; x++)
+        {
+            enemyLvTotal += activeRoomEnemies[x].GetUnitLevel();
+        }
+
+        if (enemyLvTotal > allyLvTotal)
+        {
+            levelDiff = enemyLvTotal - allyLvTotal;
+        }
+        else if (allyLvTotal >= enemyLvTotal)
+        {
+            levelDiff = 0;
+        }
+
+        // Update each enemy unit's level text colour
+        for (int i = 0; i < activeRoomEnemies.Count; i++)
+        {
+            if (levelDiff >= chaosdiffEnemyLvDifference)
+            {
+                activeRoomEnemies[i].UpdateUnitLevelColour(chaosDiffEnemyLvColour);
+                continue;
+            }
+            else if (levelDiff >= mediumdiffEnemyLvDifference && levelDiff < harddiffEnemyLvDifference)
+            {
+                activeRoomEnemies[i].UpdateUnitLevelColour(hardDiffEnemyLvColour);
+                continue;
+            }
+            else if (levelDiff >= easydiffEnemyLvDifference && levelDiff < mediumdiffEnemyLvDifference)
+            {
+                activeRoomEnemies[i].UpdateUnitLevelColour(mediumDiffEnemyLvColour);
+                continue;
+            }
+            else if (levelDiff <= easydiffEnemyLvDifference)
+            {
+                activeRoomEnemies[i].UpdateUnitLevelColour(easyDiffEnemyLvColour);
+                continue;
+            }
+        }
     }
 
     public Weapon GetActiveWeapon()
@@ -263,14 +340,27 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitColour(unit.unitColour);
                 unitFunctionality.UpdateUnitType("Player");
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
+                unitFunctionality.UpdateUnitSpeedInc(1);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
+                unitFunctionality.UpdateUnitPowerInc(1);
                 unitFunctionality.UpdateUnitDefense(unit.startingDefense);
+                unitFunctionality.UpdateUnitDefenseInc(0);
+                unitFunctionality.UpdateUnitHealingPowerInc(1);
+
+                unitFunctionality.UpdateSpeedIncPerLv(unit.speedIncPerLv);
+                unitFunctionality.UpdatePowerIncPerLv(unit.powerIncPerLv);
+                unitFunctionality.UpdateHealingPowerIncPerLv(unit.healingPowerIncPerLv);
+                unitFunctionality.UpdateDefenseIncPerLv(unit.defenseIncPerLv);
+                unitFunctionality.UpdateMaxHealthIncPerLv(unit.maxHealthIncPerLv);
+
                 unitFunctionality.UpdateCurrentMasteries(unit.GetStandardStats());
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
                 //unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
+
+                unitFunctionality.deathClip = unit.deathClip;
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
                 //AddActiveRoomAllUnits(unit);
@@ -474,8 +564,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ToggleMap(bool toggle, bool generateMap = false, bool increaseFloor = false)
+    public void ToggleMap(bool toggle, bool generateMap = false, bool increaseFloor = false, bool playMapLoop = true)
     {
+        // Turning map OFF
         if (!toggle)
         {
             ResetAlliesExpVisual();            
@@ -485,19 +576,26 @@ public class GameManager : MonoBehaviour
 
             map.ToggleMapVisibility(false, false);
 
-            ToggleSkillSelection(false);
+            //ToggleSkillVisibility(false);
         }
+        // Turn map ON
         else
         {
             if (!increaseFloor)
                 ResetAlliesExpVisual();
+
+            // Play Map music
+            if (playMapLoop)
+                AudioManager.Instance.PauseMapMusic(false);
 
             map.mapOverlay.ToggleBottomBG(true);
             map.gameObject.SetActive(true);
 
             map.ToggleMapVisibility(true, generateMap, increaseFloor);
 
-            ToggleSkillSelection(true);
+            ToggleSkillVisibility(true);
+
+            TeamSetup.Instance.UpdateUnspentPointsText(TeamSetup.Instance.CalculateUnspentStatPoints());
         }
     }
 
@@ -547,8 +645,18 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(postBattleTime);
 
+        // SFX
+        if (playerWon)
+            AudioManager.Instance.Play("Room_Win");
+        else
+            AudioManager.Instance.Play("Room_Lose");
+
+        // Stop combat music
+        AudioManager.Instance.StopCombatMusic();
+
         StartCoroutine(SetupRoomPostBattle(playerWon));
         UpdateAllAlliesPosition(true);
+        ToggleSkillVisibility(false);
 
         RoomManager.Instance.ToggleInteractable(false);
     }
@@ -660,6 +768,10 @@ public class GameManager : MonoBehaviour
         Weapon.Instance.ToggleEnabled(true);
         Weapon.Instance.StartHitLine();
 
+        AudioManager.Instance.PauseCombatMusic(true);
+
+        AudioManager.Instance.Play("AttackBarLoop");
+
         ToggleUIElement(playerAbilities, false);
         ToggleUIElement(playerAbilityDesc, false);
 
@@ -697,6 +809,13 @@ public class GameManager : MonoBehaviour
         // If room type is enemy, spawn enemy room
         if (room.curRoomType == RoomMapIcon.RoomType.ENEMY || room.curRoomType == RoomMapIcon.RoomType.BOSS)
         {
+            // Stop Map music
+            AudioManager.Instance.PauseMapMusic(true);
+
+            // Combat battle music
+            AudioManager.Instance.Play("Combat");
+
+
             // Update background
             BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetCombatForest());
 
@@ -734,14 +853,27 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
                 //unitFunctionality.UpdateUnitColour(unit.unitColour);
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
+                unitFunctionality.UpdateUnitSpeedInc(1);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
+                unitFunctionality.UpdateUnitPowerInc(1);
                 unitFunctionality.UpdateUnitDefense(unit.startingDefense);
+                unitFunctionality.UpdateUnitDefenseInc(0);
+                unitFunctionality.UpdateUnitHealingPowerInc(1);
+
+                unitFunctionality.UpdateSpeedIncPerLv(unit.speedIncPerLv);
+                unitFunctionality.UpdatePowerIncPerLv(unit.powerIncPerLv);
+                unitFunctionality.UpdateHealingPowerIncPerLv(unit.healingPowerIncPerLv);
+                unitFunctionality.UpdateDefenseIncPerLv(unit.defenseIncPerLv);
+                unitFunctionality.UpdateMaxHealthIncPerLv(unit.maxHealthIncPerLv);
+
 
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
                 //unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
+
+                unitFunctionality.deathClip = unit.deathClip;
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
                 //AddActiveRoomAllUnits(unit);
@@ -765,6 +897,13 @@ public class GameManager : MonoBehaviour
 
             for (int x = 0; x < activeRoomAllUnitFunctionalitys.Count; x++)
             {
+                // Enable allies level image for combat
+                if (activeRoomAllUnitFunctionalitys[x].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                {
+                    // Disable unit level image in team setup tab
+                    activeRoomAllUnitFunctionalitys[x].ToggleUnitLevelImage(true);
+                }
+
                 // Update unit energy bar on
                 UpdateActiveUnitStatBar(activeRoomAllUnitFunctionalitys[x], true, true);
                 activeRoomAllUnitFunctionalitys[x].ResetIsDead();
@@ -774,7 +913,13 @@ public class GameManager : MonoBehaviour
 
                 activeRoomAllUnitFunctionalitys[x].CalculateUnitAttackChargeTurnStart();
                 activeRoomAllUnitFunctionalitys[x].UpdateUnitCurAttackCharge();
+
+                // Reset position for battle
+                activeRoomAllUnitFunctionalitys[x].gameObject.GetComponent<RectTransform>().localPosition = Vector2.zero;
             }
+
+            UpdateAllAlliesLevelColour();
+            UpdateAllEnemiesLevelColour();
 
             // Randomise enemy spawn positions
             oldActiveRoomEnemies = activeRoomEnemies;
@@ -819,6 +964,12 @@ public class GameManager : MonoBehaviour
         // If room type is shop, spawn shop room
         else if (room.curRoomType == RoomMapIcon.RoomType.SHOP)
         {
+            // Map open SFX
+            AudioManager.Instance.Play("Shop_Entered");
+
+            // Stop Map music
+            AudioManager.Instance.PauseMapMusic(true);
+
             // Update background
             BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetShopForest());
 
@@ -933,46 +1084,52 @@ public class GameManager : MonoBehaviour
 
         GetActiveUnitFunctionality().effects.UpdateAlpha(1);
 
-        // If the skill is supposed to deal no power, don't spawn projectiles for it
-        if (GetActiveSkill().skillPower != 0)
+
+
+        if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
         {
-            if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
+            GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+
+            yield return new WaitForSeconds(allyRangedSkillWaitTime / 2f);
+
+            // Projectile Launch SFX
+            AudioManager.Instance.Play(GetActiveSkill().skillLaunch.name);
+
+            yield return new WaitForSeconds(allyRangedSkillWaitTime/2f);
+
+
+            for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
             {
-                GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
-
-                yield return new WaitForSeconds(allyRangedSkillWaitTime);
-
-                for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
+                // Loop through all selected units, spawn projectiles, if target is dead stop.
+                for (int z = unitsSelected.Count - 1; z >= 0; z--)
                 {
-                    // Loop through all selected units, spawn projectiles, if target is dead stop.
-                    for (int z = unitsSelected.Count - 1; z >= 0; z--)
+                    if (unitsSelected[z] == null)
+                        continue;
+                    else
                     {
-                        if (unitsSelected[z] == null)
-                            continue;
-                        else
-                        {
-                            GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform);
-                        }
+                        GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform);
                     }
-
-                    yield return new WaitForSeconds(timeBetweenProjectile);
                 }
 
-                yield return new WaitForSeconds(unitPowerUIWaitTime);
+                yield return new WaitForSeconds(timeBetweenProjectile);
             }
-            else
-            {
-                GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
-                yield return new WaitForSeconds(allyMeleeSkillWaitTime / 2f);
-            }
-        }
 
-        /*
-        if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
-            yield return new WaitForSeconds(rangedSkillWaitTime);
+            yield return new WaitForSeconds(unitPowerUIWaitTime);
+        }
         else
-            yield return new WaitForSeconds(meleeSkillWaitTime);
-        */
+        {
+            GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
+
+            yield return new WaitForSeconds(allyMeleeSkillWaitTime / 4f);
+
+            // Projectile Launch SFX
+            AudioManager.Instance.Play(GetActiveSkill().skillLaunch.name);
+
+            yield return new WaitForSeconds(allyMeleeSkillWaitTime / 4f);
+
+            // Attack launch SFX
+            //AudioManager.Instance.Play("Attack_Sword");
+        }
 
         // For no power skills
         if (GetActiveSkill().skillPower == 0)
@@ -1026,15 +1183,17 @@ public class GameManager : MonoBehaviour
                             float tempPower = (float)(unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
                             float newPower = absPower + tempPower;
 
+                            float newHealingPower = originalPower * unitsSelected[i].GetCurHealingPowerInc();
+
                             // Cause power on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                                GetActiveUnitFunctionality().SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower);
+                                GetActiveUnitFunctionality().SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower, false, true);
                             else
-                                GetActiveUnitFunctionality().SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * originalPower);
+                                GetActiveUnitFunctionality().SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newHealingPower, false, false);
 
                             // Increase health on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                                GetActiveUnitFunctionality().UpdateUnitCurHealth(originalPower);
+                                GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newHealingPower);
 
                             // Decrease health on casting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
@@ -1056,6 +1215,9 @@ public class GameManager : MonoBehaviour
                                 float tempPower2 = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower2;
                                 float newPower2 = absPower2 + tempPower2;
 
+                                float temp4 = (unitsSelected[i].GetCurDefense() * unitsSelected[i].GetCurDefenseInc() / 100f) * newPower;
+                                float finalPowerDef = newPower - temp4;
+
                                 // Cause power on selected unit
                                 if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
                                 {
@@ -1065,20 +1227,20 @@ public class GameManager : MonoBehaviour
                                         hasBeenLuckyHit = false;
                                         orderCount--;
                                     }
-                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower2, true, false, null, x + orderCount);
+                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * finalPowerDef, true, true, null, x + orderCount);
 
                                     CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                                 }
 
                                 // Increase health from the units current health if a support skill was casted on it
                                 if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                                    unitsSelected[i].UpdateUnitCurHealth(originalPower);
+                                    unitsSelected[i].UpdateUnitCurHealth((int)newHealingPower);
 
                                 if (!parrying)
                                 {
                                     // Decrease health from the units current health if a offense skill was casted on it
                                     if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                                        unitsSelected[i].UpdateUnitCurHealth((int)newPower2, true);
+                                        unitsSelected[i].UpdateUnitCurHealth((int)finalPowerDef, true);
                                 }
 
                                 // Reset unit's prev power text for future power texts
@@ -1099,7 +1261,14 @@ public class GameManager : MonoBehaviour
                             float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
                             float newPower = absPower + tempPower;
 
+                            float newHealingPower = originalPower * unitsSelected[i].GetCurHealingPowerInc();
+
                             int orderCount;
+
+                            float temp4 = (unitsSelected[i].GetCurDefense() * unitsSelected[i].GetCurDefenseInc() / 100f) * newPower;
+                            float finalPowerDef = newPower - temp4;
+
+                            //Debug.Log(temp4);
 
                             // Cause power
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
@@ -1110,7 +1279,7 @@ public class GameManager : MonoBehaviour
                                     hasBeenLuckyHit = false;
                                     orderCount--;
                                 }
-                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower, false, true, null, x + orderCount);
+                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * finalPowerDef, false, true, null, x + orderCount);
 
                                 CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                             }
@@ -1123,21 +1292,19 @@ public class GameManager : MonoBehaviour
                                     orderCount--;
                                 }
 
-                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * originalPower, false, false, null, x + orderCount);
+                                unitsSelected[i].SpawnPowerUI(newHealingPower, false, false, null, x + orderCount);
                             }
 
                             // Increase health on targeting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                                unitsSelected[i].UpdateUnitCurHealth(originalPower);
+                                unitsSelected[i].UpdateUnitCurHealth((int)newHealingPower);
 
                             // Decrease health on targeting unit
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
                             {
-                                float health = GetActiveUnitFunctionality().GetUnitPowerInc() * newPower;         
+                                float health = GetActiveUnitFunctionality().GetUnitPowerInc() * finalPowerDef;         
                                 unitsSelected[i].UpdateUnitCurHealth((int)health, true);
                             }
-
-
 
                             // Reset unit's prev power text for future power texts
                             if (x == activeSkill.skillAttackCount - 1)
@@ -1251,7 +1418,7 @@ public class GameManager : MonoBehaviour
                 if (CheckItemHitChance(GetActiveUnitFunctionality().GetEquipItemCount("Lucky Dice"), procChance))
                 {
                     hasBeenLuckyHit = true;
-                    unitTarget.SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPowerLucky, false, false, null, xCount + orderCount + 1, true);
+                    unitTarget.SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPowerLucky, false, true, null, xCount + orderCount + 1, true);
                     unitTarget.UpdateUnitCurHealth((int)newPowerLucky, true);
                     continue;
                 }
@@ -1264,7 +1431,7 @@ public class GameManager : MonoBehaviour
                     // Calculate to heal for 5% of the caster's max health
                     float newPower = (items[g].power / 100f) * GetActiveUnitFunctionality().GetUnitMaxHealth();
 
-                    unitCaster.SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower, false, false, null, xCount + orderCount + 1, false, true);
+                    unitCaster.SpawnPowerUI(GetActiveUnitFunctionality().GetUnitPowerInc() * newPower, false, true, null, xCount + orderCount + 1, false, true);
                     unitCaster.UpdateUnitCurHealth((int)newPower, false);
                     continue;
                 }
@@ -1441,7 +1608,7 @@ public class GameManager : MonoBehaviour
         skill0.ToggleSelected(true);
     }
 
-    public void ToggleSkillSelection(bool toggle)
+    public void ToggleSkillVisibility(bool toggle)
     {
         skill0.GetComponent<CanvasGroup>().interactable = toggle;
         skill0.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
@@ -1451,6 +1618,21 @@ public class GameManager : MonoBehaviour
         skill2.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
         skill3.GetComponent<CanvasGroup>().interactable = toggle;
         skill3.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+
+        if (toggle)
+        {
+            skill0.GetComponent<CanvasGroup>().alpha = 1;
+            skill1.GetComponent<CanvasGroup>().alpha = 1;
+            skill2.GetComponent<CanvasGroup>().alpha = 1;
+            skill3.GetComponent<CanvasGroup>().alpha = 1;
+        }
+        else
+        {
+            skill0.GetComponent<CanvasGroup>().alpha = 0;
+            skill1.GetComponent<CanvasGroup>().alpha = 0;
+            skill2.GetComponent<CanvasGroup>().alpha = 0;
+            skill3.GetComponent<CanvasGroup>().alpha = 0;
+        }
     }
     #endregion
 
@@ -1560,7 +1742,7 @@ public class GameManager : MonoBehaviour
                     // units current speed
                     float curSpeed = activeRoomAllUnitFunctionalitys[i].curSpeed;
                     // units new speed
-                    float newSpeed = curSpeed + ((activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent / 100f) * curSpeed);
+                    float newSpeed = curSpeed + (((activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent / 100f) * curSpeed) * activeRoomAllUnitFunctionalitys[i].GetUnitSpeedInc());
 
                     activeRoomAllUnitFunctionalitys[i].UpdateUnitOldSpeed((int)curSpeed);
 
@@ -1600,11 +1782,11 @@ public class GameManager : MonoBehaviour
                         activeRoomAllUnitFunctionalitys[i].ToggleIsDefenseUp(true);
 
                         // units current def
-                        float curDef = activeRoomAllUnitFunctionalitys[i].curDefense;
+                        float curDef = activeRoomAllUnitFunctionalitys[i].GetCurDefense();
                         // units new def
-                        float newDef = curDef + activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent;
+                        float newDef = curDef + (activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent * activeRoomAllUnitFunctionalitys[i].GetCurDefenseInc());
 
-                        activeRoomAllUnitFunctionalitys[i].UpdateUnitOldDefense((int)curDef);
+                        activeRoomAllUnitFunctionalitys[i].UpdateUnitOldDefense((int)newDef);
 
                         // updating new defense
                         activeRoomAllUnitFunctionalitys[i].UpdateUnitDefense((int)newDef);
@@ -1630,11 +1812,11 @@ public class GameManager : MonoBehaviour
                         activeRoomAllUnitFunctionalitys[i].ToggleIsDefenseDown(true);
 
                         // units current def
-                        float curDef = activeRoomAllUnitFunctionalitys[i].curDefense;
+                        float curDef = activeRoomAllUnitFunctionalitys[i].GetCurDefense();
                         // units new def
-                        float newDef = curDef - activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent;
+                        float newDef = curDef - (activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent * activeRoomAllUnitFunctionalitys[i].GetCurDefenseInc());
 
-                        activeRoomAllUnitFunctionalitys[i].UpdateUnitOldDefense((int)curDef);
+                        activeRoomAllUnitFunctionalitys[i].UpdateUnitOldDefense((int)newDef);
 
                         // updating new defense
                         activeRoomAllUnitFunctionalitys[i].UpdateUnitDefense((int)newDef);
@@ -1679,7 +1861,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateTurnOrder(bool unitDied = false, bool roundStart = false)
     {
-        ToggleSkillSelection(true);
+        //ToggleSkillVisibility(false);
 
         ToggleUIElement(turnOrder, true);   // Enable turn order UI
 
@@ -1702,6 +1884,8 @@ public class GameManager : MonoBehaviour
 
         UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
 
+        GetActiveUnitFunctionality().StartFocusUnit();
+
         // Reset active unit attack charge
         GetActiveUnitFunctionality().ResetUnitCurAttackCharge();
         GetActiveUnitFunctionality().unitData.UpdateUnitCurAttackCharge(GetActiveUnitFunctionality().GetCurAttackCharge());
@@ -1719,7 +1903,7 @@ public class GameManager : MonoBehaviour
             playerUIElement.UpdateAlpha(1);
             SetupPlayerUI();
             SetupPlayerSkillsUI();
-
+            ToggleSkillVisibility(true);
             UpdatePlayerAbilityUI();
             UpdateActiveUnitNameText(GetActiveUnitFunctionality().GetUnitName());
 
@@ -1727,6 +1911,7 @@ public class GameManager : MonoBehaviour
             activeSkill = GetActiveUnitFunctionality().unitData.skill0;
 
             ToggleEndTurnButton(true);      // Toggle End Turn Button on
+
         }
         else
         {
@@ -1752,6 +1937,8 @@ public class GameManager : MonoBehaviour
             
             UpdateUnitSelection(activeSkill);
             UpdateEnemyPosition(true);
+
+
         }
 
         UpdateActiveUnitTurnArrow();
@@ -2047,6 +2234,8 @@ public class GameManager : MonoBehaviour
         playerSkill1.ToggleSelectImage(false);
         playerSkill2.ToggleSelectImage(false);
         playerSkill3.ToggleSelectImage(false);
+
+        ToggleSkillVisibility(true);
     }
 
     public void UpdateTurnOrderVisual()
@@ -2263,6 +2452,8 @@ public class GameManager : MonoBehaviour
         DisableButton(skill1Button);
         DisableButton(skill2Button);
         DisableButton(skill3Button);
+
+        ToggleSkillVisibility(false);
 
         GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false);
 

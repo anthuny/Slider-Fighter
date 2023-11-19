@@ -18,6 +18,13 @@ public class UnitData : ScriptableObject
     public int startingDefense;
     public int startingPower;
     public int startingMaxHealth;
+
+    public float speedIncPerLv;
+    public float powerIncPerLv;
+    public float healingPowerIncPerLv;
+    public float defenseIncPerLv;
+    public float maxHealthIncPerLv;
+
     public int startingEnergy;
     public int startingUnitStartTurnEnergyGain;
     // The amount of units this unit can target at once with it's basic attack
@@ -33,6 +40,8 @@ public class UnitData : ScriptableObject
     [Header("Mastery Tree")]
     [SerializeField] private List<Stat> standardStats = new List<Stat>();
     [SerializeField] private List<Stat> advancedStats = new List<Stat>();
+
+    public AudioClip deathClip;
 
     private int curAttackChargeTurnStart;
 

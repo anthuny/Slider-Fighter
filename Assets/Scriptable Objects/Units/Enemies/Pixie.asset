@@ -19,9 +19,14 @@ MonoBehaviour:
   unitColour: {r: 1, g: 0.9782015, b: 0.75, a: 1}
   unitName: Pixie
   startingSpeed: 22
-  startingArmor: 0
+  startingDefense: 0
   startingPower: 3
   startingMaxHealth: 900
+  speedIncPerLv: 2
+  powerIncPerLv: 1
+  healingPowerIncPerLv: 1.5
+  defenseIncPerLv: 0.25
+  maxHealthIncPerLv: 100
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 2
@@ -31,6 +36,6 @@ MonoBehaviour:
   skill1: {fileID: 11400000, guid: dea070939dac73d4097d7ec16fdd2c91, type: 2}
   skill2: {fileID: 11400000, guid: ff6dd9c436887b84b86b518627cc09a3, type: 2}
   skill3: {fileID: 11400000, guid: d5eb76a2123ceb34eb288d50fc856cc6, type: 2}
-  offenseMasteries: []
-  defenseMasteries: []
-  utilityMasteries: []
+  standardStats: []
+  advancedStats: []
+  deathClip: {fileID: 8300000, guid: aa8a888ed30c12c4ba771562e891fe24, type: 3}

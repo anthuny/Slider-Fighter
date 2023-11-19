@@ -41,4 +41,6 @@ public class SkillData : ScriptableObject
     public Sprite skillProjectile;
     public bool projectileAllowSpin;
     public RuntimeAnimatorController projectileAC;
+    public AudioClip skillLaunch;
+    public AudioClip skillHit;
 }

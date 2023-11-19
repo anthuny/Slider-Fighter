@@ -157,7 +157,7 @@ public class Weapon : MonoBehaviour
             if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
             {
                 // Power calculated here
-                weaponHitAreas[i].HitArea();
+                weaponHitAreas[i].StartCoroutine("HitArea");    
                 break;
             }       
         }

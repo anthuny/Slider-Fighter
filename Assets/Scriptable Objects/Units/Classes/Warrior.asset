@@ -19,9 +19,14 @@ MonoBehaviour:
   unitColour: {r: 0.9716981, g: 0.9505435, b: 0.21542363, a: 1}
   unitName: Warrior
   startingSpeed: 15
-  startingDefense: 0
+  startingDefense: 5
   startingPower: 3
   startingMaxHealth: 1600
+  speedIncPerLv: 1
+  powerIncPerLv: 1
+  healingPowerIncPerLv: 1
+  defenseIncPerLv: 0.5
+  maxHealthIncPerLv: 125
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
@@ -42,3 +47,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80774dd74ddd2844287bfb357ed02509, type: 2}
   - {fileID: 11400000, guid: c709aed9547d46d4e8adda8052194396, type: 2}
   - {fileID: 11400000, guid: 8d52d5e1d27a25d469c7e34bee031112, type: 2}
+  deathClip: {fileID: 8300000, guid: 2ee8bb7478e1f704992347ee205d7b67, type: 3}

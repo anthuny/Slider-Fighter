@@ -19,9 +19,14 @@ MonoBehaviour:
   unitColour: {r: 1, g: 1, b: 1, a: 1}
   unitName: Skeleton
   startingSpeed: 15
-  startingArmor: 0
+  startingDefense: 0
   startingPower: 3
   startingMaxHealth: 1000
+  speedIncPerLv: 1
+  powerIncPerLv: 1
+  healingPowerIncPerLv: 0.25
+  defenseIncPerLv: 1
+  maxHealthIncPerLv: 100
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
@@ -31,6 +36,6 @@ MonoBehaviour:
   skill1: {fileID: 11400000, guid: 35a840c5b49c2194381a1f0a12d398dc, type: 2}
   skill2: {fileID: 11400000, guid: 0884c62a1d793f74b924c84b13f4410f, type: 2}
   skill3: {fileID: 11400000, guid: 501512750c7df82488bd750aa72288e2, type: 2}
-  offenseMasteries: []
-  defenseMasteries: []
-  utilityMasteries: []
+  standardStats: []
+  advancedStats: []
+  deathClip: {fileID: 8300000, guid: 7399de115d530e54f98d445b4385b419, type: 3}

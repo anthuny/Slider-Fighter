@@ -7,7 +7,7 @@ public class TeamSetup : MonoBehaviour
     public enum ActiveStatType { STANDARD, ADVANCED };
     public ActiveStatType activeStatType;
 
-    [SerializeField] private int masterPointsPerLv = 2;
+    [SerializeField] private int masteryPointsPerLv = 2;
 
     public UIElement statsBase1;
     public UIElement statsBase2;
@@ -24,6 +24,7 @@ public class TeamSetup : MonoBehaviour
     [SerializeField] private UIElement statFillAmount;
     [SerializeField] private UIElement unitLevelText;
     [SerializeField] private UIElement unspentPointsText;
+    [SerializeField] private UIElement teamPageAlert;
 
     [SerializeField] private UIElement statTreeType;
     [SerializeField] private Color offenseTitleColour;
@@ -44,6 +45,54 @@ public class TeamSetup : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void TriggerStat(string statType, float power)
+    {
+        // Basic Stats
+        if (statType == "HPBONUS")
+        {
+            float tempAddedHealth = ((power*100) / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
+            float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
+        }
+        else if (statType == "DMGBONUS")
+        {
+            GetActiveUnit().UpdateUnitPowerInc(power);
+        }
+        else if (statType == "HEALINGBONUS")
+        {
+            GetActiveUnit().UpdateUnitHealingPowerInc(power);
+        }
+        else if (statType == "DEFENSEBONUS")
+        {
+            GetActiveUnit().UpdateUnitDefenseInc(power);
+        }
+        else if (statType == "SPEEDBONUS")
+        {
+            GetActiveUnit().UpdateUnitSpeedInc(power);
+        }
+
+
+        /*
+        // Advanced Stats
+        else if (statType == "DMGLINEBONUS")
+        {
+            GetActiveUnit().IncDamageLineBonus();
+        }
+        else if (statType == "HEALINGLINEBONUS")
+        {
+            GetActiveUnit().IncHealingLineBonus();
+        }
+        else if (statType == "COOLDOWNREDUCBONUS")
+        {
+            GetActiveUnit().IncCooldownReducBonus();
+        }
+        else if (statType == "ITEMPROCBONUS")
+        {
+            GetActiveUnit().RerollItemCount();
+        }
+        */
     }
 
     public void ToggleMasteryPage(bool standard, bool toggle)
@@ -212,20 +261,18 @@ public class TeamSetup : MonoBehaviour
     public void SetupTeamSetup(UnitFunctionality unit, ActiveStatType statType)
     {
         UpdateActiveUnit(unit);
-        // active unit face right
-
-        //UpdateMasteryPage(masteryType);
 
         UpdateUnitLevelText(GetActiveUnit().GetUnitLevel().ToString());
 
         ResetStatSelection();
         UpdateStatDescription();
 
-        //activeStat = unit.GetCurrentStat(0);
-        //selectedStat = statsBase1;
+        activeStat = unit.GetCurrentStat(0);
 
         if (statType == ActiveStatType.STANDARD)
         {
+            selectedStat = statsBase1;
+
             statsBase1.UpdateStatPoindsAdded(true, false, unit.statsBase1Added, true, "STANDARD");
             statsBase2.UpdateStatPoindsAdded(true, false, unit.statsBase2Added, true, "STANDARD");
             statsBase3.UpdateStatPoindsAdded(true, false, unit.statsBase3Added, true, "STANDARD");
@@ -274,6 +321,8 @@ public class TeamSetup : MonoBehaviour
         }
         else if (statType == ActiveStatType.ADVANCED)
         {
+            selectedStat = statsAdvanced1;
+
             statsAdvanced1.UpdateStatPoindsAdded(true, false, unit.statsAdv1Added, true, "ADVANCED");
             statsAdvanced2.UpdateStatPoindsAdded(true, false, unit.statsAdv2Added, true, "ADVANCED");
             statsAdvanced3.UpdateStatPoindsAdded(true, false, unit.statsAdv3Added, true, "ADVANCED");
@@ -359,6 +408,9 @@ public class TeamSetup : MonoBehaviour
         if (GetSelectedStat().GetStatPointsAdded() >= maxAmount)
             return;
 
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         string activeMasteryType2 = "";
 
         if (activeStatType == ActiveStatType.STANDARD)
@@ -368,6 +420,44 @@ public class TeamSetup : MonoBehaviour
 
         GetSelectedStat().UpdateStatPoindsAdded(true, false, 0, false, activeMasteryType2);
         GetSelectedStat().UpdateContentSubText(GetSelectedStat().GetStatPointsAdded().ToString() + " / " + maxAmount);
+
+        if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD1)
+        {
+            TriggerStat("HPBONUS", 0.05f);
+        }
+        else if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD2)
+        {
+            TriggerStat("DMGBONUS", 0.05f);
+        }
+        if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD3)
+        {
+            TriggerStat("HEALINGBONUS", 0.05f);
+        }
+        else if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD4)
+        {
+            TriggerStat("SPEEDBONUS", 0.05f);
+        }
+        else if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD5)
+        {
+            TriggerStat("DEFENSEBONUS", 0.5f);
+        }
+
+        else if (GetSelectedStat().curStatType == UIElement.StatType.STATADVANCED1)
+        {
+            TriggerStat("DMGLINEBONUS", 1f);
+        }
+        else if (GetSelectedStat().curStatType == UIElement.StatType.STATADVANCED2)
+        {
+            TriggerStat("HEALINGLINEBONUS", 1F);
+        }
+        else if (GetSelectedStat().curStatType == UIElement.StatType.STATADVANCED3)
+        {
+            TriggerStat("COOLDOWNREDUCBONUS", 1f);
+        }
+        else if (GetSelectedStat().curStatType == UIElement.StatType.STATADVANCED4)
+        {
+            TriggerStat("ITEMPROCBONUS", 1f);
+        }
 
         //CheckIfStatShouldBeLocked();
     }
@@ -533,6 +623,9 @@ public class TeamSetup : MonoBehaviour
     }
     public void UpdateActiveUnit(UnitFunctionality unit)
     {
+        // Disable unit level image in team setup tab
+        unit.ToggleUnitLevelImage(false);
+
         activeUnit = unit;
     }
 
@@ -578,11 +671,32 @@ public class TeamSetup : MonoBehaviour
     public void UpdateUnspentPointsText(int count)
     {
         unspentPointsText.UpdateContentSubText(count.ToString());
+
+
     }
 
     public int CalculateUnspentStatPoints()
     {
-        int points = (GetActiveUnit().GetUnitLevel() * masterPointsPerLv) - GetActiveUnit().GetSpentMasteryPoints();
+        int points = (GetActiveUnit().GetUnitLevel() * masteryPointsPerLv) - GetActiveUnit().GetSpentMasteryPoints();
+
+        int unitsCombinedLevel = 0;
+        int spentPoints = 0;
+
+        for (int i = 0; i < GameManager.Instance.activeTeam.Count; i++)
+        {
+            unitsCombinedLevel += GameManager.Instance.activeRoomAllies[i].GetUnitLevel() * masteryPointsPerLv;
+            spentPoints += GameManager.Instance.activeRoomAllies[i].GetSpentMasteryPoints();
+        }
+
+        // Display alert if points remain
+        if (unitsCombinedLevel > spentPoints)
+        {
+            teamPageAlert.UpdateAlpha(1);
+        }
+        // Hide alerrt if no points remain
+        else
+            teamPageAlert.UpdateAlpha(0);
+
         return points;
     }
 

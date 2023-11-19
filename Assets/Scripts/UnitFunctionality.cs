@@ -12,6 +12,7 @@ public class UnitFunctionality : MonoBehaviour
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
+    [SerializeField] private UIElement unitLevelImage;
     [SerializeField] private UIElement selectionCircle;
     [SerializeField] private UIElement unitVisuals;
     private Sprite unitIcon;
@@ -26,14 +27,23 @@ public class UnitFunctionality : MonoBehaviour
     public Image unitImage;
     public UIElement curUnitTurnArrow;
     public int curSpeed;
+    public float curSpeedInc = 0;
     public int curPower;
     public float curPowerInc = 0;
+    //public int curHealingPower = 1;
+    public float curHealingPowerInc = 0;
     public int curDefense;
+    public float curDefenseInc;
     [SerializeField] private int curHealth;
-    private int maxHealth;
+    [SerializeField] private int maxHealth;
     private int curlevel;
     private float curExp;
     private float maxExp;
+    [SerializeField] private float curSpeedIncPerLv;
+    [SerializeField] private float curPowerIncPerLv;
+    [SerializeField] private float curHealingPowerIncPerLv;
+    [SerializeField] private float curDefenseIncPerLv;
+    [SerializeField] private float maxHealthIncPerLv;
     [HideInInspector]
     public int unitStartTurnEnergyGain;
     public EnergyCost energyCostImage;
@@ -89,6 +99,8 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int skill2CurCooldown = 0;
     [SerializeField] private int skill3CurCooldown = 0;
 
+    public CombatUnitFocus unitFocus;
+
     public bool idleBattle;
     public bool isDead;
     public bool isTaunting;
@@ -106,6 +118,100 @@ public class UnitFunctionality : MonoBehaviour
     public bool isSpeedUp;
     public bool isDefenseUp;
     public bool isDefenseDown;
+    public int bonusDmgLines;
+    public int bonusHealingLines;
+    public int reducedCooldownsCount;
+    public int rerollItemCount;
+
+    [HideInInspector]
+    public AudioClip deathClip;
+
+    public void UpdateSpeedIncPerLv(float newVal)
+    {
+        //curSpeedIncPerLv += newVal;
+    }
+    public void UpdatePowerIncPerLv(float newVal)
+    {
+        //curPowerIncPerLv += newVal;
+    }
+    public void UpdateHealingPowerIncPerLv(float newVal)
+    {
+        //curHealingPowerIncPerLv += newVal;
+    }
+    public void UpdateDefenseIncPerLv(float newVal)
+    {
+        //curDefenseIncPerLv += newVal;
+    }
+    public void UpdateMaxHealthIncPerLv(float newVal)
+    {
+        //maxHealthIncPerLv += newVal;
+    }
+
+    public float GetSpeedIncPerLv()
+    {
+        return curSpeedIncPerLv;
+    }
+    public float GetPowerIncPerLv()
+    {
+        return curPowerIncPerLv;
+    }
+    public float GetHealingPowerIncPerLv()
+    {
+        return curHealingPowerIncPerLv;
+    }
+    public float GetDefenseIncPerLv()
+    {
+        return curDefenseIncPerLv;
+    }
+    public float GetMaxHealthIncPerLv()
+    {
+        return maxHealthIncPerLv;
+    }
+
+    public void StartFocusUnit()
+    {
+        unitFocus.FocusUnit();
+    }
+    
+    public void IncDamageLineBonus()
+    {
+        bonusDmgLines++;
+    }
+
+    public void IncHealingLineBonus()
+    {
+        bonusHealingLines++;
+    }
+
+    public void IncCooldownReducBonus()
+    {
+        reducedCooldownsCount++;
+    }
+
+    public void RerollItemCount()
+    {
+        rerollItemCount++;
+    }
+
+    public int GetBonusDmgLines()
+    {
+        return bonusDmgLines;
+    }
+
+    public int GetHealingLineBonus()
+    {
+        return bonusHealingLines;
+    }
+
+    public int GetCooldownReducBonus()
+    {
+        return reducedCooldownsCount;
+    }
+
+    public int GetRerollItemCount()
+    {
+        return rerollItemCount;
+    }
 
     private void Awake()
     {
@@ -118,9 +224,33 @@ public class UnitFunctionality : MonoBehaviour
         ToggleUnitBG(false);
         ResetEffects();
 
-        UpdateUnitPowerInc(1);
+        //UpdateUnitPowerInc(1);
+        //sUpdateUnitHealingPowerInc(1);
 
         UpdateIsVisible(false);
+
+        UpdateUnitLevelImage();
+        ToggleUnitLevelImage(true);
+    }
+
+    public void ToggleUnitLevelImage(bool toggle)
+    {
+        UpdateUnitLevelImage();
+
+        if (toggle)
+            unitLevelImage.UpdateAlpha(1);
+        else
+            unitLevelImage.UpdateAlpha(0);
+    }
+
+    public void UpdateUnitLevelColour(Color color)
+    {
+        unitLevelImage.UpdateContentSubTextColour(color);
+    }
+
+    public void UpdateUnitLevelImage()
+    {
+        unitLevelImage.UpdateContentSubText(curlevel.ToString());
     }
 
     public void UpdateLastOpenedMastery(TeamSetup.ActiveStatType masteryType)
@@ -676,16 +806,6 @@ public class UnitFunctionality : MonoBehaviour
         unitIcon = sprite;
     }
 
-    public float GetUnitPowerInc()
-    {
-        return curPowerInc;
-    }
-
-    public void UpdateUnitPowerInc(float newPowerInc)
-    {
-        curPowerInc += newPowerInc;
-    }
-
     public void ToggleTaunt(bool toggle)
     {
         isTaunting = toggle;
@@ -702,9 +822,20 @@ public class UnitFunctionality : MonoBehaviour
     public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, int powerUICount = 1, bool isLuckyHit = false, bool isHeal = false)
     {
         if (offense)
+        {
+            if (effect == null)
+                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+            else if (effect.curEffectName == Effect.EffectName.BLEED)
+                AudioManager.Instance.Play("Bleed");
+
             damageCount++;
+        }
+
         else
+        {
+            AudioManager.Instance.Play("Heal");
             healCount++;
+        }
 
         if (!isLuckyHit)
         {
@@ -751,6 +882,8 @@ public class UnitFunctionality : MonoBehaviour
             return;
         }
 
+
+
         // Make Animate
         powerText.GetComponent<UIElement>().UpdateAlpha(1);
 
@@ -765,7 +898,7 @@ public class UnitFunctionality : MonoBehaviour
         // Update Text Colour
         if (effect == null)
         {
-            if (!isHeal)
+            if (offense)
             {
                 // Change power text colour to offense colour if the type of attack is offense
                 if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
@@ -909,6 +1042,8 @@ public class UnitFunctionality : MonoBehaviour
 
             GameManager.Instance.RemoveUnit(this);
 
+            AudioManager.Instance.Play(deathClip.name);
+
             yield return new WaitForSeconds(1.2f);
 
 
@@ -960,7 +1095,19 @@ public class UnitFunctionality : MonoBehaviour
 
                 TriggerTextAlert("LEVEL UP!", 1, false, "", true);
 
+                // Level up SFX
+                AudioManager.Instance.Play("LevelUp");
+
+                // level up bonus
+                UpdatePowerIncPerLv(GetPowerIncPerLv());
+                UpdateHealingPowerIncPerLv(GetHealingPowerIncPerLv());
+                UpdateSpeedIncPerLv(GetSpeedIncPerLv());
+                UpdateDefenseIncPerLv(GetDefenseIncPerLv());
+                UpdateMaxHealthIncPerLv(GetMaxHealthIncPerLv());
+
                 UpdateUnitCurHealth((int)GetUnitMaxHealth(), false, true);
+
+                UpdateUnitLevelImage();
                 yield break;
             }
             else
@@ -1070,11 +1217,12 @@ public class UnitFunctionality : MonoBehaviour
 
                 if (curHealth > 0)
                 {
-                    // Damage formula - Defense 
-                    float temp = (curDefense / 100f) * absPower;
-                    float powerIncArmor = absPower - temp;
+                    // Damage formula - Defense. Negate some of the damage
+                    //float temp = ((GetCurDefense() * GetCurDefenseInc()) / 100f) * absPower;
+                    //Debug.Log(temp);
+                    //float powerIncArmor = absPower - temp;
 
-                    curHealth -= (int)powerIncArmor;
+                    curHealth -= (int)absPower;
                 }
 
 
@@ -1191,6 +1339,16 @@ public class UnitFunctionality : MonoBehaviour
         curSpeed = newSpeed;
     }
 
+    public void UpdateUnitSpeedInc(float newSpeedInc)
+    {
+        curSpeedInc += newSpeedInc;
+    }
+
+    public float GetUnitSpeedInc()
+    {
+        return curSpeedInc;
+    }
+
     public void UpdateUnitOldSpeed(int oldSpeed)
     {
         oldCurSpeed = oldSpeed;
@@ -1265,9 +1423,46 @@ public class UnitFunctionality : MonoBehaviour
         curPower = newPower;
     }
 
-    public void UpdateUnitDefense(int newArmor)
+    public void UpdateUnitHealingPower(int newHealingPower)
     {
-        curDefense = newArmor;
+        //curHealingPower = newHealingPower;
+    }
+
+    public void UpdateUnitHealingPowerInc(float newHealingPowerInc)
+    {
+        curHealingPowerInc += newHealingPowerInc;
+    }
+
+    public float GetCurHealingPowerInc()
+    {
+        return curHealingPowerInc;
+    }
+
+
+
+    public float GetUnitPowerInc()
+    {
+        return curPowerInc;
+    }
+
+    public void UpdateUnitPowerInc(float newPowerInc)
+    {
+        curPowerInc += newPowerInc;
+    }
+
+    public void UpdateUnitDefense(int newDefense)
+    {
+        curDefense = newDefense;
+    }
+
+    public void UpdateUnitDefenseInc(float newDefenseInc)
+    {
+        curDefenseInc += newDefenseInc;
+    }
+
+    public float GetCurDefenseInc()
+    {
+        return curDefenseInc;
     }
 
     public int GetCurDefense()

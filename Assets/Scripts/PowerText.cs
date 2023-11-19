@@ -26,6 +26,7 @@ public class PowerText : MonoBehaviour
     private void Start()
     {
         StartCoroutine(StartFadeCountdown());
+
     }
 
     void UpdateSortingOrder(int newSortingOrder)

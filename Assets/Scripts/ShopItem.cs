@@ -71,6 +71,9 @@ public class ShopItem : MonoBehaviour
         else
             ShopManager.Instance.UpdatePlayerGold(-price);
 
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         // Purchase the item
         imageUI.UpdateAlpha(0);
         textUI.UpdateAlpha(0);
@@ -96,7 +99,10 @@ public class ShopItem : MonoBehaviour
                     GameManager.Instance.ToggleAllowSelection(true);
                     ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
                     ShopManager.Instance.selectAlly = true;
-            
+
+                    // Buy item SFX
+                    AudioManager.Instance.Play("Shop_Item_Buy");
+
                     UpdatePurchased(true);
 
                     return;
@@ -123,6 +129,9 @@ public class ShopItem : MonoBehaviour
                     ShopManager.Instance.selectAlly = true;
 
                     UpdatePurchased(true);
+
+                    // potion buy/drink  SFX
+                    AudioManager.Instance.Play("Shop_Potion_Buy");
 
                     return;
                 }

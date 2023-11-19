@@ -19,9 +19,14 @@ MonoBehaviour:
   unitColour: {r: 1, g: 1, b: 1, a: 1}
   unitName: Ogre
   startingSpeed: 15
-  startingArmor: 0
+  startingDefense: 0
   startingPower: 3
   startingMaxHealth: 1400
+  speedIncPerLv: 1
+  powerIncPerLv: 2
+  healingPowerIncPerLv: 1
+  defenseIncPerLv: 2
+  maxHealthIncPerLv: 100
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
@@ -31,6 +36,6 @@ MonoBehaviour:
   skill1: {fileID: 11400000, guid: 34b9c64cee933fa40882af1c12a8abe8, type: 2}
   skill2: {fileID: 11400000, guid: 8d7a5f633b611624ebfab7e379ed0b4f, type: 2}
   skill3: {fileID: 11400000, guid: b0948dac6231f6945bed3a2822a2e9a1, type: 2}
-  offenseMasteries: []
-  defenseMasteries: []
-  utilityMasteries: []
+  standardStats: []
+  advancedStats: []
+  deathClip: {fileID: 8300000, guid: f6bdac24d6957ac4eb414094bd3457e8, type: 3}

@@ -19,9 +19,14 @@ MonoBehaviour:
   unitColour: {r: 0.29519406, g: 0.6792453, b: 0.21466713, a: 1}
   unitName: Archer
   startingSpeed: 20
-  startingDefense: 0
+  startingDefense: 5
   startingPower: 3
   startingMaxHealth: 1400
+  speedIncPerLv: 2
+  powerIncPerLv: 1
+  healingPowerIncPerLv: 0.25
+  defenseIncPerLv: 0.25
+  maxHealthIncPerLv: 100
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
@@ -42,3 +47,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c594405fa5019f24e9c252c3a105a4af, type: 2}
   - {fileID: 11400000, guid: 524ffbc92f6128349bd1dd7c2510bc1c, type: 2}
   - {fileID: 11400000, guid: 18ef1a26a48f7874f8286d8ca11737d4, type: 2}
+  deathClip: {fileID: 8300000, guid: c278f4be40dfcea4a9c7f17ecd4a78e1, type: 3}

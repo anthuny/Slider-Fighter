@@ -34,4 +34,6 @@ MonoBehaviour:
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
-  projectileInvisColour: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 0}
+  projectileAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: bd0048dda2873ca4b8061ab39773ee4b, type: 3}
+  skillHit: {fileID: 0}

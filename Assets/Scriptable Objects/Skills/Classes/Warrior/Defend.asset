@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Defend
+  m_EditorClassIdentifier: 
+  curSkillType: 1
+  curSkillSelectionType: 1
+  curSkillGameType: 2
+  curRangedType: 1
+  skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
+  skillName: DEFENSE UP
+  skillDescr: Cast DEFENSE UP on self for 0/1/2/3/4 turns
+  skillPower: 0
+  skillAttackCount: 0
+  projectileSpeed: 10
+  skillCooldown: 3
+  skillSelectionCount: 1
+  isSelfCast: 1
+  special: 1
+  effect: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
+  effectTurnLength: 1
+  effectHitChance: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
+  skillProjectile: {fileID: 0}
+  projectileAllowSpin: 0
+  projectileAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 02589b44135c9394e978d1ae980de22e, type: 3}
+  skillHit: {fileID: 0}

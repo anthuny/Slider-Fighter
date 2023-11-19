@@ -143,11 +143,12 @@ public class Effect : MonoBehaviour
         {
             initialUse = true;
 
-            tempAddedHealth = (powerPercent / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
+            tempAddedHealth = ((powerPercent / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth()) * targetUnit.GetCurHealingPowerInc();
             float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
+            float newCurHealth = (int)tempAddedHealth;
             GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)tempAddedHealth);
-            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, false, this);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newCurHealth);
+            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(newCurHealth, false, false, this);
         }
         else if (curEffectName == EffectName.TAUNT)
             GameManager.Instance.GetActiveUnitFunctionality().ToggleTaunt(true);
@@ -232,15 +233,19 @@ public class Effect : MonoBehaviour
         float tempPower = (powerPercent / 100f) * unitMaxHealth;
         int power = (int)tempPower;
 
+        float newHealingPower = power * GameManager.Instance.GetActiveUnitFunctionality().GetCurHealingPowerInc();
+
         // Make bleed scale with recover buff // TODO
 
         if (curEffectName == EffectName.BLEED)
             GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(-power, true);
         else if (curEffectName == EffectName.RECOVER)
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(power);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newHealingPower);
 
-        if (curEffectName == EffectName.BLEED || curEffectName == EffectName.RECOVER)
-            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(power, false, false, this);
+        if (curEffectName == EffectName.BLEED)
+            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(power, false, true, this);
+        else if (curEffectName == EffectName.RECOVER)
+            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)newHealingPower, false, false, this);
 
         if (curEffectName ==  EffectName.PARRY)
         { }

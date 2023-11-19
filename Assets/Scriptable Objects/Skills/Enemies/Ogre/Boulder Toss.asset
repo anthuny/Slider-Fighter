@@ -35,3 +35,5 @@ MonoBehaviour:
   skillProjectile: {fileID: 21300000, guid: 03b412e4cc6e03746939734ab20d47dd, type: 3}
   projectileAllowSpin: 1
   projectileAC: {fileID: 9100000, guid: 067109bf65bf80e45a7193ef7d38c9ac, type: 2}
+  skillLaunch: {fileID: 8300000, guid: 14ea4f6a0ce8ab6408b7b8865d101407, type: 3}
+  skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
