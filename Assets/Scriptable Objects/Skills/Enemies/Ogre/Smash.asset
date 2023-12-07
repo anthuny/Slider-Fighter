@@ -19,7 +19,7 @@ MonoBehaviour:
   skillSprite: {fileID: 0}
   skillName: SMASH
   skillDescr: 
-  skillPower: 75
+  skillPower: 50
   skillAttackCount: 2
   projectileSpeed: 12
   skillCooldown: 0

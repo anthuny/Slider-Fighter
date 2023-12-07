@@ -103,7 +103,7 @@ public class AudioManager : MonoBehaviour
         if (!avoidSFX)
         {
             // Button Click SFX
-            Play("Button_Click");
+            //Play("Button_Click");
         }
 
         if (!musicMuted)

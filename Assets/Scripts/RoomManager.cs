@@ -14,7 +14,7 @@ public class RoomManager : MonoBehaviour
     private CanvasGroup cg;
 
     private FloorData activeFloor;
-    private int floorCount = 0;   
+    private int floorCount = 1;   
     private int minRoomCountBonus;
     private int maxRoomCountBonus;
 

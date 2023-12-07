@@ -12,6 +12,7 @@ public class FloorData : ScriptableObject
     public int maxRoomCount = 8;
     public int sideRoomAmount = 5;
     public int shopRoomCount = 1;
+    public int heroRoomCount = 1;
 
     public List<UnitData> enemyUnits = new List<UnitData>();
 

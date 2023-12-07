@@ -22,7 +22,7 @@ public class ButtonFunctionality : MonoBehaviour
     [SerializeField] private bool playMapMusic;
 
     private bool settingsOpened = false;
-
+    public bool buttonLocked;
 
     private void Awake()
     {
@@ -43,6 +43,42 @@ public class ButtonFunctionality : MonoBehaviour
         }
     }
 
+    public void MenuSelectAlly()
+    {
+        if (!buttonLocked)
+        {
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            CharacterCarasel.Instance.SelectAlly(this);
+        }
+    }
+
+    public IEnumerator MenuUnitSelection()
+    {
+        yield return new WaitForSeconds(1.45f);
+
+        CharacterCarasel.Instance.ToggleMenu(false);
+
+        // Allow button selection
+        buttonLocked = false;
+    }
+    public void MenuLeftArrowCarasel()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        CharacterCarasel.Instance.SpinCarasel(true);
+    }
+
+    public void MenuRightArrowCarasel()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        CharacterCarasel.Instance.SpinCarasel(false);
+    }
+
     public void AdjustMusicVolume()
     {
         float val = GetComponent<Slider>().value;
@@ -59,11 +95,17 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void ToggleSfxVolume()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         SettingsManager.Instance.ToggleSFX();
     }
 
     public void ToggleMusicVolume()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         SettingsManager.Instance.ToggleMusic();
     }
 
@@ -112,6 +154,9 @@ public class ButtonFunctionality : MonoBehaviour
 
         if (playMapMusic)
             AudioManager.Instance.PauseMapMusic(false);
+
+        MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
+        MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
 
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
@@ -375,6 +420,9 @@ public class ButtonFunctionality : MonoBehaviour
         // Map open SFX
         AudioManager.Instance.Play("Map_Open");
 
+        // Toggle Map back on
+        GameManager.Instance.ToggleMap(true, false, false, false);
+
         // Disable post battle UI
         GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
@@ -506,6 +554,21 @@ public class ButtonFunctionality : MonoBehaviour
         return selected;
     }
 
+    public void HeroRoomPromptYes()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        HeroRoomManager.Instance.TogglePrompt(false, false);
+    }
+
+    public void HeroRoomPromptNo()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        HeroRoomManager.Instance.TogglePrompt(false);
+    }
     public void SelectUnit()
     {
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)

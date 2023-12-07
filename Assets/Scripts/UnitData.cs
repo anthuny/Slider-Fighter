@@ -17,6 +17,7 @@ public class UnitData : ScriptableObject
     public int startingSpeed;
     public int startingDefense;
     public int startingPower;
+    public int startingHealingPower;
     public int startingMaxHealth;
 
     public float speedIncPerLv;

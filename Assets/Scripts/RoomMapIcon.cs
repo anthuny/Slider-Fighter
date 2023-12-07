@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class RoomMapIcon : MonoBehaviour
 {
-    public enum RoomType { ENEMY, SHOP, BOSS, STARTING }
+    public enum RoomType { ENEMY, SHOP, HERO, BOSS, STARTING }
     public RoomType curRoomType;
 
     public enum RoomSize { MAIN, SIDE }
@@ -380,6 +380,8 @@ public class RoomMapIcon : MonoBehaviour
             GameManager.Instance.map.UpdateRoomIconType(this, "enemy");
         else if (curRoomType == RoomType.SHOP)
             GameManager.Instance.map.UpdateRoomIconType(this, "shop");
+        else if (curRoomType == RoomType.HERO)
+            GameManager.Instance.map.UpdateRoomIconType(this, "hero");
         else if (curRoomType == RoomType.BOSS)
             GameManager.Instance.map.UpdateRoomIconType(this, "boss");
         else if (curRoomType == RoomType.STARTING)

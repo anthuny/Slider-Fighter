@@ -58,19 +58,19 @@ public class TeamSetup : MonoBehaviour
         }
         else if (statType == "DMGBONUS")
         {
-            GetActiveUnit().UpdateUnitPowerInc(power);
+            GetActiveUnit().UpdatePowerIncPerLv((int)power);
         }
         else if (statType == "HEALINGBONUS")
         {
-            GetActiveUnit().UpdateUnitHealingPowerInc(power);
+            GetActiveUnit().UpdateHealingPowerIncPerLv((int)power);
         }
         else if (statType == "DEFENSEBONUS")
         {
-            GetActiveUnit().UpdateUnitDefenseInc(power);
+            GetActiveUnit().UpdateDefenseIncPerLv((int)power);
         }
         else if (statType == "SPEEDBONUS")
         {
-            GetActiveUnit().UpdateUnitSpeedInc(power);
+            GetActiveUnit().UpdateSpeedIncPerLv((int)power);
         }
 
 
@@ -261,6 +261,8 @@ public class TeamSetup : MonoBehaviour
     public void SetupTeamSetup(UnitFunctionality unit, ActiveStatType statType)
     {
         UpdateActiveUnit(unit);
+
+        UpdateUnspentPointsText(CalculateUnspentStatPoints());
 
         UpdateUnitLevelText(GetActiveUnit().GetUnitLevel().ToString());
 

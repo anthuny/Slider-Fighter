@@ -143,7 +143,7 @@ public class Effect : MonoBehaviour
         {
             initialUse = true;
 
-            tempAddedHealth = ((powerPercent / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth()) * targetUnit.GetCurHealingPowerInc();
+            tempAddedHealth = ((powerPercent / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth());
             float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
             float newCurHealth = (int)tempAddedHealth;
             GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
@@ -155,10 +155,10 @@ public class Effect : MonoBehaviour
         else if (curEffectName == EffectName.POWERUP)
         {
             storedPowerAmp = powerAmp;
-            targetUnit.UpdateUnitPowerInc(storedPowerAmp);       
+            targetUnit.UpdatePowerIncPerLv((int)storedPowerAmp);       
         }
         else if (curEffectName == EffectName.POWERDOWN)
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitPowerInc(-storedPowerAmp);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdatePowerIncPerLv((int)-storedPowerAmp);
         else if (curEffectName == EffectName.PARRY)
             GameManager.Instance.GetActiveUnitFunctionality().isParrying = true;
         else if (curEffectName == EffectName.SPEEDUP)
@@ -181,7 +181,6 @@ public class Effect : MonoBehaviour
         {
             float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() - tempAddedHealth;
             GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)-tempAddedHealth, true);
             GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, true, this);
         }
         else if (curEffectName == EffectName.TAUNT)
@@ -211,12 +210,12 @@ public class Effect : MonoBehaviour
         else if (curEffectName == EffectName.POWERUP)
         {
             // Toggle mark effect off the target
-            unit.UpdateUnitPowerInc(-storedPowerAmp);
+            unit.UpdatePowerIncPerLv((int)-storedPowerAmp);
         }
         else if (curEffectName == EffectName.POWERDOWN)
         {
             // Toggle mark effect off the target
-            unit.UpdateUnitPowerInc(storedPowerAmp);
+            unit.UpdatePowerIncPerLv((int)storedPowerAmp);
         }
 
         if (unit.GetEffects()[unit.GetEffects().IndexOf(this)])
@@ -233,7 +232,7 @@ public class Effect : MonoBehaviour
         float tempPower = (powerPercent / 100f) * unitMaxHealth;
         int power = (int)tempPower;
 
-        float newHealingPower = power * GameManager.Instance.GetActiveUnitFunctionality().GetCurHealingPowerInc();
+        float newHealingPower = power * GameManager.Instance.GetActiveUnitFunctionality().GetHealingPowerIncPerLv();
 
         // Make bleed scale with recover buff // TODO
 

@@ -23,9 +23,6 @@ public class MapOverlay : MonoBehaviour
     private void Start()
     {
         //ToggleMapOverlayButtons(false);
-
-        ToggleEnterRoomButton(false);
-        ToggleTeamPageButton(true);
     }
 
     public void ToggleBottomBG(bool toggle)
@@ -54,6 +51,12 @@ public class MapOverlay : MonoBehaviour
         {
             UpdateRoomTypeText("SHOP");
             UpdateRoomTypeTextColour(MapManager.Instance.roomShopColour);
+            UpdateRoomSubText("ROOM");
+        }
+        else if (roomType == RoomMapIcon.RoomType.HERO)
+        {
+            UpdateRoomTypeText("ENEMY+");
+            UpdateRoomTypeTextColour(MapManager.Instance.roomEnemyColour);
             UpdateRoomSubText("ROOM");
         }
         else if (roomType == RoomMapIcon.RoomType.BOSS)

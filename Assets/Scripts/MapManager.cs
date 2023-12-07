@@ -34,6 +34,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private List<GameObject> spawnedPaths = new List<GameObject>(); // List of spawned paths
     [SerializeField] private List<GameObject> spawnedAdditionalPaths = new List<GameObject>();
     [SerializeField] private List<GameObject> spawnedShopRooms = new List<GameObject>();
+    [SerializeField] private List<GameObject> spawnedHeroRooms = new List<GameObject>();
 
     [SerializeField] private List<RoomMapIcon> rooms = new List<RoomMapIcon>();
     [SerializeField] private List<MapPath> mapPaths = new List<MapPath>();
@@ -52,6 +53,7 @@ public class MapManager : MonoBehaviour
 
     public Sprite roomEnemySprite;
     public Sprite roomShopSprite;
+    public Sprite roomHeroSprite;
     public Sprite roomBossSprite;
     public Sprite roomStartingSprite;
 
@@ -59,11 +61,13 @@ public class MapManager : MonoBehaviour
 
     public Vector2 roomEnemySize;
     public Vector2 roomShopSize;
+    public Vector2 roomHeroSize;
     public Vector2 roomBossSize;
     public Vector2 rooomStartingSize;
     public Vector2 roomSelectedSizeInc;
     public Color roomEnemyColour;
     public Color roomShopColour;
+    public Color roomHeroColour;
     public Color roomBossColour;
     public Color roomStartingColour;
     public Color roomHiddenColour;
@@ -112,7 +116,7 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
-        Setup();
+
     }
 
     public void RefocusCamera()
@@ -149,6 +153,9 @@ public class MapManager : MonoBehaviour
 
     public void Setup()
     {
+        // Spawn Starter Ally
+        GameManager.Instance.SpawnAllies();
+
         ToggleMapVisibility(true, true);
 
         // Disable player weapon input 
@@ -214,7 +221,10 @@ public class MapManager : MonoBehaviour
         }
         // If player lost
         else
-            GameManager.Instance.ToggleMap(true, true);
+        {
+            CharacterCarasel.Instance.ResetMenu();
+        }
+
     }
 
     public void UpdateActiveFloor(FloorData floor = null)
@@ -314,7 +324,7 @@ public class MapManager : MonoBehaviour
             else if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.SHOP)
                 mapOverlay.ToggleEnterRoomButton(true);
 
-            int diffCount = 1 + RoomManager.Instance.GetFloorCount();
+            int diffCount = RoomManager.Instance.GetFloorCount();
             mapOverlay.UpdateRoomCountText(diffCount.ToString());
             mapOverlay.UpdateFloorNameText(activeFloor.floorName, activeFloor.floorColour);
         }
@@ -365,6 +375,7 @@ public class MapManager : MonoBehaviour
         spawnedPaths.Clear();
         spawnedAdditionalPaths.Clear();
         spawnedShopRooms.Clear();
+        spawnedHeroRooms.Clear();
 
         startingRoom.ResetLinkedPaths();
         startingRoom.ResetLinkedRooms();
@@ -394,10 +405,9 @@ public class MapManager : MonoBehaviour
 
     public void GenerateMap(bool resetting = true)
     {
-        // Player lost / Game start
+        // Player lost 
         if (resetting)
         {
-            GameManager.Instance.SpawnAllies();
             ShopManager.Instance.ResetPlayerGold();
             ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.playerStartingGold);
         }
@@ -425,33 +435,45 @@ public class MapManager : MonoBehaviour
 
         // Updating unit map icon starting position
         unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
+
+        if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count != 0)
+        {
+            unitMapIcon.UpdateUnitName(GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
+            unitMapIcon.UpdateIconAnimator(GameManager.Instance.GetActiveUnitFunctionality().GetAnimator().runtimeAnimatorController);
+        }
     }
 
     void CheckIfMapIsPossible(bool resetting = true)
     {
         // If there is not enough shops on the floor, remake it
-        if (spawnedShopRooms.Count < activeFloor.shopRoomCount)
+        if (spawnedShopRooms.Count == 0)
         {
-            //ResetMap();
             ToggleMapVisibility(true, true, resetting);
             return;
         }
 
+        // If there is not at least 1 hero room in floor, remake it
+        if (spawnedHeroRooms.Count == 0)
+        {
+            ToggleMapVisibility(true, true, resetting);
+            return;
+        }
+
+        // Check if starting room has possible linked rooms, if not remake it 
         for (int i = 0; i < startingRoom.GetLinkedRooms().Count; i++)
         {
-            if (startingRoom.GetLinkedRooms()[i].curRoomType == RoomMapIcon.RoomType.SHOP)
+            if (startingRoom.GetLinkedRooms()[i].curRoomSize == RoomMapIcon.RoomSize.SIDE)
             {
-                //ResetMap();
                 ToggleMapVisibility(true, true, resetting);
                 return;
             }
         }
 
+        // Check if ending room has possible linked rooms, if not remake it 
         for (int i = 0; i < endingRoom.GetLinkedRooms().Count; i++)
         {
             if (endingRoom.GetLinkedRooms()[i].curRoomSize == RoomMapIcon.RoomSize.SIDE)
             {
-                //ResetMap();
                 ToggleMapVisibility(true, true, resetting);
                 return;
             }
@@ -646,6 +668,7 @@ public class MapManager : MonoBehaviour
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 //Debug.Log(failedCurAttempts);
+
                 // Instantiate the object prefab
                 GameObject sideRoom = Instantiate(roomPrefab);
 
@@ -734,6 +757,8 @@ public class MapManager : MonoBehaviour
 
         int shopRoomCount = Random.Range(activeFloor.shopRoomCount, activeFloor.shopRoomCount + (RoomManager.Instance.GetFloorCount() - 1));
 
+
+
         if (shopRoomCount > RoomManager.Instance.floorMaxShopRoomCount)
             shopRoomCount = RoomManager.Instance.floorMaxShopRoomCount;
 
@@ -761,6 +786,35 @@ public class MapManager : MonoBehaviour
                 roomIcon.UpdateRoomType(RoomMapIcon.RoomType.SHOP);
                 UpdateRoomIconType(spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>(), "shop");
                 spawnedShopRooms.Add(spawnedAdditionalRooms[rand]);
+            }
+        }
+
+        int heroRoomCount = Random.Range(activeFloor.heroRoomCount, activeFloor.heroRoomCount + (RoomManager.Instance.GetFloorCount() - 1));
+
+        // Set Hero rooms
+        for (int i = 0; i < heroRoomCount; i++)
+        {
+            // Make enough hero rooms from the additional room spawns, until enough has been hit for floor
+            int rand = Random.Range(0, spawnedAdditionalRooms.Count - 1);
+
+            RoomMapIcon roomIcon = spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>();
+
+            if (failedCurAttempts <= maxFailedAttempts)
+            {
+                // If there is already a shop room, skip it and reset so it can do it again
+                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO)
+                {
+                    i--;
+                    if (i < 0)
+                        i = 0;
+                    failedCurAttempts++;
+                    continue;
+                }
+
+                // If room is not a hero room, make it a hero room
+                roomIcon.UpdateRoomType(RoomMapIcon.RoomType.HERO);
+                UpdateRoomIconType(spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>(), "hero");
+                spawnedHeroRooms.Add(spawnedAdditionalRooms[rand]);
             }
         }
 
@@ -883,7 +937,6 @@ public class MapManager : MonoBehaviour
             roomMapIcon.UpdateRoomiconSize(rooomStartingSize);
             roomMapIcon.UpdateRoomIconColour(roomStartingColour);
             roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + rooomStartingSize.x, roomSelectedSizeInc.y + rooomStartingSize.y));
-
         }
         else if (roomTypeName == "shop")
         {
@@ -892,7 +945,14 @@ public class MapManager : MonoBehaviour
             roomMapIcon.UpdateRoomiconSize(roomShopSize);
             roomMapIcon.UpdateRoomIconColour(roomShopColour);
             roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomShopSize.x, roomSelectedSizeInc.y + roomShopSize.y));
-
+        }
+        else if (roomTypeName == "hero")
+        {
+            roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.HERO);
+            roomMapIcon.UpdateRoomDetail(roomHeroSprite);
+            roomMapIcon.UpdateRoomiconSize(roomHeroSize);
+            roomMapIcon.UpdateRoomIconColour(roomHeroColour);
+            roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomHeroSize.x, roomSelectedSizeInc.y + roomHeroSize.y));
         }
         else if (roomTypeName == "boss")
         {
