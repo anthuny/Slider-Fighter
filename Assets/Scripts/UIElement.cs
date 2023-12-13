@@ -16,7 +16,7 @@ public class UIElement : MonoBehaviour
     public enum ActiveMasteryType { STANDARD, ADVANCED };
     public ActiveMasteryType activeStatType;
 
-    [SerializeField] private Image contentImage;
+    public Image contentImage;
     [SerializeField] private TextMeshProUGUI contentText;
     [SerializeField] private Text contentSubText;
     [SerializeField] private CanvasGroup buttonCG;
@@ -305,6 +305,12 @@ public class UIElement : MonoBehaviour
 
     public void ToggleButton(bool toggle)
     {
+        if (toggle)
+            buttonCG.alpha = 1;
+        else
+            buttonCG.alpha = 0;
+
+        buttonCG.blocksRaycasts = toggle;
         buttonCG.blocksRaycasts = toggle;
     }
 

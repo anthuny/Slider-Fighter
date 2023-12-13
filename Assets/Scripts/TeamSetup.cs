@@ -40,6 +40,11 @@ public class TeamSetup : MonoBehaviour
 
     public GameObject statScrollView;
 
+    public bool playerInTeamTab;
+
+    public ButtonFunctionality gearTabArrowLeftButton;
+    public ButtonFunctionality gearTabArrowRightButton;
+
     private int statPageCount;
 
     private void Awake()

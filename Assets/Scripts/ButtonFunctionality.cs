@@ -7,6 +7,7 @@ public class ButtonFunctionality : MonoBehaviour
 {
     public enum MasteryType { STATSTANDARD1, STATSTANDARD2, STATSTANDARD3, STATSTANDARD4, STATSTANDARD5, STATADVANCED1, STATADVANCED2, STATADVANCED3, STATADVANCED4, BG };
     public MasteryType curMasteryType;
+
     UnitFunctionality unitFunctionality;
     [SerializeField] private CanvasGroup buttonSelectionCG;
     bool selected;
@@ -23,6 +24,8 @@ public class ButtonFunctionality : MonoBehaviour
 
     private bool settingsOpened = false;
     public bool buttonLocked;
+
+    [SerializeField] private Gear gear;
 
     private void Awake()
     {
@@ -231,6 +234,117 @@ public class ButtonFunctionality : MonoBehaviour
         TeamSetup.Instance.ChangeStatPage(false);
     }
 
+    public void ButtonGearTab()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        TeamGearManager.Instance.playerInGearTab = true;
+        TeamSetup.Instance.playerInTeamTab = false;
+
+        TeamGearManager.Instance.ToggleTeamGear(true);
+    }
+
+    // From gear tab to team setup tab
+    public void ButtonTeamSetupTab()
+    {
+        TeamSetup.Instance.playerInTeamTab = true;
+        TeamGearManager.Instance.playerInGearTab = false;
+
+        TeamGearManager.Instance.ToggleTeamGear(false);
+        ButtonTeamPage();
+    }
+
+    public void ButtonSelectGear()
+    {
+        // If owned gear tab is opened, do not allow selecting a new gear
+        if (gear != null)
+        {
+            if (OwnedGearInven.Instance.GetOwnedGearOpened() && gear.GetCurGearStatis() == Gear.GearStatis.UNOWNED)
+                return;
+
+            // If player selects an owned gear piece (todo: need to make this functional
+            //if (OwnedGearInven.Instance.GetOwnedGearOpened() && gear.GetCurGearStatis() == Gear.GearStatis.OWNED)
+            //    return;
+
+            // If player selects a gear in the rewards for post game battle screen, stop
+            if (gear.GetCurGearStatis() == Gear.GearStatis.REWARD)
+                return;
+        }
+
+
+        // If the BG is selected
+        if (curMasteryType == MasteryType.BG)
+            return;
+
+        OwnedGearInven.Instance.ClearOwnedItemsSlotsSelection();
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        if (gear != null)
+        {
+            if (gear.GetCurGearType() == Gear.GearType.HELMET)
+                TeamGearManager.Instance.GearSelection(gear);
+            else if (gear.GetCurGearType() == Gear.GearType.CHESTPIECE)
+                TeamGearManager.Instance.GearSelection(gear);
+            else if (gear.GetCurGearType() == Gear.GearType.LEGGINGS)
+                TeamGearManager.Instance.GearSelection(gear);
+            else if (gear.GetCurGearType() == Gear.GearType.BOOTS)
+                TeamGearManager.Instance.GearSelection(gear);
+        }
+    }
+
+    public void EquipGear()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        if (gear != null)
+        {
+            TeamGearManager.Instance.GearSelection(gear, true);
+        }
+    }
+
+    public void DisplayOwnedGear()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        if (gear != null)
+        {
+            TeamGearManager.Instance.GearSelection(gear);
+
+            // Display inven
+            OwnedGearInven.Instance.ToggleOwnedGearDisplay(true);
+        }
+    }
+
+    public void HideOwnedGear()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        OwnedGearInven.Instance.ToggleOwnedGearDisplay(false);
+    }
+
+    public void GearUnEquip()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        TeamGearManager.Instance.UnequipGear();
+    }
+
+    public void GearSell()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        TeamGearManager.Instance.SellGear();
+        Debug.Log("b pressed");
+    }
+
     public void Mastery()
     {
         // If the BG is selected
@@ -381,7 +495,13 @@ public class ButtonFunctionality : MonoBehaviour
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
+        TeamGearManager.Instance.playerInGearTab = false;
+        TeamSetup.Instance.playerInTeamTab = true;
+
+
         TeamSetup.Instance.ResetStatPageCount();
+        TeamSetup.Instance.playerInTeamTab = true;
+        TeamGearManager.Instance.playerInGearTab = false;
 
         // Disable map UI
         GameManager.Instance.ToggleMap(false);
@@ -396,6 +516,7 @@ public class ButtonFunctionality : MonoBehaviour
 
         // Enable To Map Button
         GameManager.Instance.toMapButton.UpdateAlpha(1);
+
     }
 
     public void MasteryChangeUnit()

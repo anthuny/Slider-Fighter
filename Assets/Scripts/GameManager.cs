@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int chaosdiffEnemyLvDifference;
     [Space(1)]
     [SerializeField] private int heroRoomIncChallengeCount = 2;
+    [SerializeField] private int heroRoomMinEnemiesIncCount = 1;
+    [SerializeField] private int heroRoomMaxEnemiesIncCount = 2;
 
     [Header("Hero Retrieval")]
     [SerializeField] private float postFightTimeWait = 1.5f;
@@ -146,7 +148,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CanvasGroup skill3CG;
 
     [Header("Post Battle")]
-    public Rewards rewards;
+    public GearRewards gearRewards;
     public DefeatedEnemies defeatedEnemies;
 
     [Header("Enemy")]
@@ -493,8 +495,13 @@ public class GameManager : MonoBehaviour
     {
         TeamSetup.Instance.statScrollView.SetActive(toggle);
 
+
+
         if (toggle)
         {
+            TeamSetup.Instance.gearTabArrowLeftButton.ToggleButton(true);
+            TeamSetup.Instance.gearTabArrowRightButton.ToggleButton(true);
+
             teamSetup.UpdateAlpha(1);
             //SpawnAllies(false);
 
@@ -516,6 +523,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            TeamSetup.Instance.gearTabArrowLeftButton.ToggleButton(false);
+            TeamSetup.Instance.gearTabArrowRightButton.ToggleButton(false);
+
             teamSetup.UpdateAlpha(0);
         }
     }
@@ -719,7 +729,7 @@ public class GameManager : MonoBehaviour
         UpdateActiveSkill(null);
 
         // If completed room WAS NOT a hero room
-        if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO)
+        if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO || !playerWon)
         {
             StartCoroutine(SetupRoomPostBattle(playerWon));
             UpdateAllAlliesPosition(true);
@@ -818,7 +828,7 @@ public class GameManager : MonoBehaviour
 
             playerLost = false;
 
-            rewards.FillRewardsTable(5);
+            gearRewards.FillGearRewardsTable();
         }
         // If player LOST, reset game
         else
@@ -954,20 +964,20 @@ public class GameManager : MonoBehaviour
             // Update background
             BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetCombatForest());
 
-            // Determine enemy unit value
-            int floorDiff = RoomManager.Instance.GetFloorDifficulty();
-            int roomChallengeCount = (RoomManager.Instance.GetFloorCount()) + floorDiff;
-
-            // If room is hero, make spawns slightly harder
-            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-            {
-                roomChallengeCount += heroRoomIncChallengeCount;
-            }
-
             int spawnEnemyPosIndex = 0;
 
+            FloorData floor = RoomManager.Instance.GetActiveFloor();
+
+            int enemySpawnCount = Random.RandomRange(floor.minEnemyRoomCount, floor.maxEnemyRoomCount + 1);
+
+            // If room is hero, spawn additional enemies
+            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
+            {
+                enemySpawnCount += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + (RoomManager.Instance.GetFloorCount()-1);
+            }
+
             // Spawn enemy type
-            for (int i = 0; i < roomChallengeCount; i++)
+            for (int i = 0; i < enemySpawnCount; i++)
             {
                 GameObject go = null;
 
@@ -989,41 +999,9 @@ public class GameManager : MonoBehaviour
                 }
 
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
-                unitFunctionality.UpdateUnitLevel(1 + RoomManager.Instance.GetFloorCount() - 1);
 
-                // Randomise Level
-                int rand = Random.Range(1, 11);
-                if (rand >= 1 && rand < 8) // 70%
-                {
-                    // Stay same level
-                }
-                else if (rand >= 8 && rand < 10) // 20%
-                {
-                    // Increase lv mildly
-                    unitFunctionality.UpdateUnitLevel(RoomManager.Instance.GetFloorCount());
-                }
-                else if (rand >= 9) // 10%
-                {
-                    // Increase lv greatly
-                    unitFunctionality.UpdateUnitLevel(RoomManager.Instance.GetFloorCount() + 1);
-                }
-
-                int unitValue = activeFloor.enemyUnits[spawnEnemyIndex].GetUnitValue();
-
-                unitFunctionality.UpdateUnitValue(unitValue);
-
-                // Increment loop by unit value + their level
-                i += unitValue + unitFunctionality.GetUnitLevel();
-
-                if (i != 0)
-                    i--;
-
-                // Check if the current amount of enemies cover the roomChallengeCount, if yes then stop
-                if (GetActiveRoomEnemyPowerLevels() >= GetActiveRoomAllyPowerLevels())
-                {
-                    Destroy(go);
-                    break;
-                }
+                unitFunctionality.UpdateUnitValue(unit.GetUnitValue());
+                unitFunctionality.UpdateUnitLevel(RoomManager.Instance.GetFloorCount());
 
                 // Set unit stats
                 unitFunctionality.UpdateUnitType("Enemy");
@@ -1059,25 +1037,19 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
-                //int newMaxHealth = (unitFunctionality.GetUnitLevel() * unitFunctionality.GetMaxHealthIncPerLv());
-                //unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth + newMaxHealth, unit.startingMaxHealth + newMaxHealth);
-                //unitFunctionality.UpdateUnitStartTurnEnergy(unit.startingUnitStartTurnEnergyGain);
-
                 unitFunctionality.deathClip = unit.deathClip;
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
-                //AddActiveRoomAllUnits(unit);
-
-                //unitFunctionality.UpdateMaxEnergy(unit.startingEnergy);
-                //unitFunctionality.UpdateUnitCurEnergy(unit.startingEnergy);
-
-                //unitFunctionality.UpdateUnitProjectileSprite(unit.projectileSprite);
-
-
 
                 unitFunctionality.unitData = unit;
             }
 
+            int curChallengeCount = 0;
+
+            // Determine enemy unit value
+            int floorDiff = RoomManager.Instance.GetFloorDifficulty();
+
+            // Loop through all units in room
             for (int x = 0; x < activeRoomAllUnitFunctionalitys.Count; x++)
             {
                 // Enable allies level image for combat
@@ -1085,6 +1057,46 @@ public class GameManager : MonoBehaviour
                 {
                     // Disable unit level image in team setup tab
                     activeRoomAllUnitFunctionalitys[x].ToggleUnitLevelImage(true);
+                }
+                // If unit in room is an ENEMY
+                else
+                {
+                    int roomChallengeCount = (RoomManager.Instance.GetFloorCount()) + floorDiff;
+
+                    // Randomise enemy unit Level
+                    int rand = Random.Range(1, 11);
+                    if (rand >= 1 && rand < 8) // 70%
+                    {
+                        // Stay same level
+                        activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(1 + RoomManager.Instance.GetFloorCount() - 1, 0, true);
+                    }
+                    else if (rand >= 8 && rand < 10) // 20%
+                    {
+                        // Increase lv mildly
+                        activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(RoomManager.Instance.GetFloorCount(), 0, true);
+                    }
+                    else if (rand >= 9) // 10%
+                    {
+                        // Ensure player is NOT on floor one, Increase lv greatly
+                        if (RoomManager.Instance.GetFloorCount() != 1)
+                        {
+                            activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(RoomManager.Instance.GetFloorCount() + 1, 0, true);
+                        }
+                        else
+                        {
+                            // Stay same level
+                            activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(1 + RoomManager.Instance.GetFloorCount() - 1, 0, true);
+                        }
+                    }
+
+                    // Calculate unit value
+                    int unitValue = activeRoomAllUnitFunctionalitys[x].GetUnitLevel() + activeRoomAllUnitFunctionalitys[x].GetUnitValue();
+
+                    // Add to unit value to current challenge count. If reached max difficulty, stop.
+                    if (curChallengeCount < roomChallengeCount)
+                        curChallengeCount += unitValue;
+                    else
+                        break;
                 }
 
                 // Update unit energy bar on
@@ -1125,7 +1137,6 @@ public class GameManager : MonoBehaviour
 
                 activeRoomEnemies[i].SetPositionAndParent(enemySpawnPositions[rand].transform);
             }
-
 
             RoomManager.Instance.ToggleInteractable(true);
 
@@ -2251,22 +2262,6 @@ public class GameManager : MonoBehaviour
                 {
                     int rand = Random.Range(0, activeRoomEnemies.Count);
 
-                    // If skill requires only 1 unit selection - (full team target wont work without this)
-                    if (usedSkill.skillSelectionCount == 1)
-                    {
-                        // If enemy chooses itself for ally attack, reselect to target any other ally 
-                        if (activeRoomEnemies[rand] == GetActiveUnitFunctionality())
-                        {
-                            if (i != 0)
-                            {
-                                i--;
-                                continue;
-                            }
-                            else
-                                continue;
-                        }
-                    }
-
                     selectedAmount++;
 
                     // If self cast, cast on self, otherwise, continue for whomever
@@ -2291,6 +2286,22 @@ public class GameManager : MonoBehaviour
                     // If enough units have been selected, toggle the display
                     if (selectedAmount == usedSkill.skillSelectionCount)
                         return;
+
+                    // If skill requires only 1 unit selection - (full team target wont work without this)
+                    if (usedSkill.skillSelectionCount == 1)
+                    {
+                        // If enemy chooses itself for ally attack, reselect to target any other ally 
+                        if (activeRoomEnemies[rand] == GetActiveUnitFunctionality())
+                        {
+                            if (i != 0)
+                            {
+                                i--;
+                                continue;
+                            }
+                            else
+                                continue;
+                        }
+                    }
                 }
             }
         }

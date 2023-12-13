@@ -1730,8 +1730,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 73.45303, y: 0.1274414}
-  m_SizeDelta: {x: 173.1337, y: 32.6069}
+  m_AnchoredPosition: {x: 73.37755, y: 0.1274414}
+  m_SizeDelta: {x: 172.98271, y: 32.6069}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1561384719978120548
 CanvasRenderer:
@@ -2902,6 +2902,7 @@ MonoBehaviour:
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0
+  gear: {fileID: 0}
 --- !u!225 &1727944501489654778
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2913,7 +2914,7 @@ CanvasGroup:
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 1
+  m_IgnoreParentGroups: 0
 --- !u!223 &9033149546790478691
 Canvas:
   m_ObjectHideFlags: 0

@@ -25,12 +25,26 @@ public class MenuUnitDisplay : MonoBehaviour
     public void UpdateUnitDisplay(string unitName)
     {
         if (unitName == "Warrior")
+        {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;
+            // Adjust size of unit
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+        }
+
         else if (unitName == "Archer")
+        {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.archerAnimator;
+            // Adjust size of unit
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 140);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, 20);
+        }
+
         else if (unitName == "Locked")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;
+            // Adjust size of unit
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+
             ToggleUnitLocked(true, true);
         }
 

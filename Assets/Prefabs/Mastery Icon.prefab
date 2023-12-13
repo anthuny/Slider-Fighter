@@ -754,6 +754,8 @@ MonoBehaviour:
   disabled: 0
   UIbutton: {fileID: 0}
   startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
 --- !u!114 &5259889019705451123
 MonoBehaviour:
   m_ObjectHideFlags: 0

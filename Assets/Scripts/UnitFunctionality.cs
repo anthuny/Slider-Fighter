@@ -32,7 +32,7 @@ public class UnitFunctionality : MonoBehaviour
     public float curDefense;
     [SerializeField] private int curHealth;
     [SerializeField] private int maxHealth;
-    private int curlevel;
+    private int curLevel;
     private float curExp;
     private float maxExp;
     [SerializeField] private int curSpeedIncPerLv = 0;
@@ -123,6 +123,8 @@ public class UnitFunctionality : MonoBehaviour
 
     [HideInInspector]
     public AudioClip deathClip;
+
+
 
     public void UpdateSpeed(float newVal)
     {
@@ -278,7 +280,7 @@ public class UnitFunctionality : MonoBehaviour
         if (unitLevelImage == null)
             return;
 
-        unitLevelImage.UpdateContentSubText(curlevel.ToString());
+        unitLevelImage.UpdateContentSubText(curLevel.ToString());
     }
 
     public void UpdateLastOpenedMastery(TeamSetup.ActiveStatType masteryType)
@@ -1170,9 +1172,12 @@ public class UnitFunctionality : MonoBehaviour
             unitExpBar.UpdateAlpha(0);
     }
 
-    public void UpdateUnitLevel(int level, int extraExp = 0)
+    public void UpdateUnitLevel(int level, int extraExp = 0, bool set = false)
     {
-        curlevel += level;
+        if (!set)
+            curLevel += level;
+        else
+            curLevel = level;
         UpdateUnitLevelVisual(GetUnitLevel());
 
         ResetUnitExp();
@@ -1192,7 +1197,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public int GetUnitLevel()
     {
-        return curlevel;
+        return curLevel;
     }
 
     void ResetUnitExp()
