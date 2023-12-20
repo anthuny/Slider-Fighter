@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
     [Header("Power UI")]
     [Tooltip("Randomness percentage for power output")]
     public float randomPerc;
+    public int randomBaseOffset = 15;
     public GameObject powerUITextPrefab;
     [SerializeField] private float timeBetweenPowerUIStack;
     [SerializeField] private float timeBetweenProjectile;
@@ -284,6 +285,21 @@ public class GameManager : MonoBehaviour
         return activeTeam[count];
     }
 
+    public UnitFunctionality GetUnitFunctionality(UnitData unit)
+    {
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            if (activeRoomAllUnitFunctionalitys[i].GetUnitName() == unit.unitName)
+            {
+                return activeRoomAllUnitFunctionalitys[i];
+            }
+            else
+                continue;
+        }
+
+        return null;
+    }
+
     public void ResetButton(ButtonFunctionality button)
     {
         button.EnableButton();
@@ -414,6 +430,12 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
+
+                unitFunctionality.startingDamage = unit.startingPower;
+                unitFunctionality.startingHealth = unit.startingMaxHealth;
+                unitFunctionality.startingHealing = unit.startingHealingPower;
+                unitFunctionality.startingDefense = unit.startingDefense;
+                unitFunctionality.startingSpeed = unit.startingSpeed;
 
                 unitFunctionality.deathClip = unit.deathClip;
 
@@ -1015,6 +1037,12 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateDefenseIncPerLv((int)unit.defenseIncPerLv);
                 unitFunctionality.UpdateMaxHealthIncPerLv((int)unit.maxHealthIncPerLv);
 
+                unitFunctionality.startingDamage = unit.startingPower;
+                unitFunctionality.startingHealth = unit.startingMaxHealth;
+                unitFunctionality.startingHealing = unit.startingHealingPower;
+                unitFunctionality.startingDefense = unit.startingDefense;
+                unitFunctionality.startingSpeed = unit.startingSpeed;
+
                 // If enemy unit spawned is NOT lv 1, spawn with level bonus stats
                 if (unitFunctionality.GetUnitLevel() != 1)
                 {
@@ -1234,11 +1262,11 @@ public class GameManager : MonoBehaviour
         return RandomisePower((int)power);
     }
 
-    int RandomisePower(int power)
+    public int RandomisePower(int power)
     {
         float powerToRandomise = ((randomPerc / 100f) * power);
         int powerToRandomiseInt = (int)powerToRandomise;
-        float randPower = Random.Range(power - powerToRandomiseInt, (power + powerToRandomiseInt+1));
+        float randPower = Random.Range(power - powerToRandomiseInt - randomBaseOffset, (power + powerToRandomiseInt+1 + randomBaseOffset));
         return (int)randPower;
     }
 
@@ -1272,13 +1300,11 @@ public class GameManager : MonoBehaviour
         return units;
     }
         
-    public IEnumerator WeaponAttackCommand(int power, int hitMultCount = 0, int effectHitAcc = -1)
+    public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1)
     {
         UnitFunctionality castingUnit = GetActiveUnitFunctionality();
 
         GetActiveUnitFunctionality().effects.UpdateAlpha(1);
-
-
 
         if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
         {
@@ -1292,7 +1318,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(allyRangedSkillWaitTime/2f);
 
 
-            for (int w = 0; w < GetActiveSkill().skillAttackCount; w++)
+            for (int w = 0; w < hitCount; w++)
             {
                 // Loop through all selected units, spawn projectiles, if target is dead stop.
                 for (int z = unitsSelected.Count - 1; z >= 0; z--)
@@ -1353,7 +1379,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Loop as many times as power text will appear
-            for (int x = 0; x < activeSkill.skillAttackCount; x++)
+            for (int x = 0; x < hitCount; x++)
             {
                 // If 1 enemy is trying to target an ally, dont?
                 if (unitsSelected.Count == 0)
@@ -1397,13 +1423,14 @@ public class GameManager : MonoBehaviour
                             if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
                                 GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newPower, true);
 
+                            /*
                             // Reset unit's prev power text for future power texts
-                            if (x == activeSkill.skillAttackCount - 1)
+                            if (x == hitCount - 1)
                                 GetActiveUnitFunctionality().ResetPreviousPowerUI();
-
+                            */
                             // If active skill has an effect AND it's not a self cast, apply it to selected targets
                             //if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                                //GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality());
+                            //GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality());
 
                             // ATTACKING A PARRYING UNIT
                             // If skill is supposed to cause power, continue
@@ -1413,8 +1440,8 @@ public class GameManager : MonoBehaviour
                                 float tempPower2 = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower2;
                                 float newPower2 = absPower2 + tempPower2;
 
-                                float temp4 = (unitsSelected[i].GetCurDefense() * unitsSelected[i].GetDefenseIncPerLv() / 100f) * newPower;
-                                float finalPowerDef = newPower - temp4;
+                                //float temp4 = (unitsSelected[i].GetCurDefense() * unitsSelected[i].GetDefenseIncPerLv() / 100f) * newPower;
+                                //float finalPowerDef = newPower - temp4;
 
                                 // Cause power on selected unit
                                 if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
@@ -1425,7 +1452,7 @@ public class GameManager : MonoBehaviour
                                         hasBeenLuckyHit = false;
                                         orderCount--;
                                     }
-                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * finalPowerDef, true, true, null, x + orderCount);
+                                    unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * newPower, true, true, null);
 
                                     CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                                 }
@@ -1438,12 +1465,14 @@ public class GameManager : MonoBehaviour
                                 {
                                     // Decrease health from the units current health if a offense skill was casted on it
                                     if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                                        unitsSelected[i].UpdateUnitCurHealth((int)finalPowerDef, true);
+                                        unitsSelected[i].UpdateUnitCurHealth((int)newPower, true);
                                 }
 
+                                /*
                                 // Reset unit's prev power text for future power texts
                                 if (x == activeSkill.skillAttackCount - 1)
                                     unitsSelected[i].ResetPreviousPowerUI();
+                                */
 
                                 // If active skill has an effect AND it's not a self cast, apply it to selected targets
                                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
@@ -1459,13 +1488,19 @@ public class GameManager : MonoBehaviour
                             float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
                             float newPower = absPower + tempPower;
 
-                            float newHealingPower = originalPower * unitsSelected[i].GetHealingPowerIncPerLv();
+                            // Randomize power
+
+                            float newHealingPower = originalPower * GetActiveUnitFunctionality().GetHealingPowerIncPerLv();
 
                             int orderCount;
 
-                            float temp4 = (unitsSelected[i].GetCurDefense() * unitsSelected[i].GetDefenseIncPerLv() / 100f) * newPower;
-                            float finalPowerDef = newPower - temp4;
+                            bool blocked;
 
+                            float targetBlockChance = Random.Range(1, 101);
+                            if (unitsSelected[i].GetCurDefense() >= targetBlockChance)
+                                blocked = true;
+                            else
+                                blocked = false;
                             //Debug.Log(temp4);
 
                             // Cause power
@@ -1477,7 +1512,7 @@ public class GameManager : MonoBehaviour
                                     hasBeenLuckyHit = false;
                                     orderCount--;
                                 }
-                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * finalPowerDef, false, true, null, x + orderCount);
+                                unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * newPower, false, true, null, blocked);
 
                                 CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                             }
@@ -1490,23 +1525,25 @@ public class GameManager : MonoBehaviour
                                     orderCount--;
                                 }
 
-                                unitsSelected[i].SpawnPowerUI(newHealingPower, false, false, null, x + orderCount);
+                                unitsSelected[i].SpawnPowerUI(newHealingPower, false, false, null);
                             }
 
-                            // Increase health on targeting unit
-                            if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                            // Increase health on targeting unit If target did not block
+                            if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT && !blocked)
                                 unitsSelected[i].UpdateUnitCurHealth((int)newHealingPower);
 
                             // Decrease health on targeting unit
-                            if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                            if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && !blocked)
                             {
-                                float health = GetActiveUnitFunctionality().GetPowerIncPerLv() * finalPowerDef;         
+                                float health = GetActiveUnitFunctionality().GetPowerIncPerLv() * newPower;         
                                 unitsSelected[i].UpdateUnitCurHealth((int)health, true);
                             }
 
+                            /*
                             // Reset unit's prev power text for future power texts
-                            if (x == activeSkill.skillAttackCount - 1)
+                            if (x == activeSkill.skillAttackAccMult - 1)
                                 unitsSelected[i].ResetPreviousPowerUI();
+                            */
 
                             // If active skill has an effect AND it's not a self cast, apply it to selected targets
                             if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
@@ -1524,11 +1561,13 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenPowerUIStack);
             }
 
+            /*
             // Reset each units power UI
             for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
             {
                 activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
             }
+            */
         }
 
         // If skill is self cast, do it here
@@ -1616,7 +1655,7 @@ public class GameManager : MonoBehaviour
                 if (CheckItemHitChance(GetActiveUnitFunctionality().GetEquipItemCount("Lucky Dice"), procChance))
                 {
                     hasBeenLuckyHit = true;
-                    unitTarget.SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * newPowerLucky, false, true, null, xCount + orderCount + 1, true);
+                    unitTarget.SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * newPowerLucky, false, true, null);
                     unitTarget.UpdateUnitCurHealth((int)newPowerLucky, true);
                     continue;
                 }
@@ -1629,7 +1668,7 @@ public class GameManager : MonoBehaviour
                     // Calculate to heal for 5% of the caster's max health
                     float newPower = (items[g].power / 100f) * GetActiveUnitFunctionality().GetUnitMaxHealth();
 
-                    unitCaster.SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * newPower, false, true, null, xCount + orderCount + 1, false, true);
+                    unitCaster.SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * newPower, false, true, null);
                     unitCaster.UpdateUnitCurHealth((int)newPower, false);
                     continue;
                 }
@@ -1846,8 +1885,8 @@ public class GameManager : MonoBehaviour
             tempAttack = false;
 
         abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower, 
-            skill.skillAttackCount, tempAttack, skill.skillSelectionCount, 
-            skill.skillPower, skill.skillCooldown, skill.skillAttackCount, skill.skillPowerIcon, skill.skillSprite, skill.special);
+            skill.skillAttackAccMult, tempAttack, skill.skillSelectionCount, 
+            skill.skillPower, skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
 
         UnitFunctionality activeUnit = GetActiveUnitFunctionality();
 
@@ -2053,6 +2092,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void ResetAllUnitPowerUIHeight()
+    {
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            activeRoomAllUnitFunctionalitys[i].ResetDamageHealCount();
+        }
+    }
+
     public void UpdateTurnOrder(bool unitDied = false, bool roundStart = false)
     {
         //ToggleSkillVisibility(false);
@@ -2077,6 +2124,8 @@ public class GameManager : MonoBehaviour
         GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false);
 
         DetermineTurnOrder();
+
+        ResetAllUnitPowerUIHeight();
 
         IncreaseAttackBarAllUnits();
 
@@ -2109,7 +2158,6 @@ public class GameManager : MonoBehaviour
             activeSkill = GetActiveUnitFunctionality().unitData.skill0;
 
             ToggleEndTurnButton(true);      // Toggle End Turn Button on
-
         }
         else
         {
@@ -2515,7 +2563,7 @@ public class GameManager : MonoBehaviour
             if (ShopManager.Instance.GetUnassignedItem().healthItem)
             {
                 float healthToRegen = (ShopManager.Instance.GetUnassignedItem().power / 100f) * unit.GetUnitMaxHealth();
-                unit.SpawnPowerUI(healthToRegen, false, false, null, 1, false, true);
+                unit.SpawnPowerUI(healthToRegen, false, false, null, false);
                 unit.UpdateUnitCurHealth((int)healthToRegen, false, false);
             }
 
@@ -2718,7 +2766,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < activeRoomEnemies.Count; i++)
         {
-            activeRoomEnemies[i].UpdateUnitMaxHealth(1);
+            activeRoomEnemies[i].UpdateUnitMaxHealth(1, true, false);
         }
     }
 
@@ -2729,7 +2777,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < activeRoomAllies.Count; i++)
         {
-            activeRoomAllies[i].UpdateUnitMaxHealth(1);
+            activeRoomAllies[i].UpdateUnitMaxHealth(1, true, false);
         }
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
@@ -56,6 +57,9 @@ public class ShopManager : MonoBehaviour
     {
         totalGoldText.UpdateAlpha(0);
         refreshItem.UpdateAlpha(0);
+
+        // Disable randomiser button
+        ToggleRandomiserButton(false);
     }
 
     public void CloseShop()
@@ -200,6 +204,8 @@ public class ShopManager : MonoBehaviour
             randomiser.UpdateAlpha(1);
         else
             randomiser.UpdateAlpha(0);
+
+        ToggleRandomiserButton(toggle);
     }
 
     List<Item> ChooseItems(bool combatItem)
@@ -292,6 +298,12 @@ public class ShopManager : MonoBehaviour
     {
         return GetActiveRoom().hasEntered;
     }
+
+    void ToggleRandomiserButton(bool toggle)
+    {
+        randomiser.gameObject.transform.GetChild(0).GetComponent<Image>().raycastTarget = toggle;
+    }
+
     public void FillShopItems(bool clearItems, bool refreshItems)
     {
         SetActiveRoom(RoomManager.Instance.GetActiveRoom());

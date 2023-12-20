@@ -7,7 +7,7 @@ public class OwnedGearInven : MonoBehaviour
     public static OwnedGearInven Instance;
 
     [SerializeField] private UIElement ownedGearUI;
-    [SerializeField] private List<Gear> ownedGearSlots = new List<Gear>();
+    public List<Gear> ownedGearSlots = new List<Gear>();
 
     private bool ownedGearOpened = false;
 
@@ -19,6 +19,7 @@ public class OwnedGearInven : MonoBehaviour
     public List<Gear> wornGearSecondAlly = new List<Gear>();
     public List<Gear> wornGearThirdAlly = new List<Gear>();
     public List<Gear> gears = new List<Gear>();
+    [SerializeField] private UIElement buttonToggleOwnedGear;
 
     private void Awake()
     {
@@ -77,6 +78,7 @@ public class OwnedGearInven : MonoBehaviour
     private void Start()
     {
         ToggleOwnedGearDisplay(false);
+        ToggleOwnedGearEquipButton(false);
 
         for (int i = 0; i < startingGearPieces.Count; i++)
         {
@@ -151,6 +153,8 @@ public class OwnedGearInven : MonoBehaviour
             ToggleOwnedGearEquipButton(false);
             ownedGearOpened = false;
         }
+
+        buttonToggleOwnedGear.ToggleButton(toggle);
     }
 
     void ClearOwnedItemSlots()
@@ -221,16 +225,50 @@ public class OwnedGearInven : MonoBehaviour
 
                     ownedGear[i].ToggleEquipButton(false);
                     ownedGear[i].UpdateGearImage(TeamGearManager.Instance.clearSlotSprite);
-                    //ownedGear[i].UpdateCurGearType(Gear.GearType.EMPTY);
+                    ownedGear[i].UpdateCurGearType(Gear.GearType.EMPTY);
                     ownedGear[i].isEmpty = true;
 
                     index++;
                     continue;
                 }
-
-                // if an item is equipped, skip it in the own inventory display
-                //if (!gears.Contains(wornGear[i]))
             }
+
+            if (wornGearSecondAlly.Count > i)
+            {
+                if (ownedGear.Contains(wornGearSecondAlly[i]) && !gears.Contains(wornGearSecondAlly[i]))
+                {
+                    gears.Add(wornGearSecondAlly[i]);
+                    //ToggleOwnedGearEquipButton(false);
+
+                    ownedGear[i].ToggleEquipButton(false);
+                    ownedGear[i].UpdateGearImage(TeamGearManager.Instance.clearSlotSprite);
+                    ownedGear[i].UpdateCurGearType(Gear.GearType.EMPTY);
+                    ownedGear[i].isEmpty = true;
+
+                    index++;
+                    continue;
+                }
+            }
+
+            if (wornGearThirdAlly.Count > i)
+            {
+                if (ownedGear.Contains(wornGearThirdAlly[i]) && !gears.Contains(wornGearThirdAlly[i]))
+                {
+                    gears.Add(wornGearThirdAlly[i]);
+                    //ToggleOwnedGearEquipButton(false);
+
+                    ownedGear[i].ToggleEquipButton(false);
+                    ownedGear[i].UpdateGearImage(TeamGearManager.Instance.clearSlotSprite);
+                    ownedGear[i].UpdateCurGearType(Gear.GearType.EMPTY);
+                    ownedGear[i].isEmpty = true;
+
+                    index++;
+                    continue;
+                }
+            }
+
+            // if an item is equipped, skip it in the own inventory display
+            //if (!gears.Contains(wornGear[i]))
 
             //ToggleOwnedGearEquipButton(true);
             // If selected armor piece is helmet, display only owned helmets
@@ -312,6 +350,18 @@ public class OwnedGearInven : MonoBehaviour
                     ownedGearSlots[ownedGearSlotIndex].isEmpty = false;
                     ownedGearSlotIndex++;
                 }
+            }
+        }
+
+        // Make all empty owned gear slots display nothing 
+        for (int x = 0; x < ownedGearSlots.Count; x++)
+        {
+            if (ownedGearSlots[x].isEmpty)
+            {
+                ownedGearSlots[x].ToggleEquipButton(false);
+                ownedGearSlots[x].UpdateGearImage(TeamGearManager.Instance.clearSlotSprite);
+                //ownedGear[i].UpdateCurGearType(Gear.GearType.EMPTY);
+                ownedGearSlots[x].isEmpty = true;
             }
         }
     }

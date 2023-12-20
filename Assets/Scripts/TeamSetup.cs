@@ -689,11 +689,16 @@ public class TeamSetup : MonoBehaviour
         int unitsCombinedLevel = 0;
         int spentPoints = 0;
 
-        for (int i = 0; i < GameManager.Instance.activeTeam.Count; i++)
+        //  error check with starting with allies 
+        if (GameManager.Instance.activeRoomAllies.Count > 0)
         {
-            unitsCombinedLevel += GameManager.Instance.activeRoomAllies[i].GetUnitLevel() * masteryPointsPerLv;
-            spentPoints += GameManager.Instance.activeRoomAllies[i].GetSpentMasteryPoints();
+            for (int i = 0; i < GameManager.Instance.activeTeam.Count; i++)
+            {
+                unitsCombinedLevel += GameManager.Instance.activeRoomAllies[i].GetUnitLevel() * masteryPointsPerLv;
+                spentPoints += GameManager.Instance.activeRoomAllies[i].GetSpentMasteryPoints();
+            }
         }
+
 
         // Display alert if points remain
         if (unitsCombinedLevel > spentPoints)

@@ -226,13 +226,15 @@ public class Effect : MonoBehaviour
 
     public void TriggerPowerEffect()
     {
+        GameManager.Instance.GetActiveUnitFunctionality().ResetPowerUI();
+
         // Trigger effect alert
         // Do effect
         int unitMaxHealth = (int)GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
         float tempPower = (powerPercent / 100f) * unitMaxHealth;
         int power = (int)tempPower;
 
-        float newHealingPower = power * GameManager.Instance.GetActiveUnitFunctionality().GetHealingPowerIncPerLv();
+        float newHealingPower = power;
 
         // Make bleed scale with recover buff // TODO
 

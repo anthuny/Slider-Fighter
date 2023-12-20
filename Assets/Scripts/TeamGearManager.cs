@@ -8,6 +8,13 @@ public class TeamGearManager : MonoBehaviour
 
     [SerializeField] private UIElement teamGearTabUI;
 
+    public Color statDefaultColour;
+    public Color statIncreasedColour;
+    public Color statDecreasedColour;
+
+    public float timeStatIncColour = 1;
+    public float timeStatDecColour = 1;
+
     public Sprite clearSlotSprite;
     public Sprite helmetSlotSprite;
     public Sprite chestSlotSprite;
@@ -38,22 +45,22 @@ public class TeamGearManager : MonoBehaviour
     public Gear selectedBaseGearSlot;
     [Space(2)]
     [Header("Main Ally")]
-    public Gear equippedHelmetMain;
-    public Gear equippedChestpieceMain;
-    public Gear equippedLeggingsMain;
-    public Gear equippedBootsMain;
+    public GearPiece equippedHelmetMain;
+    public GearPiece equippedChestpieceMain;
+    public GearPiece equippedLeggingsMain;
+    public GearPiece equippedBootsMain;
     [Space(2)]
     [Header("Second Ally")]
-    public Gear equippedHelmetSec;
-    public Gear equippedChestpieceSec;
-    public Gear equippedLeggingsSec;
-    public Gear equippedBootsSec;
+    public GearPiece equippedHelmetSec;
+    public GearPiece equippedChestpieceSec;
+    public GearPiece equippedLeggingsSec;
+    public GearPiece equippedBootsSec;
     [Space(2)]
     [Header("Third Ally")]
-    public Gear equippedHelmetThi;
-    public Gear equippedChestpieceThi;
-    public Gear equippedLeggingsThi;
-    public Gear equippedBootsThi;
+    public GearPiece equippedHelmetThi;
+    public GearPiece equippedChestpieceThi;
+    public GearPiece equippedLeggingsThi;
+    public GearPiece equippedBootsThi;
     [Space(2)]
     public bool playerInGearTab;
 
@@ -79,6 +86,87 @@ public class TeamGearManager : MonoBehaviour
             Destroy(gearDescGO.transform.GetChild(x).gameObject);
         }
     }
+
+    public void UpdateUnitStatsEquip(Gear gear)
+    {
+        if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.MAIN)
+        {
+            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]);
+
+            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
+            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
+            unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
+            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
+            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
+
+            ally1MenuUnitDisplay.UpdateUnitStats(unitFunc);
+        }
+        else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.SECOND)
+        {
+            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]);
+
+            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
+            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
+            unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
+            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
+            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
+
+            ally2MenuUnitDisplay.UpdateUnitStats(unitFunc);
+        }
+        else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.THIRD)
+        {
+            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]);
+
+            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
+            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
+            unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
+            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
+            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
+
+            ally3MenuUnitDisplay.UpdateUnitStats(unitFunc);
+        }
+    }
+
+    public void UpdateUnitStatsUnEquip(Gear gear)
+    {
+        if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.MAIN)
+        {
+            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]);
+
+            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
+            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
+            unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
+            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
+            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
+
+            ally1MenuUnitDisplay.UpdateUnitStats(unitFunc);
+        }
+        else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.SECOND)
+        {
+            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]);
+
+            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
+            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
+            unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
+            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
+            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
+
+            ally2MenuUnitDisplay.UpdateUnitStats(unitFunc);
+        }
+        else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.THIRD)
+        {
+            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]);
+
+            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
+            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
+            unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
+            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
+            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
+
+            ally3MenuUnitDisplay.UpdateUnitStats(unitFunc);
+        }
+    }
+
     public void UpdateGearStatDetails()
     {
         ClearAllGearStats();
@@ -95,15 +183,15 @@ public class TeamGearManager : MonoBehaviour
 
             // Update gear stat UI
             if (i == 0)
-                statUI.UpdateContentText("+ " + GetSelectedGearSlot().GetBonusHealth() + " Health");
+                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusHealth().ToString());
             else if (i == 1)
-                statUI.UpdateContentText("+ " + GetSelectedGearSlot().GetBonusDamage() + " Damage");
+                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusDamage().ToString());
             else if (i == 2)
-                statUI.UpdateContentText("+ " + GetSelectedGearSlot().GetBonusDamage() + " Healing");
+                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusHealing().ToString());
             else if (i == 3)
-                statUI.UpdateContentText("+ " + GetSelectedGearSlot().GetBonusDamage() + " Defense");
+                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusDefense().ToString());
             else if (i == 4)
-                statUI.UpdateContentText("+ " + GetSelectedGearSlot().GetBonusDamage() + " Speed");
+                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusSpeed().ToString());
 
             // Gear Stat Name Update
             gearNameText.UpdateContentText(GetSelectedGearSlot().GetGearName());
@@ -275,6 +363,7 @@ public class TeamGearManager : MonoBehaviour
 
     public void UpdateGearSlotsBase(bool ally1 = false, bool ally2 = false, bool ally3 = false)
     {
+
         // Ensure each gear slot has correct bg gear sprite
 
         if (ally1)
@@ -287,7 +376,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedHelmetMain == null)
                         ally1GearSlots[i].UpdateGearImage(helmetSlotSprite);
                     else
-                        ally1GearSlots[i].UpdateGearImage(equippedHelmetMain.GetGearImage());
+                        ally1GearSlots[i].UpdateGearImage(equippedHelmetMain.gearIcon);
                 }
                 // Place chestpiece
                 if (i == 1)
@@ -295,7 +384,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedChestpieceMain == null)
                         ally1GearSlots[i].UpdateGearImage(chestSlotSprite);
                     else
-                        ally1GearSlots[i].UpdateGearImage(equippedChestpieceMain.GetGearImage());
+                        ally1GearSlots[i].UpdateGearImage(equippedChestpieceMain.gearIcon);
                 }
                 // Place leggings
                 if (i == 2)
@@ -303,7 +392,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedLeggingsMain == null)
                         ally1GearSlots[i].UpdateGearImage(legsSlotSprite);
                     else
-                        ally1GearSlots[i].UpdateGearImage(equippedLeggingsMain.GetGearImage());
+                        ally1GearSlots[i].UpdateGearImage(equippedLeggingsMain.gearIcon);
                 }
                 // Place boots 
                 if (i == 3)
@@ -311,7 +400,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedBootsMain == null)
                         ally1GearSlots[i].UpdateGearImage(bootsSlotSprite);
                     else
-                        ally1GearSlots[i].UpdateGearImage(equippedBootsMain.GetGearImage());
+                        ally1GearSlots[i].UpdateGearImage(equippedBootsMain.gearIcon);
                 }
 
                 ally1GearSlots[i].UpdateGearStatis(Gear.GearStatis.DEFAULT);
@@ -329,7 +418,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedHelmetSec == null)
                         ally2GearSlots[x].UpdateGearImage(helmetSlotSprite);
                     else
-                        ally2GearSlots[x].UpdateGearImage(equippedHelmetSec.GetGearImage());
+                        ally2GearSlots[x].UpdateGearImage(equippedHelmetSec.gearIcon);
                 }
                 // Place chestpiece
                 if (x == 1)
@@ -337,7 +426,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedChestpieceSec == null)
                         ally2GearSlots[x].UpdateGearImage(chestSlotSprite);
                     else
-                        ally2GearSlots[x].UpdateGearImage(equippedChestpieceSec.GetGearImage());
+                        ally2GearSlots[x].UpdateGearImage(equippedChestpieceSec.gearIcon);
                 }
                 // Place leggings
                 if (x == 2)
@@ -345,7 +434,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedLeggingsSec == null)
                         ally2GearSlots[x].UpdateGearImage(legsSlotSprite);
                     else
-                        ally2GearSlots[x].UpdateGearImage(equippedLeggingsSec.GetGearImage());
+                        ally2GearSlots[x].UpdateGearImage(equippedLeggingsSec.gearIcon);
                 }
                 // Place boots 
                 if (x == 3)
@@ -353,7 +442,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedBootsSec == null)
                         ally2GearSlots[x].UpdateGearImage(bootsSlotSprite);
                     else
-                        ally2GearSlots[x].UpdateGearImage(equippedBootsSec.GetGearImage());
+                        ally2GearSlots[x].UpdateGearImage(equippedBootsSec.gearIcon);
                 }
 
                 ally2GearSlots[x].UpdateGearStatis(Gear.GearStatis.DEFAULT);
@@ -371,7 +460,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedHelmetThi == null)
                         ally3GearSlots[y].UpdateGearImage(helmetSlotSprite);
                     else
-                        ally3GearSlots[y].UpdateGearImage(equippedHelmetThi.GetGearImage());
+                        ally3GearSlots[y].UpdateGearImage(equippedHelmetThi.gearIcon);
                 }
                 // Place chestpiece
                 if (y == 1)
@@ -379,7 +468,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedChestpieceThi == null)
                         ally3GearSlots[y].UpdateGearImage(chestSlotSprite);
                     else
-                        ally3GearSlots[y].UpdateGearImage(equippedChestpieceThi.GetGearImage());
+                        ally3GearSlots[y].UpdateGearImage(equippedChestpieceThi.gearIcon);
                 }
                 // Place leggings
                 if (y == 2)
@@ -387,7 +476,7 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedLeggingsThi == null)
                         ally3GearSlots[y].UpdateGearImage(legsSlotSprite);
                     else
-                        ally3GearSlots[y].UpdateGearImage(equippedLeggingsThi.GetGearImage());
+                        ally3GearSlots[y].UpdateGearImage(equippedLeggingsThi.gearIcon);
                 }
                 // Place boots 
                 if (y == 3)
@@ -395,13 +484,23 @@ public class TeamGearManager : MonoBehaviour
                     if (equippedBootsThi == null)
                         ally3GearSlots[y].UpdateGearImage(bootsSlotSprite);
                     else
-                        ally3GearSlots[y].UpdateGearImage(equippedBootsThi.GetGearImage());
+                        ally3GearSlots[y].UpdateGearImage(equippedBootsThi.gearIcon);
                 }
 
                 ally3GearSlots[y].UpdateGearStatis(Gear.GearStatis.DEFAULT);
                 ally3GearSlots[y].UpdateGearOwnedBy(Gear.GearOwnedBy.THIRD);
             }
         }
+    }
+
+    void ClearEmptyGearSlots()
+    {
+        if (GameManager.Instance.activeTeam.Count == 1)
+            UpdateGearSlotsBase(true);
+        else if (GameManager.Instance.activeTeam.Count == 2)
+            UpdateGearSlotsBase(true, true);
+        else if (GameManager.Instance.activeTeam.Count == 3)
+            UpdateGearSlotsBase(true, true, true);
     }
 
     public void ToggleAllyGearSets()
@@ -474,7 +573,24 @@ public class TeamGearManager : MonoBehaviour
 
             ToggleAllyGearSets();
 
+            // Clears empty base gear slots if empty
+            ClearEmptyGearSlots();
+
             ClearAllGearStats();
+
+            if (GameManager.Instance.activeTeam.Count == 1)
+                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]));
+            if (GameManager.Instance.activeTeam.Count == 2)
+            {
+                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]));
+                ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]));
+            }
+            if (GameManager.Instance.activeTeam.Count == 3)
+            {
+                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]));
+                ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]));
+                ally3MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]));
+            }
         }
         else
         {
@@ -515,23 +631,74 @@ public class TeamGearManager : MonoBehaviour
         for (int x = 0; x < ally1GearSlots.Count; x++)
         {
             if (toggle)
+            {
                 ally1GearSlots[x].GetGearSelection().ToggleButton(true);
+                ally1GearSlots[x].ToggleMainGear(true);
+                ally1GearSlots[x].ToggleOwnedGearButton(true);
+                ally1GearSlots[x].ToggleEquipButton(true);
+            }
             else
+            {
                 ally1GearSlots[x].GetGearSelection().ToggleButton(false);
+                ally1GearSlots[x].ToggleMainGear(false);
+                ally1GearSlots[x].ToggleOwnedGearButton(false);
+                ally2GearSlots[x].ToggleEquipButton(false);
+            }
         }
         for (int y = 0; y < ally2GearSlots.Count; y++)
         {
             if (toggle)
+            {
                 ally2GearSlots[y].GetGearSelection().ToggleButton(true);
+                ally2GearSlots[y].ToggleMainGear(true);
+                ally2GearSlots[y].ToggleOwnedGearButton(true);
+                ally2GearSlots[y].ToggleEquipButton(true);
+            }
+
             else
+            {
                 ally2GearSlots[y].GetGearSelection().ToggleButton(false);
+                ally2GearSlots[y].ToggleMainGear(false);
+                ally2GearSlots[y].ToggleOwnedGearButton(false);
+                ally2GearSlots[y].ToggleEquipButton(false);
+            }
         }
         for (int z = 0; z < ally3GearSlots.Count; z++)
         {
             if (toggle)
+            {
                 ally3GearSlots[z].GetGearSelection().ToggleButton(true);
+                ally3GearSlots[z].ToggleMainGear(true);
+                ally3GearSlots[z].ToggleOwnedGearButton(true);
+                ally3GearSlots[z].ToggleEquipButton(true);
+            }
             else
+            {
                 ally3GearSlots[z].GetGearSelection().ToggleButton(false);
+                ally3GearSlots[z].ToggleMainGear(false);
+                ally3GearSlots[z].ToggleOwnedGearButton(false);
+                ally3GearSlots[z].ToggleEquipButton(false);
+            }
+        }
+
+        int count = OwnedGearInven.Instance.ownedGearSlots.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            if (toggle)
+            {
+                OwnedGearInven.Instance.ownedGearSlots[i].GetGearSelection().ToggleButton(true);
+                OwnedGearInven.Instance.ownedGearSlots[i].ToggleMainGear(true);
+                //OwnedGearInven.Instance.ownedGearSlots[i].ToggleOwnedGearButton(true);
+                OwnedGearInven.Instance.ownedGearSlots[i].ToggleEquipButton(true);
+            }
+            else
+            {
+                OwnedGearInven.Instance.ownedGearSlots[i].GetGearSelection().ToggleButton(false);
+                OwnedGearInven.Instance.ownedGearSlots[i].ToggleMainGear(false);
+                //OwnedGearInven.Instance.ownedGearSlots[i].ToggleOwnedGearButton(false);
+                OwnedGearInven.Instance.ownedGearSlots[i].ToggleEquipButton(false);
+            }
         }
     }
 
@@ -638,7 +805,100 @@ public class TeamGearManager : MonoBehaviour
 
         UpdateGearStatDetails();
 
+        // Update unit stats with stats from gear
+        UpdateUnitStatsEquip(gear);
+
         // Show combined calculated values next to unit
+    }
+
+    public void UpdateEquippedGearPiece(string gearPieceTypeName, GearPiece newGearPiece, bool replacing = true)
+    {
+        if (gearPieceTypeName == "helmMain")
+        {
+            if (replacing)
+                equippedHelmetMain = newGearPiece;
+            else
+                equippedHelmetMain = null;
+        }
+        else if (gearPieceTypeName == "chestMain")
+        {
+            if (replacing)
+                equippedChestpieceMain = newGearPiece;
+            else
+                equippedChestpieceMain = null;
+        }
+        else if (gearPieceTypeName == "legsMain")
+        {
+            if (replacing)
+                equippedLeggingsMain = newGearPiece;
+            else
+                equippedLeggingsMain = null;
+        }
+        else if (gearPieceTypeName == "bootsMain")
+        {
+            if (replacing)
+                equippedBootsMain = newGearPiece;
+            else
+                equippedBootsMain = null;
+        }
+
+        else if (gearPieceTypeName == "helmSecond")
+        {
+            if (replacing)
+                equippedHelmetSec = newGearPiece;
+            else
+                equippedHelmetSec = null;
+        }
+        else if (gearPieceTypeName == "chestSecond")
+        {
+            if (replacing)
+                equippedChestpieceSec = newGearPiece;
+            else
+                equippedChestpieceSec = null;
+        }
+        else if (gearPieceTypeName == "legsSecond")
+        {
+            if (replacing)
+                equippedLeggingsSec = newGearPiece;
+            else
+                equippedLeggingsSec = null;
+        }
+        else if (gearPieceTypeName == "bootsSecond")
+        {
+            if (replacing)
+                equippedBootsSec = newGearPiece;
+            else
+                equippedBootsSec = null;
+        }
+
+        else if (gearPieceTypeName == "helmThird")
+        {
+            if (replacing)
+                equippedHelmetThi = newGearPiece;
+            else
+                equippedHelmetThi = null;
+        }
+        else if (gearPieceTypeName == "chestThird")
+        {
+            if (replacing)
+                equippedChestpieceThi = newGearPiece;
+            else
+                equippedChestpieceThi = null;
+        }
+        else if (gearPieceTypeName == "legsThird")
+        {
+            if (replacing)
+                equippedLeggingsThi = newGearPiece;
+            else
+                equippedLeggingsThi = null;
+        }
+        else if (gearPieceTypeName == "bootsThird")
+        {
+            if (replacing)
+                equippedBootsThi = newGearPiece;
+            else
+                equippedBootsThi = null;
+        }
     }
 
     public void GearSelection(Gear gear, bool select = false)
@@ -650,6 +910,8 @@ public class TeamGearManager : MonoBehaviour
         gear.ToggleGearSelected(true);
         //OwnedGearInven.Instance.FillOwnedGearSlots();
 
+        // Bug todo - 2nd / 3rd ally arent having their gear saved.
+
         if (gear.curGearStatis == Gear.GearStatis.DEFAULT)
         {
             UpdateSelectedBaseGearSlot(gear);
@@ -660,68 +922,91 @@ public class TeamGearManager : MonoBehaviour
         }
         else
         {
+
+            if (selectedBaseGearSlot != null)
+            {
+
+
+            }
             UpdateSelectedGearSlot(gear);
             OwnedGearInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedGearSlot());
 
             if (!gear.isEmpty && select)
             {
-                if (gear.GetGearOwnedBy()  == Gear.GearOwnedBy.MAIN)
+                GearPiece gearPiece = new GearPiece();
+
+                if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.MAIN)
                 {
                     if (gear.curGearType == Gear.GearType.HELMET)
                     {
-                        equippedHelmetMain = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("helmMain", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.CHESTPIECE)
                     {
-                        equippedChestpieceMain = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("chestMain", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.LEGGINGS)
                     {
-                        equippedLeggingsMain = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("legsMain", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.BOOTS)
                     {
-                        equippedBootsMain = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("bootsMain", gearPiece);
                     }
                 }
-                else if (gear.GetGearOwnedBy() == Gear.GearOwnedBy.SECOND)
+                if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.SECOND)
                 {
                     if (gear.curGearType == Gear.GearType.HELMET)
                     {
-                        equippedHelmetSec = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("helmSecond", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.CHESTPIECE)
                     {
-                        equippedChestpieceSec = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("chestSecond", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.LEGGINGS)
                     {
-                        equippedLeggingsSec = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("legsSecond", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.BOOTS)
                     {
-                        equippedBootsSec = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("bootsSecond", gearPiece);
                     }
                 }
-                else if (gear.GetGearOwnedBy() == Gear.GearOwnedBy.THIRD)
+                if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.THIRD)
                 {
                     if (gear.curGearType == Gear.GearType.HELMET)
                     {
-                        equippedHelmetThi = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("helmThird", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.CHESTPIECE)
                     {
-                        equippedChestpieceThi = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("chestThird", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.LEGGINGS)
                     {
-                        equippedLeggingsThi = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("legsThird", gearPiece);
                     }
                     else if (gear.curGearType == Gear.GearType.BOOTS)
                     {
-                        equippedBootsThi = gear;
+                        gearPiece.UpdateGearPiece(gear.GetGearName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetGearImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        UpdateEquippedGearPiece("bootsThird", gearPiece);
                     }
                 }
+
+                // Toggle main gear selection on
+                GetSelectedBaseGearSlot().ToggleGearSelected(true);
 
                 // Display inven
                 EquipItem(gear);
@@ -730,6 +1015,7 @@ public class TeamGearManager : MonoBehaviour
 
         // Reference owned item, if the player currently already owns the selected piece of gear.
         //GearPiece newGearPiece = OwnedGearInven.Instance.GetGearPiece(gear);
+
 
         // If gear is NOT empty, put gear in it
         if (!gear.isEmpty)
@@ -752,10 +1038,21 @@ public class TeamGearManager : MonoBehaviour
 
         // If gear IS empty, dont put gear in it, display it as empty
         else
-        {       
-            // Initialize gear base data
-            gear.ResetGearSlot(true);
-            
+        {
+            /*
+            if (gear.GetCurGearStatis() != Gear.GearStatis.DEFAULT)
+            {
+                // Initialize gear base data
+                gear.ResetGearSlot(true);
+
+            }
+            else
+            {
+                // Initialize gear base data
+                //gear.ResetGearSlot(true, true);
+            }
+            */
+
             ClearAllGearStats();
             UpdateGearNameText("");
         }
@@ -777,6 +1074,27 @@ public class TeamGearManager : MonoBehaviour
                     // if equipped gear name is the same as any worn gear
                     if (OwnedGearInven.Instance.GetWornGearMainAlly()[x].GetGearName() == GetSelectedGearSlot().GetGearName())
                     {
+                        // Remove saved equipped gear piece (data side)
+                        if (OwnedGearInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Gear.GearType.HELMET)
+                        {
+                            UpdateEquippedGearPiece("helmMain", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Gear.GearType.CHESTPIECE)
+                        {
+                            UpdateEquippedGearPiece("chestMain", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Gear.GearType.LEGGINGS)
+                        {
+                            UpdateEquippedGearPiece("legsMain", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Gear.GearType.BOOTS)
+                        {
+                            UpdateEquippedGearPiece("bootsMain", null, false);
+                        }
+
+                        // Update unit stats when unequiping
+                        UpdateUnitStatsUnEquip(OwnedGearInven.Instance.GetWornGearMainAlly()[x]);
+
                         // Add gear into owned gear
                         OwnedGearInven.Instance.AddOwnedGear(OwnedGearInven.Instance.GetWornGearMainAlly()[x]);
 
@@ -798,6 +1116,27 @@ public class TeamGearManager : MonoBehaviour
                     // if equipped gear name is the same as any worn gear
                     if (OwnedGearInven.Instance.GetWornGearSecondAlly()[x].GetGearName() == GetSelectedGearSlot().GetGearName())
                     {
+                        // Remove saved equipped gear piece (data side)
+                        if (OwnedGearInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Gear.GearType.HELMET)
+                        {
+                            UpdateEquippedGearPiece("helmSecond", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Gear.GearType.CHESTPIECE)
+                        {
+                            UpdateEquippedGearPiece("chestSecond", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Gear.GearType.LEGGINGS)
+                        {
+                            UpdateEquippedGearPiece("legsSecond", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Gear.GearType.BOOTS)
+                        {
+                            UpdateEquippedGearPiece("bootsSecond", null, false);
+                        }
+
+                        // Update unit stats when unequiping
+                        UpdateUnitStatsUnEquip(OwnedGearInven.Instance.GetWornGearSecondAlly()[x]);
+
                         // Add gear into owned gear
                         OwnedGearInven.Instance.AddOwnedGear(OwnedGearInven.Instance.GetWornGearSecondAlly()[x]);
 
@@ -819,11 +1158,33 @@ public class TeamGearManager : MonoBehaviour
                     // if equipped gear name is the same as any worn gear
                     if (OwnedGearInven.Instance.GetWornGearThirdAlly()[x].GetGearName() == GetSelectedGearSlot().GetGearName())
                     {
+                        // Remove saved equipped gear piece (data side)
+                        if (OwnedGearInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Gear.GearType.HELMET)
+                        {
+                            UpdateEquippedGearPiece("helmThird", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Gear.GearType.CHESTPIECE)
+                        {
+                            UpdateEquippedGearPiece("chestThird", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Gear.GearType.LEGGINGS)
+                        {
+                            UpdateEquippedGearPiece("legsThird", null, false);
+                        }
+                        else if (OwnedGearInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Gear.GearType.BOOTS)
+                        {
+                            UpdateEquippedGearPiece("bootsThird", null, false);
+                        }
+
+                        // Update unit stats when unequiping
+                        UpdateUnitStatsUnEquip(OwnedGearInven.Instance.GetWornGearThirdAlly()[x]);
+
                         // Add gear into owned gear
                         OwnedGearInven.Instance.AddOwnedGear(OwnedGearInven.Instance.GetWornGearThirdAlly()[x]);
 
                         // Remove worn gear
                         OwnedGearInven.Instance.RemoveWornGearAllyThird(OwnedGearInven.Instance.GetWornGearThirdAlly()[x]);
+
                         break;
                     }
                 }
@@ -835,6 +1196,8 @@ public class TeamGearManager : MonoBehaviour
 
         // Remove gear icon details (name / stats)
         ClearAllGearStats();
+
+
     }
 
     public void SellGear()

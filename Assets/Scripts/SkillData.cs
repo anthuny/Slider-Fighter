@@ -22,7 +22,10 @@ public class SkillData : ScriptableObject
     public string skillName;
     public string skillDescr;
     public int skillPower;
-    public int skillAttackCount;
+    [Tooltip("For each of this, each accuracy hit will create x 1 power text appear")]
+    public int skillAttackAccMult = 1;
+    [Tooltip("The base amount of hit lines a skill will do on (with at least bad or higher accuracy with Attack Bar")]
+    public int skillAttackCount = 0;
     public int projectileSpeed = 1;
     public int skillCooldown;
     public int skillSelectionCount;

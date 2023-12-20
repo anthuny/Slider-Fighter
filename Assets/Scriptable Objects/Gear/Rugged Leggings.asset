@@ -16,8 +16,8 @@ MonoBehaviour:
   gearType: leggings
   gearRarity: common
   gearIcon: {fileID: 21300000, guid: b45015fcc926a09429686f4e051e5384, type: 3}
-  bonusHealth: 12
-  bonusDamage: 0
+  bonusHealth: 45
+  bonusDamage: 1
   bonusHealing: 2
   bonusDefense: 2
   bonusSpeed: 1

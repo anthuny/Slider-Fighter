@@ -87,6 +87,8 @@ GameObject:
   - component: {fileID: 9151182703363105181}
   - component: {fileID: 153971202246489352}
   - component: {fileID: 2141171518583310020}
+  - component: {fileID: 2177863367481008886}
+  - component: {fileID: 3718657310061081098}
   m_Layer: 0
   m_Name: rt
   m_TagString: Untagged
@@ -138,7 +140,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 0.003921569}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -152,6 +154,49 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2177863367481008886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816049996934779424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStatType: 0
+  activeStatType: 0
+  contentImage: {fileID: 2141171518583310020}
+  contentText: {fileID: 0}
+  contentSubText: {fileID: 0}
+  buttonCG: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  statPointsThreshhold: 0
+  isLocked: 0
+--- !u!225 &3718657310061081098
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816049996934779424}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2663448480631324746
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,6 +1232,7 @@ MonoBehaviour:
   curGearType: 0
   curRarity: 0
   curGearStatis: 0
+  curGearOwnedBy: 0
   gearUI: {fileID: 1799372229995533476}
   gearSelectionUI: {fileID: 8844219337109568658}
   ownedGearButton: {fileID: 0}

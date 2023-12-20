@@ -232,7 +232,11 @@ public class UIElement : MonoBehaviour
 
     public void AnimateUI()
     {
+        if (!doScalePunch)
+            return;
+
         ResetAnimateScale();
+
         //contentText.gameObject.transform.DOLocalMoveY()
         if (doScalePunch)
             contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
@@ -249,6 +253,15 @@ public class UIElement : MonoBehaviour
 
         UpdateAlpha(0);
 
+    }
+
+    public IEnumerator ChangeTextColourTime(Color newColor, float time = 1)
+    {
+        contentText.color = newColor;
+
+        yield return new WaitForSeconds(time);
+
+        contentText.color = TeamGearManager.Instance.statDefaultColour;
     }
 
     public void ResetAnimateScale()
@@ -281,17 +294,20 @@ public class UIElement : MonoBehaviour
         contentImage.color = colour;
     }
 
-    public void UpdateAlpha(float alpha)
+    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0)
     {
         cg = GetComponent<CanvasGroup>();
 
         cg.alpha = alpha;   // Update UI Alpha
 
+        if (difAlpha)
+        {
+            cg.alpha = difAlphaNum;
+        }
         // Make UI element selectable/unselectable
         if (alpha == 1)
         {
-            if (doScalePunch)
-                AnimateUI();
+            AnimateUI();
 
             cg.interactable = true;
             cg.blocksRaycasts = true;
@@ -301,6 +317,24 @@ public class UIElement : MonoBehaviour
             cg.interactable = false;
             cg.blocksRaycasts = false;
         }
+
+
+        if (GetComponent<Image>())
+        {
+            if (alpha == 1)
+                GetComponent<Image>().raycastTarget = true;
+            else
+                GetComponent<Image>().raycastTarget = false;
+        }
+    }
+
+    public void UpdateImage(bool toggle)
+    {
+        contentImage.raycastTarget = toggle;
+
+        cg.interactable = toggle;
+        cg.blocksRaycasts = toggle;
+
     }
 
     public void ToggleButton(bool toggle)
@@ -310,7 +344,7 @@ public class UIElement : MonoBehaviour
         else
             buttonCG.alpha = 0;
 
-        buttonCG.blocksRaycasts = toggle;
+        buttonCG.interactable = toggle;
         buttonCG.blocksRaycasts = toggle;
     }
 

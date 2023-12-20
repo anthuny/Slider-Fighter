@@ -176,6 +176,18 @@ public class Weapon : MonoBehaviour
 
         // Adjust power based on skill effect amp on target then send it 
 
+        int effectHitAccuracy = 1;
+        if (curHitAreaType == HitAreaType.PERFECT)
+            effectHitAccuracy = 4;
+        else if (curHitAreaType == HitAreaType.GREAT)
+            effectHitAccuracy = 3;
+        else if (curHitAreaType == HitAreaType.GOOD)
+            effectHitAccuracy = 2;
+        else if (curHitAreaType == HitAreaType.BAD)
+            effectHitAccuracy = 1;
+        else if (curHitAreaType == HitAreaType.MISS)
+            effectHitAccuracy = 0;
+
         int hitAccuracy = 1;
         if (curHitAreaType == HitAreaType.PERFECT)
             hitAccuracy = 4;
@@ -188,8 +200,14 @@ public class Weapon : MonoBehaviour
         else if (curHitAreaType == HitAreaType.MISS)
             hitAccuracy = 0;
 
-        int hitCount = GameManager.Instance.GetActiveSkill().skillAttackCount;
-        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, hitCount, hitAccuracy));
+        int finalHitCount = 0;
+
+        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+            finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillAttackCount + GameManager.Instance.GetActiveUnitFunctionality().GetUnitDamageHits();
+        else
+            finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillAttackCount + GameManager.Instance.GetActiveUnitFunctionality().GetUnitHealingHits();
+
+        StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, finalHitCount, effectHitAccuracy));
     }
 
     public void DisableAlertUI()
@@ -201,6 +219,7 @@ public class Weapon : MonoBehaviour
     {
         float currentPower = GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
+        /*
         if (curHitAreaType == WeaponHitArea.HitAreaType.PERFECT)
             calculatedPower = perfectMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         else if (curHitAreaType == WeaponHitArea.HitAreaType.GREAT)
@@ -211,8 +230,11 @@ public class Weapon : MonoBehaviour
             calculatedPower = badMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         else if(curHitAreaType == WeaponHitArea.HitAreaType.MISS)
             calculatedPower = missMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
+        */
 
-        calculatedPower *= 10;      
+        calculatedPower = GameManager.Instance.GetActiveSkill().skillPower + currentPower;
+        calculatedPower += GameManager.Instance.randomBaseOffset*2;
+        calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
     }
 
     public void TriggerHitAlertText(WeaponHitArea.HitAreaType curHitAreaType)

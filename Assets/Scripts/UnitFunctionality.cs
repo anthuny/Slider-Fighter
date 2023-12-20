@@ -33,6 +33,8 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int curHealth;
     [SerializeField] private int maxHealth;
     private int curLevel;
+    private int curDamageHits;
+    private int curHealingHits;
     private float curExp;
     private float maxExp;
     [SerializeField] private int curSpeedIncPerLv = 0;
@@ -40,6 +42,11 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int curHealingPowerIncPerLv = 0;
     [SerializeField] private float curDefenseIncPerLv = 0;
     [SerializeField] private int maxHealthIncPerLv = 0;
+    public int startingSpeed;
+    public int startingHealth;
+    public int startingDamage;
+    public int startingHealing;
+    public int startingDefense;
     [HideInInspector]
     public int unitStartTurnEnergyGain;
     public EnergyCost energyCostImage;
@@ -503,7 +510,13 @@ public class UnitFunctionality : MonoBehaviour
             }
 
             // Adjust power based on skill effect amp on target then send it 
-            StartCoroutine(GameManager.Instance.WeaponAttackCommand(GameManager.Instance.activeSkill.skillPower, GameManager.Instance.activeSkill.skillAttackCount));
+
+            int totalPower = GameManager.Instance.activeSkill.skillPower + GameManager.Instance.GetActiveUnitFunctionality().curPower;
+
+            totalPower += GameManager.Instance.randomBaseOffset*2;
+            totalPower = GameManager.Instance.RandomisePower(totalPower);
+
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, GameManager.Instance.activeSkill.skillAttackCount));
 
             /*
             // End turn
@@ -856,7 +869,7 @@ public class UnitFunctionality : MonoBehaviour
         damageCount = 0;
         healCount = 0;
     }
-    public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, int powerUICount = 1, bool isLuckyHit = false, bool isHeal = false)
+    public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false)
     {
         if (offense)
         {
@@ -865,112 +878,144 @@ public class UnitFunctionality : MonoBehaviour
             else if (effect.curEffectName == Effect.EffectName.BLEED)
                 AudioManager.Instance.Play("Bleed");
 
-            damageCount++;
+            //damageCount++;
         }
-
         else
         {
             AudioManager.Instance.Play("Heal");
-            healCount++;
+            //healCount++;
         }
 
-        if (!isLuckyHit)
+        // LAST power UI hit
+        if (damageCount >= GameManager.Instance.maxPowerUICount || healCount >= GameManager.Instance.maxPowerUICount)
         {
-            // If this is NOT the first power text UI
-            if (prevPowerUI != null)
+            if (offense)
+                damageCount = 1;
+            else
+                healCount = 1;
+
+            prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
+            prevPowerUI.transform.SetParent(powerUIParent);
+            prevPowerUI.transform.localScale = Vector2.one;
+        }
+        // Starting power UI
+        else if (damageCount == 0 && offense || healCount == 0 && !offense)
+        {
+            prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
+            prevPowerUI.transform.SetParent(powerUIParent);
+            prevPowerUI.transform.localScale = Vector2.one;
+
+            if (offense)
+                damageCount++;
+            else
+                healCount++;
+        }
+        // Subsequent power UI hits
+        else if (damageCount != 0  && offense || healCount != 0 && !offense)
+        {
+            if (offense)
             {
                 // If power UI count has been reached from heal / damage, reset back to original Y position.
-                if (healCount >= GameManager.Instance.maxPowerUICount+1 || damageCount >= GameManager.Instance.maxPowerUICount+1)
-                {
-                    prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
-                    healCount = 0;
-                    damageCount = 0;
-                }
-                else
-                    prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity); 
+
+                prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity);
+                damageCount++;
+
+                prevPowerUI.transform.SetParent(powerUIParent);
+                prevPowerUI.transform.localScale = Vector2.one;
             }
-            // If this IS the first power text UI
             else
-                prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, powerUIParent.position, Quaternion.identity);
+            {
+                // If power UI count has been reached from heal / damage, reset back to original Y position.
+                prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity);
+                healCount++;
+
+                prevPowerUI.transform.SetParent(powerUIParent);
+                prevPowerUI.transform.localScale = Vector2.one;
+            }
         }
-        else
-            prevPowerUI = Instantiate(GameManager.Instance.powerUITextPrefab, prevPowerUI.transform.position + new Vector3(0, GameManager.Instance.powerUIHeightLvInc), Quaternion.identity);
 
         prevPowerUI.transform.SetParent(powerUIParent);
         prevPowerUI.transform.localScale = Vector2.one;
 
         PowerText powerText = prevPowerUI.GetComponent<PowerText>();
 
-        if (isParrying)
+        if (prevPowerUI == null)
         {
-            powerText.UpdatePowerTextFontSize(GameManager.Instance.powerSkillParryFontSize);
-            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillParry);
-            powerText.UpdatePowerText(GameManager.Instance.parryPowerText);
             return;
         }
 
-        // If power is 0, display that it missed
-        if (power <= 0)
+        if (powerText != null)
         {
-            powerText.UpdatePowerTextFontSize(GameManager.Instance.powerMissFontSize);
-            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillMiss);
-            powerText.UpdatePowerText(GameManager.Instance.missPowerText);
-            //powerText.UpdatePowerText(power.ToString());   // Update Power Text
-            return;
-        }
-
-
-
-        // Make Animate
-        powerText.GetComponent<UIElement>().UpdateAlpha(1);
-
-        float Randx = Random.Range(-GameManager.Instance.powerHorizontalRandomness, GameManager.Instance.powerHorizontalRandomness);
-        prevPowerUI.transform.localPosition = new Vector2(Randx, prevPowerUI.transform.localPosition.y);
-
-        //powerText.UpdateSortingOrder(powerUICount);
-
-        // Otherwise, display the power
-        powerText.UpdatePowerTextFontSize(GameManager.Instance.powerHitFontSize);
-
-        // Update Text Colour
-        if (effect == null)
-        {
-            if (offense)
+            if (isParrying || isBlocked)
             {
-                // Change power text colour to offense colour if the type of attack is offense
-                if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-                // Change power text colour to support colour if the type of attack is support
-                else if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                powerText.UpdatePowerTextFontSize(GameManager.Instance.powerSkillParryFontSize);
+                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillParry);
+                powerText.UpdatePowerText(GameManager.Instance.parryPowerText);
+                return;
+            }
+
+            // If power is 0, display that it missed
+            if (power <= 0)
+            {
+                //Debug.Log(power);
+                powerText.UpdatePowerTextFontSize(GameManager.Instance.powerMissFontSize);
+                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillMiss);
+                powerText.UpdatePowerText(GameManager.Instance.missPowerText);
+                //powerText.UpdatePowerText(power.ToString());   // Update Power Text
+                return;
+            }
+
+            // Make Animate
+            powerText.GetComponent<UIElement>().UpdateAlpha(1);
+
+            float Randx = Random.Range(-GameManager.Instance.powerHorizontalRandomness, GameManager.Instance.powerHorizontalRandomness);
+            prevPowerUI.transform.localPosition = new Vector2(Randx, prevPowerUI.transform.localPosition.y);
+
+            //powerText.UpdateSortingOrder(powerUICount);
+
+            // Otherwise, display the power
+            powerText.UpdatePowerTextFontSize(GameManager.Instance.powerHitFontSize);
+
+            // Update Text Colour
+            if (effect == null)
+            {
+                if (offense)
+                {
+                    // Change power text colour to offense colour if the type of attack is offense
+                    if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                        powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
+                    // Change power text colour to support colour if the type of attack is support
+                    else if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                        powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                }
+                else
+                {
+                    // Change power text colour to support colour if the type of attack is support
                     powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                }
+
             }
             else
             {
+                // Change power text colour to offense colour if the type of attack is offense
+                if (effect.curEffectType == Effect.EffectType.OFFENSE)
+                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
                 // Change power text colour to support colour if the type of attack is support
-                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                else if (effect.curEffectType == Effect.EffectType.SUPPORT)
+                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+
+                if (effect.curEffectName == Effect.EffectName.HEALTHUP && offense)
+                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
+
+                if (effect.curEffectName == Effect.EffectName.RECOVER && !offense)
+                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
             }
 
+            int finalPower = (int)power;
+            powerText.UpdatePowerText(finalPower.ToString());   // Update Power Text
         }
         else
-        {
-            // Change power text colour to offense colour if the type of attack is offense
-            if (effect.curEffectType == Effect.EffectType.OFFENSE)
-                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-            // Change power text colour to support colour if the type of attack is support
-            else if (effect.curEffectType == Effect.EffectType.SUPPORT)
-                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
-
-            if (effect.curEffectName == Effect.EffectName.HEALTHUP && offense)
-                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-        }
-
-        int finalPower = (int)power;
-        powerText.UpdatePowerText(finalPower.ToString());   // Update Power Text
-    }
-
-    public void ResetPreviousPowerUI()
-    {
-        prevPowerUI = null;
+            Destroy(prevPowerUI.gameObject);
     }
 
     public void SpawnProjectile(Transform target)
@@ -998,7 +1043,11 @@ public class UnitFunctionality : MonoBehaviour
         projectile.UpdateSpeed(GameManager.Instance.GetActiveSkill().projectileSpeed);
     }
 
-
+    public void ResetDamageHealCount()
+    {
+        healCount = 0;
+        damageCount = 0;
+    }
     public void ResetPosition()
     {
         //transform.position = Vector2.zero;
@@ -1308,12 +1357,28 @@ public class UnitFunctionality : MonoBehaviour
         animator.SetBool("DamageFlg", false);
     }
 
-    public void UpdateUnitMaxHealth(int newMaxHealth, bool set = false)
+    public void UpdateUnitMaxHealth(int newMaxHealth, bool set = false, bool inc = true)
     {
-        maxHealth = newMaxHealth;
+        //maxHealth = newMaxHealth;
 
-        if (set)
-            curHealth = maxHealth;
+        if (inc)
+        {
+            if (set)
+            {
+                maxHealth = newMaxHealth;
+                curHealth = maxHealth;
+            }
+
+            else
+                maxHealth += newMaxHealth;
+        }
+        else
+        {
+            if (set)
+                maxHealth = newMaxHealth;
+            else
+                maxHealth -= newMaxHealth;
+        }
 
         if (curHealth > maxHealth)
             curHealth = maxHealth;
@@ -1383,6 +1448,19 @@ public class UnitFunctionality : MonoBehaviour
     public void UpdateUnitSpeed(int newSpeed)
     {
         curSpeed = newSpeed;
+    }
+
+    public void UpdateUnitSpeedChange(int newSpeed, bool inc)
+    {
+        if (inc)
+            curSpeed += newSpeed;
+        else
+            curSpeed -= newSpeed;
+    }
+
+    public int GetUnitSpeed()
+    {
+        return curSpeed;
     }
 
     public void UpdateUnitOldSpeed(int oldSpeed)
@@ -1470,11 +1548,44 @@ public class UnitFunctionality : MonoBehaviour
         curDefense = newDefense;
     }
 
+    public void UpdateUnitDefenseChange(int newDef, bool inc)
+    {
+        if (inc)
+            curDefense += newDef;
+        else
+            curDefense -= newDef;
+    }
+
     public float GetCurDefense()
     {
         return curDefense;
     }
     
+    public void UpdateUnitDamageHits(int newDmgHits, bool inc = true)
+    {
+        if (inc)
+            curDamageHits += newDmgHits;
+        else
+            curDamageHits -= newDmgHits;
+    }
+
+    public int GetUnitDamageHits()
+    {
+        return curDamageHits;
+    }
+
+    public void UpdateUnitHealingHits(int newHealHits, bool inc = true)
+    {
+        if (inc)
+            curHealingHits += newHealHits;
+        else
+            curHealingHits -= newHealHits;
+    }
+
+    public int GetUnitHealingHits()
+    {
+        return curHealingHits;
+    }
     /*
     public void AddUnitDefense(int armor)
     {

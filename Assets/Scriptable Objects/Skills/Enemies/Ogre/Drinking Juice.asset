@@ -20,7 +20,7 @@ MonoBehaviour:
   skillName: DRINKING JUICE
   skillDescr: 
   skillPower: 0
-  skillAttackCount: 0
+  skillAttackMult: 0
   projectileSpeed: 0
   skillCooldown: 2
   skillSelectionCount: 1

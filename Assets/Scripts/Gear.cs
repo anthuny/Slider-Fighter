@@ -56,6 +56,7 @@ public class Gear : MonoBehaviour
         }
         else
         {
+            /*
             if (GetCurGearType() == GearType.HELMET)
                 UpdateGearImage(TeamGearManager.Instance.helmetSlotSprite);
             else if (GetCurGearType() == GearType.CHESTPIECE)
@@ -64,6 +65,7 @@ public class Gear : MonoBehaviour
                 UpdateGearImage(TeamGearManager.Instance.legsSlotSprite);
             else if (GetCurGearType() == GearType.BOOTS)
                 UpdateGearImage(TeamGearManager.Instance.bootsSlotSprite);
+                */
         }
 
         UpdateGearName("");
@@ -210,6 +212,8 @@ public class Gear : MonoBehaviour
     {
         if (equipGearButton != null)
         {
+            equipGearButton.gameObject.transform.GetChild(0).gameObject.GetComponent<UIElement>().UpdateImage(toggle);
+
             if (toggle)
                 equipGearButton.UpdateAlpha(1);
             else
@@ -242,5 +246,13 @@ public class Gear : MonoBehaviour
     public void UpdateGearAlpha(bool toggle)
     {
         gameObject.GetComponent<UIElement>().ToggleButton(toggle);
+    }
+
+    public void ToggleMainGear(bool toggle)
+    {
+        if (toggle)
+            gearUI.UpdateAlpha(1);
+        else
+            gearUI.UpdateAlpha(0);
     }
 }

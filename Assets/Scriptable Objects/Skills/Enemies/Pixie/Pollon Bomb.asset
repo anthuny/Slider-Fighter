@@ -20,7 +20,7 @@ MonoBehaviour:
   skillName: POLLON BOMB
   skillDescr: Buff all allies with Recover for 2 turns
   skillPower: 0
-  skillAttackCount: 0
+  skillAttackMult: 0
   projectileSpeed: 0
   skillCooldown: 3
   skillSelectionCount: 6

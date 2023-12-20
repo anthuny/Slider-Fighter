@@ -37,7 +37,7 @@ public class OverlayUI : MonoBehaviour
         UpdateSkillDetailsDesc(skillDesc, skillDescPower, skillAttackCount, skillTargetCount, attack, special);
         UpdateSkillPowerText(skillPower, attack);
         UpdateSkillDetailsCooldownText(skillCooldown);
-        UpdateSkillDetailsMutlihitCountText(multihitCount);
+        UpdateSkillDetailsMultihitCountText(multihitCount);
         UpdateSkillDetailsPowerImage(skillPowerImage);
         UpdateSkillDetailsIcon(skillIcon);
     }
@@ -120,7 +120,7 @@ public class OverlayUI : MonoBehaviour
         skillDetailsCooldownText.text = cooldown.ToString();
     }
 
-    private void UpdateSkillDetailsMutlihitCountText(int count)
+    private void UpdateSkillDetailsMultihitCountText(int count)
     {
         skillDetailsMutlihitCountText.text = count.ToString();
     }

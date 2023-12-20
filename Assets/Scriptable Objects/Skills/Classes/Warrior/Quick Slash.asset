@@ -19,8 +19,9 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 9f003367cde8e914cadd39e9903c2904, type: 3}
   skillName: QUICK SLASH
   skillDescr: Target up to
-  skillPower: 75
-  skillAttackCount: 4
+  skillPower: 3
+  skillAttackAccMult: 1
+  skillAttackCount: 2
   projectileSpeed: 1
   skillCooldown: 0
   skillSelectionCount: 1

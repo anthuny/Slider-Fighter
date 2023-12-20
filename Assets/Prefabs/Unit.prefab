@@ -1122,6 +1122,7 @@ MonoBehaviour:
   growSpeed: 0.1
   alphaDecreaseInterval: 0.05
   alphaDecreaseSpeed: 2.5
+  maxAlpha: 0.5
 --- !u!114 &3027606193029678876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2583,7 +2584,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5318260040361309156}
   m_Enabled: 1
-  m_Alpha: 0.35
+  m_Alpha: 0.15
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0

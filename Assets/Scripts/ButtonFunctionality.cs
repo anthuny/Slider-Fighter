@@ -149,6 +149,10 @@ public class ButtonFunctionality : MonoBehaviour
 
     public void ButtonOpenMap()
     {
+        // If owned gear is opened, do not allow map button to be selected
+        if (OwnedGearInven.Instance.GetOwnedGearOpened())
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -175,6 +179,7 @@ public class ButtonFunctionality : MonoBehaviour
         //GameManager.Instance.activeRoomAllUnitFunctionalitys = GameManager.Instance.oldActiveRoomAllUnitFunctionalitys;
 
         GameManager.Instance.ToggleTeamSetup(false);
+        TeamGearManager.Instance.ToggleTeamGear(false);
 
         // Reset room, enemes only
         GameManager.Instance.ResetRoom(true);
@@ -302,6 +307,8 @@ public class ButtonFunctionality : MonoBehaviour
 
         if (gear != null)
         {
+            TeamGearManager.Instance.UnequipGear();
+
             TeamGearManager.Instance.GearSelection(gear, true);
         }
     }
@@ -495,18 +502,46 @@ public class ButtonFunctionality : MonoBehaviour
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
+        TeamGearManager.Instance.playerInGearTab = true;
+        TeamSetup.Instance.playerInTeamTab = false;
+
+
+        TeamSetup.Instance.ResetStatPageCount();
+        TeamSetup.Instance.playerInTeamTab = false;
+        //TeamGearManager.Instance.playerInGearTab = true;
+
+        // Disable map UI
+        GameManager.Instance.ToggleMap(false);
+
+        // temp 
+        //GameManager.Instance.ToggleTeamSetup(true);
+        TeamGearManager.Instance.ToggleTeamGear(true);
+
+        //GameManager.Instance.UpdateAllyVisibility(true, true);
+
+        MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
+
+        GameManager.Instance.ToggleSkillVisibility(false);
+
+        // Enable To Map Button
+        GameManager.Instance.toMapButton.UpdateAlpha(1);
+
+    }
+
+    public void ButtonTeamPageFromGear()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         TeamGearManager.Instance.playerInGearTab = false;
         TeamSetup.Instance.playerInTeamTab = true;
 
 
         TeamSetup.Instance.ResetStatPageCount();
         TeamSetup.Instance.playerInTeamTab = true;
-        TeamGearManager.Instance.playerInGearTab = false;
-
-        // Disable map UI
-        GameManager.Instance.ToggleMap(false);
 
         GameManager.Instance.ToggleTeamSetup(true);
+        TeamGearManager.Instance.ToggleTeamGear(false);
 
         GameManager.Instance.UpdateAllyVisibility(true, true);
 

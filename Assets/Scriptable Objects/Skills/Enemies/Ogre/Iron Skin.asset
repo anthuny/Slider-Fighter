@@ -20,7 +20,7 @@ MonoBehaviour:
   skillName: IRON SKIN
   skillDescr: 
   skillPower: 0
-  skillAttackCount: 0
+  skillAttackMult: 0
   projectileSpeed: 0
   skillCooldown: 3
   skillSelectionCount: 1
