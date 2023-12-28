@@ -70,6 +70,21 @@ public class OwnedGearInven : MonoBehaviour
         wornGearThirdAlly.Remove(gear);
     }
 
+    public void ResetWornGearAllyMain()
+    {
+        wornGearMainAlly.Clear();
+    }
+
+    public void ResetWornGearAllySecond()
+    {
+        wornGearSecondAlly.Clear();
+    }
+
+    public void ResetWornGearAllyThird()
+    {
+        wornGearThirdAlly.Clear();
+    }
+
     public bool GetOwnedGearOpened()
     {
         return ownedGearOpened;

@@ -228,13 +228,13 @@ public class Weapon : MonoBehaviour
             calculatedPower = goodMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         else if(curHitAreaType == WeaponHitArea.HitAreaType.BAD)
             calculatedPower = badMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
-        else if(curHitAreaType == WeaponHitArea.HitAreaType.MISS)
-            calculatedPower = missMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         */
-
         calculatedPower = GameManager.Instance.GetActiveSkill().skillPower + currentPower;
         calculatedPower += GameManager.Instance.randomBaseOffset*2;
         calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
+
+        if (curHitAreaType == WeaponHitArea.HitAreaType.MISS)
+            calculatedPower = 0;
     }
 
     public void TriggerHitAlertText(WeaponHitArea.HitAreaType curHitAreaType)

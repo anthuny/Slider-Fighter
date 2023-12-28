@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 1
   curEffectType: 1
-  curEffectName: 11
+  curEffectName: 12
   effectName: PARRY
   effectDesc: Parry the next blow of attacks.
   effectIcon: {fileID: 21300000, guid: dc2e86f7e160ce94791b3cd64e50a04f, type: 3}

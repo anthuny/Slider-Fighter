@@ -16,19 +16,25 @@ MonoBehaviour:
   curSkillSelectionType: 1
   curSkillGameType: 1
   curRangedType: 1
+  curAnimType: 1
   skillSprite: {fileID: 0}
   skillName: IRON SKIN
   skillDescr: 
   skillPower: 0
-  skillAttackMult: 0
+  skillAttackAccMult: 1
+  skillAttackCount: 0
   projectileSpeed: 0
   skillCooldown: 3
   skillSelectionCount: 1
   isSelfCast: 1
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
   special: 0
   effect: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
-  effectTurnLength: 2
+  effectTurnLength: 1
   effectHitChance: 0
+  baseEffectApplyCount: 2
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 0}

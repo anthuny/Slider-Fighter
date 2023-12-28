@@ -16,19 +16,25 @@ MonoBehaviour:
   curSkillSelectionType: 0
   curSkillGameType: 3
   curRangedType: 1
+  curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 9ef8fd37a1319de4e99f44a124e65db3, type: 3}
   skillName: MARK
   skillDescr: Inflict Mark on 1 target for 0/1/2/3 turns
   skillPower: 0
-  skillAttackMult: 1
+  skillAttackAccMult: 1
+  skillAttackCount: 0
   projectileSpeed: 12
   skillCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
   special: 1
   effect: {fileID: 11400000, guid: d41e5b4319f5482409b2937401337b74, type: 2}
   effectTurnLength: 1
   effectHitChance: 0
+  baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}

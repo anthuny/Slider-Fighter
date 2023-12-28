@@ -237,12 +237,19 @@ public class UIElement : MonoBehaviour
 
         ResetAnimateScale();
 
-        //contentText.gameObject.transform.DOLocalMoveY()
         if (doScalePunch)
             contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 
+        AnimateUIMaxCap();
+
         if (dieAfterDisplay)
             StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime));
+    }
+
+    void AnimateUIMaxCap()
+    {
+        if (contentText.gameObject.transform.localScale.x >= 1.3f)
+            contentText.gameObject.transform.localScale = new Vector2(1.3f, 1.3f);
     }
 
     IEnumerator HideUIOvertime(float time = 0)
@@ -267,6 +274,9 @@ public class UIElement : MonoBehaviour
     public void ResetAnimateScale()
     {
         contentText.gameObject.transform.localScale = new Vector3(originalScale, originalScale);
+
+        contentText.gameObject.transform.DORestart();
+        //contentText.gameObject.transform.DOKill(true);
     }
     public void UpdateContentTextColour(Color colour)
     {

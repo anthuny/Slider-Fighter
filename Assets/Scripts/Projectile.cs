@@ -152,6 +152,10 @@ public class Projectile : MonoBehaviour
     }
     public void MoveForward()
     {
+        // If there is no target for whatever reason, destroy the projectile
+        if (target == null)
+            HitTarget();
+
         //transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         if (CheckDistanceToTarget(target))
             HitTarget();

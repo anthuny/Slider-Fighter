@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 1
   curEffectType: 0
-  curEffectName: 13
+  curEffectName: 14
   effectName: MARK
   effectDesc: Inflict Mark on target enemy for
   effectIcon: {fileID: 21300000, guid: d7b9f2cea2b43cc4a92c0144a7846116, type: 3}

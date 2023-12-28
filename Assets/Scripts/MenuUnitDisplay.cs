@@ -66,6 +66,15 @@ public class MenuUnitDisplay : MonoBehaviour
         StartIdleAnim();
     }
 
+    public void ResetUnitStats()
+    {
+        prevStatHealth = 0;
+        prevStatDamageHits = 0;
+        prevStatHealingHits = 0;
+        prevStatDefense = 0;
+        prevStatSpeed = 0;
+    }
+
     public void UpdateUnitStats(UnitFunctionality unitFunc)
     {
         // If new gear has a higher stat then current, make the stat bounce

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b5ca964c25ccf542b4b722aabc76bc8, type: 3}
+  m_Name: Slime
+  m_EditorClassIdentifier: 
+  curUnitType: 1
+  unitValue: 1
+  unitSprite: {fileID: -307370437, guid: f5a578533257a894aa0d0a1affff6c6e, type: 3}
+  unitIcon: {fileID: 21300000, guid: 9fc2fa53319ca09468a5c2f78e699abe, type: 3}
+  unitColour: {r: 0.6, g: 0.8980393, b: 0.3137255, a: 1}
+  unitName: Slime
+  startingSpeed: 12
+  startingDefense: 1
+  startingPower: 2
+  startingHealingPower: 1
+  startingMaxHealth: 150
+  speedIncPerLv: 1
+  powerIncPerLv: 1
+  healingPowerIncPerLv: 0.25
+  defenseIncPerLv: 1
+  maxHealthIncPerLv: 100
+  startingEnergy: 3
+  startingUnitStartTurnEnergyGain: 2
+  basicSelectionCount: 1
+  characterPrefab: {fileID: 1415871230302792947, guid: 1bf1a9c9f88998b48906be4d2431acc9, type: 3}
+  projectileSprite: {fileID: 21300000, guid: 9643bfb5474702d4caedeed7875ae076, type: 3}
+  skill0: {fileID: 11400000, guid: 00b1e19f336e1674a82f75de3538fac2, type: 2}
+  skill1: {fileID: 11400000, guid: 977fd1e4fdc117642a74c56e52ad4314, type: 2}
+  skill2: {fileID: 11400000, guid: ad8fbf90514a568458a31d87d1531afc, type: 2}
+  skill3: {fileID: 11400000, guid: c6a4de2a0b0171b469ecac31976f23b8, type: 2}
+  standardStats: []
+  advancedStats: []
+  deathClip: {fileID: 8300000, guid: 7399de115d530e54f98d445b4385b419, type: 3}

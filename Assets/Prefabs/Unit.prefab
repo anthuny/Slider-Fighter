@@ -1122,7 +1122,6 @@ MonoBehaviour:
   growSpeed: 0.1
   alphaDecreaseInterval: 0.05
   alphaDecreaseSpeed: 2.5
-  maxAlpha: 0.5
 --- !u!114 &3027606193029678876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1651,8 +1650,8 @@ MonoBehaviour:
   startHidden: 1
   doScalePunch: 1
   dieAfterDisplay: 1
-  scaleIncSize: 0.4
-  scaleIncTime: 0.25
+  scaleIncSize: 0.55
+  scaleIncTime: 0.225
   vibrato: 1
   elasticity: 1
   selectable: 0
@@ -2009,6 +2008,7 @@ MonoBehaviour:
   attackBarUIElement: {fileID: 6849034864485892777}
   unitImage: {fileID: 4794480140323690797}
   curUnitTurnArrow: {fileID: 5809257815195215671}
+  curHealingRecieved: 1
   curSpeed: 0
   curPower: 0
   curHealingPower: 0
@@ -2020,6 +2020,11 @@ MonoBehaviour:
   curHealingPowerIncPerLv: 0
   curDefenseIncPerLv: 0
   maxHealthIncPerLv: 0
+  startingSpeed: 0
+  startingHealth: 0
+  startingDamage: 0
+  startingHealing: 0
+  startingDefense: 0
   unitStartTurnEnergyGain: 0
   energyCostImage: {fileID: 1915120964295476734}
   projectileParent: {fileID: 599644548073673327}
@@ -2067,6 +2072,8 @@ MonoBehaviour:
   isSpeedUp: 0
   isDefenseUp: 0
   isDefenseDown: 0
+  isPoison: 0
+  isPoisonLeaching: 0
   bonusDmgLines: 0
   bonusHealingLines: 0
   reducedCooldownsCount: 0

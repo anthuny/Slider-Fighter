@@ -18,6 +18,9 @@ public class SkillData : ScriptableObject
     public enum SkillRangedType { MELEE, RANGED }
     public SkillRangedType curRangedType;
 
+    public enum SkillAnimType { DEFAULT, SKILL }
+    public SkillAnimType curAnimType;
+
     public Sprite skillSprite;
     public string skillName;
     public string skillDescr;
@@ -30,10 +33,17 @@ public class SkillData : ScriptableObject
     public int skillCooldown;
     public int skillSelectionCount;
     public bool isSelfCast;
+    [Tooltip("Determines whether this skill doubles the turns remaining on each target for its effect that it applies. (before applying its own)")]
+    public bool isDoublingEffect;
+    public bool isLeaching;
+    public bool isPassive;
     public bool special;
     public EffectData effect;
     public int effectTurnLength;
+    [Tooltip("0 = 100% also, although 1 = 1 as normal upwards.")]
     public float effectHitChance;
+    [Tooltip("Each of these, causes the skill to immediately apply a stack of this amount to each target")]
+    public int baseEffectApplyCount = 0;
     [Tooltip("Skill has increased power to a unit with this effect")]
     public enum SkillExtraPowerToEffect { NONE, SPEEDUP, SPEEDDOWN, BLEED, RECOVER, EXHAUST, HASTE, SLEEP, 
         POWERUP, POWERDOWN, DEFENSEUP, DEFENSEDOWN, PARRY, TAUNT, MARK, SHADOWPARTNER}

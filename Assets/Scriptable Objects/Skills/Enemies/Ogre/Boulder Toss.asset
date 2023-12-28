@@ -16,6 +16,7 @@ MonoBehaviour:
   curSkillSelectionType: 0
   curSkillGameType: 2
   curRangedType: 1
+  curAnimType: 1
   skillSprite: {fileID: 0}
   skillName: BOULDER TOSS
   skillDescr: 
@@ -26,10 +27,14 @@ MonoBehaviour:
   skillCooldown: 1
   skillSelectionCount: 2
   isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
   effectHitChance: 0
+  baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 0}

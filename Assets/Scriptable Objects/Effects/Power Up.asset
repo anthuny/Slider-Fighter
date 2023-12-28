@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 2
   curEffectType: 0
-  curEffectName: 3
+  curEffectName: 4
   effectName: POWERUP
   effectDesc: Increase current power by 15%
   effectIcon: {fileID: 21300000, guid: 4afe27971f0d17c4f872cb475325c5ad, type: 3}

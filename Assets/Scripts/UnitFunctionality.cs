@@ -26,6 +26,8 @@ public class UnitFunctionality : MonoBehaviour
 
     public Image unitImage;
     public UIElement curUnitTurnArrow;
+    [Tooltip("Healing amplification this unit recives. This value is multiplied by the healing recieved. 1 = normal, 0 = nothing, 2 = double")]
+    public float curHealingRecieved = 1;
     public int curSpeed;
     public int curPower;
     public int curHealingPower;
@@ -61,7 +63,7 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private UIElement unitUIElement;
     [SerializeField] private Transform effectsParent;
     public UIElement effects;
-    [SerializeField] private List<Effect> activeEffects = new List<Effect>();
+    public List<Effect> activeEffects = new List<Effect>();
     public int curRecieveDamageAmp = 100;
     [SerializeField] private Color unitColour;
 
@@ -121,6 +123,8 @@ public class UnitFunctionality : MonoBehaviour
     public bool isSpeedUp;
     public bool isDefenseUp;
     public bool isDefenseDown;
+    public bool isPoison;
+    public bool isPoisonLeaching;
     public int bonusDmgLines;
     public int bonusHealingLines;
     public int reducedCooldownsCount;
@@ -262,6 +266,32 @@ public class UnitFunctionality : MonoBehaviour
 
         UpdateUnitLevelImage();
         ToggleUnitLevelImage(true);
+        //ToggleIsPoisonLeaching(false);
+    }
+
+    public void ToggleUnitPoisoned(bool toggle)
+    {
+        isPoison = toggle;
+    }
+
+    public bool GetUnitPoisoned()
+    {
+        return isPoison;
+    }
+
+    public float GetUnitHealingRecieved()
+    {
+        return curHealingRecieved;
+    }
+
+    public void UpdateUnitHealingRecieved(float newVal)
+    {
+        curHealingRecieved = newVal;
+    }
+
+    public void ResetUnitHealingRecieved()
+    {
+        curHealingRecieved = 1;
     }
 
     public void ToggleUnitLevelImage(bool toggle)
@@ -412,6 +442,11 @@ public class UnitFunctionality : MonoBehaviour
         transform.localPosition = new Vector3(0, 0, 0);
     }
 
+    public void ToggleIsPoisonLeaching(bool toggle)
+    {
+        isPoisonLeaching = toggle;
+    }
+
     public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null, bool levelUp = false)
     {
         statUI.UpdateContentText(name);
@@ -493,20 +528,13 @@ public class UnitFunctionality : MonoBehaviour
 
             TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
 
-            
-            if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED && GameManager.Instance.GetActiveSkill().skillPower != 0)
-            {
-                animator.SetTrigger("SkillFlg");
-                //yield return new WaitForSeconds(GameManager.Instance.enemyRangedSkillWaitTime);
-            }
-            else if (GameManager.Instance.GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED && GameManager.Instance.GetActiveSkill().skillPower == 0)
-            {
-                animator.SetTrigger("SkillFlg");
-            }
-            else
+            if (GameManager.Instance.GetActiveSkill().curAnimType == SkillData.SkillAnimType.DEFAULT)
             {
                 animator.SetTrigger("AttackFlg");
-                //yield return new WaitForSeconds(GameManager.Instance.enemyMeleeSkillWaitTime);
+            }
+            else if (GameManager.Instance.GetActiveSkill().curAnimType == SkillData.SkillAnimType.SKILL)
+            {
+                animator.SetTrigger("SkillFlg");
             }
 
             // Adjust power based on skill effect amp on target then send it 
@@ -516,7 +544,14 @@ public class UnitFunctionality : MonoBehaviour
             totalPower += GameManager.Instance.randomBaseOffset*2;
             totalPower = GameManager.Instance.RandomisePower(totalPower);
 
-            StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, GameManager.Instance.activeSkill.skillAttackCount));
+            int effectCount;
+
+            if (GameManager.Instance.GetActiveSkill().baseEffectApplyCount == 0)
+                effectCount = 1;
+            else
+                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount;
+
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, GameManager.Instance.activeSkill.skillAttackCount, effectCount));
 
             /*
             // End turn
@@ -527,22 +562,23 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
+    public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
     {
         // If no effects remain on the unit, stop
         if (activeEffects.Count >= 1)
         {
             if (activeEffects[0] == null)
-                return;
+                yield return null;
         }
 
         for (int i = 0; i < activeEffects.Count; i++)
         {
+
             if (parry)
             {
                 if (activeEffects[i].curEffectName == Effect.EffectName.PARRY)
                 {
-                    activeEffects[i].TriggerPowerEffect();
+                    activeEffects[i].TriggerPowerEffect(this);
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
                     //return;
@@ -553,20 +589,38 @@ public class UnitFunctionality : MonoBehaviour
             {
                 if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
                 {
-                    activeEffects[i].TriggerPowerEffect();
+                    activeEffects[i].TriggerPowerEffect(this);
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
+
+                    /*
+                    if (activeEffects[i].GetTurnCountRemaining() == 1)
+                    {
+                        i--;
+                        if (i < 0)
+                            i = 0;
+                    }
+                    */
+
+                    yield return new WaitForSeconds(.75f);
                 }
             }
             else
             {
                 if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                 {
-                    activeEffects[i].TriggerPowerEffect();
+                    activeEffects[i].TriggerPowerEffect(this);
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
                 }
             }
+        }
+
+        // If effect was removed, remove it here after all done
+        for (int x = 0; x < activeEffects.Count; x++)
+        {
+            if (activeEffects[x] == null)
+                GetEffects().RemoveAt(x);
         }
     }
 
@@ -684,26 +738,26 @@ public class UnitFunctionality : MonoBehaviour
             //Debug.Log(rand);
             if (rand == 1)  // Skill 1
             {
-                if (skill1CurCooldown == 0)
+                if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill1().isPassive)
                     return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill1();
                 else
                     continue;
             }
             else if (rand == 2)  // Skill 2
             {
-                if (skill2CurCooldown == 0)
+                if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill2().isPassive)
                     return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill2();
                 else
                     continue;
             }
             else if (rand == 3)  // Skill 3
             {
-                if (skill3CurCooldown == 0)
+                if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill3().isPassive)
                     return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill3();
                 else
                     continue;
             }
-
+            // Base skill
             else if (rand == 4)
             {
                 return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill0();
@@ -718,6 +772,17 @@ public class UnitFunctionality : MonoBehaviour
         return activeEffects;
     }
 
+    public Effect GetEffect(string name)
+    {
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (activeEffects[i].effectName == name)
+                return activeEffects[i];
+        }
+
+        return null;
+    }
+
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1)
     {
         // If player miss, do not apply effect
@@ -729,72 +794,90 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (addedEffect.effectName == activeEffects[i].effectName)
             {
-                // If skill came from an enemy, with no hit accuracy
-                if (effectHitAcc == -1)
-                {
-                    // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
-                    {
-                        int rand = Random.Range(0, 100);
-                        if (rand > GameManager.Instance.GetActiveSkill().effectHitChance)
-                            return;
-                    }
-
-                    // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-                    if (GameManager.Instance.GetActiveUnitFunctionality() != this)
-                        TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
-                    activeEffects[i].AddTurnCountText(turnDuration);
-                    return;
-                }
-                    
+                // Determining whether the effect hits, If it fails, stop
+                // Add more stacks to the effect that the unit already has
                 for (int x = 0; x < effectHitAcc; x++)
                 {
                     // Determining whether the effect hits, If it fails, stop
                     if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
                     {
-                        int rand = Random.Range(0, 100);
-                        if (rand > GameManager.Instance.GetActiveSkill().effectHitChance)
-                            return;
+                        int rand = Random.Range(1, 101);
+                        if (rand <= GameManager.Instance.GetActiveSkill().effectHitChance)
+                        {
+                            // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+                            activeEffects[i].AddTurnCountText(1);
+                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                        }
+                        else
+                            continue;
                     }
-
-                    activeEffects[i].AddTurnCountText(turnDuration);
+                    else
+                    {
+                        activeEffects[i].AddTurnCountText(1);
+                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                    }
                 }
-                return;
             }
         }
 
-        // Determining whether the effect hits, If it fails, stop
-        if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
+        // If unit DOES NOT currently have this effect, create it, and start the loop
+        if (GetEffect(addedEffect.effectName) == null)
         {
-            int rand = Random.Range(0, 100);
-            if (rand < GameManager.Instance.GetActiveSkill().effectHitChance)
-                return;
-        }
-
-        // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-        if (GameManager.Instance.GetActiveUnitFunctionality() != this)
-            TriggerTextAlert(GameManager.Instance.GetActiveSkill().effect.effectName, 1, true, "Inflict");
-
-        // Spawn new effect on target unit
-        GameObject go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-        go.transform.SetParent(effectsParent);
-        go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-        go.transform.localScale = new Vector3(1, 1, 1);
-
-        Effect effect = go.GetComponent<Effect>();
-        activeEffects.Add(effect);
-        effect.Setup(addedEffect, targetUnit, turnDuration);
-
-        int index = activeEffects.IndexOf(effect);
-
-        // If effect was used through a weapon hit attack, add counts to that effect
-        if (effectHitAcc != -1)
-        {
-            for (int x = 0; x < effectHitAcc - 1; x++)
+            for (int m = 0; m < effectHitAcc; m++)
             {
-                activeEffects[index].AddTurnCountText(1);
+                GameObject go = null;
+
+                // Determining whether the effect hits, If it fails, stop
+                if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
+                {
+                    if (m == 0)
+                    {
+                        int rand = Random.Range(1, 101);
+                        if (rand <= GameManager.Instance.GetActiveSkill().effectHitChance)
+                        {
+                            // Spawn new effect on target unit
+                            go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                            go.transform.SetParent(effectsParent);
+                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                            go.transform.localScale = new Vector3(1, 1, 1);
+
+                            Effect effect = go.GetComponent<Effect>();
+                            activeEffects.Add(effect);
+                            effect.Setup(addedEffect, targetUnit, 1);
+
+                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+
+                            AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
+                            break;
+                        }
+                    }
+                    else
+                        continue;
+
+                }
+                else
+                {
+                    if (m == 0)
+                    {
+                        // Spawn new effect on target unit
+                        go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                        go.transform.SetParent(effectsParent);
+                        go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                        go.transform.localScale = new Vector3(1, 1, 1);
+
+                        Effect effect = go.GetComponent<Effect>();
+                        activeEffects.Add(effect);
+                        effect.Setup(addedEffect, targetUnit, 1);
+
+                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+
+                        AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
+                        break;
+                    }
+                }
             }
         }
+
     }
 
     public void ResetEffects()
@@ -868,23 +951,73 @@ public class UnitFunctionality : MonoBehaviour
     {
         damageCount = 0;
         healCount = 0;
+        prevPowerUI = null;
     }
-    public void SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false)
+
+    public IEnumerator SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false)
     {
+        if (offense)
+        {
+            if (effect != null)
+            {
+                // If posion is about to tick, allow all other units to leach if they can
+                if (effect.effectName == "POISON")
+                {
+                    // Loop through all units in current room
+                    for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+                    {
+                        UnitFunctionality targetUnit = GameManager.Instance.activeRoomAllUnitFunctionalitys[i];
+
+                        // If unit is able to leach, give them effects they should get.
+                        if (targetUnit.isPoisonLeaching)
+                        {
+                            // Spawn new effect on target unit
+                            GameObject go = Instantiate(EffectManager.instance.effectPrefab, targetUnit.effectsParent.transform);
+                            go.transform.SetParent(targetUnit.effectsParent);
+                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                            go.transform.localScale = new Vector3(1, 1, 1);
+
+                            Effect unitEffect1 = go.GetComponent<Effect>();
+                            targetUnit.activeEffects.Add(unitEffect1);
+                            unitEffect1.Setup(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1);
+
+                            //yield return new WaitForSeconds(.2f);
+
+                            // Spawn new effect on target unit
+                            GameObject go2 = Instantiate(EffectManager.instance.effectPrefab, targetUnit.effectsParent.transform);
+                            go2.transform.SetParent(targetUnit.effectsParent);
+                            go2.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                            go2.transform.localScale = new Vector3(1, 1, 1);
+
+                            Effect unitEffect2 = go2.GetComponent<Effect>();
+                            targetUnit.activeEffects.Add(unitEffect2);
+                            unitEffect2.Setup(EffectManager.instance.GetEffect("RECOVER"), targetUnit, 1);
+
+                            targetUnit.TriggerTextAlert("Poison Leach", 1, false);
+
+                            //targetUnit.healCount++;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        // Play Audio
         if (offense)
         {
             if (effect == null)
                 AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
             else if (effect.curEffectName == Effect.EffectName.BLEED)
                 AudioManager.Instance.Play("Bleed");
-
-            //damageCount++;
+            else if (effect.curEffectName == Effect.EffectName.POISON)
+                AudioManager.Instance.Play("Poison");
         }
         else
         {
             AudioManager.Instance.Play("Heal");
-            //healCount++;
         }
+
 
         // LAST power UI hit
         if (damageCount >= GameManager.Instance.maxPowerUICount || healCount >= GameManager.Instance.maxPowerUICount)
@@ -911,7 +1044,7 @@ public class UnitFunctionality : MonoBehaviour
                 healCount++;
         }
         // Subsequent power UI hits
-        else if (damageCount != 0  && offense || healCount != 0 && !offense)
+        else if (damageCount != 0 && offense || healCount != 0 && !offense)
         {
             if (offense)
             {
@@ -941,7 +1074,7 @@ public class UnitFunctionality : MonoBehaviour
 
         if (prevPowerUI == null)
         {
-            return;
+            yield break;
         }
 
         if (powerText != null)
@@ -951,7 +1084,7 @@ public class UnitFunctionality : MonoBehaviour
                 powerText.UpdatePowerTextFontSize(GameManager.Instance.powerSkillParryFontSize);
                 powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillParry);
                 powerText.UpdatePowerText(GameManager.Instance.parryPowerText);
-                return;
+                yield break;
             }
 
             // If power is 0, display that it missed
@@ -962,7 +1095,7 @@ public class UnitFunctionality : MonoBehaviour
                 powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillMiss);
                 powerText.UpdatePowerText(GameManager.Instance.missPowerText);
                 //powerText.UpdatePowerText(power.ToString());   // Update Power Text
-                return;
+                yield break;
             }
 
             // Make Animate
@@ -1325,7 +1458,12 @@ public class UnitFunctionality : MonoBehaviour
                     curHealth = 0;
 
                 //if (curHealth > 0)
-                animator.SetTrigger("DamageFlg");
+
+                // If the hit wasnt a miss, or 0 dmg, cause hit recieved animation
+                if (power != 0)
+                    animator.SetBool("DamageFlg", true);
+
+                StartCoroutine(PlayIdleAnimation());
             }
             // Healing
             else
@@ -1352,6 +1490,11 @@ public class UnitFunctionality : MonoBehaviour
         UpdateUnitHealthVisual();
     }
 
+    IEnumerator PlayIdleAnimation()
+    {
+        yield return new WaitForSeconds(1.25f);
+        ToggleDamageAnimOff();
+    }
     public void ToggleDamageAnimOff()
     {
         animator.SetBool("DamageFlg", false);

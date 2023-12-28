@@ -100,9 +100,9 @@ public class OverlayUI : MonoBehaviour
         }
 
         if (attack)
-            skillDetailsDesc.text = $"{mainText}<color={targetCountTextColour}> {skillTargetCount}</color> {targetType},<color={damageWordTextColour}> {targetType2}</color> for<color={damagingTextColour}> {power}</color> x <color={skillMultihitColour}>{skillAttackCount}</color>";
+            skillDetailsDesc.text = $"{mainText}<color={targetCountTextColour}> {skillTargetCount}</color> {targetType},<color={damageWordTextColour}> {targetType2}</color> for<color={damagingTextColour}> {power}</color> x <color={skillMultihitColour}>{skillAttackCount}+</color>";
         else
-            skillDetailsDesc.text = $"{mainText}<color={targetCountTextColour}> {skillTargetCount}</color> {targetType},<color={healWordTextColour}> {targetType2}</color> for<color={healingTextColour}> {power}</color> x <color={skillMultihitColour}>{skillAttackCount}</color>";
+            skillDetailsDesc.text = $"{mainText}<color={targetCountTextColour}> {skillTargetCount}</color> {targetType},<color={healWordTextColour}> {targetType2}</color> for<color={healingTextColour}> {power}</color> x <color={skillMultihitColour}>{skillAttackCount}+</color>";
     }
 
     private void UpdateSkillPowerText(int power, bool damaging = true)

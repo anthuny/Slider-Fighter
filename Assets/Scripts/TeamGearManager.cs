@@ -94,6 +94,7 @@ public class TeamGearManager : MonoBehaviour
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]);
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
@@ -106,6 +107,7 @@ public class TeamGearManager : MonoBehaviour
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]);
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
@@ -118,6 +120,7 @@ public class TeamGearManager : MonoBehaviour
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]);
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
@@ -133,6 +136,7 @@ public class TeamGearManager : MonoBehaviour
         {
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]);
 
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
@@ -145,6 +149,7 @@ public class TeamGearManager : MonoBehaviour
         {
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]);
 
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
@@ -157,6 +162,7 @@ public class TeamGearManager : MonoBehaviour
         {
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]);
 
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
@@ -809,6 +815,35 @@ public class TeamGearManager : MonoBehaviour
         UpdateUnitStatsEquip(gear);
 
         // Show combined calculated values next to unit
+    }
+
+    public void ResetGearOwned()
+    {
+        equippedHelmetMain = null;
+        equippedChestpieceMain = null;
+        equippedLeggingsMain = null;
+        equippedBootsMain = null;
+
+        equippedHelmetSec = null;
+        equippedChestpieceSec = null;
+        equippedLeggingsSec = null;
+        equippedBootsSec = null;
+
+        equippedHelmetThi = null;
+        equippedChestpieceThi = null;
+        equippedLeggingsThi = null;
+        equippedBootsThi = null;
+
+        OwnedGearInven.Instance.ResetWornGearAllyMain();
+        OwnedGearInven.Instance.ResetWornGearAllySecond();
+        OwnedGearInven.Instance.ResetWornGearAllyThird();
+
+        ally1MenuUnitDisplay.ResetUnitStats();
+        ally2MenuUnitDisplay.ResetUnitStats();
+        ally3MenuUnitDisplay.ResetUnitStats();
+
+        ClearAllGearStats();
+        UpdateGearNameText("");
     }
 
     public void UpdateEquippedGearPiece(string gearPieceTypeName, GearPiece newGearPiece, bool replacing = true)

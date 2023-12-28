@@ -12,9 +12,11 @@ public class Effect : MonoBehaviour
     public enum EffectType { OFFENSE, SUPPORT }
     public EffectType curEffectType;
 
+    int power;
+
     public enum EffectName 
     { 
-        BLEED, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
+        BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
         PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN 
     }
     public EffectName curEffectName;
@@ -29,7 +31,6 @@ public class Effect : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI effectTurnCountText;
     public int turnCountRemaining;
-    public int maxTurnCountRemaining;
 
     private Image effectIconImage;
     bool initialUse;
@@ -59,6 +60,8 @@ public class Effect : MonoBehaviour
 
         if (effect.curEffectName == EffectData.EffectName.BLEED)
             curEffectName = EffectName.BLEED;
+        else if (effect.curEffectName == EffectData.EffectName.POISON)
+            curEffectName = EffectName.POISON;
         else if (effect.curEffectName == EffectData.EffectName.HEALTHUP)
             curEffectName = EffectName.HEALTHUP;
         else if (effect.curEffectName == EffectData.EffectName.HEALTHDOWN)
@@ -95,13 +98,15 @@ public class Effect : MonoBehaviour
         powerPercent = effect.powerPercent;
         powerAmp = effect.powerAmp;
 
-        if (powerAmp != 0)
+        if (powerPercent != 0)
         {
-            TriggerPowerEffect();
+            //TriggerPowerEffect();
         }
 
         UpdateEffectIcon(effect);
         AddTurnCountText(turnDuration);
+
+        transform.GetComponentInParent<CanvasGroup>().alpha = 1;
 
         //maxTurnCountRemaining = GameManager.Instance.GetActiveSkill().effectTurnLength;
 
@@ -117,15 +122,25 @@ public class Effect : MonoBehaviour
     {
         turnCountRemaining += turns;
         effectTurnCountText.text = turnCountRemaining.ToString();
+
+        // Ensure there is a cap
+        int max = EffectManager.instance.GetMaxEffectTurnsRemaining();
+        if (turnCountRemaining >= max)
+            turnCountRemaining = max;
+
+        effectTurnCountText.text = turnCountRemaining.ToString();
+    }
+
+    public int GetTurnCountRemaining()
+    {
+        return turnCountRemaining;
     }
 
     public void RemoveEffect(UnitFunctionality unit)
     {
-     //   if (GameManager.Instance.GetActiveUnitFunctionality().GetEffects().Count >= 1)
-     //     GameManager.Instance.GetActiveUnitFunctionality().ResetEffects();
+
 
         EffectRemove(unit);
-        Destroy(gameObject);
     }
 
     public void ReduceTurnCountText(UnitFunctionality unit)
@@ -139,28 +154,33 @@ public class Effect : MonoBehaviour
 
     public void EffectApply(UnitFunctionality targetUnit)
     {
-        if (curEffectName == EffectName.HEALTHUP && !initialUse)
+        if (curEffectName == EffectName.HEALTHUP)
         {
-            initialUse = true;
+            tempAddedHealth = ((powerPercent / 100f) * targetUnit.GetUnitMaxHealth());
 
-            tempAddedHealth = ((powerPercent / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth());
-            float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
             float newCurHealth = (int)tempAddedHealth;
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newCurHealth);
-            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(newCurHealth, false, false, this);
+            targetUnit.UpdateUnitMaxHealth((int)newCurHealth);
+            targetUnit.UpdateUnitCurHealth((int)newCurHealth);
+            targetUnit.StartCoroutine(targetUnit.SpawnPowerUI(newCurHealth, false, false, this));
         }
         else if (curEffectName == EffectName.TAUNT)
-            GameManager.Instance.GetActiveUnitFunctionality().ToggleTaunt(true);
+            targetUnit.ToggleTaunt(true);
+        else if (curEffectName == EffectName.POISON)
+        {
+            // healing recieved is halved while on
+            targetUnit.ToggleUnitPoisoned(true);
+            targetUnit.UpdateUnitHealingRecieved(.5f);
+
+        }
         else if (curEffectName == EffectName.POWERUP)
         {
             storedPowerAmp = powerAmp;
             targetUnit.UpdatePowerIncPerLv((int)storedPowerAmp);       
         }
         else if (curEffectName == EffectName.POWERDOWN)
-            GameManager.Instance.GetActiveUnitFunctionality().UpdatePowerIncPerLv((int)-storedPowerAmp);
+            targetUnit.UpdatePowerIncPerLv((int)-storedPowerAmp);
         else if (curEffectName == EffectName.PARRY)
-            GameManager.Instance.GetActiveUnitFunctionality().isParrying = true;
+            targetUnit.isParrying = true;
         else if (curEffectName == EffectName.SPEEDUP)
             GameManager.Instance.AddSpeedBuffUnit();
         else if (curEffectName == EffectName.MARK)
@@ -179,12 +199,20 @@ public class Effect : MonoBehaviour
     {
         if (curEffectName == EffectName.HEALTHUP)
         {
-            float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() - tempAddedHealth;
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
-            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(tempAddedHealth, false, true, this);
+            float newMaxHealth = tempAddedHealth;
+            unit.UpdateUnitMaxHealth((int)newMaxHealth, false, false);
+            unit.UpdateUnitCurHealth((int)tempAddedHealth, false, false);
+            unit.StartCoroutine(unit.SpawnPowerUI(tempAddedHealth, false, true, this));
+        }
+        else if (curEffectName == EffectName.POISON)
+        {
+            // healing recieved is halved while on
+            unit.ToggleUnitPoisoned(false);
+            unit.ResetUnitHealingRecieved();
+
         }
         else if (curEffectName == EffectName.TAUNT)
-            GameManager.Instance.GetActiveUnitFunctionality().ToggleTaunt(false);
+            unit.ToggleTaunt(false);
         else if (curEffectName == EffectName.PARRY)
         {
             unit.isParrying = false;
@@ -218,38 +246,55 @@ public class Effect : MonoBehaviour
             unit.UpdatePowerIncPerLv((int)storedPowerAmp);
         }
 
+        DestroyEffectAfterTime(unit);
+    }
+
+    void DestroyEffectAfterTime(UnitFunctionality unit)
+    {
+        //yield return new WaitForSeconds(.4f);
+
+        /*
         if (unit.GetEffects()[unit.GetEffects().IndexOf(this)])
         {
             unit.GetEffects().Remove(this);
         }
-    }
+        */
 
-    public void TriggerPowerEffect()
+
+        //if (unit.GetEffects().Count == 0)
+            //unit.ResetEffects();
+
+        Destroy(gameObject);
+    }
+    public void TriggerPowerEffect(UnitFunctionality unitTarget)
     {
-        GameManager.Instance.GetActiveUnitFunctionality().ResetPowerUI();
+        unitTarget.ResetPowerUI();
 
         // Trigger effect alert
         // Do effect
-        int unitMaxHealth = (int)GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
+        int unitMaxHealth = (int)unitTarget.GetUnitMaxHealth();
         float tempPower = (powerPercent / 100f) * unitMaxHealth;
-        int power = (int)tempPower;
+        power = (int)tempPower;
 
         float newHealingPower = power;
 
         // Make bleed scale with recover buff // TODO
 
         if (curEffectName == EffectName.BLEED)
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth(-power, true);
+            unitTarget.UpdateUnitCurHealth(-power, true);
         else if (curEffectName == EffectName.RECOVER)
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newHealingPower);
+            unitTarget.UpdateUnitCurHealth((int)newHealingPower);
+        else if (curEffectName == EffectName.POISON)
+        {
+            unitTarget.UpdateUnitCurHealth(-power, true);
+        }
 
         if (curEffectName == EffectName.BLEED)
-            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI(power, false, true, this);
+            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this));
         else if (curEffectName == EffectName.RECOVER)
-            GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)newHealingPower, false, false, this);
-
-        if (curEffectName ==  EffectName.PARRY)
-        { }
+            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI((int)newHealingPower, false, false, this));
+        else if (curEffectName == EffectName.POISON)
+            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this));
     }
 }
 
