@@ -132,8 +132,11 @@ public class UnitFunctionality : MonoBehaviour
 
     public bool heroRoomUnit;
 
+    SimpleFlash hitFlash;
+    public UIElement uiElement;
+
     [HideInInspector]
-    public AudioClip deathClip;
+    public AudioClip deathClip, hitRecievedClip;
 
 
 
@@ -267,8 +270,20 @@ public class UnitFunctionality : MonoBehaviour
         UpdateUnitLevelImage();
         ToggleUnitLevelImage(true);
         //ToggleIsPoisonLeaching(false);
+
+        SetupFlashHit();
     }
 
+    void SetupFlashHit()
+    {
+        hitFlash = GetComponentInChildren<SimpleFlash>();
+        uiElement = hitFlash.gameObject.GetComponent<UIElement>();
+    }
+
+    public SimpleFlash GetHitFlash()
+    {
+        return hitFlash;
+    }
     public void ToggleUnitPoisoned(bool toggle)
     {
         isPoison = toggle;
@@ -1006,12 +1021,15 @@ public class UnitFunctionality : MonoBehaviour
         // Play Audio
         if (offense)
         {
-            if (effect == null)
-                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
-            else if (effect.curEffectName == Effect.EffectName.BLEED)
-                AudioManager.Instance.Play("Bleed");
-            else if (effect.curEffectName == Effect.EffectName.POISON)
-                AudioManager.Instance.Play("Poison");
+            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+
+            if (effect != null)
+            {
+                if (effect.curEffectName == Effect.EffectName.BLEED)
+                    AudioManager.Instance.Play("Bleed");
+                else if (effect.curEffectName == Effect.EffectName.POISON)
+                    AudioManager.Instance.Play("Poison");
+            }
         }
         else
         {
@@ -1360,7 +1378,8 @@ public class UnitFunctionality : MonoBehaviour
             curLevel += level;
         else
             curLevel = level;
-        UpdateUnitLevelVisual(GetUnitLevel());
+
+        UpdateUnitLevelVisual(curLevel);
 
         ResetUnitExp();
         UpdateUnitMaxExp();
@@ -1374,6 +1393,7 @@ public class UnitFunctionality : MonoBehaviour
 
     void UpdateUnitLevelVisual(int level)
     {
+        //Debug.Log(level);
         unitLevelText.text = level.ToString();
     }
 
@@ -1425,7 +1445,7 @@ public class UnitFunctionality : MonoBehaviour
         return maxExp;
     }
 
-    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false)
+    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true)
     {
         if (isDead)
             return;
@@ -1461,8 +1481,18 @@ public class UnitFunctionality : MonoBehaviour
 
                 // If the hit wasnt a miss, or 0 dmg, cause hit recieved animation
                 if (power != 0)
+                {
                     animator.SetBool("DamageFlg", true);
 
+                    GetHitFlash().Flash();
+                    uiElement.AnimateUI(false);
+                    
+                    if (doExtras)
+                    {
+                        CameraShake.instance.EnableCanShake();
+                        AudioManager.Instance.Play(hitRecievedClip.name);
+                    }
+                }
                 StartCoroutine(PlayIdleAnimation());
             }
             // Healing

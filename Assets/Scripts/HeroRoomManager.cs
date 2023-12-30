@@ -15,6 +15,8 @@ public class HeroRoomManager : MonoBehaviour
 
     [SerializeField] private float timeWaitAfterHeroJoining = 1.5f;
 
+    private bool playerOffered;
+
     private void Awake()
     {
         Instance = this;
@@ -40,6 +42,16 @@ public class HeroRoomManager : MonoBehaviour
         return spawnLocation;
     }
     
+    public void TogglePlayedOffered(bool toggle)
+    {
+        playerOffered = toggle;
+    }
+
+    public bool GetPlayerOffered()
+    {
+        return playerOffered;
+    }
+
     public void TogglePrompt(bool toggle, bool denied = true)
     {
         promptYesButton.ToggleButton(toggle);
@@ -48,6 +60,7 @@ public class HeroRoomManager : MonoBehaviour
         if (!denied)
             GameManager.Instance.AddUnitToTeam(GameManager.Instance.spawnedUnit);
 
+
         if (toggle)
         {
             promptUI.UpdateAlpha(1);
@@ -55,9 +68,14 @@ public class HeroRoomManager : MonoBehaviour
         }
         else
         {
+            TogglePlayedOffered(true);
+
             promptUI.UpdateAlpha(0);
 
-            StartCoroutine(TimeWaitHerojoining());
+            if (denied)
+                RemoveSpawnedUnit();
+            else
+                StartCoroutine(TimeWaitHerojoining());
         }
     }
 
@@ -80,5 +98,16 @@ public class HeroRoomManager : MonoBehaviour
 
         // Save earnt ally
         CharacterCarasel.Instance.SaveUnlockedAlly(GameManager.Instance.spawnedUnitFunctionality.GetUnitName());
+    }
+
+    void RemoveSpawnedUnit()
+    {
+        GameManager.Instance.StartCoroutine(GameManager.Instance.SetupRoomPostBattle(true));
+        GameManager.Instance.UpdateAllAlliesPosition(true);
+        RoomManager.Instance.ToggleInteractable(false);
+
+        GameManager.Instance.RemoveUnit(GameManager.Instance.spawnedUnitFunctionality, false);
+
+        Destroy(GameManager.Instance.spawnedUnitFunctionality.gameObject);
     }
 }

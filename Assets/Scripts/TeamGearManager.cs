@@ -136,7 +136,7 @@ public class TeamGearManager : MonoBehaviour
         {
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]);
 
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false);
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
@@ -149,7 +149,7 @@ public class TeamGearManager : MonoBehaviour
         {
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]);
 
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false);
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
@@ -162,7 +162,7 @@ public class TeamGearManager : MonoBehaviour
         {
             UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]);
 
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false);
+            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);

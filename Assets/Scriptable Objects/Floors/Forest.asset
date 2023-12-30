@@ -20,8 +20,8 @@ MonoBehaviour:
   sideRoomAmount: 2
   shopRoomCount: 1
   heroRoomCount: 1
-  minEnemyRoomCount: 1
-  maxEnemyRoomCount: 3
+  minRoomValue: 2
+  maxRoomValue: 4
   enemyUnits:
   - {fileID: 11400000, guid: eb1ecd658a1af71459cae8dd2020afa2, type: 2}
   - {fileID: 11400000, guid: af4c98db1fd39344c8f213210e44ae12, type: 2}

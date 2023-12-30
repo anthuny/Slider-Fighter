@@ -40,9 +40,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int harddiffEnemyLvDifference;
     [SerializeField] private int chaosdiffEnemyLvDifference;
     [Space(1)]
-    [SerializeField] private int heroRoomIncChallengeCount = 2;
+    //[SerializeField] private int heroRoomIncChallengeCount = 2;
     [SerializeField] private int heroRoomMinEnemiesIncCount = 1;
     [SerializeField] private int heroRoomMaxEnemiesIncCount = 2;
+
+    [Tooltip("Duration of the flash.")]
+    public float hitFlashDuration = 0.05f;
 
     [Header("Hero Retrieval")]
     [SerializeField] private float postFightTimeWait = 1.5f;
@@ -438,6 +441,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.startingSpeed = unit.startingSpeed;
 
                 unitFunctionality.deathClip = unit.deathClip;
+                unitFunctionality.hitRecievedClip = unit.hitRecievedClip;
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
 
@@ -641,15 +645,15 @@ public class GameManager : MonoBehaviour
             }
             //activeRoomAllUnitFunctionalitys.Clear();
 
-            for (int i = 0; i < enemySpawnPositions.Count; i++)
+            for (int x = 0; x < enemySpawnPositions.Count; x++)
             {
-                if (enemySpawnPositions[i].childCount >= 1)
-                    Destroy(enemySpawnPositions[i].transform.GetChild(0).gameObject);
+                if (enemySpawnPositions[x].childCount >= 1)
+                    Destroy(enemySpawnPositions[x].transform.GetChild(0).gameObject);
             }
 
-            for (int i = 0; i < activeRoomEnemies.Count; i++)
+            for (int y = 0; y < activeRoomEnemies.Count; y++)
             {
-                activeRoomEnemies.RemoveAt(i);
+                activeRoomEnemies.RemoveAt(y);
             }
 
             activeRoomEnemies.Clear();
@@ -675,6 +679,8 @@ public class GameManager : MonoBehaviour
         // Turn map ON
         else
         {
+            HeroRoomManager.Instance.TogglePlayedOffered(false);
+
             if (!increaseFloor)
                 ResetAlliesExpVisual();
 
@@ -813,6 +819,7 @@ public class GameManager : MonoBehaviour
         ResetActiveUnitTurnArrow();
         ToggleAllAlliesStatBar(true);
        
+
 
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
@@ -998,16 +1005,18 @@ public class GameManager : MonoBehaviour
 
             FloorData floor = RoomManager.Instance.GetActiveFloor();
 
-            int enemySpawnCount = Random.RandomRange(floor.minEnemyRoomCount, floor.maxEnemyRoomCount + 1);
+            int enemySpawnValue = Random.Range(floor.minRoomValue, floor.maxRoomValue + 1 + (RoomManager.Instance.GetFloorCount()*3));
 
             // If room is hero, spawn additional enemies
             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
             {
-                enemySpawnCount += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + (RoomManager.Instance.GetFloorCount()-1);
+                enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + ((RoomManager.Instance.GetFloorCount()*2)- 1);
             }
 
+            //Debug.Log("Room Value = " + enemySpawnValue);
+
             // Spawn enemy type
-            for (int i = 0; i < enemySpawnCount; i++)
+            for (int i = 0; i < enemySpawnValue; i++)
             {
                 GameObject go = null;
 
@@ -1031,8 +1040,38 @@ public class GameManager : MonoBehaviour
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
 
                 unitFunctionality.UpdateUnitValue(unit.GetUnitValue());
-                unitFunctionality.UpdateUnitLevel(RoomManager.Instance.GetFloorCount());
 
+                int unitLevel = RoomManager.Instance.GetFloorCount() + (Random.Range(RoomManager.Instance.GetFloorCount() - 1, RoomManager.Instance.GetFloorCount() + 1));
+
+
+
+                //Debug.Log("i = " + i);
+                i += unit.GetUnitValue() + unitLevel;
+
+                if (unitLevel == 0)
+                {
+                    unitLevel = 1;
+                }
+
+
+                if (i >= enemySpawnValue)
+                {
+                    if (unitLevel > 1)
+                        unitLevel--;
+                }
+                else
+                {
+                    if (i != 0)
+                        i--;
+                }
+
+
+
+                unitFunctionality.UpdateUnitLevel(unitLevel, 0, true);
+                //Debug.Log("i = " + i);
+
+                //Debug.Log("unit val " + unit.GetUnitValue());
+                //Debug.Log("unit lv " + unitLevel);
                 // Set unit stats
                 unitFunctionality.UpdateUnitType("Enemy");
                 unitFunctionality.ResetPosition();
@@ -1084,6 +1123,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.deathClip = unit.deathClip;
+                unitFunctionality.hitRecievedClip = unit.hitRecievedClip;
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
 
@@ -1107,6 +1147,7 @@ public class GameManager : MonoBehaviour
                 // If unit in room is an ENEMY
                 else
                 {
+                    /*
                     int roomChallengeCount = (RoomManager.Instance.GetFloorCount()) + floorDiff;
 
                     // Randomise enemy unit Level
@@ -1143,6 +1184,7 @@ public class GameManager : MonoBehaviour
                         curChallengeCount += unitValue;
                     else
                         break;
+                    */
                 }
 
                 // Update unit energy bar on
@@ -1879,7 +1921,7 @@ public class GameManager : MonoBehaviour
         abilityDetailsUI.UpdateUnitOverlayHealthUI(activeUnit, activeUnit.GetUnitCurHealth(), activeUnit.GetUnitMaxHealth());
     }
 
-    public void RemoveUnit(UnitFunctionality unitFunctionality)
+    public void RemoveUnit(UnitFunctionality unitFunctionality, bool byPass = true)
     {
         if (activeRoomEnemies.Contains(unitFunctionality))
             activeRoomEnemies.Remove(unitFunctionality);
@@ -1890,16 +1932,20 @@ public class GameManager : MonoBehaviour
         if (activeRoomAllUnitFunctionalitys.Contains(unitFunctionality))
             activeRoomAllUnitFunctionalitys.Remove(unitFunctionality);
 
-        UpdateEnemiesKilled(unitFunctionality);
+        if (byPass)
+        {
+            UpdateEnemiesKilled(unitFunctionality);
 
-        // If this is the last enemy that got killed, queue player win post battle ui
-        if (activeRoomEnemies.Count == 0)
-            StartCoroutine(SetupPostBattleUI(true));
-        // If this is the last ally that got killed, queue player lose post battle ui
-        if (activeRoomAllies.Count == 0)
-            StartCoroutine(SetupPostBattleUI(false));
+            // If this is the last enemy that got killed, queue player win post battle ui
+            if (activeRoomEnemies.Count == 0)
+                StartCoroutine(SetupPostBattleUI(true));
+            // If this is the last ally that got killed, queue player lose post battle ui
+            if (activeRoomAllies.Count == 0)
+                StartCoroutine(SetupPostBattleUI(false));
 
-        AddExperienceGained(unitFunctionality.GetUnitExpKillGained());
+            AddExperienceGained(unitFunctionality.GetUnitExpKillGained());
+        }
+
 
         /*
         // Remove unit from unit list
@@ -2664,8 +2710,9 @@ public class GameManager : MonoBehaviour
                 unit.ToggleSelected(true);
                 UpdateUnitsSelectedText();
 
-                // If there are no enemies remaining AND its a hero room
-                if (activeRoomEnemies.Count == 0 && (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO))
+                // If there are no enemies remaining AND its a hero room, AND hero room has no been offered yet
+                if (activeRoomEnemies.Count == 0 && (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
+                    && !HeroRoomManager.Instance.GetPlayerOffered())
                     StartCoroutine(ToggleHeroSelectPrompt());
             }
         }

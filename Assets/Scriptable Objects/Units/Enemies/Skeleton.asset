@@ -40,3 +40,4 @@ MonoBehaviour:
   standardStats: []
   advancedStats: []
   deathClip: {fileID: 8300000, guid: 7399de115d530e54f98d445b4385b419, type: 3}
+  hitRecievedClip: {fileID: 8300000, guid: 7399de115d530e54f98d445b4385b419, type: 3}

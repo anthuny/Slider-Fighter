@@ -49,3 +49,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 524ffbc92f6128349bd1dd7c2510bc1c, type: 2}
   - {fileID: 11400000, guid: 18ef1a26a48f7874f8286d8ca11737d4, type: 2}
   deathClip: {fileID: 8300000, guid: c278f4be40dfcea4a9c7f17ecd4a78e1, type: 3}
+  hitRecievedClip: {fileID: 8300000, guid: 1f91da09a3e411d4283247c2a4fd67b8, type: 3}

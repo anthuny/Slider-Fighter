@@ -22,7 +22,7 @@ MonoBehaviour:
   startingDefense: 1
   startingPower: 2
   startingHealingPower: 1
-  startingMaxHealth: 150
+  startingMaxHealth: 200
   speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 0.25
@@ -39,4 +39,5 @@ MonoBehaviour:
   skill3: {fileID: 11400000, guid: c6a4de2a0b0171b469ecac31976f23b8, type: 2}
   standardStats: []
   advancedStats: []
-  deathClip: {fileID: 8300000, guid: 7399de115d530e54f98d445b4385b419, type: 3}
+  deathClip: {fileID: 8300000, guid: a7e3e569e90d0574ca7c2134c837f020, type: 3}
+  hitRecievedClip: {fileID: 8300000, guid: 3bd9d7e52bee410449b328cf51ba37a8, type: 3}

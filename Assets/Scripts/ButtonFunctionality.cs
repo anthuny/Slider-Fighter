@@ -583,6 +583,8 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
         GameManager.Instance.map.ClearRoom();
+
+        GameManager.Instance.ResetRoom(true);
     }
 
     public void WeaponBackButton()

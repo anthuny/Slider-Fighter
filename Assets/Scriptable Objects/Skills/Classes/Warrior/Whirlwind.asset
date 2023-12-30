@@ -16,6 +16,7 @@ MonoBehaviour:
   curSkillSelectionType: 0
   curSkillGameType: 1
   curRangedType: 0
+  curAnimType: 0
   skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
   skillName: WHIRLWIND
   skillDescr: Target up to
@@ -23,13 +24,17 @@ MonoBehaviour:
   skillAttackAccMult: 1
   skillAttackCount: 3
   projectileSpeed: 1
-  skillCooldown: 1
+  skillCooldown: 2
   skillSelectionCount: 4
   isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
   effectHitChance: 0
+  baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}

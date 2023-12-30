@@ -43,6 +43,7 @@ public class UnitData : ScriptableObject
     [SerializeField] private List<Stat> advancedStats = new List<Stat>();
 
     public AudioClip deathClip;
+    public AudioClip hitRecievedClip;
 
     private int curAttackChargeTurnStart;
 

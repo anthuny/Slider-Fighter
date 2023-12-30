@@ -230,17 +230,25 @@ public class UIElement : MonoBehaviour
         contentText.colorGradientPreset = gradient;
     }
 
-    public void AnimateUI()
+    public void AnimateUI(bool text = true)
     {
         if (!doScalePunch)
             return;
 
-        ResetAnimateScale();
+        if (text)
+        {
+            ResetAnimateScale();
 
-        if (doScalePunch)
-            contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
+            if (doScalePunch)
+                contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 
-        AnimateUIMaxCap();
+            AnimateUIMaxCap();
+        }
+        else
+        {
+            if (doScalePunch)
+                contentImage.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
+        }
 
         if (dieAfterDisplay)
             StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime));

@@ -87,6 +87,8 @@ GameObject:
   - component: {fileID: 1206359433039636095}
   - component: {fileID: 1204477792179178743}
   - component: {fileID: 1312161310553083477}
+  - component: {fileID: 117666161967653836}
+  - component: {fileID: 6994916748169668503}
   m_Layer: 5
   m_Name: Character
   m_TagString: Untagged
@@ -134,7 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: cb7b4067b1c47f847816edc8a73cdffb, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -152,6 +154,50 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &117666161967653836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414190591669720661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d50d60ff6dbbe489229df852d2e0b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashMaterial: {fileID: 2100000, guid: 43211246c645c51428974532c4786829, type: 2}
+--- !u!114 &6994916748169668503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414190591669720661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStatType: 0
+  activeStatType: 0
+  contentImage: {fileID: 1312161310553083477}
+  contentText: {fileID: 0}
+  contentSubText: {fileID: 0}
+  buttonCG: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 1
+  dieAfterDisplay: 0
+  scaleIncSize: 0.2
+  scaleIncTime: 0.05
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  statPointsThreshhold: 0
+  isLocked: 0
 --- !u!1 &1415871230302792947
 GameObject:
   m_ObjectHideFlags: 0

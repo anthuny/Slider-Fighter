@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ogre
   m_EditorClassIdentifier: 
   curUnitType: 1
-  unitValue: 1
+  unitValue: 2
   unitSprite: {fileID: 21300000, guid: c168637633625ad42911600374afed78, type: 2}
   unitIcon: {fileID: 21300000, guid: 83d7c9c003ccb8a48934aad53579e932, type: 3}
   unitColour: {r: 1, g: 1, b: 1, a: 1}
@@ -22,7 +22,7 @@ MonoBehaviour:
   startingDefense: 5
   startingPower: 2
   startingHealingPower: 1
-  startingMaxHealth: 300
+  startingMaxHealth: 250
   speedIncPerLv: 1
   powerIncPerLv: 2
   healingPowerIncPerLv: 1
@@ -40,3 +40,4 @@ MonoBehaviour:
   standardStats: []
   advancedStats: []
   deathClip: {fileID: 8300000, guid: f6bdac24d6957ac4eb414094bd3457e8, type: 3}
+  hitRecievedClip: {fileID: 8300000, guid: b9e8325b75e4ae24e8964b9790ed10fa, type: 3}
