@@ -798,7 +798,7 @@ public class UnitFunctionality : MonoBehaviour
         return null;
     }
 
-    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1)
+    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true)
     {
         // If player miss, do not apply effect
         if (effectHitAcc == 0 || targetUnit.isParrying)
@@ -814,7 +814,7 @@ public class UnitFunctionality : MonoBehaviour
                 for (int x = 0; x < effectHitAcc; x++)
                 {
                     // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
+                    if (GameManager.Instance.GetActiveSkill().effectHitChance != 0 && byPassAcc)
                     {
                         int rand = Random.Range(1, 101);
                         if (rand <= GameManager.Instance.GetActiveSkill().effectHitChance)
@@ -843,7 +843,7 @@ public class UnitFunctionality : MonoBehaviour
                 GameObject go = null;
 
                 // Determining whether the effect hits, If it fails, stop
-                if (GameManager.Instance.GetActiveSkill().effectHitChance != 0)
+                if (GameManager.Instance.GetActiveSkill().effectHitChance != 0 && byPassAcc)
                 {
                     if (m == 0)
                     {
@@ -986,33 +986,13 @@ public class UnitFunctionality : MonoBehaviour
                         // If unit is able to leach, give them effects they should get.
                         if (targetUnit.isPoisonLeaching)
                         {
-                            // Spawn new effect on target unit
-                            GameObject go = Instantiate(EffectManager.instance.effectPrefab, targetUnit.effectsParent.transform);
-                            go.transform.SetParent(targetUnit.effectsParent);
-                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                            go.transform.localScale = new Vector3(1, 1, 1);
-
-                            Effect unitEffect1 = go.GetComponent<Effect>();
-                            targetUnit.activeEffects.Add(unitEffect1);
-                            unitEffect1.Setup(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1);
-
-                            //yield return new WaitForSeconds(.2f);
+                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, false);
 
                             // Spawn new effect on target unit
-                            GameObject go2 = Instantiate(EffectManager.instance.effectPrefab, targetUnit.effectsParent.transform);
-                            go2.transform.SetParent(targetUnit.effectsParent);
-                            go2.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                            go2.transform.localScale = new Vector3(1, 1, 1);
-
-                            Effect unitEffect2 = go2.GetComponent<Effect>();
-                            targetUnit.activeEffects.Add(unitEffect2);
-                            unitEffect2.Setup(EffectManager.instance.GetEffect("RECOVER"), targetUnit, 1);
+                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("RECOVER"), targetUnit, 1, 1, false);
 
                             targetUnit.TriggerTextAlert("Poison Leach", 1, false);
-
-                            //targetUnit.healCount++;
                         }
-
                     }
                 }
             }
@@ -1345,7 +1325,14 @@ public class UnitFunctionality : MonoBehaviour
                 UpdateDefense(GetDefenseIncPerLv());
                 UpdateMaxHealth(GetMaxHealthIncPerLv());
 
-                UpdateUnitCurHealth((int)GetUnitMaxHealth(), false, true);
+                float levelUpHeal = ((float)GameManager.Instance.levelupHealPerc / 100f) * GetUnitMaxHealth();
+
+                ResetPowerUI();
+
+                UpdateUnitCurHealth((int)levelUpHeal, false, false);
+
+                // This isnt working
+                //SpawnPowerUI(levelUpHeal, false, false, null, false);
 
                 UpdateUnitLevelImage();
                 yield break;

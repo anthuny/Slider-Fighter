@@ -34,7 +34,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 4d56bebc670b2184f90cda6ba558d462, type: 2}
   effectTurnLength: 1
   effectHitChance: 0
-  baseEffectApplyCount: 2
+  baseEffectApplyCount: 3
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}

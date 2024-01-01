@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject unitIcon;
 
     [Header("Combat - Unit Levels")]
+    public int levelupHealPerc = 20;
     [SerializeField] private Color easyDiffEnemyLvColour;
     [SerializeField] private Color mediumDiffEnemyLvColour;
     [SerializeField] private Color hardDiffEnemyLvColour;
@@ -1005,129 +1006,132 @@ public class GameManager : MonoBehaviour
 
             FloorData floor = RoomManager.Instance.GetActiveFloor();
 
-            int enemySpawnValue = Random.Range(floor.minRoomValue, floor.maxRoomValue + 1 + (RoomManager.Instance.GetFloorCount()*3));
+           int enemySpawnValue = Random.Range(floor.minRoomValue, floor.maxRoomValue + 1) + ((RoomManager.Instance.GetFloorCount()*3) - 2);
 
             // If room is hero, spawn additional enemies
             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
             {
-                enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + ((RoomManager.Instance.GetFloorCount()*2)- 1);
+                enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + ((RoomManager.Instance.GetFloorCount() * 3) - 1);
             }
-
-            //Debug.Log("Room Value = " + enemySpawnValue);
+            else if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
+            {
+                enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + ((RoomManager.Instance.GetFloorCount() * 3) - 1);
+            }
 
             // Spawn enemy type
             for (int i = 0; i < enemySpawnValue; i++)
             {
-                GameObject go = null;
+            GameObject go = null;
 
-                int spawnEnemyIndex = Random.Range(0, activeFloor.enemyUnits.Count);
+            int spawnEnemyIndex = Random.Range(0, activeFloor.enemyUnits.Count);
 
-                UnitData unit = activeFloor.enemyUnits[spawnEnemyIndex];  // Reference
+            UnitData unit = activeFloor.enemyUnits[spawnEnemyIndex];  // Reference
 
-                // Check if there are remaining enemy unit spawn locations left
-                if (spawnEnemyPosIndex <= enemySpawnPositions.Count -1)
-                {
-                    go = Instantiate(baseUnit, enemySpawnPositions[spawnEnemyPosIndex]);
-                    go.transform.SetParent(enemySpawnPositions[spawnEnemyPosIndex]);
-                    spawnEnemyPosIndex++;
-                }                
-                else
-                {
-                    Destroy(go);
-                    break;
-                }
+            // Check if there are remaining enemy unit spawn locations left
+            if (spawnEnemyPosIndex <= enemySpawnPositions.Count -1)
+            {
+                go = Instantiate(baseUnit, enemySpawnPositions[spawnEnemyPosIndex]);
+                go.transform.SetParent(enemySpawnPositions[spawnEnemyPosIndex]);
+                spawnEnemyPosIndex++;
+            }                
+            else
+            {
+                Destroy(go);
+                break;
+            }
 
-                UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
+            UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
 
-                unitFunctionality.UpdateUnitValue(unit.GetUnitValue());
+            unitFunctionality.UpdateUnitValue(unit.GetUnitValue());
 
-                int unitLevel = RoomManager.Instance.GetFloorCount() + (Random.Range(RoomManager.Instance.GetFloorCount() - 1, RoomManager.Instance.GetFloorCount() + 1));
-
-
-
-                //Debug.Log("i = " + i);
-                i += unit.GetUnitValue() + unitLevel;
-
-                if (unitLevel == 0)
-                {
-                    unitLevel = 1;
-                }
-
-
-                if (i >= enemySpawnValue)
-                {
-                    if (unitLevel > 1)
-                        unitLevel--;
-                }
-                else
-                {
-                    if (i != 0)
-                        i--;
-                }
+            int unitLevel = RoomManager.Instance.GetFloorCount() + (Random.Range(RoomManager.Instance.GetFloorCount() - 1, RoomManager.Instance.GetFloorCount() + 1));
 
 
 
-                unitFunctionality.UpdateUnitLevel(unitLevel, 0, true);
-                //Debug.Log("i = " + i);
+            //Debug.Log("i = " + i);
+            i += unit.GetUnitValue() + unitLevel;
 
-                //Debug.Log("unit val " + unit.GetUnitValue());
-                //Debug.Log("unit lv " + unitLevel);
-                // Set unit stats
-                unitFunctionality.UpdateUnitType("Enemy");
-                unitFunctionality.ResetPosition();
-                unitFunctionality.UpdateUnitName(unit.unitName);
-                unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
+            if (unitLevel == 0)
+            {
+                unitLevel = 1;
+            }
 
-                unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
-                unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
-                unitFunctionality.UpdateHealingPowerIncPerLv((int)unit.healingPowerIncPerLv);
-                unitFunctionality.UpdateDefenseIncPerLv((int)unit.defenseIncPerLv);
-                unitFunctionality.UpdateMaxHealthIncPerLv((int)unit.maxHealthIncPerLv);
 
-                unitFunctionality.startingDamage = unit.startingPower;
-                unitFunctionality.startingHealth = unit.startingMaxHealth;
-                unitFunctionality.startingHealing = unit.startingHealingPower;
-                unitFunctionality.startingDefense = unit.startingDefense;
-                unitFunctionality.startingSpeed = unit.startingSpeed;
+            if (i >= enemySpawnValue)
+            {
+                if (unitLevel > 1)
+                    unitLevel--;
+            }
+            else
+            {
+                if (i != 0)
+                    i--;
+            }
 
-                // Apply to unit whether any of its skills leaches.
-                if (unit.GetSkill0().isLeaching)
-                    unitFunctionality.ToggleIsPoisonLeaching(true);
-                else if (unit.GetSkill1().isLeaching)
-                    unitFunctionality.ToggleIsPoisonLeaching(true);
-                else if (unit.GetSkill2().isLeaching)
-                    unitFunctionality.ToggleIsPoisonLeaching(true);
-                else if (unit.GetSkill3().isLeaching)
-                    unitFunctionality.ToggleIsPoisonLeaching(true);
 
-                // If enemy unit spawned is NOT lv 1, spawn with level bonus stats
-                if (unitFunctionality.GetUnitLevel() != 1)
-                {
-                    unitFunctionality.UpdateUnitSpeed(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetSpeedIncPerLv()) + unit.startingSpeed);
-                    unitFunctionality.UpdateUnitPower(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetPowerIncPerLv()) + unit.startingPower);
-                    unitFunctionality.UpdateUnitHealingPower(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetHealingPowerIncPerLv()) + unit.startingHealingPower);
-                    unitFunctionality.UpdateUnitDefense(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetDefenseIncPerLv()) + unit.startingDefense);
-                    unitFunctionality.UpdateUnitMaxHealth(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetMaxHealthIncPerLv()) + unit.startingMaxHealth, true);
-                }
-                // If enemy spawned IS level 1, spawn with starting stats
-                else
-                {
-                    unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
-                    unitFunctionality.UpdateUnitPower(unit.startingPower);
-                    unitFunctionality.UpdateUnitHealingPower(unit.startingHealingPower);
-                    unitFunctionality.UpdateUnitDefense(unit.startingDefense);
-                    unitFunctionality.UpdateUnitMaxHealth(unit.startingMaxHealth, true);
-                }
 
-                unitFunctionality.UpdateUnitVisual(unit.unitSprite);
-                unitFunctionality.UpdateUnitIcon(unit.unitIcon);
+            unitFunctionality.UpdateUnitLevel(unitLevel, 0, true);
+            //Debug.Log("i = " + i);
 
-                unitFunctionality.deathClip = unit.deathClip;
-                unitFunctionality.hitRecievedClip = unit.hitRecievedClip;
+            //Debug.Log("unit val " + unit.GetUnitValue());
+            //Debug.Log("unit lv " + unitLevel);
+            // Set unit stats
+            unitFunctionality.UpdateUnitType("Enemy");
+            unitFunctionality.ResetPosition();
+            unitFunctionality.UpdateUnitName(unit.unitName);
+            unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
 
-                AddActiveRoomAllUnitsFunctionality(unitFunctionality);
+            unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
+            unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
+            unitFunctionality.UpdateHealingPowerIncPerLv((int)unit.healingPowerIncPerLv);
+            unitFunctionality.UpdateDefenseIncPerLv((int)unit.defenseIncPerLv);
+            unitFunctionality.UpdateMaxHealthIncPerLv((int)unit.maxHealthIncPerLv);
 
-                unitFunctionality.unitData = unit;
+            unitFunctionality.startingDamage = unit.startingPower;
+            unitFunctionality.startingHealth = unit.startingMaxHealth;
+            unitFunctionality.startingHealing = unit.startingHealingPower;
+            unitFunctionality.startingDefense = unit.startingDefense;
+            unitFunctionality.startingSpeed = unit.startingSpeed;
+
+            // Apply to unit whether any of its skills leaches.
+            if (unit.GetSkill0().isLeaching)
+                unitFunctionality.ToggleIsPoisonLeaching(true);
+            else if (unit.GetSkill1().isLeaching)
+                unitFunctionality.ToggleIsPoisonLeaching(true);
+            else if (unit.GetSkill2().isLeaching)
+                unitFunctionality.ToggleIsPoisonLeaching(true);
+            else if (unit.GetSkill3().isLeaching)
+                unitFunctionality.ToggleIsPoisonLeaching(true);
+
+            // If enemy unit spawned is NOT lv 1, spawn with level bonus stats
+            if (unitFunctionality.GetUnitLevel() != 1)
+            {
+                unitFunctionality.UpdateUnitSpeed(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetSpeedIncPerLv()) + unit.startingSpeed);
+                unitFunctionality.UpdateUnitPower(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetPowerIncPerLv()) + unit.startingPower);
+                unitFunctionality.UpdateUnitHealingPower(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetHealingPowerIncPerLv()) + unit.startingHealingPower);
+                unitFunctionality.UpdateUnitDefense(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetDefenseIncPerLv()) + unit.startingDefense);
+                unitFunctionality.UpdateUnitMaxHealth(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetMaxHealthIncPerLv()) + unit.startingMaxHealth, true);
+            }
+            // If enemy spawned IS level 1, spawn with starting stats
+            else
+            {
+                unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
+                unitFunctionality.UpdateUnitPower(unit.startingPower);
+                unitFunctionality.UpdateUnitHealingPower(unit.startingHealingPower);
+                unitFunctionality.UpdateUnitDefense(unit.startingDefense);
+                unitFunctionality.UpdateUnitMaxHealth(unit.startingMaxHealth, true);
+            }
+
+            unitFunctionality.UpdateUnitVisual(unit.unitSprite);
+            unitFunctionality.UpdateUnitIcon(unit.unitIcon);
+
+            unitFunctionality.deathClip = unit.deathClip;
+            unitFunctionality.hitRecievedClip = unit.hitRecievedClip;
+
+            AddActiveRoomAllUnitsFunctionality(unitFunctionality);
+
+            unitFunctionality.unitData = unit;
+
             }
 
             int curChallengeCount = 0;
