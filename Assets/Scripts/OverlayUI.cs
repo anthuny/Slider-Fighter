@@ -42,18 +42,6 @@ public class OverlayUI : MonoBehaviour
         UpdateSkillDetailsIcon(skillIcon);
     }
 
-    /*
-    public void UpdateUnitOverlayEnergyUI(UnitFunctionality unit, float curEnergy, float maxEnergy)
-    {
-        // Update overlay energy current text
-        unitOverlayCurEnergyText.text = unit.GetUnitCurEnergy().ToString();
-
-        // Update Energy Image Fill Progress
-        float fillAmount = curEnergy / maxEnergy;
-        unitOverlayCurEnergyImage.fillAmount = fillAmount;
-    }
-    */
-
     public void UpdateUnitOverlayHealthUI(UnitFunctionality unit, float curHealth, float maxHealth)
     {
         // Update overlay health current text

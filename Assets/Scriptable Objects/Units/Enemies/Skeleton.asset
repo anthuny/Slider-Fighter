@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curUnitType: 1
   unitValue: 1
-  unitSprite: {fileID: 21300000, guid: f11188ccb9d85fd4c8b84e0006d1887c, type: 2}
-  unitIcon: {fileID: 21300000, guid: df752b2cbf803d140a3ba55bca3f9e84, type: 3}
+  unitSprite: {fileID: -1239719131, guid: fbe5805802964d7489180c0dedd510b7, type: 3}
+  unitIcon: {fileID: 21300000, guid: 79e49d6df08cbb647a21eaea4d88d7b5, type: 3}
   unitColour: {r: 1, g: 1, b: 1, a: 1}
   unitName: Skeleton
   startingSpeed: 15

@@ -16,7 +16,7 @@ MonoBehaviour:
   curEffectType: 0
   curEffectName: 5
   effectName: POWERDOWN
-  effectDesc: Recieve 10% maximum health damage at the start of turn.
+  effectDesc: Decrease  Power damage hits by 2
   effectIcon: {fileID: 21300000, guid: cb876834c6ceaa94eab0cea4530aa96e, type: 3}
   powerPercent: 0
   powerAmp: -0.15

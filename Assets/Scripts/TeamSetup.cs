@@ -7,6 +7,8 @@ public class TeamSetup : MonoBehaviour
     public enum ActiveStatType { STANDARD, ADVANCED };
     public ActiveStatType activeStatType;
 
+    [SerializeField] private ButtonFunctionality toMapButton;
+
     [SerializeField] private int masteryPointsPerLv = 2;
 
     public UIElement statsBase1;
@@ -50,6 +52,11 @@ public class TeamSetup : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void ToggleToMapButton(bool toggle)
+    {
+        toMapButton.ToggleButton(toggle);
     }
 
     public void TriggerStat(string statType, float power)
@@ -193,6 +200,8 @@ public class TeamSetup : MonoBehaviour
 
     public void UpdateStatPage(ActiveStatType statType)
     {
+        //ToggleToMapButton(true);
+
         string statPageTypeName = "";
 
         if (statType == ActiveStatType.STANDARD)

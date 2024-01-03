@@ -120,6 +120,7 @@ MonoBehaviour:
   buttonSelectionCG: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 5370905286981818580}
+  itemParent: {fileID: 0}
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0
@@ -194,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curStatType: 0
   activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
@@ -211,6 +213,8 @@ MonoBehaviour:
   lockedImage: {fileID: 0}
   statPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
 --- !u!225 &736634709790740255
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -462,6 +466,7 @@ MonoBehaviour:
   buttonSelectionCG: {fileID: 3471916845073843233}
   disabled: 0
   UIbutton: {fileID: 0}
+  itemParent: {fileID: 0}
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0
@@ -616,6 +621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curStatType: 0
   activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
@@ -633,6 +639,8 @@ MonoBehaviour:
   lockedImage: {fileID: 0}
   statPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
 --- !u!1 &4464626655675011679
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,6 +750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curStatType: 0
   activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 3449677605194979785}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
@@ -759,6 +768,8 @@ MonoBehaviour:
   lockedImage: {fileID: 0}
   statPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
 --- !u!225 &5652339567940830073
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1070,6 +1081,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curStatType: 0
   activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 3346300702503523991}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
@@ -1087,6 +1099,8 @@ MonoBehaviour:
   lockedImage: {fileID: 0}
   statPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
 --- !u!1 &8105081523320373190
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,15 +1169,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curStatType: 0
   activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 3471916845073843237}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   buttonCG: {fileID: 3471916845073843233}
   startHidden: 0
-  doScalePunch: 0
+  doScalePunch: 1
   dieAfterDisplay: 0
-  scaleIncSize: 1
-  scaleIncTime: 0.25
+  scaleIncSize: 0.25
+  scaleIncTime: 0.2
   vibrato: 5
   elasticity: 0.25
   selectable: 1
@@ -1172,6 +1187,8 @@ MonoBehaviour:
   lockedImage: {fileID: 290391304174115226}
   statPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
 --- !u!114 &3719199964190919270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1187,11 +1204,14 @@ MonoBehaviour:
   curGearType: 0
   curRarity: 0
   curGearStatis: 0
+  curGearOwnedBy: 0
   gearUI: {fileID: 873810701133512399}
   gearSelectionUI: {fileID: 7954547787694544633}
   ownedGearButton: {fileID: 5370905286981818580}
+  equipGearButton: {fileID: 0}
   goldtextUI: {fileID: 8448886624976684352}
   isGold: 0
+  isEmpty: 1
 --- !u!1 &8730867197212519636
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,6 +1515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curStatType: 0
   activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 0}
   contentText: {fileID: 8540238855158572232}
   contentSubText: {fileID: 0}
@@ -1512,3 +1533,5 @@ MonoBehaviour:
   lockedImage: {fileID: 0}
   statPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}

@@ -7,6 +7,7 @@ public class TeamGearManager : MonoBehaviour
     public static TeamGearManager Instance;
 
     [SerializeField] private UIElement teamGearTabUI;
+    [SerializeField] private ButtonFunctionality toMapButton;
 
     public Color statDefaultColour;
     public Color statIncreasedColour;
@@ -64,7 +65,10 @@ public class TeamGearManager : MonoBehaviour
     [Space(2)]
     public bool playerInGearTab;
 
-
+    public void ToggleToMapButton(bool toggle)
+    {
+        toMapButton.ToggleButton(toggle);
+    }
 
     public void UpdateGearNameText(string name)
     {
@@ -519,6 +523,9 @@ public class TeamGearManager : MonoBehaviour
             ally3GearTabUI.UpdateAlpha(0);
             ally1GearTabUI.UpdateAlpha(1);
 
+            // Display unit level image
+            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[0].GetUnitLevel());
+
             // Update visible character ally 
             ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
 
@@ -532,6 +539,10 @@ public class TeamGearManager : MonoBehaviour
             ally3GearTabUI.UpdateAlpha(0);
             ally1GearTabUI.UpdateAlpha(1);
             ally2GearTabUI.UpdateAlpha(1);
+
+            // Display unit level image
+            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[0].GetUnitLevel());
+            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[1].GetUnitLevel());
 
             // Update visible character ally 
             ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
@@ -548,6 +559,11 @@ public class TeamGearManager : MonoBehaviour
             ally2GearTabUI.UpdateAlpha(1);
             ally3GearTabUI.UpdateAlpha(1);
 
+            // Display unit level image
+            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[0].GetUnitLevel());
+            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[1].GetUnitLevel());
+            ally3MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[2].GetUnitLevel());
+
             // Update visible character ally 
             ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
             ally2MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[1].unitName);
@@ -563,6 +579,17 @@ public class TeamGearManager : MonoBehaviour
         if (toggle)
         {
             teamGearTabUI.UpdateAlpha(1);
+
+            // Active unit level image for team page
+            for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+            {
+                GameManager.Instance.activeRoomAllies[i].ToggleUnitLevelImage(true);
+            }
+
+            // Toggle to map button for team gear
+            ToggleToMapButton(true);
+            // Toggle Team setup to map button off for team gear page
+            TeamSetup.Instance.ToggleToMapButton(false);
 
             // Disable team setup tab
             GameManager.Instance.ToggleTeamSetup(false);
@@ -601,6 +628,10 @@ public class TeamGearManager : MonoBehaviour
         else
         {
             teamGearTabUI.UpdateAlpha(0);
+
+            // Toggle to map button for team gear
+            ToggleToMapButton(false);
+            TeamSetup.Instance.ToggleToMapButton(true);
 
             ResetAllGearSelections();
 

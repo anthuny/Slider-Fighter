@@ -250,6 +250,11 @@ public class Gear : MonoBehaviour
 
     public void ToggleMainGear(bool toggle)
     {
+        if (gearUI.doScalePunch)
+        {
+            gearUI.doScalePunch = false;
+        }
+
         if (toggle)
             gearUI.UpdateAlpha(1);
         else

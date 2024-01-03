@@ -135,11 +135,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  activeStatType: 0
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  buttonCG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -149,9 +150,9 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 0}
-  masteryPointsThreshhold: 0
+  statPointsThreshhold: 0
   isLocked: 0
 --- !u!225 &8733777640031525376
 CanvasGroup:
@@ -239,7 +240,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -17.5, y: -153.1}
+  m_AnchoredPosition: {x: -51, y: -153.1}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7059071883796537259
@@ -259,7 +260,7 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 17
   m_TargetDisplay: 0
@@ -504,11 +505,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  activeStatType: 0
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  buttonCG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -518,9 +520,9 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 0}
-  masteryPointsThreshhold: 0
+  statPointsThreshhold: 0
   isLocked: 0
 --- !u!225 &2592876863712991764
 CanvasGroup:
@@ -648,6 +650,9 @@ MonoBehaviour:
   disabled: 0
   UIbutton: {fileID: 0}
   startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
+  gear: {fileID: 0}
 --- !u!225 &5899579099612982651
 CanvasGroup:
   m_ObjectHideFlags: 0

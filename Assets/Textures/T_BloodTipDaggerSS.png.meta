@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: 0bd35c7e59b26c14f895e256d175009a
+guid: 22ecdccef7e7fc740b9edb842475025e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -63,6 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -128,7 +129,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_0
+      name: T_BloodTipDaggerSS_0
       rect:
         serializedVersion: 2
         x: 0
@@ -142,14 +143,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 05288b3becbd99e46b647cecf11cdd87
-      internalID: 1189908015
+      spriteID: 763d55208b4dd0c4fb8ad231cf72ce5a
+      internalID: 907232452
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_1
+      name: T_BloodTipDaggerSS_1
       rect:
         serializedVersion: 2
         x: 50
@@ -163,14 +164,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f72009201d6f86469b79ccd49d93683
-      internalID: -1151181420
+      spriteID: ee48f2b7aafd792499e90e0e3c030bec
+      internalID: -1502716078
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_2
+      name: T_BloodTipDaggerSS_2
       rect:
         serializedVersion: 2
         x: 100
@@ -184,14 +185,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ae36263c7fb5a264fa67eea8830f904b
-      internalID: -2097712098
+      spriteID: 191f819cf5526f948928be1821508af2
+      internalID: -1552036088
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_3
+      name: T_BloodTipDaggerSS_3
       rect:
         serializedVersion: 2
         x: 150
@@ -205,14 +206,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1d574937e28ad4141a5c5006cff4a37f
-      internalID: -825324350
+      spriteID: 79b637a363370dc4795e330f054b560e
+      internalID: -1506808378
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_4
+      name: T_BloodTipDaggerSS_4
       rect:
         serializedVersion: 2
         x: 200
@@ -226,14 +227,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a9543fb075003124ea266ad4efb7d6aa
-      internalID: -1674472867
+      spriteID: 2211b5373c245754f8272ccea77d97b9
+      internalID: 516560472
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_5
+      name: T_BloodTipDaggerSS_5
       rect:
         serializedVersion: 2
         x: 250
@@ -247,14 +248,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cb2ea6515ffb12a40be041360278501d
-      internalID: 1842239665
+      spriteID: 72d01dd15285b194c9d13586f5823ad4
+      internalID: -480444723
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_6
+      name: T_BloodTipDaggerSS_6
       rect:
         serializedVersion: 2
         x: 300
@@ -268,14 +269,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1425d282a33cb5d4b87cfefa8a420a09
-      internalID: 2146012456
+      spriteID: f9f546cb6f1249743b55fc43e63b13d4
+      internalID: -1019401340
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_7
+      name: T_BloodTipDaggerSS_7
       rect:
         serializedVersion: 2
         x: 350
@@ -289,14 +290,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0b0060826aecc11459fa177585f22780
-      internalID: 1299210647
+      spriteID: 6c6235fdd75b1e5439e63531259313f5
+      internalID: 1065459366
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_8
+      name: T_BloodTipDaggerSS_8
       rect:
         serializedVersion: 2
         x: 400
@@ -310,14 +311,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9540d8a93deadfa44a1a60ea1197c3f5
-      internalID: -783854045
+      spriteID: 120e010c29fd9ea46ba80d04ceb690e5
+      internalID: 1071869869
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_9
+      name: T_BloodTipDaggerSS_9
       rect:
         serializedVersion: 2
         x: 450
@@ -331,14 +332,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 260d7bb292771bf4b82a55efc04790c0
-      internalID: -308846464
+      spriteID: 614585e5540ddb042a48d55564743940
+      internalID: 1431367519
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_10
+      name: T_BloodTipDaggerSS_10
       rect:
         serializedVersion: 2
         x: 0
@@ -352,14 +353,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 663a4a5f120ee7d4e9aee4e9cfe970d5
-      internalID: 93322821
+      spriteID: 5759b5d13093802438c033607c75252c
+      internalID: 2010383346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_11
+      name: T_BloodTipDaggerSS_11
       rect:
         serializedVersion: 2
         x: 50
@@ -373,14 +374,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f4a4c3e65a6c3d4b8f55ce44e3f256a
-      internalID: -1171171542
+      spriteID: 3a6a6341bdcbfa74dbc599a4850dbfc9
+      internalID: 486065477
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_12
+      name: T_BloodTipDaggerSS_12
       rect:
         serializedVersion: 2
         x: 100
@@ -394,14 +395,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f2e5db1c337f78a42a6a8f0eca696609
-      internalID: 1478495270
+      spriteID: febc0926051a80f4282dbfad05f64a82
+      internalID: 98265729
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_13
+      name: T_BloodTipDaggerSS_13
       rect:
         serializedVersion: 2
         x: 150
@@ -415,14 +416,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b357d1ad43dc31b49a329dca06a4b913
-      internalID: 1066095822
+      spriteID: 8ebb085b4cec6724b9a672e5817f3af2
+      internalID: 379440579
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_14
+      name: T_BloodTipDaggerSS_14
       rect:
         serializedVersion: 2
         x: 200
@@ -436,14 +437,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 92406ccd7bcf1e44ea992d6ff92b7bb2
-      internalID: 1587611547
+      spriteID: de70db40aff2c634a9a2d84b0cf2ec8f
+      internalID: -406729431
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_15
+      name: T_BloodTipDaggerSS_15
       rect:
         serializedVersion: 2
         x: 250
@@ -457,14 +458,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2f9e052191373a540bf15494e16deeb2
-      internalID: -381939515
+      spriteID: 59a1c50ee1aa46f44a5ad383bc821607
+      internalID: 1473756656
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_16
+      name: T_BloodTipDaggerSS_16
       rect:
         serializedVersion: 2
         x: 300
@@ -478,14 +479,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6e9c9141af39d36408ee31211b2614cb
-      internalID: -709168315
+      spriteID: 372e9d569a37a1844ab1977211b5e3dd
+      internalID: 2044877387
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_17
+      name: T_BloodTipDaggerSS_17
       rect:
         serializedVersion: 2
         x: 350
@@ -499,14 +500,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 34f5e1eef1e5faf4b8ec2bafefefd40e
-      internalID: 965005705
+      spriteID: 44963a8a752f36d438fb42673efe214a
+      internalID: 1237653271
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionBigSS_18
+      name: T_BloodTipDaggerSS_18
       rect:
         serializedVersion: 2
         x: 400
@@ -520,8 +521,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5f4af7a61cb3b7943b1488749e7cbc6e
-      internalID: 1004869262
+      spriteID: 21adf2f4762a0484085ebd4c318b19e3
+      internalID: -1011880058
       vertices: []
       indices: 
       edges: []
@@ -537,25 +538,25 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      T_HealthPotionBigSS_1: -1151181420
-      T_HealthPotionBigSS_3: -825324350
-      T_HealthPotionBigSS_11: -1171171542
-      T_HealthPotionBigSS_17: 965005705
-      T_HealthPotionBigSS_8: -783854045
-      T_HealthPotionBigSS_15: -381939515
-      T_HealthPotionBigSS_16: -709168315
-      T_HealthPotionBigSS_14: 1587611547
-      T_HealthPotionBigSS_12: 1478495270
-      T_HealthPotionBigSS_0: 1189908015
-      T_HealthPotionBigSS_4: -1674472867
-      T_HealthPotionBigSS_2: -2097712098
-      T_HealthPotionBigSS_5: 1842239665
-      T_HealthPotionBigSS_9: -308846464
-      T_HealthPotionBigSS_10: 93322821
-      T_HealthPotionBigSS_6: 2146012456
-      T_HealthPotionBigSS_7: 1299210647
-      T_HealthPotionBigSS_13: 1066095822
-      T_HealthPotionBigSS_18: 1004869262
+      T_BloodTipDaggerSS_2: -1552036088
+      T_BloodTipDaggerSS_5: -480444723
+      T_BloodTipDaggerSS_11: 486065477
+      T_BloodTipDaggerSS_13: 379440579
+      T_BloodTipDaggerSS_12: 98265729
+      T_BloodTipDaggerSS_8: 1071869869
+      T_BloodTipDaggerSS_14: -406729431
+      T_BloodTipDaggerSS_6: -1019401340
+      T_BloodTipDaggerSS_17: 1237653271
+      T_BloodTipDaggerSS_4: 516560472
+      T_BloodTipDaggerSS_3: -1506808378
+      T_BloodTipDaggerSS_9: 1431367519
+      T_BloodTipDaggerSS_18: -1011880058
+      T_BloodTipDaggerSS_10: 2010383346
+      T_BloodTipDaggerSS_0: 907232452
+      T_BloodTipDaggerSS_15: 1473756656
+      T_BloodTipDaggerSS_16: 2044877387
+      T_BloodTipDaggerSS_7: 1065459366
+      T_BloodTipDaggerSS_1: -1502716078
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

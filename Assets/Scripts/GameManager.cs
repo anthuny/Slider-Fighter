@@ -189,6 +189,10 @@ public class GameManager : MonoBehaviour
     public UnitData spawnedUnit;
     public UnitFunctionality spawnedUnitFunctionality;
 
+    [HideInInspector]
+    public bool playerWon;
+
+    private bool combatOver;
 
     private void Awake()
     {
@@ -522,8 +526,6 @@ public class GameManager : MonoBehaviour
     {
         TeamSetup.Instance.statScrollView.SetActive(toggle);
 
-
-
         if (toggle)
         {
             TeamSetup.Instance.gearTabArrowLeftButton.ToggleButton(true);
@@ -531,7 +533,7 @@ public class GameManager : MonoBehaviour
 
             teamSetup.UpdateAlpha(1);
             //SpawnAllies(false);
-
+            TeamSetup.Instance.ToggleToMapButton(true);
             UpdateAllAlliesPosition(false, true, true);
             TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
 
@@ -552,7 +554,7 @@ public class GameManager : MonoBehaviour
         {
             TeamSetup.Instance.gearTabArrowLeftButton.ToggleButton(false);
             TeamSetup.Instance.gearTabArrowRightButton.ToggleButton(false);
-
+            TeamSetup.Instance.ToggleToMapButton(false);
             teamSetup.UpdateAlpha(0);
         }
     }
@@ -615,6 +617,8 @@ public class GameManager : MonoBehaviour
     public void ResetRoom(bool enemies = true)
     {
         defeatedEnemies.ResetDefeatedEnemies();
+
+        combatOver = false;
 
         powerUISpawnCount = 0;
 
@@ -739,10 +743,58 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    #region Setup Multiple UIs
-    IEnumerator SetupPostBattleUI(bool playerWon)
+    public void SetupItemRewards()
     {
-        yield return new WaitForSeconds(postBattleTime);
+        ResetSelectedUnits();
+
+        combatOver = true;
+
+        // Toggle player overlay and skill ui off
+        ToggleUIElement(playerAbilities, false);
+        ToggleUIElement(playerAbilityDesc, false);
+        ToggleUIElement(endTurnButtonUI, false);
+        ToggleUIElement(turnOrder, false);
+        ResetActiveUnitTurnArrow();
+        ToggleAllAlliesStatBar(false);
+
+        // Remove all unit effects and level image for item rewards
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].ResetEffects();
+            activeRoomAllies[i].ToggleUnitLevelImage(false);
+        }
+
+        StartCoroutine(SetupItemRewardsCo());
+    }
+
+    IEnumerator SetupItemRewardsCo()
+    {
+        yield return new WaitForSeconds(ItemRewardManager.Instance.postCombatTillItemTime2);
+
+        // Stop combat music
+        AudioManager.Instance.StopCombatMusic();
+
+        // If item rewards are NOT disabled, offer them
+        if (!ItemRewardManager.Instance.disableItemRewards)
+            ItemRewardManager.Instance.FillItemsTable();
+        // If item rewards ARE disabled, DONT offer items, skip to post battle sequence
+        else
+            StartCoroutine(SetupPostBattleUI(playerWon));
+    }
+
+    #region Setup Multiple UIs
+    public IEnumerator SetupPostBattleUI(bool playerWon)
+    {
+        ItemRewardManager.Instance.ToggleItemRewards(false);
+        ItemRewardManager.Instance.ToggleConfirmItemButton(false);
+
+        yield return new WaitForSeconds(ItemRewardManager.Instance.postItemTillPostCombat);
+
+        // Enable unit level image for post combat
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].ToggleUnitLevelImage(true);
+        }
 
         // SFX
         if (playerWon)
@@ -753,11 +805,6 @@ public class GameManager : MonoBehaviour
         // Stop combat music
         AudioManager.Instance.StopCombatMusic();
 
-        // Remove all unit effects
-        for (int i = 0; i < activeRoomAllies.Count; i++)
-        {
-            activeRoomAllies[i].ResetEffects();
-        }
 
         roomDefeated = true;
 
@@ -778,7 +825,6 @@ public class GameManager : MonoBehaviour
             //ToggleSkillVisibility(false);
             StartCoroutine(HeroRetrievalScene());
         }
-
     }
 
     IEnumerator HeroRetrievalScene()
@@ -827,6 +873,8 @@ public class GameManager : MonoBehaviour
 
         postBattleUI.TogglePostBattleConditionText(playerWon);   // Update battle condition text
 
+        yield return new WaitForSeconds(.3f);
+
         defeatedEnemies.DisplayDefeatedEnemies();
 
         if (playerWon)
@@ -864,7 +912,7 @@ public class GameManager : MonoBehaviour
 
             playerLost = false;
 
-            gearRewards.FillGearRewardsTable();
+
         }
         // If player LOST, reset game
         else
@@ -1006,131 +1054,134 @@ public class GameManager : MonoBehaviour
 
             FloorData floor = RoomManager.Instance.GetActiveFloor();
 
-           int enemySpawnValue = Random.Range(floor.minRoomValue, floor.maxRoomValue + 1) + ((RoomManager.Instance.GetFloorCount()*3) - 2);
+            int enemySpawnFirst = Random.Range(floor.minRoomValue, floor.maxRoomValue + 2);
+            int enemySpawnValue = (enemySpawnFirst * (RoomManager.Instance.GetFloorCount() * ((RoomManager.Instance.GetFloorCount())))) + 1;
 
             // If room is hero, spawn additional enemies
             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
             {
-                enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + ((RoomManager.Instance.GetFloorCount() * 3) - 1);
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 4);
             }
             else if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
             {
-                enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + ((RoomManager.Instance.GetFloorCount() * 3) - 1);
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 7);
             }
 
             // Spawn enemy type
             for (int i = 0; i < enemySpawnValue; i++)
             {
-            GameObject go = null;
+                GameObject go = null;
 
-            int spawnEnemyIndex = Random.Range(0, activeFloor.enemyUnits.Count);
+                int spawnEnemyIndex = Random.Range(0, activeFloor.enemyUnits.Count);
 
-            UnitData unit = activeFloor.enemyUnits[spawnEnemyIndex];  // Reference
+                UnitData unit = activeFloor.enemyUnits[spawnEnemyIndex];  // Reference
 
-            // Check if there are remaining enemy unit spawn locations left
-            if (spawnEnemyPosIndex <= enemySpawnPositions.Count -1)
-            {
-                go = Instantiate(baseUnit, enemySpawnPositions[spawnEnemyPosIndex]);
-                go.transform.SetParent(enemySpawnPositions[spawnEnemyPosIndex]);
-                spawnEnemyPosIndex++;
-            }                
-            else
-            {
-                Destroy(go);
-                break;
-            }
+                // Check if there are remaining enemy unit spawn locations left
+                if (spawnEnemyPosIndex <= enemySpawnPositions.Count -1)
+                {
+                    go = Instantiate(baseUnit, enemySpawnPositions[spawnEnemyPosIndex]);
+                    go.transform.SetParent(enemySpawnPositions[spawnEnemyPosIndex]);
+                    spawnEnemyPosIndex++;
+                }                
+                else
+                {
+                    Destroy(go);
+                    break;
+                }
 
-            UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
+                UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
 
-            unitFunctionality.UpdateUnitValue(unit.GetUnitValue());
+                unitFunctionality.UpdateUnitValue(unit.GetUnitValue());
 
-            int unitLevel = RoomManager.Instance.GetFloorCount() + (Random.Range(RoomManager.Instance.GetFloorCount() - 1, RoomManager.Instance.GetFloorCount() + 1));
-
-
-
-            //Debug.Log("i = " + i);
-            i += unit.GetUnitValue() + unitLevel;
-
-            if (unitLevel == 0)
-            {
-                unitLevel = 1;
-            }
-
-
-            if (i >= enemySpawnValue)
-            {
-                if (unitLevel > 1)
-                    unitLevel--;
-            }
-            else
-            {
-                if (i != 0)
-                    i--;
-            }
+                int unitLevel = RoomManager.Instance.GetFloorCount() + (Random.Range(RoomManager.Instance.GetFloorCount() - 1, RoomManager.Instance.GetFloorCount() + 1));
 
 
 
-            unitFunctionality.UpdateUnitLevel(unitLevel, 0, true);
-            //Debug.Log("i = " + i);
+                //Debug.Log("i = " + i);
+                i += unit.GetUnitValue() + unitLevel;
 
-            //Debug.Log("unit val " + unit.GetUnitValue());
-            //Debug.Log("unit lv " + unitLevel);
-            // Set unit stats
-            unitFunctionality.UpdateUnitType("Enemy");
-            unitFunctionality.ResetPosition();
-            unitFunctionality.UpdateUnitName(unit.unitName);
-            unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
+                if (unitLevel == 0)
+                {
+                    unitLevel = 1;
+                }
 
-            unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
-            unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
-            unitFunctionality.UpdateHealingPowerIncPerLv((int)unit.healingPowerIncPerLv);
-            unitFunctionality.UpdateDefenseIncPerLv((int)unit.defenseIncPerLv);
-            unitFunctionality.UpdateMaxHealthIncPerLv((int)unit.maxHealthIncPerLv);
 
-            unitFunctionality.startingDamage = unit.startingPower;
-            unitFunctionality.startingHealth = unit.startingMaxHealth;
-            unitFunctionality.startingHealing = unit.startingHealingPower;
-            unitFunctionality.startingDefense = unit.startingDefense;
-            unitFunctionality.startingSpeed = unit.startingSpeed;
+                if (i >= enemySpawnValue)
+                {
+                    if (unitLevel > 1)
+                        unitLevel--;
+                }
+                else
+                {
+                    if (i != 0)
+                        i--;
+                }
 
-            // Apply to unit whether any of its skills leaches.
-            if (unit.GetSkill0().isLeaching)
-                unitFunctionality.ToggleIsPoisonLeaching(true);
-            else if (unit.GetSkill1().isLeaching)
-                unitFunctionality.ToggleIsPoisonLeaching(true);
-            else if (unit.GetSkill2().isLeaching)
-                unitFunctionality.ToggleIsPoisonLeaching(true);
-            else if (unit.GetSkill3().isLeaching)
-                unitFunctionality.ToggleIsPoisonLeaching(true);
 
-            // If enemy unit spawned is NOT lv 1, spawn with level bonus stats
-            if (unitFunctionality.GetUnitLevel() != 1)
-            {
-                unitFunctionality.UpdateUnitSpeed(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetSpeedIncPerLv()) + unit.startingSpeed);
-                unitFunctionality.UpdateUnitPower(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetPowerIncPerLv()) + unit.startingPower);
-                unitFunctionality.UpdateUnitHealingPower(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetHealingPowerIncPerLv()) + unit.startingHealingPower);
-                unitFunctionality.UpdateUnitDefense(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetDefenseIncPerLv()) + unit.startingDefense);
-                unitFunctionality.UpdateUnitMaxHealth(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetMaxHealthIncPerLv()) + unit.startingMaxHealth, true);
-            }
-            // If enemy spawned IS level 1, spawn with starting stats
-            else
-            {
-                unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
-                unitFunctionality.UpdateUnitPower(unit.startingPower);
-                unitFunctionality.UpdateUnitHealingPower(unit.startingHealingPower);
-                unitFunctionality.UpdateUnitDefense(unit.startingDefense);
-                unitFunctionality.UpdateUnitMaxHealth(unit.startingMaxHealth, true);
-            }
+                unitFunctionality.UpdateUnitDamageHits(unitLevel - 1);
+                unitFunctionality.UpdateUnitHealingHits(unitLevel - 1);
 
-            unitFunctionality.UpdateUnitVisual(unit.unitSprite);
-            unitFunctionality.UpdateUnitIcon(unit.unitIcon);
+                unitFunctionality.UpdateUnitLevel(unitLevel, 0, true);
+                //Debug.Log("i = " + i);
 
-            unitFunctionality.deathClip = unit.deathClip;
-            unitFunctionality.hitRecievedClip = unit.hitRecievedClip;
+                //Debug.Log("unit val " + unit.GetUnitValue());
+                //Debug.Log("unit lv " + unitLevel);
+                // Set unit stats
+                unitFunctionality.UpdateUnitType("Enemy");
+                unitFunctionality.ResetPosition();
+                unitFunctionality.UpdateUnitName(unit.unitName);
+                unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
 
-            AddActiveRoomAllUnitsFunctionality(unitFunctionality);
+                unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
+                unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
+                unitFunctionality.UpdateHealingPowerIncPerLv((int)unit.healingPowerIncPerLv);
+                unitFunctionality.UpdateDefenseIncPerLv((int)unit.defenseIncPerLv);
+                unitFunctionality.UpdateMaxHealthIncPerLv((int)unit.maxHealthIncPerLv);
 
-            unitFunctionality.unitData = unit;
+                unitFunctionality.startingDamage = unit.startingPower;
+                unitFunctionality.startingHealth = unit.startingMaxHealth;
+                unitFunctionality.startingHealing = unit.startingHealingPower;
+                unitFunctionality.startingDefense = unit.startingDefense;
+                unitFunctionality.startingSpeed = unit.startingSpeed;
+
+                // Apply to unit whether any of its skills leaches.
+                if (unit.GetSkill0().isLeaching)
+                    unitFunctionality.ToggleIsPoisonLeaching(true);
+                else if (unit.GetSkill1().isLeaching)
+                    unitFunctionality.ToggleIsPoisonLeaching(true);
+                else if (unit.GetSkill2().isLeaching)
+                    unitFunctionality.ToggleIsPoisonLeaching(true);
+                else if (unit.GetSkill3().isLeaching)
+                    unitFunctionality.ToggleIsPoisonLeaching(true);
+
+                // If enemy unit spawned is NOT lv 1, spawn with level bonus stats
+                if (unitFunctionality.GetUnitLevel() != 1)
+                {
+                    unitFunctionality.UpdateUnitSpeed(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetSpeedIncPerLv()) + unit.startingSpeed);
+                    unitFunctionality.UpdateUnitPower(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetPowerIncPerLv()) + unit.startingPower);
+                    unitFunctionality.UpdateUnitHealingPower(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetHealingPowerIncPerLv()) + unit.startingHealingPower);
+                    unitFunctionality.UpdateUnitDefense(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetDefenseIncPerLv()) + unit.startingDefense);
+                    unitFunctionality.UpdateUnitMaxHealth(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetMaxHealthIncPerLv()) + unit.startingMaxHealth, true);
+                }
+                // If enemy spawned IS level 1, spawn with starting stats
+                else
+                {
+                    unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
+                    unitFunctionality.UpdateUnitPower(unit.startingPower);
+                    unitFunctionality.UpdateUnitHealingPower(unit.startingHealingPower);
+                    unitFunctionality.UpdateUnitDefense(unit.startingDefense);
+                    unitFunctionality.UpdateUnitMaxHealth(unit.startingMaxHealth, true);
+                }
+
+                unitFunctionality.UpdateUnitVisual(unit.unitSprite);
+                unitFunctionality.UpdateUnitIcon(unit.unitIcon);
+
+                unitFunctionality.deathClip = unit.deathClip;
+                unitFunctionality.hitRecievedClip = unit.hitRecievedClip;
+
+                AddActiveRoomAllUnitsFunctionality(unitFunctionality);
+
+                unitFunctionality.unitData = unit;
 
             }
 
@@ -1277,6 +1328,8 @@ public class GameManager : MonoBehaviour
 
             // Update allies into position for shop
             UpdateAllAlliesPosition(false, GetActiveUnitType(), false, true);
+
+            MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
             return;
         }
     }
@@ -1626,6 +1679,11 @@ public class GameManager : MonoBehaviour
         // If active unit is player, setup player UI
         if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER)
         {
+            // Resume combat music
+            AudioManager.Instance.PauseCombatMusic(false);
+
+            Weapon.Instance.ResetAcc();
+
             //SetupPlayerUI();
             StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
         }
@@ -1909,11 +1967,22 @@ public class GameManager : MonoBehaviour
         else
             tempAttack = false;
 
-        abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower, 
-            skill.skillAttackCount, tempAttack, skill.skillSelectionCount, 
-            skill.skillPower, skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
 
         UnitFunctionality activeUnit = GetActiveUnitFunctionality();
+
+        if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+        {
+            abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower,
+                skill.skillAttackCount + activeUnit.GetUnitDamageHits(), tempAttack, skill.skillSelectionCount,
+                skill.skillPower, skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
+        }
+        else
+        {
+            abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower,
+                skill.skillAttackCount + activeUnit.GetUnitHealingHits(), tempAttack, skill.skillSelectionCount,
+                skill.skillPower, skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
+        }
+
 
         /*
         // Update Unit Overlay Energy
@@ -1942,10 +2011,16 @@ public class GameManager : MonoBehaviour
 
             // If this is the last enemy that got killed, queue player win post battle ui
             if (activeRoomEnemies.Count == 0)
-                StartCoroutine(SetupPostBattleUI(true));
+            {
+                playerWon = true;
+                SetupItemRewards();
+            }
             // If this is the last ally that got killed, queue player lose post battle ui
             if (activeRoomAllies.Count == 0)
-                StartCoroutine(SetupPostBattleUI(false));
+            {
+                playerWon = false;
+                SetupItemRewards();
+            }
 
             AddExperienceGained(unitFunctionality.GetUnitExpKillGained());
         }
@@ -2052,7 +2127,7 @@ public class GameManager : MonoBehaviour
                         // units new def
                         float newDef = curDef + ((activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent / 100f)) * curDef;
 
-                        activeRoomAllUnitFunctionalitys[i].UpdateUnitOldDefense((int)newDef);
+                        activeRoomAllUnitFunctionalitys[i].UpdateUnitOldDefense((int)curDef);
 
                         // updating new defense
                         activeRoomAllUnitFunctionalitys[i].UpdateUnitDefense((int)newDef);
@@ -2131,6 +2206,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdateTurnOrder(bool unitDied = false, bool roundStart = false)
     {
+        if (combatOver)
+            return;
+
         //ToggleSkillVisibility(false);
 
         ToggleUIElement(turnOrder, true);   // Enable turn order UI

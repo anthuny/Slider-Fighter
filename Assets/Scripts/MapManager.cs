@@ -287,6 +287,10 @@ public class MapManager : MonoBehaviour
         {
             GameManager.Instance.UpdateAllyVisibility(false);
 
+            GearRewards.Instance.ResetRewards();
+            ItemRewardManager.Instance.ResetRewardsTable();
+
+            //TeamSetup.Instance.ToggleToMapButton(false);
             // Disable unit's post battle bg
             int count = GameManager.Instance.activeRoomAllies.Count;
             for (int i = 0; i < count; i++)
@@ -296,6 +300,7 @@ public class MapManager : MonoBehaviour
 
             map.UpdateAlpha(1);
 
+            TeamSetup.Instance.ToggleToMapButton(false);
 
             //ToggleMapScroll(true);
 
@@ -445,6 +450,7 @@ public class MapManager : MonoBehaviour
 
     void CheckIfMapIsPossible(bool resetting = true)
     {
+        //Debug.Log("resetting");
         // If there is not enough shops on the floor, remake it
         if (spawnedShopRooms.Count == 0)
         {
@@ -773,7 +779,7 @@ public class MapManager : MonoBehaviour
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 // If there is already a shop room, skip it and reset so it can do it again
-                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP)
+                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP || roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO)
                 {
                     i--;
                     if (i < 0)
@@ -802,7 +808,7 @@ public class MapManager : MonoBehaviour
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 // If there is already a shop room, skip it and reset so it can do it again
-                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO)
+                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO || roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP)
                 {
                     i--;
                     if (i < 0)

@@ -17,9 +17,6 @@ public class WeaponHitArea : MonoBehaviour
 
     public IEnumerator HitArea()
     {
-        AudioManager.Instance.StopAttackBarMusic();
-
-
         if (curHitAreaType == HitAreaType.PERFECT)
         {
             Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.PERFECT);
@@ -87,9 +84,6 @@ public class WeaponHitArea : MonoBehaviour
 
             AudioManager.Instance.Play("AttackBar_Miss");
         }
-
-        // Resume combat battle music
-        AudioManager.Instance.PauseCombatMusic(false);
     }
 
     public bool CheckIfHitLineHit(GameObject hitLine)

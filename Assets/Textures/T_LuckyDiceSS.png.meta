@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: 6566b02daad39504ea6598f68e1d435f
+guid: dd74056bbd1b20546813d4c1e54c9d6e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 75
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -63,6 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -128,7 +129,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_0
+      name: T_LuckyDiceSS_0
       rect:
         serializedVersion: 2
         x: 0
@@ -142,14 +143,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d92eff398e8aef5408a474e3c1b6d218
-      internalID: -906669019
+      spriteID: 7c7d3577535272e4191d0c0d98c4ec40
+      internalID: -2111633262
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_1
+      name: T_LuckyDiceSS_1
       rect:
         serializedVersion: 2
         x: 50
@@ -163,14 +164,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3d35ead1f3cbfc8438bfb2c972140019
-      internalID: -1155161016
+      spriteID: 8444388ba4294ab4fb19e0616636b80e
+      internalID: -1372991257
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_2
+      name: T_LuckyDiceSS_2
       rect:
         serializedVersion: 2
         x: 100
@@ -184,14 +185,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 25cf82a403737c54e8b7d716ae979db5
-      internalID: 980476358
+      spriteID: 8e00a5c2573358346bdaa49a66ce5eef
+      internalID: -1639583995
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_3
+      name: T_LuckyDiceSS_3
       rect:
         serializedVersion: 2
         x: 150
@@ -205,14 +206,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e0168e8ad88859c47895f9bf23dbe2c2
-      internalID: -759854678
+      spriteID: 877b6c283fcde444eb228811f5c838c6
+      internalID: 749696834
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_4
+      name: T_LuckyDiceSS_4
       rect:
         serializedVersion: 2
         x: 200
@@ -226,14 +227,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab08e1b4a6ff57d4081ed07acc28ed2b
-      internalID: -423436140
+      spriteID: 9a0ccdac5ac1d1b4fad3191a12724a52
+      internalID: 1575190898
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_5
+      name: T_LuckyDiceSS_5
       rect:
         serializedVersion: 2
         x: 250
@@ -247,14 +248,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ade23d8b917ce944aac836492f6a20c
-      internalID: 2069662529
+      spriteID: d1a89d53cc6e1e646a12df8134fc10b3
+      internalID: -1772173720
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_6
+      name: T_LuckyDiceSS_6
       rect:
         serializedVersion: 2
         x: 300
@@ -268,14 +269,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a14e433a66df82488f4ab71c8008630
-      internalID: -1592827904
+      spriteID: 387c6856dc786cc4eadd07c8579c771e
+      internalID: 894353065
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_7
+      name: T_LuckyDiceSS_7
       rect:
         serializedVersion: 2
         x: 350
@@ -289,14 +290,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97577a89867d28842b351499544ba288
-      internalID: 1935656026
+      spriteID: c9c6c7b2a554dc8468e207efda8684c5
+      internalID: 1302319605
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_8
+      name: T_LuckyDiceSS_8
       rect:
         serializedVersion: 2
         x: 400
@@ -310,14 +311,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6dc067a826d88445a4e3cdae877bc43
-      internalID: -1177583704
+      spriteID: 3e1912e3a5e2b08438b0e35b200416d9
+      internalID: 904854640
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_9
+      name: T_LuckyDiceSS_9
       rect:
         serializedVersion: 2
         x: 450
@@ -331,14 +332,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5916ca9d9c508a645a1c08fcd073fb5e
-      internalID: -10123980
+      spriteID: 8d4d738d4bc60fc4ca76cef9855c270a
+      internalID: 2088697064
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_10
+      name: T_LuckyDiceSS_10
       rect:
         serializedVersion: 2
         x: 0
@@ -352,14 +353,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 03470564e20804b4488ffecb23e8504d
-      internalID: -524650648
+      spriteID: 6558c601cbbbc784381db06d006c56e2
+      internalID: -284297691
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_11
+      name: T_LuckyDiceSS_11
       rect:
         serializedVersion: 2
         x: 50
@@ -373,14 +374,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3122d9dc6788ee848a7aa15baf09cba7
-      internalID: -505053029
+      spriteID: a8de4af01d930104b9a8e1808ac0db2c
+      internalID: 1893232916
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_12
+      name: T_LuckyDiceSS_12
       rect:
         serializedVersion: 2
         x: 100
@@ -394,14 +395,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8e5a4237cf4e3d541a74f84b9cffa60e
-      internalID: 70822152
+      spriteID: 357f16bf3f527e8439e4f0c325371f9e
+      internalID: 426496105
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_13
+      name: T_LuckyDiceSS_13
       rect:
         serializedVersion: 2
         x: 150
@@ -415,14 +416,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17dbcea57cf47d74da320e6b3c86156e
-      internalID: 1646911952
+      spriteID: 1f8b537921bc3554db1da9da1afa423c
+      internalID: -1963795481
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_14
+      name: T_LuckyDiceSS_14
       rect:
         serializedVersion: 2
         x: 200
@@ -436,14 +437,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3f4a109b6932ad47b220a08a64df544
-      internalID: 2134440445
+      spriteID: 4524c5f5bc59bdb41bd69f023e40eac0
+      internalID: 1856349993
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_15
+      name: T_LuckyDiceSS_15
       rect:
         serializedVersion: 2
         x: 250
@@ -457,14 +458,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dc6b8d038ead70047ac9dc47c267bc36
-      internalID: -629752562
+      spriteID: fa731ee9aff32184f8e093f1b0f15d3c
+      internalID: 1287366217
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_16
+      name: T_LuckyDiceSS_16
       rect:
         serializedVersion: 2
         x: 300
@@ -478,14 +479,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0322502b7b6c2814e8e7fa7e691efecd
-      internalID: 53031175
+      spriteID: a56a20ef74c3b4042b4a9d938c72f8fd
+      internalID: 8627407
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_17
+      name: T_LuckyDiceSS_17
       rect:
         serializedVersion: 2
         x: 350
@@ -499,14 +500,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5579be8dbe1de0e419c3c5bd73d02f47
-      internalID: -2091367248
+      spriteID: 46356d6d03df0fa4eb22fa763c3d2259
+      internalID: 401878945
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_HealthPotionSmallSS_18
+      name: T_LuckyDiceSS_18
       rect:
         serializedVersion: 2
         x: 400
@@ -520,8 +521,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82ce3173845146846aab03bdf0fc0167
-      internalID: -2086207583
+      spriteID: 264b2049ceeddbb40a0fecf2a41d3a07
+      internalID: -1427247892
       vertices: []
       indices: 
       edges: []
@@ -537,25 +538,25 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      T_HealthPotionSmallSS_18: -2086207583
-      T_HealthPotionSmallSS_6: -1592827904
-      T_HealthPotionSmallSS_3: -759854678
-      T_HealthPotionSmallSS_16: 53031175
-      T_HealthPotionSmallSS_2: 980476358
-      T_HealthPotionSmallSS_9: -10123980
-      T_HealthPotionSmallSS_0: -906669019
-      T_HealthPotionSmallSS_17: -2091367248
-      T_HealthPotionSmallSS_15: -629752562
-      T_HealthPotionSmallSS_7: 1935656026
-      T_HealthPotionSmallSS_8: -1177583704
-      T_HealthPotionSmallSS_11: -505053029
-      T_HealthPotionSmallSS_4: -423436140
-      T_HealthPotionSmallSS_10: -524650648
-      T_HealthPotionSmallSS_14: 2134440445
-      T_HealthPotionSmallSS_1: -1155161016
-      T_HealthPotionSmallSS_12: 70822152
-      T_HealthPotionSmallSS_13: 1646911952
-      T_HealthPotionSmallSS_5: 2069662529
+      T_LuckyDiceSS_9: 2088697064
+      T_LuckyDiceSS_18: -1427247892
+      T_LuckyDiceSS_13: -1963795481
+      T_LuckyDiceSS_12: 426496105
+      T_LuckyDiceSS_0: -2111633262
+      T_LuckyDiceSS_11: 1893232916
+      T_LuckyDiceSS_7: 1302319605
+      T_LuckyDiceSS_14: 1856349993
+      T_LuckyDiceSS_5: -1772173720
+      T_LuckyDiceSS_17: 401878945
+      T_LuckyDiceSS_2: -1639583995
+      T_LuckyDiceSS_16: 8627407
+      T_LuckyDiceSS_4: 1575190898
+      T_LuckyDiceSS_6: 894353065
+      T_LuckyDiceSS_15: 1287366217
+      T_LuckyDiceSS_8: 904854640
+      T_LuckyDiceSS_3: 749696834
+      T_LuckyDiceSS_1: -1372991257
+      T_LuckyDiceSS_10: -284297691
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

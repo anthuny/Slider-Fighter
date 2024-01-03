@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2301e84fd49eda94484a7f6ebe3ddd26, type: 2}
-  m_sharedMaterial: {fileID: -6006359576746837634, guid: 2301e84fd49eda94484a7f6ebe3ddd26, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b1262895f9a0c2741837260617873ff4, type: 2}
+  m_sharedMaterial: {fileID: -6006359576746837634, guid: b1262895f9a0c2741837260617873ff4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -227,9 +227,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curEffectTrigger: 0
-  curEffectDeplete: 0
+  curEffectType: 0
+  curEffectName: 0
   effectName: 
   effectDesc: 
+  powerPercent: 0
+  powerAmp: 0
+  isSelfCast: 0
   effectTurnCountText: {fileID: 4968432914797804758}
   turnCountRemaining: 0
 --- !u!114 &8672398786583446444

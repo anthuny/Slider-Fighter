@@ -9,6 +9,7 @@ public class MenuUnitDisplay : MonoBehaviour
     [SerializeField] private Image unitImage;
     [SerializeField] private UIElement unitQuestionMarkImage;
     [SerializeField] private bool unitLocked;
+    [SerializeField] private UIElement unitLevel;
 
     [Header("Stats")]
     [SerializeField] private UIElement statHealth;
@@ -28,13 +29,26 @@ public class MenuUnitDisplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ToggleUnitLevelImage(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void ToggleUnitLevelImage(bool toggle, int newLevel = 0)
+    {
+        if (unitLevel == null)
+            return;
+
+        if (toggle)
+            unitLevel.UpdateAlpha(1);
+        else
+            unitLevel.UpdateAlpha(0);
+
+        unitLevel.UpdateContentSubText(newLevel.ToString());
     }
 
     public void UpdateUnitDisplay(string unitName)

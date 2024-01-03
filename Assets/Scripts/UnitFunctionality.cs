@@ -35,7 +35,8 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int curHealth;
     [SerializeField] private int maxHealth;
     private int curLevel;
-    private int curDamageHits;
+
+    public int curDamageHits;
     private int curHealingHits;
     private float curExp;
     private float maxExp;
@@ -209,17 +210,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         unitFocus.FocusUnit();
     }
-    
-    public void IncDamageLineBonus()
-    {
-        bonusDmgLines++;
-    }
-
-    public void IncHealingLineBonus()
-    {
-        bonusHealingLines++;
-    }
-
+  
     public void IncCooldownReducBonus()
     {
         reducedCooldownsCount++;
@@ -228,16 +219,6 @@ public class UnitFunctionality : MonoBehaviour
     public void RerollItemCount()
     {
         rerollItemCount++;
-    }
-
-    public int GetBonusDmgLines()
-    {
-        return bonusDmgLines;
-    }
-
-    public int GetHealingLineBonus()
-    {
-        return bonusHealingLines;
     }
 
     public int GetCooldownReducBonus()
@@ -566,7 +547,14 @@ public class UnitFunctionality : MonoBehaviour
             else
                 effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount;
 
-            StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, GameManager.Instance.activeSkill.skillAttackCount, effectCount));
+            int skillAttackCount;
+
+            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                skillAttackCount = GameManager.Instance.GetActiveSkill().skillAttackCount + GetUnitDamageHits();
+            else
+                skillAttackCount = GameManager.Instance.GetActiveSkill().skillAttackCount + GetUnitHealingHits();
+
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, skillAttackCount, effectCount));
 
             /*
             // End turn
@@ -1001,7 +989,8 @@ public class UnitFunctionality : MonoBehaviour
         // Play Audio
         if (offense)
         {
-            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+            if (GameManager.Instance.GetActiveSkill().skillHit != null)
+                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
 
             if (effect != null)
             {
@@ -1333,6 +1322,9 @@ public class UnitFunctionality : MonoBehaviour
 
                 // This isnt working
                 //SpawnPowerUI(levelUpHeal, false, false, null, false);
+
+                UpdateUnitDamageHits(1, true);
+                UpdateUnitHealingHits(1, true);
 
                 UpdateUnitLevelImage();
                 yield break;

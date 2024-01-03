@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class DefeatedEnemies : MonoBehaviour
 {
+    [SerializeField] private float timeWaitAfterTitle = .2f;
+    [SerializeField] private float timeBetweenEnemiesDisplay = .25f;
+
     [SerializeField] private Transform defeatedEnemiesParent;
     [SerializeField] private GameObject enemiesPrefab;
+    [SerializeField] private UIElement defeatedUnitsTextUI;
 
     public List<UnitFunctionality> defeatedEnemies = new List<UnitFunctionality>();
-    [SerializeField] private float timeBetweenEnemiesDisplay;
+
+    private void Awake()
+    {
+        ToggleDefeatedUnitsText(false);
+    }
 
     private void Start()
     {
         Setup();
+    }
+
+    public void ToggleDefeatedUnitsText(bool toggle)
+    {
+        if (toggle)
+        {
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            defeatedUnitsTextUI.UpdateAlpha(1);
+        }
+        else
+            defeatedUnitsTextUI.UpdateAlpha(0);
     }
 
     public void Setup()
@@ -37,11 +58,15 @@ public class DefeatedEnemies : MonoBehaviour
 
     public void DisplayDefeatedEnemies()
     {
+        ToggleDefeatedUnitsText(true);
+
         StartCoroutine(DisplayDefeatedEnemiesTime());
     }
 
     IEnumerator DisplayDefeatedEnemiesTime()
     {
+        yield return new WaitForSeconds(timeWaitAfterTitle);
+
         for (int i = 0; i < defeatedEnemies.Count; i++)
         {
             GameObject go = Instantiate(enemiesPrefab, defeatedEnemiesParent.position, Quaternion.identity);
@@ -51,9 +76,18 @@ public class DefeatedEnemies : MonoBehaviour
             UnitPortrait unitPortrait = go.GetComponent<UnitPortrait>();
             unitPortrait.UpdatePortrait(defeatedEnemies[i].GetUnitIcon());
             //unitPortrait.UpdatePortraitColour(defeatedEnemies[i].GetUnitColour());
-            unitPortrait.ToggleBg(true);
+            //unitPortrait.ToggleBg(true);
+            unitPortrait.uIElement.AnimateUI(false);
+
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
 
             yield return new WaitForSeconds(timeBetweenEnemiesDisplay);
         }
+        
+        // After all units are displayed, then display gear rewards
+        GearRewards.Instance.ToggleGearRewardsTab(true);
+
+        GearRewards.Instance.FillGearRewardsTable();
     }
 }

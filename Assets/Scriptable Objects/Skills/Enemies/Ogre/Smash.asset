@@ -16,20 +16,25 @@ MonoBehaviour:
   curSkillSelectionType: 0
   curSkillGameType: 0
   curRangedType: 0
+  curAnimType: 0
   skillSprite: {fileID: 0}
   skillName: SMASH
   skillDescr: 
-  skillPower: 3
+  skillPower: 2
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 12
   skillCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
   effectHitChance: 0
+  baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   skillPowerIcon: {fileID: 0}

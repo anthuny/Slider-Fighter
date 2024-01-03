@@ -8,13 +8,16 @@ using DG.Tweening;
 public class UIElement : MonoBehaviour
 {
     private CanvasGroup cg;
-    private Text mainText;
+    private TextMeshProUGUI mainText;
 
     public enum StatType { STATSTANDARD1, STATSTANDARD2, STATSTANDARD3, STATSTANDARD4, STATSTANDARD5, STATADVANCED1, STATADVANCED2, STATADVANCED3, STATADVANCED4, BG };
     public StatType curStatType;
 
     public enum ActiveMasteryType { STANDARD, ADVANCED };
     public ActiveMasteryType activeStatType;
+
+    public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
+    public Rarity curRarity;
 
     public Image contentImage;
     [SerializeField] private TextMeshProUGUI contentText;
@@ -23,7 +26,7 @@ public class UIElement : MonoBehaviour
 
     [SerializeField] private bool startHidden;
 
-    [SerializeField] private bool doScalePunch;
+    public bool doScalePunch;
     [SerializeField] private bool dieAfterDisplay;
     [SerializeField] private float scaleIncSize = 1;
     [SerializeField] private float scaleIncTime = .25f;
@@ -37,15 +40,28 @@ public class UIElement : MonoBehaviour
     [SerializeField] private UIElement lockedImage;
     [SerializeField] private int statPointsThreshhold;
     [SerializeField] bool isLocked;
+    public string itemName;
+    [SerializeField] private UIElement rarityBorderUI;
 
     private RectTransform rt;
-    private float originalScale;
+    private float originalScaleText;
+    private float originalScaleImage;
     private float originalYPos;
+
+    public void UpdateItemName(string name)
+    {
+        itemName = name;
+    }
+
+    public string GetItemName()
+    {
+        return itemName;
+    }
 
     private void Awake()
     {
         cg = GetComponent<CanvasGroup>();
-        mainText = GetComponent<Text>();
+        mainText = GetComponent<TextMeshProUGUI>();
         rt = GetComponent<RectTransform>();
 
         if (startHidden)
@@ -58,8 +74,13 @@ public class UIElement : MonoBehaviour
         
         if (gameObject.GetComponent<RectTransform>() != null)
         {
-            originalScale = transform.GetComponent<RectTransform>().localScale.x;
+            originalScaleText = transform.GetComponent<RectTransform>().localScale.x;
             GetOriginalYPosition();
+        }
+
+        if (contentImage != null)
+        {
+            originalScaleImage = contentImage.gameObject.transform.localScale.x;
         }
     }
 
@@ -205,12 +226,23 @@ public class UIElement : MonoBehaviour
         return selectable;
     }
 
-    public void ToggleSelected(bool toggle)
+    public void ToggleSelected(bool toggle, bool clearItemRewardsSelection = false)
     {
         if (toggle)
+        {
+            if (clearItemRewardsSelection)
+                ItemRewardManager.Instance.ClearItemSelection();
+
             selectBorder.UpdateAlpha(1);
+        }
+
         else
             selectBorder.UpdateAlpha(0);
+    }
+
+    public void UpdateRarityBorderColour(Color colour)
+    {
+        rarityBorderUI.UpdateColour(colour);
     }
 
     public void UpdateContentText(string text)
@@ -237,7 +269,7 @@ public class UIElement : MonoBehaviour
 
         if (text)
         {
-            ResetAnimateScale();
+            ResetAnimateScaleText();
 
             if (doScalePunch)
                 contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
@@ -246,6 +278,8 @@ public class UIElement : MonoBehaviour
         }
         else
         {
+            ResetAnimateScaleImage();
+
             if (doScalePunch)
                 contentImage.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
         }
@@ -262,7 +296,7 @@ public class UIElement : MonoBehaviour
 
     IEnumerator HideUIOvertime(float time = 0)
     {
-        ResetAnimateScale();
+        ResetAnimateScaleText();
 
         yield return new WaitForSeconds(time);
 
@@ -279,11 +313,18 @@ public class UIElement : MonoBehaviour
         contentText.color = TeamGearManager.Instance.statDefaultColour;
     }
 
-    public void ResetAnimateScale()
+    public void ResetAnimateScaleText()
     {
-        contentText.gameObject.transform.localScale = new Vector3(originalScale, originalScale);
+        contentText.gameObject.transform.localScale = new Vector3(originalScaleText, originalScaleText);
 
         contentText.gameObject.transform.DORestart();
+        //contentText.gameObject.transform.DOKill(true);
+    }
+    public void ResetAnimateScaleImage()
+    {
+        contentImage.gameObject.transform.localScale = new Vector3(originalScaleImage, originalScaleImage);
+
+        contentImage.gameObject.transform.DORestart();
         //contentText.gameObject.transform.DOKill(true);
     }
     public void UpdateContentTextColour(Color colour)
@@ -375,6 +416,8 @@ public class UIElement : MonoBehaviour
     {
         mainText.text = alertText;
         mainText.color = mainText.color = color;
+
+        AnimateUI();
 
         yield return new WaitForSeconds(duration);
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   curEffectType: 0
   curEffectName: 4
   effectName: POWERUP
-  effectDesc: Increase current power by 15%
+  effectDesc: Increase Power damage hits by 2
   effectIcon: {fileID: 21300000, guid: 4afe27971f0d17c4f872cb475325c5ad, type: 3}
   powerPercent: 0
   powerAmp: 0.15

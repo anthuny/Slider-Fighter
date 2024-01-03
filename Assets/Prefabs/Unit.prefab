@@ -1562,8 +1562,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 3232323
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2301e84fd49eda94484a7f6ebe3ddd26, type: 2}
-  m_sharedMaterial: {fileID: -6006359576746837634, guid: 2301e84fd49eda94484a7f6ebe3ddd26, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b1262895f9a0c2741837260617873ff4, type: 2}
+  m_sharedMaterial: {fileID: -6006359576746837634, guid: b1262895f9a0c2741837260617873ff4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2015,6 +2015,7 @@ MonoBehaviour:
   curDefense: 0
   curHealth: 0
   maxHealth: 0
+  curDamageHits: 0
   curSpeedIncPerLv: 0
   curPowerIncPerLv: 0
   curHealingPowerIncPerLv: 0
@@ -2079,7 +2080,9 @@ MonoBehaviour:
   reducedCooldownsCount: 0
   rerollItemCount: 0
   heroRoomUnit: 0
+  uiElement: {fileID: 0}
   deathClip: {fileID: 0}
+  hitRecievedClip: {fileID: 0}
 --- !u!114 &7414491478435158705
 MonoBehaviour:
   m_ObjectHideFlags: 0

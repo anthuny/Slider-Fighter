@@ -68,6 +68,8 @@ public class PostBattle : MonoBehaviour
             postBattleConditionText.UpdateContentTextColour(loseConditionTextColour);
         }
 
+        postBattleConditionText.AnimateUI();
+
         StartCoroutine(ToggleButtonPostBattleMap(true));
     }
 

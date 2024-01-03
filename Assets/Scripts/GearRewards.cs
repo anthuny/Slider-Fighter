@@ -7,8 +7,12 @@ public class GearRewards : MonoBehaviour
 {
     public static GearRewards Instance;
 
+    [SerializeField] private float timeInbetweenRewards = .2f;
     [SerializeField] private Transform recievedGearParent;
+    [SerializeField] private UIElement uiElement;
+    [SerializeField] private UIElement rewardsTextUI;
     public GameObject gearGO;
+    public GameObject goldRewardGO;
     [SerializeField] private Sprite goldSprite;
 
     [Tooltip("% chance of a unit dropping 1 piece of gear (Flip the %)")]
@@ -42,30 +46,59 @@ public class GearRewards : MonoBehaviour
 
     void Start()
     {
+        ToggleGearRewardsTab(false);
+
         Setup();
+    }
+
+    public void ResetRewards()
+    {
+        ResetRewardsTable();
+        rewardsTextUI.UpdateAlpha(0);
+        ToggleGearRewardsTab(false);
     }
 
     public void Setup()
     {
+        ResetRewards();
+
+        rewardsTextUI.UpdateAlpha(1);
+        ToggleGearRewardsTab(true);
+
         ResetRewardsTable();
+    }
+
+    public void ToggleGearRewardsTab(bool toggle)
+    {
+        if (uiElement)
+        {
+            if (toggle)
+            {
+                uiElement.UpdateAlpha(1);
+
+                rewardsTextUI.UpdateAlpha(1);
+            }
+            else
+            {
+                uiElement.UpdateAlpha(0);
+            }
+        }
     }
 
     public void FillGearRewardsTable()
     {
-        ResetRewardsTable();
+        Setup();
 
-        GiveGold();
+        // Give Gold
+        StartCoroutine(GiveGold());
 
-
-        // Give item(s)
-        GiveItems();
-
+        // Give Item and Gear
+        StartCoroutine(GiveRewards());
 
         GameManager.Instance.ResetEnemiesKilledCount();
-
     }
 
-    void ResetRewardsTable()
+    public void ResetRewardsTable()
     {
         foreach (Transform child in recievedGearParent)
         {
@@ -73,30 +106,83 @@ public class GearRewards : MonoBehaviour
         }
     }
 
-    void GiveItems()
+    IEnumerator GiveRewards()
     {
         int count = GameManager.Instance.GetEnemiesKilledCount();
+        bool spawnedItem = false; 
 
-        // Check if EACH defeated enemy drops an item
+        // Check if EACH defeated enemy drops an Gear
         for (int i = 0; i < count; i++)
         {
+            // If max rewards have been given, do not give more
+            if (i == 4)
+                break;
+
+            // If item rewards are NOT disabled
+            // Ensure spawned item only spawns once
+            if (!ItemRewardManager.Instance.disableItemRewards && !spawnedItem)
+            {
+                spawnedItem = true;
+
+                yield return new WaitForSeconds(timeInbetweenRewards);
+
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
+                GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, recievedGearParent.position, Quaternion.identity);
+                go.transform.SetParent(recievedGearParent);
+                go.transform.localScale = new Vector2(1, 1);
+
+                UIElement uIElement = go.GetComponent<UIElement>();
+
+                // Set item
+                uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
+                uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
+
+                if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.LEGENDARY)
+                {
+                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
+                }
+                else if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.EPIC)
+                {
+                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
+                }
+                else if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.RARE)
+                {
+                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
+                }
+                else if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.COMMON)
+                {
+                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
+                }
+
+                uIElement.ToggleButton(false);
+            }
+
             int gearChance = Random.Range(0, 101);
 
-            // Roll if item drops
+            // Roll if Gear drops
             if (gearChance >= unitDropRatePerc)
             {
+                yield return new WaitForSeconds(timeInbetweenRewards);
+
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
                 GameObject go = Instantiate(gearGO, recievedGearParent.position, Quaternion.identity);
                 go.transform.SetParent(recievedGearParent);
                 go.transform.localScale = new Vector2(1, 1);
 
                 Gear gear = go.GetComponent<Gear>();
 
+                //gear.gameObject.GetComponent<UIElement>().AnimateUI();
+
                 gear.isGold = false;
 
 
                 gear.UpdateGearStatis(Gear.GearStatis.REWARD);
 
-                // Determien item rarity
+                // Determien Gear rarity
                 int rarityChance = Random.Range(0, 101);
 
                 if (gearLegendaryPerc >= rarityChance)
@@ -118,7 +204,7 @@ public class GearRewards : MonoBehaviour
 
                 GearPiece newGear = null;
 
-                // Determine what gear this item is
+                // Determine what gear this Gear is
                 if (gear.GetRarity() == Gear.Rarity.COMMON)
                 {
                     int rand = Random.Range(0, allGearPiecesCommon.Count);
@@ -177,34 +263,31 @@ public class GearRewards : MonoBehaviour
 
                 // Disable owned gear button for unowned loot
                 gear.ToggleOwnedGearButton(false);
-                // Show full visibility of item
+                // Show full visibility of Gear
                 gear.UpdateGearAlpha(true);
             }
         }
     }
 
-    void GiveGold()
+    IEnumerator GiveGold()
     {       
         // Give gold
-        GameObject go = Instantiate(gearGO, recievedGearParent.position, Quaternion.identity);
+        GameObject go = Instantiate(goldRewardGO, recievedGearParent.position, Quaternion.identity);
         go.transform.SetParent(recievedGearParent);
         go.transform.localScale = new Vector2(1, 1);
 
-        Gear gear = go.GetComponent<Gear>();
+        UIElement uiElement = go.GetComponent<UIElement>();
 
-        gear.UpdateGearStatis(Gear.GearStatis.REWARD);
-
-        gear.isGold = true;
-        gear.UpdateGearImage(goldSprite);
-        gear.UpdateGoldText(CalculateGoldRecieved());
-
-        // Disable owned gear button for unowned loot
-        gear.ToggleOwnedGearButton(false);
-
-        //Reposition gold image to be lower?
-
+        uiElement.UpdateContentImage(goldSprite);
+        uiElement.UpdateContentText(CalculateGoldRecieved().ToString());
+        uiElement.AnimateUI(false);
 
         ShopManager.Instance.UpdatePlayerGold(CalculateGoldRecieved());
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        yield return new WaitForSeconds(timeInbetweenRewards);
     }
 
     int CalculateGoldRecieved()

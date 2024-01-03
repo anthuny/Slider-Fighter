@@ -90,6 +90,14 @@ public class AudioManager : MonoBehaviour
             combatMusic.source.Play();
     }
 
+    public void PauseAttackBarMusic(bool toggle)
+    {
+        if (toggle)
+            attackBarMusic.source.Pause();
+        else
+            attackBarMusic.source.Play();
+    }
+
     public void PauseMapMusic(bool toggle)
     {
         if (toggle)

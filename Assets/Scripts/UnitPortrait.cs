@@ -10,6 +10,13 @@ public class UnitPortrait : MonoBehaviour
     [SerializeField] private CanvasGroup cg;
     [SerializeField] private CanvasGroup bgCg;
 
+    public UIElement uIElement;
+
+    private void Awake()
+    {
+        uIElement = GetComponent<UIElement>();
+    }
+
     void Start()
     {
         Setup();

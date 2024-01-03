@@ -15,7 +15,7 @@ MonoBehaviour:
   curUnitType: 1
   unitValue: 1
   unitSprite: {fileID: 21300000, guid: 2618ddc2e922f0b4a803a59bf63d6611, type: 3}
-  unitIcon: {fileID: 21300000, guid: 2618ddc2e922f0b4a803a59bf63d6611, type: 3}
+  unitIcon: {fileID: 21300000, guid: dfbc2ac274d5c654caadfaa87796094d, type: 3}
   unitColour: {r: 1, g: 0.9782015, b: 0.75, a: 1}
   unitName: Pixie
   startingSpeed: 22

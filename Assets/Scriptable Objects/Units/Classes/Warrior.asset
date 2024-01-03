@@ -15,7 +15,7 @@ MonoBehaviour:
   curUnitType: 0
   unitValue: 2
   unitSprite: {fileID: 21300000, guid: 34d9e4090ee8996408dba62e1ccdd554, type: 2}
-  unitIcon: {fileID: 21300000, guid: 3f6f62c001d44cd42a0eecfdcc2d3128, type: 3}
+  unitIcon: {fileID: 21300000, guid: 325b656c97439ea479d694a14f60ff03, type: 3}
   unitColour: {r: 0.9716981, g: 0.9505435, b: 0.21542363, a: 1}
   unitName: Warrior
   startingSpeed: 15

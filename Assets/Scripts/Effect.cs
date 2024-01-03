@@ -16,7 +16,7 @@ public class Effect : MonoBehaviour
 
     public enum EffectName 
     { 
-        BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
+        BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, HEALINGUP, HEALINGDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
         PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN 
     }
     public EffectName curEffectName;
@@ -70,6 +70,10 @@ public class Effect : MonoBehaviour
             curEffectName = EffectName.POWERUP;
         else if (effect.curEffectName == EffectData.EffectName.POWERDOWN)
             curEffectName = EffectName.POWERDOWN;
+        else if (effect.curEffectName == EffectData.EffectName.HEALINGUP)
+            curEffectName = EffectName.HEALINGUP;
+        else if (effect.curEffectName == EffectData.EffectName.HEALINGDOWN)
+            curEffectName = EffectName.HEALINGDOWN;
         else if (effect.curEffectName == EffectData.EffectName.RECOVER)
             curEffectName = EffectName.RECOVER;
         else if (effect.curEffectName == EffectData.EffectName.SPEEDUP)
@@ -174,11 +178,16 @@ public class Effect : MonoBehaviour
         }
         else if (curEffectName == EffectName.POWERUP)
         {
-            storedPowerAmp = powerAmp;
-            targetUnit.UpdatePowerIncPerLv((int)storedPowerAmp);       
+            //storedPowerAmp = powerAmp;
+            //targetUnit.UpdatePowerIncPerLv((int)storedPowerAmp);       
+            targetUnit.UpdateUnitDamageHits(2, true);
         }
         else if (curEffectName == EffectName.POWERDOWN)
-            targetUnit.UpdatePowerIncPerLv((int)-storedPowerAmp);
+            targetUnit.UpdateUnitDamageHits(2, false);
+        else if (curEffectName == EffectName.HEALINGUP)
+            targetUnit.UpdateUnitHealingHits(2, true);
+        else if (curEffectName == EffectName.HEALINGDOWN)
+            targetUnit.UpdateUnitHealingHits(2, false);
         else if (curEffectName == EffectName.PARRY)
             targetUnit.isParrying = true;
         else if (curEffectName == EffectName.SPEEDUP)
@@ -201,7 +210,7 @@ public class Effect : MonoBehaviour
         {
             float newMaxHealth = tempAddedHealth;
             unit.UpdateUnitMaxHealth((int)newMaxHealth, false, false);
-            unit.UpdateUnitCurHealth((int)tempAddedHealth, false, false);
+            unit.UpdateUnitCurHealth((int)tempAddedHealth, true, false);
             unit.StartCoroutine(unit.SpawnPowerUI(tempAddedHealth, false, true, this));
         }
         else if (curEffectName == EffectName.POISON)
@@ -232,18 +241,23 @@ public class Effect : MonoBehaviour
         }
         else if (curEffectName == EffectName.MARK)
         {
-            // Toggle mark effect off the target
             unit.curRecieveDamageAmp -= (int)powerPercent;
         }
         else if (curEffectName == EffectName.POWERUP)
         {
-            // Toggle mark effect off the target
-            unit.UpdatePowerIncPerLv((int)-storedPowerAmp);
+            unit.UpdateUnitDamageHits(2, false);
         }
         else if (curEffectName == EffectName.POWERDOWN)
         {
-            // Toggle mark effect off the target
-            unit.UpdatePowerIncPerLv((int)storedPowerAmp);
+            unit.UpdateUnitDamageHits(2, true);
+        }
+        else if (curEffectName == EffectName.HEALINGUP)
+        {
+            unit.UpdateUnitHealingHits(2, false);
+        }
+        else if (curEffectName == EffectName.HEALINGDOWN)
+        {
+            unit.UpdateUnitHealingHits(2, true);
         }
 
         DestroyEffectAfterTime(unit);

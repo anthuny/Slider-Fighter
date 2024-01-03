@@ -17,6 +17,7 @@ public class ButtonFunctionality : MonoBehaviour
     private ShopItem shopItem;
     [SerializeField] private bool disabled;
     [SerializeField] private UIElement UIbutton;
+    [SerializeField] private UIElement itemParent;
 
 
     [SerializeField] private bool startDisabled;
@@ -165,6 +166,7 @@ public class ButtonFunctionality : MonoBehaviour
         MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
 
+
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
         GameManager.Instance.UpdateAllyVisibility(false);
@@ -180,6 +182,8 @@ public class ButtonFunctionality : MonoBehaviour
 
         GameManager.Instance.ToggleTeamSetup(false);
         TeamGearManager.Instance.ToggleTeamGear(false);
+
+        TeamSetup.Instance.ToggleToMapButton(false);
 
         // Reset room, enemes only
         GameManager.Instance.ResetRoom(true);
@@ -247,6 +251,7 @@ public class ButtonFunctionality : MonoBehaviour
         TeamGearManager.Instance.playerInGearTab = true;
         TeamSetup.Instance.playerInTeamTab = false;
 
+        TeamSetup.Instance.ToggleToMapButton(false);
         TeamGearManager.Instance.ToggleTeamGear(true);
     }
 
@@ -258,6 +263,38 @@ public class ButtonFunctionality : MonoBehaviour
 
         TeamGearManager.Instance.ToggleTeamGear(false);
         ButtonTeamPage();
+    }
+
+    public void ButtonSelectItem()
+    {
+        // Ensure the player cant select the same item
+        if (ItemRewardManager.Instance.selectedItemName != itemParent.GetItemName())
+            ButtonSelectItemCo();
+    }
+
+    public void ButtonSelectItemCo()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        // Put selection on seleted item
+        if (itemParent != null)
+        {
+            ItemRewardManager.Instance.selectedItemName = itemParent.GetItemName();
+            itemParent.ToggleSelected(true);
+        }
+
+        ItemRewardManager.Instance.UpdateItemDescription(true);
+
+        ItemRewardManager.Instance.ToggleConfirmItemButton(true);
+    }
+
+    public void ConfirmItem()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        StartCoroutine(GameManager.Instance.SetupPostBattleUI(GameManager.Instance.playerWon));
     }
 
     public void ButtonSelectGear()
@@ -524,8 +561,9 @@ public class ButtonFunctionality : MonoBehaviour
         GameManager.Instance.ToggleSkillVisibility(false);
 
         // Enable To Map Button
-        GameManager.Instance.toMapButton.UpdateAlpha(1);
+        //GameManager.Instance.toMapButton.UpdateAlpha(1);
 
+        //TeamSetup.Instance.ToggleToMapButton(true);
     }
 
     public void ButtonTeamPageFromGear()
@@ -548,6 +586,8 @@ public class ButtonFunctionality : MonoBehaviour
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
 
         GameManager.Instance.ToggleSkillVisibility(false);
+
+        //TeamSetup.Instance.ToggleToMapButton(true);
 
         // Enable To Map Button
         GameManager.Instance.toMapButton.UpdateAlpha(1);

@@ -15,7 +15,7 @@ MonoBehaviour:
   curUnitType: 1
   unitValue: 1
   unitSprite: {fileID: -307370437, guid: f5a578533257a894aa0d0a1affff6c6e, type: 3}
-  unitIcon: {fileID: 21300000, guid: 9fc2fa53319ca09468a5c2f78e699abe, type: 3}
+  unitIcon: {fileID: 21300000, guid: d4872ca97d36c34459e1927d43a1e97a, type: 3}
   unitColour: {r: 0.6, g: 0.8980393, b: 0.3137255, a: 1}
   unitName: Slime
   startingSpeed: 12
