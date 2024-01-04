@@ -314,10 +314,12 @@ public class ButtonFunctionality : MonoBehaviour
                 return;
         }
 
-
         // If the BG is selected
         if (curMasteryType == MasteryType.BG)
+        {
+            OwnedGearInven.Instance.ToggleOwnedGearDisplay(false);
             return;
+        }
 
         OwnedGearInven.Instance.ClearOwnedItemsSlotsSelection();
 
@@ -335,6 +337,10 @@ public class ButtonFunctionality : MonoBehaviour
             else if (gear.GetCurGearType() == Gear.GearType.BOOTS)
                 TeamGearManager.Instance.GearSelection(gear);
         }
+
+        // Display inven
+        if (gear.isEmpty)
+            OwnedGearInven.Instance.ToggleOwnedGearDisplay(true);
     }
 
     public void EquipGear()

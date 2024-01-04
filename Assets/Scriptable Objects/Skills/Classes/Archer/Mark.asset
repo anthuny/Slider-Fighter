@@ -22,7 +22,7 @@ MonoBehaviour:
   skillDescr: Inflict Mark on 1 target for 0/1/2/3 turns
   skillPower: 0
   skillAttackAccMult: 1
-  skillAttackCount: 0
+  skillAttackCount: 1
   projectileSpeed: 12
   skillCooldown: 0
   skillSelectionCount: 1

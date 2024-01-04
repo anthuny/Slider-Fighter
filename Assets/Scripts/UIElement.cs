@@ -22,6 +22,7 @@ public class UIElement : MonoBehaviour
     public Image contentImage;
     [SerializeField] private TextMeshProUGUI contentText;
     [SerializeField] private Text contentSubText;
+    [SerializeField] private TextMeshProUGUI contentSubTextTMP;
     [SerializeField] private CanvasGroup buttonCG;
 
     [SerializeField] private bool startHidden;
@@ -44,7 +45,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private UIElement rarityBorderUI;
 
     private RectTransform rt;
-    private float originalScaleText;
+    public float originalScaleText;
     private float originalScaleImage;
     private float originalYPos;
 
@@ -275,6 +276,8 @@ public class UIElement : MonoBehaviour
                 contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 
             AnimateUIMaxCap();
+
+            ResetAnimateScaleText();
         }
         else
         {
@@ -282,6 +285,8 @@ public class UIElement : MonoBehaviour
 
             if (doScalePunch)
                 contentImage.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
+            
+            ResetAnimateScaleImage();
         }
 
         if (dieAfterDisplay)
@@ -343,6 +348,18 @@ public class UIElement : MonoBehaviour
         contentSubText.color = colour;
     }
 
+    public void UpdateContentSubTextTMPColour(Color colour)
+    {
+        contentSubTextTMP.color = colour;
+    }
+
+    public void ToggleContentSubTextTMP(bool toggle)
+    {
+        if (toggle)
+            contentSubTextTMP.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
+        else
+            contentSubTextTMP.gameObject.GetComponent<UIElement>().UpdateAlpha(0);
+    }
     public void UpdateRectPos(Vector2 pos)
     {
         rt.sizeDelta = pos;
@@ -412,10 +429,12 @@ public class UIElement : MonoBehaviour
         mainText.color = new Color(mainText.color.r, mainText.color.g, mainText.color.b, 0);
     }
 
-    public IEnumerator TriggerUIAlert(float duration, string alertText, Color color)
+    public IEnumerator TriggerUIAlert(float duration, string alertText, TMP_ColorGradient gradient)
     {
         mainText.text = alertText;
-        mainText.color = mainText.color = color;
+        //mainText.color = mainText.color = color;
+        mainText.colorGradientPreset = gradient;
+        mainText.color = Weapon.Instance.defaultColour;
 
         AnimateUI();
 

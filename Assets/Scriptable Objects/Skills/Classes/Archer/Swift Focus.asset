@@ -22,7 +22,7 @@ MonoBehaviour:
   skillDescr: Buff all allies with Speed up for 0/1/2/3 turns
   skillPower: 0
   skillAttackAccMult: 1
-  skillAttackCount: 0
+  skillAttackCount: 1
   projectileSpeed: 10
   skillCooldown: 3
   skillSelectionCount: 3

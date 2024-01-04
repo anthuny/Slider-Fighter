@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 1
   curEffectType: 1
-  curEffectName: 16
+  curEffectName: 18
   effectName: DEFENSE UP
   effectDesc: 
   effectIcon: {fileID: 21300000, guid: 268387cb6f194354d9ea80c476664fcd, type: 3}

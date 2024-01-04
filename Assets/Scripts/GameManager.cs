@@ -1427,6 +1427,13 @@ public class GameManager : MonoBehaviour
         {
             GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
 
+            // Display active unit hits remaining text, Update hits remaining text
+            GetActiveUnitFunctionality().ToggleHitsRemainingText(true);
+            if (power == 0)
+                GetActiveUnitFunctionality().UpdateHitsRemainingText(effectHitAcc);
+            else
+                GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount);
+
             yield return new WaitForSeconds(allyRangedSkillWaitTime / 2f);
 
             // Projectile Launch SFX
@@ -1461,6 +1468,13 @@ public class GameManager : MonoBehaviour
         {
             GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
 
+            // Display active unit hits remaining text, Update hits remaining text
+            GetActiveUnitFunctionality().ToggleHitsRemainingText(true);
+            if (power == 0)
+                GetActiveUnitFunctionality().UpdateHitsRemainingText(effectHitAcc);
+            else
+                GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount);
+
             yield return new WaitForSeconds(allyMeleeSkillWaitTime / 4f);
 
             // Projectile Launch SFX
@@ -1487,7 +1501,7 @@ public class GameManager : MonoBehaviour
                 // If active skil has an effect AND it's not a self cast, apply it to selected targets
                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
                 {
-                    int val = GetActiveSkill().baseEffectApplyCount;
+                    int val = effectHitAcc;
 
                     // If active skill doubles current effects, do it
                     if (GetActiveSkill().isDoublingEffect)
@@ -1504,11 +1518,7 @@ public class GameManager : MonoBehaviour
                         }
                     }
                     
-                    if (val == 0 || val == 1)
-                        unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], GetActiveSkill().effectTurnLength, effectHitAcc);
-                    else
-                        unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], GetActiveSkill().effectTurnLength, val);
-
+                    unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], GetActiveSkill().effectTurnLength, val);
                 }
 
                 #if !UNITY_EDITOR
@@ -1526,12 +1536,19 @@ public class GameManager : MonoBehaviour
             // Loop as many times as power text will appear
             for (int x = 0; x < hitCount; x++)
             {
+                // If we've cycled through all units selected, Disable hits remaining text
+                if (x == hitCount-1)
+                    GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
+
                 // If 1 enemy is trying to target an ally, dont?
                 if (unitsSelected.Count == 0)
                     break;
 
                 if (unitsSelected[0] == null)
                     continue;
+
+                // Update hits remaining text
+                GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount - x);
 
                 // Loop through all selected units
                 for (int i = unitsSelected.Count - 1; i >= 0; i--)
@@ -1631,7 +1648,6 @@ public class GameManager : MonoBehaviour
                         #if !UNITY_EDITOR
                             Vibration.Vibrate(15);
                         #endif
-
                     }
                 }
 
@@ -1639,17 +1655,18 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenPowerUIStack);
             }
 
-            /*
             // Reset each units power UI
             for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
             {
                 activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
-            }
-            */
+            }       
         }
+
+        GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
 
         // If skill is self cast, do it here
         if (GetActiveSkill().isSelfCast)
+        {
             if (GetActiveSkill().effect != null)
             {
                 GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), GetActiveSkill().effectTurnLength, effectHitAcc);
@@ -1658,6 +1675,7 @@ public class GameManager : MonoBehaviour
                     Vibration.Vibrate(15);
                 #endif
             }
+        }
 
         // Disable unit selection just before attack
         for (int y = 0; y < unitsSelected.Count; y++)
@@ -1675,7 +1693,7 @@ public class GameManager : MonoBehaviour
             GetActiveUnitFunctionality().SetSkill3CooldownMax();
 
         yield return new WaitForSeconds(postHitWaitTime);
-    
+
         // If active unit is player, setup player UI
         if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER)
         {

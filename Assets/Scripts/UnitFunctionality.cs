@@ -19,6 +19,7 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private Transform unitVisualsParent;
     [SerializeField] private Transform powerUIParent;
     [SerializeField] private UIElement statUI;
+    [SerializeField] private UIElement hitsRemainingText;
     [SerializeField] private Image unitHealthBar;
     [SerializeField] private Image unitAttackBar;
     public UIElement healthBarUIElement;
@@ -139,7 +140,26 @@ public class UnitFunctionality : MonoBehaviour
     [HideInInspector]
     public AudioClip deathClip, hitRecievedClip;
 
+    [HideInInspector]
+    public int hitsRemaining;
 
+    public void UpdateHitsRemainingText(int remaining)
+    {
+        hitsRemainingText.UpdateContentText(remaining.ToString());
+        hitsRemainingText.AnimateUI();
+    }
+
+    public void ToggleHitsRemainingText(bool toggle)
+    {
+        if (toggle)
+        {
+            hitsRemainingText.UpdateAlpha(1);          
+        }
+        else
+        {
+            hitsRemainingText.UpdateAlpha(0);
+        }
+    }
 
     public void UpdateSpeed(float newVal)
     {
@@ -241,6 +261,7 @@ public class UnitFunctionality : MonoBehaviour
         ToggleUnitExpVisual(false);
         ToggleUnitBG(false);
         ResetEffects();
+        ToggleHitsRemainingText(false);
 
         //UpdateUnitPowerInc(1);
         //sUpdateUnitHealingPowerInc(1);
@@ -537,8 +558,11 @@ public class UnitFunctionality : MonoBehaviour
 
             int totalPower = GameManager.Instance.activeSkill.skillPower + GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
-            totalPower += GameManager.Instance.randomBaseOffset*2;
+            totalPower += //GameManager.Instance.randomBaseOffset*2;
             totalPower = GameManager.Instance.RandomisePower(totalPower);
+
+            if (GameManager.Instance.activeSkill.skillPower == 0)
+                totalPower = 0;
 
             int effectCount;
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Weapon : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float minDistanceBorderTrigger;
     [SerializeField] private Transform topBarBorder;
     [SerializeField] private Transform botBarBorder;
+    [SerializeField] private UIElement hitsRemainingText;
+    [SerializeField] private UIElement hitsAccumulatedText;
+    [SerializeField] private float accumulatedHitsTimeBetween = 15f;
+    [SerializeField] private Color oneHitRemainingTextColour;
+    [SerializeField] private Color twoHitRemainingTextColour;
+    [SerializeField] private Color threeHitRemainingTextColour;
     public float weaponLineSpeed = 350f;
     private float originalWeaponLineSpeed;
     [SerializeField] private float lockoutTime;
@@ -28,16 +35,18 @@ public class Weapon : MonoBehaviour
 
     [Header("Hit Alert")]
     [SerializeField] private UIElement hitAlertText;
+    [SerializeField] private UIElement weaponUI;
     public string perfectHitAlertText;
     public string greatHitAlertText;
     public string goodHitAlertText;
     public string badHitAlertText;
     public string missHitAlertText;
-    public Color perfectHitAlertTextColour;
-    public Color greatHitAlertTextColour;
-    public Color goodHitAlertTextColour;
-    public Color badHitAlertTextColour;
-    public Color missHitAlertTextColour;
+    public Color defaultColour;
+    public TMP_ColorGradient perfectHitAlertTextGradient;
+    public TMP_ColorGradient greatHitAlertTextGradient;
+    public TMP_ColorGradient goodHitAlertTextGradient;
+    public TMP_ColorGradient badHitAlertTextGradient;
+    public TMP_ColorGradient missHitAlertTextGradient;
     public float hitAlertTriggerDuration = 1f;
 
     public HitAreaManager hitAreaManager;
@@ -50,6 +59,11 @@ public class Weapon : MonoBehaviour
 
     int effectHitAccuracy = 0;
     int hitAccuracy = 0;
+    int hitsPerformed;
+    int accumulatedHits = 0;
+
+    bool stopHitLine;
+    int hitsRemaining;
 
     private void Awake()
     {
@@ -62,6 +76,8 @@ public class Weapon : MonoBehaviour
     {
         hitAccuracy = 0;
         effectHitAccuracy = 0;
+        hitsPerformed = 0;
+        accumulatedHits = 0;
     }
 
     public void ToggleEnabled(bool toggle)
@@ -92,6 +108,109 @@ public class Weapon : MonoBehaviour
                 if (Input.GetMouseButton(0))
                     HitWeapon();
         }
+    }
+
+    public void ResetWeapon()
+    {
+        hitsAccumulatedText.UpdateAlpha(0);
+        hitsRemainingText.UpdateAlpha(0);
+    }
+
+    public void UpdateWeaponDetails(bool playerMissed = false)
+    {
+        hitsRemaining = GameManager.Instance.GetActiveSkill().skillAttackCount - hitsPerformed;
+
+        if (hitsRemaining >= 3)
+        {
+            hitsRemainingText.UpdateContentTextColour(threeHitRemainingTextColour);
+            hitsRemainingText.UpdateContentSubTextTMPColour(threeHitRemainingTextColour);
+            hitsRemainingText.UpdateAlpha(1);
+            hitAreaManager.UpdateHitAreaPos();
+        }
+        else if (hitsRemaining == 2)
+        {
+            hitsRemainingText.UpdateContentTextColour(twoHitRemainingTextColour);
+            hitsRemainingText.UpdateContentSubTextTMPColour(twoHitRemainingTextColour);
+            hitsRemainingText.UpdateAlpha(1);
+            hitAreaManager.UpdateHitAreaPos();
+        }
+        else if (hitsRemaining == 1)
+        {
+            hitsRemainingText.UpdateContentTextColour(oneHitRemainingTextColour);
+            hitsRemainingText.UpdateContentSubTextTMPColour(oneHitRemainingTextColour);
+            hitsRemainingText.UpdateAlpha(1);
+            hitAreaManager.UpdateHitAreaPos();
+        }
+        else if (hitsRemaining == 0)
+        {
+            stopHitLine = true;
+            hitsRemainingText.ToggleContentSubTextTMP(false);
+            hitsRemainingText.UpdateAlpha(0);
+        }
+
+        if (playerMissed)
+        {
+            stopHitLine = true;
+            hitsRemainingText.ToggleContentSubTextTMP(false);
+            hitsRemainingText.UpdateAlpha(0);
+        }
+        else
+        {
+            //hitAreaManager.UpdateHitAreaPos();
+
+            hitsRemainingText.UpdateContentText(hitsRemaining.ToString());
+
+            hitsRemainingText.AnimateUI();
+        }
+    }
+
+    public IEnumerator UpdateWeaponAccumulatedHits(int hits)
+    {
+        for (int i = 0; i < hits; i++)
+        {
+            accumulatedHits++;
+            hitsAccumulatedText.UpdateContentText(accumulatedHits.ToString());
+
+            hitsAccumulatedText.AnimateUI();
+
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            yield return new WaitForSeconds(accumulatedHitsTimeBetween);
+        }
+    }
+
+    void ResetWeaponAccHits()
+    {
+        hitsAccumulatedText.UpdateContentText(0.ToString());
+        //GameManager.Instance.GetActiveUnitFunctionality().hits
+    }
+
+    public void ToggleWeaponAccHits(bool toggle)
+    {
+        if (toggle)
+            hitsAccumulatedText.UpdateAlpha(1);
+        else
+            hitsAccumulatedText.UpdateAlpha(0);
+    }
+
+    public void ToggleWeaponHitsRemainingText(bool toggle)
+    {
+        if (toggle)
+        {
+            hitsRemainingText.UpdateAlpha(1);
+            hitsRemainingText.ToggleContentSubTextTMP(true);
+        }
+        else
+        {
+            hitsRemainingText.UpdateAlpha(0);
+            hitsRemainingText.ToggleContentSubTextTMP(false);
+        }
+    }
+
+    public void AnimateWeaponUI()
+    {
+        weaponUI.AnimateUI(false);
     }
 
     private void FixedUpdate()
@@ -171,7 +290,17 @@ public class Weapon : MonoBehaviour
     {
         isStopped = false;
 
+        ResetAcc();
+
+        ResetWeaponAccHits();
+
         hitAreaManager.UpdateHitAreaPos();
+
+        ToggleWeaponHitsRemainingText(true);
+
+        UpdateWeaponDetails();
+        //StartCoroutine(UpdateWeaponAccumulatedHits());
+        //ToggleWeaponAccHits(false);
         GameManager.Instance.UpdateEnemyPosition(false);
 
         GameManager.Instance.ResetButton(GameManager.Instance.skill1Button);
@@ -212,7 +341,7 @@ public class Weapon : MonoBehaviour
 
     public IEnumerator StopHitLine()
     {
-        bool stopHitLine = false;
+        stopHitLine = false;
 
         for (int i = 0; i < weaponHitAreas.Count; i++)
         {
@@ -225,8 +354,41 @@ public class Weapon : MonoBehaviour
                 if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.MISS)
                     stopHitLine = true;
 
+                int acc = 0;
+
+                // If unit hit perfect, give them another hit
                 if (curHitAreaType == HitAreaType.PERFECT)
-                    effectHitAccuracy += 4;
+                {
+                    hitAccuracy += 3;
+                    acc += 3;
+                }
+                else if (curHitAreaType == HitAreaType.GREAT)
+                {
+                    hitAccuracy += 3;
+                    acc += 3;
+                    hitsPerformed++;
+                }
+                else if (curHitAreaType == HitAreaType.GOOD)
+                {
+                    hitAccuracy += 2;
+                    acc += 2;
+                    hitsPerformed++;
+                }
+                else if (curHitAreaType == HitAreaType.BAD)
+                {
+                    hitAccuracy += 1;
+                    acc += 1;
+                    hitsPerformed++;
+                }
+                else if (curHitAreaType == HitAreaType.MISS)
+                {
+                    hitAccuracy += 0;
+                    acc += 0;
+                    hitsPerformed++;
+                }
+
+                if (curHitAreaType == HitAreaType.PERFECT)
+                    effectHitAccuracy += 3;
                 else if (curHitAreaType == HitAreaType.GREAT)
                     effectHitAccuracy += 3;
                 else if (curHitAreaType == HitAreaType.GOOD)
@@ -236,22 +398,30 @@ public class Weapon : MonoBehaviour
                 else if (curHitAreaType == HitAreaType.MISS)
                     effectHitAccuracy += 0;
 
-                if (curHitAreaType == HitAreaType.PERFECT)
-                    hitAccuracy += 4;
-                else if (curHitAreaType == HitAreaType.GREAT)
-                    hitAccuracy += 3;
-                else if (curHitAreaType == HitAreaType.GOOD)
-                    hitAccuracy += 2;
-                else if (curHitAreaType == HitAreaType.BAD)
-                    hitAccuracy += 1;
-                else if (curHitAreaType == HitAreaType.MISS)
-                    hitAccuracy += 0;
+                AnimateWeaponUI();
+
+                StartCoroutine(UpdateWeaponAccumulatedHits(acc));
+
+
 
                 yield return new WaitForSeconds(pausedMovementTime);
 
-                //AudioManager.Instance.PauseAttackBarMusic(false);
+                ToggleWeaponAccHits(true);
 
                 isStopped = false;
+
+                if (curHitAreaType == HitAreaType.MISS)
+                {
+                    ToggleWeaponHitsRemainingText(false);
+                    UpdateWeaponDetails(true);
+                }
+                else
+                {
+                    if (stopHitLine == false)
+                    {
+                        UpdateWeaponDetails();
+                    }
+                }
 
                 DisableAttackBar();
 
@@ -290,9 +460,9 @@ public class Weapon : MonoBehaviour
             int finalHitCount = 0;
 
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillAttackCount + GameManager.Instance.GetActiveUnitFunctionality().GetUnitDamageHits();
+                finalHitCount = hitAccuracy;
             else
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillAttackCount + GameManager.Instance.GetActiveUnitFunctionality().GetUnitHealingHits();
+                finalHitCount = hitAccuracy;
 
             // If user missed on first hit, send 1 hit count
             if (hitAccuracy == 0)
@@ -341,15 +511,15 @@ public class Weapon : MonoBehaviour
     public void TriggerHitAlertText(WeaponHitArea.HitAreaType curHitAreaType)
     {
         if (curHitAreaType == WeaponHitArea.HitAreaType.PERFECT)
-            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, perfectHitAlertText, perfectHitAlertTextColour));
+            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, perfectHitAlertText, perfectHitAlertTextGradient));
         else if (curHitAreaType == WeaponHitArea.HitAreaType.GREAT)
-            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, greatHitAlertText, greatHitAlertTextColour));
+            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, greatHitAlertText, greatHitAlertTextGradient));
         else if (curHitAreaType == WeaponHitArea.HitAreaType.GOOD)
-            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, goodHitAlertText, goodHitAlertTextColour));
+            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, goodHitAlertText, goodHitAlertTextGradient));
         else if (curHitAreaType == WeaponHitArea.HitAreaType.BAD)
-            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, badHitAlertText, badHitAlertTextColour));
+            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, badHitAlertText, badHitAlertTextGradient));
         else if (curHitAreaType == WeaponHitArea.HitAreaType.MISS)
-            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, missHitAlertText, missHitAlertTextColour));
+            StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, missHitAlertText, missHitAlertTextGradient));
     }
 
     /*

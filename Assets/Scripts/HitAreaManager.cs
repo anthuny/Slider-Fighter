@@ -5,8 +5,8 @@ using UnityEngine;
 public class HitAreaManager : MonoBehaviour
 {
     [SerializeField] private Transform hitAreasTrans;
-    [SerializeField] private int minYPos;
-    [SerializeField] private int maxYPos;
+    [SerializeField] private float minYPos;
+    [SerializeField] private float maxYPos;
 
     public void UpdateHitAreaPos()
     {
