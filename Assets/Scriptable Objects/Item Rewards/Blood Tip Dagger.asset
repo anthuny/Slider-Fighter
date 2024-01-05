@@ -39,4 +39,4 @@ MonoBehaviour:
   healthItem: 0
   power: 5
   procChance: 12
-  ac: {fileID: 9100000, guid: 51b84ec8701920c4bb831dbf06fc2c43, type: 2}
+  ac: {fileID: 0}

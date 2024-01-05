@@ -24,6 +24,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private Text contentSubText;
     [SerializeField] private TextMeshProUGUI contentSubTextTMP;
     [SerializeField] private CanvasGroup buttonCG;
+    [SerializeField] private CanvasGroup button2CG;
 
     [SerializeField] private bool startHidden;
 
@@ -402,6 +403,14 @@ public class UIElement : MonoBehaviour
             else
                 GetComponent<Image>().raycastTarget = false;
         }
+
+        if (GetComponent<Button>())
+        {
+            if (alpha == 1)
+                GetComponent<Button>().interactable = true;
+            else
+                GetComponent<Button>().interactable = false;
+        }
     }
 
     public void UpdateImage(bool toggle)
@@ -422,6 +431,21 @@ public class UIElement : MonoBehaviour
 
         buttonCG.interactable = toggle;
         buttonCG.blocksRaycasts = toggle;
+    }
+
+    public void ToggleButton2(bool toggle)
+    {
+        /*
+        if (toggle)
+            button2CG.alpha = 1;
+        else
+            button2CG.alpha = 0;
+        */
+
+        button2CG.interactable = toggle;
+        button2CG.blocksRaycasts = toggle;
+
+        button2CG.GetComponent<Button>().interactable = toggle; 
     }
 
     public void DisableAlertUI()

@@ -58,6 +58,7 @@ public class MenuUnitDisplay : MonoBehaviour
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;
             // Adjust size of unit
             animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 0);
         }
 
         else if (unitName == "Archer")
@@ -65,7 +66,7 @@ public class MenuUnitDisplay : MonoBehaviour
             animator.runtimeAnimatorController = CharacterCarasel.Instance.archerAnimator;
             // Adjust size of unit
             animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 140);
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, 20);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, 40);
         }
 
         else if (unitName == "Locked")

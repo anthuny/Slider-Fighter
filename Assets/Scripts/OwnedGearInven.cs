@@ -19,7 +19,7 @@ public class OwnedGearInven : MonoBehaviour
     public List<Gear> wornGearSecondAlly = new List<Gear>();
     public List<Gear> wornGearThirdAlly = new List<Gear>();
     public List<Gear> gears = new List<Gear>();
-    [SerializeField] private UIElement buttonToggleOwnedGear;
+    [SerializeField] private UIElement buttonExitOwnedGear;
 
     private void Awake()
     {
@@ -169,7 +169,7 @@ public class OwnedGearInven : MonoBehaviour
             ownedGearOpened = false;
         }
 
-        buttonToggleOwnedGear.ToggleButton(toggle);
+        buttonExitOwnedGear.ToggleButton(toggle);
     }
 
     void ClearOwnedItemSlots()
@@ -386,7 +386,7 @@ public class OwnedGearInven : MonoBehaviour
         for (int i = 0; i < ownedGearSlots.Count; i++)
         {
             ownedGearSlots[i].gameObject.GetComponent<UIElement>().ToggleButton(toggle);
+            ownedGearSlots[i].gameObject.GetComponent<UIElement>().ToggleButton2(toggle);
         }
     }
-
 }

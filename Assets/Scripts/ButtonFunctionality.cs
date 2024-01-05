@@ -281,7 +281,7 @@ public class ButtonFunctionality : MonoBehaviour
         if (itemParent != null)
         {
             ItemRewardManager.Instance.selectedItemName = itemParent.GetItemName();
-            itemParent.ToggleSelected(true);
+            itemParent.ToggleSelected(true, true);
         }
 
         ItemRewardManager.Instance.UpdateItemDescription(true);
@@ -340,7 +340,10 @@ public class ButtonFunctionality : MonoBehaviour
 
         // Display inven
         if (gear.isEmpty)
+        {
             OwnedGearInven.Instance.ToggleOwnedGearDisplay(true);
+            //OwnedGearInven.Instance.ToggleOwnedGearEquipButton(true);
+        }
     }
 
     public void EquipGear()

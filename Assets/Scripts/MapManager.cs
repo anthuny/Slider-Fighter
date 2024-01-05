@@ -288,6 +288,8 @@ public class MapManager : MonoBehaviour
             GameManager.Instance.UpdateAllyVisibility(false);
 
             GearRewards.Instance.ResetRewards();
+
+            // If items didnt get wiped from hero unit spawning scene, wipe them here (it blocks mid screen taps)
             ItemRewardManager.Instance.ResetRewardsTable();
 
             //TeamSetup.Instance.ToggleToMapButton(false);

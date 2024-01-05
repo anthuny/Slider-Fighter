@@ -95,7 +95,7 @@ public class TeamGearManager : MonoBehaviour
     {
         if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.MAIN)
         {
-            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]);
+            UnitFunctionality unitFunc = GameManager.Instance.activeRoomAllUnitFunctionalitys[0];
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
@@ -108,7 +108,7 @@ public class TeamGearManager : MonoBehaviour
         }
         else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.SECOND)
         {
-            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]);
+            UnitFunctionality unitFunc = GameManager.Instance.activeRoomAllUnitFunctionalitys[1];
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
@@ -121,7 +121,7 @@ public class TeamGearManager : MonoBehaviour
         }
         else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.THIRD)
         {
-            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]);
+            UnitFunctionality unitFunc = GameManager.Instance.activeRoomAllUnitFunctionalitys[2];
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
@@ -138,7 +138,7 @@ public class TeamGearManager : MonoBehaviour
     {
         if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.MAIN)
         {
-            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]);
+            UnitFunctionality unitFunc = GameManager.Instance.activeRoomAllUnitFunctionalitys[0];
 
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
@@ -151,7 +151,7 @@ public class TeamGearManager : MonoBehaviour
         }
         else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.SECOND)
         {
-            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]);
+            UnitFunctionality unitFunc = GameManager.Instance.activeRoomAllUnitFunctionalitys[1];
 
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
@@ -164,7 +164,7 @@ public class TeamGearManager : MonoBehaviour
         }
         else if (selectedBaseGearSlot.GetGearOwnedBy() == Gear.GearOwnedBy.THIRD)
         {
-            UnitFunctionality unitFunc = GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]);
+            UnitFunctionality unitFunc = GameManager.Instance.activeRoomAllUnitFunctionalitys[2];
 
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
@@ -580,6 +580,8 @@ public class TeamGearManager : MonoBehaviour
         {
             teamGearTabUI.UpdateAlpha(1);
 
+            OwnedGearInven.Instance.ToggleOwnedGearDisplay(false);
+
             // Active unit level image for team page
             for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
             {
@@ -612,17 +614,17 @@ public class TeamGearManager : MonoBehaviour
             ClearAllGearStats();
 
             if (GameManager.Instance.activeTeam.Count == 1)
-                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]));
+                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[0]);
             if (GameManager.Instance.activeTeam.Count == 2)
             {
-                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]));
-                ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]));
+                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[0]);
+                ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[1]);
             }
             if (GameManager.Instance.activeTeam.Count == 3)
             {
-                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[0]));
-                ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[1]));
-                ally3MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.GetUnitFunctionality(GameManager.Instance.activeTeam[2]));
+                ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[0]);
+                ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[1]);
+                ally3MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[2]);
             }
         }
         else

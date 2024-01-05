@@ -143,6 +143,8 @@ public class UnitFunctionality : MonoBehaviour
     [HideInInspector]
     public int hitsRemaining;
 
+    //public bool unitDouble;
+
     public void UpdateHitsRemainingText(int remaining)
     {
         hitsRemainingText.UpdateContentText(remaining.ToString());

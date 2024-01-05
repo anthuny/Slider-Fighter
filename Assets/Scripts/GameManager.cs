@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     public UnitData startingUnit;
 
+    public bool devMode;
+
     [SerializeField] private float postBattleTime;
     public List<UnitData> activeTeam = new List<UnitData>();
     //public List<UnitData> allPlayerClasses = new List<UnitData>();
@@ -193,6 +195,7 @@ public class GameManager : MonoBehaviour
     public bool playerWon;
 
     private bool combatOver;
+    public int unitID;
 
     private void Awake()
     {
@@ -369,7 +372,10 @@ public class GameManager : MonoBehaviour
                 for (int t = 0; t < CharacterCarasel.Instance.GetAllAllies().Count; t++)
                 {
                     if (CharacterCarasel.Instance.GetAlly(t).unitName == "Archer")
+                    {
                         unit = CharacterCarasel.Instance.GetAlly(t);    // Reference Archer as unit to spawn
+                    }
+
                 }
             }
 
@@ -392,12 +398,33 @@ public class GameManager : MonoBehaviour
                 {
                     go = Instantiate(baseUnit, HeroRoomManager.Instance.GetSpawnLocTrans());
                     go.transform.SetParent(HeroRoomManager.Instance.GetSpawnLocTrans());
+
+                    ItemRewardManager.Instance.ResetRewardsTable();
                 }
 
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
                 UIElement unitUI = go.GetComponent<UIElement>();
 
                 HeroRoomManager.Instance.UpdateHero(unitUI);
+
+                /*
+                // If there is already this ally in the team, make this double spawned ally = true
+                // If spawning hero ally from end of hero room
+                if (spawnHeroAlly)
+                {
+                    List<string> ownedUnitNames = new List<string>();
+
+                    // Loop through all allies
+                    for (int t = 0; t < activeRoomAllUnitFunctionalitys.Count; t++)
+                    {
+                        string unitName = activeRoomAllUnitFunctionalitys[t].GetUnitName();
+                        if (ownedUnitNames.Contains(unitName))
+                            activeRoomAllUnitFunctionalitys[t].unitDouble = true;
+
+                        ownedUnitNames.Add(unitName);
+                    }
+                }
+                */
 
                 // Set ally correct position based on team size
                 if (!spawnHeroAlly)
@@ -438,6 +465,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
                 unitFunctionality.UpdateUnitHealth(unit.startingMaxHealth, unit.startingMaxHealth);
+
 
                 unitFunctionality.startingDamage = unit.startingPower;
                 unitFunctionality.startingHealth = unit.startingMaxHealth;
@@ -790,12 +818,6 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(ItemRewardManager.Instance.postItemTillPostCombat);
 
-        // Enable unit level image for post combat
-        for (int i = 0; i < activeRoomAllies.Count; i++)
-        {
-            activeRoomAllies[i].ToggleUnitLevelImage(true);
-        }
-
         // SFX
         if (playerWon)
             AudioManager.Instance.Play("Room_Win");
@@ -818,6 +840,12 @@ public class GameManager : MonoBehaviour
             //ToggleSkillVisibility(false);
 
             RoomManager.Instance.ToggleInteractable(false);
+
+            // Enable unit level image for post combat
+            for (int i = 0; i < activeRoomAllies.Count; i++)
+            {
+                activeRoomAllies[i].ToggleUnitLevelImage(true);
+            }
         }
         // If completed room WAS a hero room
         else
@@ -879,10 +907,13 @@ public class GameManager : MonoBehaviour
 
         if (playerWon)
         {
-            postBattleUI.ToggleExpGainedUI(true);
-            postBattleUI.ToggleRewardsUI(true);
+            // Enable unit level image for post combat
+            for (int i = 0; i < activeRoomAllies.Count; i++)
+            {
+                activeRoomAllies[i].ToggleUnitLevelImage(true);
+            }
 
-            yield return new WaitForSeconds(0);
+            postBattleUI.ToggleExpGainedUI(true);
 
             UnitFunctionality unitFunctionality = null;
 
@@ -904,6 +935,13 @@ public class GameManager : MonoBehaviour
                 activeRoomAllies[i].ToggleHideEffects(playerWon);
             }
 
+
+
+            yield return new WaitForSeconds(.15f);
+
+            postBattleUI.ToggleRewardsUI(true);
+
+
             // Reset hero room unit to be a normal unit (code purpose only)
             if (unitFunctionality != null)
                 unitFunctionality.heroRoomUnit = false;
@@ -917,6 +955,12 @@ public class GameManager : MonoBehaviour
         // If player LOST, reset game
         else
         {
+            // Enable unit level image for post combat
+            for (int i = 0; i < activeRoomAllies.Count; i++)
+            {
+                activeRoomAllies[i].ToggleUnitLevelImage(true);
+            }
+
             // Set correct post battle UI
             postBattleUI.ToggleExpGainedUI(false);
             postBattleUI.ToggleRewardsUI(false);
@@ -1060,11 +1104,11 @@ public class GameManager : MonoBehaviour
             // If room is hero, spawn additional enemies
             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
             {
-                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 4);
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 5);
             }
             else if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
             {
-                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 7);
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 10);
             }
 
             // Spawn enemy type
@@ -2512,6 +2556,12 @@ public class GameManager : MonoBehaviour
 
     public SkillData GetActiveSkill()
     {
+        if (devMode)
+        {
+            if (activeSkill)
+                activeSkill.skillSelectionCount = 6;
+        }
+
         return activeSkill;
     }
 
