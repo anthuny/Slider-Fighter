@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 
     public UnitData startingUnit;
 
-    public bool devMode;
+    //public bool devMode;
 
     [SerializeField] private float postBattleTime;
     public List<UnitData> activeTeam = new List<UnitData>();
@@ -853,6 +853,12 @@ public class GameManager : MonoBehaviour
             //ToggleSkillVisibility(false);
             StartCoroutine(HeroRetrievalScene());
         }
+
+        // Ads
+        if (playerWon && RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+        {
+            AdManager.Instance.ShowSkippableAd();
+        }
     }
 
     IEnumerator HeroRetrievalScene()
@@ -903,7 +909,8 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(.3f);
 
-        defeatedEnemies.DisplayDefeatedEnemies();
+        if (playerWon)
+            defeatedEnemies.DisplayDefeatedEnemies();
 
         if (playerWon)
         {
@@ -2081,7 +2088,7 @@ public class GameManager : MonoBehaviour
             if (activeRoomAllies.Count == 0)
             {
                 playerWon = false;
-                SetupItemRewards();
+                StartCoroutine(SetupPostBattleUI(playerWon));
             }
 
             AddExperienceGained(unitFunctionality.GetUnitExpKillGained());
@@ -2556,11 +2563,13 @@ public class GameManager : MonoBehaviour
 
     public SkillData GetActiveSkill()
     {
+        /*
         if (devMode)
         {
             if (activeSkill)
                 activeSkill.skillSelectionCount = 6;
         }
+        */
 
         return activeSkill;
     }

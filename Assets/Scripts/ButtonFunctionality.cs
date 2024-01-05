@@ -631,7 +631,7 @@ public class ButtonFunctionality : MonoBehaviour
         // Disable post battle UI
         GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
-        GameManager.Instance.map.ClearRoom();
+        GameManager.Instance.map.ClearRoom(true);
 
         GameManager.Instance.ResetRoom(true);
     }

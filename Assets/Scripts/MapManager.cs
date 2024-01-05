@@ -188,7 +188,7 @@ public class MapManager : MonoBehaviour
             return false;
     }
 
-    public void ClearRoom()
+    public void ClearRoom(bool tryShowAd = false)
     {
         // Do not allow room clear if selected room is the starting room
         if (selectedRoom == startingRoom)
@@ -222,9 +222,11 @@ public class MapManager : MonoBehaviour
         // If player lost
         else
         {
+            if (tryShowAd)
+                AdManager.Instance.ShowForcedAd();
+
             CharacterCarasel.Instance.ResetMenu();
         }
-
     }
 
     public void UpdateActiveFloor(FloorData floor = null)

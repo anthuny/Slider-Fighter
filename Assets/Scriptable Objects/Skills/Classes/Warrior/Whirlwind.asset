@@ -25,7 +25,7 @@ MonoBehaviour:
   skillAttackCount: 3
   projectileSpeed: 1
   skillCooldown: 2
-  skillSelectionCount: 4
+  skillSelectionCount: 3
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
