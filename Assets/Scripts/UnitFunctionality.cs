@@ -22,8 +22,10 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private UIElement hitsRemainingText;
     [SerializeField] private Image unitHealthBar;
     [SerializeField] private Image unitAttackBar;
+    [SerializeField] private Image unitAttackBarNext;
     public UIElement healthBarUIElement;
     public UIElement attackBarUIElement;
+    public UIElement unitAttackBarNextUIElement;
 
     public Image unitImage;
     public UIElement curUnitTurnArrow;
@@ -69,7 +71,7 @@ public class UnitFunctionality : MonoBehaviour
     public int curRecieveDamageAmp = 100;
     [SerializeField] private Color unitColour;
 
-    [SerializeField] private List<Item> equiptItems = new List<Item>();
+    [SerializeField] private List<ItemPiece> equiptItems = new List<ItemPiece>();
 
     [SerializeField] private List<Stat> curStatPage = new List<Stat>();
 
@@ -328,7 +330,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitLevelColour(Color color)
     {
-        unitLevelImage.UpdateContentSubTextColour(color);
+        unitLevelImage.UpdateContentSubTextTMPColour(color);
     }
 
     public void UpdateUnitLevelImage()
@@ -336,7 +338,7 @@ public class UnitFunctionality : MonoBehaviour
         if (unitLevelImage == null)
             return;
 
-        unitLevelImage.UpdateContentSubText(curLevel.ToString());
+        unitLevelImage.UpdateContentSubTextTMP(curLevel.ToString());
     }
 
     public void UpdateLastOpenedMastery(TeamSetup.ActiveStatType masteryType)
@@ -384,12 +386,12 @@ public class UnitFunctionality : MonoBehaviour
     {
         return isVisible;
     }
-    public void AddOwnedItems(Item item)
+    public void AddOwnedItems(ItemPiece item)
     {
         equiptItems.Add(item);
     }
 
-    public List<Item> GetEquipItems()
+    public List<ItemPiece> GetEquipItems()
     {
         return equiptItems;
     }
@@ -560,7 +562,7 @@ public class UnitFunctionality : MonoBehaviour
 
             int totalPower = GameManager.Instance.activeSkill.skillPower + GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
-            totalPower += //GameManager.Instance.randomBaseOffset*2;
+            //totalPower += //GameManager.Instance.randomBaseOffset*2;
             totalPower = GameManager.Instance.RandomisePower(totalPower);
 
             if (GameManager.Instance.activeSkill.skillPower == 0)
@@ -583,7 +585,7 @@ public class UnitFunctionality : MonoBehaviour
             StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, skillAttackCount, effectCount));
 
             /*
-            // End turn
+            // End turn 
             GameManager.Instance.ToggleEndTurnButton(false);
             GameManager.Instance.UpdateTurnOrder();
             yield break;
@@ -1588,16 +1590,60 @@ public class UnitFunctionality : MonoBehaviour
     {
         curAttackCharge = 0;
 
+        attackChargeTurnStart = 0;
+
         UpdateUnitAttackBarVisual();
+        UpdateUnitAttackBarNextVisual();
+    }
+
+    public void ResetAttackChargeTurnStart()
+    {
+        attackChargeTurnStart = 0;
     }
     public void UpdateUnitCurAttackCharge()
     {
+        ResetAttackChargeTurnStart();
+
+        CalculateUnitAttackChargeTurnStart();
+
+        // If unit is player, give more exp the lower allies there are on team
+        if (curUnitType == UnitType.PLAYER)
+        {
+            if (GameManager.Instance.activeRoomAllies.Count == 1)
+                attackChargeTurnStart *= 7;
+            else if (GameManager.Instance.activeRoomAllies.Count == 2)
+                attackChargeTurnStart *= 5;
+            else if (GameManager.Instance.activeRoomAllies.Count == 3)
+                attackChargeTurnStart *= 2;
+        }
+        // If unit is enemy, give more exp the lower allies there are on team
+        else
+        {
+            if (GameManager.Instance.activeRoomEnemies.Count == 1)
+                attackChargeTurnStart *= 7;
+            else if (GameManager.Instance.activeRoomEnemies.Count == 2)
+                attackChargeTurnStart *= 6;
+            else if (GameManager.Instance.activeRoomEnemies.Count == 3)
+                attackChargeTurnStart *= 5;
+            else if (GameManager.Instance.activeRoomEnemies.Count == 4)
+                attackChargeTurnStart *= 4;
+            else if (GameManager.Instance.activeRoomEnemies.Count == 5)
+                attackChargeTurnStart *= 3;
+            else if (GameManager.Instance.activeRoomEnemies.Count == 6)
+                attackChargeTurnStart *= 2;
+        }
+
+        attackChargeTurnStart /= 3;
+
+        //Debug.Log(GetUnitName() + " 's attack charge = " + attackChargeTurnStart);
+        
         curAttackCharge += attackChargeTurnStart;
 
         if (curAttackCharge > 100)
             curAttackCharge = 100;
 
         UpdateUnitAttackBarVisual();
+        UpdateUnitAttackBarNextVisual();
     }
 
     void UpdateUnitAttackBarVisual()
@@ -1606,6 +1652,12 @@ public class UnitFunctionality : MonoBehaviour
 
         unitAttackBar.fillAmount = (float)curAttackCharge / 100f;
     }
+    void UpdateUnitAttackBarNextVisual()
+    {
+        //ToggleUnitAttackBar(true);
+
+        unitAttackBarNext.fillAmount = unitAttackBar.fillAmount + ((float)attackChargeTurnStart / 100f);
+    }
 
     public void ToggleUnitHealthBar(bool toggle)
     {
@@ -1613,6 +1665,14 @@ public class UnitFunctionality : MonoBehaviour
             healthBarUIElement.UpdateAlpha(1);
         else
             healthBarUIElement.UpdateAlpha(0);  
+    }
+
+    public void ToggleActionNextBar(bool toggle)
+    {
+        if (toggle)
+            unitAttackBarNextUIElement.UpdateAlpha(1);
+        else
+            unitAttackBarNextUIElement.UpdateAlpha(0);
     }
 
     public void ToggleUnitAttackBar(bool toggle)

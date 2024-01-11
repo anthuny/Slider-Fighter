@@ -48,7 +48,7 @@ public class MenuUnitDisplay : MonoBehaviour
         else
             unitLevel.UpdateAlpha(0);
 
-        unitLevel.UpdateContentSubText(newLevel.ToString());
+        unitLevel.UpdateContentSubTextTMP(newLevel.ToString());
     }
 
     public void UpdateUnitDisplay(string unitName)

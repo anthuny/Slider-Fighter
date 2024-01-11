@@ -18,9 +18,9 @@ public class RoomMapIcon : MonoBehaviour
     public UIElement roomSelectionImage;
     [SerializeField] private Button roomButton;
     [SerializeField] private ButtonRoom buttonRoom;
-    [SerializeField] private List<Item> shopRoomCombatItems = new List<Item>();
-    [SerializeField] private List<Item> shopRoomHealthItems = new List<Item>();
-    [SerializeField] private List<Item> purchasedItems = new List<Item>();
+    [SerializeField] private List<ItemPiece> shopRoomCombatItems = new List<ItemPiece>();
+    [SerializeField] private List<ItemPiece> shopRoomHealthItems = new List<ItemPiece>();
+    [SerializeField] private List<ItemPiece> purchasedItems = new List<ItemPiece>();
 
     public bool isHidden;
     public bool isSelected;
@@ -50,12 +50,12 @@ public class RoomMapIcon : MonoBehaviour
         buttonRoom.room = this;
     }
 
-    public void AddPurchasedItems(Item item)
+    public void AddPurchasedItems(ItemPiece item)
     {
         purchasedItems.Add(item);
     }
 
-    public List<Item> GetPurchasedItems()
+    public List<ItemPiece> GetPurchasedItems()
     {
         return purchasedItems;
     }
@@ -66,7 +66,7 @@ public class RoomMapIcon : MonoBehaviour
     }
 
     // Combat Items
-    public void AddShopRoomCombatItems(Item item)
+    public void AddShopRoomCombatItems(ItemPiece item)
     {
         shopRoomCombatItems.Add(item);
     }
@@ -76,7 +76,7 @@ public class RoomMapIcon : MonoBehaviour
         shopRoomCombatItems.Clear();
     }
 
-    public List<Item> GetShopRoomCombatItems()
+    public List<ItemPiece> GetShopRoomCombatItems()
     {
         return shopRoomCombatItems;
     }
@@ -105,7 +105,7 @@ public class RoomMapIcon : MonoBehaviour
         return count;
     }
     // Health Items
-    public void AddShopRoomHealthItems(Item item)
+    public void AddShopRoomHealthItems(ItemPiece item)
     {
         shopRoomHealthItems.Add(item);
     }
@@ -115,7 +115,7 @@ public class RoomMapIcon : MonoBehaviour
         shopRoomHealthItems.Clear();
     }
 
-    public List<Item> GetShopRoomHealthItems()
+    public List<ItemPiece> GetShopRoomHealthItems()
     {
         return shopRoomHealthItems;
     }

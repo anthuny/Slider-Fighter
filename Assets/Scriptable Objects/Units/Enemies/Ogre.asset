@@ -20,14 +20,14 @@ MonoBehaviour:
   unitName: Ogre
   startingSpeed: 15
   startingDefense: 5
-  startingPower: 2
+  startingPower: 20
   startingHealingPower: 1
   startingMaxHealth: 250
   speedIncPerLv: 1
   powerIncPerLv: 2
   healingPowerIncPerLv: 1
   defenseIncPerLv: 2
-  maxHealthIncPerLv: 150
+  maxHealthIncPerLv: 75
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1

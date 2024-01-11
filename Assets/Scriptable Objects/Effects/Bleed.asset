@@ -16,7 +16,7 @@ MonoBehaviour:
   curEffectType: 0
   curEffectName: 0
   effectName: BLEED
-  effectDesc: Recieve 10% maximum health damage at the start of turn.
+  effectDesc: Recieve 5% maximum health damage at the start of turn.
   effectIcon: {fileID: 21300000, guid: 7aea869f20adade498a543cd83d6330d, type: 3}
-  powerPercent: 10
+  powerPercent: 5
   powerAmp: 0

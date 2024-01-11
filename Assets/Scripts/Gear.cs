@@ -48,11 +48,11 @@ public class Gear : MonoBehaviour
         if (allowGearDefaultClear)
         {
             if (GetGearOwnedBy() == GearOwnedBy.MAIN)
-                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(this, true, false, false);
+                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(this, null, true, false, false);
             else if (GetGearOwnedBy() == GearOwnedBy.SECOND)
-                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(this, false, true, false);
+                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(this, null, false, true, false);
             else if (GetGearOwnedBy() == GearOwnedBy.THIRD)
-                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(this, false, false, true);
+                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(this, null, false, false, true);
         }
         else
         {

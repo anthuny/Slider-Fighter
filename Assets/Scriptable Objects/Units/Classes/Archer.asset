@@ -20,14 +20,14 @@ MonoBehaviour:
   unitName: Archer
   startingSpeed: 20
   startingDefense: 5
-  startingPower: 3
+  startingPower: 25
   startingHealingPower: 0
   startingMaxHealth: 650
-  speedIncPerLv: 2
+  speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 0.25
   defenseIncPerLv: 1
-  maxHealthIncPerLv: 100
+  maxHealthIncPerLv: 50
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1

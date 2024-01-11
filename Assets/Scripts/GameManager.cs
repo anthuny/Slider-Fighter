@@ -258,17 +258,22 @@ public class GameManager : MonoBehaviour
                 activeRoomEnemies[i].UpdateUnitLevelColour(chaosDiffEnemyLvColour);
                 continue;
             }
-            else if (levelDiff >= mediumdiffEnemyLvDifference && levelDiff < harddiffEnemyLvDifference)
+            else if (levelDiff >= mediumdiffEnemyLvDifference)
             {
                 activeRoomEnemies[i].UpdateUnitLevelColour(hardDiffEnemyLvColour);
                 continue;
             }
-            else if (levelDiff >= easydiffEnemyLvDifference && levelDiff < mediumdiffEnemyLvDifference)
+            else if (levelDiff >= easydiffEnemyLvDifference)
             {
                 activeRoomEnemies[i].UpdateUnitLevelColour(mediumDiffEnemyLvColour);
                 continue;
             }
-            else if (levelDiff <= easydiffEnemyLvDifference)
+            else if (levelDiff < easydiffEnemyLvDifference)
+            {
+                activeRoomEnemies[i].UpdateUnitLevelColour(easyDiffEnemyLvColour);
+                continue;
+            }
+            else
             {
                 activeRoomEnemies[i].UpdateUnitLevelColour(easyDiffEnemyLvColour);
                 continue;
@@ -629,6 +634,7 @@ public class GameManager : MonoBehaviour
                     activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(true);
                     activeRoomAllUnitFunctionalitys[i].ToggleUnitHealthBar(true);
                     activeRoomAllUnitFunctionalitys[i].ToggleUnitAttackBar(true);
+                    activeRoomAllUnitFunctionalitys[i].ToggleActionNextBar(true);
                 }
             }
         }
@@ -827,6 +833,10 @@ public class GameManager : MonoBehaviour
         // Stop combat music
         AudioManager.Instance.StopCombatMusic();
 
+        if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO && RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.BOSS)
+        {
+            RoomManager.Instance.IncrementDefaultRoomsCleared();
+        }
 
         roomDefeated = true;
 
@@ -837,7 +847,7 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(SetupRoomPostBattle(playerWon));
             UpdateAllAlliesPosition(true);
-            //ToggleSkillVisibility(false);
+            ToggleSkillVisibility(false);
 
             RoomManager.Instance.ToggleInteractable(false);
 
@@ -851,7 +861,32 @@ public class GameManager : MonoBehaviour
         else
         {
             //ToggleSkillVisibility(false);
-            StartCoroutine(HeroRetrievalScene());
+
+            // If player has 3 allies already, do not offer a 4th, go to post battle (TEMP SOLUTION) TODO: Make prompt to swap
+            if (activeTeam.Count < 3)
+            {
+                StartCoroutine(HeroRetrievalScene());
+            }
+            else
+            {
+                StartCoroutine(SetupRoomPostBattle(playerWon));
+                UpdateAllAlliesPosition(true);
+                ToggleSkillVisibility(false);
+
+                RoomManager.Instance.ToggleInteractable(false);
+
+                // Enable unit level image for post combat
+                for (int i = 0; i < activeRoomAllies.Count; i++)
+                {
+                    activeRoomAllies[i].ToggleUnitLevelImage(true);
+                }
+            }
+        }
+
+        if (!playerWon)
+        {
+            // Disable post battle to map button for next post battle scene
+            StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
         }
 
         // Ads
@@ -904,8 +939,6 @@ public class GameManager : MonoBehaviour
 
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
-
-        postBattleUI.TogglePostBattleConditionText(playerWon);   // Update battle condition text
 
         yield return new WaitForSeconds(.3f);
 
@@ -1105,17 +1138,29 @@ public class GameManager : MonoBehaviour
 
             FloorData floor = RoomManager.Instance.GetActiveFloor();
 
-            int enemySpawnFirst = Random.Range(floor.minRoomValue, floor.maxRoomValue + 2);
-            int enemySpawnValue = (enemySpawnFirst * (RoomManager.Instance.GetFloorCount() * ((RoomManager.Instance.GetFloorCount())))) + 1;
+            int enemySpawnFirst = Random.Range(floor.minRoomValue, floor.maxRoomValue + 1);
+            int enemySpawnValue = (enemySpawnFirst * (RoomManager.Instance.GetFloorCount()*2));
+
+            /*
+            if (activeTeam.Count != 1)
+                enemySpawnValue *= (activeTeam.Count*3);
+            */
+
+            enemySpawnValue *= (RoomManager.Instance.GetFloorCount() * RoomManager.Instance.GetFloorCount());
 
             // If room is hero, spawn additional enemies
             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
             {
-                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 5);
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 2);
             }
             else if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
             {
-                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 10);
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * RoomManager.Instance.GetFloorCount() + 8);
+            }
+            // If room is just a regular enemy room, increment enemyspawnvalue by rooms cleared
+            else
+            {
+                enemySpawnValue += RoomManager.Instance.GetRoomsCleared();
             }
 
             // Spawn enemy type
@@ -1249,6 +1294,7 @@ public class GameManager : MonoBehaviour
                 {
                     // Disable unit level image in team setup tab
                     activeRoomAllUnitFunctionalitys[x].ToggleUnitLevelImage(true);
+                    //activeRoomAllies[i].ToggleActionNextBar(true);
                 }
                 // If unit in room is an ENEMY
                 else
@@ -1295,12 +1341,11 @@ public class GameManager : MonoBehaviour
 
                 // Update unit energy bar on
                 UpdateActiveUnitStatBar(activeRoomAllUnitFunctionalitys[x], true, true);
+
                 activeRoomAllUnitFunctionalitys[x].ResetIsDead();
 
                 activeRoomAllUnitFunctionalitys[x].ToggleHideEffects(false);
-                activeRoomAllUnitFunctionalitys[x].ResetUnitCurAttackCharge();
 
-                activeRoomAllUnitFunctionalitys[x].CalculateUnitAttackChargeTurnStart();
                 activeRoomAllUnitFunctionalitys[x].UpdateUnitCurAttackCharge();
 
                 // Reset position for battle
@@ -1367,6 +1412,7 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < activeRoomAllies.Count; i++)
             {
                 UpdateActiveUnitStatBar(activeRoomAllies[i], true, false);
+                activeRoomAllies[i].ToggleActionNextBar(false);
             }
 
             playerUIElement.UpdateAlpha(0);     // Disable player UI
@@ -1419,7 +1465,7 @@ public class GameManager : MonoBehaviour
             {
                 if (unitsSelected[i].GetEffects()[y].effectName == GetActiveSkill().curSkillExtraPowerToEffect.ToString())
                 {
-                    float adjustedPower = (1f + (GetActiveSkill().percIncPower / 100f)) * power;
+                    float adjustedPower = (1f + ((float)GetActiveSkill().percIncPower / 100f)) * power;
                     return RandomisePower((int)adjustedPower);
                 }
                 else
@@ -1588,17 +1634,23 @@ public class GameManager : MonoBehaviour
             for (int x = 0; x < hitCount; x++)
             {
                 // If we've cycled through all units selected, Disable hits remaining text
-                if (x == hitCount-1)
-                    GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
+               // if (x == hitCount-1)
+                    //GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
+
 
                 // If 1 enemy is trying to target an ally, dont?
                 if (unitsSelected.Count == 0)
+                {
+                    GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
                     break;
+                }
 
                 if (unitsSelected[0] == null)
+                {
+                    GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
                     continue;
+                }
 
-                // Update hits remaining text
                 GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount - x);
 
                 // Loop through all selected units
@@ -1613,10 +1665,10 @@ public class GameManager : MonoBehaviour
                     else
                     {
                         float absPower = Mathf.Abs(originalPower);
-                        float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
-                        float newPower = absPower + tempPower;
+                        //float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
+                        float newPower = absPower;
 
-                        float newHealingPower = originalPower * GetActiveUnitFunctionality().GetHealingPowerIncPerLv();
+                        float newHealingPower = originalPower;
 
                         // If unit missed, give them 0 power output
                         if (effectHitAcc == 0)
@@ -1659,7 +1711,7 @@ public class GameManager : MonoBehaviour
                                 hasBeenLuckyHit = false;
                                 orderCount--;
                             }
-                            unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI(GetActiveUnitFunctionality().GetPowerIncPerLv() * newPower, false, true, null, blocked));
+                            unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
 
                             CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                         }
@@ -1682,7 +1734,7 @@ public class GameManager : MonoBehaviour
                         // Decrease health on targeting unit
                         if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && !blocked)
                         {
-                            float health = GetActiveUnitFunctionality().GetPowerIncPerLv() * newPower;         
+                            float health = newPower;         
                             unitsSelected[i].UpdateUnitCurHealth((int)health, true);
                         }
 
@@ -1790,7 +1842,7 @@ public class GameManager : MonoBehaviour
     private void CheckAttackForItem(UnitFunctionality unitTarget, UnitFunctionality unitCaster, int power, int xCount, int orderCount)
     {
         // If the unit has lucky dice, roll for another attack
-        List<Item> items = GetActiveUnitFunctionality().GetEquipItems();
+        List<ItemPiece> items = GetActiveUnitFunctionality().GetEquipItems();
         int count = GetActiveUnitFunctionality().GetEquipItems().Count;
 
         for (int g = 0; g < count; g++)
@@ -1799,8 +1851,8 @@ public class GameManager : MonoBehaviour
 
             power = AdjustSkillPowerTargetEffectAmp(power);
             float absPowerLucky = Mathf.Abs(power);
-            float tempPowerLucky = (unitTarget.curRecieveDamageAmp / 100f) * absPowerLucky;
-            float newPowerLucky = absPowerLucky + tempPowerLucky;
+            //float tempPowerLucky = (unitTarget.curRecieveDamageAmp / 100f) * absPowerLucky;
+            float newPowerLucky = absPowerLucky;
 
             if (items[g].itemName == "Lucky Dice")
             {
@@ -1861,6 +1913,7 @@ public class GameManager : MonoBehaviour
         {
             activeRoomAllies[i].ToggleUnitHealthBar(toggle);
             activeRoomAllies[i].ToggleUnitAttackBar(toggle);
+            activeRoomAllies[i].ToggleActionNextBar(toggle);
         }
     }
     #endregion
@@ -2258,9 +2311,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
-            activeRoomAllUnitFunctionalitys[i].CalculateUnitAttackChargeTurnStart();
             activeRoomAllUnitFunctionalitys[i].UpdateUnitCurAttackCharge();
-
             //activeRoomAllUnits[i].UpdateUnitCurAttackCharge(activeRoomAllUnitFunctionalitys[i].GetCurAttackCharge());
         }
     }
@@ -2725,16 +2776,15 @@ public class GameManager : MonoBehaviour
     }
     public void SelectUnit(UnitFunctionality unit)
     {
-        //Debug.Log("Get Allow Selection = " + GetAllowSelection());
 
-        if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.HERO)
+        // Ensure units cant change their selection before asd after attack
+        // Allows hero rooms to still allow selection if room is defeated
+        if (roomDefeated)
         {
+
         }
-        else
-        {
-            if (!GetAllowSelection())
-                return;
-        }
+        else if (!GetAllowSelection() || !GetSelectingUnitsAllowed())
+            return;
 
         // If current room is a shop
         if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP)
@@ -2805,6 +2855,7 @@ public class GameManager : MonoBehaviour
             if (!roomDefeated)
             {
                 ToggleSelectingUnits(false);
+                ToggleAllowSelection(false);
                 PlayerAttack();
                 return;
             }

@@ -98,6 +98,11 @@ public class AudioManager : MonoBehaviour
             attackBarMusic.source.Play();
     }
 
+    public void IncAttackBarMusicSpeed()
+    {
+        //attackBarMusic.source.temp
+    }
+
     public void PauseMapMusic(bool toggle)
     {
         if (toggle)

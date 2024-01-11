@@ -151,7 +151,7 @@ public class ButtonFunctionality : MonoBehaviour
     public void ButtonOpenMap()
     {
         // If owned gear is opened, do not allow map button to be selected
-        if (OwnedGearInven.Instance.GetOwnedGearOpened())
+        if (OwnedLootInven.Instance.GetOwnedLootOpened())
             return;
 
         // Button Click SFX
@@ -165,7 +165,6 @@ public class ButtonFunctionality : MonoBehaviour
 
         MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
-
 
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
@@ -182,8 +181,11 @@ public class ButtonFunctionality : MonoBehaviour
 
         GameManager.Instance.ToggleTeamSetup(false);
         TeamGearManager.Instance.ToggleTeamGear(false);
+        TeamItemsManager.Instance.ToggleTeamItems(false);
 
         TeamSetup.Instance.ToggleToMapButton(false);
+        TeamGearManager.Instance.ToggleToMapButton(false);
+        TeamItemsManager.Instance.ToggleToMapButton(false);
 
         // Reset room, enemes only
         GameManager.Instance.ResetRoom(true);
@@ -243,27 +245,7 @@ public class ButtonFunctionality : MonoBehaviour
         TeamSetup.Instance.ChangeStatPage(false);
     }
 
-    public void ButtonGearTab()
-    {
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
 
-        TeamGearManager.Instance.playerInGearTab = true;
-        TeamSetup.Instance.playerInTeamTab = false;
-
-        TeamSetup.Instance.ToggleToMapButton(false);
-        TeamGearManager.Instance.ToggleTeamGear(true);
-    }
-
-    // From gear tab to team setup tab
-    public void ButtonTeamSetupTab()
-    {
-        TeamSetup.Instance.playerInTeamTab = true;
-        TeamGearManager.Instance.playerInGearTab = false;
-
-        TeamGearManager.Instance.ToggleTeamGear(false);
-        ButtonTeamPage();
-    }
 
     public void ButtonSelectItem()
     {
@@ -302,7 +284,7 @@ public class ButtonFunctionality : MonoBehaviour
         // If owned gear tab is opened, do not allow selecting a new gear
         if (gear != null)
         {
-            if (OwnedGearInven.Instance.GetOwnedGearOpened() && gear.GetCurGearStatis() == Gear.GearStatis.UNOWNED)
+            if (OwnedLootInven.Instance.GetOwnedLootOpened() && gear.GetCurGearStatis() == Gear.GearStatis.UNOWNED)
                 return;
 
             // If player selects an owned gear piece (todo: need to make this functional
@@ -317,11 +299,11 @@ public class ButtonFunctionality : MonoBehaviour
         // If the BG is selected
         if (curMasteryType == MasteryType.BG)
         {
-            OwnedGearInven.Instance.ToggleOwnedGearDisplay(false);
+            OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
             return;
         }
 
-        OwnedGearInven.Instance.ClearOwnedItemsSlotsSelection();
+        OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
@@ -339,9 +321,9 @@ public class ButtonFunctionality : MonoBehaviour
         }
 
         // Display inven
-        if (gear.isEmpty)
+        if (gear.isEmpty && gear.curGearStatis == Gear.GearStatis.DEFAULT)
         {
-            OwnedGearInven.Instance.ToggleOwnedGearDisplay(true);
+            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
             //OwnedGearInven.Instance.ToggleOwnedGearEquipButton(true);
         }
     }
@@ -359,6 +341,23 @@ public class ButtonFunctionality : MonoBehaviour
         }
     }
 
+    public void SelectBaseItem()
+    {
+        OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        TeamItemsManager.Instance.ItemSelection(gear, true);
+        
+        // Display inven
+        if (gear.isEmpty)
+        {
+            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
+            //OwnedGearInven.Instance.ToggleOwnedGearEquipButton(true);
+        }
+    }
+
     public void DisplayOwnedGear()
     {
         // Button Click SFX
@@ -368,8 +367,10 @@ public class ButtonFunctionality : MonoBehaviour
         {
             TeamGearManager.Instance.GearSelection(gear);
 
-            // Display inven
-            OwnedGearInven.Instance.ToggleOwnedGearDisplay(true);
+            if (TeamGearManager.Instance.playerInGearTab)
+                OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
+            else
+                OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
         }
     }
 
@@ -378,7 +379,7 @@ public class ButtonFunctionality : MonoBehaviour
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        OwnedGearInven.Instance.ToggleOwnedGearDisplay(false);
+        OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
     }
 
     public void GearUnEquip()
@@ -511,7 +512,7 @@ public class ButtonFunctionality : MonoBehaviour
         shopItem = transform.parent.parent.GetComponent<ShopItem>();
 
         // Combat Item
-        List<Item> shopCombatItems = new List<Item>();
+        List<ItemPiece> shopCombatItems = new List<ItemPiece>();
         shopCombatItems = ShopManager.Instance.GetShopCombatItems();
         int shopCombatCount = shopCombatItems.Count;
 
@@ -527,7 +528,7 @@ public class ButtonFunctionality : MonoBehaviour
         }
 
         // Health Item
-        List<Item> shopHealthItems = new List<Item>();
+        List<ItemPiece> shopHealthItems = new List<ItemPiece>();
         shopHealthItems = ShopManager.Instance.GetShopHealthItems();
         int shopItemCount = shopHealthItems.Count;
 
@@ -548,13 +549,11 @@ public class ButtonFunctionality : MonoBehaviour
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        TeamGearManager.Instance.playerInGearTab = true;
-        TeamSetup.Instance.playerInTeamTab = false;
-
+        TeamItemsManager.Instance.playerInItemTab = false;
+        TeamGearManager.Instance.playerInGearTab = false;
+        TeamSetup.Instance.playerInTeamTab = true;
 
         TeamSetup.Instance.ResetStatPageCount();
-        TeamSetup.Instance.playerInTeamTab = false;
-        //TeamGearManager.Instance.playerInGearTab = true;
 
         // Disable map UI
         GameManager.Instance.ToggleMap(false);
@@ -563,7 +562,13 @@ public class ButtonFunctionality : MonoBehaviour
         //GameManager.Instance.ToggleTeamSetup(true);
         TeamGearManager.Instance.ToggleTeamGear(true);
 
-        //GameManager.Instance.UpdateAllyVisibility(true, true);
+        TeamSetup.Instance.ToggleToMapButton(false);
+        TeamGearManager.Instance.ToggleToMapButton(true);
+        TeamItemsManager.Instance.ToggleToMapButton(false);
+        
+        // Toggle unequip button
+        TeamItemsManager.Instance.ToggleUnequipButton(false);
+        TeamGearManager.Instance.ToggleUnequipButton(true);
 
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
 
@@ -575,24 +580,32 @@ public class ButtonFunctionality : MonoBehaviour
         //TeamSetup.Instance.ToggleToMapButton(true);
     }
 
+    // Gear to Team Setup
     public void ButtonTeamPageFromGear()
     {
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
+        // Disable Owned Gear Display
+        OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
+
+        TeamItemsManager.Instance.playerInItemTab = false;
         TeamGearManager.Instance.playerInGearTab = false;
         TeamSetup.Instance.playerInTeamTab = true;
 
-
-        TeamSetup.Instance.ResetStatPageCount();
-        TeamSetup.Instance.playerInTeamTab = true;
+        //TeamSetup.Instance.ResetStatPageCount();
 
         GameManager.Instance.ToggleTeamSetup(true);
         TeamGearManager.Instance.ToggleTeamGear(false);
+        TeamItemsManager.Instance.ToggleTeamItems(false);
 
-        GameManager.Instance.UpdateAllyVisibility(true, true);
+        TeamSetup.Instance.ToggleToMapButton(true);
+        TeamGearManager.Instance.ToggleToMapButton(false);
+        TeamItemsManager.Instance.ToggleToMapButton(false);
 
-        MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
+        // Toggle unequip button
+        TeamItemsManager.Instance.ToggleUnequipButton(false);
+        TeamGearManager.Instance.ToggleUnequipButton(false);
 
         GameManager.Instance.ToggleSkillVisibility(false);
 
@@ -600,7 +613,52 @@ public class ButtonFunctionality : MonoBehaviour
 
         // Enable To Map Button
         GameManager.Instance.toMapButton.UpdateAlpha(1);
+    }
 
+    // Team Setup to Item Tab
+    public void ButtonGearTab()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        TeamSetup.Instance.playerInTeamTab = false;
+        TeamItemsManager.Instance.playerInItemTab = true;
+
+        GameManager.Instance.ToggleTeamSetup(false);
+        TeamItemsManager.Instance.ToggleTeamItems(true);
+
+        TeamSetup.Instance.ToggleToMapButton(false);
+        TeamGearManager.Instance.ToggleToMapButton(false);
+        TeamItemsManager.Instance.ToggleToMapButton(true);
+
+        // Toggle unequip button
+        TeamItemsManager.Instance.ToggleUnequipButton(true);
+        TeamGearManager.Instance.ToggleUnequipButton(false);
+    }
+
+
+    // Items to Gear
+    public void ButtonTeamSetupTab()
+    {
+        // Disable Owned Gear Display
+        OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
+
+        TeamItemsManager.Instance.playerInItemTab = false;
+        TeamSetup.Instance.playerInTeamTab = true;
+        TeamGearManager.Instance.playerInGearTab = false;
+
+        TeamItemsManager.Instance.ToggleTeamItems(false);
+        GameManager.Instance.ToggleTeamSetup(true);
+
+        TeamSetup.Instance.ToggleToMapButton(false);
+        TeamGearManager.Instance.ToggleToMapButton(true);
+        TeamItemsManager.Instance.ToggleToMapButton(false);
+
+        // Toggle unequip button
+        TeamItemsManager.Instance.ToggleUnequipButton(false);
+        TeamGearManager.Instance.ToggleUnequipButton(true);
+
+        ButtonTeamPage();
     }
 
     public void MasteryChangeUnit()
@@ -624,6 +682,9 @@ public class ButtonFunctionality : MonoBehaviour
 
         // Map open SFX
         AudioManager.Instance.Play("Map_Open");
+
+        // Disable post battle to map button for next post battle scene
+        StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
         // Toggle Map back on
         GameManager.Instance.ToggleMap(true, false, false, false);

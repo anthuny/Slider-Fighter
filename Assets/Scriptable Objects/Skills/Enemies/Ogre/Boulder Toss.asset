@@ -20,7 +20,7 @@ MonoBehaviour:
   skillSprite: {fileID: 0}
   skillName: BOULDER TOSS
   skillDescr: 
-  skillPower: 2
+  skillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 3
   projectileSpeed: 12

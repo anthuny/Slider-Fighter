@@ -53,7 +53,7 @@ public class CharacterCarasel : MonoBehaviour
             ResetSave();
         }
 
-        ResetMenu();
+        //ResetMenu();
     }
 
     public void ResetMenu()

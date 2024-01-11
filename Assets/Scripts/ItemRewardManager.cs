@@ -46,15 +46,15 @@ public class ItemRewardManager : MonoBehaviour
     [SerializeField] private int itemLegendaryPerc;
 
     [Space(5)]
-    [SerializeField] private List<Item> allItems = new List<Item>();
+    [SerializeField] private List<ItemPiece> allItems = new List<ItemPiece>();
     [Space(5)]
-    public List<Item> allItemCommon = new List<Item>();
+    public List<ItemPiece> allItemCommon = new List<ItemPiece>();
     [Space(3)]
-    public List<Item> allItemRare = new List<Item>();
+    public List<ItemPiece> allItemRare = new List<ItemPiece>();
     [Space(3)]
-    public List<Item> allItemEpic = new List<Item>();
+    public List<ItemPiece> allItemEpic = new List<ItemPiece>();
     [Space(3)]
-    public List<Item> allItemLegendary = new List<Item>();
+    public List<ItemPiece> allItemLegendary = new List<ItemPiece>();
     
     [HideInInspector]
     public UIElement uiElement;
@@ -62,7 +62,7 @@ public class ItemRewardManager : MonoBehaviour
     [HideInInspector]
     public bool itemSelected;
     public string selectedItemName;
-    public Item selectedItem;
+    public ItemPiece selectedItem;
     public List<UIElement> offeredItemsUI = new List<UIElement>();
 
     private void Awake()
@@ -83,13 +83,13 @@ public class ItemRewardManager : MonoBehaviour
     {
         for (int i = 0; i < allItems.Count; i++)
         {
-            if (allItems[i].curRarity == Item.Rarity.COMMON)
+            if (allItems[i].curRarity == ItemPiece.Rarity.COMMON)
                 allItemCommon.Add(allItems[i]);
-            else if (allItems[i].curRarity == Item.Rarity.RARE)
+            else if (allItems[i].curRarity == ItemPiece.Rarity.RARE)
                 allItemRare.Add(allItems[i]);
-            else if (allItems[i].curRarity == Item.Rarity.EPIC)
+            else if (allItems[i].curRarity == ItemPiece.Rarity.EPIC)
                 allItemEpic.Add(allItems[i]);
-            else if (allItems[i].curRarity == Item.Rarity.LEGENDARY)
+            else if (allItems[i].curRarity == ItemPiece.Rarity.LEGENDARY)
                 allItemLegendary.Add(allItems[i]);
         }
     }
@@ -148,7 +148,7 @@ public class ItemRewardManager : MonoBehaviour
         }
     }
 
-    Item GetItem(string name)
+    ItemPiece GetItem(string name)
     {
         for (int i = 0; i < allItems.Count; i++)
         {
@@ -203,7 +203,7 @@ public class ItemRewardManager : MonoBehaviour
         else
             count = 3;
 
-        List<Item> offeredItemsTemp = new List<Item>();
+        List<ItemPiece> offeredItemsTemp = new List<ItemPiece>();
 
         // Create as many items as needed
         for (int i = 0; i < count; i++)

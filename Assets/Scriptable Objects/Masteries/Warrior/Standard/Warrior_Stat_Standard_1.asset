@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statIcon: {fileID: 21300000, guid: 3f6f62c001d44cd42a0eecfdcc2d3128, type: 3}
   statName: HP
-  statDesc: +5% maximum health
-  statMaxAmount: 10
+  statDesc: +1.5% maximum health
+  statMaxAmount: 30

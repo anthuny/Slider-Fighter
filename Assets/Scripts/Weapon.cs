@@ -449,8 +449,6 @@ public class Weapon : MonoBehaviour
 
             yield return new WaitForSeconds(timePostHit);
 
-            GameManager.Instance.ToggleAllowSelection(true);
-
             GameManager.Instance.SetupPlayerPostHitUI();
 
             GameManager.Instance.ResetButton(GameManager.Instance.weaponBackButton);    // Enable weapon back button only when damage has gone through
@@ -500,7 +498,7 @@ public class Weapon : MonoBehaviour
         else if(curHitAreaType == WeaponHitArea.HitAreaType.BAD)
             calculatedPower = badMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         */
-        calculatedPower = (GameManager.Instance.GetActiveSkill().skillPower + currentPower) * 3;
+        calculatedPower = (GameManager.Instance.GetActiveSkill().skillPower + currentPower);
         //calculatedPower += GameManager.Instance.randomBaseOffset*2;
         calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
 

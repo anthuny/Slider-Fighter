@@ -20,14 +20,14 @@ MonoBehaviour:
   unitName: Pixie
   startingSpeed: 22
   startingDefense: 1
-  startingPower: 2
+  startingPower: 12
   startingHealingPower: 2
   startingMaxHealth: 150
   speedIncPerLv: 2
-  powerIncPerLv: 1
+  powerIncPerLv: 2
   healingPowerIncPerLv: 1.5
   defenseIncPerLv: 0.25
-  maxHealthIncPerLv: 100
+  maxHealthIncPerLv: 50
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 2

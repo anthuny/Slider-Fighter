@@ -10,6 +10,7 @@ public class RoomManager : MonoBehaviour
     public int floorMaxShopRoomCount;
     [SerializeField] private float floorDifficultyRandomAmount;
     [SerializeField] private RoomMapIcon activeRoom;
+    private int enemyRoomsCleared;
 
     private CanvasGroup cg;
 
@@ -44,6 +45,8 @@ public class RoomManager : MonoBehaviour
     public void ResetFloorCount()
     {
         floorCount = 1;
+
+        ResetRoomsCleared();
     }
 
     public void SelectFloor()
@@ -61,7 +64,22 @@ public class RoomManager : MonoBehaviour
         IncrementFloorCount();
         SelectFloor();
 
-        IncreaseMaxRoomCount();
+        //IncreaseMaxRoomCount();
+    }
+
+    public void IncrementDefaultRoomsCleared()
+    {
+        enemyRoomsCleared++;
+    }
+
+    public void ResetRoomsCleared()
+    {
+        enemyRoomsCleared = 0;
+    }
+
+    public int GetRoomsCleared()
+    {
+        return enemyRoomsCleared;
     }
 
     public void IncreaseMaxRoomCount()

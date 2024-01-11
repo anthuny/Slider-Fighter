@@ -92,7 +92,7 @@ public class ShopItem : MonoBehaviour
                     // Disable exit button until player has selected ally with item
                     MapManager.Instance.exitShopRoom.UpdateAlpha(0);
 
-                    Item item = ShopManager.Instance.GetShopCombatItems()[i];
+                    ItemPiece item = ShopManager.Instance.GetShopCombatItems()[i];
                     ShopManager.Instance.GetActiveRoom().AddPurchasedItems(item);
                     ShopManager.Instance.UpdateUnAssignedItem(item);
                     // Prompt player on who to give item
@@ -120,7 +120,7 @@ public class ShopItem : MonoBehaviour
                     // Disable exit button until player has selected ally with item
                     MapManager.Instance.exitShopRoom.UpdateAlpha(0);
 
-                    Item item = ShopManager.Instance.GetShopHealthItems()[i];
+                    ItemPiece item = ShopManager.Instance.GetShopHealthItems()[i];
                     ShopManager.Instance.GetActiveRoom().AddPurchasedItems(item);
                     ShopManager.Instance.UpdateUnAssignedItem(item);
                     // Prompt player on who to give item

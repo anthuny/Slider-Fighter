@@ -13,8 +13,8 @@ public class ShopManager : MonoBehaviour
 
     [SerializeField] private int shopMaxCombatItems = 3;
     [SerializeField] private int shopMaxHealthItems = 3;
-    [SerializeField] private List<Item> shopHealthItems = new List<Item>();
-    [SerializeField] private List<Item> shopCombatItems = new List<Item>();
+    [SerializeField] private List<ItemPiece> shopHealthItems = new List<ItemPiece>();
+    [SerializeField] private List<ItemPiece> shopCombatItems = new List<ItemPiece>();
 
     [SerializeField] private UIElement itemsParent;
     [SerializeField] private UIElement randomiser;
@@ -33,7 +33,7 @@ public class ShopManager : MonoBehaviour
     public UIElement shop;
     public UIElement shopSelectAllyPrompt;
     public bool selectAlly;
-    [SerializeField] private Item unassigedItem;
+    [SerializeField] private ItemPiece unassigedItem;
     [SerializeField] private ButtonFunctionality buttonExitShop;
     public Transform unitsPositionShopTrans;
     public UIElement totalGoldText;
@@ -146,12 +146,12 @@ public class ShopManager : MonoBehaviour
         totalGoldText.UpdateContentText(playerGold.ToString());
         MapManager.Instance.mapOverlay.UpdatePlayerGoldText(playerGold.ToString());
     }
-    public void UpdateUnAssignedItem(Item item)
+    public void UpdateUnAssignedItem(ItemPiece item)
     {
         unassigedItem = item;
     }
 
-    public Item GetUnassignedItem()
+    public ItemPiece GetUnassignedItem()
     {
         return unassigedItem;
     }
@@ -174,16 +174,16 @@ public class ShopManager : MonoBehaviour
         activeRoom = room;
     }
 
-    public List<Item> GetShopCombatItems()
+    public List<ItemPiece> GetShopCombatItems()
     {
         return shopCombatItems;
     }
-    public List<Item> GetShopHealthItems()
+    public List<ItemPiece> GetShopHealthItems()
     {
         return shopHealthItems;
     }
 
-    Item GetRandomShopItem(bool combatItem)
+    ItemPiece GetRandomShopItem(bool combatItem)
     {
         int rand = 0;
         if (combatItem)
@@ -208,15 +208,15 @@ public class ShopManager : MonoBehaviour
         ToggleRandomiserButton(toggle);
     }
 
-    List<Item> ChooseItems(bool combatItem)
+    List<ItemPiece> ChooseItems(bool combatItem)
     {
-        List<Item> items = new List<Item>();
+        List<ItemPiece> items = new List<ItemPiece>();
 
         if (combatItem)
         {
             for (int i = 0; i < shopCombatItems.Count; i++)
             {
-                Item item = GetRandomShopItem(combatItem);
+                ItemPiece item = GetRandomShopItem(combatItem);
                 if (items.Contains(item))
                 {
                     if (i != 0)
@@ -230,7 +230,7 @@ public class ShopManager : MonoBehaviour
         {
             for (int n = 0; n < shopHealthItems.Count; n++)
             {
-                Item item = GetRandomShopItem(combatItem);
+                ItemPiece item = GetRandomShopItem(combatItem);
                 if (items.Contains(item))
                 {
                     if (n != 0)
@@ -325,7 +325,7 @@ public class ShopManager : MonoBehaviour
 
         ShopItem shopItem = null;
 
-        Item itemCombat = null;
+        ItemPiece itemCombat = null;
 
         // Spawn Combat Items
         for (int i = 0; i < shopMaxCombatItems; i++)
@@ -378,7 +378,7 @@ public class ShopManager : MonoBehaviour
                 activeRoom.AddShopRoomCombatItems(itemCombat);
         }
 
-        Item itemHealth = null;
+        ItemPiece itemHealth = null;
 
         // Spawn Health Items
         for (int y = 0; y < shopMaxHealthItems; y++)

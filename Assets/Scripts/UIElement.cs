@@ -25,6 +25,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private TextMeshProUGUI contentSubTextTMP;
     [SerializeField] private CanvasGroup buttonCG;
     [SerializeField] private CanvasGroup button2CG;
+    [SerializeField] private CanvasGroup button3CG;
 
     [SerializeField] private bool startHidden;
 
@@ -271,6 +272,9 @@ public class UIElement : MonoBehaviour
 
         if (text)
         {
+            if (contentText == null)
+                return;
+
             ResetAnimateScaleText();
 
             if (doScalePunch)
@@ -354,6 +358,10 @@ public class UIElement : MonoBehaviour
         contentSubTextTMP.color = colour;
     }
 
+    public void UpdateContentSubTextTMP(string text)
+    {
+        contentSubTextTMP.text = text;
+    }
     public void ToggleContentSubTextTMP(bool toggle)
     {
         if (toggle)
@@ -431,21 +439,41 @@ public class UIElement : MonoBehaviour
 
         buttonCG.interactable = toggle;
         buttonCG.blocksRaycasts = toggle;
+
+        buttonCG.GetComponent<Button>().interactable = toggle;
     }
 
-    public void ToggleButton2(bool toggle)
+    public void ToggleButton2(bool toggle, bool bypass = false)
     {
-        /*
-        if (toggle)
-            button2CG.alpha = 1;
-        else
-            button2CG.alpha = 0;
-        */
+        if (bypass)
+        {
+            if (toggle)
+                button2CG.alpha = 1;
+            else
+                button2CG.alpha = 0;
+        }
 
         button2CG.interactable = toggle;
         button2CG.blocksRaycasts = toggle;
 
         button2CG.GetComponent<Button>().interactable = toggle; 
+    }
+
+    public void ToggleButton3(bool toggle, bool bypass = false)
+    {
+        if (bypass)
+        {
+            if (toggle)
+                button3CG.alpha = 1;
+            else
+                button3CG.alpha = 0;
+        }
+
+        button3CG.interactable = toggle;
+        button3CG.blocksRaycasts = toggle;
+
+        if (button3CG.GetComponent<Button>())
+            button3CG.GetComponent<Button>().interactable = toggle;
     }
 
     public void DisableAlertUI()

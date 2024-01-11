@@ -9,14 +9,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b27730fa3c62164b8cfc276eb929bc6, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c98df06682a0b046bbcbdca0e2e04c7, type: 3}
   m_Name: Blood Tip Dagger
   m_EditorClassIdentifier: 
+  curRarity: 0
   itemName: Blood Tip Dagger
-  itemSprite: {fileID: 21300000, guid: 22ecdccef7e7fc740b9edb842475025e, type: 3}
-  basePrice: 50
-  purchased: 1
+  itemDesc: Add Atk Up (1) - On Turn Start. using 1 charge.
+  itemSprite: {fileID: 907232452, guid: 22ecdccef7e7fc740b9edb842475025e, type: 3}
+  effectAdded: {fileID: 11400000, guid: 4d56bebc670b2184f90cda6ba558d462, type: 2}
+  effectAddedTurnLength: 1
+  itemPower: 0
+  isBaseHealing: 0
+  isLifestealing: 0
+  isDamageNegating: 0
+  isIncWeaponHitSpace: 0
+  isVampHealing: 0
+  isReflectingEffect: 0
+  isEffectStrippingTarget: 0
+  isCleansingAll: 0
+  isCleansingRandom: 0
+  effectCleansed: {fileID: 0}
+  activeOnTurnStart: 1
+  activeOnSkillAttack: 0
+  activeOnAlliesAttacked: 0
+  activeOnEnemiesHealing: 0
+  activeOnSelfAttacked: 0
+  basePrice: 0
+  purchased: 0
   healthItem: 0
-  power: 5
-  procChance: 12
-  ac: {fileID: 9100000, guid: 51b84ec8701920c4bb831dbf06fc2c43, type: 2}
+  power: 0
+  procChance: 0
+  ac: {fileID: 0}

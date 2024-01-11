@@ -199,7 +199,10 @@ MonoBehaviour:
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -215,6 +218,7 @@ MonoBehaviour:
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  originalScaleText: 0
 --- !u!225 &736634709790740255
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -625,7 +629,10 @@ MonoBehaviour:
   contentImage: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -641,6 +648,7 @@ MonoBehaviour:
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  originalScaleText: 0
 --- !u!1 &4464626655675011679
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +762,10 @@ MonoBehaviour:
   contentImage: {fileID: 3449677605194979785}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
   startHidden: 1
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -770,6 +781,7 @@ MonoBehaviour:
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  originalScaleText: 0
 --- !u!225 &5652339567940830073
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1085,7 +1097,10 @@ MonoBehaviour:
   contentImage: {fileID: 3346300702503523991}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -1101,6 +1116,7 @@ MonoBehaviour:
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  originalScaleText: 0
 --- !u!1 &8105081523320373190
 GameObject:
   m_ObjectHideFlags: 0
@@ -1173,7 +1189,10 @@ MonoBehaviour:
   contentImage: {fileID: 3471916845073843237}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 3471916845073843233}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
   startHidden: 0
   doScalePunch: 1
   dieAfterDisplay: 0
@@ -1189,6 +1208,7 @@ MonoBehaviour:
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  originalScaleText: 0
 --- !u!114 &3719199964190919270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1201,9 +1221,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899e99bc018a248409aabd29733f766d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curGearType: 0
+  curGearType: 3
   curRarity: 0
-  curGearStatis: 0
+  curGearStatis: 3
   curGearOwnedBy: 0
   gearUI: {fileID: 873810701133512399}
   gearSelectionUI: {fileID: 7954547787694544633}
@@ -1519,7 +1539,10 @@ MonoBehaviour:
   contentImage: {fileID: 0}
   contentText: {fileID: 8540238855158572232}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -1535,3 +1558,4 @@ MonoBehaviour:
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  originalScaleText: 0

@@ -20,7 +20,7 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: GLOWING PAINS
   skillDescr: 'Heal a targeted ally for '
-  skillPower: 30
+  skillPower: 25
   skillAttackAccMult: 1
   skillAttackCount: 4
   projectileSpeed: 13

@@ -9,6 +9,7 @@ public class TeamSetup : MonoBehaviour
 
     [SerializeField] private ButtonFunctionality toMapButton;
 
+
     [SerializeField] private int masteryPointsPerLv = 2;
 
     public UIElement statsBase1;
@@ -64,9 +65,9 @@ public class TeamSetup : MonoBehaviour
         // Basic Stats
         if (statType == "HPBONUS")
         {
-            float tempAddedHealth = ((power*100) / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
+            float tempAddedHealth = (power / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
             float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth);
+            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth, true);
         }
         else if (statType == "DMGBONUS")
         {
@@ -439,23 +440,23 @@ public class TeamSetup : MonoBehaviour
 
         if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD1)
         {
-            TriggerStat("HPBONUS", 0.05f);
+            TriggerStat("HPBONUS", 1.5f);
         }
         else if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD2)
         {
-            TriggerStat("DMGBONUS", 0.05f);
+            TriggerStat("DMGBONUS", 5f);
         }
         if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD3)
         {
-            TriggerStat("HEALINGBONUS", 0.05f);
+            TriggerStat("HEALINGBONUS", 5f);
         }
         else if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD4)
         {
-            TriggerStat("SPEEDBONUS", 0.05f);
+            TriggerStat("SPEEDBONUS", 5f);
         }
         else if (GetSelectedStat().curStatType == UIElement.StatType.STATSTANDARD5)
         {
-            TriggerStat("DEFENSEBONUS", 0.5f);
+            TriggerStat("DEFENSEBONUS", 5f);
         }
 
         else if (GetSelectedStat().curStatType == UIElement.StatType.STATADVANCED1)

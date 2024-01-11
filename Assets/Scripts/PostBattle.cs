@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PostBattle : MonoBehaviour
 {
+    public static PostBattle Instance;
+
     [SerializeField] private UIElement postBattleConditionText;
     [SerializeField] private Color winConditionTextColour;
     [SerializeField] private Color loseConditionTextColour;
@@ -19,11 +21,13 @@ public class PostBattle : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         postBattleUI = GetComponent<UIElement>();
     }
     void Start()
     {
-        TogglePostBattleUI(false);
+        ToggleToMapButton(false);
     }
 
     public void ToggleExpGainedUI(bool toggle)
@@ -42,7 +46,7 @@ public class PostBattle : MonoBehaviour
             rewardsUI.UpdateAlpha(0);
     }
 
-    void ToggleToMapButtonInteractable(bool toggle)
+    void ToggleToMapButton(bool toggle)
     {
         toMapButton.ToggleButton(toggle);
         //Handheld.Vibrate();
@@ -50,7 +54,7 @@ public class PostBattle : MonoBehaviour
 
     public void TogglePostBattleUI(bool toggle)
     {
-        ToggleToMapButtonInteractable(toggle);
+        //ToggleToMapButtonInteractable(toggle);
 
         GameManager.Instance.ToggleUIElement(postBattleUI, toggle);
     }
@@ -69,21 +73,12 @@ public class PostBattle : MonoBehaviour
         }
 
         postBattleConditionText.AnimateUI();
-
-        StartCoroutine(ToggleButtonPostBattleMap(true));
     }
 
     public IEnumerator ToggleButtonPostBattleMap(bool toggle)
     {
-        yield return new WaitForSeconds(timeToSpawnToMapButton);
+        yield return new WaitForSeconds(0);
 
-        if (toggle)
-        {
-            buttonPostBattleMap.UpdateAlpha(1);
-        }
-        else
-        {
-            buttonPostBattleMap.UpdateAlpha(0);
-        }
+        ToggleToMapButton(toggle);
     }
 }

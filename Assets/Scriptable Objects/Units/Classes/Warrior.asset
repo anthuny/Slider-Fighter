@@ -20,14 +20,14 @@ MonoBehaviour:
   unitName: Warrior
   startingSpeed: 15
   startingDefense: 8
-  startingPower: 3
+  startingPower: 20
   startingHealingPower: 0
   startingMaxHealth: 800
   speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 1
   defenseIncPerLv: 2
-  maxHealthIncPerLv: 125
+  maxHealthIncPerLv: 75
   startingEnergy: 4
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1

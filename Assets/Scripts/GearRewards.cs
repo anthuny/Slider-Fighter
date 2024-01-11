@@ -12,6 +12,7 @@ public class GearRewards : MonoBehaviour
     [SerializeField] private UIElement uiElement;
     [SerializeField] private UIElement rewardsTextUI;
     public GameObject gearGO;
+    public GameObject itemGO;
     public GameObject goldRewardGO;
     [SerializeField] private Sprite goldSprite;
 
@@ -139,19 +140,19 @@ public class GearRewards : MonoBehaviour
                 uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
                 uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
 
-                if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.LEGENDARY)
+                if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.LEGENDARY)
                 {
                     uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
                 }
-                else if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.EPIC)
+                else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.EPIC)
                 {
                     uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
                 }
-                else if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.RARE)
+                else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.RARE)
                 {
                     uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
                 }
-                else if (ItemRewardManager.Instance.selectedItem.curRarity == Item.Rarity.COMMON)
+                else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.COMMON)
                 {
                     uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
                 }
@@ -210,27 +211,27 @@ public class GearRewards : MonoBehaviour
                     int rand = Random.Range(0, allGearPiecesCommon.Count);
                     newGear = allGearPiecesCommon[rand];
 
-                    OwnedGearInven.Instance.AddOwnedGear(gear);
+                    OwnedLootInven.Instance.AddOwnedGear(gear);
                 }
                 else if (gear.GetRarity() == Gear.Rarity.RARE)
                 {
                     int rand = Random.Range(0, allGearPiecesRare.Count);
                     newGear = allGearPiecesRare[rand];
                     gear.UpdateGearImage(newGear.gearIcon);
-                    OwnedGearInven.Instance.AddOwnedGear(gear);
+                    OwnedLootInven.Instance.AddOwnedGear(gear);
                 }
                 else if (gear.GetRarity() == Gear.Rarity.EPIC)
                 {
                     int rand = Random.Range(0, allGearPiecesEpic.Count);
                     newGear = allGearPiecesEpic[rand];
                     gear.UpdateGearImage(newGear.gearIcon);
-                    OwnedGearInven.Instance.AddOwnedGear(gear);
+                    OwnedLootInven.Instance.AddOwnedGear(gear);
                 }
                 else if (gear.GetRarity() == Gear.Rarity.LEGENDARY)
                 {
                     int rand = Random.Range(0, allGearPiecesLegendary.Count);
                     newGear = allGearPiecesLegendary[rand];
-                    OwnedGearInven.Instance.AddOwnedGear(gear);
+                    OwnedLootInven.Instance.AddOwnedGear(gear);
                 }
 
                 // Update gear type
@@ -267,6 +268,9 @@ public class GearRewards : MonoBehaviour
                 gear.UpdateGearAlpha(true);
             }
         }
+
+        // After last reward given, enable post battle TO MAP - Button
+        StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
     }
 
     IEnumerator GiveGold()

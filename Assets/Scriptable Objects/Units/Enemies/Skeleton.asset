@@ -20,14 +20,14 @@ MonoBehaviour:
   unitName: Skeleton
   startingSpeed: 15
   startingDefense: 1
-  startingPower: 2
+  startingPower: 25
   startingHealingPower: 1
   startingMaxHealth: 200
   speedIncPerLv: 1
-  powerIncPerLv: 1
+  powerIncPerLv: 2
   healingPowerIncPerLv: 0.25
   defenseIncPerLv: 1
-  maxHealthIncPerLv: 100
+  maxHealthIncPerLv: 50
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
