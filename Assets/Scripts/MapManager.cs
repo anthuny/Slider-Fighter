@@ -457,10 +457,13 @@ public class MapManager : MonoBehaviour
     {
         //Debug.Log("resetting");
         // If there is not enough shops on the floor, remake it
-        if (spawnedShopRooms.Count == 0)
+        if (activeFloor.shopRoomCount != 0)
         {
-            ToggleMapVisibility(true, true, resetting);
-            return;
+            if (spawnedShopRooms.Count == 0)
+            {
+                ToggleMapVisibility(true, true, resetting);
+                return;
+            }
         }
 
         // If there is not at least 1 hero room in floor, remake it
@@ -765,40 +768,44 @@ public class MapManager : MonoBehaviour
         //UpdateRoomIconType(startingRoom, "starting");
 
         failedCurAttempts = 0;
-
-        int shopRoomCount = Random.Range(activeFloor.shopRoomCount, activeFloor.shopRoomCount + (RoomManager.Instance.GetFloorCount() - 1));
+        int origShopRoomCount = Random.Range(activeFloor.shopRoomCount, activeFloor.shopRoomCount);
+        int shopRoomCount = origShopRoomCount + (RoomManager.Instance.GetFloorCount() - 1);
 
 
 
         if (shopRoomCount > RoomManager.Instance.floorMaxShopRoomCount)
             shopRoomCount = RoomManager.Instance.floorMaxShopRoomCount;
 
-        // Set shop rooms
-        for (int i = 0; i < shopRoomCount; i++)
+        if (origShopRoomCount != 0)
         {
-            // Make enough shops from the additional room spawns, until enough has been hit for floor
-            int rand = Random.Range(0, spawnedAdditionalRooms.Count-1);
-
-            RoomMapIcon roomIcon = spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>();
-            
-            if (failedCurAttempts <= maxFailedAttempts)
+            // Set shop rooms
+            for (int i = 0; i < shopRoomCount; i++)
             {
-                // If there is already a shop room, skip it and reset so it can do it again
-                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP || roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO)
-                {
-                    i--;
-                    if (i < 0)
-                        i = 0;
-                    failedCurAttempts++;
-                    continue;
-                }
+                // Make enough shops from the additional room spawns, until enough has been hit for floor
+                int rand = Random.Range(0, spawnedAdditionalRooms.Count - 1);
 
-                // If room is not a shop, make it a shop
-                roomIcon.UpdateRoomType(RoomMapIcon.RoomType.SHOP);
-                UpdateRoomIconType(spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>(), "shop");
-                spawnedShopRooms.Add(spawnedAdditionalRooms[rand]);
+                RoomMapIcon roomIcon = spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>();
+
+                if (failedCurAttempts <= maxFailedAttempts)
+                {
+                    // If there is already a shop room, skip it and reset so it can do it again
+                    if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP || roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO)
+                    {
+                        i--;
+                        if (i < 0)
+                            i = 0;
+                        failedCurAttempts++;
+                        continue;
+                    }
+
+                    // If room is not a shop, make it a shop
+                    roomIcon.UpdateRoomType(RoomMapIcon.RoomType.SHOP);
+                    UpdateRoomIconType(spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>(), "shop");
+                    spawnedShopRooms.Add(spawnedAdditionalRooms[rand]);
+                }
             }
         }
+        
 
         int heroRoomCount = Random.Range(activeFloor.heroRoomCount, activeFloor.heroRoomCount + (RoomManager.Instance.GetFloorCount() - 1));
 

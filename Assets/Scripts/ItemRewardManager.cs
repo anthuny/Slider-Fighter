@@ -364,6 +364,8 @@ public class ItemRewardManager : MonoBehaviour
                     continue;
                 }
             }
+
+
         }
     }
             /*

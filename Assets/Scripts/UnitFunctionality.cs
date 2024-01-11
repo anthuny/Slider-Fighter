@@ -987,6 +987,9 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false)
     {
+        if (GameManager.Instance.GetActiveSkill() == null)
+            yield break;
+
         if (offense)
         {
             if (effect != null)
@@ -1610,9 +1613,9 @@ public class UnitFunctionality : MonoBehaviour
         if (curUnitType == UnitType.PLAYER)
         {
             if (GameManager.Instance.activeRoomAllies.Count == 1)
-                attackChargeTurnStart *= 7;
+                attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomAllies.Count == 2)
-                attackChargeTurnStart *= 5;
+                attackChargeTurnStart *= 4;
             else if (GameManager.Instance.activeRoomAllies.Count == 3)
                 attackChargeTurnStart *= 2;
         }

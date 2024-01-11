@@ -842,11 +842,12 @@ public class GameManager : MonoBehaviour
 
         UpdateActiveSkill(null);
 
+        StartCoroutine(SetupRoomPostBattle(playerWon));
+        UpdateAllAlliesPosition(true);
+
         // If completed room WAS NOT a hero room
         if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO || !playerWon)
         {
-            StartCoroutine(SetupRoomPostBattle(playerWon));
-            UpdateAllAlliesPosition(true);
             ToggleSkillVisibility(false);
 
             RoomManager.Instance.ToggleInteractable(false);
@@ -860,7 +861,7 @@ public class GameManager : MonoBehaviour
         // If completed room WAS a hero room
         else
         {
-            //ToggleSkillVisibility(false);
+            ToggleSkillVisibility(false);
 
             // If player has 3 allies already, do not offer a 4th, go to post battle (TEMP SOLUTION) TODO: Make prompt to swap
             if (activeTeam.Count < 3)
@@ -869,8 +870,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                StartCoroutine(SetupRoomPostBattle(playerWon));
-                UpdateAllAlliesPosition(true);
                 ToggleSkillVisibility(false);
 
                 RoomManager.Instance.ToggleInteractable(false);
@@ -883,11 +882,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (!playerWon)
-        {
-            // Disable post battle to map button for next post battle scene
-            StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
-        }
+        // Disable post battle to map button for next post battle scene
+        StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
+
+        PostBattle.Instance.TogglePostBattleConditionText(playerWon);
 
         // Ads
         if (playerWon && RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
@@ -935,8 +933,6 @@ public class GameManager : MonoBehaviour
         ResetActiveUnitTurnArrow();
         ToggleAllAlliesStatBar(true);
        
-
-
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
 
@@ -944,6 +940,8 @@ public class GameManager : MonoBehaviour
 
         if (playerWon)
             defeatedEnemies.DisplayDefeatedEnemies();
+        
+
 
         if (playerWon)
         {
@@ -1660,98 +1658,103 @@ public class GameManager : MonoBehaviour
 
                     int originalPower = AdjustSkillPowerTargetEffectAmp(power);
 
-                    if (unitsSelected[i] == null || unitsSelected[i].isDead)
-                        continue;
+                    // Helps catch the null error
+                    if (i < unitsSelected.Count)
+                    {
+                        if (unitsSelected[i] == null)
+                            continue;
+
+                        if (unitsSelected[i].isDead)
+                            continue;
+                    }
+
+                    float absPower = Mathf.Abs(originalPower);
+                    //float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
+                    float newPower = absPower;
+
+                    float newHealingPower = originalPower;
+
+                    // If unit missed, give them 0 power output
+                    if (effectHitAcc == 0)
+                    {
+                        newPower = 0;
+                        newHealingPower = 0;
+                    }
+
+                    if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                    {
+                        // Check if target unit has poison, half the heal if it does
+                        for (int y = 0; y < unitsSelected[i].GetEffects().Count; y++)
+                        {
+                            if (unitsSelected[i].activeEffects[y].curEffectName == Effect.EffectName.POISON)
+                            {
+                                newHealingPower /= 2;
+                                //Debug.Log("Healing power halfed");
+                                break;
+                            }
+                        }
+                    }
+
+                    int orderCount;
+
+                    bool blocked;
+
+                    float targetBlockChance = Random.Range(1, 101);
+                    if (unitsSelected[i].GetCurDefense() >= targetBlockChance)
+                        blocked = true;
+                    else
+                        blocked = false;
+                    //Debug.Log(temp4);
+
+                    // Cause power
+                    if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                    {
+                        orderCount = 2;
+                        if (hasBeenLuckyHit)
+                        {
+                            hasBeenLuckyHit = false;
+                            orderCount--;
+                        }
+                        unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+
+                        CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                    }
                     else
                     {
-                        float absPower = Mathf.Abs(originalPower);
-                        //float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
-                        float newPower = absPower;
-
-                        float newHealingPower = originalPower;
-
-                        // If unit missed, give them 0 power output
-                        if (effectHitAcc == 0)
+                        orderCount = 2;
+                        if (hasBeenLuckyHit)
                         {
-                            newPower = 0;
-                            newHealingPower = 0;
+                            hasBeenLuckyHit = false;
+                            orderCount--;
                         }
 
-                        if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
-                        {
-                            // Check if target unit has poison, half the heal if it does
-                            for (int y = 0; y < unitsSelected[i].GetEffects().Count; y++)
-                            {
-                                if (unitsSelected[i].activeEffects[y].curEffectName == Effect.EffectName.POISON)
-                                {
-                                    newHealingPower /= 2;
-                                    //Debug.Log("Healing power halfed");
-                                    break;
-                                }
-                            }
-                        }
-
-                        int orderCount;
-
-                        bool blocked;
-
-                        float targetBlockChance = Random.Range(1, 101);
-                        if (unitsSelected[i].GetCurDefense() >= targetBlockChance)
-                            blocked = true;
-                        else
-                            blocked = false;
-                        //Debug.Log(temp4);
-
-                        // Cause power
-                        if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                        {
-                            orderCount = 2;
-                            if (hasBeenLuckyHit)
-                            {
-                                hasBeenLuckyHit = false;
-                                orderCount--;
-                            }
-                            unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
-
-                            CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
-                        }
-                        else
-                        {
-                            orderCount = 2;
-                            if (hasBeenLuckyHit)
-                            {
-                                hasBeenLuckyHit = false;
-                                orderCount--;
-                            }
-
-                            unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI(newHealingPower, false, false, null));
-                        }
-
-                        // Increase health on targeting unit If target did not block
-                        if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT && !blocked)
-                            unitsSelected[i].UpdateUnitCurHealth((int)newHealingPower);
-
-                        // Decrease health on targeting unit
-                        if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && !blocked)
-                        {
-                            float health = newPower;         
-                            unitsSelected[i].UpdateUnitCurHealth((int)health, true);
-                        }
-
-                        /*
-                        // Reset unit's prev power text for future power texts
-                        if (x == activeSkill.skillAttackAccMult - 1)
-                            unitsSelected[i].ResetPreviousPowerUI();
-                        */
-
-                        // If active skill has an effect AND it's not a self cast, apply it to selected targets
-                        if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                            unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength, effectHitAcc);
-
-                        #if !UNITY_EDITOR
-                            Vibration.Vibrate(15);
-                        #endif
+                        unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI(newHealingPower, false, false, null));
                     }
+
+                    // Increase health on targeting unit If target did not block
+                    if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT && !blocked)
+                        unitsSelected[i].UpdateUnitCurHealth((int)newHealingPower);
+
+                    // Decrease health on targeting unit
+                    if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && !blocked)
+                    {
+                        float health = newPower;         
+                        unitsSelected[i].UpdateUnitCurHealth((int)health, true);
+                    }
+
+                    /*
+                    // Reset unit's prev power text for future power texts
+                    if (x == activeSkill.skillAttackAccMult - 1)
+                        unitsSelected[i].ResetPreviousPowerUI();
+                    */
+
+                    // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                    if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                        unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength, effectHitAcc);
+
+                    #if !UNITY_EDITOR
+                        Vibration.Vibrate(15);
+                    #endif
                 }
 
                 // Time wait in between attacks, shared across all targeted units

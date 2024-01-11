@@ -15,10 +15,10 @@ MonoBehaviour:
   floorName: FOREST
   floorColour: {r: 0.17595254, g: 0.7735849, b: 0, a: 1}
   floorLevel: 1
-  minRoomCount: 3
-  maxRoomCount: 3
+  minRoomCount: 2
+  maxRoomCount: 2
   sideRoomAmount: 2
-  shopRoomCount: 1
+  shopRoomCount: 0
   heroRoomCount: 1
   minRoomValue: 2
   maxRoomValue: 3

@@ -20,14 +20,14 @@ MonoBehaviour:
   unitName: Slime
   startingSpeed: 12
   startingDefense: 1
-  startingPower: 15
+  startingPower: 25
   startingHealingPower: 1
-  startingMaxHealth: 200
+  startingMaxHealth: 300
   speedIncPerLv: 1
-  powerIncPerLv: 2
+  powerIncPerLv: 4
   healingPowerIncPerLv: 0.25
   defenseIncPerLv: 1
-  maxHealthIncPerLv: 50
+  maxHealthIncPerLv: 150
   startingEnergy: 3
   startingUnitStartTurnEnergyGain: 2
   basicSelectionCount: 1
