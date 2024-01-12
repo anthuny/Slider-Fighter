@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ButtonFunctionality : MonoBehaviour
+public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public enum MasteryType { STATSTANDARD1, STATSTANDARD2, STATSTANDARD3, STATSTANDARD4, STATSTANDARD5, STATADVANCED1, STATADVANCED2, STATADVANCED3, STATADVANCED4, BG };
     public MasteryType curMasteryType;
@@ -27,6 +28,10 @@ public class ButtonFunctionality : MonoBehaviour
     public bool buttonLocked;
 
     [SerializeField] private Gear gear;
+
+    public float heldTimer;
+    public bool isHeldDown;
+    public bool unitIsSelected;
 
     private void Awake()
     {
@@ -276,7 +281,10 @@ public class ButtonFunctionality : MonoBehaviour
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        StartCoroutine(GameManager.Instance.SetupPostBattleUI(GameManager.Instance.playerWon));
+        if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.HERO)
+            StartCoroutine(GameManager.Instance.HeroRetrievalScene());
+        else
+            StartCoroutine(GameManager.Instance.SetupPostBattleUI(GameManager.Instance.playerWon));
     }
 
     public void ButtonSelectGear()
@@ -837,33 +845,6 @@ public class ButtonFunctionality : MonoBehaviour
 
         HeroRoomManager.Instance.TogglePrompt(false);
     }
-    public void SelectUnit()
-    {
-        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
-        {
-            // Button Click SFX
-            AudioManager.Instance.Play("Button_Click");
-
-            if (GameManager.Instance.IsEnemyTaunting().Count >= 1)
-            {
-                for (int i = 0; i < GameManager.Instance.IsEnemyTaunting().Count; i++)
-                {
-                    if (GameManager.Instance.IsEnemyTaunting()[i] == unitFunctionality)
-                        GameManager.Instance.SelectUnit(unitFunctionality);
-                    else
-                    {
-                        // Check if active skill targets allies, and is player type, then allow it
-                        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
-                            GameManager.Instance.SelectUnit(unitFunctionality);
-                    }
-                }
-
-                return;
-            }
-            else
-                GameManager.Instance.SelectUnit(unitFunctionality);
-        }
-    }
 
     public void SelectSkill0()
     {
@@ -1026,5 +1007,96 @@ public class ButtonFunctionality : MonoBehaviour
     public void MapDownArrow()
     {
         Debug.Log("down");
+    }
+
+    void Update()
+    {
+        if (isHeldDown)
+            heldTimer += Time.deltaTime;
+    }
+
+    public void SelectUnit()
+    {
+        // If unit has held the unit down for x seconds, do not allow a selection from the release of that tap
+        if (heldTimer >= GameManager.Instance.maxHeldTimeTooltip)
+            return;
+
+        StartCoroutine(SelectUnitCo());
+    }
+
+    IEnumerator SelectUnitCo()
+    {
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            if (GameManager.Instance.IsEnemyTaunting().Count >= 1)
+            {
+                for (int i = 0; i < GameManager.Instance.IsEnemyTaunting().Count; i++)
+                {
+                    if (GameManager.Instance.IsEnemyTaunting()[i] == unitFunctionality)
+                    {
+                        GameManager.Instance.SelectUnit(unitFunctionality);
+                        unitIsSelected = true;
+                    }
+                    else
+                    {
+                        // Check if active skill targets allies, and is player type, then allow it
+                        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            unitIsSelected = true;
+                            GameManager.Instance.SelectUnit(unitFunctionality);
+                        }
+
+                    }
+                }
+
+                yield break;
+            }
+            else
+            {
+                isHeldDown = false;
+                StartCoroutine(HeldDownCooldown());
+                GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
+
+                unitIsSelected = true;
+                GameManager.Instance.SelectUnit(unitFunctionality);
+            }
+        }
+    }
+    IEnumerator EnableUnitStatTooltip()
+    {
+        yield return new WaitForSeconds(0);
+
+
+        if (heldTimer > .1f)
+            GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(true);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (GetComponentInParent<UnitFunctionality>())
+        {
+            isHeldDown = true;
+
+            StartCoroutine(EnableUnitStatTooltip());
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (GetComponentInParent<UnitFunctionality>())
+        {
+            isHeldDown = false;
+            StartCoroutine(HeldDownCooldown());
+            GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
+        }
+    }
+
+    IEnumerator HeldDownCooldown()
+    {
+        yield return new WaitForSeconds(.1f);
+        heldTimer = 0;
     }
 }

@@ -86,7 +86,8 @@ public class HeroRoomManager : MonoBehaviour
         //GetHeroRoomUI().UpdateAlpha(0);
         //Destroy(GetHeroRoomUI().gameObject);
 
-        GameManager.Instance.StartCoroutine(GameManager.Instance.SetupRoomPostBattle(true));
+        GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
+        //StartCoroutine(GameManager.Instance.HeroRetrievalScene());
         GameManager.Instance.UpdateAllAlliesPosition(true);
         RoomManager.Instance.ToggleInteractable(false);
 
@@ -102,7 +103,7 @@ public class HeroRoomManager : MonoBehaviour
 
     void RemoveSpawnedUnit()
     {
-        GameManager.Instance.StartCoroutine(GameManager.Instance.SetupRoomPostBattle(true));
+        GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
         GameManager.Instance.UpdateAllAlliesPosition(true);
         RoomManager.Instance.ToggleInteractable(false);
 

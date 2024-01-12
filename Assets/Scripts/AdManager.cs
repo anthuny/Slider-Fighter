@@ -9,6 +9,7 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
 
     [SerializeField] private bool isTesting;
     [SerializeField] private bool clearPlayerPrefs;
+    [SerializeField] private bool isDegugging;
     [SerializeField] private string androidID = "5512312";
     [SerializeField] private string iosID = "5512313";
 
@@ -73,6 +74,7 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
             agePrompt.ToggleButton2(true, true);
             agePrompt.ToggleButton3(true, true);   // bg
 
+
             //CharacterCarasel.Instance.ToggleMenu(false);
         }
         else
@@ -82,36 +84,49 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
             agePrompt.ToggleButton2(false, true);
             agePrompt.ToggleButton3(false, true);   // bg
 
+            // If the user opts in to targeted advertising:
+            MetaData gdprMetaData = new MetaData("gdpr");
+            gdprMetaData.Set("consent", "true");
+            Advertisement.SetMetaData(gdprMetaData);
+
+            PlayerPrefs.SetInt("OverAgeRequirement", 1);
+
             CharacterCarasel.Instance.ResetMenu();
         }
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            Advertisement.Initialize(androidID, isTesting, this);
-            Advertisement.Load(androidID, this);
-        }
-        else if (Application.platform == RuntimePlatform.IPhonePlayer)
-        {
-            Advertisement.Initialize(iosID, isTesting, this);
-            Advertisement.Load(iosID, this);
-        }
+#if UNITY_ANDROID && !UNITY_EDITOR
+    Advertisement.Initialize(androidID, isTesting, this);
+    Advertisement.Load(androidID, this);
+#endif
 
-        else if (Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            //Debug.Log("Platform is Editor");
-            Advertisement.Initialize(androidID, isTesting, this);
-        }
+#if UNITY_IOS
+    Advertisement.Initialize(iosID, isTesting, this);
+    Advertisement.Load(iosID, this);
+
+#endif
+#if UNITY_EDITOR
+        Advertisement.Initialize(androidID, isTesting, this);
+        Advertisement.Load(androidID, this);
+#endif
+            
     }
 
     void Update()
     {
-        //AdStartManualInput();
+        AdStartManualInputSkippable();
+        AdStartManualInputForced();
     }
 
-    void AdStartManualInput()
+    void AdStartManualInputSkippable()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+            ShowSkippableAd();
+    }
+
+    void AdStartManualInputForced()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            ShowSkippableAd();
+            ShowForcedAd();
     }
 
     public void ShowForcedAd()
@@ -129,7 +144,8 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
 
     public void OnUnityAdsDidError(string message)
     {
-        //Debug.Log("AD ERROR");
+        if (isDegugging)
+            Debug.Log("AD ERROR");
     }
 
     public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
@@ -138,7 +154,8 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         {
             if (placementId == forcedVideoPlacementID)
             {
-                Debug.Log("Ad Finished");
+                if (isDegugging)
+                    Debug.Log("Ad Finished");
             }
         }
     }
@@ -150,23 +167,29 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
 
     public void OnUnityAdsReady(string placementId)
     {
-        //Debug.Log("Ad Ready");
+        if (isDegugging)
+            Debug.Log("Ad Ready");
     }
 
     public void OnUnityAdsAdLoaded(string placementId)
     {
-        Debug.Log("Ad Showing");
+        if (isDegugging)
+            Debug.Log("Ad Showing");
         Advertisement.Show(placementId, this);
     }
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
     {
-        //throw new System.NotImplementedException();
+        if (isDegugging)
+            Debug.Log("failed to load ad");
+        StartCoroutine(TryLoadAds());
     }
 
     public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
     {
-        //throw new System.NotImplementedException();
+        if (isDegugging)
+            Debug.Log("failed to show ad");
+        StartCoroutine(TryLoadAds());
     }
 
     public void OnUnityAdsShowStart(string placementId)
@@ -184,17 +207,63 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         //throw new System.NotImplementedException();
         if (placementId == forcedVideoPlacementID && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
-            Debug.Log("Ads fully Watched");
+            if (isDegugging)
+                Debug.Log("Ads fully Watched");
         }
     }
 
     public void OnInitializationComplete()
     {
-        
+        LoadAds();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
-        
+        if (isDegugging)
+            Debug.Log("failed to init ad");
+
+        StartCoroutine(TryInitAds());
+    }
+
+    IEnumerator TryInitAds()
+    {
+        yield return new WaitForSeconds(3);
+        InitAds();
+    }
+
+    IEnumerator TryLoadAds()
+    {
+        yield return new WaitForSeconds(3);
+        LoadAds();
+    }
+
+    void LoadAds()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    Advertisement.Load(androidID, this);
+#endif
+
+#if UNITY_IOS
+    Advertisement.Load(iosID, this);
+
+#endif
+#if UNITY_EDITOR
+    Advertisement.Load(androidID, this);
+#endif
+    }
+
+    void InitAds()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    Advertisement.Initialize(androidID, isTesting, this);
+#endif
+
+#if UNITY_IOS
+    Advertisement.Initialize(iosID, isTesting, this);
+
+#endif
+#if UNITY_EDITOR
+    Advertisement.Initialize(androidID, isTesting, this);
+#endif
     }
 }

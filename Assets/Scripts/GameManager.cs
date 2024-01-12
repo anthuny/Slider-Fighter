@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
     public float allyRangedSkillWaitTime;
     public float enemyMeleeSkillWaitTime = .5f;
     public float enemyRangedSkillWaitTime;
+    public float maxHeldTimeTooltip;
 
     [Header("Player UI")]
     public UIElement playerUIElement;
@@ -822,6 +823,11 @@ public class GameManager : MonoBehaviour
         ItemRewardManager.Instance.ToggleItemRewards(false);
         ItemRewardManager.Instance.ToggleConfirmItemButton(false);
 
+        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
+        {
+
+        }
+
         yield return new WaitForSeconds(ItemRewardManager.Instance.postItemTillPostCombat);
 
         // SFX
@@ -842,8 +848,11 @@ public class GameManager : MonoBehaviour
 
         UpdateActiveSkill(null);
 
-        StartCoroutine(SetupRoomPostBattle(playerWon));
+        //if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO)
+        //    StartCoroutine(SetupRoomPostBattle(playerWon));
+
         UpdateAllAlliesPosition(true);
+
 
         // If completed room WAS NOT a hero room
         if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO || !playerWon)
@@ -866,7 +875,7 @@ public class GameManager : MonoBehaviour
             // If player has 3 allies already, do not offer a 4th, go to post battle (TEMP SOLUTION) TODO: Make prompt to swap
             if (activeTeam.Count < 3)
             {
-                StartCoroutine(HeroRetrievalScene());
+                //StartCoroutine(HeroRetrievalScene());
             }
             else
             {
@@ -890,16 +899,22 @@ public class GameManager : MonoBehaviour
         // Ads
         if (playerWon && RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
         {
-            AdManager.Instance.ShowSkippableAd();
+            AdManager.Instance.ShowForcedAd();
         }
+
+        StartCoroutine(SetupRoomPostBattle(playerWon));
     }
 
-    IEnumerator HeroRetrievalScene()
+    public IEnumerator HeroRetrievalScene()
     {
+        ItemRewardManager.Instance.ToggleItemRewards(false);
+        ItemRewardManager.Instance.ToggleConfirmItemButton(false);
+
         yield return new WaitForSeconds(postFightTimeWait);
 
         //RoomManager.Instance.ToggleInteractable(true);
         ToggleAllowSelection(true);
+        ToggleSelectingUnits(true);
 
         // Toggle player overlay and skill ui off
         ToggleUIElement(playerAbilities, false);
@@ -915,6 +930,8 @@ public class GameManager : MonoBehaviour
     // Toggle UI accordingly
     public IEnumerator SetupRoomPostBattle(bool playerWon)
     {
+        //StartCoroutine(SetupPostBattleUI(playerWon));
+
         // Remove ally unit's effects
         /*
         for (int i = 0; i < activeRoomAllies.Count; i++)
@@ -1514,6 +1531,12 @@ public class GameManager : MonoBehaviour
         
     public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1)
     {
+        // Reset each units power UI
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
+        }
+
         UnitFunctionality castingUnit = GetActiveUnitFunctionality();
 
         GetActiveUnitFunctionality().effects.UpdateAlpha(1);

@@ -12,6 +12,14 @@ public class UnitFunctionality : MonoBehaviour
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
+    public ButtonFunctionality selectUnitButton;
+    [SerializeField] private UIElement tooltipStats;
+    [SerializeField] private UIElement tooltipEffect;
+    [SerializeField] private UIElement statHealth;
+    [SerializeField] private UIElement statPower;
+    [SerializeField] private UIElement statHealingPower;
+    [SerializeField] private UIElement statDefense;
+    [SerializeField] private UIElement statSpeed;
     [SerializeField] private UIElement unitLevelImage;
     [SerializeField] private UIElement selectionCircle;
     [SerializeField] private UIElement unitVisuals;
@@ -147,6 +155,46 @@ public class UnitFunctionality : MonoBehaviour
 
     //public bool unitDouble;
 
+    public void ToggleTooltipStats(bool toggle)
+    {
+        if (toggle)
+        {
+            if (!tooltipStats.isEnabled)
+            {
+                UpdateTooltipStats();
+                tooltipStats.UpdateAlpha(1);
+            }
+        }
+        else
+            tooltipStats.UpdateAlpha(0);
+    }
+
+    public void ToggleTooltipEffect(bool toggle)
+    {
+        if (toggle)
+            if (!tooltipStats.isEnabled)
+            {
+                UpdateTooltipEffect();
+                tooltipEffect.UpdateAlpha(1);
+            }
+        else
+            tooltipEffect.UpdateAlpha(0);
+    }
+
+    public void UpdateTooltipStats()
+    {
+        statHealth.UpdateContentText(GetUnitCurHealth().ToString());
+        statPower.UpdateContentText(curPower.ToString());
+        statHealingPower.UpdateContentText(GetUnitHealingHits().ToString());
+        statDefense.UpdateContentText(GetCurDefense().ToString());
+        statSpeed.UpdateContentText(GetUnitSpeed().ToString());
+    }
+
+    public void UpdateTooltipEffect()
+    {
+        //tooltipEffect.UpdateContentText()
+    }
+
     public void UpdateHitsRemainingText(int remaining)
     {
         hitsRemainingText.UpdateContentText(remaining.ToString());
@@ -258,6 +306,13 @@ public class UnitFunctionality : MonoBehaviour
     private void Awake()
     {
         rt = GetComponent<RectTransform>();
+    }
+
+    private void Update()
+    {
+        // If player is holding down on unit, display stats
+
+
     }
 
     private void Start()
@@ -1350,6 +1405,7 @@ public class UnitFunctionality : MonoBehaviour
                 ResetPowerUI();
 
                 UpdateUnitCurHealth((int)levelUpHeal, false, false);
+                SpawnPowerUI(levelUpHeal, false, false, null, false);
 
                 // This isnt working
                 //SpawnPowerUI(levelUpHeal, false, false, null, false);

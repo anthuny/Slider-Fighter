@@ -223,9 +223,9 @@ public class MapManager : MonoBehaviour
         else
         {
             if (tryShowAd)
-                AdManager.Instance.ShowForcedAd();
+                AdManager.Instance.ShowSkippableAd();
 
-            RoomManager.Instance.ResetRoomsCleared();
+            RoomManager.Instance.ResetFloorCount();
             CharacterCarasel.Instance.ResetMenu();
         }
     }

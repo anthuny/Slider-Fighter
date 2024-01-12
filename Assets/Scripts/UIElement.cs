@@ -20,6 +20,8 @@ public class UIElement : MonoBehaviour
     public Rarity curRarity;
 
     public Image contentImage;
+    [SerializeField] private UIElement contentImageUI;
+    [SerializeField] private UIElement contentImage2UI;
     [SerializeField] private TextMeshProUGUI contentText;
     [SerializeField] private Text contentSubText;
     [SerializeField] private TextMeshProUGUI contentSubTextTMP;
@@ -50,6 +52,7 @@ public class UIElement : MonoBehaviour
     public float originalScaleText;
     private float originalScaleImage;
     private float originalYPos;
+    public bool isEnabled = false;
 
     public void UpdateItemName(string name)
     {
@@ -224,6 +227,15 @@ public class UIElement : MonoBehaviour
         contentImage.sprite = sprite;
     }
 
+    public void UpdateContentUI(Sprite sprite)
+    {
+        contentImageUI.UpdateContentImage(sprite);
+    }
+    public void UpdateContent2UI(Sprite sprite)
+    {
+        contentImage2UI.UpdateContentImage(sprite);
+    }
+
     public bool GetIsSelectable()
     {
         return selectable;
@@ -380,7 +392,7 @@ public class UIElement : MonoBehaviour
     }
 
     public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0)
-    {
+    {   
         cg = GetComponent<CanvasGroup>();
 
         cg.alpha = alpha;   // Update UI Alpha
@@ -394,15 +406,18 @@ public class UIElement : MonoBehaviour
         {
             AnimateUI();
 
+            isEnabled = true;
+
             cg.interactable = true;
             cg.blocksRaycasts = true;
         }
         else
         {
+            isEnabled = false;
+
             cg.interactable = false;
             cg.blocksRaycasts = false;
         }
-
 
         if (GetComponent<Image>())
         {
