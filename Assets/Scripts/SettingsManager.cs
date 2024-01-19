@@ -38,6 +38,11 @@ public class SettingsManager : MonoBehaviour
         musicSliderFill.color = soundOnColour;
     }
 
+    public void ToggleSettingsButton(bool toggle)
+    {
+        uiElement.ToggleButton(toggle);
+    }
+
     public void ToggleSettingsTab()
     {
         if (!settingsOpened)

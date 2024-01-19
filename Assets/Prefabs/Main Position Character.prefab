@@ -213,6 +213,8 @@ MonoBehaviour:
   activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 9089367640506971031}
@@ -235,6 +237,7 @@ MonoBehaviour:
   itemName: 
   rarityBorderUI: {fileID: 0}
   originalScaleText: 0
+  isEnabled: 0
 --- !u!223 &5789137698856299066
 Canvas:
   m_ObjectHideFlags: 0
@@ -344,8 +347,8 @@ MonoBehaviour:
   unitLocked: 0
   unitLevel: {fileID: 7441071824687468853}
   statHealth: {fileID: 7376262039340570467}
-  statDamageHits: {fileID: 1244914422699095010}
-  statHealingHits: {fileID: 3933932883949219558}
+  statPower: {fileID: 1244914422699095010}
+  statHealingPower: {fileID: 3933932883949219558}
   statDefense: {fileID: 1600840991373585134}
   statSpeed: {fileID: 9133512175098734000}
 --- !u!1 &8648429512500235734

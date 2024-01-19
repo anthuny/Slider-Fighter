@@ -37,7 +37,7 @@ public class Item : MonoBehaviour
 
     private void Start()
     {
-        ToggleGearEnabled(false);
+        ToggleItemEnabled(false);
     }
 
     public void ResetGearSlot(bool byPass = false, bool allowGearDefaultClear = false)
@@ -48,11 +48,11 @@ public class Item : MonoBehaviour
         if (allowGearDefaultClear)
         {
             if (GetGearOwnedBy() == ItemOwnedBy.MAIN)
-                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(null, this, true, false, false);
+                TeamGearManager.Instance.UpdateSlotsBaseDefault(null, this, true, false, false);
             else if (GetGearOwnedBy() == ItemOwnedBy.SECOND)
-                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(null, this, false, true, false);
+                TeamGearManager.Instance.UpdateSlotsBaseDefault(null, this, false, true, false);
             else if (GetGearOwnedBy() == ItemOwnedBy.THIRD)
-                TeamGearManager.Instance.UpdateGearSlotsBaseDefault(null, this, false, false, true);
+                TeamGearManager.Instance.UpdateSlotsBaseDefault(null, this, false, false, true);
         }
         else
         {
@@ -221,12 +221,7 @@ public class Item : MonoBehaviour
         }
     }
 
-    public void ToggleGearEnabled(bool toggle)
-    {
-        itemSelectionUI.gameObject.SetActive(toggle);
-    }
-
-    public void ToggleGearSelected(bool toggle)
+    public void ToggleItemEnabled(bool toggle)
     {
         if (toggle)
         {

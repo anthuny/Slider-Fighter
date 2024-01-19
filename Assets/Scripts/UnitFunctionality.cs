@@ -13,6 +13,7 @@ public class UnitFunctionality : MonoBehaviour
     public LastOpenedMastery lastOpenedStatPage;
 
     public ButtonFunctionality selectUnitButton;
+    [SerializeField] private Color effectTitleColour;
     [SerializeField] private UIElement tooltipStats;
     [SerializeField] private UIElement tooltipEffect;
     [SerializeField] private UIElement statHealth;
@@ -81,10 +82,9 @@ public class UnitFunctionality : MonoBehaviour
 
     [SerializeField] private List<ItemPiece> equiptItems = new List<ItemPiece>();
 
-    [SerializeField] private List<Stat> curStatPage = new List<Stat>();
+    [SerializeField] private List<SkillBase> curSkillBaseSlots = new List<SkillBase>();
 
-    [SerializeField] private List<Stat> standardMasteries = new List<Stat>();
-    [SerializeField] private List<Stat> advancedMasteries = new List<Stat>();
+    [SerializeField] private List<SkillBase> skillBaseSlots = new List<SkillBase>();
 
     public UnitData unitData;
 
@@ -108,7 +108,7 @@ public class UnitFunctionality : MonoBehaviour
     public int statsAdv4Added;
 
     private int spentMasteryTotalPoints = 0;
-    public int statsSpentBasePoints = 0;
+    public int SkillSpentPoints = 0;
     public int statsSpentAdvPoints = 0;
 
     [SerializeField] private int skill0CurCooldown = 0;
@@ -153,12 +153,23 @@ public class UnitFunctionality : MonoBehaviour
     [HideInInspector]
     public int hitsRemaining;
 
+    public int prevStatHealth;
+    public int prevStatPower;
+    public int prevStatHealingPower;
+    public int prevStatDefense;
+    public int prevStatSpeed;
+    public string selectedEffect;
+
     //public bool unitDouble;
 
     public void ToggleTooltipStats(bool toggle)
     {
+        //Debug.Log("toggling " + toggle);
+
         if (toggle)
         {
+            //Debug.Log(tooltipStats.isEnabled);
+
             if (!tooltipStats.isEnabled)
             {
                 UpdateTooltipStats();
@@ -169,16 +180,24 @@ public class UnitFunctionality : MonoBehaviour
             tooltipStats.UpdateAlpha(0);
     }
 
-    public void ToggleTooltipEffect(bool toggle)
+    public void ToggleTooltipEffect(bool toggle, string effectSelectedName = null)
     {
         if (toggle)
-            if (!tooltipStats.isEnabled)
+        {
+            if (!tooltipEffect.isEnabled)
             {
-                UpdateTooltipEffect();
+                //Debug.Log("enabling");
+                tooltipEffect.isEnabled = true;
+
                 tooltipEffect.UpdateAlpha(1);
+                UpdateTooltipEffect(effectSelectedName);
             }
+        }
         else
+        {
+            //Debug.Log("disabling");
             tooltipEffect.UpdateAlpha(0);
+        }
     }
 
     public void UpdateTooltipStats()
@@ -190,9 +209,17 @@ public class UnitFunctionality : MonoBehaviour
         statSpeed.UpdateContentText(GetUnitSpeed().ToString());
     }
 
-    public void UpdateTooltipEffect()
+    public void UpdateTooltipEffect(string effectSelectedName)
     {
-        //tooltipEffect.UpdateContentText()
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            if (effectSelectedName == activeEffects[i].effectName)
+            {
+                tooltipEffect.UpdateContentText(activeEffects[i].effectName);
+                tooltipEffect.UpdateContentSubTextTMP(activeEffects[i].effectDesc);
+                tooltipEffect.UpdateContentTextColourTMP(activeEffects[i].titleTextColour);
+            }
+        }
     }
 
     public void UpdateHitsRemainingText(int remaining)
@@ -221,9 +248,22 @@ public class UnitFunctionality : MonoBehaviour
     {
         curPower += (int)newVal;
     }
-    public void UpdateHealingPower(int newVal)
+    public void UpdateHealingPower(int newPower, bool setting = true, bool adding = true)
     {
-        curHealingPower += newVal;
+        if (adding)
+        {
+            if (setting)
+                curHealingPower = newPower;
+            else
+                curHealingPower += newPower;
+        }
+        else
+        {
+            if (setting)
+                curHealingPower = newPower;
+            else
+                curHealingPower -= newPower;
+        }
     }
     public void UpdateDefense(float newVal)
     {
@@ -396,18 +436,6 @@ public class UnitFunctionality : MonoBehaviour
         unitLevelImage.UpdateContentSubTextTMP(curLevel.ToString());
     }
 
-    public void UpdateLastOpenedMastery(TeamSetup.ActiveStatType masteryType)
-    {
-        /*
-        if (masteryType == TeamSetup.ActiveStatType.STANDARD)
-            lastOpenedStatPage = LastOpenedMastery.STANDARD;
-        else if (masteryType == TeamSetup.ActiveStatType.ADVANCED)
-            lastOpenedStatPage = LastOpenedMastery.ADVANCED;
-         */
-
-        lastOpenedStatPage = LastOpenedMastery.STANDARD;
-    }
-
     public LastOpenedMastery GetLastOpenedMastery()
     {
         return lastOpenedStatPage;
@@ -451,50 +479,33 @@ public class UnitFunctionality : MonoBehaviour
         return equiptItems;
     }
 
-    public void UpdateCurrentMasteries(List<Stat> masteries)
+    public void UpdateCurrentSkillBaseSlots(List<SkillBase> skillBaseSlots)
     {
-        this.curStatPage = masteries;
+        this.curSkillBaseSlots = skillBaseSlots;
     }
 
-    public void UpdateStandardMasteries(List<Stat> masteries)
+    public void UpdateSkillBaseStats(List<SkillBase> skillBaseSlots)
     {
-        this.standardMasteries = masteries;
-    }
-    public void UpdateAdvancedMasteries(List<Stat> masteries)
-    {
-        this.advancedMasteries = masteries;
+        this.skillBaseSlots = skillBaseSlots;
     }
 
-    public Stat GetCurrentStat(int count)
+    public SkillBase GetCurrentSkillBase(int count)
     {
-        return curStatPage[count];
+        return curSkillBaseSlots[count];
     }
-    public Stat GetStandardMastery(int count)
+    public SkillBase GetSkillBaseSLot(int count)
     {
-        return standardMasteries[count];
-    }
-    public Stat GetAdvancedMastery(int count)
-    {
-        return advancedMasteries[count];
+        return skillBaseSlots[count];
     }
 
-    public List<Stat> GetAllCurrentMasteries()
+    public List<SkillBase> GetAllSkillBaseSlots()
     {
-        return curStatPage;
-    }
-    public List<Stat> GetAllStandardMasteries()
-    {
-        return standardMasteries;
-    }
-    public List<Stat> GetAllAdvancedMasteries()
-    {
-        return advancedMasteries;
+        return skillBaseSlots;
     }
 
-    public void ClearMasteries()
+    public void ClearSkillBaseSlots()
     {
-        curStatPage.Clear();
-        advancedMasteries.Clear();
+        curSkillBaseSlots.Clear();
     }
 
     public int GetEquipItemCount(string itemName)
@@ -558,12 +569,12 @@ public class UnitFunctionality : MonoBehaviour
         return animator;
     }
 
-    public int GetSpentMasteryPoints()
+    public int GetSpentSkillPoints()
     {
         return spentMasteryTotalPoints;
     }
 
-    public void UpdateSpentMasteryPoints(int add)
+    public void UpdateSpentSkillPoints(int add)
     {
         spentMasteryTotalPoints += add;
     }
@@ -571,7 +582,7 @@ public class UnitFunctionality : MonoBehaviour
     public void ResetSpentStatPoints()
     {
         spentMasteryTotalPoints = 0;
-        statsSpentBasePoints = 0;
+        SkillSpentPoints = 0;
         statsSpentAdvPoints = 0;
     }
 
@@ -1328,6 +1339,8 @@ public class UnitFunctionality : MonoBehaviour
         {
             isDead = true;
 
+            ResetEffects();
+
             curHealth = 0;
 
             animator.SetTrigger("DeathFlg");
@@ -1424,7 +1437,9 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         yield return new WaitForSeconds(GameManager.Instance.timePostExp);
-        //ToggleUnitExpVisual(false);
+
+        // Enable post battle to map button for next post battle scene
+        StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
     }
 
     public void ToggleUnitExpVisual(bool toggle)
@@ -1829,9 +1844,22 @@ public class UnitFunctionality : MonoBehaviour
             isSpeedUp = false;
     }
 
-    public void UpdateUnitPower(int newPower)
+    public void UpdateUnitPower(int newPower, bool setting = true, bool adding = true)
     {
-        curPower = newPower;
+        if (adding)
+        {
+            if (setting)
+                curPower = newPower;
+            else
+                curPower += newPower;
+        }
+        else
+        {
+            if (setting)
+                curPower = newPower;
+            else
+                curPower -= newPower;
+        }
     }
 
     public void UpdateUnitHealingPower(int newHealingPower)

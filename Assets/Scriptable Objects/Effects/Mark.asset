@@ -16,7 +16,8 @@ MonoBehaviour:
   curEffectType: 0
   curEffectName: 16
   effectName: MARK
-  effectDesc: Inflict Mark on target enemy for
+  effectDesc: Receive an additional 50% damage
   effectIcon: {fileID: 21300000, guid: d7b9f2cea2b43cc4a92c0144a7846116, type: 3}
-  powerPercent: 20
+  powerPercent: 50
   powerAmp: 0
+  titleTextColour: {r: 0.756251, g: 1, b: 0.2783019, a: 1}

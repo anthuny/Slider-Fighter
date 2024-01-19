@@ -13,16 +13,10 @@ public class MenuUnitDisplay : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField] private UIElement statHealth;
-    [SerializeField] private UIElement statDamageHits;
-    [SerializeField] private UIElement statHealingHits;
+    [SerializeField] private UIElement statPower;
+    [SerializeField] private UIElement statHealingPower;
     [SerializeField] private UIElement statDefense;
     [SerializeField] private UIElement statSpeed;
-
-    private int prevStatHealth;
-    private int prevStatDamageHits;
-    private int prevStatHealingHits;
-    private int prevStatDefense;
-    private int prevStatSpeed;
 
     // todo am here
 
@@ -83,42 +77,45 @@ public class MenuUnitDisplay : MonoBehaviour
 
     public void ResetUnitStats()
     {
-        prevStatHealth = 0;
-        prevStatDamageHits = 0;
-        prevStatHealingHits = 0;
-        prevStatDefense = 0;
-        prevStatSpeed = 0;
+        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        {
+            GameManager.Instance.activeRoomAllies[i].prevStatHealth = 0;
+            GameManager.Instance.activeRoomAllies[i].prevStatPower = 0;
+            GameManager.Instance.activeRoomAllies[i].prevStatHealingPower = 0;
+            GameManager.Instance.activeRoomAllies[i].prevStatDefense = 0;
+            GameManager.Instance.activeRoomAllies[i].prevStatSpeed = 0;
+        }
     }
 
     public void UpdateUnitStats(UnitFunctionality unitFunc)
     {
         // If new gear has a higher stat then current, make the stat bounce
 
-        if (prevStatHealth < unitFunc.GetUnitMaxHealth())
+        if (unitFunc.prevStatHealth < unitFunc.GetUnitMaxHealth())
         {
             statHealth.AnimateUI();
             StartCoroutine(statHealth.ChangeTextColourTime(TeamGearManager.Instance.statIncreasedColour, TeamGearManager.Instance.timeStatIncColour));
         }
 
-        if (prevStatDamageHits < unitFunc.GetUnitDamageHits())
+        if (unitFunc.prevStatPower < unitFunc.curPower)
         {
-            statDamageHits.AnimateUI();
-            StartCoroutine(statDamageHits.ChangeTextColourTime(TeamGearManager.Instance.statIncreasedColour, TeamGearManager.Instance.timeStatIncColour));
+            statPower.AnimateUI();
+            StartCoroutine(statPower.ChangeTextColourTime(TeamGearManager.Instance.statIncreasedColour, TeamGearManager.Instance.timeStatIncColour));
         }
 
-        if (prevStatHealingHits < unitFunc.GetUnitHealingHits())
+        if (unitFunc.prevStatHealingPower < unitFunc.curHealingPower)
         {
-            statHealingHits.AnimateUI();
-            StartCoroutine(statHealingHits.ChangeTextColourTime(TeamGearManager.Instance.statIncreasedColour, TeamGearManager.Instance.timeStatIncColour));
+            statHealingPower.AnimateUI();
+            StartCoroutine(statHealingPower.ChangeTextColourTime(TeamGearManager.Instance.statIncreasedColour, TeamGearManager.Instance.timeStatIncColour));
         }
 
-        if (prevStatDefense < unitFunc.GetCurDefense())
+        if (unitFunc.prevStatDefense < unitFunc.GetCurDefense())
         {
             statDefense.AnimateUI();
             StartCoroutine(statDefense.ChangeTextColourTime(TeamGearManager.Instance.statIncreasedColour, TeamGearManager.Instance.timeStatIncColour));
         }
 
-        if (prevStatSpeed < unitFunc.GetUnitSpeed())
+        if (unitFunc.prevStatSpeed < unitFunc.GetUnitSpeed())
         {
             statSpeed.AnimateUI();
             StartCoroutine(statSpeed.ChangeTextColourTime(TeamGearManager.Instance.statIncreasedColour, TeamGearManager.Instance.timeStatIncColour));
@@ -126,49 +123,47 @@ public class MenuUnitDisplay : MonoBehaviour
 
 
         // Decrease stat - colour behaviour
-        if (prevStatHealth > unitFunc.GetUnitMaxHealth())
+        if (unitFunc.prevStatHealth > unitFunc.GetUnitMaxHealth())
         {
             //statHealth.AnimateUI();
             StartCoroutine(statHealth.ChangeTextColourTime(TeamGearManager.Instance.statDecreasedColour, TeamGearManager.Instance.timeStatDecColour));
         }
 
-        if (prevStatDamageHits > unitFunc.GetUnitDamageHits())
+        if (unitFunc.prevStatPower > unitFunc.curPower)
         {
             //statDamageHits.AnimateUI();
-            StartCoroutine(statDamageHits.ChangeTextColourTime(TeamGearManager.Instance.statDecreasedColour, TeamGearManager.Instance.timeStatDecColour));
+            StartCoroutine(statPower.ChangeTextColourTime(TeamGearManager.Instance.statDecreasedColour, TeamGearManager.Instance.timeStatDecColour));
         }
 
-        if (prevStatHealingHits > unitFunc.GetUnitHealingHits())
+        if (unitFunc.prevStatHealingPower > unitFunc.curHealingPower)
         {
             //statHealingHits.AnimateUI();
-            StartCoroutine(statHealingHits.ChangeTextColourTime(TeamGearManager.Instance.statDecreasedColour, TeamGearManager.Instance.timeStatDecColour));
+            StartCoroutine(statHealingPower.ChangeTextColourTime(TeamGearManager.Instance.statDecreasedColour, TeamGearManager.Instance.timeStatDecColour));
         }
 
-        if (prevStatDefense > unitFunc.GetCurDefense())
+        if (unitFunc.prevStatDefense > unitFunc.GetCurDefense())
         {
             //statDefense.AnimateUI();
             StartCoroutine(statDefense.ChangeTextColourTime(TeamGearManager.Instance.statDecreasedColour, TeamGearManager.Instance.timeStatDecColour));
         }
 
-        if (prevStatSpeed > unitFunc.GetUnitSpeed())
+        if (unitFunc.prevStatSpeed > unitFunc.GetUnitSpeed())
         {
             //statSpeed.AnimateUI();
             StartCoroutine(statSpeed.ChangeTextColourTime(TeamGearManager.Instance.statDecreasedColour, TeamGearManager.Instance.timeStatDecColour));
         }
 
         statHealth.UpdateContentText(unitFunc.GetUnitMaxHealth().ToString());
-        statDamageHits.UpdateContentText(unitFunc.GetUnitDamageHits().ToString());
-        statHealingHits.UpdateContentText(unitFunc.GetUnitHealingHits().ToString());
+        statPower.UpdateContentText(unitFunc.curPower.ToString());
+        statHealingPower.UpdateContentText(unitFunc.curHealingPower.ToString());
         statDefense.UpdateContentText(unitFunc.GetCurDefense().ToString());
         statSpeed.UpdateContentText(unitFunc.GetUnitSpeed().ToString());
 
-        prevStatHealth = (int)unitFunc.GetUnitMaxHealth();
-        prevStatDamageHits = (int)unitFunc.GetUnitDamageHits();
-        prevStatHealingHits = (int)unitFunc.GetUnitHealingHits();
-        prevStatDefense = (int)unitFunc.GetCurDefense();
-        prevStatSpeed = (int)unitFunc.GetUnitSpeed();
-
-
+        unitFunc.prevStatHealth = (int)unitFunc.GetUnitMaxHealth();
+        unitFunc.prevStatPower = (int)unitFunc.curPower;
+        unitFunc.prevStatHealingPower = (int)unitFunc.curHealingPower;
+        unitFunc.prevStatDefense = (int)unitFunc.GetCurDefense();
+        unitFunc.prevStatSpeed = (int)unitFunc.GetUnitSpeed();
     }
 
     public void UpdateStatHealth(int health)
@@ -179,8 +174,8 @@ public class MenuUnitDisplay : MonoBehaviour
 
     public void UpdateStatDamageHits(int dmgHits)
     {
-        statDamageHits.UpdateContentText(dmgHits.ToString());
-        statDamageHits.AnimateUI();
+        statPower.UpdateContentText(dmgHits.ToString());
+        statPower.AnimateUI();
     }
 
     public void ToggleUnitLocked(bool toggle, bool displayQuestionMark = false)

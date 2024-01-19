@@ -305,7 +305,7 @@ public class MapManager : MonoBehaviour
 
             map.UpdateAlpha(1);
 
-            TeamSetup.Instance.ToggleToMapButton(false);
+            SkillsTabManager.Instance.ToggleToMapButton(false);
 
             //ToggleMapScroll(true);
 

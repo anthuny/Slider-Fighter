@@ -57,6 +57,8 @@ public class HeroRoomManager : MonoBehaviour
         promptYesButton.ToggleButton(toggle);
         promptNoButton.ToggleButton(toggle);
 
+        GameManager.Instance.UpdateActiveSkill(null);
+
         if (!denied)
             GameManager.Instance.AddUnitToTeam(GameManager.Instance.spawnedUnit);
 

@@ -10,11 +10,8 @@ public class UIElement : MonoBehaviour
     private CanvasGroup cg;
     private TextMeshProUGUI mainText;
 
-    public enum StatType { STATSTANDARD1, STATSTANDARD2, STATSTANDARD3, STATSTANDARD4, STATSTANDARD5, STATADVANCED1, STATADVANCED2, STATADVANCED3, STATADVANCED4, BG };
+    public enum StatType { SKILLSLOT1, SKILLSLOT2, SKILLSLOT3, SKILLSLOT4, BG };
     public StatType curStatType;
-
-    public enum ActiveMasteryType { STANDARD, ADVANCED };
-    public ActiveMasteryType activeStatType;
 
     public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
     public Rarity curRarity;
@@ -125,7 +122,7 @@ public class UIElement : MonoBehaviour
         if (GetIsSelectable())
         {
             // If locked, display as locked
-            if (TeamSetup.Instance.GetActiveStatTypeSpentPoints() < GetMasteryPointThreshhold())
+            if (SkillsTabManager.Instance.GetActiveSkillSpentPoints() < GetMasteryPointThreshhold())
                 UpdateIsLocked(true);
             else
             {
@@ -138,11 +135,11 @@ public class UIElement : MonoBehaviour
         }
     }
 
-    public void UpdateStatPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false, string statType = "OFFENSE")
+    public void UpdateStatPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false)
     {
         if (isReset)
         {
-            if (TeamSetup.Instance.GetActiveUnit().GetSpentMasteryPoints() < GetMasteryPointThreshhold())
+            if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetMasteryPointThreshhold())
                 ToggleLockedImage(true);
             else
                 ToggleLockedImage(false);
@@ -153,7 +150,7 @@ public class UIElement : MonoBehaviour
 
         if (adding)
         {
-            if (TeamSetup.Instance.CalculateUnspentStatPoints() <= 0)
+            if (SkillsTabManager.Instance.CalculateUnspentSkillPoints() <= 0)
                 return;
 
             // If bulk adding,
@@ -162,42 +159,27 @@ public class UIElement : MonoBehaviour
             else
             {
                 statPointsAdded++;
-                TeamSetup.Instance.UpdateUnspentStatPoints(true);
+                SkillsTabManager.Instance.UpdateUnspentSkillPoints(true);
             }
 
             // Adds
-            if (statType == "STANDARD")
-            {
-                if (curStatType == StatType.STATSTANDARD1)
-                    TeamSetup.Instance.GetActiveUnit().statsBase1Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD2)
-                    TeamSetup.Instance.GetActiveUnit().statsBase2Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD3)
-                    TeamSetup.Instance.GetActiveUnit().statsBase3Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD4)
-                    TeamSetup.Instance.GetActiveUnit().statsBase4Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATSTANDARD5)
-                    TeamSetup.Instance.GetActiveUnit().statsBase5Added = GetStatPointsAdded();
-            }
-            else if (statType == "ADVANCED")
-            {
-                if (curStatType == StatType.STATADVANCED1)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv1Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATADVANCED2)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv2Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATADVANCED3)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv3Added = GetStatPointsAdded();
-                else if (curStatType == StatType.STATADVANCED4)
-                    TeamSetup.Instance.GetActiveUnit().statsAdv4Added = GetStatPointsAdded();
-            }
+
+            if (curStatType == StatType.SKILLSLOT1)
+                SkillsTabManager.Instance.GetActiveUnit().statsBase1Added = GetStatPointsAdded();
+            else if (curStatType == StatType.SKILLSLOT2)
+                SkillsTabManager.Instance.GetActiveUnit().statsBase2Added = GetStatPointsAdded();
+            else if (curStatType == StatType.SKILLSLOT3)
+                SkillsTabManager.Instance.GetActiveUnit().statsBase3Added = GetStatPointsAdded();
+            else if (curStatType == StatType.SKILLSLOT4)
+                SkillsTabManager.Instance.GetActiveUnit().statsBase4Added = GetStatPointsAdded();
         }
         else
         {
             statPointsAdded--;
-            TeamSetup.Instance.UpdateUnspentStatPoints(false);
+            SkillsTabManager.Instance.UpdateUnspentSkillPoints(false);
         }
 
-        if (TeamSetup.Instance.GetActiveUnit().GetSpentMasteryPoints() < GetMasteryPointThreshhold())
+        if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetMasteryPointThreshhold())
             ToggleLockedImage(true);
         else
             ToggleLockedImage(false);
@@ -243,6 +225,8 @@ public class UIElement : MonoBehaviour
 
     public void ToggleSelected(bool toggle, bool clearItemRewardsSelection = false)
     {
+        //Debug.Log("UIELEMENT Toggling " + toggle);
+
         if (toggle)
         {
             if (clearItemRewardsSelection)
@@ -267,7 +251,7 @@ public class UIElement : MonoBehaviour
         // Shit fix for rewards finding their content text
         if (contentText == null)
             contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
-
+        
         contentText.text = text;
         //AnimateUI();
     }
@@ -275,6 +259,11 @@ public class UIElement : MonoBehaviour
     public void UpdateContentTextColour(TMP_ColorGradient gradient)
     {
         contentText.colorGradientPreset = gradient;
+    }
+
+    public void UpdateContentTextColourTMP(Color color)
+    {
+        contentText.color = color;
     }
 
     public void AnimateUI(bool text = true)
@@ -401,6 +390,8 @@ public class UIElement : MonoBehaviour
         {
             cg.alpha = difAlphaNum;
         }
+
+        //Debug.Log("updating alpha " + alpha);
         // Make UI element selectable/unselectable
         if (alpha == 1)
         {

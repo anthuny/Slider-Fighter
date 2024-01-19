@@ -124,7 +124,16 @@ MonoBehaviour:
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0
-  gear: {fileID: 3719199964190919270}
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDown: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
 --- !u!114 &1908293258537851895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,9 +203,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
-  contentImage: {fileID: 0}
+  contentImage: {fileID: 2122130133030508406}
+  contentImageUI: {fileID: 5370905286981818580}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
@@ -219,6 +229,7 @@ MonoBehaviour:
   itemName: 
   rarityBorderUI: {fileID: 0}
   originalScaleText: 0
+  isEnabled: 0
 --- !u!225 &736634709790740255
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -474,7 +485,16 @@ MonoBehaviour:
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0
-  gear: {fileID: 3719199964190919270}
+  slot: {fileID: 3719199964190919270}
+  heldTimer: 0
+  isHeldDown: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
 --- !u!114 &3471916845073843237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,7 +515,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a272d151765eb184b968a702c3f42551, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bce5a8579a91b194a8cc43417a21b9ac, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -624,9 +644,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
@@ -649,6 +670,7 @@ MonoBehaviour:
   itemName: 
   rarityBorderUI: {fileID: 0}
   originalScaleText: 0
+  isEnabled: 0
 --- !u!1 &4464626655675011679
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,9 +779,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 3449677605194979785}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
@@ -782,6 +805,7 @@ MonoBehaviour:
   itemName: 
   rarityBorderUI: {fileID: 0}
   originalScaleText: 0
+  isEnabled: 0
 --- !u!225 &5652339567940830073
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -902,6 +926,9 @@ GameObject:
   - component: {fileID: 7066415375064936028}
   - component: {fileID: 6481919743779131907}
   - component: {fileID: 7738427405295108551}
+  - component: {fileID: 7361198231530348304}
+  - component: {fileID: 8567531401613743899}
+  - component: {fileID: 3970542999968931991}
   m_Layer: 0
   m_Name: rt
   m_TagString: Untagged
@@ -967,6 +994,98 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7361198231530348304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634919159842512385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 7738427405295108551}
+  contentImageUI: {fileID: 7361198231530348304}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  statPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  originalScaleText: 0
+  isEnabled: 0
+--- !u!225 &8567531401613743899
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634919159842512385}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &3970542999968931991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634919159842512385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 7738427405295108551}
+  contentImageUI: {fileID: 7361198231530348304}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  statPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  originalScaleText: 0
+  isEnabled: 0
 --- !u!1 &6911069032676942399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092,9 +1211,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 3346300702503523991}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
@@ -1117,6 +1237,7 @@ MonoBehaviour:
   itemName: 
   rarityBorderUI: {fileID: 0}
   originalScaleText: 0
+  isEnabled: 0
 --- !u!1 &8105081523320373190
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,9 +1305,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 3471916845073843237}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
@@ -1209,6 +1331,7 @@ MonoBehaviour:
   itemName: 
   rarityBorderUI: {fileID: 0}
   originalScaleText: 0
+  isEnabled: 0
 --- !u!114 &3719199964190919270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1223,12 +1346,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curGearType: 3
   curRarity: 0
-  curGearStatis: 3
+  curSlotStatis: 0
   curGearOwnedBy: 0
-  gearUI: {fileID: 873810701133512399}
-  gearSelectionUI: {fileID: 7954547787694544633}
-  ownedGearButton: {fileID: 5370905286981818580}
-  equipGearButton: {fileID: 0}
+  slotUI: {fileID: 873810701133512399}
+  slotSelectionUI: {fileID: 7954547787694544633}
+  ownedSlotButton: {fileID: 3471916845073843232}
+  equipSlotButton: {fileID: 0}
   goldtextUI: {fileID: 8448886624976684352}
   isGold: 0
   isEmpty: 1
@@ -1534,9 +1657,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 8540238855158572232}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
@@ -1559,3 +1683,4 @@ MonoBehaviour:
   itemName: 
   rarityBorderUI: {fileID: 0}
   originalScaleText: 0
+  isEnabled: 0

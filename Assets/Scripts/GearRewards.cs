@@ -174,60 +174,60 @@ public class GearRewards : MonoBehaviour
                 go.transform.SetParent(recievedGearParent);
                 go.transform.localScale = new Vector2(1, 1);
 
-                Gear gear = go.GetComponent<Gear>();
+                Slot gear = go.GetComponent<Slot>();
 
                 //gear.gameObject.GetComponent<UIElement>().AnimateUI();
 
                 gear.isGold = false;
 
 
-                gear.UpdateGearStatis(Gear.GearStatis.REWARD);
+                gear.UpdateGearStatis(Slot.SlotStatis.REWARD);
 
                 // Determien Gear rarity
-                int rarityChance = Random.Range(0, 101);
+                int rarityChance = Random.Range(1, 101);
 
-                if (gearLegendaryPerc >= rarityChance)
+                if (rarityChance >= gearLegendaryPerc)
                 {
-                    gear.UpdateRarity(Gear.Rarity.LEGENDARY);
+                    gear.UpdateRarity(Slot.Rarity.LEGENDARY);
                 }
-                else if (gearEpicPerc >= rarityChance)
+                else if (rarityChance >= gearEpicPerc)
                 {
-                    gear.UpdateRarity(Gear.Rarity.EPIC);
+                    gear.UpdateRarity(Slot.Rarity.EPIC);
                 }
-                else if (gearRarePerc >= rarityChance)
+                else if (rarityChance >= gearRarePerc)
                 {
-                    gear.UpdateRarity(Gear.Rarity.RARE);
+                    gear.UpdateRarity(Slot.Rarity.RARE);
                 }
-                else if (gearCommonPerc >= rarityChance)
+                else
                 {
-                    gear.UpdateRarity(Gear.Rarity.COMMON);
+                    gear.UpdateRarity(Slot.Rarity.COMMON);
                 }
 
                 GearPiece newGear = null;
 
                 // Determine what gear this Gear is
-                if (gear.GetRarity() == Gear.Rarity.COMMON)
+                if (gear.GetRarity() == Slot.Rarity.COMMON)
                 {
                     int rand = Random.Range(0, allGearPiecesCommon.Count);
                     newGear = allGearPiecesCommon[rand];
-
+                    gear.UpdateSlotImage(newGear.gearIcon);
                     OwnedLootInven.Instance.AddOwnedGear(gear);
                 }
-                else if (gear.GetRarity() == Gear.Rarity.RARE)
+                else if (gear.GetRarity() == Slot.Rarity.RARE)
                 {
                     int rand = Random.Range(0, allGearPiecesRare.Count);
                     newGear = allGearPiecesRare[rand];
-                    gear.UpdateGearImage(newGear.gearIcon);
+                    gear.UpdateSlotImage(newGear.gearIcon);
                     OwnedLootInven.Instance.AddOwnedGear(gear);
                 }
-                else if (gear.GetRarity() == Gear.Rarity.EPIC)
+                else if (gear.GetRarity() == Slot.Rarity.EPIC)
                 {
                     int rand = Random.Range(0, allGearPiecesEpic.Count);
                     newGear = allGearPiecesEpic[rand];
-                    gear.UpdateGearImage(newGear.gearIcon);
+                    gear.UpdateSlotImage(newGear.gearIcon);
                     OwnedLootInven.Instance.AddOwnedGear(gear);
                 }
-                else if (gear.GetRarity() == Gear.Rarity.LEGENDARY)
+                else if (gear.GetRarity() == Slot.Rarity.LEGENDARY)
                 {
                     int rand = Random.Range(0, allGearPiecesLegendary.Count);
                     newGear = allGearPiecesLegendary[rand];
@@ -237,24 +237,24 @@ public class GearRewards : MonoBehaviour
                 // Update gear type
                 if (newGear.gearType == "helmet")
                 {
-                    gear.UpdateCurGearType(Gear.GearType.HELMET);
+                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
                 }
                 else if (newGear.gearType == "chestpiece")
                 {
-                    gear.UpdateCurGearType(Gear.GearType.CHESTPIECE);
+                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
                 }
                 else if (newGear.gearType == "leggings")
                 {
-                    gear.UpdateCurGearType(Gear.GearType.LEGGINGS);
+                    gear.UpdateCurSlotType(Slot.SlotType.LEGGINGS);
                 }
                 else if (newGear.gearType == "boots")
                 {
-                    gear.UpdateCurGearType(Gear.GearType.BOOTS);
+                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
                 }
 
                 // Initialize gear base data
-                gear.UpdateGearImage(newGear.gearIcon);
-                gear.UpdateGearImage(newGear.gearIcon);
+                gear.UpdateSlotImage(newGear.gearIcon);
+                gear.UpdateSlotImage(newGear.gearIcon);
                 gear.UpdateGearName(newGear.gearName);
                 gear.UpdateGearBonusHealth(newGear.bonusHealth);
                 gear.UpdateGearBonusDamage(newGear.bonusDamage);
@@ -265,12 +265,12 @@ public class GearRewards : MonoBehaviour
                 // Disable owned gear button for unowned loot
                 gear.ToggleOwnedGearButton(false);
                 // Show full visibility of Gear
-                gear.UpdateGearAlpha(true);
+                gear.UpdateLootGearAlpha(true);
             }
         }
 
         // After last reward given, enable post battle TO MAP - Button
-        StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
+        //StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
     }
 
     IEnumerator GiveGold()

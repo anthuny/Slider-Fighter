@@ -1,7 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Callbacks;
 using UnityEngine.Advertisements;
+using UnityEditor;
+using UnityEditor.Advertisements;
+
+public class UnityAdsBuildProcessor : Editor
+{
+    [PostProcessScene]
+    public static void OnPostprocessScene()
+    {
+        AdvertisementSettings.enabled = true;
+        AdvertisementSettings.initializeOnStartup = false;
+    }
+}
 
 public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener, IUnityAdsInitializationListener
 {

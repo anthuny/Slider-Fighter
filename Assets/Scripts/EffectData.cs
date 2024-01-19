@@ -24,4 +24,5 @@ public class EffectData : ScriptableObject
     public Sprite effectIcon;
     public float powerPercent;
     public float powerAmp;
+    public Color titleTextColour;
 }

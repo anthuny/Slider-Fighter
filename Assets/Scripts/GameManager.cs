@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool playerWon;
 
-    private bool combatOver;
+    public bool combatOver;
     public int unitID;
 
     private void Awake()
@@ -374,15 +374,32 @@ public class GameManager : MonoBehaviour
             // If spawning hero ally from end of hero room
             if (spawnHeroAlly)
             {
+                List<string> ownedUnitNames = new List<string>();
+
+                for (int i = 0; i < activeTeam.Count; i++)
+                {
+                    ownedUnitNames.Add(activeTeam[i].unitName);
+                }
+
                 // Loop through all allies in Characters Carasel
                 for (int t = 0; t < CharacterCarasel.Instance.GetAllAllies().Count; t++)
                 {
-                    if (CharacterCarasel.Instance.GetAlly(t).unitName == "Archer")
+                    for (int v = 0; v < ownedUnitNames.Count; v++)
                     {
-                        unit = CharacterCarasel.Instance.GetAlly(t);    // Reference Archer as unit to spawn
+                        if (!ownedUnitNames.Contains(CharacterCarasel.Instance.GetAllAllies()[t].unitName))
+                        {
+                            unit = CharacterCarasel.Instance.GetAlly(t);    // Reference a unit that is not on the current ally team
+                        }
                     }
-
                 }
+
+                if (unit == null)
+                {
+                    Debug.Log("No ally found that is not already on team!");
+                    StartCoroutine(SetupPostBattleUI(playerWon));
+                    return;
+                }
+
             }
 
             // Spawn ally
@@ -466,7 +483,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateDefenseIncPerLv(unit.defenseIncPerLv);
                 unitFunctionality.UpdateMaxHealthIncPerLv((int)unit.maxHealthIncPerLv);
 
-                unitFunctionality.UpdateCurrentMasteries(unit.GetStandardStats());
+                unitFunctionality.UpdateCurrentSkillBaseSlots(unit.GetStandardStats());
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
@@ -498,7 +515,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.unitData = unit;
 
                 if (i == 0 && !spawnHeroAlly)
-                    TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
+                    SkillsTabManager.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
 
                 //activeRoomAllies.Add(unitFunctionality);
 
@@ -558,37 +575,30 @@ public class GameManager : MonoBehaviour
     }
     public void ToggleTeamSetup(bool toggle)
     {
-        TeamSetup.Instance.statScrollView.SetActive(toggle);
+        SkillsTabManager.Instance.statScrollView.SetActive(toggle);
 
         if (toggle)
         {
-            TeamSetup.Instance.gearTabArrowLeftButton.ToggleButton(true);
-            TeamSetup.Instance.gearTabArrowRightButton.ToggleButton(true);
+            SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(true);
+            SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(true);
 
             teamSetup.UpdateAlpha(1);
             //SpawnAllies(false);
-            TeamSetup.Instance.ToggleToMapButton(true);
+            SkillsTabManager.Instance.ToggleToMapButton(true);
             UpdateAllAlliesPosition(false, true, true);
-            TeamSetup.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
+            SkillsTabManager.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
 
             oldActiveRoomAllUnitFunctionalitys = activeRoomAllUnitFunctionalitys;
 
-            // Track the last mastery type from the active unit
-            TeamSetup.ActiveStatType masteryType = TeamSetup.ActiveStatType.STANDARD;
-            if (TeamSetup.Instance.GetActiveUnit().GetLastOpenedMastery() == UnitFunctionality.LastOpenedMastery.STANDARD)
-                masteryType = TeamSetup.ActiveStatType.STANDARD;
-            else if (TeamSetup.Instance.GetActiveUnit().GetLastOpenedMastery() == UnitFunctionality.LastOpenedMastery.ADVANCED)
-                masteryType = TeamSetup.ActiveStatType.ADVANCED;
-
-            TeamSetup.Instance.UpdateStatPage(masteryType);
-
-            TeamSetup.Instance.UpdateAllyNameText();
+            SkillsTabManager.Instance.UpdateStatPage();
+            
+            SkillsTabManager.Instance.UpdateAllyNameText();
         }
         else
         {
-            TeamSetup.Instance.gearTabArrowLeftButton.ToggleButton(false);
-            TeamSetup.Instance.gearTabArrowRightButton.ToggleButton(false);
-            TeamSetup.Instance.ToggleToMapButton(false);
+            SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(false);
+            SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(false);
+            SkillsTabManager.Instance.ToggleToMapButton(false);
             teamSetup.UpdateAlpha(0);
         }
     }
@@ -750,9 +760,9 @@ public class GameManager : MonoBehaviour
         {
             if (masteryPosition)
             {
-                allyPositions.SetParent(TeamSetup.Instance.statAllyPosTrans);
+                allyPositions.SetParent(SkillsTabManager.Instance.statAllyPosTrans);
                 allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
-                allyPositions.position = TeamSetup.Instance.statAllyPosTrans.position;
+                allyPositions.position = SkillsTabManager.Instance.statAllyPosTrans.position;
 
                 return;
             }
@@ -891,15 +901,18 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Disable post battle to map button for next post battle scene
-        StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
-
         PostBattle.Instance.TogglePostBattleConditionText(playerWon);
 
         // Ads
         if (playerWon && RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
         {
             AdManager.Instance.ShowForcedAd();
+        }
+
+        if (!playerWon)
+        {
+            // Enable post battle to map button for next post battle scene
+            StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
         }
 
         StartCoroutine(SetupRoomPostBattle(playerWon));
@@ -2350,11 +2363,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void ToggleUnitEffectTooltipsOff(bool onlyEnemies = false)
+    {
+        ButtonFunctionality[] buttons = GameObject.FindObjectsOfType<ButtonFunctionality>();
+
+        foreach (ButtonFunctionality button in buttons)
+        {
+            StartCoroutine(button.HideEffectTooltipOvertime(onlyEnemies));
+        }
+    }
     public void UpdateTurnOrder(bool unitDied = false, bool roundStart = false)
     {
         if (combatOver)
             return;
 
+        ToggleUnitEffectTooltipsOff(true);
         //ToggleSkillVisibility(false);
 
         ToggleUIElement(turnOrder, true);   // Enable turn order UI
@@ -2623,6 +2646,9 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < unitsSelected.Count; i++)
         {
             unitsSelected[i].ToggleSelected(false);
+
+            // Tell unit button that it is d 
+            unitsSelected[i].selectUnitButton.unitIsSelected = false;
         }
 
         unitsSelected.Clear();
@@ -2802,7 +2828,6 @@ public class GameManager : MonoBehaviour
     }
     public void SelectUnit(UnitFunctionality unit)
     {
-
         // Ensure units cant change their selection before asd after attack
         // Allows hero rooms to still allow selection if room is defeated
         if (roomDefeated)
@@ -2810,7 +2835,10 @@ public class GameManager : MonoBehaviour
 
         }
         else if (!GetAllowSelection() || !GetSelectingUnitsAllowed())
+        {
+            //Debug.Log("ending");
             return;
+        }
 
         // If current room is a shop
         if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP)
@@ -2833,7 +2861,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(WaitTimeThenDeselect(shopRemoveSelectTime, unit));            
         }
 
-        if (activeSkill)
+        if (activeSkill && !combatOver)
         {
             // Dont select other units if its a self cast
             if (activeSkill.isSelfCast && unit != GetActiveUnitFunctionality())
@@ -2846,10 +2874,15 @@ public class GameManager : MonoBehaviour
             if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             {
                 if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                {
+                    //Debug.Log("ending 2");
                     return;
-
+                }
                 if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                {
+                    //Debug.Log("ending 3");
                     return;
+                }
             }
         }
 
@@ -2878,7 +2911,7 @@ public class GameManager : MonoBehaviour
             //UpdateUnitsSelectedText();
 
             // If its not a hero room, dont attack on unselecting
-            if (!roomDefeated)
+            if (!combatOver)
             {
                 ToggleSelectingUnits(false);
                 ToggleAllowSelection(false);
@@ -2949,7 +2982,11 @@ public class GameManager : MonoBehaviour
                 // If there are no enemies remaining AND its a hero room, AND hero room has no been offered yet
                 if (activeRoomEnemies.Count == 0 && (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
                     && !HeroRoomManager.Instance.GetPlayerOffered())
+                {
+                    //Debug.Log("toggling prompt");
                     StartCoroutine(ToggleHeroSelectPrompt());
+                }
+
             }
         }
         else
@@ -2996,6 +3033,8 @@ public class GameManager : MonoBehaviour
         ToggleSkillVisibility(false);
 
         GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false);
+
+        ToggleUnitEffectTooltipsOff();
 
         StartCoroutine(AttackButtonCont());
     }

@@ -39,8 +39,8 @@ public class UnitData : ScriptableObject
     public SkillData skill3;
 
     [Header("Mastery Tree")]
-    [SerializeField] private List<Stat> standardStats = new List<Stat>();
-    [SerializeField] private List<Stat> advancedStats = new List<Stat>();
+    [SerializeField] private List<SkillBase> standardStats = new List<SkillBase>();
+    [SerializeField] private List<SkillBase> advancedStats = new List<SkillBase>();
 
     public AudioClip deathClip;
     public AudioClip hitRecievedClip;
@@ -83,12 +83,12 @@ public class UnitData : ScriptableObject
         return unitValue;
     }
 
-    public List<Stat> GetStandardStats()
+    public List<SkillBase> GetStandardStats()
     {
         return standardStats;
     }
 
-    public List<Stat> GetAdvancedStats()
+    public List<SkillBase> GetAdvancedStats()
     {
         return advancedStats;
     }

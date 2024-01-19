@@ -15,9 +15,9 @@ MonoBehaviour:
   gearName: Rugged Chestpiece
   gearType: chestpiece
   gearRarity: common
-  gearIcon: {fileID: 21300000, guid: afbec790ad6b9cb439b61c5823347bf9, type: 3}
-  bonusHealth: 50
-  bonusDamage: 1
-  bonusHealing: 1
-  bonusDefense: 3
+  gearIcon: {fileID: 21300000, guid: 22349d9d84466c047bb7c36ba5887c61, type: 3}
+  bonusHealth: 45
+  bonusDamage: 0
+  bonusHealing: 2
+  bonusDefense: 2
   bonusSpeed: 0

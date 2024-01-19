@@ -37,6 +37,7 @@ public class Effect : MonoBehaviour
     private float tempAddedHealth;
 
     private float storedPowerAmp;
+    public Color titleTextColour;
 
     private void Awake()
     {
@@ -97,7 +98,8 @@ public class Effect : MonoBehaviour
         else if (effect.curEffectName == EffectData.EffectName.DEFENSEDOWN)
             curEffectName = EffectName.DEFENSEDOWN;
 
-        effectName = effect.effectName; 
+        effectName = effect.effectName;
+        titleTextColour = effect.titleTextColour;
         effectDesc = effect.effectDesc;
         powerPercent = effect.powerPercent;
         powerAmp = effect.powerAmp;
