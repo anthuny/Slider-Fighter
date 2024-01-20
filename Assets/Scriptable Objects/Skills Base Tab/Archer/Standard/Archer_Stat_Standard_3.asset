@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c515bbf9fa0bc4d9bd8e0baa75a0b8, type: 3}
   m_Name: Archer_Stat_Standard_3
   m_EditorClassIdentifier: 
-  statIcon: {fileID: 21300000, guid: 102d2b3b78a53a442a5657efab178a1e, type: 3}
-  statName: Healing Power
-  statDesc: +5% Healing
-  statMaxAmount: 10
+  skillBaseIcon: {fileID: 21300000, guid: 6615f742c768f9b459960f4eb1ddb6dd, type: 3}
+  skillBaseName: 
+  skillBaseDesc: 
+  skillBaseMaxAmount: 0

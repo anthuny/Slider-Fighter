@@ -22,7 +22,7 @@ MonoBehaviour:
   skillDescr: 
   skillPower: 6
   skillAttackAccMult: 1
-  skillAttackCount: 3
+  skillAttackCount: 2
   projectileSpeed: 12
   skillCooldown: 1
   skillSelectionCount: 2

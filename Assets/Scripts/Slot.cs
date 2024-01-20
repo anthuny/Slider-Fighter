@@ -77,7 +77,9 @@ public class Slot : MonoBehaviour
 
         isEmpty = true;
         // Disable gear equip button if its empty
-        ToggleEquipButton(false);
+        //Debug.Log("about to reset " + gameObject.name);
+        //ToggleEquipButton(false);
+
 
         TeamGearManager.Instance.UpdateGearNameText("");
 
@@ -203,6 +205,8 @@ public class Slot : MonoBehaviour
 
     public void ToggleOwnedGearButton(bool toggle)
     {
+        equipSlotButton.ToggleButton(toggle);
+
         if (toggle)
             ownedSlotButton.UpdateAlpha(1);
         else
@@ -211,14 +215,22 @@ public class Slot : MonoBehaviour
 
     public void ToggleEquipButton(bool toggle)
     {
+        //Debug.Log("togging " + gameObject.name + " equip slot button " + toggle);
+
         if (equipSlotButton != null)
         {
-            equipSlotButton.gameObject.transform.GetChild(0).gameObject.GetComponent<UIElement>().UpdateImage(toggle);
+            //equipSlotButton.gameObject.transform.GetChild(0).gameObject.GetComponent<UIElement>().UpdateImage(toggle);
 
             if (toggle)
+            {
                 equipSlotButton.UpdateAlpha(1);
+            }
             else
+            {
                 equipSlotButton.UpdateAlpha(0);
+            }
+
+            equipSlotButton.ToggleButton(toggle);
         }
     }
 
@@ -261,7 +273,7 @@ public class Slot : MonoBehaviour
 
     public void ToggleMainSlot(bool toggle)
     {
-        Debug.Log("Toggling main slot " + toggle);
+        //Debug.Log("Toggling main slot " + toggle);
         if (slotUI.doScalePunch)
         {
             slotUI.doScalePunch = false;

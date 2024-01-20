@@ -18,6 +18,7 @@ public class PostBattle : MonoBehaviour
     [SerializeField] private ButtonFunctionality toMapButton;
 
     private UIElement postBattleUI;
+    [HideInInspector] public bool isInPostBattle;
 
     private void Awake()
     {
@@ -57,6 +58,8 @@ public class PostBattle : MonoBehaviour
         //ToggleToMapButtonInteractable(toggle);
 
         GameManager.Instance.ToggleUIElement(postBattleUI, toggle);
+
+        isInPostBattle = toggle;
     }
 
     public void TogglePostBattleConditionText(bool playerWin)

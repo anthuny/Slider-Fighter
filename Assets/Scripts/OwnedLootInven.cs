@@ -470,7 +470,7 @@ public class OwnedLootInven : MonoBehaviour
                 {
                     if (ownedGear[i].GetCurGearType() == Slot.SlotType.HELMET)
                     {
-                        Debug.Log("loading owned gear helm");
+                        //Debug.Log("loading owned gear helm");
                         // Update gear icon
                         ownedLootSlots[ownedGearSlotIndex].UpdateSlotImage(ownedGear[i].GetGearImage());
                         ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.HELMET);
@@ -491,7 +491,7 @@ public class OwnedLootInven : MonoBehaviour
                 {
                     if (ownedGear[i].GetCurGearType() == Slot.SlotType.CHESTPIECE)
                     {
-                        Debug.Log("loading owned gear chest");
+                        //Debug.Log("loading owned gear chest");
                         // Update gear icon
                         ownedLootSlots[ownedGearSlotIndex].UpdateSlotImage(ownedGear[i].GetGearImage());
                         ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
@@ -535,7 +535,7 @@ public class OwnedLootInven : MonoBehaviour
                 {
                     if (ownedGear[i].GetCurGearType() == Slot.SlotType.BOOTS)
                     {
-                        Debug.Log("loading owned gear boots");
+                        //Debug.Log("loading owned gear boots");
                         // Update gear icon
                         ownedLootSlots[ownedGearSlotIndex].UpdateSlotImage(ownedGear[i].GetGearImage());
                         ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.BOOTS);

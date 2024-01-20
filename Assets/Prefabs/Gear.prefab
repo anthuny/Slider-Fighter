@@ -124,7 +124,7 @@ MonoBehaviour:
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0
-  slot: {fileID: 0}
+  slot: {fileID: 3719199964190919270}
   heldTimer: 0
   isHeldDown: 0
   unitIsSelected: 0
@@ -180,7 +180,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3916592916697177058}
         m_TargetAssemblyTypeName: ButtonFunctionality, Assembly-CSharp
-        m_MethodName: DisplayOwnedGear
+        m_MethodName: ButtonSlotDetails
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -210,7 +210,7 @@ MonoBehaviour:
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
-  buttonCG: {fileID: 0}
+  buttonCG: {fileID: 736634709790740255}
   button2CG: {fileID: 0}
   button3CG: {fileID: 0}
   startHidden: 0
@@ -1351,7 +1351,7 @@ MonoBehaviour:
   slotUI: {fileID: 873810701133512399}
   slotSelectionUI: {fileID: 7954547787694544633}
   ownedSlotButton: {fileID: 3471916845073843232}
-  equipSlotButton: {fileID: 0}
+  equipSlotButton: {fileID: 5370905286981818580}
   goldtextUI: {fileID: 8448886624976684352}
   isGold: 0
   isEmpty: 1

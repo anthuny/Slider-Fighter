@@ -299,6 +299,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             StartCoroutine(GameManager.Instance.SetupPostBattleUI(GameManager.Instance.playerWon));
     }
 
+    public void ButtonSlotDetails()
+    {
+        if (PostBattle.Instance.isInPostBattle)
+            return;
+
+        if (slot != null)
+            TeamGearManager.Instance.GearSelection(slot);
+
+        if (TeamGearManager.Instance.playerInGearTab)
+            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
+        else if (TeamItemsManager.Instance.playerInItemTab)
+            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
+        else if (SkillsTabManager.Instance.playerInSkillTab)
+            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");
+    }
     public void ButtonSelectGear()
     {
         // If owned gear tab is opened, do not allow selecting a new gear
@@ -333,9 +348,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         if (slot != null)
-        {
             TeamGearManager.Instance.GearSelection(slot);
-        }
 
         // Display inven
         if (slot.isEmpty && slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
@@ -535,8 +548,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         TeamItemsManager.Instance.playerInItemTab = false;
-        TeamGearManager.Instance.playerInGearTab = false;
-        SkillsTabManager.Instance.playerInSkillTab = true;
+        SkillsTabManager.Instance.playerInSkillTab = false;
+        TeamGearManager.Instance.playerInGearTab = true;
 
         SkillsTabManager.Instance.ResetStatPageCount();
 
@@ -614,6 +627,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
+        TeamGearManager.Instance.playerInGearTab = false;
         SkillsTabManager.Instance.playerInSkillTab = false;
         TeamItemsManager.Instance.playerInItemTab = true;
 

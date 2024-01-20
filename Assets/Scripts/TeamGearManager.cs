@@ -832,8 +832,8 @@ public class TeamGearManager : MonoBehaviour
             {
                 ally1GearSlots[x].GetSlotUI().ToggleButton(false);
                 ally1GearSlots[x].ToggleMainSlot(false);
-                ally1GearSlots[x].ToggleOwnedGearButton(false);
-                ally1GearSlots[x].ToggleEquipButton(false);
+                //ally1GearSlots[x].ToggleOwnedGearButton(false);
+                //ally1GearSlots[x].ToggleEquipButton(false);
             }
         }   
 
@@ -884,7 +884,7 @@ public class TeamGearManager : MonoBehaviour
             {
                 if (toggle)
                 {
-                    Debug.Log("gear tab " + toggle);
+                    //Debug.Log("gear tab " + toggle);
                     OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(true);
                     OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(true);
                     //OwnedLootInven.Instance.ownedLootSlots[i].ToggleOwnedGearEquipButton(true);
@@ -892,7 +892,7 @@ public class TeamGearManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("gear tab " + toggle);
+                    //Debug.Log("gear tab " + toggle);
                     OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(false);
                     OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(false);
                     //OwnedLootInven.Instance.ownedLootSlots[i].ToggleOwnedGearEquipButton(false);

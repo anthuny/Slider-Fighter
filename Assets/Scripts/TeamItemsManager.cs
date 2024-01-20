@@ -530,7 +530,7 @@ public class TeamItemsManager : MonoBehaviour
                 {
                     OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(true);
                     OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(true);
-                    //OwnedItemsInven.Instance.ownedItemsSlots[i].ToggleOwnedItemsButton(true);
+                    //OwnedLootInven.Instance.ownedLootSlots[i].ToggleOwnedItemsButton(true);
                     if (OwnedLootInven.Instance.ownedLootSlots[i].isEmpty)
                         OwnedLootInven.Instance.ownedLootSlots[i].ToggleEquipButton(false);
                     else
@@ -540,7 +540,7 @@ public class TeamItemsManager : MonoBehaviour
                 {
                     OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(false);
                     OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(false);
-                    //OwnedItemsInven.Instance.ownedItemsSlots[i].ToggleOwnedItemsButton(false);
+                    //OwnedLootInven.Instance.ownedLootSlots[i].ToggleOwnedItemsButton(false);
                     OwnedLootInven.Instance.ownedLootSlots[i].ToggleEquipButton(false);
                 }
             }

@@ -540,7 +540,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4402806483487106117}
         m_TargetAssemblyTypeName: ButtonFunctionality, Assembly-CSharp
-        m_MethodName: DisplayOwnedGear
+        m_MethodName: ButtonSlotDetails
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -570,7 +570,7 @@ MonoBehaviour:
   contentText: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
-  buttonCG: {fileID: 0}
+  buttonCG: {fileID: 4402806483487106916}
   button2CG: {fileID: 0}
   button3CG: {fileID: 0}
   startHidden: 0
@@ -1037,7 +1037,7 @@ MonoBehaviour:
   slotUI: {fileID: 4402806483487106084}
   slotSelectionUI: {fileID: 4402806483487106204}
   ownedSlotButton: {fileID: 4402806483487106168}
-  equipSlotButton: {fileID: 0}
+  equipSlotButton: {fileID: 4402806483487106208}
   goldtextUI: {fileID: 4402806483487106278}
   isGold: 0
   isEmpty: 1

@@ -770,7 +770,7 @@ public class SkillsTabManager : MonoBehaviour
         {
             if (toggle)
             {
-                Debug.Log("enabling");
+                //Debug.Log("enabling");
                 OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(true);
                 OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(true);
                 //OwnedGearInven.Instance.ownedGearSlots[i].ToggleOwnedGearButton(true);
@@ -782,7 +782,7 @@ public class SkillsTabManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("disabling");
+                //Debug.Log("disabling");
                 OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(false);
                 OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(false);
                 //OwnedGearInven.Instance.ownedGearSlots[i].ToggleOwnedGearButton(false);
