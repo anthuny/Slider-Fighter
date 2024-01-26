@@ -24,6 +24,7 @@ public class SkillData : ScriptableObject
     public Sprite skillSprite;
     public string skillName;
     public string skillDescr;
+    public string skillTabDescr;
     public int skillPower;
     [Tooltip("For each of this, each accuracy hit will create x 1 power text appear")]
     public int skillAttackAccMult = 1;
@@ -32,6 +33,7 @@ public class SkillData : ScriptableObject
     public int projectileSpeed = 1;
     public int skillCooldown;
     public int skillSelectionCount;
+    public int maxSkillLevel = 5;
     public bool isSelfCast;
     [Tooltip("Determines whether this skill doubles the turns remaining on each target for its effect that it applies. (before applying its own)")]
     public bool isDoublingEffect;
@@ -56,4 +58,5 @@ public class SkillData : ScriptableObject
     public RuntimeAnimatorController projectileAC;
     public AudioClip skillLaunch;
     public AudioClip skillHit;
+    public int originalIndex;
 }

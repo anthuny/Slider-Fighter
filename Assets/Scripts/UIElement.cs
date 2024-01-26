@@ -22,7 +22,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private TextMeshProUGUI contentText;
     [SerializeField] private Text contentSubText;
     [SerializeField] private TextMeshProUGUI contentSubTextTMP;
-    [SerializeField] private CanvasGroup buttonCG;
+    public CanvasGroup buttonCG;
     [SerializeField] private CanvasGroup button2CG;
     [SerializeField] private CanvasGroup button3CG;
 
@@ -40,10 +40,11 @@ public class UIElement : MonoBehaviour
     [SerializeField] private int statPointsAdded;
 
     [SerializeField] private UIElement lockedImage;
-    [SerializeField] private int statPointsThreshhold;
+    [SerializeField] private int unlockedPointsThreshhold;
     [SerializeField] bool isLocked;
     public string itemName;
     [SerializeField] private UIElement rarityBorderUI;
+    public Slot slot;
 
     private RectTransform rt;
     public float originalScaleText;
@@ -93,11 +94,9 @@ public class UIElement : MonoBehaviour
     }
 
     public void UpdateIsLocked(bool toggle)
-    {
-        /*
+    {      
         isLocked = toggle;
-        ToggleLockedImage(toggle);
-        */
+        //ToggleLockedImage(toggle);     
     }
 
     void Start()
@@ -117,29 +116,31 @@ public class UIElement : MonoBehaviour
         originalYPos = gameObject.transform.position.y;
     }
 
+    /*
     public void CheckIfThreshholdPassed(bool toggle = false)
     {
         if (GetIsSelectable())
         {
             // If locked, display as locked
-            if (SkillsTabManager.Instance.GetActiveSkillSpentPoints() < GetMasteryPointThreshhold())
-                UpdateIsLocked(true);
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() > GetSkillPointThreshhold())
+                UpdateIsLocked(false);
             else
             {
                 if (toggle)
                 {
                     if (GetIsLocked())
-                        UpdateIsLocked(false);
+                        UpdateIsLocked(true);
                 }
             }
         }
     }
+    */
 
     public void UpdateStatPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false)
     {
         if (isReset)
         {
-            if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetMasteryPointThreshhold())
+            if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetSkillPointThreshhold())
                 ToggleLockedImage(true);
             else
                 ToggleLockedImage(false);
@@ -179,14 +180,36 @@ public class UIElement : MonoBehaviour
             SkillsTabManager.Instance.UpdateUnspentSkillPoints(false);
         }
 
-        if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetMasteryPointThreshhold())
+        /*
+        if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetSkillPointThreshhold())
             ToggleLockedImage(true);
         else
             ToggleLockedImage(false);
-
+        */
     }
 
-    public void ToggleLockedImage(bool toggle)
+    public void ToggleLockedSkill()
+    {
+        //Debug.Log(GetSkillPointThreshhold());
+        if (SkillsTabManager.Instance.GetActiveUnit().GetUnitLevel() < GetSkillPointThreshhold())
+        {
+            //Debug.Log(toggle);
+            ToggleLockedImage(true);
+            UpdateIsLocked(true);
+            //ToggleLockedImage(toggle);
+            buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = true;
+        }
+        else
+        {
+            //Debug.Log(toggle);
+            ToggleLockedImage(false);
+            UpdateIsLocked(false);
+            //ToggleLockedImage(toggle);
+            buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = false;
+        }
+    }
+
+    void ToggleLockedImage(bool toggle)
     {
         if (toggle)
             lockedImage.UpdateAlpha(1);
@@ -194,9 +217,14 @@ public class UIElement : MonoBehaviour
             lockedImage.UpdateAlpha(0);
     }
 
-    public int GetMasteryPointThreshhold()
+    public int GetSkillPointThreshhold()
     {
-        return statPointsThreshhold;
+        return unlockedPointsThreshhold;
+    }
+
+    public void UpdateSkillPointThreshhold(int newThresh)
+    {
+        unlockedPointsThreshhold = newThresh;
     }
 
     public int GetStatPointsAdded()

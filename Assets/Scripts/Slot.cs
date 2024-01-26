@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour
 {
-    public enum SlotType { HELMET, CHESTPIECE, LEGGINGS, BOOTS, EMPTY }
+    public enum SlotType { HELMET, CHESTPIECE, BOOTS, SKILL, ITEM, EMPTY }
     public SlotType curGearType;
 
     public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
@@ -24,16 +24,18 @@ public class Slot : MonoBehaviour
     private int gearBonusDefense;
     private int gearBonusSpeed;
 
+    public SkillData skill;
+
     [SerializeField] private UIElement slotUI;
     [SerializeField] private UIElement slotSelectionUI;
 
-    [SerializeField] private UIElement ownedSlotButton;
+    public UIElement ownedSlotButton;
     [SerializeField] private UIElement equipSlotButton;
     public UIElement goldtextUI;
 
     public bool isGold;
     public bool isEmpty = true;
-
+    //public bool isLocked;
 
     private void Start()
     {
@@ -56,6 +58,8 @@ public class Slot : MonoBehaviour
         }
         else
         {
+
+
             /*
             if (GetCurGearType() == GearType.HELMET)
                 UpdateGearImage(TeamGearManager.Instance.helmetSlotSprite);
@@ -68,7 +72,7 @@ public class Slot : MonoBehaviour
                 */
         }
 
-        UpdateGearName("");
+        UpdateSlotName("");
         UpdateGearBonusHealth(0);
         UpdateGearBonusDefense(0);
         UpdateGearBonusHealing(0);
@@ -86,7 +90,26 @@ public class Slot : MonoBehaviour
         //UpdateCurGearType(GearType.EMPTY);
     }
 
-    public void UpdateGearName(string newName)
+    public void UpdateIconSkillSize(bool skill = true)
+    {
+        RectTransform rt = null;
+
+        if (ownedSlotButton.GetComponent<RectTransform>())
+            rt = ownedSlotButton.GetComponent<RectTransform>();
+
+        if (skill)
+        {
+            rt.sizeDelta = new Vector2(382, 413);
+            rt.localPosition = new Vector3(1, -0.28f);
+        }
+        else
+        {
+            rt.sizeDelta = new Vector2(200, 200);
+            rt.localPosition = new Vector3(0, 9.5f);
+        }
+    }
+
+    public void UpdateSlotName(string newName)
     {
         if (newName != "")
             isEmpty = false;
@@ -94,7 +117,7 @@ public class Slot : MonoBehaviour
         slotName = newName;
     }
 
-    public string GetGearName()
+    public string GetSlotName()
     {
         return slotName;
     }
@@ -158,7 +181,7 @@ public class Slot : MonoBehaviour
         slotUI.UpdateContentImage(sprite);
     }
 
-    public Sprite GetGearImage()
+    public Sprite GetSlotImage()
     {
         return slotUI.contentImage.sprite;
     }

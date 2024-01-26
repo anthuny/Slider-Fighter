@@ -20,12 +20,14 @@ MonoBehaviour:
   skillSprite: {fileID: 0}
   skillName: BOULDER TOSS
   skillDescr: 
+  skillTabDescr: 
   skillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 12
   skillCooldown: 1
   skillSelectionCount: 2
+  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -43,3 +45,4 @@ MonoBehaviour:
   projectileAC: {fileID: 9100000, guid: 067109bf65bf80e45a7193ef7d38c9ac, type: 2}
   skillLaunch: {fileID: 8300000, guid: 14ea4f6a0ce8ab6408b7b8865d101407, type: 3}
   skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
+  originalIndex: 1

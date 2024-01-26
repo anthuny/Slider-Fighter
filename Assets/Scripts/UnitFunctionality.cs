@@ -46,7 +46,7 @@ public class UnitFunctionality : MonoBehaviour
     public float curDefense;
     [SerializeField] private int curHealth;
     [SerializeField] private int maxHealth;
-    private int curLevel;
+    [SerializeField] private int curLevel;
 
     public int curDamageHits;
     private int curHealingHits;
@@ -82,9 +82,10 @@ public class UnitFunctionality : MonoBehaviour
 
     [SerializeField] private List<ItemPiece> equiptItems = new List<ItemPiece>();
 
-    [SerializeField] private List<SkillBase> curSkillBaseSlots = new List<SkillBase>();
+    [SerializeField] private List<SkillData> curSkillBaseSlots = new List<SkillData>();
 
-    [SerializeField] private List<SkillBase> skillBaseSlots = new List<SkillBase>();
+    [SerializeField] private List<SkillData> startingSkills = new List<SkillData>();
+    [SerializeField] private List<SkillData> skills = new List<SkillData>();
 
     public UnitData unitData;
 
@@ -232,7 +233,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         if (toggle)
         {
-            hitsRemainingText.UpdateAlpha(1);          
+            hitsRemainingText.UpdateAlpha(1);
         }
         else
         {
@@ -322,7 +323,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         unitFocus.FocusUnit();
     }
-  
+
     public void IncCooldownReducBonus()
     {
         reducedCooldownsCount++;
@@ -355,6 +356,11 @@ public class UnitFunctionality : MonoBehaviour
 
     }
 
+    public void ResetUnitSkillOrder()
+    {
+        //GetSkillBaseSlot(0).
+    }
+
     private void Start()
     {
         ToggleUnitExpVisual(false);
@@ -366,7 +372,10 @@ public class UnitFunctionality : MonoBehaviour
         //sUpdateUnitHealingPowerInc(1);
 
         if (!heroRoomUnit)
-            UpdateIsVisible(false);
+        {
+            //Debug.Log("ddd");
+            UpdateIsVisible(true);
+        }
 
         UpdateUnitLevelImage();
         ToggleUnitLevelImage(true);
@@ -455,6 +464,7 @@ public class UnitFunctionality : MonoBehaviour
 
         if (curUnitType == UnitType.PLAYER)
         {
+            //Debug.Log(toggle);
             if (unitUIElement == null)
                 return;
 
@@ -479,28 +489,57 @@ public class UnitFunctionality : MonoBehaviour
         return equiptItems;
     }
 
-    public void UpdateCurrentSkillBaseSlots(List<SkillBase> skillBaseSlots)
+    public void UpdateCurrentSkills(List<SkillData> skillBaseSlots)
     {
         this.curSkillBaseSlots = skillBaseSlots;
     }
 
-    public void UpdateSkillBaseStats(List<SkillBase> skillBaseSlots)
+    public void UpdateUnitSkills(List<SkillData> skills)
     {
-        this.skillBaseSlots = skillBaseSlots;
+        //this.skills = skills;
+
+        /*
+        this.skills.Clear();
+        for (int i = 0; i < 4; i++)
+        {
+            if (skills[i].originalIndex == 0)
+                skills.Insert(0, skills[i]);
+            else if (skills[i].originalIndex == 1)
+                skills.Insert(1, skills[i]);
+            else if (skills[i].originalIndex == 2)
+                skills.Insert(2, skills[i]);
+            else if (skills[i].originalIndex == 3)
+                skills.Insert(3, skills[i]);
+        }
+        */
+
+        this.skills = skills;
     }
 
-    public SkillBase GetCurrentSkillBase(int count)
+    public SkillData GetBaseSelectSkill()
     {
-        return curSkillBaseSlots[count];
-    }
-    public SkillBase GetSkillBaseSLot(int count)
-    {
-        return skillBaseSlots[count];
+        for (int i = 0; i < skills.Count; i++)
+        {
+            if (skills[i].skillCooldown == 0)
+            {
+                return skills[i];
+            }
+        }
+
+        return skills[0];
     }
 
-    public List<SkillBase> GetAllSkillBaseSlots()
+    public SkillData GetSkill(int count)
     {
-        return skillBaseSlots;
+        if (skills.Count == 0)
+            return null;
+        else
+            return skills[count];
+    }
+
+    public List<SkillData> GetAllSkills()
+    {
+        return skills;
     }
 
     public void ClearSkillBaseSlots()
@@ -730,6 +769,36 @@ public class UnitFunctionality : MonoBehaviour
         GameManager.Instance.UpdateTurnOrder();
     }
 
+    public List<SkillData> GetStartingSkills()
+    {
+        return startingSkills;
+    }
+
+    public void SetStartingSkills(List<SkillData> skills)
+    {
+        List<SkillData> newStartingSkills = skills;
+        startingSkills.Clear();
+
+        for (int i = 0; i < skills.Count; i++)
+        {
+            //skills[i]
+        }
+        startingSkills = newStartingSkills;
+    }
+
+    public SkillData GetNoCDSkill()
+    {
+        for (int i = 0; i < skills.Count; i++)
+        {
+            if (skills[i].skillCooldown == 0)
+            {
+                return skills[i];
+            }
+        }
+
+        return null;
+    }
+
     public int GetSkill0CurCooldown()
     {
         return skill0CurCooldown;
@@ -750,7 +819,7 @@ public class UnitFunctionality : MonoBehaviour
     public void ResetSkill0Cooldown()
     {
         skill0CurCooldown = 0;
-        //GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
+        GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
     }
     public void ResetSkill1Cooldown()
     {
@@ -770,22 +839,22 @@ public class UnitFunctionality : MonoBehaviour
 
     public void SetSkill0CooldownMax()
     {
-        skill0CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill0().skillCooldown;
-        //GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
+        skill0CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).skillCooldown + 1;
+        GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
     }
     public void SetSkill1CooldownMax()
     {
-        skill1CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill1().skillCooldown + 1;
+        skill1CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).skillCooldown + 1;
         GameManager.Instance.skill1IconCooldownUIText.UpdateUIText((skill1CurCooldown).ToString());
     }
     public void SetSkill2CooldownMax()
     {
-        skill2CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill2().skillCooldown + 1;
+        skill2CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).skillCooldown + 1;
         GameManager.Instance.skill2IconCooldownUIText.UpdateUIText((skill2CurCooldown).ToString());
     }
     public void SetSkill3CooldownMax()
     {
-        skill3CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill3().skillCooldown + 1;
+        skill3CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).skillCooldown + 1;
         GameManager.Instance.skill3IconCooldownUIText.UpdateUIText((skill3CurCooldown).ToString());
     }
 
@@ -796,7 +865,7 @@ public class UnitFunctionality : MonoBehaviour
         if (skill0CurCooldown <= 0)
             skill0CurCooldown = 0;
 
-        //GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill1CurCooldown.ToString());
+        GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
     }
     public void DecreaseSkill1Cooldown()
     {
@@ -835,33 +904,33 @@ public class UnitFunctionality : MonoBehaviour
             //Debug.Log(rand);
             if (rand == 1)  // Skill 1
             {
-                if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill1().isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill1();
+                if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive)
+                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1);
                 else
                     continue;
             }
             else if (rand == 2)  // Skill 2
             {
-                if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill2().isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill2();
+                if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).isPassive)
+                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2);
                 else
                     continue;
             }
             else if (rand == 3)  // Skill 3
             {
-                if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill3().isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill3();
+                if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).isPassive)
+                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2);
                 else
                     continue;
             }
             // Base skill
             else if (rand == 4)
             {
-                return GameManager.Instance.GetActiveUnitFunctionality().unitData.GetSkill0();
+                return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
             }
         }
 
-        return GameManager.Instance.GetActiveUnitFunctionality().unitData.skill0;
+        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
     }
 
     public List<Effect> GetEffects()

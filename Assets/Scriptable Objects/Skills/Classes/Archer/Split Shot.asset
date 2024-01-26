@@ -17,15 +17,18 @@ MonoBehaviour:
   curSkillGameType: 0
   curRangedType: 1
   curAnimType: 0
+  ownedByAllyName: Archer
   skillSprite: {fileID: 21300000, guid: f5e1a147817aafd4aa35b740f355159d, type: 3}
   skillName: SPLIT SHOT
   skillDescr: Damage up to
+  skillTabDescr: Target up to 2 enemies, dealing damage
   skillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 12
   skillCooldown: 0
   skillSelectionCount: 2
+  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0

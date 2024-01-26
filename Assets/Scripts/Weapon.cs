@@ -442,7 +442,7 @@ public class Weapon : MonoBehaviour
 
             AudioManager.Instance.StopAttackBarMusic();
 
-            GameManager.Instance.EnableSkill0Selection();
+            //GameManager.Instance.EnableFreeSkillSelection();
             GameManager.Instance.DisableAllSkillSelections(true);
 
             ToggleAttackButtonInteractable(false);

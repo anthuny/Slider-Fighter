@@ -20,12 +20,14 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP
   skillDescr: Cast DEFENSE UP on self for 0/1/2/3/4 turns
+  skillTabDescr: Target self, cast Defense Up Buff
   skillPower: 0
   skillAttackAccMult: 1
   skillAttackCount: 1
   projectileSpeed: 10
   skillCooldown: 3
   skillSelectionCount: 1
+  maxSkillLevel: 5
   isSelfCast: 1
   isDoublingEffect: 0
   isLeaching: 0
@@ -43,3 +45,4 @@ MonoBehaviour:
   projectileAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 02589b44135c9394e978d1ae980de22e, type: 3}
   skillHit: {fileID: 0}
+  originalIndex: 2

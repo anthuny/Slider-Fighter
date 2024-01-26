@@ -43,7 +43,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 109, y: 108}
-  m_SizeDelta: {x: 75, y: 75}
+  m_SizeDelta: {x: 85, y: 85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5506943504625857113
 CanvasRenderer:
@@ -953,8 +953,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6, y: 14.4}
-  m_SizeDelta: {x: 117.9, y: 120}
+  m_AnchoredPosition: {x: 2.79, y: 9.32}
+  m_SizeDelta: {x: 124.32, y: 130.17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6481919743779131907
 CanvasRenderer:
@@ -1348,6 +1348,7 @@ MonoBehaviour:
   curRarity: 0
   curSlotStatis: 0
   curGearOwnedBy: 0
+  skill: {fileID: 0}
   slotUI: {fileID: 873810701133512399}
   slotSelectionUI: {fileID: 7954547787694544633}
   ownedSlotButton: {fileID: 3471916845073843232}

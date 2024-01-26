@@ -20,12 +20,14 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 7ac91a992e8dc9f4c90aac343e15e174, type: 3}
   skillName: DIVINE HEAL
   skillDescr: Target up to
+  skillTabDescr: Target 1 ally, healing them
   skillPower: 35
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 9
   skillCooldown: 2
   skillSelectionCount: 1
+  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -43,3 +45,4 @@ MonoBehaviour:
   projectileAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 98364bbbde80b1042b08767b6cc775aa, type: 3}
   skillHit: {fileID: 8300000, guid: 4aa6ea9e63e55a044b0b51c49cbabfbf, type: 3}
+  originalIndex: 3

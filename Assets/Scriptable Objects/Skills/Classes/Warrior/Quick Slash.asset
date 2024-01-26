@@ -17,15 +17,18 @@ MonoBehaviour:
   curSkillGameType: 0
   curRangedType: 0
   curAnimType: 0
+  ownedByAllyName: Warrior
   skillSprite: {fileID: 21300000, guid: 9f003367cde8e914cadd39e9903c2904, type: 3}
   skillName: QUICK SLASH
   skillDescr: Target up to
+  skillTabDescr: Target 1 enemy, dealing damage
   skillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 1
   skillCooldown: 0
   skillSelectionCount: 1
+  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0

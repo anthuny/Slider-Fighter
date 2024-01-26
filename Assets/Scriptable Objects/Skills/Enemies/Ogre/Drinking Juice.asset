@@ -20,12 +20,14 @@ MonoBehaviour:
   skillSprite: {fileID: 0}
   skillName: DRINKING JUICE
   skillDescr: 
+  skillTabDescr: 
   skillPower: 0
   skillAttackAccMult: 1
   skillAttackCount: 0
   projectileSpeed: 0
   skillCooldown: 2
   skillSelectionCount: 1
+  maxSkillLevel: 5
   isSelfCast: 1
   isDoublingEffect: 0
   isLeaching: 0
@@ -43,3 +45,4 @@ MonoBehaviour:
   projectileAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: bd0048dda2873ca4b8061ab39773ee4b, type: 3}
   skillHit: {fileID: 0}
+  originalIndex: 2

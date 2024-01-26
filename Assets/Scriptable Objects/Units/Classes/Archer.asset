@@ -33,20 +33,10 @@ MonoBehaviour:
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 8fc51ebc57d289c43a80806bfa3ecec8, type: 3}
   projectileSprite: {fileID: 21300000, guid: 9643bfb5474702d4caedeed7875ae076, type: 3}
-  skill0: {fileID: 11400000, guid: c73d0bea0f8ca6e408b0cbd7c9346939, type: 2}
-  skill1: {fileID: 11400000, guid: e591c0ea94e44dc4f966fed6cf5e0dbf, type: 2}
-  skill2: {fileID: 11400000, guid: cc318f8510e168b4388ec5807679be82, type: 2}
-  skill3: {fileID: 11400000, guid: 43bd87269e8a8af4b993f2342c6320a4, type: 2}
-  standardStats:
-  - {fileID: 11400000, guid: 56c7ea566a7bb864b9658632abf96615, type: 2}
-  - {fileID: 11400000, guid: ca15bf2fe675506439b5b841fc41ef28, type: 2}
-  - {fileID: 11400000, guid: f0eac9d91877fcf40a45cd6c1b435487, type: 2}
-  - {fileID: 11400000, guid: 9934de37c1fe3a94e99213f56d7fd639, type: 2}
-  - {fileID: 11400000, guid: 6d9f1b36d5a6e7548b8a8128e758ad87, type: 2}
-  advancedStats:
-  - {fileID: 11400000, guid: a735338c4914c614ea2cc8a1bcbfb3f6, type: 2}
-  - {fileID: 11400000, guid: c594405fa5019f24e9c252c3a105a4af, type: 2}
-  - {fileID: 11400000, guid: 524ffbc92f6128349bd1dd7c2510bc1c, type: 2}
-  - {fileID: 11400000, guid: 18ef1a26a48f7874f8286d8ca11737d4, type: 2}
+  curSkills:
+  - {fileID: 11400000, guid: c73d0bea0f8ca6e408b0cbd7c9346939, type: 2}
+  - {fileID: 11400000, guid: e591c0ea94e44dc4f966fed6cf5e0dbf, type: 2}
+  - {fileID: 11400000, guid: cc318f8510e168b4388ec5807679be82, type: 2}
+  - {fileID: 11400000, guid: 43bd87269e8a8af4b993f2342c6320a4, type: 2}
   deathClip: {fileID: 8300000, guid: c278f4be40dfcea4a9c7f17ecd4a78e1, type: 3}
   hitRecievedClip: {fileID: 8300000, guid: 1f91da09a3e411d4283247c2a4fd67b8, type: 3}

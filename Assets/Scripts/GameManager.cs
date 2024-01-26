@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float postFightTimeWait = 1.5f;
 
     [Header("Team Setup")]
-    [SerializeField] private UIElement teamSetup;
+    [SerializeField] private UIElement skillsTab;
     public UIElement toMapButton;
     [SerializeField] private Transform teamSetupAllyPosition;
 
@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour
         //map.Setup();
         //ShopManager.Instance.UpdatePlayerGold(0);
         //map.mapOverlay.ResetPlayerGoldText();
-        ToggleTeamSetup(false);
+        SkillsTabChangeAlly(false);
 
         // Map music
         AudioManager.Instance.Play("MapLoop");
@@ -389,6 +389,15 @@ public class GameManager : MonoBehaviour
                         if (!ownedUnitNames.Contains(CharacterCarasel.Instance.GetAllAllies()[t].unitName))
                         {
                             unit = CharacterCarasel.Instance.GetAlly(t);    // Reference a unit that is not on the current ally team
+
+                            UnitFunctionality unitFunct = GetActiveUnitFunctionality();
+                            UnitData unitData = unitFunct.unitData;
+                            //unitData.ResetCurSkills();
+                            //unitFunct.SetStartingSkills(unitData.GetUnitSkills());
+                            //unitData.UpdateCurSkills(unitFunct.GetStartingSkills());
+                            //Debug.Log("3");
+                            unitFunct.UpdateUnitSkills(unitData.GetUnitSkills());
+                            unitFunct.UpdateCurrentSkills(unitData.GetUnitSkills());
                         }
                     }
                 }
@@ -409,7 +418,7 @@ public class GameManager : MonoBehaviour
                 if (!spawnHeroAlly)
                     unit = activeTeam[i];    // Reference
 
-                //AddUnitToTeam(unit);
+
 
                 GameObject go = null;
                 if (!spawnHeroAlly)
@@ -426,6 +435,9 @@ public class GameManager : MonoBehaviour
                 }
 
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
+
+
+
                 UIElement unitUI = go.GetComponent<UIElement>();
 
                 HeroRoomManager.Instance.UpdateHero(unitUI);
@@ -467,7 +479,6 @@ public class GameManager : MonoBehaviour
                     spawnedUnit = unit;
                     spawnedUnitFunctionality = unitFunctionality;
                 }
-
                 unitFunctionality.UpdateUnitName(unit.unitName);
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
                 unitFunctionality.UpdateUnitColour(unit.unitColour);
@@ -483,7 +494,6 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateDefenseIncPerLv(unit.defenseIncPerLv);
                 unitFunctionality.UpdateMaxHealthIncPerLv((int)unit.maxHealthIncPerLv);
 
-                unitFunctionality.UpdateCurrentSkillBaseSlots(unit.GetStandardStats());
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
 
@@ -502,8 +512,10 @@ public class GameManager : MonoBehaviour
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
 
                 unitFunctionality.UpdateUnitLevel(1);
-
                 UpdateAllAlliesLevelColour();
+
+
+                //SkillsTabManager.Instance.SetupSkillsTab(unitFunctionality);
 
                 if (spawnHeroAlly)
                     ToggleAllowSelection(true);
@@ -517,8 +529,26 @@ public class GameManager : MonoBehaviour
                 if (i == 0 && !spawnHeroAlly)
                     SkillsTabManager.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
 
+                UnitData unitData = unitFunctionality.unitData;
+                //Debug.Log(unitData.unitName);
+                //unitData.ResetCurSkills();
+                //unitFunctionality.SetStartingSkills();
+                //unitData.UpdateCurSkills(unitData.GetUnitSkills());
+                /*
+                for (int x = 0; x < unitData.GetUnitSkills().Count; x++)
+                {
+                    Debug.Log(unitData.GetUnitSkills()[x].skillName);
+                }
+                */
+
+                //Debug.Log(unitData.GetUnitSkills());
+                unitFunctionality.UpdateUnitSkills(unitData.GetUnitSkills());
+                unitFunctionality.UpdateCurrentSkills(unitData.GetUnitSkills());
+
                 //activeRoomAllies.Add(unitFunctionality);
 
+                SkillsTabChangeAlly(true);
+                SkillsTabChangeAlly(false);
                 // If spawn hero ally from hero room, only spawn 1 ally
                 if (spawnHeroAlly)
                     break;
@@ -526,7 +556,17 @@ public class GameManager : MonoBehaviour
         }     
     }
 
-    public void UpdateMasteryAllyPosition()
+    void OnApplicationQuit()
+    {
+        /*
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].unitData.UpdateCurSkills(activeRoomAllies[i].GetStartingSkills());
+        }
+        */
+    }
+
+    public void UpdateActiveAllyDisplay()
     {
         for (int i = 0; i < activeRoomAllies.Count; i++)
         {
@@ -535,8 +575,6 @@ public class GameManager : MonoBehaviour
                 UnitFunctionality oldUnit = activeRoomAllUnitFunctionalitys[0];
                 activeRoomAllUnitFunctionalitys[0] = activeRoomAllUnitFunctionalitys[1];
                 activeRoomAllUnitFunctionalitys[1] = oldUnit;
-
-
             }
             else if (i == 2)
             {
@@ -549,7 +587,11 @@ public class GameManager : MonoBehaviour
             activeRoomAllUnitFunctionalitys[0].UpdateIsVisible(true);
             activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0).transform.position;
             if (i != 0)
+            {
+                //Debug.Log("bb");
                 activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(false);
+            }
+
         }
     }
 
@@ -573,33 +615,49 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    public void ToggleTeamSetup(bool toggle)
+    public void SkillsTabChangeAlly(bool toggle)
     {
         SkillsTabManager.Instance.statScrollView.SetActive(toggle);
 
         if (toggle)
         {
+            // Update which ally is active
+            UpdateActiveAllyDisplay();
+
+            // Update skills details when ally swap
+            //SkillsTabManager.Instance.UpdateSelectedSkillBase();
+            //SkillsTabManager.Instance.UpdateSkillStatDetails();
+
             SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(true);
             SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(true);
 
-            teamSetup.UpdateAlpha(1);
+            // Update UI
+            SkillsTabManager.Instance.activeSkillBase = null;
+            SkillsTabManager.Instance.UpdateActiveSkillNameText("");
+            SkillsTabManager.Instance.UpdateSkillStatDetails();
+            SkillsTabManager.Instance.ResetSkillsBaseSelection();
+
+            skillsTab.UpdateAlpha(1);
             //SpawnAllies(false);
             SkillsTabManager.Instance.ToggleToMapButton(true);
             UpdateAllAlliesPosition(false, true, true);
             SkillsTabManager.Instance.UpdateActiveUnit(GetActiveUnitFunctionality());
 
             oldActiveRoomAllUnitFunctionalitys = activeRoomAllUnitFunctionalitys;
-
-            SkillsTabManager.Instance.UpdateStatPage();
             
             SkillsTabManager.Instance.UpdateAllyNameText();
+
+            SkillsTabManager.Instance.UpdateStatPage();
         }
         else
         {
             SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(false);
             SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(false);
             SkillsTabManager.Instance.ToggleToMapButton(false);
-            teamSetup.UpdateAlpha(0);
+            skillsTab.UpdateAlpha(0);
+
+            UpdateAllyVisibility(true, false, false);
+            UpdateAllysPositionCombat();
         }
     }
 
@@ -633,7 +691,9 @@ public class GameManager : MonoBehaviour
 
                     if (i != 0)
                     {
+                        //Debug.Log("aa");
                         activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(false);
+
                     }
                 }
             }
@@ -654,7 +714,12 @@ public class GameManager : MonoBehaviour
             // Toggle ally visibility
             for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
             {
+
+                if (!toggle)
+                    //Debug.Log("ccc");
+
                 activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(toggle);
+
             }
         }
     }
@@ -1066,11 +1131,19 @@ public class GameManager : MonoBehaviour
 
         Weapon.Instance.ToggleAttackButtonInteractable(false);
 
+        /*
         if (activeSkill != null)
             this.activeSkill = activeSkill;
         else
-            this.activeSkill = GetActiveUnitFunctionality().unitData.skill0;
+        {
+            if (GetActiveUnitFunctionality().unitData.GetNoCDSkill() != null)
+                this.activeSkill = GetActiveUnitFunctionality().unitData.GetNoCDSkill();
+            else
+                this.activeSkill = null;
+        }
+        */
 
+        //asd
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(playerAbilityDesc, true);
         ToggleEndTurnButton(true);
@@ -1268,6 +1341,17 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.startingDefense = unit.startingDefense;
                 unitFunctionality.startingSpeed = unit.startingSpeed;
 
+                unitFunctionality.unitData = unit;
+
+                UnitData unitData = unitFunctionality.unitData;
+                //unitData.ResetCurSkills();
+                //unitFunctionality.SetStartingSkills(unitData.GetUnitSkills());
+                //unitData.UpdateCurSkills(unitFunctionality.GetStartingSkills());
+
+                Debug.Log("2");
+                unitFunctionality.UpdateUnitSkills(unitData.GetUnitSkills());
+                unitFunctionality.UpdateCurrentSkills(unitData.GetUnitSkills());
+
                 // Apply to unit whether any of its skills leaches.
                 if (unit.GetSkill0().isLeaching)
                     unitFunctionality.ToggleIsPoisonLeaching(true);
@@ -1305,7 +1389,6 @@ public class GameManager : MonoBehaviour
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality);
 
-                unitFunctionality.unitData = unit;
 
             }
 
@@ -1825,13 +1908,28 @@ public class GameManager : MonoBehaviour
             unitsSelected[y].ToggleSelected(false);
         }
 
-        if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.BASIC)
+        int index = 0;
+
+        for (int i = 0; i < GetActiveUnitFunctionality().GetAllSkills().Count; i++)
+        {
+            if (GetActiveUnitFunctionality().GetSkill(i).skillName == GetActiveSkill().skillName)
+            {
+                //Debug.Log("Skill name " + GetActiveUnitFunctionality().GetSkill(i).skillName);
+                //Debug.Log("used Skill name " + GetActiveSkill().skillName);
+                index = i;
+                break;
+            }
+        }
+
+        //Debug.Log("index is " + index);
+
+        if (index == 0)
             GetActiveUnitFunctionality().SetSkill0CooldownMax();
-        else if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.PRIMARY)
+        else if (index == 1)
             GetActiveUnitFunctionality().SetSkill1CooldownMax();
-        else if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.SECONDARY)
+        else if (index == 2)
             GetActiveUnitFunctionality().SetSkill2CooldownMax();
-        else if (GetActiveSkill().curSkillGameType == SkillData.SkillGameType.ALTERNATE)
+        else if (index == 3)
             GetActiveUnitFunctionality().SetSkill3CooldownMax();
 
         yield return new WaitForSeconds(postHitWaitTime);
@@ -1922,11 +2020,11 @@ public class GameManager : MonoBehaviour
     public void SetupPlayerUI()
     {
         SetupPlayerSkillsUI();
-        UpdateSkillDetails(GetActiveUnitFunctionality().unitData.skill0);
+        UpdateSkillDetails(GetActiveUnitFunctionality().GetNoCDSkill());
         UpdateAllSkillIconAvailability();
-        UpdateUnitSelection(activeSkill);
+        UpdateUnitSelection(GetActiveUnitFunctionality().GetNoCDSkill());
         UpdateUnitsSelectedText();
-        EnableSkill0Selection();
+         //EnableFreeSkillSelection();
     }
     #region Update Unit UI
     public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0, bool enemy = false)
@@ -1968,7 +2066,7 @@ public class GameManager : MonoBehaviour
             {
                 UpdateSkillIconAvailability(skill0IconUnavailableImage, skill0IconCooldownUIText, GetActiveUnitFunctionality().unitData.GetSkill0().skillCooldown.ToString(), false);
                 DisableButton(skill0Button);
-                skill0IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill1CurCooldown().ToString());
+                skill0IconCooldownUIText.UpdateUIText(GetActiveUnitFunctionality().GetSkill0CurCooldown().ToString());
             }
         }
         else
@@ -2084,9 +2182,69 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnableSkill0Selection()
+
+    public void EnableFreeSkillSelection()
     {
-        skill0.ToggleSelected(true);
+        if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
+            playerSkill1.ToggleHiddenImage(true);
+        else
+            playerSkill1.ToggleHiddenImage(false);
+
+        if (SkillsTabManager.Instance.skillBase3.GetIsLocked())
+            playerSkill2.ToggleHiddenImage(true);
+        else
+            playerSkill2.ToggleHiddenImage(false);
+
+        if (SkillsTabManager.Instance.skillBase4.GetIsLocked())
+            playerSkill3.ToggleHiddenImage(true);
+        else
+            playerSkill3.ToggleHiddenImage(false);
+
+
+
+        // todo work with new locked skills
+        for (int i = 0; i < GetActiveUnitFunctionality().GetAllSkills().Count; i++)
+        {
+            // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
+            if (GetActiveUnitFunctionality().GetSkill(i).skillCooldown == 0 && !SkillsTabManager.Instance.skillBase1.GetIsLocked())
+            {
+                skill0.ToggleSelected(true);
+
+                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[0]);
+                UpdateSkillDetails(GetActiveUnitFunctionality().GetAllSkills()[0]);
+
+                break;
+            }
+            else if (GetActiveUnitFunctionality().GetSkill(i).skillCooldown == 0 && !SkillsTabManager.Instance.skillBase2.GetIsLocked())
+            {
+                skill1.ToggleSelected(true);
+
+                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[1]);
+                UpdateSkillDetails(GetActiveUnitFunctionality().GetAllSkills()[1]);
+
+                break;
+            }
+            else if (GetActiveUnitFunctionality().GetSkill(i).skillCooldown == 0 && !SkillsTabManager.Instance.skillBase3.GetIsLocked())
+            {
+                skill2.ToggleSelected(true);
+
+                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[2]);
+                UpdateSkillDetails(GetActiveUnitFunctionality().GetAllSkills()[2]);
+
+                break;
+            }
+            else if (GetActiveUnitFunctionality().GetSkill(i).skillCooldown == 0 && !SkillsTabManager.Instance.skillBase4.GetIsLocked())
+            {
+                skill3.ToggleSelected(true);
+
+                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[3]);
+                UpdateSkillDetails(GetActiveUnitFunctionality().GetAllSkills()[3]);
+
+                break;
+            }
+
+            //if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
+        }
     }
 
     public void ToggleSkillVisibility(bool toggle)
@@ -2119,6 +2277,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdateSkillDetails(SkillData skill)
     {
+        if (skill == null)
+            return;
+
         ToggleUIElement(playerAbilityDesc, true);
 
         bool tempAttack = false;
@@ -2131,7 +2292,7 @@ public class GameManager : MonoBehaviour
 
         UnitFunctionality activeUnit = GetActiveUnitFunctionality();
 
-        if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+        if (skill.curSkillType == SkillData.SkillType.OFFENSE)
         {
             abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower,
                 skill.skillAttackCount + activeUnit.GetUnitDamageHits(), tempAttack, skill.skillSelectionCount,
@@ -2431,7 +2592,7 @@ public class GameManager : MonoBehaviour
             UpdateActiveUnitNameText(GetActiveUnitFunctionality().GetUnitName());
 
             // Set the basic skill to be on by default to begin with
-            activeSkill = GetActiveUnitFunctionality().unitData.skill0;
+            //activeSkill = GetActiveUnitFunctionality().unitData.skill0;
 
             ToggleEndTurnButton(true);      // Toggle End Turn Button on
         }
@@ -2455,18 +2616,39 @@ public class GameManager : MonoBehaviour
 
         if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER)
         {
-            UpdateSkillDetails(activeSkill);
+            //UpdateSkillDetails(activeSkill);
             
             UpdateUnitSelection(activeSkill);
             UpdateEnemyPosition(true);
-
-
         }
 
         UpdateActiveUnitTurnArrow();
 
         // Update allies into position for battle/shop
         UpdateAllAlliesPosition(false, GetActiveUnitType());
+
+        // Skip unit turn if all skills are on cooldown
+        if (GetActiveUnitFunctionality().GetSkill0CurCooldown() > 0 || SkillsTabManager.Instance.skillBase1.GetIsLocked())
+        {
+            if (GetActiveUnitFunctionality().GetSkill1CurCooldown() > 0 || SkillsTabManager.Instance.skillBase2.GetIsLocked())
+            {
+                if (GetActiveUnitFunctionality().GetSkill2CurCooldown() > 0 || SkillsTabManager.Instance.skillBase3.GetIsLocked())
+                {
+                    if (GetActiveUnitFunctionality().GetSkill3CurCooldown() > 0 || SkillsTabManager.Instance.skillBase4.GetIsLocked())
+                    {
+                        StartCoroutine(SkipTurnAfterWait());
+                    }
+                }
+            }
+        }
+    }
+
+    IEnumerator SkipTurnAfterWait()
+    {
+        yield return new WaitForSeconds(.25f);
+
+        UpdateEnemyPosition(false);
+        UpdateTurnOrder();
     }
 
     // If something casts taunt, ally buff skills cant be used - bug
@@ -2755,20 +2937,26 @@ public class GameManager : MonoBehaviour
     private void UpdatePlayerAbilityUI()
     {
         // Update active player's portrait and colour
-        //playerIcon.UpdatePortrait(GetActiveUnitFunctionality().GetUnitIcon());
+        DisableAllSkillSelections();
+        UpdateActiveSkill(GetActiveUnitFunctionality().GetBaseSelectSkill());
+        UpdateSkillDetails(GetActiveUnitFunctionality().GetBaseSelectSkill());
+
+
 
         // Update player skill portraits
-        playerSkill0.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill0().skillSprite);
-        playerSkill1.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill1().skillSprite);
-        playerSkill2.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill2().skillSprite);
-        playerSkill3.UpdatePortrait(GetActiveUnitFunctionality().unitData.GetSkill3().skillSprite);
+        playerSkill0.UpdatePortrait(GetActiveUnitFunctionality().GetSkill(0).skillSprite);
+        playerSkill1.UpdatePortrait(GetActiveUnitFunctionality().GetSkill(1).skillSprite);
+        playerSkill2.UpdatePortrait(GetActiveUnitFunctionality().GetSkill(2).skillSprite);
+        playerSkill3.UpdatePortrait(GetActiveUnitFunctionality().GetSkill(3).skillSprite);
 
-        //playerSkill0.ToggleSelectImage(false);
+        playerSkill0.ToggleSelectImage(false);
         playerSkill1.ToggleSelectImage(false);
         playerSkill2.ToggleSelectImage(false);
         playerSkill3.ToggleSelectImage(false);
 
         ToggleSkillVisibility(true);
+
+        EnableFreeSkillSelection();
     }
 
     public void UpdateTurnOrderVisual()

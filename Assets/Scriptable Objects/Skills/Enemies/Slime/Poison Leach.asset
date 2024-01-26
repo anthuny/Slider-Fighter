@@ -20,12 +20,14 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: Poison Leach
   skillDescr: 
+  skillTabDescr: 
   skillPower: 0
   skillAttackAccMult: 1
   skillAttackCount: 0
   projectileSpeed: 0
   skillCooldown: 0
   skillSelectionCount: 0
+  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 1
@@ -43,3 +45,4 @@ MonoBehaviour:
   projectileAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: a16b5578f0b4c02419c3e4e47e8d533e, type: 3}
   skillHit: {fileID: 0}
+  originalIndex: 3

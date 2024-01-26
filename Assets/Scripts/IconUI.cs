@@ -7,6 +7,7 @@ public class IconUI : MonoBehaviour
 {
     Image image;
     [SerializeField] private UIElement selectImage;
+    [SerializeField] private UIElement hiddenImage;
 
     private void Awake()
     {
@@ -28,5 +29,13 @@ public class IconUI : MonoBehaviour
             selectImage.UpdateAlpha(1);
         else
             selectImage.UpdateAlpha(0);
+    }
+
+    public void ToggleHiddenImage(bool toggle)
+    {
+        if (toggle)
+            hiddenImage.UpdateAlpha(1);
+        else
+            hiddenImage.UpdateAlpha(0);
     }
 }

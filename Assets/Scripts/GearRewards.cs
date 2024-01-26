@@ -243,10 +243,6 @@ public class GearRewards : MonoBehaviour
                 {
                     slot.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
                 }
-                else if (newGear.gearType == "leggings")
-                {
-                    slot.UpdateCurSlotType(Slot.SlotType.LEGGINGS);
-                }
                 else if (newGear.gearType == "boots")
                 {
                     slot.UpdateCurSlotType(Slot.SlotType.BOOTS);
@@ -255,7 +251,7 @@ public class GearRewards : MonoBehaviour
                 // Initialize gear base data
                 slot.UpdateSlotImage(newGear.gearIcon);
                 slot.UpdateSlotImage(newGear.gearIcon);
-                slot.UpdateGearName(newGear.gearName);
+                slot.UpdateSlotName(newGear.gearName);
                 slot.UpdateGearBonusHealth(newGear.bonusHealth);
                 slot.UpdateGearBonusDamage(newGear.bonusDamage);
                 slot.UpdateGearBonusHealing(newGear.bonusHealing);

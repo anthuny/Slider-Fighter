@@ -33,14 +33,9 @@ public class UnitData : ScriptableObject
     public GameObject characterPrefab;
     public Sprite projectileSprite;
 
-    public SkillData skill0;
-    public SkillData skill1;
-    public SkillData skill2;
-    public SkillData skill3;
-
-    [Header("Mastery Tree")]
-    [SerializeField] private List<SkillBase> standardStats = new List<SkillBase>();
-    [SerializeField] private List<SkillBase> advancedStats = new List<SkillBase>();
+    [Header("Skills")]
+    [SerializeField] private List<SkillData> curSkills = new List<SkillData>();
+    //[SerializeField] private List<SkillBase> advancedStats = new List<SkillBase>();
 
     public AudioClip deathClip;
     public AudioClip hitRecievedClip;
@@ -57,24 +52,77 @@ public class UnitData : ScriptableObject
         return curAttackChargeTurnStart;
     }
 
+
+
+    public void UpdateCurSkills(List<SkillData> skills)
+    {
+        //curSkills = skills;
+
+        /*
+        List<SkillData> newSkills = new List<SkillData>();
+
+        for (int i = 0; i < curSkills.Count; i++)
+        {
+            if (curSkills[i].originalIndex == 0)
+            {
+                newSkills.Insert(0, curSkills[i]);
+            }
+            else if (curSkills[i].originalIndex == 1)
+            {
+                newSkills.Insert(1, curSkills[i]);
+            }
+            else if (curSkills[i].originalIndex == 2)
+            {
+                newSkills.Insert(2, curSkills[i]);
+            }
+            else if (curSkills[i].originalIndex == 3)
+            {
+                newSkills.Insert(3, curSkills[i]);
+            }
+        }
+
+        
+         */
+        curSkills.Clear();
+
+        curSkills = skills;
+    }
+
+    public void ResetCurSkills()
+    {
+        curSkills.Clear();
+    }
+   
+
     public SkillData GetSkill0()
     {
-        return skill0;
+        return curSkills[0];
     }
 
     public SkillData GetSkill1()
     {
-        return skill1;
+        return curSkills[1];
     }
 
     public SkillData GetSkill2()
     {
-        return skill2;
+        return curSkills[2];
     }
 
     public SkillData GetSkill3()
     {
-        return skill3;
+        return curSkills[3];
+    }
+
+    public SkillData GetNoCDSkill()
+    {
+        for (int i = 0; i < curSkills.Count; i++)
+        {
+            if (curSkills[i].skillCooldown == 0)
+                return curSkills[i];
+        }
+
+        return null;
     }
 
     public int GetUnitValue()
@@ -83,13 +131,8 @@ public class UnitData : ScriptableObject
         return unitValue;
     }
 
-    public List<SkillBase> GetStandardStats()
+    public List<SkillData> GetUnitSkills()
     {
-        return standardStats;
-    }
-
-    public List<SkillBase> GetAdvancedStats()
-    {
-        return advancedStats;
+        return curSkills;
     }
 }
