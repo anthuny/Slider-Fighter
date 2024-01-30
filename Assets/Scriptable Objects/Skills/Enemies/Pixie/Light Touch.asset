@@ -20,12 +20,18 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: LIGHT TOUCH
   skillDescr: Damage up to
-  skillPower: 6
+  skillTabDescr: 
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  pointsAdded: 0
+  startingSkillPower: 6
+  curSkillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 10
   skillCooldown: 0
   skillSelectionCount: 2
+  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -37,9 +43,13 @@ MonoBehaviour:
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
   skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
   projectileAllowSpin: 0
   projectileAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: bd0048dda2873ca4b8061ab39773ee4b, type: 3}
   skillHit: {fileID: 8300000, guid: 48d64bd581402b84dae4488709290b1a, type: 3}
+  originalIndex: 0

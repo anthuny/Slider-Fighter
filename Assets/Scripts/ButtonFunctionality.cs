@@ -163,6 +163,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.UpdateAllysPositionCombat();
     }
 
+    public void ButtonAddSkillPointIncreaseTargets()
+    {
+        SkillsTabManager.Instance.SkillPointAdd(0);
+    }
+
+    public void ButtonAddSkillPointIncreasePower()
+    {
+        SkillsTabManager.Instance.SkillPointAdd(1);
+    }
+
+    public void ButtonAddSkillPointIncreaseEffect()
+    {
+        SkillsTabManager.Instance.SkillPointAdd(2);
+    }
+
     public void ButtonOpenMap()
     {
         // If owned gear is opened, do not allow map button to be selected
@@ -307,24 +322,24 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public void ButtonSlotDetails()
     {
         // If button selected is unlocked, open owned stuff
-        if (mainButton.isLocked)
-            return;
-        
-        SkillSlotSelection();
-
-        SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
-
+        if (mainButton != null)
+        {
+            if (mainButton.isLocked)
+                return;
+        }
         if (SkillsTabManager.Instance.playerInSkillTab)
-            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");
+        {
+            SkillSlotSelection();
 
+            SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
+            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");
+        }
         else if (TeamGearManager.Instance.playerInGearTab)
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
         else if (TeamItemsManager.Instance.playerInItemTab)
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
-
-
-
     }
+
     public void ButtonSelectGear()
     {
         // If owned gear tab is opened, do not allow selecting a new gear
@@ -460,28 +475,28 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             //SkillsTabManager.Instance.ResetSkillsBaseSelection();
             //SkillsTabManager.Instance.UpdateSkillDescription("");
             SkillsTabManager.Instance.ToggleSkillBaseSelection(SkillsTabManager.Instance.skillBase1, true);
-            SkillsTabManager.Instance.skillBase1.UpdateContentSubText(SkillsTabManager.Instance.skillBase1.GetStatPointsAdded().ToString());
+            //SkillsTabManager.Instance.skillBase1.UpdateContentSubText(SkillsTabManager.Instance.skillBase1.GetStatPointsAdded().ToString());
         }
         else if (curMasteryType == MasteryType.Skill2)
         {
             //SkillsTabManager.Instance.ResetSkillsBaseSelection();
             //SkillsTabManager.Instance.UpdateSkillDescription("");
             SkillsTabManager.Instance.ToggleSkillBaseSelection(SkillsTabManager.Instance.skillBase2, true);
-            SkillsTabManager.Instance.skillBase2.UpdateContentSubText(SkillsTabManager.Instance.skillBase2.GetStatPointsAdded().ToString());
+            //SkillsTabManager.Instance.skillBase2.UpdateContentSubText(SkillsTabManager.Instance.skillBase2.GetStatPointsAdded().ToString());
         }
         else if (curMasteryType == MasteryType.Skill3)
         {
             //SkillsTabManager.Instance.ResetSkillsBaseSelection();
             //SkillsTabManager.Instance.UpdateSkillDescription("");
             SkillsTabManager.Instance.ToggleSkillBaseSelection(SkillsTabManager.Instance.skillBase3, true);
-            SkillsTabManager.Instance.skillBase3.UpdateContentSubText(SkillsTabManager.Instance.skillBase3.GetStatPointsAdded().ToString());
+            //SkillsTabManager.Instance.skillBase3.UpdateContentSubText(SkillsTabManager.Instance.skillBase3.GetStatPointsAdded().ToString());
         }
         else if (curMasteryType == MasteryType.Skill4)
         {
             //SkillsTabManager.Instance.ResetSkillsBaseSelection();
             //SkillsTabManager.Instance.UpdateSkillDescription("");
             SkillsTabManager.Instance.ToggleSkillBaseSelection(SkillsTabManager.Instance.skillBase4, true);
-            SkillsTabManager.Instance.skillBase4.UpdateContentSubText(SkillsTabManager.Instance.skillBase4.GetStatPointsAdded().ToString());
+            //SkillsTabManager.Instance.skillBase4.UpdateContentSubText(SkillsTabManager.Instance.skillBase4.GetStatPointsAdded().ToString());
         }
 
         SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
@@ -1067,7 +1082,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (heldTimer > GameManager.Instance.maxHeldTimeTooltip)
         {
-            GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(true);
+            UnitFunctionality unit = GetComponentInParent<UnitFunctionality>();
+
+            if (unit != null)
+                GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(true);
+            else
+                //SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(true);
+
             unitLocked = true;
         }
     }
@@ -1166,6 +1187,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 heldTimer = 0;
                 StartCoroutine(HeldDownCooldown());
                 GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
+
+                //SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(false);
             }
         }
         else

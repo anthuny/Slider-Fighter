@@ -19,16 +19,20 @@ MonoBehaviour:
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP
-  skillDescr: Cast DEFENSE UP on self for 0/1/2/3/4 turns
-  skillTabDescr: Target self, cast Defense Up Buff
-  skillPower: 0
+  skillDescr: Cast DEFENSE UP on all allies for 0/1/2/3/4 turns
+  skillTabDescr: Target all allies, cast Defense Up Buff
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  pointsAdded: 0
+  startingSkillPower: 0
+  curSkillPower: 0
   skillAttackAccMult: 1
   skillAttackCount: 1
   projectileSpeed: 10
   skillCooldown: 3
-  skillSelectionCount: 1
+  skillSelectionCount: 3
   maxSkillLevel: 5
-  isSelfCast: 1
+  isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -39,6 +43,9 @@ MonoBehaviour:
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

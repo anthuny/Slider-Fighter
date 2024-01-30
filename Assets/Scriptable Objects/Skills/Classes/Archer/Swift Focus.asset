@@ -21,7 +21,10 @@ MonoBehaviour:
   skillName: SWIFT FOCUS
   skillDescr: Buff all allies with Speed up for 0/1/2/3 turns
   skillTabDescr: Target all allies, buff each target with Speed Up
-  skillPower: 0
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  startingSkillPower: 0
+  curSkillPower: 0
   skillAttackAccMult: 1
   skillAttackCount: 1
   projectileSpeed: 10
@@ -39,6 +42,9 @@ MonoBehaviour:
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

@@ -16,7 +16,14 @@ public class SkillsTabManager : MonoBehaviour
     public UIElement skillBase3;
     public UIElement skillBase4;
 
-    [SerializeField] private UIElement skillDescUI;
+    public UIElement holdingButton;
+
+    public UIElement skillDescUI;
+    public UIElement powerStatUI;
+    public UIElement hitsStatUI;
+    public UIElement cdStatUI;
+    public UIElement maxTargetsStatUI;
+    public UIElement hitEffectChanceUI;
     [SerializeField] private UIElement skillNameText;
     [SerializeField] private UIElement gearStatsUI;
     [SerializeField] private GameObject gearStatGO;
@@ -53,6 +60,72 @@ public class SkillsTabManager : MonoBehaviour
         UpdateActiveSkillNameText("");
         UpdateSkillDescription("");
     }
+
+    void OnApplicationQuit()
+    {
+        // Reset skill points of each skill to 0 on ally first start
+
+        /*
+        for (int i = 0; i < activeRoomAllies.Count; i++)
+        {
+            activeRoomAllies[i].unitData.UpdateCurSkills(activeRoomAllies[i].GetStartingSkills());
+        }
+        */
+    }
+
+    public void UpdateProgressSlider()
+    {
+        selectedSkillBase.gameObject.GetComponent<Slot>().UpdateProgressSlider();
+    }
+
+    public void SkillPointAdd(int skillUpgradeType = 0, bool doProgressSlider = true)
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        // Check to disable buttons if no points remain for the ally
+
+        
+        // Increase skill point
+        if (skillUpgradeType == 0)
+        {
+            // cap 
+            if (activeSkillBase.upgradeIncTargetCount > 4)
+                return;
+
+            if (doProgressSlider)
+                selectedSkillBase.gameObject.GetComponent<Slot>().IncreaseProgressSlider();
+
+        }
+        else if (skillUpgradeType == 1)
+        {
+            activeSkillBase.upgradeIncPowerCount++;
+        }
+        else if (skillUpgradeType == 2)
+        {
+            activeSkillBase.upgradeIncEffectCount++;
+        }
+
+        activeSkillBase.curSkillLevel++;
+        selectedSkillBase.UpdateSkillLevelText(activeSkillBase.curSkillLevel);
+
+        UpdateSkillUpgradesText();
+
+        SkillAddPoint();
+
+        UpdateSkillStatDetails();
+    }
+
+    public void ResetAllySkllls(UnitFunctionality unit)
+    {
+        List<SkillData> skills = unit.GetAllSkills();
+
+        for (int x = 0; x < skills.Count; x++)
+        {
+            skills[x].ResetSkill();
+        }
+    }
+
 
     public void ToggleToMapButton(bool toggle)
     {
@@ -326,10 +399,37 @@ public class SkillsTabManager : MonoBehaviour
         // Show combined calculated values next to unit
     }
 
+    public void UpdateSkillUpgradesText()
+    {
+        selectedSkillBase.skillUpgradesUI.UpdateContentText(activeSkillBase.upgradeIncTargetCount.ToString());
+        selectedSkillBase.skillUpgradesUI.UpdateContentText2(activeSkillBase.GetCalculatedSkillPower().ToString() + "%");
+        selectedSkillBase.skillUpgradesUI.UpdateContentText3(activeSkillBase.GetCalculatedSkillEffectChance().ToString() + "%");
+
+        //Debug.Log(activeSkillBase.GetCalculatedSkillSelectionCount().ToString());
+    }
+
+    void UpdateSkillStatsDisplay(int power = 0, int hits = 0, int cd = 0, int maxTargets = 0, int hitEffectChance = 0)
+    {
+        powerStatUI.UpdateContentText(power.ToString());
+        hitsStatUI.UpdateContentText(hits.ToString());
+        cdStatUI.UpdateContentText(cd.ToString());
+        maxTargetsStatUI.UpdateContentText(maxTargets.ToString());
+        hitEffectChanceUI.UpdateContentText(hitEffectChance.ToString());
+
+        //UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillAttackCount, activeSkillBase.skillCooldown);
+    }
+
+    void ClearSkillStatsDisplay()
+    {
+        powerStatUI.UpdateContentText("");
+        hitsStatUI.UpdateContentText("");
+        cdStatUI.UpdateContentText("");
+        maxTargetsStatUI.UpdateContentText("");
+        hitEffectChanceUI.UpdateContentText("");
+    }
+
     public void UpdateSkillStatDetails()
     {
-
-
         ClearAllSkillsStats();
 
         if (activeSkillBase != null)
@@ -337,15 +437,15 @@ public class SkillsTabManager : MonoBehaviour
             //Debug.Log(activeSkillBase);
             UpdateActiveSkillNameText(activeSkillBase.skillName);
             UpdateSkillDescription(activeSkillBase.skillTabDescr);
+            UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillAttackCount, activeSkillBase.skillCooldown, activeSkillBase.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(activeSkillBase.GetCalculatedSkillEffectStat()));
         }
         else
         {
             //Debug.Log("active skill base missing");
             UpdateActiveSkillNameText("");
             UpdateSkillDescription("");
+            ClearSkillStatsDisplay();
         }
-
-
 
 
         /*
@@ -388,6 +488,11 @@ public class SkillsTabManager : MonoBehaviour
 
     }
 
+    public void UpdateSkillDescription(string desc)
+    {
+        skillDescUI.UpdateContentText(desc);
+    }
+
     public Slot SelectedOwnedSlot()
     {
         return selectedOwnedSlot;
@@ -418,10 +523,6 @@ public class SkillsTabManager : MonoBehaviour
         */
     }
 
-    public void UpdateSkillDescription(string desc)
-    {
-        skillDescUI.UpdateContentText(desc);
-    }
 
     public void TriggerStat(string statType, float power)
     {
@@ -610,7 +711,8 @@ public class SkillsTabManager : MonoBehaviour
     public void SetupSkillsTab(UnitFunctionality unit)
     {
         UpdateActiveUnit(unit);
-
+        
+        selectedSkillBase = skillBase1;
         UpdateUnspentPointsText(CalculateUnspentSkillPoints());
 
         UpdateUnitLevelText(GetActiveUnit().GetUnitLevel().ToString());
@@ -620,7 +722,7 @@ public class SkillsTabManager : MonoBehaviour
 
 
         //activeSkillBase = unit.GetCurrentSkillBase(0);
-        //selectedSkillBase = skillBase1;
+
         //ToggleSkillBaseSelection(skillBase1, true);
 
         UpdateSkillStatDetails();
@@ -634,10 +736,10 @@ public class SkillsTabManager : MonoBehaviour
 
         //skillBase1.UpdateContentImage(unit.GetSkillBaseSLot)
 
-        skillBase1.UpdateContentSubText(skillBase1.GetStatPointsAdded().ToString());
-        skillBase2.UpdateContentSubText(skillBase2.GetStatPointsAdded().ToString());
-        skillBase3.UpdateContentSubText(skillBase3.GetStatPointsAdded().ToString());
-        skillBase4.UpdateContentSubText(skillBase4.GetStatPointsAdded().ToString());
+        skillBase1.GetSkillLevelText().UpdateContentText(GetActiveUnit().GetSkill(0).curSkillLevel.ToString());
+        skillBase2.GetSkillLevelText().UpdateContentText(GetActiveUnit().GetSkill(1).curSkillLevel.ToString());
+        skillBase3.GetSkillLevelText().UpdateContentText(GetActiveUnit().GetSkill(2).curSkillLevel.ToString());
+        skillBase4.GetSkillLevelText().UpdateContentText(GetActiveUnit().GetSkill(3).curSkillLevel.ToString());
 
         skillBase1.ToggleButton(true);
         skillBase2.ToggleButton(true);
@@ -695,8 +797,9 @@ public class SkillsTabManager : MonoBehaviour
         AudioManager.Instance.Play("Button_Click");
 
         GetSelectedSkillSlot().UpdateStatPoindsAdded(true, false, 0, false);
-        GetSelectedSkillSlot().UpdateContentSubText(GetSelectedSkillSlot().GetStatPointsAdded().ToString() + " / " + maxAmount);
+        //GetSelectedSkillSlot().UpdateContentSubText(GetSelectedSkillSlot().GetStatPointsAdded().ToString());
 
+        /*
         if (GetSelectedSkillSlot().curStatType == UIElement.StatType.SKILLSLOT1)
         {
             TriggerStat("HPBONUS", 1.5f);
@@ -713,7 +816,7 @@ public class SkillsTabManager : MonoBehaviour
         {
             TriggerStat("SPEEDBONUS", 5f);
         }
-
+        */
         //CheckIfStatShouldBeLocked();
     }
 
@@ -862,6 +965,7 @@ public class SkillsTabManager : MonoBehaviour
         }
 
         UpdateSkillStatDetails();
+        UpdateSkillUpgradesText();
     }
 
     public UIElement GetSelectedSkillSlot()
@@ -871,7 +975,7 @@ public class SkillsTabManager : MonoBehaviour
     public void UpdateActiveUnit(UnitFunctionality unit)
     {
         // Disable unit level image in team setup tab
-        unit.ToggleUnitLevelImage(false);
+        //unit.ToggleUnitLevelImage(false);
 
         activeUnit = unit;
     }
@@ -888,6 +992,8 @@ public class SkillsTabManager : MonoBehaviour
         skillBase2.ToggleSelected(false);
         skillBase3.ToggleSelected(false);
         skillBase4.ToggleSelected(false);
+
+        ResetBaseSkillUpgradesDisplay();
     }
 
     public void ToggleSkillBaseSelection(UIElement skill, bool toggle)
@@ -913,7 +1019,20 @@ public class SkillsTabManager : MonoBehaviour
 
         selectedBaseSlot = slot;
 
+        ResetBaseSkillUpgradesDisplay();
+
         slot.ToggleSlotSelection(true);
+
+        slot.GetComponent<UIElement>().skillUpgradesUI.UpdateAlpha(1);
+
+    }
+
+    void ResetBaseSkillUpgradesDisplay()
+    {
+        skillBase1.skillUpgradesUI.UpdateAlpha(0);
+        skillBase2.skillUpgradesUI.UpdateAlpha(0);
+        skillBase3.skillUpgradesUI.UpdateAlpha(0);
+        skillBase4.skillUpgradesUI.UpdateAlpha(0);
     }
 
     public void SkillSelection(Slot slot, bool select = false)
@@ -961,6 +1080,8 @@ public class SkillsTabManager : MonoBehaviour
             // Update UI
             //UpdateActiveSkillNameText(slot.GetSlotName());
             UpdateSkillStatDetails();
+
+            UpdateProgressSlider();
 
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(false, "", false);
             //OwnedLootInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedSlot());
@@ -1156,13 +1277,26 @@ public class SkillsTabManager : MonoBehaviour
     */
     public void UpdateUnspentPointsText(int count)
     {
-        unspentPointsText.UpdateContentSubText(count.ToString());
+        if (count == 0)
+        {
+            unspentPointsText.UpdateContentText("");
+
+            // Disable add point buttons and visuals
+            selectedSkillBase.gameObject.GetComponent<Slot>().ToggleSkillUpgradeButtons(false);
+        }
+        else
+        {
+            selectedSkillBase.gameObject.GetComponent<Slot>().ToggleSkillUpgradeButtons(true);
+            unspentPointsText.UpdateContentText(count.ToString());
+        }
     }
 
 
     public int CalculateUnspentSkillPoints()
     {
         int points = (GetActiveUnit().GetUnitLevel() * skillPointsPerLv) - GetActiveUnit().GetSpentSkillPoints();
+
+        //Debug.Log("points = " + points);
 
         int unitsCombinedLevel = 0;
         int spentPoints = 0;
@@ -1205,8 +1339,10 @@ public class SkillsTabManager : MonoBehaviour
                 UpdateSpentSkillPoints(-1);
         }
 
+        /*
         if (GetSelectedSkillSlot().GetStatPointsAdded() > GetActiveSkillBase().maxSkillLevel)
             GetActiveUnit().UpdateSpentSkillPoints(-1);
+        */
 
         UpdateUnspentPointsText(CalculateUnspentSkillPoints());
     }

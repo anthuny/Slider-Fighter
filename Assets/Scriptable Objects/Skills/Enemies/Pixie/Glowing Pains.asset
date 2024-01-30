@@ -21,11 +21,15 @@ MonoBehaviour:
   skillName: GLOWING PAINS
   skillDescr: 'Heal a targeted ally for '
   skillTabDescr: 
-  skillPower: 20
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  pointsAdded: 0
+  startingSkillPower: 30
+  curSkillPower: 30
   skillAttackAccMult: 1
   skillAttackCount: 4
   projectileSpeed: 13
-  skillCooldown: 0
+  skillCooldown: 1
   skillSelectionCount: 1
   maxSkillLevel: 5
   isSelfCast: 0
@@ -39,6 +43,9 @@ MonoBehaviour:
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
   projectileAllowSpin: 0

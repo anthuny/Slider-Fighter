@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Combat - Unit Levels")]
     public int levelupHealPerc = 20;
+    public int combatCompleteHealPerc = 25;
+
     [SerializeField] private Color easyDiffEnemyLvColour;
     [SerializeField] private Color mediumDiffEnemyLvColour;
     [SerializeField] private Color hardDiffEnemyLvColour;
@@ -545,6 +547,8 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitSkills(unitData.GetUnitSkills());
                 unitFunctionality.UpdateCurrentSkills(unitData.GetUnitSkills());
 
+                SkillsTabManager.Instance.ResetAllySkllls(unitFunctionality);
+
                 //activeRoomAllies.Add(unitFunctionality);
 
                 SkillsTabChangeAlly(true);
@@ -556,15 +560,6 @@ public class GameManager : MonoBehaviour
         }     
     }
 
-    void OnApplicationQuit()
-    {
-        /*
-        for (int i = 0; i < activeRoomAllies.Count; i++)
-        {
-            activeRoomAllies[i].unitData.UpdateCurSkills(activeRoomAllies[i].GetStartingSkills());
-        }
-        */
-    }
 
     public void UpdateActiveAllyDisplay()
     {
@@ -895,6 +890,9 @@ public class GameManager : MonoBehaviour
     #region Setup Multiple UIs
     public IEnumerator SetupPostBattleUI(bool playerWon)
     {
+        if (!playerWon)
+            activeRoomAllUnitFunctionalitys.Clear();
+
         ItemRewardManager.Instance.ToggleItemRewards(false);
         ItemRewardManager.Instance.ToggleConfirmItemButton(false);
 
@@ -1034,7 +1032,10 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(.3f);
 
         if (playerWon)
+        {
             defeatedEnemies.DisplayDefeatedEnemies();
+        }
+
         
 
 
@@ -1044,6 +1045,12 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < activeRoomAllies.Count; i++)
             {
                 activeRoomAllies[i].ToggleUnitLevelImage(true);
+
+                // Give combat win heal to alive allies
+                float combatWinHeal = ((float)combatCompleteHealPerc / 100f) * activeRoomAllies[i].GetUnitMaxHealth();
+                activeRoomAllies[i].ResetPowerUI();
+                activeRoomAllies[i].UpdateUnitCurHealth((int)combatWinHeal, false, false);
+                activeRoomAllies[i].SpawnPowerUI(combatWinHeal, false, false, null, false);
             }
 
             postBattleUI.ToggleExpGainedUI(true);
@@ -1702,7 +1709,7 @@ public class GameManager : MonoBehaviour
         }
 
         // For no power skills
-        if (GetActiveSkill().skillPower == 0)
+        if (GetActiveSkill().curSkillPower == 0)
         {
             GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
 
@@ -2294,15 +2301,15 @@ public class GameManager : MonoBehaviour
 
         if (skill.curSkillType == SkillData.SkillType.OFFENSE)
         {
-            abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower,
-                skill.skillAttackCount + activeUnit.GetUnitDamageHits(), tempAttack, skill.skillSelectionCount,
-                skill.skillPower, skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
+            abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.GetCalculatedSkillPowerStat(),
+                skill.skillAttackCount + activeUnit.GetUnitDamageHits(), tempAttack, skill.GetCalculatedSkillSelectionCount(),
+                skill.GetCalculatedSkillPowerStat(), skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
         }
         else
         {
-            abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.skillPower,
-                skill.skillAttackCount + activeUnit.GetUnitHealingHits(), tempAttack, skill.skillSelectionCount,
-                skill.skillPower, skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
+            abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.GetCalculatedSkillPowerStat(),
+                skill.skillAttackCount + activeUnit.GetUnitHealingHits(), tempAttack, skill.GetCalculatedSkillSelectionCount(),
+                skill.GetCalculatedSkillPowerStat(), skill.skillCooldown, skill.skillAttackAccMult, skill.skillPowerIcon, skill.skillSprite, skill.special);
         }
 
 
@@ -2448,6 +2455,7 @@ public class GameManager : MonoBehaviour
                         float curDef = activeRoomAllUnitFunctionalitys[i].GetCurDefense();
                         // units new def
                         float newDef = curDef + ((activeRoomAllUnitFunctionalitys[i].GetEffects()[x].powerPercent / 100f)) * curDef;
+                        newDef += 4;
 
                         activeRoomAllUnitFunctionalitys[i].UpdateUnitOldDefense((int)curDef);
 
@@ -2547,14 +2555,11 @@ public class GameManager : MonoBehaviour
         ToggleSelectingUnits(true);
         ToggleAllowSelection(true);
 
-        // Only decrease skill CDs during combat, not firt turn
-        if (!roundStart)
-        {
-            GetActiveUnitFunctionality().DecreaseSkill0Cooldown();
-            GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
-            GetActiveUnitFunctionality().DecreaseSkill2Cooldown();
-            GetActiveUnitFunctionality().DecreaseSkill3Cooldown();
-        }
+        // Only decrease skill CDs during combat
+        GetActiveUnitFunctionality().DecreaseSkill0Cooldown();
+        GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
+        GetActiveUnitFunctionality().DecreaseSkill2Cooldown();
+        GetActiveUnitFunctionality().DecreaseSkill3Cooldown();
 
         UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
 
@@ -2645,7 +2650,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SkipTurnAfterWait()
     {
-        yield return new WaitForSeconds(.25f);
+        yield return new WaitForSeconds(.75f);
 
         UpdateEnemyPosition(false);
         UpdateTurnOrder();
@@ -2699,7 +2704,7 @@ public class GameManager : MonoBehaviour
                         SelectUnit(IsEnemyTaunting()[i]);
 
                         // If enough units have been selected FOR ability max targets, or max amount of enemy units tanking
-                        if (selectedAmount == usedSkill.skillSelectionCount || selectedAmount == IsEnemyTaunting().Count)
+                        if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount() || selectedAmount == IsEnemyTaunting().Count)
                             return;
                     }
                 }
@@ -2712,7 +2717,7 @@ public class GameManager : MonoBehaviour
                     SelectUnit(activeRoomEnemies[x]);
 
                     // If enough units have been selected (in order of closest)
-                    if (selectedAmount == usedSkill.skillSelectionCount)
+                    if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
                         return;
                 }
             }
@@ -2732,7 +2737,7 @@ public class GameManager : MonoBehaviour
                     selectedAmount++;
 
                     // If enough units have been selected, toggle the display
-                    if (selectedAmount == usedSkill.skillSelectionCount)
+                    if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
                         return;
                 }
             }
@@ -2756,7 +2761,7 @@ public class GameManager : MonoBehaviour
                         SelectUnit(activeRoomAllies[i]);
 
                     // If enough units have been selected (in order of closest)
-                    if (selectedAmount == usedSkill.skillSelectionCount)
+                    if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
                         return;
                 }
             }
@@ -2790,11 +2795,11 @@ public class GameManager : MonoBehaviour
                     }
 
                     // If enough units have been selected, toggle the display
-                    if (selectedAmount == usedSkill.skillSelectionCount)
+                    if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
                         return;
 
                     // If skill requires only 1 unit selection - (full team target wont work without this)
-                    if (usedSkill.skillSelectionCount == 1)
+                    if (usedSkill.GetCalculatedSkillSelectionCount() == 1)
                     {
                         // If enemy chooses itself for ally attack, reselect to target any other ally 
                         if (activeRoomEnemies[rand] == GetActiveUnitFunctionality())
@@ -3127,7 +3132,7 @@ public class GameManager : MonoBehaviour
                         if (IsEnemyTaunting()[i] == unit)
                         {
                             // remove previous target
-                            if (unitsSelected.Count == GetActiveSkill().skillSelectionCount)
+                            if (unitsSelected.Count == GetActiveSkill().GetCalculatedSkillSelectionCount())
                                 ResetSelectedUnits();
 
                             // Select targeted unit
@@ -3139,7 +3144,7 @@ public class GameManager : MonoBehaviour
                     else  // If active unit is ally, and is selecting allies, disregard parry, and continue
                     {
                         // remove previous target
-                        if (unitsSelected.Count == GetActiveSkill().skillSelectionCount)
+                        if (unitsSelected.Count == GetActiveSkill().GetCalculatedSkillSelectionCount())
                             ResetSelectedUnits();
 
                         // Select targeted unit
@@ -3155,7 +3160,7 @@ public class GameManager : MonoBehaviour
                 // remove previous target
                 if (GetActiveSkill() != null)
                 {
-                    if (unitsSelected.Count == GetActiveSkill().skillSelectionCount)
+                    if (unitsSelected.Count == GetActiveSkill().GetCalculatedSkillSelectionCount())
                     {
                         unitsSelected[0].ToggleSelected(false);
                         unitsSelected.RemoveAt(0);
@@ -3238,7 +3243,7 @@ public class GameManager : MonoBehaviour
         // If a skill is selected
         if (activeSkill != null)
         {
-            UpdateUnitsSelectedText(unitsSelected.Count, activeSkill.skillSelectionCount);
+            UpdateUnitsSelectedText(unitsSelected.Count, activeSkill.GetCalculatedSkillSelectionCount());
         }
     }
 

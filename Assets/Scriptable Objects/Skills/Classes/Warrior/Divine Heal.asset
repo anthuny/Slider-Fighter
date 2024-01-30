@@ -21,7 +21,10 @@ MonoBehaviour:
   skillName: DIVINE HEAL
   skillDescr: Target up to
   skillTabDescr: Target 1 ally, healing them
-  skillPower: 35
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  startingSkillPower: 45
+  curSkillPower: 45
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 9
@@ -39,6 +42,9 @@ MonoBehaviour:
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
   projectileAllowSpin: 0

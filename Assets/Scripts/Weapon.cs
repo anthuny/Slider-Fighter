@@ -498,7 +498,7 @@ public class Weapon : MonoBehaviour
         else if(curHitAreaType == WeaponHitArea.HitAreaType.BAD)
             calculatedPower = badMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
         */
-        calculatedPower = (GameManager.Instance.GetActiveSkill().skillPower + currentPower);
+        calculatedPower = (GameManager.Instance.GetActiveSkill().GetCalculatedSkillPowerStat() + currentPower);
         //calculatedPower += GameManager.Instance.randomBaseOffset*2;
         calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
 

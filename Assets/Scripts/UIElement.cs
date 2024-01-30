@@ -20,11 +20,14 @@ public class UIElement : MonoBehaviour
     [SerializeField] private UIElement contentImageUI;
     [SerializeField] private UIElement contentImage2UI;
     [SerializeField] private TextMeshProUGUI contentText;
+    [SerializeField] private TextMeshProUGUI contentText2;
+    [SerializeField] private TextMeshProUGUI contentText3;
     [SerializeField] private Text contentSubText;
     [SerializeField] private TextMeshProUGUI contentSubTextTMP;
     public CanvasGroup buttonCG;
     [SerializeField] private CanvasGroup button2CG;
     [SerializeField] private CanvasGroup button3CG;
+    [SerializeField] private UIElement skillLevelText;
 
     [SerializeField] private bool startHidden;
 
@@ -45,12 +48,39 @@ public class UIElement : MonoBehaviour
     public string itemName;
     [SerializeField] private UIElement rarityBorderUI;
     public Slot slot;
+    public UIElement skillUpgradesUI;
+    [SerializeField] private UIElement tooltipStats;
+    [SerializeField] private string statText;
+
 
     private RectTransform rt;
     public float originalScaleText;
     private float originalScaleImage;
     private float originalYPos;
     public bool isEnabled = false;
+
+    public void ToggleTooltipStats(bool toggle)
+    {
+        //Debug.Log("toggling " + toggle);
+
+        if (toggle)
+        {
+            //Debug.Log(tooltipStats.isEnabled);
+
+            if (!tooltipStats.isEnabled)
+            {
+                UpdateTooltipText();
+                tooltipStats.UpdateAlpha(1);
+            }
+        }
+        else
+            tooltipStats.UpdateAlpha(0);
+    }
+
+    public void UpdateTooltipText()
+    {
+        tooltipStats.UpdateContentText(statText);
+    }
 
     public void UpdateItemName(string name)
     {
@@ -62,6 +92,15 @@ public class UIElement : MonoBehaviour
         return itemName;
     }
 
+    public void UpdateSkillLevelText(int level)
+    {
+        skillLevelText.UpdateContentText(level.ToString());
+    }
+
+    public UIElement GetSkillLevelText()
+    {
+        return skillLevelText;
+    }
     private void Awake()
     {
         cg = GetComponent<CanvasGroup>();
@@ -140,10 +179,12 @@ public class UIElement : MonoBehaviour
     {
         if (isReset)
         {
+            /*
             if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetSkillPointThreshhold())
                 ToggleLockedImage(true);
             else
                 ToggleLockedImage(false);
+            */
 
             statPointsAdded = 0;
             return;
@@ -281,6 +322,28 @@ public class UIElement : MonoBehaviour
             contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
         
         contentText.text = text;
+        //AnimateUI();
+    }
+    public void UpdateContentText2(string text)
+    {
+        //Debug.Log(gameObject.name);
+
+        // Shit fix for rewards finding their content text
+        if (contentText2 == null)
+            contentText2 = transform.GetComponentInChildren<TextMeshProUGUI>();
+
+        contentText2.text = text;
+        //AnimateUI();
+    }
+    public void UpdateContentText3(string text)
+    {
+        //Debug.Log(gameObject.name);
+
+        // Shit fix for rewards finding their content text
+        if (contentText3 == null)
+            contentText3 = transform.GetComponentInChildren<TextMeshProUGUI>();
+
+        contentText3.text = text;
         //AnimateUI();
     }
 

@@ -21,11 +21,15 @@ MonoBehaviour:
   skillName: Tracking Shot
   skillDescr: Damage up to
   skillTabDescr: 
-  skillPower: 6
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  pointsAdded: 0
+  startingSkillPower: 6
+  curSkillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 3
   projectileSpeed: 12
-  skillCooldown: 1
+  skillCooldown: 2
   skillSelectionCount: 1
   maxSkillLevel: 5
   isSelfCast: 0
@@ -35,10 +39,14 @@ MonoBehaviour:
   special: 0
   effect: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
   effectTurnLength: 1
-  effectHitChance: 35
+  curEffectHitChance: 35
+  startingEffectHitChance: 35
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 21300000, guid: 34e06899a5ab702488057f2bcda0801a, type: 3}
   projectileAllowSpin: 0

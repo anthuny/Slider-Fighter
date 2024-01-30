@@ -17,12 +17,15 @@ MonoBehaviour:
   curSkillGameType: 0
   curRangedType: 0
   curAnimType: 0
-  ownedByAllyName: Warrior
   skillSprite: {fileID: 21300000, guid: 9f003367cde8e914cadd39e9903c2904, type: 3}
   skillName: QUICK SLASH
   skillDescr: Target up to
-  skillTabDescr: Target 1 enemy, dealing damage
-  skillPower: 6
+  skillTabDescr: Target 1 base enemy, dealing damage
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  pointsAdded: 0
+  startingSkillPower: 6
+  curSkillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 1
@@ -36,13 +39,18 @@ MonoBehaviour:
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
-  effectHitChance: 0
+  curEffectHitChance: 0
+  startingEffectHitChance: 0
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: de68bf11f3ddf4d4482781d4ef21afdc, type: 3}
   skillHit: {fileID: 8300000, guid: f6869df06c510324290acef8c918416f, type: 3}
+  originalIndex: 0

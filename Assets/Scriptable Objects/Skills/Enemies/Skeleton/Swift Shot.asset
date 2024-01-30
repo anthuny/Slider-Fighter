@@ -20,12 +20,18 @@ MonoBehaviour:
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: Swift Shot
   skillDescr: Damage up to
-  skillPower: 6
+  skillTabDescr: 
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  pointsAdded: 0
+  startingSkillPower: 6
+  curSkillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 2
   projectileSpeed: 12
   skillCooldown: 0
   skillSelectionCount: 1
+  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -37,9 +43,13 @@ MonoBehaviour:
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 21300000, guid: 34e06899a5ab702488057f2bcda0801a, type: 3}
   projectileAllowSpin: 0
   projectileAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: be0b8e4737c72c04b99ce68ca4eeb89a, type: 3}
   skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
+  originalIndex: 0

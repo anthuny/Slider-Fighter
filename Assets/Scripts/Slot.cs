@@ -29,17 +29,81 @@ public class Slot : MonoBehaviour
     [SerializeField] private UIElement slotUI;
     [SerializeField] private UIElement slotSelectionUI;
 
+    public UIElement buttonSkillUpgrade1;
+    public UIElement buttonSkillUpgrade2;
+    public UIElement buttonSkillUpgrade3;
+
+    public UIElement progressSlider;
+
     public UIElement ownedSlotButton;
     [SerializeField] private UIElement equipSlotButton;
     public UIElement goldtextUI;
 
     public bool isGold;
     public bool isEmpty = true;
+
+    private int pointsAdded = 0;
     //public bool isLocked;
 
     private void Start()
     {
         ToggleSlotSelection(false);
+    }
+
+    public void ToggleSkillUpgradeButtons(bool toggle)
+    {
+        buttonSkillUpgrade1.ToggleButton(toggle);
+
+        if (toggle)
+            buttonSkillUpgrade1.UpdateAlpha(1);
+        else
+            buttonSkillUpgrade1.UpdateAlpha(0);
+
+
+        buttonSkillUpgrade2.ToggleButton(toggle);
+
+        if (toggle)
+            buttonSkillUpgrade2.UpdateAlpha(1);
+        else
+            buttonSkillUpgrade2.UpdateAlpha(0);
+
+
+        buttonSkillUpgrade3.ToggleButton(toggle);
+
+        if (toggle)
+            buttonSkillUpgrade3.UpdateAlpha(1);
+        else
+            buttonSkillUpgrade3.UpdateAlpha(0);
+    }
+
+    public void IncreaseProgressSlider()
+    {
+        SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded++;
+
+        float val = 1f / 3f;
+
+        progressSlider.contentImage.fillAmount += val;
+
+        if (SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded % 3 == 0)
+        {
+            SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded = 0;
+            SkillsTabManager.Instance.activeSkillBase.upgradeIncTargetCount++;
+            SkillsTabManager.Instance.SkillPointAdd(0, false);
+
+            StartCoroutine(ResetProgressSlider());
+        }
+    }
+
+    public void UpdateProgressSlider()
+    {
+        progressSlider.contentImage.fillAmount = SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded / 3f;
+    }
+
+    IEnumerator ResetProgressSlider()
+    {
+        yield return new WaitForSeconds(.25f);
+
+        progressSlider.contentImage.fillAmount = 0;
     }
 
     public void ResetGearSlot(bool byPass = false, bool allowGearDefaultClear = false)

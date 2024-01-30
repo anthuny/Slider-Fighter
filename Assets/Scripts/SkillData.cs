@@ -25,7 +25,11 @@ public class SkillData : ScriptableObject
     public string skillName;
     public string skillDescr;
     public string skillTabDescr;
-    public int skillPower;
+    public int startingSkillLevel = 1;
+    public int curSkillLevel = 1;
+    public int pointsAdded;
+    public int startingSkillPower;
+    public int curSkillPower;
     [Tooltip("For each of this, each accuracy hit will create x 1 power text appear")]
     public int skillAttackAccMult = 1;
     [Tooltip("The base amount of hit lines a skill will do on (with at least bad or higher accuracy with Attack Bar")]
@@ -43,7 +47,8 @@ public class SkillData : ScriptableObject
     public EffectData effect;
     public int effectTurnLength;
     [Tooltip("0 = 100% also, although 1 = 1 as normal upwards.")]
-    public float effectHitChance;
+    public float curEffectHitChance;
+    public float startingEffectHitChance;
     [Tooltip("Each of these, causes the skill to immediately apply a stack of this amount to each target")]
     public int baseEffectApplyCount = 0;
     [Tooltip("Skill has increased power to a unit with this effect")]
@@ -52,6 +57,10 @@ public class SkillData : ScriptableObject
     public SkillExtraPowerToEffect curSkillExtraPowerToEffect;
     [Tooltip("Percentage increase of power when targeting a unit with an effect")]
     public int percIncPower;
+    public int upgradeIncTargetCount = 0;
+    public int upgradeIncPowerCount = 0;
+    public int upgradeIncEffectCount = 0;
+
     public Sprite skillPowerIcon;
     public Sprite skillProjectile;
     public bool projectileAllowSpin;
@@ -59,4 +68,59 @@ public class SkillData : ScriptableObject
     public AudioClip skillLaunch;
     public AudioClip skillHit;
     public int originalIndex;
+
+    public int GetCalculatedSkillSelectionCount()
+    {
+        int val = skillSelectionCount + upgradeIncTargetCount;
+
+        if (val > 6)
+            val = 6;
+
+        return val;
+    }
+
+    public int GetCalculatedSkillPower()
+    {
+        float val = upgradeIncPowerCount * 25;
+
+        return (int)val;
+    }
+
+    public int GetCalculatedSkillPowerStat()
+    {
+        float val = startingSkillPower + (((25f / 100f) * startingSkillPower) * upgradeIncPowerCount);
+        //Debug.Log("float in skilldata is " + val);
+
+        curSkillPower = Mathf.RoundToInt(val);
+        return Mathf.RoundToInt(val);
+    }
+
+    public int GetCalculatedSkillEffectStat()
+    {
+        float val = startingEffectHitChance + (((15f / 100f) * startingEffectHitChance) * upgradeIncEffectCount);
+        //Debug.Log("float in skilldata is " + val);
+
+        curEffectHitChance = Mathf.RoundToInt(val);
+        return Mathf.RoundToInt(val);
+    }
+
+    public int GetCalculatedSkillEffectChance()
+    {
+        float val = upgradeIncEffectCount * 15f;
+
+        return (int)val;
+    }
+
+    public void ResetSkill()
+    {
+        curSkillLevel = startingSkillLevel;
+        curSkillPower = startingSkillPower;
+        curEffectHitChance = startingEffectHitChance;
+        pointsAdded = 0;
+
+        upgradeIncTargetCount = 0;
+        upgradeIncPowerCount = 0;
+        upgradeIncEffectCount = 0;
+    }
+
 }

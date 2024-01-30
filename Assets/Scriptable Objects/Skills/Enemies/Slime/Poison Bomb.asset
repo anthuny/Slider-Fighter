@@ -21,7 +21,11 @@ MonoBehaviour:
   skillName: Poison Bomb
   skillDescr: Damage up to
   skillTabDescr: 
-  skillPower: 6
+  startingSkillLevel: 1
+  curSkillLevel: 1
+  pointsAdded: 0
+  startingSkillPower: 6
+  curSkillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 4
   projectileSpeed: 12
@@ -35,10 +39,14 @@ MonoBehaviour:
   special: 0
   effect: {fileID: 11400000, guid: 84de7150b1f66f44c9f3aa5aff3670b9, type: 2}
   effectTurnLength: 1
-  effectHitChance: 25
+  curEffectHitChance: 35
+  startingEffectHitChance: 35
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 21300000, guid: ec8867ae37f5da94ebd387fc87bc9e2c, type: 3}
   projectileAllowSpin: 0

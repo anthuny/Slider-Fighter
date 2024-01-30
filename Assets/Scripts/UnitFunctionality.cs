@@ -108,7 +108,7 @@ public class UnitFunctionality : MonoBehaviour
     public int statsAdv3Added;
     public int statsAdv4Added;
 
-    private int spentMasteryTotalPoints = 0;
+    public int spentMasteryTotalPoints = 0;
     public int SkillSpentPoints = 0;
     public int statsSpentAdvPoints = 0;
 
@@ -665,12 +665,12 @@ public class UnitFunctionality : MonoBehaviour
 
             // Adjust power based on skill effect amp on target then send it 
 
-            int totalPower = GameManager.Instance.activeSkill.skillPower + GameManager.Instance.GetActiveUnitFunctionality().curPower;
+            int totalPower = GameManager.Instance.activeSkill.GetCalculatedSkillPowerStat() + GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
             //totalPower += //GameManager.Instance.randomBaseOffset*2;
             totalPower = GameManager.Instance.RandomisePower(totalPower);
 
-            if (GameManager.Instance.activeSkill.skillPower == 0)
+            if (GameManager.Instance.activeSkill.curSkillPower == 0)
                 totalPower = 0;
 
             int effectCount;
@@ -897,6 +897,11 @@ public class UnitFunctionality : MonoBehaviour
 
     SkillData ChooseRandomSkill()
     {
+        Debug.Log("skill 1 cd " + skill0CurCooldown);
+        Debug.Log("skill 2 cd " + skill1CurCooldown);
+        Debug.Log("skill 3 cd " + skill2CurCooldown);
+        Debug.Log("skill 4 cd " + skill3CurCooldown);
+
         int unitEnemyIntelligence = 10;
         for (int i = 0; i < unitEnemyIntelligence; i++)
         {
@@ -926,7 +931,8 @@ public class UnitFunctionality : MonoBehaviour
             // Base skill
             else if (rand == 4)
             {
-                return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
+                if (skill0CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).isPassive)
+                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
             }
         }
 
@@ -965,10 +971,10 @@ public class UnitFunctionality : MonoBehaviour
                 for (int x = 0; x < effectHitAcc; x++)
                 {
                     // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().effectHitChance != 0 && byPassAcc)
+                    if (GameManager.Instance.GetActiveSkill().curEffectHitChance != 0 && byPassAcc)
                     {
                         int rand = Random.Range(1, 101);
-                        if (rand <= GameManager.Instance.GetActiveSkill().effectHitChance)
+                        if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                         {
                             // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
                             activeEffects[i].AddTurnCountText(1);
@@ -994,12 +1000,12 @@ public class UnitFunctionality : MonoBehaviour
                 GameObject go = null;
 
                 // Determining whether the effect hits, If it fails, stop
-                if (GameManager.Instance.GetActiveSkill().effectHitChance != 0 && byPassAcc)
+                if (GameManager.Instance.GetActiveSkill().curEffectHitChance != 0 && byPassAcc)
                 {
                     if (m == 0)
                     {
                         int rand = Random.Range(1, 101);
-                        if (rand <= GameManager.Instance.GetActiveSkill().effectHitChance)
+                        if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                         {
                             // Spawn new effect on target unit
                             go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
