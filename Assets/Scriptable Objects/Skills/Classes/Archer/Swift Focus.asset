@@ -14,31 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
-  curSkillGameType: 2
+  curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 8cdfd37f9e223d74c8c1b04387be2592, type: 3}
   skillName: SWIFT FOCUS
   skillDescr: Buff all allies with Speed up for 0/1/2/3 turns
   skillTabDescr: Target all allies, buff each target with Speed Up
-  startingSkillLevel: 1
-  curSkillLevel: 1
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
   startingSkillPower: 0
   curSkillPower: 0
   skillAttackAccMult: 1
   skillAttackCount: 1
   projectileSpeed: 10
   skillCooldown: 3
+  curCooldown: 0
   skillSelectionCount: 3
-  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
   special: 1
   effect: {fileID: 11400000, guid: 0abfc7040d3eb7e4da2698486445dc5a, type: 2}
   effectTurnLength: 1
-  effectHitChance: 0
+  curEffectHitChance: 0
+  startingEffectHitChance: 0
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0

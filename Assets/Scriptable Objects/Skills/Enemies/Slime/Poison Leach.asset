@@ -14,31 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
-  curSkillGameType: 3
+  curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: Poison Leach
   skillDescr: 
   skillTabDescr: 
-  skillPower: 0
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 0
+  curSkillPower: 0
   skillAttackAccMult: 1
   skillAttackCount: 0
   projectileSpeed: 0
   skillCooldown: 0
+  curCooldown: 0
   skillSelectionCount: 0
-  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 1
   isPassive: 1
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
-  effectHitChance: 0
+  curEffectHitChance: 0
+  startingEffectHitChance: 0
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

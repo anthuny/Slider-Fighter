@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Magical Light
+  m_EditorClassIdentifier: 
+  curSkillType: 0
+  curSkillSelectionType: 0
+  curskillSelectionAliveType: 0
+  curRangedType: 1
+  curAnimType: 0
+  skillSprite: {fileID: 21300000, guid: 7ac91a992e8dc9f4c90aac343e15e174, type: 3}
+  skillName: MAGICAL LIGHT
+  skillDescr: Target 2 base enemies, dealing damage, each hit has a 35% to apply
+    speed down effect for 0/1/2/3/4 turns
+  skillTabDescr: Target 2 base enemies, dealing damage, each hit has a 35% to apply
+    speed down effect
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 6
+  curSkillPower: 6
+  skillAttackAccMult: 1
+  skillAttackCount: 1
+  projectileSpeed: 10
+  skillCooldown: 0
+  curCooldown: 0
+  skillSelectionCount: 6
+  isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
+  special: 0
+  effect: {fileID: 11400000, guid: a0a448b2d3383c44b82ac9431b0bd644, type: 2}
+  effectTurnLength: 1
+  curEffectHitChance: 35
+  startingEffectHitChance: 35
+  baseEffectApplyCount: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncPowerCount: 0
+  upgradeIncEffectCount: 0
+  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
+  skillProjectile: {fileID: 0}
+  projectileAllowSpin: 0
+  projectileAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: de68bf11f3ddf4d4482781d4ef21afdc, type: 3}
+  skillHit: {fileID: 8300000, guid: f6869df06c510324290acef8c918416f, type: 3}
+  originalIndex: 0

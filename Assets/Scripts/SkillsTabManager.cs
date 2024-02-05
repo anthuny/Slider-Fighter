@@ -80,8 +80,7 @@ public class SkillsTabManager : MonoBehaviour
 
     public void SkillPointAdd(int skillUpgradeType = 0, bool doProgressSlider = true)
     {
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+
 
         // Check to disable buttons if no points remain for the ally
 
@@ -94,8 +93,12 @@ public class SkillsTabManager : MonoBehaviour
                 return;
 
             if (doProgressSlider)
-                selectedSkillBase.gameObject.GetComponent<Slot>().IncreaseProgressSlider();
+            {
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
 
+                selectedSkillBase.gameObject.GetComponent<Slot>().IncreaseProgressSlider();
+            }
         }
         else if (skillUpgradeType == 1)
         {
@@ -751,10 +754,7 @@ public class SkillsTabManager : MonoBehaviour
         skillBase3.UpdateAlpha(1);
         skillBase4.UpdateAlpha(1);
 
-        skillBase1.ToggleLockedSkill();
-        skillBase2.ToggleLockedSkill();
-        skillBase3.ToggleLockedSkill();
-        skillBase4.ToggleLockedSkill();
+        UpdateLockedSkills();
 
         // Select Standard default when setting up
         //UpdateSkillDescription(unit.GetCurrentSkillBase(0));
@@ -762,6 +762,14 @@ public class SkillsTabManager : MonoBehaviour
         //statsBase1.UpdateContentSubText(statsBase1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(0).statMaxAmount);
 
         UpdateUnspentPointsText(CalculateUnspentSkillPoints());
+    }
+
+    public void UpdateLockedSkills()
+    {
+        skillBase1.ToggleLockedSkill();
+        skillBase2.ToggleLockedSkill();
+        skillBase3.ToggleLockedSkill();
+        skillBase4.ToggleLockedSkill();
     }
 
     public SkillData GetActiveSkillBase()
@@ -787,11 +795,11 @@ public class SkillsTabManager : MonoBehaviour
         if (GetSelectedSkillSlot().GetIsLocked())
             return;
 
-        int maxAmount = GetActiveSkillBase().maxSkillLevel;
+        //int maxAmount = GetActiveSkillBase().maxSkillLevel;
 
         // if mastery points are maxed already, stop
-        if (GetSelectedSkillSlot().GetStatPointsAdded() >= maxAmount)
-            return;
+        //if (GetSelectedSkillSlot().GetStatPointsAdded() >= maxAmount)
+        //    return;
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
@@ -852,14 +860,14 @@ public class SkillsTabManager : MonoBehaviour
         if (GetSelectedSkillSlot() == null)
             return;
 
-        int maxAmount = GetActiveSkillBase().maxSkillLevel;
+        //int maxAmount = GetActiveSkillBase().maxSkillLevel;
 
         // if mastery points are at 0 already, stop
         if (GetSelectedSkillSlot().GetStatPointsAdded() <= 0)
             return;
 
         GetSelectedSkillSlot().UpdateStatPoindsAdded(false);
-        GetSelectedSkillSlot().UpdateContentSubText(GetSelectedSkillSlot().GetStatPointsAdded().ToString() + " / " + maxAmount);
+        //GetSelectedSkillSlot().UpdateContentSubText(GetSelectedSkillSlot().GetStatPointsAdded().ToString() + " / " + maxAmount);
         
         /*
         // Force L2/R2 and L4/R4 to be unique. only of of each can be used

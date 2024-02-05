@@ -26,12 +26,9 @@ public class UnitData : ScriptableObject
     public float defenseIncPerLv;
     public float maxHealthIncPerLv;
 
-    public int startingEnergy;
-    public int startingUnitStartTurnEnergyGain;
     // The amount of units this unit can target at once with it's basic attack
     public int basicSelectionCount;
     public GameObject characterPrefab;
-    public Sprite projectileSprite;
 
     [Header("Skills")]
     [SerializeField] private List<SkillData> curSkills = new List<SkillData>();

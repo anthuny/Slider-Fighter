@@ -19,11 +19,13 @@ public class CharacterCarasel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI allyNameText;
     [SerializeField] private Color lockedNameColour;
 
-    [SerializeField] private bool unlockedWarrior = false;
-    [SerializeField] private bool unlockedArcher = false;
+    [SerializeField] private bool unlockedKnight = false;
+    [SerializeField] private bool unlockedRanger = false;
+    [SerializeField] private bool unlockedCleric = false;
 
     public RuntimeAnimatorController warriorAnimator;
     public RuntimeAnimatorController archerAnimator;
+    public RuntimeAnimatorController clericAnimator;
 
     public Color unlockedUnitColour;
     public Color lockedUnitColour;
@@ -60,7 +62,7 @@ public class CharacterCarasel : MonoBehaviour
     {
         ToggleMenu(true);
 
-        SaveUnlockedAlly("Warrior");
+        SaveUnlockedAlly("Knight");
         LoadSave();
         LoadCarasel();
     }
@@ -142,11 +144,11 @@ public class CharacterCarasel : MonoBehaviour
                 continue;
             }
 
-            if (allAllies[i].unitName == "Warrior")
+            if (allAllies[i].unitName == "Knight")
             {
                 allAlliesMenu[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
 
-                if (IsWarriorUnlocked())
+                if (IsKnightUnlocked())
                 {
                     allAlliesMenu[i].ToggleUnitLocked(false, false);
                 }
@@ -154,11 +156,25 @@ public class CharacterCarasel : MonoBehaviour
                     allAlliesMenu[i].ToggleUnitLocked(true, true);
             }
 
-            if (allAllies[i].unitName == "Archer")
+            if (allAllies[i].unitName == "Ranger")
             {
                 allAlliesMenu[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 140);
 
-                if (IsArcherUnlocked())
+                if (IsRangerUnlocked())
+                {
+                    allAlliesMenu[i].ToggleUnitLocked(false, false);
+                }
+                else
+                {
+                    allAlliesMenu[i].ToggleUnitLocked(true, true);
+                }
+            }
+
+            if (allAllies[i].unitName == "Cleric")
+            {
+                allAlliesMenu[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+
+                if (IsClericUnlocked())
                 {
                     allAlliesMenu[i].ToggleUnitLocked(false, false);
                 }
@@ -200,41 +216,55 @@ public class CharacterCarasel : MonoBehaviour
 
     public void ResetSave()
     {
-        PlayerPrefs.SetInt("UnlockedWarrior", 0);
-        PlayerPrefs.SetInt("UnlockedArcher", 0);
-        unlockedWarrior = false;
-        unlockedArcher = false;
+        PlayerPrefs.SetInt("UnlockedKnight", 0);
+        PlayerPrefs.SetInt("UnlockedRanger", 0);
+        PlayerPrefs.SetInt("UnlockedCleric", 0);
+        unlockedKnight = false;
+        unlockedRanger = false;
+        unlockedCleric = false;
     }
 
     public void LoadSave()
     {
-        if (PlayerPrefs.GetInt("UnlockedWarrior") == 1)
-            unlockedWarrior = true;
-        if (PlayerPrefs.GetInt("UnlockedArcher") == 1)
-            unlockedArcher = true;
+        if (PlayerPrefs.GetInt("UnlockedKnight") == 1)
+            unlockedKnight = true;
+        if (PlayerPrefs.GetInt("UnlockedRanger") == 1)
+            unlockedRanger = true;
+        if (PlayerPrefs.GetInt("UnlockedCleric") == 1)
+            unlockedCleric = true;
     }
 
     public void SaveUnlockedAlly(string allyName)
     {
-        if (allyName == "Warrior")
+        if (allyName == "Knight")
         {
-            PlayerPrefs.SetInt("UnlockedWarrior", 1);
-            unlockedWarrior = true;
+            PlayerPrefs.SetInt("UnlockedKnight", 1);
+            unlockedKnight = true;
         }
-        else if (allyName == "Archer")
+        else if (allyName == "Ranger")
         {
-            PlayerPrefs.SetInt("UnlockedArcher", 1);
-            unlockedArcher = true;
+            PlayerPrefs.SetInt("UnlockedRanger", 1);
+            unlockedRanger = true;
+        }
+        else if (allyName == "Cleric")
+        {
+            PlayerPrefs.SetInt("UnlockedCleric", 1);
+            unlockedCleric = true;
         }
     }
 
-    public bool IsWarriorUnlocked()
+    public bool IsKnightUnlocked()
     {
-        return unlockedWarrior;
+        return unlockedKnight;
     }
 
-    public bool IsArcherUnlocked()
+    public bool IsRangerUnlocked()
     {
-        return unlockedArcher;
+        return unlockedRanger;
+    }
+
+    public bool IsClericUnlocked()
+    {
+        return unlockedCleric;
     }
 }

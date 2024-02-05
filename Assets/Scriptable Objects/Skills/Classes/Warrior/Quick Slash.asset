@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
-  curSkillGameType: 0
+  curskillSelectionAliveType: 0
   curRangedType: 0
   curAnimType: 0
   skillSprite: {fileID: 21300000, guid: 9f003367cde8e914cadd39e9903c2904, type: 3}
   skillName: QUICK SLASH
   skillDescr: Target up to
   skillTabDescr: Target 1 base enemy, dealing damage
-  startingSkillLevel: 1
-  curSkillLevel: 1
+  startingSkillLevel: 0
+  curSkillLevel: 0
   pointsAdded: 0
   startingSkillPower: 6
   curSkillPower: 6
@@ -30,12 +30,17 @@ MonoBehaviour:
   skillAttackCount: 2
   projectileSpeed: 1
   skillCooldown: 0
+  curCooldown: 0
   skillSelectionCount: 1
-  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0

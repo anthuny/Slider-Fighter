@@ -112,11 +112,6 @@ public class UnitFunctionality : MonoBehaviour
     public int SkillSpentPoints = 0;
     public int statsSpentAdvPoints = 0;
 
-    [SerializeField] private int skill0CurCooldown = 0;
-    [SerializeField] private int skill1CurCooldown = 0;
-    [SerializeField] private int skill2CurCooldown = 0;
-    [SerializeField] private int skill3CurCooldown = 0;
-
     public CombatUnitFocus unitFocus;
 
     public bool idleBattle;
@@ -134,6 +129,7 @@ public class UnitFunctionality : MonoBehaviour
     private float oldCurSpeed = 0;
     private float oldCurDefense = 0;
     public bool isSpeedUp;
+    public bool isSpeedDown;
     public bool isDefenseUp;
     public bool isDefenseDown;
     public bool isPoison;
@@ -160,6 +156,11 @@ public class UnitFunctionality : MonoBehaviour
     public int prevStatDefense;
     public int prevStatSpeed;
     public string selectedEffect;
+
+    public int skill0CurCooldown;
+    public int skill1CurCooldown;
+    public int skill2CurCooldown;
+    public int skill3CurCooldown;
 
     //public bool unitDouble;
 
@@ -698,6 +699,17 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
+    public void DecreaseRandomEffect()
+    {
+        if (activeEffects.Count > 0)
+        {
+            int rand = Random.Range(0, activeEffects.Count);
+
+            TriggerTextAlert(activeEffects[rand].effectName, 1, true, "Trigger");
+            activeEffects[rand].ReduceTurnCountText(this);
+        }
+    }
+
     public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
     {
         // If no effects remain on the unit, stop
@@ -799,114 +811,217 @@ public class UnitFunctionality : MonoBehaviour
         return null;
     }
 
-    public int GetSkill0CurCooldown()
-    {
-        return skill0CurCooldown;
-    }
-    public int GetSkill1CurCooldown()
-    {
-        return skill1CurCooldown;
-    }
-    public int GetSkill2CurCooldown()
-    {
-        return skill2CurCooldown;
-    }
-    public int GetSkill3CurCooldown()
-    {
-        return skill3CurCooldown;
-    }
-
     public void ResetSkill0Cooldown()
     {
-        skill0CurCooldown = 0;
-        GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(0), 0);
+            GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(0)).ToString());
+        }
+        else
+        {
+            skill0CurCooldown = 0;
+        }
     }
     public void ResetSkill1Cooldown()
     {
-        skill1CurCooldown = 0;
-        GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill1CurCooldown.ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(1), 0);
+            GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(1)).ToString());
+        }
+        else
+        {
+            skill1CurCooldown = 0;
+        }
     }
     public void ResetSkill2Cooldown()
     {
-        skill2CurCooldown = 0;
-        GameManager.Instance.skill2IconCooldownUIText.UpdateUIText(skill2CurCooldown.ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(2), 0);
+            GameManager.Instance.skill2IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(2)).ToString());
+        }
+        else
+        {
+            skill2CurCooldown = 0;
+        }
     }
     public void ResetSkill3Cooldown()
     {
-        skill3CurCooldown = 0;
-        GameManager.Instance.skill3IconCooldownUIText.UpdateUIText(skill3CurCooldown.ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(3), 0);
+            GameManager.Instance.skill3IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(3)).ToString());
+        }
+        else
+        {
+            skill3CurCooldown = 0;
+        }
     }
 
     public void SetSkill0CooldownMax()
     {
-        skill0CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).skillCooldown + 1;
-        GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(0), GetSkillCooldownMax(GetSkill(0)));
+            GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(0)).ToString());
+        }
+        else
+        {
+            skill0CurCooldown = GetSkill(0).skillCooldown + 1;
+        }
     }
     public void SetSkill1CooldownMax()
     {
-        skill1CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).skillCooldown + 1;
-        GameManager.Instance.skill1IconCooldownUIText.UpdateUIText((skill1CurCooldown).ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(1), GetSkillCooldownMax(GetSkill(1)));
+            GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(1)).ToString());
+        }
+        else
+        {
+            skill1CurCooldown = GetSkill(1).skillCooldown + 1;
+        }
     }
     public void SetSkill2CooldownMax()
     {
-        skill2CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).skillCooldown + 1;
-        GameManager.Instance.skill2IconCooldownUIText.UpdateUIText((skill2CurCooldown).ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(2), GetSkillCooldownMax(GetSkill(2)));
+            GameManager.Instance.skill2IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(2)).ToString());
+        }
+        else
+        {
+            skill2CurCooldown = GetSkill(2).skillCooldown + 1;
+        }
     }
     public void SetSkill3CooldownMax()
     {
-        skill3CurCooldown = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).skillCooldown + 1;
-        GameManager.Instance.skill3IconCooldownUIText.UpdateUIText((skill3CurCooldown).ToString());
+        if (curUnitType == UnitType.PLAYER)
+        {
+            UpdateSkillCooldown(GetSkill(3), GetSkillCooldownMax(GetSkill(3)));
+            GameManager.Instance.skill3IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(3)).ToString());
+        }
+        else
+        {
+            skill3CurCooldown = GetSkill(3).skillCooldown + 1;
+        }
+    }
+
+    public int GetSkillCurCooldown(SkillData skill)
+    {
+        return skill.curCooldown;
+    }
+
+    public int GetSkillCooldownMax(SkillData skill)
+    {
+        return skill.skillCooldown + 1;
+    }
+
+    public void UpdateSkillCooldown(SkillData skill, int cd)
+    {
+        skill.curCooldown = cd;
     }
 
     public void DecreaseSkill0Cooldown()
     {
-        skill0CurCooldown--;
+        if (curUnitType == UnitType.PLAYER)
+        {
+            int curCooldown = GetSkillCurCooldown(GetSkill(0));
+            curCooldown--;
 
-        if (skill0CurCooldown <= 0)
-            skill0CurCooldown = 0;
+            if (curCooldown <= 0)
+                curCooldown = 0;
 
-        GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(skill0CurCooldown.ToString());
+            UpdateSkillCooldown(GetSkill(0), curCooldown);
+
+            GameManager.Instance.skill0IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(0)).ToString());
+        }
+        else
+        {
+            skill0CurCooldown--;
+
+            if (skill0CurCooldown <= 0)
+                skill0CurCooldown = 0;
+        }
     }
     public void DecreaseSkill1Cooldown()
     {
-        skill1CurCooldown--;
+        if (curUnitType == UnitType.PLAYER)
+        {
+            int curCooldown = GetSkillCurCooldown(GetSkill(1));
+            curCooldown--;
 
-        if (skill1CurCooldown <= 0)
-            skill1CurCooldown = 0;
+            if (curCooldown <= 0)
+                curCooldown = 0;
 
-        GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(skill1CurCooldown.ToString());
+            UpdateSkillCooldown(GetSkill(1), curCooldown);
+
+            GameManager.Instance.skill1IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(1)).ToString());
+        }
+        else
+        {
+            skill1CurCooldown--;
+
+            if (skill1CurCooldown <= 0)
+                skill1CurCooldown = 0;
+        }
     }
     public void DecreaseSkill2Cooldown()
     {
-        skill2CurCooldown--;
+        if (curUnitType == UnitType.PLAYER)
+        {
+            int curCooldown = GetSkillCurCooldown(GetSkill(2));
+            curCooldown--;
 
-        if (skill2CurCooldown <= 0)
-            skill2CurCooldown = 0;
+            if (curCooldown <= 0)
+                curCooldown = 0;
 
-        GameManager.Instance.skill2IconCooldownUIText.UpdateUIText(skill2CurCooldown.ToString());
+            UpdateSkillCooldown(GetSkill(2), curCooldown);
+
+            GameManager.Instance.skill2IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(2)).ToString());
+        }
+        else
+        {
+            skill2CurCooldown--;
+
+            if (skill2CurCooldown <= 0)
+                skill2CurCooldown = 0;
+        }
     }
     public void DecreaseSkill3Cooldown()
     {
-        skill3CurCooldown--;
+        if (curUnitType == UnitType.PLAYER)
+        {
+            int curCooldown = GetSkillCurCooldown(GetSkill(3));
+            curCooldown--;
 
-        if (skill3CurCooldown <= 0)
-            skill3CurCooldown = 0;
+            if (curCooldown <= 0)
+                curCooldown = 0;
 
-        GameManager.Instance.skill3IconCooldownUIText.UpdateUIText(skill3CurCooldown.ToString());
+            UpdateSkillCooldown(GetSkill(3), curCooldown);
+
+            GameManager.Instance.skill3IconCooldownUIText.UpdateUIText(GetSkillCurCooldown(GetSkill(3)).ToString());
+        }
+        else
+        {
+            skill3CurCooldown--;
+
+            if (skill3CurCooldown <= 0)
+                skill3CurCooldown = 0;
+        }
     }
 
     SkillData ChooseRandomSkill()
     {
-        Debug.Log("skill 1 cd " + skill0CurCooldown);
-        Debug.Log("skill 2 cd " + skill1CurCooldown);
-        Debug.Log("skill 3 cd " + skill2CurCooldown);
-        Debug.Log("skill 4 cd " + skill3CurCooldown);
-
         int unitEnemyIntelligence = 10;
         for (int i = 0; i < unitEnemyIntelligence; i++)
         {
             int rand = Random.Range(1, 5);
             //Debug.Log(rand);
+
+            Debug.Log(rand);
             if (rand == 1)  // Skill 1
             {
                 if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive)
@@ -924,7 +1039,7 @@ public class UnitFunctionality : MonoBehaviour
             else if (rand == 3)  // Skill 3
             {
                 if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2);
+                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3);
                 else
                     continue;
             }
@@ -1420,16 +1535,30 @@ public class UnitFunctionality : MonoBehaviour
 
             animator.SetTrigger("DeathFlg");
 
-            GameManager.Instance.RemoveUnit(this);
-
             AudioManager.Instance.Play(deathClip.name);
+
+            GameManager.Instance.RemoveUnitFromTurnOrder(this);
 
             yield return new WaitForSeconds(1.2f);
 
-
-
-            DestroyUnit();
+            ToggleUnitDisplay(false);
         }
+    }
+
+    public void ReviveUnit()
+    {
+        isDead = false;
+
+        ToggleUnitDisplay(true);
+
+        GameManager.Instance.AddUnitFromTurnOrder(this);
+
+        animator.SetTrigger("Idle");
+
+        // Heal ally
+        float val = (75f / 100f) * GetUnitMaxHealth();
+        SpawnPowerUI(val, false, false, null, false);
+        UpdateUnitCurHealth((int)val, false, false, false);
     }
 
     public void UpdateUnitExp(int gainedExp)
@@ -1640,7 +1769,11 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     animator.SetBool("DamageFlg", true);
 
-                    GetHitFlash().Flash();
+                    if (GetHitFlash() == null)
+                        return;
+                    else
+                        GetHitFlash().Flash();
+
                     uiElement.AnimateUI(false);
                     
                     if (doExtras)
@@ -1885,6 +2018,11 @@ public class UnitFunctionality : MonoBehaviour
         return isSpeedUp;
     }
 
+    public bool GetIsSpeedDown()
+    {
+        return isSpeedDown;
+    }
+
     public bool GetIsDefenseUp()
     {
         return isDefenseUp;
@@ -1917,6 +2055,14 @@ public class UnitFunctionality : MonoBehaviour
             isSpeedUp = true;
         else
             isSpeedUp = false;
+    }
+
+    public void ToggleIsSpeedDown(bool toggle)
+    {
+        if (toggle)
+            isSpeedDown = true;
+        else
+            isSpeedDown = false;
     }
 
     public void UpdateUnitPower(int newPower, bool setting = true, bool adding = true)
@@ -2046,9 +2192,15 @@ public class UnitFunctionality : MonoBehaviour
     }
     */
 
-    void DestroyUnit()
+    void ToggleUnitDisplay(bool toggle)
     {
-        unitVisuals.UpdateAlpha(0);
+        if (toggle)
+            unitVisuals.UpdateAlpha(1);
+        else
+        {
+            unitVisuals.UpdateAlpha(0);
+            ResetEffects();
+        }
         //GameManager.instance.UpdateTurnOrder();
         //Destroy(gameObject);
     }

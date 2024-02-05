@@ -232,7 +232,7 @@ public class UIElement : MonoBehaviour
     public void ToggleLockedSkill()
     {
         //Debug.Log(GetSkillPointThreshhold());
-        if (SkillsTabManager.Instance.GetActiveUnit().GetUnitLevel() < GetSkillPointThreshhold())
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() < GetSkillPointThreshhold())
         {
             //Debug.Log(toggle);
             ToggleLockedImage(true);
@@ -529,6 +529,11 @@ public class UIElement : MonoBehaviour
 
     public void ToggleButton(bool toggle)
     {
+        if (buttonCG == null)
+        {
+            Debug.Log(gameObject.name);
+        }
+
         if (toggle)
             buttonCG.alpha = 1;
         else

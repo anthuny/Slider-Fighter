@@ -12,8 +12,8 @@ public class SkillData : ScriptableObject
     public enum SkillSelectionType { ENEMIES, PLAYERS };
     public SkillSelectionType curSkillSelectionType;
 
-    public enum SkillGameType { BASIC, PRIMARY, SECONDARY, ALTERNATE }
-    public SkillGameType curSkillGameType;
+    public enum SkillSelectionAliveType { ALIVE, DEAD };
+    public SkillSelectionAliveType curskillSelectionAliveType;
 
     public enum SkillRangedType { MELEE, RANGED }
     public SkillRangedType curRangedType;
@@ -25,8 +25,8 @@ public class SkillData : ScriptableObject
     public string skillName;
     public string skillDescr;
     public string skillTabDescr;
-    public int startingSkillLevel = 1;
-    public int curSkillLevel = 1;
+    public int startingSkillLevel = 0;
+    public int curSkillLevel = 0;
     public int pointsAdded;
     public int startingSkillPower;
     public int curSkillPower;
@@ -36,13 +36,28 @@ public class SkillData : ScriptableObject
     public int skillAttackCount = 0;
     public int projectileSpeed = 1;
     public int skillCooldown;
+    public int curCooldown;
     public int skillSelectionCount;
-    public int maxSkillLevel = 5;
+    //public int maxSkillLevel = 5;
     public bool isSelfCast;
     [Tooltip("Determines whether this skill doubles the turns remaining on each target for its effect that it applies. (before applying its own)")]
     public bool isDoublingEffect;
     public bool isLeaching;
     public bool isPassive;
+    public bool isReviving;
+    [Tooltip("Determines that this skill cleanses an effect")]
+    public bool isCleansingEffect;
+    [Tooltip("Determines which effect is cleansed")]
+    public enum SkillToCleanse { NONE, SPEEDUP, SPEEDDOWN, BLEED, RECOVER, EXHAUST, HASTE, SLEEP,
+        POWERUP, POWERDOWN, DEFENSEUP, DEFENSEDOWN, PARRY, TAUNT, MARK, SHADOWPARTNER
+    }
+    public SkillToCleanse curSkillToCleanse;
+
+    [Tooltip("Determines that this skill cleanses a RANDOM effect")]
+    public bool isCleansingEffectRandom;
+    [Tooltip("Remove effects on target up till this amount")]
+    public int cleanseCount;
+
     public bool special;
     public EffectData effect;
     public int effectTurnLength;
@@ -117,6 +132,7 @@ public class SkillData : ScriptableObject
         curSkillPower = startingSkillPower;
         curEffectHitChance = startingEffectHitChance;
         pointsAdded = 0;
+        curCooldown = 0;
 
         upgradeIncTargetCount = 0;
         upgradeIncPowerCount = 0;

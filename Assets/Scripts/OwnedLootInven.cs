@@ -10,7 +10,7 @@ public class OwnedLootInven : MonoBehaviour
     [SerializeField] private UIElement ownedTitleTextUI;
     public List<Slot> ownedLootSlots = new List<Slot>();
 
-    private bool ownedLootOpened = false;
+    public bool ownedLootOpened = false;
 
     public List<Slot> ownedGear = new List<Slot>();
     public List<Item> ownedItems = new List<Item>();

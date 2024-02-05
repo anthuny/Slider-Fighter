@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
-  curSkillGameType: 0
+  curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 0
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: LIGHT TOUCH
   skillDescr: Damage up to
   skillTabDescr: 
-  startingSkillLevel: 1
-  curSkillLevel: 1
+  startingSkillLevel: 0
+  curSkillLevel: 0
   pointsAdded: 0
   startingSkillPower: 6
   curSkillPower: 6
@@ -30,16 +30,22 @@ MonoBehaviour:
   skillAttackCount: 2
   projectileSpeed: 10
   skillCooldown: 0
+  curCooldown: 0
   skillSelectionCount: 2
-  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
-  effectHitChance: 0
+  curEffectHitChance: 0
+  startingEffectHitChance: 0
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0

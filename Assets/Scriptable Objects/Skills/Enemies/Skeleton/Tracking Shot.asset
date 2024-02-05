@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
-  curSkillGameType: 2
+  curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: Tracking Shot
   skillDescr: Damage up to
   skillTabDescr: 
-  startingSkillLevel: 1
-  curSkillLevel: 1
+  startingSkillLevel: 0
+  curSkillLevel: 0
   pointsAdded: 0
   startingSkillPower: 6
   curSkillPower: 6
@@ -30,12 +30,17 @@ MonoBehaviour:
   skillAttackCount: 3
   projectileSpeed: 12
   skillCooldown: 2
+  curCooldown: 0
   skillSelectionCount: 1
-  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
   special: 0
   effect: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
   effectTurnLength: 1

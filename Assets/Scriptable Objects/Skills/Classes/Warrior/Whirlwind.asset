@@ -14,28 +14,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
-  curSkillGameType: 1
+  curskillSelectionAliveType: 0
   curRangedType: 0
   curAnimType: 0
   skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
   skillName: WHIRLWIND
   skillDescr: Target up to
   skillTabDescr: Target multiple enemies, dealing damage
-  startingSkillLevel: 1
-  curSkillLevel: 1
-  pointsAdded: 0
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 1
   startingSkillPower: 6
   curSkillPower: 6
   skillAttackAccMult: 1
   skillAttackCount: 3
   projectileSpeed: 1
   skillCooldown: 2
+  curCooldown: 0
   skillSelectionCount: 3
-  maxSkillLevel: 5
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0

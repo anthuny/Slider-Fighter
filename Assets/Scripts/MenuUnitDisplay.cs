@@ -47,27 +47,39 @@ public class MenuUnitDisplay : MonoBehaviour
 
     public void UpdateUnitDisplay(string unitName)
     {
-        if (unitName == "Warrior")
+        if (unitName == "Knight")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;
             // Adjust size of unit
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 0);
+            //animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, 0);
         }
 
-        else if (unitName == "Archer")
+        else if (unitName == "Ranger")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.archerAnimator;
             // Adjust size of unit
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 140);
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, 40);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 55);
         }
 
+        else if (unitName == "Cleric")
+        {
+            animator.runtimeAnimatorController = CharacterCarasel.Instance.clericAnimator;
+            // Adjust size of unit
+            //Debug.Log(animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
+            //Debug.Log(animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta);
+            //Debug.Log(" ");
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
+        }
         else if (unitName == "Locked")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;
             // Adjust size of unit
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
 
             ToggleUnitLocked(true, true);
         }

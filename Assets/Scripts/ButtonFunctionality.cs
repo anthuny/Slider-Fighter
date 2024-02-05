@@ -30,10 +30,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public Slot slot;
 
     public float heldTimer;
-    public bool isHeldDown;
+    public bool isHeldDownUnit;
+    public bool isHeldDownStat;
     public bool unitIsSelected;
     public UnitFunctionality unit;
-    public bool unitLocked;
+    public bool locked;
 
 
     public float effectHeldTimer;
@@ -42,6 +43,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public bool isEnabled;
     public bool isLocked;
     public ButtonFunctionality mainButton;
+    public UIElement mainUIelement;
+    public bool isStatButton;
 
     private void Awake()
     {
@@ -165,6 +168,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void ButtonAddSkillPointIncreaseTargets()
     {
+        //Debug.Log("a");
         SkillsTabManager.Instance.SkillPointAdd(0);
     }
 
@@ -342,6 +346,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void ButtonSelectGear()
     {
+        if (OwnedLootInven.Instance.ownedLootOpened)
+            return;
+
         // If owned gear tab is opened, do not allow selecting a new gear
         if (slot != null)
         {
@@ -469,7 +476,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             SkillsTabManager.Instance.SkillSelection(slot, true);
         }
 
-
         if (curMasteryType == MasteryType.Skill1)
         {
             //SkillsTabManager.Instance.ResetSkillsBaseSelection();
@@ -501,7 +507,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
 
-
+        SkillsTabManager.Instance.UpdateUnspentPointsText(SkillsTabManager.Instance.CalculateUnspentSkillPoints());
 
         //OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");
     }
@@ -730,6 +736,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.map.ClearRoom(true);
 
         GameManager.Instance.ResetRoom(true);
+
+        GameManager.Instance.SkillsTabChangeAlly(true);
+        GameManager.Instance.SkillsTabChangeAlly(false);
     }
 
     public void WeaponBackButton()
@@ -883,7 +892,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             return;
 
         // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill0CurCooldown() > 0)
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0)) > 0)
             return;
 
         // If skill is locked, stop
@@ -929,7 +938,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             return;
 
         // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill1CurCooldown() > 0)
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1)) > 0)
             return;
 
         // If skill is locked, stop
@@ -973,7 +982,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             return;
 
         // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill2CurCooldown() > 0)
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2)) > 0)
             return;
 
         // If skill is locked, stop
@@ -1018,7 +1027,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             return;
 
         // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill3CurCooldown() > 0)
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3)) > 0)
             return;
 
         // If skill is locked, stop
@@ -1069,9 +1078,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     void Update()
     {
-        if (isHeldDown)
+        if (isHeldDownUnit)
+            heldTimer += Time.deltaTime;
+        else if (isHeldDownStat)
             heldTimer += Time.deltaTime;
 
+
+        // If effect
         if (isHeldDownEffect)
         {
             effectHeldTimer += Time.deltaTime;
@@ -1080,16 +1093,26 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (effectHeldTimer > 0 && isHeldDownEffect)
             SelectEffect();
 
+        // If unit
         if (heldTimer > GameManager.Instance.maxHeldTimeTooltip)
         {
-            UnitFunctionality unit = GetComponentInParent<UnitFunctionality>();
+            if (GetComponentInParent<UnitFunctionality>() != null)
+            {
+                UnitFunctionality unit = GetComponentInParent<UnitFunctionality>();
 
-            if (unit != null)
-                GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(true);
+                unit.ToggleTooltipStats(true);
+                locked = true;
+            }
+            // If stats
             else
-                //SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(true);
-
-            unitLocked = true;
+            {
+                if (mainUIelement != null && isStatButton)
+                {
+                    locked = true;
+                    SkillsTabManager.Instance.holdingButton = mainUIelement;
+                    SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(true);
+                }
+            }
         }
     }
 
@@ -1108,7 +1131,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (!GameManager.Instance.combatOver)
         {
             // If unit has held the unit down for x seconds, do not allow a selection from the release of that tap
-            if (heldTimer >= GameManager.Instance.maxHeldTimeTooltip || unitLocked)
+            if (heldTimer >= GameManager.Instance.maxHeldTimeTooltip || locked)
                 return;
         }
 
@@ -1128,7 +1151,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 {
                     if (GameManager.Instance.IsEnemyTaunting()[i] == unitFunctionality)
                     {
-                        GameManager.Instance.SelectUnit(unitFunctionality);
+                        GameManager.Instance.targetUnit(unitFunctionality);
                         unitIsSelected = true;
                     }
                     else
@@ -1137,7 +1160,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
                         {
                             unitIsSelected = true;
-                            GameManager.Instance.SelectUnit(unitFunctionality);
+                            GameManager.Instance.targetUnit(unitFunctionality);
                         }
 
                     }
@@ -1147,26 +1170,37 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             }
             else
             {
-                isHeldDown = false;
+                isHeldDownUnit = false;
                 StartCoroutine(HeldDownCooldown());
                 GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
 
                 unitIsSelected = true;
-                GameManager.Instance.SelectUnit(unitFunctionality);
+                GameManager.Instance.targetUnit(unitFunctionality);
             }
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        //Debug.Log("a");
         // If not pressing effect button, instead pressing a unit
         if (!isEffectButton)
         {
-            if (GetComponentInParent<UnitFunctionality>())
+            if (GetComponentInParent<UnitFunctionality>() && !GetComponentInParent<UnitFunctionality>().isDead)
             {
-                isHeldDown = true;
+                isHeldDownUnit = true;
                 //Debug.Log("Pointer Down");
-                //StartCoroutine(EnableUnitStatTooltip());
+                
+            }
+            else
+            {
+                //Debug.Log("b");
+                if (isStatButton)
+                {
+                    isHeldDownStat = true;
+                    //Debug.Log("c");
+                }
+
             }
         }
         else
@@ -1183,12 +1217,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (GetComponentInParent<UnitFunctionality>())
             {
                 //Debug.Log("Pointer Up");
-                isHeldDown = false;
+                isHeldDownUnit = false;
                 heldTimer = 0;
                 StartCoroutine(HeldDownCooldown());
                 GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
-
-                //SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(false);
+            }
+            // If skill page stat
+            else
+            {
+                if (isStatButton)
+                {
+                    isHeldDownStat = false;
+                    heldTimer = 0;
+                    StartCoroutine(HeldDownCooldown());
+                    SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(false);
+                }
             }
         }
         else
@@ -1206,7 +1249,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         yield return new WaitForSeconds(.1f);
 
-        unitLocked = false;
+        locked = false;
     }
 
     public IEnumerator HideEffectTooltipOvertime(bool onlyEnemies = false)

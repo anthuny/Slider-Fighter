@@ -25,14 +25,22 @@ public class UnitMapIcon : MonoBehaviour
 
     void UpdateIconSize()
     {
-        if (unitName == "Archer")
+        if (unitName == "Ranger")
         {
             gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 140);
-            //gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new 
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, -20);
+        }
+        else if (unitName == "Knight")
+        {
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, -60);
         }
 
-        else if (unitName == "Warrior")
-            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+        else if (unitName == "Cleric")
+        {
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(125, 125);
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, -35);
+        }
     }
 
     public void UpdateUnitName(string newName)

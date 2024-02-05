@@ -180,11 +180,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 1312161310553083477}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
   startHidden: 0
   doScalePunch: 1
   dieAfterDisplay: 0
@@ -196,8 +204,16 @@ MonoBehaviour:
   selectBorder: {fileID: 0}
   statPointsAdded: 0
   lockedImage: {fileID: 0}
-  statPointsThreshhold: 0
+  unlockedPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
 --- !u!1 &1415871230302792947
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +414,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -10.6, y: -69.5}
+  m_AnchoredPosition: {x: -9.3, y: -69.5}
   m_SizeDelta: {x: 72, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3949276627073500629

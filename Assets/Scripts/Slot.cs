@@ -78,6 +78,7 @@ public class Slot : MonoBehaviour
 
     public void IncreaseProgressSlider()
     {
+        //Debug.Log("inc slider");
         SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded++;
 
         float val = 1f / 3f;

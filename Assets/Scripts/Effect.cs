@@ -193,7 +193,9 @@ public class Effect : MonoBehaviour
         else if (curEffectName == EffectName.PARRY)
             targetUnit.isParrying = true;
         else if (curEffectName == EffectName.SPEEDUP)
-            GameManager.Instance.AddSpeedBuffUnit();
+            GameManager.Instance.AdjustSpeedBuffUnit();
+        else if (curEffectName == EffectName.SPEEDDOWN)
+            GameManager.Instance.AdjustSpeedBuffUnit(false);
         else if (curEffectName == EffectName.MARK)
         {
             // Toggle mark effect on the target
@@ -220,7 +222,6 @@ public class Effect : MonoBehaviour
             // healing recieved is halved while on
             unit.ToggleUnitPoisoned(false);
             unit.ResetUnitHealingRecieved();
-
         }
         else if (curEffectName == EffectName.TAUNT)
             unit.ToggleTaunt(false);
@@ -231,7 +232,11 @@ public class Effect : MonoBehaviour
         }
         else if (curEffectName == EffectName.SPEEDUP)
         {
-            GameManager.Instance.RemoveSpeedEffectUnit(unit);
+            GameManager.Instance.RemoveSpeedUpEffectUnit(unit);
+        }
+        else if (curEffectName == EffectName.SPEEDDOWN)
+        {
+            GameManager.Instance.RemoveSpeedDownEffectUnit(unit);
         }
         else if (curEffectName == EffectName.DEFENSEUP)
         {
