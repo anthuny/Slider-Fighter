@@ -144,8 +144,6 @@ public class Effect : MonoBehaviour
 
     public void RemoveEffect(UnitFunctionality unit)
     {
-
-
         EffectRemove(unit);
     }
 
@@ -156,6 +154,16 @@ public class Effect : MonoBehaviour
 
         turnCountRemaining--;
         effectTurnCountText.text = turnCountRemaining.ToString();
+
+        //StartCoroutine(ReduceEffectWait(.25f));
+    }
+
+    IEnumerator ReduceEffectWait(float time)
+    {
+        turnCountRemaining--;
+        effectTurnCountText.text = turnCountRemaining.ToString();
+
+        yield return new WaitForSeconds(time);
     }
 
     public void EffectApply(UnitFunctionality targetUnit)

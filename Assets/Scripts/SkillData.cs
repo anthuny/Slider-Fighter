@@ -79,9 +79,14 @@ public class SkillData : ScriptableObject
     public Sprite skillPowerIcon;
     public Sprite skillProjectile;
     public bool projectileAllowSpin;
+    public bool projectileAllowIdle;
     public RuntimeAnimatorController projectileAC;
+    public RuntimeAnimatorController targetEffectVisualAC;
     public AudioClip skillLaunch;
+    public bool repeatLaunchSFX = true;
+    public AudioClip projectileLaunch;
     public AudioClip skillHit;
+    public AudioClip skillHitAdditional;
     public int originalIndex;
 
     public int GetCalculatedSkillSelectionCount()

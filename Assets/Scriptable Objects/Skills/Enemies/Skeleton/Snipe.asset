@@ -55,7 +55,11 @@ MonoBehaviour:
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 21300000, guid: 34e06899a5ab702488057f2bcda0801a, type: 3}
   projectileAllowSpin: 0
+  projectileAllowIdle: 0
   projectileAC: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: be0b8e4737c72c04b99ce68ca4eeb89a, type: 3}
+  projectileLaunch: {fileID: 8300000, guid: 8e768e7ccf369fe4fa139fea9a76b615, type: 3}
   skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
+  skillHitAdditional: {fileID: 0}
   originalIndex: 3

@@ -357,7 +357,7 @@ public class UIElement : MonoBehaviour
         contentText.color = color;
     }
 
-    public void AnimateUI(bool text = true)
+    public void AnimateUI(bool text = true, bool depleteEffect = false)
     {
         if (!doScalePunch)
             return;
@@ -378,6 +378,9 @@ public class UIElement : MonoBehaviour
         }
         else
         {
+            if (contentImage == null)
+                return;
+
             ResetAnimateScaleImage();
 
             if (doScalePunch)
@@ -387,7 +390,12 @@ public class UIElement : MonoBehaviour
         }
 
         if (dieAfterDisplay)
-            StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime));
+        {
+            if (depleteEffect)
+                StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillEffectDepleteAppearTime));
+            else
+                StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime)); 
+        }
     }
 
     void AnimateUIMaxCap()
@@ -424,6 +432,9 @@ public class UIElement : MonoBehaviour
     }
     public void ResetAnimateScaleImage()
     {
+        if (contentImage == null)
+            return;
+
         contentImage.gameObject.transform.localScale = new Vector3(originalScaleImage, originalScaleImage);
 
         contentImage.gameObject.transform.DORestart();
@@ -471,7 +482,7 @@ public class UIElement : MonoBehaviour
         contentImage.color = colour;
     }
 
-    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0)
+    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false)
     {   
         cg = GetComponent<CanvasGroup>();
 
@@ -486,7 +497,7 @@ public class UIElement : MonoBehaviour
         // Make UI element selectable/unselectable
         if (alpha == 1)
         {
-            AnimateUI();
+            AnimateUI(depletingEffect);
 
             isEnabled = true;
 

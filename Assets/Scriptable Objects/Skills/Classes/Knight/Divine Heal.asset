@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
-  m_Name: Whirlwind
+  m_Name: Divine Heal
   m_EditorClassIdentifier: 
-  curSkillType: 0
-  curSkillSelectionType: 0
+  curSkillType: 1
+  curSkillSelectionType: 1
   curskillSelectionAliveType: 0
-  curRangedType: 0
-  curAnimType: 0
-  skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
-  skillName: WHIRLWIND
+  curRangedType: 1
+  curAnimType: 1
+  skillSprite: {fileID: 21300000, guid: 7ac91a992e8dc9f4c90aac343e15e174, type: 3}
+  skillName: DIVINE HEAL
   skillDescr: Target up to
-  skillTabDescr: Target multiple enemies, dealing damage
+  skillTabDescr: Target 1 base ally, healing them
   startingSkillLevel: 0
   curSkillLevel: 0
-  pointsAdded: 1
-  startingSkillPower: 6
-  curSkillPower: 6
+  pointsAdded: 0
+  startingSkillPower: 45
+  curSkillPower: 45
   skillAttackAccMult: 1
-  skillAttackCount: 3
-  projectileSpeed: 1
+  skillAttackCount: 2
+  projectileSpeed: 9
   skillCooldown: 2
   curCooldown: 0
-  skillSelectionCount: 3
+  skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -52,10 +52,15 @@ MonoBehaviour:
   upgradeIncTargetCount: 0
   upgradeIncPowerCount: 0
   upgradeIncEffectCount: 0
-  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
-  skillProjectile: {fileID: 0}
+  skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
+  skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
   projectileAllowSpin: 0
+  projectileAllowIdle: 0
   projectileAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: de68bf11f3ddf4d4482781d4ef21afdc, type: 3}
-  skillHit: {fileID: 8300000, guid: f6869df06c510324290acef8c918416f, type: 3}
-  originalIndex: 1
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 98364bbbde80b1042b08767b6cc775aa, type: 3}
+  repeatLaunchSFX: 1
+  projectileLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  skillHit: {fileID: 8300000, guid: b46c1ba03426d0241ae2dabf224abc57, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 3

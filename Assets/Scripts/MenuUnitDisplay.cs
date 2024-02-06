@@ -59,21 +59,37 @@ public class MenuUnitDisplay : MonoBehaviour
         else if (unitName == "Ranger")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.archerAnimator;
+
             // Adjust size of unit
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 55);
+            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
+            {
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 5.8f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 40);
+            }
+            else
+            {
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 55);
+            }
         }
 
         else if (unitName == "Cleric")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.clericAnimator;
+
             // Adjust size of unit
-            //Debug.Log(animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta);
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-            //Debug.Log(animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta);
-            //Debug.Log(" ");
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
+            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
+            {
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -26);
+            }
+            else
+            {
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
+            }
         }
+
         else if (unitName == "Locked")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;

@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
-  m_Name: Swift Focus
+  m_Name: Whirlwind
   m_EditorClassIdentifier: 
-  curSkillType: 1
-  curSkillSelectionType: 1
+  curSkillType: 0
+  curSkillSelectionType: 0
   curskillSelectionAliveType: 0
-  curRangedType: 1
+  curRangedType: 0
   curAnimType: 1
-  skillSprite: {fileID: 21300000, guid: 8cdfd37f9e223d74c8c1b04387be2592, type: 3}
-  skillName: SWIFT FOCUS
-  skillDescr: Buff all allies with Speed up for 0/1/2/3 turns
-  skillTabDescr: Target all allies, buff each target with Speed Up
+  skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
+  skillName: WHIRLWIND
+  skillDescr: Target up to
+  skillTabDescr: Target multiple enemies, dealing damage
   startingSkillLevel: 0
   curSkillLevel: 0
-  pointsAdded: 0
-  startingSkillPower: 0
-  curSkillPower: 0
+  pointsAdded: 1
+  startingSkillPower: 4
+  curSkillPower: 4
   skillAttackAccMult: 1
-  skillAttackCount: 1
-  projectileSpeed: 10
-  skillCooldown: 3
+  skillAttackCount: 3
+  projectileSpeed: 1
+  skillCooldown: 2
   curCooldown: 0
   skillSelectionCount: 3
   isSelfCast: 0
@@ -41,9 +41,9 @@ MonoBehaviour:
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
-  special: 1
-  effect: {fileID: 11400000, guid: 0abfc7040d3eb7e4da2698486445dc5a, type: 2}
-  effectTurnLength: 1
+  special: 0
+  effect: {fileID: 0}
+  effectTurnLength: 0
   curEffectHitChance: 0
   startingEffectHitChance: 0
   baseEffectApplyCount: 0
@@ -52,10 +52,13 @@ MonoBehaviour:
   upgradeIncTargetCount: 0
   upgradeIncPowerCount: 0
   upgradeIncEffectCount: 0
-  skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
+  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
+  projectileAllowIdle: 0
   projectileAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: faf8fa4233b57cc4ba62cbebeeefaa61, type: 3}
-  skillHit: {fileID: 0}
-  originalIndex: 2
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: de68bf11f3ddf4d4482781d4ef21afdc, type: 3}
+  skillHit: {fileID: 8300000, guid: f6869df06c510324290acef8c918416f, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 1

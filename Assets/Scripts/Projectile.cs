@@ -126,6 +126,17 @@ public class Projectile : MonoBehaviour
         if (allowAnimate)
         {
             animator = GetComponent<Animator>();
+            animator.SetTrigger("spin");
+        }
+    }
+
+    public void ToggleIdle(bool toggle)
+    {
+        allowAnimate = toggle;
+
+        if (allowAnimate)
+        {
+            animator = GetComponent<Animator>();
             animator.SetTrigger("idle");
         }
     }
@@ -170,12 +181,17 @@ public class Projectile : MonoBehaviour
 
     bool CheckDistanceToTarget(Transform target)
     {
-        if (Vector2.Distance(transform.position, target.position) <= GameManager.Instance.minProjectileKillDist)
+        if (target != null)
         {
-            return true;
+            if (Vector2.Distance(transform.position, target.position) <= GameManager.Instance.minProjectileKillDist)
+            {
+                return true;
+            }
+            else
+                return false;
         }
-        else
-            return false;
+
+        return true;
     }
 
     void HitTarget()

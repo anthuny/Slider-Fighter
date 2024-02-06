@@ -19,7 +19,7 @@ MonoBehaviour:
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
   skillName: BUFF UP
-  skillDescr: Buff an Ally with Power Up for 2 turns.
+  skillDescr: Buff an Ally with Power Up for 3 turns.
   skillTabDescr: 
   startingSkillLevel: 0
   curSkillLevel: 0
@@ -55,7 +55,12 @@ MonoBehaviour:
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
+  projectileAllowIdle: 0
   projectileAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: bd0048dda2873ca4b8061ab39773ee4b, type: 3}
-  skillHit: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 4bd5087bf0065ed428fb022d3b7658a4, type: 3}
+  repeatLaunchSFX: 1
+  projectileLaunch: {fileID: 0}
+  skillHit: {fileID: 8300000, guid: 48d64bd581402b84dae4488709290b1a, type: 3}
+  skillHitAdditional: {fileID: 8300000, guid: b46c1ba03426d0241ae2dabf224abc57, type: 3}
   originalIndex: 3

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
-  m_Name: Defend
+  m_Name: Swift Focus
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
-  skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
-  skillName: DEFENSE UP
-  skillDescr: Cast DEFENSE UP on all allies for 0/1/2/3/4 turns
-  skillTabDescr: Target all allies, cast Defense Up effect
+  skillSprite: {fileID: 21300000, guid: 8cdfd37f9e223d74c8c1b04387be2592, type: 3}
+  skillName: SWIFT FOCUS
+  skillDescr: Buff all allies with Speed up for 0/1/2/3 turns
+  skillTabDescr: Target all allies, buff each target with Speed Up
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 1
-  effect: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
+  effect: {fileID: 11400000, guid: 0abfc7040d3eb7e4da2698486445dc5a, type: 2}
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -55,7 +55,12 @@ MonoBehaviour:
   skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
+  projectileAllowIdle: 0
   projectileAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: 02589b44135c9394e978d1ae980de22e, type: 3}
-  skillHit: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: faf8fa4233b57cc4ba62cbebeeefaa61, type: 3}
+  repeatLaunchSFX: 1
+  projectileLaunch: {fileID: 8300000, guid: 8e768e7ccf369fe4fa139fea9a76b615, type: 3}
+  skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
+  skillHitAdditional: {fileID: 0}
   originalIndex: 2

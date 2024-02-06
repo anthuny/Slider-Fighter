@@ -95,6 +95,7 @@ public class UnitFunctionality : MonoBehaviour
     public bool isSelected;
     private int unitValue;
     private Animator animator;
+    public Animator effectDisplayAnimator;
 
     // Team Stat Page
     public int statsBase1Added;
@@ -417,7 +418,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void ResetUnitHealingRecieved()
     {
-        curHealingRecieved = 1;
+        UpdateUnitHealingRecieved(1);
     }
 
     public void ToggleUnitLevelImage(bool toggle)
@@ -577,21 +578,24 @@ public class UnitFunctionality : MonoBehaviour
     public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null, bool levelUp = false)
     {
         statUI.UpdateContentText(name);
-        statUI.UpdateAlpha(alpha);
+        statUI.UpdateAlpha(alpha, false, 0, true);
 
-        // Set correct text colour gradient
-        if (effect)
+        if (alpha != 0)
         {
-            if (gradient == "Inflict")
-                statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectAlert);
-            else if (gradient == "Trigger")
-                statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectTrigger);
-        }
-        else
-            statUI.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
+            // Set correct text colour gradient
+            if (effect)
+            {
+                if (gradient == "Inflict")
+                    statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectAlert);
+                else if (gradient == "Trigger")
+                    statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectTrigger);
+            }
+            else
+                statUI.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
 
-        if (levelUp)
-            statUI.UpdateContentTextColour(GameManager.Instance.gradientLevelUpAlert);
+            if (levelUp)
+                statUI.UpdateContentTextColour(GameManager.Instance.gradientLevelUpAlert);
+        }
     }
 
     public void ToggleIdleBattle(bool toggle)
@@ -607,6 +611,14 @@ public class UnitFunctionality : MonoBehaviour
     public Animator GetAnimator()
     {
         return animator;
+    }
+    public void UpdateEffectVisualAnimator(RuntimeAnimatorController ac)
+    {
+        effectDisplayAnimator.runtimeAnimatorController = ac;
+
+        effectDisplayAnimator.SetTrigger("animate");
+        //UpdateIconSize();
+        //StartWalkAnim();
     }
 
     public int GetSpentSkillPoints()
@@ -655,6 +667,7 @@ public class UnitFunctionality : MonoBehaviour
 
             TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
 
+            /*
             if (GameManager.Instance.GetActiveSkill().curAnimType == SkillData.SkillAnimType.DEFAULT)
             {
                 animator.SetTrigger("AttackFlg");
@@ -663,6 +676,7 @@ public class UnitFunctionality : MonoBehaviour
             {
                 animator.SetTrigger("SkillFlg");
             }
+            */
 
             // Adjust power based on skill effect amp on target then send it 
 
@@ -699,14 +713,34 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void DecreaseRandomEffect()
+    public void DecreaseRandomNegativeEffect()
     {
+        //Debug.Log("Attempting to remove effect");
+
         if (activeEffects.Count > 0)
         {
+            int offensiveEffectCount = 0;
+
+            for (int i = 0; i < activeEffects.Count; i++)
+            {
+                if (activeEffects[i].curEffectType == Effect.EffectType.OFFENSE)
+                {
+                    offensiveEffectCount++;
+                }
+            }
+
             int rand = Random.Range(0, activeEffects.Count);
 
-            TriggerTextAlert(activeEffects[rand].effectName, 1, true, "Trigger");
-            activeEffects[rand].ReduceTurnCountText(this);
+            if (offensiveEffectCount > 0)
+            {
+                if (activeEffects[rand].curEffectType == Effect.EffectType.OFFENSE)
+                {
+                    TriggerTextAlert(activeEffects[rand].effectName, 1, true, "Trigger");
+                    activeEffects[rand].ReduceTurnCountText(this);
+                }
+                else
+                    DecreaseRandomNegativeEffect();
+            }
         }
     }
 
@@ -729,7 +763,6 @@ public class UnitFunctionality : MonoBehaviour
                     activeEffects[i].TriggerPowerEffect(this);
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
-                    //return;
                 }
             }
 
@@ -741,16 +774,7 @@ public class UnitFunctionality : MonoBehaviour
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
 
-                    /*
-                    if (activeEffects[i].GetTurnCountRemaining() == 1)
-                    {
-                        i--;
-                        if (i < 0)
-                            i = 0;
-                    }
-                    */
-
-                    yield return new WaitForSeconds(.75f);
+                    yield return new WaitForSeconds(.5f);
                 }
             }
             else
@@ -760,6 +784,8 @@ public class UnitFunctionality : MonoBehaviour
                     activeEffects[i].TriggerPowerEffect(this);
                     TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                     activeEffects[i].ReduceTurnCountText(this);
+
+                    yield return new WaitForSeconds(.5f);
                 }
             }
         }
@@ -770,6 +796,12 @@ public class UnitFunctionality : MonoBehaviour
             if (activeEffects[x] == null)
                 GetEffects().RemoveAt(x);
         }
+
+        yield return new WaitForSeconds(.5f);
+
+        // Continue turn order system after effects have been depleted from turn start
+        if (turnStart)
+            GameManager.Instance.ContinueTurnOrder();
     }
 
 
@@ -1076,6 +1108,7 @@ public class UnitFunctionality : MonoBehaviour
         if (effectHitAcc == 0 || targetUnit.isParrying)
             return;
 
+        //Debug.Log("Effect hit acc " + effectHitAcc);
         // If unit is already effected with this effect, add to the effect
         for (int i = 0; i < activeEffects.Count; i++)
         {
@@ -1088,6 +1121,8 @@ public class UnitFunctionality : MonoBehaviour
                     // Determining whether the effect hits, If it fails, stop
                     if (GameManager.Instance.GetActiveSkill().curEffectHitChance != 0 && byPassAcc)
                     {
+                        Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
+
                         int rand = Random.Range(1, 101);
                         if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                         {
@@ -1246,38 +1281,12 @@ public class UnitFunctionality : MonoBehaviour
         if (GameManager.Instance.GetActiveSkill() == null)
             yield break;
 
-        if (offense)
-        {
-            if (effect != null)
-            {
-                // If posion is about to tick, allow all other units to leach if they can
-                if (effect.effectName == "POISON")
-                {
-                    // Loop through all units in current room
-                    for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
-                    {
-                        UnitFunctionality targetUnit = GameManager.Instance.activeRoomAllUnitFunctionalitys[i];
-
-                        // If unit is able to leach, give them effects they should get.
-                        if (targetUnit.isPoisonLeaching)
-                        {
-                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, false);
-
-                            // Spawn new effect on target unit
-                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("RECOVER"), targetUnit, 1, 1, false);
-
-                            targetUnit.TriggerTextAlert("Poison Leach", 1, false);
-                        }
-                    }
-                }
-            }
-        }
 
         // Play Audio
         if (offense)
         {
-            if (GameManager.Instance.GetActiveSkill().skillHit != null)
-                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+            //if (GameManager.Instance.GetActiveSkill().skillHit != null && GameManager.Instance.GetActiveSkill().skillHit != null)
+            //    AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
 
             if (effect != null)
             {
@@ -1419,10 +1428,48 @@ public class UnitFunctionality : MonoBehaviour
             }
 
             int finalPower = (int)power;
-            powerText.UpdatePowerText(finalPower.ToString());   // Update Power Text
+            float finalPower2 = finalPower;
+            finalPower2 *= curHealingRecieved;
+            int finalPower3 = (int)finalPower2;
+            powerText.UpdatePowerText(finalPower3.ToString());   // Update Power Text
         }
         else
             Destroy(prevPowerUI.gameObject);
+
+        if (offense)
+        {
+            if (effect != null)
+            {
+                // If posion is about to tick, allow all other units to leach if they can
+                if (effect.effectName == "POISON")
+                {
+                    // Loop through all units in current room
+                    for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+                    {
+                        UnitFunctionality targetUnit = GameManager.Instance.activeRoomAllUnitFunctionalitys[i];
+
+                        // If unit is able to leach, give them effects they should get.
+                        if (targetUnit.isPoisonLeaching)
+                        {
+                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
+
+                            targetUnit.TriggerTextAlert("Poison Leach", 1, false);
+
+                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait*2);
+
+                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, false);
+
+                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
+
+                            // Spawn new effect on target unit
+                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("RECOVER"), targetUnit, 1, 1, false);
+
+                            //yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void SpawnProjectile(Transform target)
@@ -1440,6 +1487,7 @@ public class UnitFunctionality : MonoBehaviour
         projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveSkill().skillProjectile);
         projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
         projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowSpin);
+        projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowIdle);
 
         if (curUnitType == UnitType.PLAYER)
             projectile.UpdateTeam(true);
@@ -1448,6 +1496,9 @@ public class UnitFunctionality : MonoBehaviour
 
         projectile.LookAtTarget(target);
         projectile.UpdateSpeed(GameManager.Instance.GetActiveSkill().projectileSpeed);
+
+        if (GameManager.Instance.GetActiveSkill().projectileLaunch != null)
+            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().projectileLaunch.name);
     }
 
     public void ResetDamageHealCount()
@@ -1552,6 +1603,10 @@ public class UnitFunctionality : MonoBehaviour
         ToggleUnitDisplay(true);
 
         GameManager.Instance.AddUnitFromTurnOrder(this);
+
+        // Play revive SFX
+        AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+        AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHitAdditional.name);
 
         animator.SetTrigger("Idle");
 
@@ -1775,18 +1830,27 @@ public class UnitFunctionality : MonoBehaviour
                         GetHitFlash().Flash();
 
                     uiElement.AnimateUI(false);
-                    
+
                     if (doExtras)
                     {
                         CameraShake.instance.EnableCanShake();
-                        AudioManager.Instance.Play(hitRecievedClip.name);
+                       
+                        if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
+                        {
+                            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                        }
+                        
+                        StartCoroutine(PlaySoundDelay(.1f));
                     }
                 }
+
                 StartCoroutine(PlayIdleAnimation());
             }
             // Healing
             else
             {
+                absPower *= curHealingRecieved;
+
                 if (curHealth < maxHealth)
                     curHealth += (int)absPower;
 
@@ -1809,9 +1873,17 @@ public class UnitFunctionality : MonoBehaviour
         UpdateUnitHealthVisual();
     }
 
+    IEnumerator PlaySoundDelay(float time, bool damage = true)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (damage)
+            AudioManager.Instance.Play(hitRecievedClip.name);
+    }
+
     IEnumerator PlayIdleAnimation()
     {
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(.75f);
         ToggleDamageAnimOff();
     }
     public void ToggleDamageAnimOff()

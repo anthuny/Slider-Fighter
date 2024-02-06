@@ -82,11 +82,13 @@ public class GameManager : MonoBehaviour
     public GameObject unitProjectile;
     public float minProjectileKillDist;
     public float randomXDist;
+    public float timeTillNextTargetEffetVisual = 0.02f;
     public float allyMeleeSkillWaitTime = .5f;
     public float allyRangedSkillWaitTime;
     public float enemyMeleeSkillWaitTime = .5f;
     public float enemyRangedSkillWaitTime;
     public float maxHeldTimeTooltip;
+    public float leachEffectGainWait = .20f;
 
     [Header("Player UI")]
     public UIElement playerUIElement;
@@ -149,6 +151,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Skills UI")]
     public float skillAlertAppearTime;
+    public float skillEffectDepleteAppearTime = .5f;
     public SkillData activeSkill;
     public TMP_ColorGradient gradientSkillAlert;
     public TMP_ColorGradient gradientLevelUpAlert;
@@ -1567,7 +1570,7 @@ public class GameManager : MonoBehaviour
 
             MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
 
-            UpdateTurnOrder(false, true);
+            UpdateTurnOrder();
         }
 
         // If room type is shop, spawn shop room
@@ -1690,6 +1693,38 @@ public class GameManager : MonoBehaviour
         return units;
     }
         
+    IEnumerator UpdateSelectedUnitsEffectVisual()
+    {
+        //Debug.Log("is using thing");
+        // Display effect visual to each selected unit before the power is shown
+        if (GetActiveSkill().skillLaunch != null)
+        {
+            if (GetActiveSkill().skillProjectile == null)
+            {
+                yield return new WaitForSeconds(allyRangedSkillWaitTime / 1.5f);
+
+                // Projectile Launch SFX
+                AudioManager.Instance.Play(GetActiveSkill().skillLaunch.name);
+            }
+        }
+
+        yield return new WaitForSeconds(allyRangedSkillWaitTime/3);
+
+        // Display effect visual to each selected unit before the power is shown
+        for (int i = 0; i < unitsSelected.Count; i++)
+        {
+            if (GetActiveSkill().targetEffectVisualAC != null)
+            {
+                unitsSelected[i].UpdateEffectVisualAnimator(GetActiveSkill().targetEffectVisualAC);
+
+                if (GetActiveSkill().skillHit != null && GetActiveSkill().skillProjectile == null)
+                    AudioManager.Instance.Play(GetActiveSkill().skillHit.name);
+
+                yield return new WaitForSeconds(timeTillNextTargetEffetVisual);
+            }
+        }
+    }
+
     public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1)
     {
         // Reset each units power UI
@@ -1713,13 +1748,10 @@ public class GameManager : MonoBehaviour
             else
                 GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount);
 
-            yield return new WaitForSeconds(allyRangedSkillWaitTime / 2f);
+            // Display effect visual to each selected unit before the power is shown
+            StartCoroutine(UpdateSelectedUnitsEffectVisual());
 
-            // Projectile Launch SFX
-            if (GetActiveSkill().skillLaunch != null)
-                AudioManager.Instance.Play(GetActiveSkill().skillLaunch.name);
-
-            yield return new WaitForSeconds(allyRangedSkillWaitTime / 2f);
+            yield return new WaitForSeconds(allyRangedSkillWaitTime);
 
             // If skill has no projectile, dont spawn it. stops white square from spawning
             if (GetActiveSkill().skillProjectile != null)
@@ -1741,7 +1773,10 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(unitPowerUIWaitTime);
+            if (GetActiveSkill().targetEffectVisualAC != null)
+                yield return new WaitForSeconds(unitPowerUIWaitTime);
+            else
+                yield return new WaitForSeconds(allyRangedSkillWaitTime/2);
         }
         else
         {
@@ -1754,22 +1789,24 @@ public class GameManager : MonoBehaviour
             else
                 GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount);
 
-            yield return new WaitForSeconds(allyMeleeSkillWaitTime / 4f);
+            // Display effect visual to each selected unit before the power is shown
+            StartCoroutine(UpdateSelectedUnitsEffectVisual());
 
-            // Projectile Launch SFX
-            if (GetActiveSkill().skillLaunch != null)
-                AudioManager.Instance.Play(GetActiveSkill().skillLaunch.name);
-
-            yield return new WaitForSeconds(allyMeleeSkillWaitTime / 4f);
+            yield return new WaitForSeconds(allyMeleeSkillWaitTime);
 
             // Attack launch SFX
             //AudioManager.Instance.Play("Attack_Sword");
+            if (GetActiveSkill().targetEffectVisualAC != null)
+                yield return new WaitForSeconds(unitPowerUIWaitTime);
+            else
+                yield return new WaitForSeconds(allyMeleeSkillWaitTime / 2);
+
         }
 
         // For no power skills
         if (GetActiveSkill().curSkillPower == 0)
         {
-            GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+           // GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
 
             // Loop through all selected units
             for (int x = 0; x < unitsSelected.Count; x++)
@@ -1829,7 +1866,7 @@ public class GameManager : MonoBehaviour
                 {
                     for (int c = 0; c < activeSkill.cleanseCount; c++)
                     {
-                        unitsSelected[i].DecreaseRandomEffect();
+                        unitsSelected[i].DecreaseRandomNegativeEffect();
                         yield return new WaitForSeconds(.25f);
                     }
                 }
@@ -1839,9 +1876,15 @@ public class GameManager : MonoBehaviour
             for (int x = 0; x < hitCount; x++)
             {
                 // If we've cycled through all units selected, Disable hits remaining text
-               // if (x == hitCount-1)
-                    //GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
+                // if (x == hitCount-1)
+                //GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
 
+                /*
+                for (int d = 0; d < unitsSelected.Count; d++)
+                {
+
+                }
+                */
 
                 // If 1 enemy is trying to target an ally, dont?
                 if (unitsSelected.Count == 0)
@@ -1949,19 +1992,19 @@ public class GameManager : MonoBehaviour
                         unitsSelected[i].UpdateUnitCurHealth((int)health, true);
                     }
 
+                    // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                    if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
+                        unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength, 1);
+
                     /*
                     // Reset unit's prev power text for future power texts
                     if (x == activeSkill.skillAttackAccMult - 1)
                         unitsSelected[i].ResetPreviousPowerUI();
                     */
 
-                    // If active skill has an effect AND it's not a self cast, apply it to selected targets
-                    if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
-                        unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], GetActiveSkill().effectTurnLength, effectHitAcc);
-
-                    #if !UNITY_EDITOR
+#if !UNITY_EDITOR
                         Vibration.Vibrate(15);
-                    #endif
+#endif
                 }
 
                 // Time wait in between attacks, shared across all targeted units
@@ -2621,7 +2664,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateTurnOrder(bool unitDied = false, bool roundStart = false)
+    public void UpdateTurnOrder()
     {
         if (combatOver)
             return;
@@ -2662,8 +2705,6 @@ public class GameManager : MonoBehaviour
         ToggleSelectingUnits(true);
         ToggleAllowSelection(true);
 
-
-
         UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
 
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false));
@@ -2690,7 +2731,10 @@ public class GameManager : MonoBehaviour
 
         //Trigger Start turn effects
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false));
+    }
 
+    public void ContinueTurnOrder()
+    {
         // Trigger Unit Energy regen 
         //UpdateActiveUnitEnergyBar(true, true, GetActiveUnitFunctionality().unitStartTurnEnergyGain);
 
@@ -2731,7 +2775,7 @@ public class GameManager : MonoBehaviour
         if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER)
         {
             //UpdateSkillDetails(activeSkill);
-            
+
             UpdateUnitSelection(activeSkill);
             UpdateEnemyPosition(true);
         }
@@ -3018,10 +3062,13 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < unitsSelected.Count; i++)
         {
-            unitsSelected[i].ToggleSelected(false);
+            if (unitsSelected[i] != null)
+            {
+                unitsSelected[i].ToggleSelected(false);
 
-            // Tell unit button that it is d 
-            unitsSelected[i].selectUnitButton.unitIsSelected = false;
+                // Tell unit button that it is d 
+                unitsSelected[i].selectUnitButton.unitIsSelected = false;
+            }
         }
 
         unitsSelected.Clear();
@@ -3205,6 +3252,8 @@ public class GameManager : MonoBehaviour
     }
     public void targetUnit(UnitFunctionality unit)
     {
+        //Debug.Log("Targeting unit " + unit.GetUnitName());
+
         // Ensure units cant change their selection before asd after attack
         // Allows hero rooms to still allow selection if room is defeated
         if (roomDefeated)

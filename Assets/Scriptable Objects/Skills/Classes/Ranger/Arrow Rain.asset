@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
-  m_Name: Divine Heal
+  m_Name: Arrow Rain
   m_EditorClassIdentifier: 
-  curSkillType: 1
-  curSkillSelectionType: 1
+  curSkillType: 0
+  curSkillSelectionType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
-  skillSprite: {fileID: 21300000, guid: 7ac91a992e8dc9f4c90aac343e15e174, type: 3}
-  skillName: DIVINE HEAL
-  skillDescr: Target up to
-  skillTabDescr: Target 1 base ally, healing them
+  skillSprite: {fileID: 21300000, guid: dda72c994f8f49746b3599079b67596a, type: 3}
+  skillName: ARROW RAIN
+  skillDescr: Damage up to
+  skillTabDescr: Target 4 base enemies, dealing damage
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
-  startingSkillPower: 45
-  curSkillPower: 45
+  startingSkillPower: 6
+  curSkillPower: 6
   skillAttackAccMult: 1
-  skillAttackCount: 2
-  projectileSpeed: 9
+  skillAttackCount: 3
+  projectileSpeed: 12
   skillCooldown: 2
   curCooldown: 0
-  skillSelectionCount: 1
+  skillSelectionCount: 4
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -52,10 +52,15 @@ MonoBehaviour:
   upgradeIncTargetCount: 0
   upgradeIncPowerCount: 0
   upgradeIncEffectCount: 0
-  skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
-  skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
+  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
+  skillProjectile: {fileID: 21300000, guid: 34e06899a5ab702488057f2bcda0801a, type: 3}
   projectileAllowSpin: 0
+  projectileAllowIdle: 0
   projectileAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: 98364bbbde80b1042b08767b6cc775aa, type: 3}
-  skillHit: {fileID: 8300000, guid: 4aa6ea9e63e55a044b0b51c49cbabfbf, type: 3}
-  originalIndex: 3
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 8e768e7ccf369fe4fa139fea9a76b615, type: 3}
+  repeatLaunchSFX: 1
+  projectileLaunch: {fileID: 8300000, guid: 8e768e7ccf369fe4fa139fea9a76b615, type: 3}
+  skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 1
