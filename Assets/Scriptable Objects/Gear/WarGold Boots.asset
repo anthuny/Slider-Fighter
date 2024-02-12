@@ -16,8 +16,8 @@ MonoBehaviour:
   gearType: boots
   gearRarity: rare
   gearIcon: {fileID: 21300000, guid: 5fd2ec0bc21b74441a082b5fee3ab1a4, type: 3}
-  bonusHealth: 75
+  bonusHealth: 100
   bonusDamage: 0
   bonusHealing: 0
-  bonusDefense: 4
-  bonusSpeed: 6
+  bonusDefense: 10
+  bonusSpeed: 15

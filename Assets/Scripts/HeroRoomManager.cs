@@ -16,6 +16,7 @@ public class HeroRoomManager : MonoBehaviour
     [SerializeField] private float timeWaitAfterHeroJoining = 1.5f;
 
     private bool playerOffered;
+    public bool playerInHeroRoomView;
 
     private void Awake()
     {
@@ -35,6 +36,10 @@ public class HeroRoomManager : MonoBehaviour
     public void SpawnHero()
     {
         GameManager.Instance.SpawnAllies(true);
+
+        GameManager.Instance.UpdateAllysPositionCombat();
+
+        playerInHeroRoomView = true;
     }
 
     public Transform GetSpawnLocTrans()
@@ -52,14 +57,14 @@ public class HeroRoomManager : MonoBehaviour
         return playerOffered;
     }
 
-    public void TogglePrompt(bool toggle, bool denied = true)
+    public void TogglePrompt(bool toggle, bool denied = true, bool overrideSpawning = true)
     {
         promptYesButton.ToggleButton(toggle);
         promptNoButton.ToggleButton(toggle);
 
         GameManager.Instance.UpdateActiveSkill(null);
 
-        if (!denied)
+        if (!denied && overrideSpawning)
             GameManager.Instance.AddUnitToTeam(GameManager.Instance.spawnedUnit);
 
 
@@ -70,14 +75,19 @@ public class HeroRoomManager : MonoBehaviour
         }
         else
         {
-            TogglePlayedOffered(true);
-
-            promptUI.UpdateAlpha(0);
-
-            if (denied)
-                RemoveSpawnedUnit();
-            else
+            if (overrideSpawning)
+            {
+                TogglePlayedOffered(true);
+                promptUI.UpdateAlpha(0);
                 StartCoroutine(TimeWaitHerojoining());
+            }
+            else
+            {
+                TogglePlayedOffered(true);
+                promptUI.UpdateAlpha(0);
+                RemoveSpawnedUnit();
+                StartCoroutine(TimeWaitHerojoining());
+            }
         }
     }
 
@@ -101,6 +111,8 @@ public class HeroRoomManager : MonoBehaviour
 
         // Save earnt ally
         CharacterCarasel.Instance.SaveUnlockedAlly(GameManager.Instance.spawnedUnitFunctionality.GetUnitName());
+
+        playerInHeroRoomView = false;
     }
 
     void RemoveSpawnedUnit()

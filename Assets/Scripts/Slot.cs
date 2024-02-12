@@ -41,9 +41,10 @@ public class Slot : MonoBehaviour
 
     public bool isGold;
     public bool isEmpty = true;
-
+    public int code = 0;
     private int pointsAdded = 0;
     //public bool isLocked;
+    public GearPiece linkedGearPiece;
 
     private void Start()
     {
@@ -76,28 +77,33 @@ public class Slot : MonoBehaviour
             buttonSkillUpgrade3.UpdateAlpha(0);
     }
 
-    public void IncreaseProgressSlider()
+    public void UpdateProgressSlider(SkillData skillData, bool addPoints = true)
     {
-        //Debug.Log("inc slider");
-        SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded++;
-
-        float val = 1f / 3f;
-
-        progressSlider.contentImage.fillAmount += val;
-
-        if (SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded % 3 == 0)
+        if (skillData == null)
         {
-            SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded = 0;
-            SkillsTabManager.Instance.activeSkillBase.upgradeIncTargetCount++;
-            SkillsTabManager.Instance.SkillPointAdd(0, false);
-
-            StartCoroutine(ResetProgressSlider());
+            progressSlider.contentImage.fillAmount = 0;
+            return;
         }
-    }
 
-    public void UpdateProgressSlider()
-    {
-        progressSlider.contentImage.fillAmount = SkillsTabManager.Instance.GetActiveSkillBase().pointsAdded / 3f;
+        //Debug.Log("inc slider");
+        if (addPoints)
+        {
+            skillData.pointsAdded++;
+
+            if (skillData.pointsAdded % 3 == 0)
+            {
+                skillData.pointsAdded = 0;
+                skillData.upgradeIncTargetCount++;
+                SkillsTabManager.Instance.SkillPointAdd(0, false);
+
+                StartCoroutine(ResetProgressSlider());
+            }
+        }
+
+        float val = skillData.pointsAdded / 3f;
+
+        //Debug.Log(skillData.skillName + " Points added: " + skillData.pointsAdded);
+        progressSlider.contentImage.fillAmount = val;
     }
 
     IEnumerator ResetProgressSlider()
@@ -185,6 +191,16 @@ public class Slot : MonoBehaviour
     public string GetSlotName()
     {
         return slotName;
+    }
+
+    public void UpdateSlotCode(int code)
+    {
+        this.code = code;
+    }
+
+    public int GetSlotCode()
+    {
+        return code;
     }
 
     public void UpdateGearBonusHealth(int bonusHealth)
@@ -371,5 +387,10 @@ public class Slot : MonoBehaviour
             slotUI.UpdateAlpha(1);
         else
             slotUI.UpdateAlpha(0);
+    }
+
+    public void UpdateLinkedGearPiece(GearPiece gearPiece)
+    {
+        linkedGearPiece = gearPiece;
     }
 }

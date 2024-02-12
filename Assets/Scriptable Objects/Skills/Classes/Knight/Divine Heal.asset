@@ -19,15 +19,16 @@ MonoBehaviour:
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 7ac91a992e8dc9f4c90aac343e15e174, type: 3}
   skillName: DIVINE HEAL
-  skillDescr: Target up to
+  skillDescr: Target 1 base ally, healing them
   skillTabDescr: Target 1 base ally, healing them
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
-  startingSkillPower: 45
-  curSkillPower: 45
+  startingSkillPower: 30
+  curSkillPower: 30
   skillAttackAccMult: 1
-  skillAttackCount: 2
+  skillBaseHitOutput: 2
+  skillHitAttempts: 1
   projectileSpeed: 9
   skillCooldown: 2
   curCooldown: 0
@@ -60,6 +61,7 @@ MonoBehaviour:
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 98364bbbde80b1042b08767b6cc775aa, type: 3}
   repeatLaunchSFX: 1
+  giveExtraDesc: 1
   projectileLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
   skillHit: {fileID: 8300000, guid: b46c1ba03426d0241ae2dabf224abc57, type: 3}
   skillHitAdditional: {fileID: 0}

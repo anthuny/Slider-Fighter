@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    public enum MasteryType { Skill1, Skill2, Skill3, Skill4, BG };
+    public enum MasteryType { Skill1, Skill2, Skill3, Skill4, BG, NOTHING };
     public MasteryType curMasteryType;
 
     UnitFunctionality unitFunctionality;
@@ -78,7 +78,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public IEnumerator MenuUnitSelection()
     {
-        yield return new WaitForSeconds(1.45f);
+        yield return new WaitForSeconds(1.5f);
 
         CharacterCarasel.Instance.ToggleMenu(false);
 
@@ -202,9 +202,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
 
+        TeamGearManager.Instance.ToggleGearButtons(false);
+
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
-        GameManager.Instance.UpdateAllyVisibility(false);
+
         ShopManager.Instance.ToggleExitShopButton(false);
         ShopManager.Instance.ToggleRandomiser(false);
 
@@ -217,7 +219,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         //GameManager.Instance.activeRoomAllUnitFunctionalitys = GameManager.Instance.oldActiveRoomAllUnitFunctionalitys;
 
-        GameManager.Instance.SkillsTabChangeAlly(false);
+        GameManager.Instance.SkillsTabChangeAlly(false, false, false);
         TeamGearManager.Instance.ToggleTeamGear(false);
         TeamItemsManager.Instance.ToggleTeamItems(false);
 
@@ -225,6 +227,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         TeamGearManager.Instance.ToggleToMapButton(false);
         TeamItemsManager.Instance.ToggleToMapButton(false);
 
+        GameManager.Instance.UpdateAllyVisibility(false);
         // Reset room, enemes only
         GameManager.Instance.ResetRoom(true);
     }
@@ -323,7 +326,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             StartCoroutine(GameManager.Instance.SetupPostBattleUI(GameManager.Instance.playerWon));
     }
 
-    public void ButtonSlotDetails()
+    public void ButtonSlotDetails(bool openedOwnedSlots = true)
     {
         // If button selected is unlocked, open owned stuff
         if (mainButton != null)
@@ -333,10 +336,15 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
         if (SkillsTabManager.Instance.playerInSkillTab)
         {
-            SkillSlotSelection();
+            //SkillSlotSelection();
+            Debug.Log("aa");
+            //SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
 
-            SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
-            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");
+            if (!OwnedLootInven.Instance.ownedLootOpened)
+            {
+                if (openedOwnedSlots && SkillsTabManager.Instance.activeSkillBase != null)
+                    OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");
+            }
         }
         else if (TeamGearManager.Instance.playerInGearTab)
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
@@ -386,8 +394,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Display inven
         if (slot.isEmpty && slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
         {
+            TeamGearManager.Instance.ToggleAllSlotsClickable(true, true, true, true);
+
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
             //OwnedGearInven.Instance.ToggleOwnedGearEquipButton(true);
+
         }
     }
 
@@ -409,10 +420,29 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             else if (SkillsTabManager.Instance.playerInSkillTab)
             {
                 //SkillsTabManager.Instance.UnequipSkill();
+
+
+
+                //SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
+
+                Debug.Log("ccc");
+                SkillsTabManager.Instance.UpdateSelectedSkillBase(SkillsTabManager.Instance.selectedSkillBase.buttonCG.GetComponent<ButtonFunctionality>());
+
                 SkillsTabManager.Instance.SkillSelection(slot);
 
-                SkillsTabManager.Instance.UpdateSelectedSkillBase(SkillsTabManager.Instance.selectedSkillBase.buttonCG.GetComponent<ButtonFunctionality>());
-                //SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
+
+
+                //ButtonSlotDetails(false);
+
+                //SkillsTabManager.Instance.UpdateSkillStatDetails();
+                SkillsTabManager.Instance.selectedSkillBase.buttonCG.GetComponent<ButtonFunctionality>().SkillSlotSelection();
+
+                // doing this doesnt work get rid of if statement figre outa dif way 
+
+                //if (SkillsTabManager.Instance.selectedSkillBase.curStatType = UIElement.StatType.SKILLSLOT1)
+
+                
+                SkillsTabManager.Instance.UpdateSkillStatDetails();
             }
         }
     }
@@ -440,11 +470,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
+        if (TeamGearManager.Instance.playerInGearTab)
+            TeamGearManager.Instance.ToggleAllSlotsClickable(false, true, false, false);
+
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false, "", true);
     }
 
     public void GearUnEquip()
     {
+        if (OwnedLootInven.Instance.ownedLootOpened)
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -470,11 +506,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
-
-        if (slot != null)
-        {
-            SkillsTabManager.Instance.SkillSelection(slot, true);
-        }
 
         if (curMasteryType == MasteryType.Skill1)
         {
@@ -505,9 +536,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             //SkillsTabManager.Instance.skillBase4.UpdateContentSubText(SkillsTabManager.Instance.skillBase4.GetStatPointsAdded().ToString());
         }
 
+        Debug.Log("bbb");
         SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
 
+        if (slot != null)
+        {
+            SkillsTabManager.Instance.SkillSelection(slot, true);
+        }
+
+
         SkillsTabManager.Instance.UpdateUnspentPointsText(SkillsTabManager.Instance.CalculateUnspentSkillPoints());
+
 
         //OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");
     }
@@ -584,6 +623,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         SkillsTabManager.Instance.ResetStatPageCount();
 
+        // Toggle button / display for skill stats
+        GameManager.Instance.abilityDetailsUI.ToggleAllStats(false);
+
         // Disable map UI
         GameManager.Instance.ToggleMap(false);
 
@@ -594,7 +636,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         SkillsTabManager.Instance.ToggleToMapButton(false);
         TeamGearManager.Instance.ToggleToMapButton(true);
         TeamItemsManager.Instance.ToggleToMapButton(false);
-        
+
+        TeamGearManager.Instance.ToggleGearButtons();
+
         // Toggle unequip button
         TeamItemsManager.Instance.ToggleUnequipButton(false);
         TeamGearManager.Instance.ToggleUnequipButton(true);
@@ -628,11 +672,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         SkillsTabManager.Instance.ToggleOwnedSkillSlotsClickable(true);
 
-        GameManager.Instance.SkillsTabChangeAlly(true);
+        GameManager.Instance.SkillsTabChangeAlly(true, false, true);
         
         TeamGearManager.Instance.ToggleTeamGear(false);
         TeamItemsManager.Instance.ToggleTeamItems(false);
-        
+
+        TeamGearManager.Instance.ToggleGearButtons(false);
+
         SkillsTabManager.Instance.ToggleToMapButton(true);
         TeamGearManager.Instance.ToggleToMapButton(false);
         TeamItemsManager.Instance.ToggleToMapButton(false);
@@ -664,7 +710,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         SkillsTabManager.Instance.ToggleOwnedSkillSlotsClickable(true);
 
-        GameManager.Instance.SkillsTabChangeAlly(false);
+        GameManager.Instance.SkillsTabChangeAlly(false, true, false);
         TeamItemsManager.Instance.ToggleTeamItems(true);
 
         SkillsTabManager.Instance.ToggleToMapButton(false);
@@ -688,7 +734,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         TeamGearManager.Instance.playerInGearTab = true;
 
         TeamItemsManager.Instance.ToggleTeamItems(false);
-        GameManager.Instance.SkillsTabChangeAlly(false);
+        GameManager.Instance.SkillsTabChangeAlly(false, true, false);
+
+        TeamGearManager.Instance.ToggleGearButtons(true);
 
         SkillsTabManager.Instance.ToggleToMapButton(false);
         TeamGearManager.Instance.ToggleToMapButton(true);
@@ -708,9 +756,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         //TeamSetup.Instance.ResetStatPageCount();
 
         //TeamSetup.Instance.GetActiveUnit().UpdateLastOpenedMastery(TeamSetup.Instance.activeStatType);
-
+        Debug.Log("Sssssssssssss");
         //if (GameManager.Instance.activeTeam.Count != 1)
-        GameManager.Instance.SkillsTabChangeAlly(true);
+        GameManager.Instance.SkillsTabChangeAlly(true, false, true, true);
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
@@ -737,8 +785,18 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GameManager.Instance.ResetRoom(true);
 
-        GameManager.Instance.SkillsTabChangeAlly(true);
-        GameManager.Instance.SkillsTabChangeAlly(false);
+        // Update unit sorting
+        GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);
+
+
+        if (GameManager.Instance.activeRoomAllies.Count > 0)
+        {
+            if (GameManager.Instance.GetActiveAlly())
+            {
+                GameManager.Instance.SkillsTabChangeAlly(true);
+                GameManager.Instance.SkillsTabChangeAlly(false, true);
+            }
+        }
     }
 
     public void WeaponBackButton()
@@ -1135,6 +1193,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 return;
         }
 
+        // If player is in hero room view AND the unit linked with this button is NOT  the offered hero unit
+        if (unit)
+        {
+            if (HeroRoomManager.Instance.playerInHeroRoomView && !unit.heroRoomUnit)
+                return;
+        }
+
         StartCoroutine(SelectUnitCo());
     }
 
@@ -1170,12 +1235,18 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             }
             else
             {
-                isHeldDownUnit = false;
-                StartCoroutine(HeldDownCooldown());
-                GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
+                // Do not ally selection of enemy units  behind the hero offering, it obstructs selecting new hero
+                if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY && HeroRoomManager.Instance.playerInHeroRoomView)
+                    yield break;
+                else
+                {
+                    isHeldDownUnit = false;
+                    StartCoroutine(HeldDownCooldown());
+                    GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
 
-                unitIsSelected = true;
-                GameManager.Instance.targetUnit(unitFunctionality);
+                    unitIsSelected = true;
+                    GameManager.Instance.targetUnit(unitFunctionality);
+                }
             }
         }
     }
@@ -1186,26 +1257,37 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // If not pressing effect button, instead pressing a unit
         if (!isEffectButton)
         {
-            if (GetComponentInParent<UnitFunctionality>() && !GetComponentInParent<UnitFunctionality>().isDead)
+            if (GameManager.Instance.playerInCombat)
             {
-                isHeldDownUnit = true;
-                //Debug.Log("Pointer Down");
-                
+                if (GetComponentInParent<UnitFunctionality>() && !GetComponentInParent<UnitFunctionality>().isDead)
+                {
+                    isHeldDownUnit = true;
+                    //Debug.Log("Pointer Down");
+
+                }
+                else
+                {
+                    //Debug.Log("b");
+                    if (isStatButton)
+                    {
+                        isHeldDownStat = true;
+                        //Debug.Log("c");
+                    }
+                }
             }
             else
             {
-                //Debug.Log("b");
                 if (isStatButton)
                 {
                     isHeldDownStat = true;
                     //Debug.Log("c");
                 }
-
             }
         }
         else
         {
-            isHeldDownEffect = true;
+            if (GameManager.Instance.playerInCombat)
+                isHeldDownEffect = true;
             //SelectEffect();
         }
     }
@@ -1230,7 +1312,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     isHeldDownStat = false;
                     heldTimer = 0;
                     StartCoroutine(HeldDownCooldown());
-                    SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(false);
+
+                    if (SkillsTabManager.Instance.holdingButton != null)
+                        SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(false);
                 }
             }
         }

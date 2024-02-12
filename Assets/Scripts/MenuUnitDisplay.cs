@@ -51,9 +51,18 @@ public class MenuUnitDisplay : MonoBehaviour
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;
             // Adjust size of unit
-            //animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
-            animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, 0);
+            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
+            {
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, -57);
+            }
+            else
+            {
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, 0);
+            }
+
+
         }
 
         else if (unitName == "Ranger")
@@ -64,7 +73,7 @@ public class MenuUnitDisplay : MonoBehaviour
             if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
             {
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 5.8f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 40);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, -17);
             }
             else
             {

@@ -20,7 +20,6 @@ public class TeamGearManager : MonoBehaviour
     public Sprite clearSlotSprite;
     public Sprite helmetSlotSprite;
     public Sprite chestSlotSprite;
-    public Sprite legsSlotSprite;
     public Sprite bootsSlotSprite;
 
     public ButtonFunctionality teamSetupTabArrowLeftButton;
@@ -49,19 +48,16 @@ public class TeamGearManager : MonoBehaviour
     [Header("Main Ally")]
     public GearPiece equippedHelmetMain;
     public GearPiece equippedChestpieceMain;
-    public GearPiece equippedLeggingsMain;
     public GearPiece equippedBootsMain;
     [Space(2)]
     [Header("Second Ally")]
     public GearPiece equippedHelmetSec;
     public GearPiece equippedChestpieceSec;
-    public GearPiece equippedLeggingsSec;
     public GearPiece equippedBootsSec;
     [Space(2)]
     [Header("Third Ally")]
     public GearPiece equippedHelmetThi;
     public GearPiece equippedChestpieceThi;
-    public GearPiece equippedLeggingsThi;
     public GearPiece equippedBootsThi;
     [Space(2)]
     public bool playerInGearTab;
@@ -394,14 +390,8 @@ public class TeamGearManager : MonoBehaviour
                     if (removedPieceType == "CHESTPIECE")
                         ally1GearSlots[i].UpdateSlotImage(chestSlotSprite);
                 }
-                // Place leggings
-                if (i == 2)
-                {
-                    if (removedPieceType == "LEGGINGS")
-                        ally1GearSlots[i].UpdateSlotImage(legsSlotSprite);
-                }
                 // Place boots 
-                if (i == 3)
+                if (i == 2)
                 {
                     if (removedPieceType == "BOOTS")
                         ally1GearSlots[i].UpdateSlotImage(bootsSlotSprite);
@@ -428,14 +418,8 @@ public class TeamGearManager : MonoBehaviour
                     if (removedPieceType == "CHESTPIECE")
                         ally2GearSlots[x].UpdateSlotImage(chestSlotSprite);
                 }
-                // Place leggings
-                if (x == 2)
-                {
-                    if (removedPieceType == "LEGGINGS")
-                        ally2GearSlots[x].UpdateSlotImage(legsSlotSprite);
-                }
                 // Place boots 
-                if (x == 3)
+                if (x == 2)
                 {
                     if (removedPieceType == "BOOTS")
                         ally2GearSlots[x].UpdateSlotImage(bootsSlotSprite);
@@ -454,25 +438,19 @@ public class TeamGearManager : MonoBehaviour
                 if (y == 0)
                 {
                     if (removedPieceType == "HELMET")
-                        ally1GearSlots[y].UpdateSlotImage(helmetSlotSprite);
+                        ally3GearSlots[y].UpdateSlotImage(helmetSlotSprite);
                 }
                 // Place chestpiece
                 if (y == 1)
                 {
                     if (removedPieceType == "CHESTPIECE")
-                        ally1GearSlots[y].UpdateSlotImage(chestSlotSprite);
-                }
-                // Place leggings
-                if (y == 2)
-                {
-                    if (removedPieceType == "LEGGINGS")
-                        ally1GearSlots[y].UpdateSlotImage(legsSlotSprite);
+                        ally3GearSlots[y].UpdateSlotImage(chestSlotSprite);
                 }
                 // Place boots 
-                if (y == 3)
+                if (y == 2)
                 {
                     if (removedPieceType == "BOOTS")
-                        ally1GearSlots[y].UpdateSlotImage(bootsSlotSprite);
+                        ally3GearSlots[y].UpdateSlotImage(bootsSlotSprite);
                 }
 
                 ally3GearSlots[y].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
@@ -505,16 +483,8 @@ public class TeamGearManager : MonoBehaviour
                     else
                         ally1GearSlots[i].UpdateSlotImage(equippedChestpieceMain.gearIcon);
                 }
-                // Place leggings
-                if (i == 2)
-                {
-                    if (equippedLeggingsMain == null)
-                        ally1GearSlots[i].UpdateSlotImage(legsSlotSprite);
-                    else
-                        ally1GearSlots[i].UpdateSlotImage(equippedLeggingsMain.gearIcon);
-                }
                 // Place boots 
-                if (i == 3)
+                if (i == 2)
                 {
                     if (equippedBootsMain == null)
                         ally1GearSlots[i].UpdateSlotImage(bootsSlotSprite);
@@ -547,16 +517,8 @@ public class TeamGearManager : MonoBehaviour
                     else
                         ally2GearSlots[x].UpdateSlotImage(equippedChestpieceSec.gearIcon);
                 }
-                // Place leggings
-                if (x == 2)
-                {
-                    if (equippedLeggingsSec == null)
-                        ally2GearSlots[x].UpdateSlotImage(legsSlotSprite);
-                    else
-                        ally2GearSlots[x].UpdateSlotImage(equippedLeggingsSec.gearIcon);
-                }
                 // Place boots 
-                if (x == 3)
+                if (x == 2)
                 {
                     if (equippedBootsSec == null)
                         ally2GearSlots[x].UpdateSlotImage(bootsSlotSprite);
@@ -589,16 +551,8 @@ public class TeamGearManager : MonoBehaviour
                     else
                         ally3GearSlots[y].UpdateSlotImage(equippedChestpieceThi.gearIcon);
                 }
-                // Place leggings
-                if (y == 2)
-                {
-                    if (equippedLeggingsThi == null)
-                        ally3GearSlots[y].UpdateSlotImage(legsSlotSprite);
-                    else
-                        ally3GearSlots[y].UpdateSlotImage(equippedLeggingsThi.gearIcon);
-                }
                 // Place boots 
-                if (y == 3)
+                if (y == 2)
                 {
                     if (equippedBootsThi == null)
                         ally3GearSlots[y].UpdateSlotImage(bootsSlotSprite);
@@ -703,9 +657,9 @@ public class TeamGearManager : MonoBehaviour
             SkillsTabManager.Instance.ToggleToMapButton(false);
 
             // Disable team setup tab
-            GameManager.Instance.SkillsTabChangeAlly(false);
+           // GameManager.Instance.SkillsTabChangeAlly(false);
 
-            ToggleAllSlotsClickable(true, true);
+            ToggleAllSlotsClickable(true, false, true);
 
             // Hide team setup tab arrow buttons
             SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(false);
@@ -815,62 +769,65 @@ public class TeamGearManager : MonoBehaviour
         }
     }
 
-    public void ToggleAllSlotsClickable(bool toggle, bool doOwnedSlots = true)
+    public void ToggleAllSlotsClickable(bool toggle, bool doOwnedSlots = true, bool doBaseGearSlots = true, bool doOwnedSlotsVisual = true)
     {
         //Debug.Log("toggling clickable " + toggle);
 
-        for (int x = 0; x < ally1GearSlots.Count; x++)
+        if (doBaseGearSlots)
         {
-            if (toggle)
+            for (int x = 0; x < ally1GearSlots.Count; x++)
             {
-                ally1GearSlots[x].GetSlotUI().ToggleButton(true);
-                ally1GearSlots[x].ToggleMainSlot(true);
-                ally1GearSlots[x].ToggleOwnedGearButton(true);
-                ally1GearSlots[x].ToggleEquipButton(true);
-            }
-            else
-            {
-                ally1GearSlots[x].GetSlotUI().ToggleButton(false);
-                ally1GearSlots[x].ToggleMainSlot(false);
-                //ally1GearSlots[x].ToggleOwnedGearButton(false);
-                //ally1GearSlots[x].ToggleEquipButton(false);
-            }
-        }   
-
-        for (int y = 0; y < ally2GearSlots.Count; y++)
-        {
-            if (toggle)
-            {
-                ally2GearSlots[y].GetSlotUI().ToggleButton(true);
-                ally2GearSlots[y].ToggleMainSlot(true);
-                ally2GearSlots[y].ToggleOwnedGearButton(true);
-                ally2GearSlots[y].ToggleEquipButton(true);
+                if (toggle)
+                {
+                    ally1GearSlots[x].GetSlotUI().ToggleButton(true);
+                    ally1GearSlots[x].ToggleMainSlot(true);
+                    ally1GearSlots[x].ToggleOwnedGearButton(true);
+                    ally1GearSlots[x].ToggleEquipButton(true);
+                }
+                else
+                {
+                    ally1GearSlots[x].GetSlotUI().ToggleButton(false);
+                    ally1GearSlots[x].ToggleMainSlot(false);
+                    //ally1GearSlots[x].ToggleOwnedGearButton(false);
+                    //ally1GearSlots[x].ToggleEquipButton(false);
+                }
             }
 
-            else
+            for (int y = 0; y < ally2GearSlots.Count; y++)
             {
-                ally2GearSlots[y].GetSlotUI().ToggleButton(false);
-                ally2GearSlots[y].ToggleMainSlot(false);
-                ally2GearSlots[y].ToggleOwnedGearButton(false);
-                ally2GearSlots[y].ToggleEquipButton(false);
-            }
-        }
+                if (toggle)
+                {
+                    ally2GearSlots[y].GetSlotUI().ToggleButton(true);
+                    ally2GearSlots[y].ToggleMainSlot(true);
+                    ally2GearSlots[y].ToggleOwnedGearButton(true);
+                    ally2GearSlots[y].ToggleEquipButton(true);
+                }
 
-        for (int z = 0; z < ally3GearSlots.Count; z++)
-        {
-            if (toggle)
-            {
-                ally3GearSlots[z].GetSlotUI().ToggleButton(true);
-                ally3GearSlots[z].ToggleMainSlot(true);
-                ally3GearSlots[z].ToggleOwnedGearButton(true);
-                ally3GearSlots[z].ToggleEquipButton(true);
+                else
+                {
+                    ally2GearSlots[y].GetSlotUI().ToggleButton(false);
+                    ally2GearSlots[y].ToggleMainSlot(false);
+                    ally2GearSlots[y].ToggleOwnedGearButton(false);
+                    ally2GearSlots[y].ToggleEquipButton(false);
+                }
             }
-            else
+
+            for (int z = 0; z < ally3GearSlots.Count; z++)
             {
-                ally3GearSlots[z].GetSlotUI().ToggleButton(false);
-                ally3GearSlots[z].ToggleMainSlot(false);
-                ally3GearSlots[z].ToggleOwnedGearButton(false);
-                ally3GearSlots[z].ToggleEquipButton(false);
+                if (toggle)
+                {
+                    ally3GearSlots[z].GetSlotUI().ToggleButton(true);
+                    ally3GearSlots[z].ToggleMainSlot(true);
+                    ally3GearSlots[z].ToggleOwnedGearButton(true);
+                    ally3GearSlots[z].ToggleEquipButton(true);
+                }
+                else
+                {
+                    ally3GearSlots[z].GetSlotUI().ToggleButton(false);
+                    ally3GearSlots[z].ToggleMainSlot(false);
+                    ally3GearSlots[z].ToggleOwnedGearButton(false);
+                    ally3GearSlots[z].ToggleEquipButton(false);
+                }
             }
         }
 
@@ -894,7 +851,8 @@ public class TeamGearManager : MonoBehaviour
                 {
                     //Debug.Log("gear tab " + toggle);
                     OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(false);
-                    OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(false);
+                    if (doOwnedSlotsVisual)
+                        OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(false);
                     //OwnedLootInven.Instance.ownedLootSlots[i].ToggleOwnedGearEquipButton(false);
                     OwnedLootInven.Instance.ownedLootSlots[i].ToggleEquipButton(false);
                 }
@@ -995,6 +953,10 @@ public class TeamGearManager : MonoBehaviour
             }
         }
 
+        GearRewards.Instance.IncrementSpawnedGearCount();
+
+        GetSelectedBaseGearSlot().UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+
         GetSelectedBaseGearSlot().UpdateSlotImage(gear.GetSlotImage());
         GetSelectedBaseGearSlot().UpdateSlotName(gear.GetSlotName());
         GetSelectedBaseGearSlot().UpdateGearBonusHealth(gear.GetBonusHealth());
@@ -1015,17 +977,14 @@ public class TeamGearManager : MonoBehaviour
     {
         equippedHelmetMain = null;
         equippedChestpieceMain = null;
-        equippedLeggingsMain = null;
         equippedBootsMain = null;
 
         equippedHelmetSec = null;
         equippedChestpieceSec = null;
-        equippedLeggingsSec = null;
         equippedBootsSec = null;
 
         equippedHelmetThi = null;
         equippedChestpieceThi = null;
-        equippedLeggingsThi = null;
         equippedBootsThi = null;
 
         OwnedLootInven.Instance.ResetWornGearAllyMain();
@@ -1036,8 +995,31 @@ public class TeamGearManager : MonoBehaviour
         ally2MenuUnitDisplay.ResetUnitStats();
         ally3MenuUnitDisplay.ResetUnitStats();
 
+        for (int i = 0; i < 3; i++)
+        {
+            ally1GearSlots[i].isEmpty = true;
+            ally2GearSlots[i].isEmpty = true;
+            ally3GearSlots[i].isEmpty = true;
+        }
+
+
         ClearAllGearStats();
         UpdateGearNameText("");
+
+        ClearEmptyGearSlots();
+    }
+
+    public void ToggleGearButtons(bool toggle = true)
+    {
+        for (int i = 0; i < ally1GearSlots.Count; i++)
+        {
+            ally1GearSlots[i].ownedSlotButton.ToggleButton(toggle);
+            ally1GearSlots[i].ToggleEquipButton(toggle);
+            ally2GearSlots[i].ownedSlotButton.ToggleButton(toggle);
+            ally2GearSlots[i].ToggleEquipButton(toggle);
+            ally3GearSlots[i].ownedSlotButton.ToggleButton(toggle);
+            ally3GearSlots[i].ToggleEquipButton(toggle);
+        }
     }
 
     public void UpdateEquippedGearPiece(string gearPieceTypeName, GearPiece newGearPiece, bool replacing = true)
@@ -1055,13 +1037,6 @@ public class TeamGearManager : MonoBehaviour
                 equippedChestpieceMain = newGearPiece;
             else
                 equippedChestpieceMain = null;
-        }
-        else if (gearPieceTypeName == "legsMain")
-        {
-            if (replacing)
-                equippedLeggingsMain = newGearPiece;
-            else
-                equippedLeggingsMain = null;
         }
         else if (gearPieceTypeName == "bootsMain")
         {
@@ -1085,13 +1060,6 @@ public class TeamGearManager : MonoBehaviour
             else
                 equippedChestpieceSec = null;
         }
-        else if (gearPieceTypeName == "legsSecond")
-        {
-            if (replacing)
-                equippedLeggingsSec = newGearPiece;
-            else
-                equippedLeggingsSec = null;
-        }
         else if (gearPieceTypeName == "bootsSecond")
         {
             if (replacing)
@@ -1113,13 +1081,6 @@ public class TeamGearManager : MonoBehaviour
                 equippedChestpieceThi = newGearPiece;
             else
                 equippedChestpieceThi = null;
-        }
-        else if (gearPieceTypeName == "legsThird")
-        {
-            if (replacing)
-                equippedLeggingsThi = newGearPiece;
-            else
-                equippedLeggingsThi = null;
         }
         else if (gearPieceTypeName == "bootsThird")
         {

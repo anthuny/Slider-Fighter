@@ -19,20 +19,19 @@ MonoBehaviour:
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 516c075e061f4a146ba131b99377228c, type: 3}
   skillName: TRUE LIGHT HEAL
-  skillDescr: Target 1 base ally, Cleansing 4 random debuffs, then perform 3 base
-    heals.
-  skillTabDescr: Target 1 base ally, Cleansing 4 random debuffs, then perform 3 base
-    heal.
+  skillDescr: Target 1 base ally, Cleanse 5 negative effects, then
+  skillTabDescr: Target 1 base ally, Cleanse 5 negative effects, then
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
-  startingSkillPower: 40
-  curSkillPower: 40
+  startingSkillPower: 35
+  curSkillPower: 35
   skillAttackAccMult: 1
-  skillAttackCount: 3
+  skillBaseHitOutput: 3
+  skillHitAttempts: 2
   projectileSpeed: 10
   skillCooldown: 2
-  curCooldown: 0
+  curCooldown: 3
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
@@ -42,7 +41,7 @@ MonoBehaviour:
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 1
-  cleanseCount: 4
+  cleanseCount: 5
   special: 0
   effect: {fileID: 0}
   effectTurnLength: 0
@@ -55,14 +54,15 @@ MonoBehaviour:
   upgradeIncPowerCount: 0
   upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
-  skillProjectile: {fileID: 900169467, guid: d138162676fe977478ea79244f36da6c, type: 3}
+  skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
   projectileAllowSpin: 0
-  projectileAllowIdle: 1
-  projectileAC: {fileID: 9100000, guid: 17d0f9b647492ae4da46bf9ca8ced099, type: 2}
-  targetEffectVisualAC: {fileID: 9100000, guid: 2b088e935cf2110469841cdbbbcd1ddc, type: 2}
+  projectileAllowIdle: 0
+  projectileAC: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
   repeatLaunchSFX: 1
-  projectileLaunch: {fileID: 0}
+  giveExtraDesc: 1
+  projectileLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
   skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 1

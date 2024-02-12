@@ -174,7 +174,7 @@ public class Effect : MonoBehaviour
 
             float newCurHealth = (int)tempAddedHealth;
             targetUnit.UpdateUnitMaxHealth((int)newCurHealth);
-            targetUnit.UpdateUnitCurHealth((int)newCurHealth);
+            targetUnit.UpdateUnitCurHealth((int)newCurHealth, false, false, true, false);
             targetUnit.StartCoroutine(targetUnit.SpawnPowerUI(newCurHealth, false, false, this));
         }
         else if (curEffectName == EffectName.TAUNT)
@@ -190,10 +190,10 @@ public class Effect : MonoBehaviour
         {
             //storedPowerAmp = powerAmp;
             //targetUnit.UpdatePowerIncPerLv((int)storedPowerAmp);       
-            targetUnit.UpdateUnitDamageHits(2, true);
+            targetUnit.UpdateUnitPowerHits(2, true);
         }
         else if (curEffectName == EffectName.POWERDOWN)
-            targetUnit.UpdateUnitDamageHits(2, false);
+            targetUnit.UpdateUnitPowerHits(2, false);
         else if (curEffectName == EffectName.HEALINGUP)
             targetUnit.UpdateUnitHealingHits(2, true);
         else if (curEffectName == EffectName.HEALINGDOWN)
@@ -222,7 +222,7 @@ public class Effect : MonoBehaviour
         {
             float newMaxHealth = tempAddedHealth;
             unit.UpdateUnitMaxHealth((int)newMaxHealth, false, false);
-            unit.UpdateUnitCurHealth((int)tempAddedHealth, true, false);
+            unit.UpdateUnitCurHealth((int)tempAddedHealth, true, false, true, false, true);
             unit.StartCoroutine(unit.SpawnPowerUI(tempAddedHealth, false, true, this));
         }
         else if (curEffectName == EffectName.POISON)
@@ -260,11 +260,11 @@ public class Effect : MonoBehaviour
         }
         else if (curEffectName == EffectName.POWERUP)
         {
-            unit.UpdateUnitDamageHits(2, false);
+            unit.UpdateUnitPowerHits(2, false);
         }
         else if (curEffectName == EffectName.POWERDOWN)
         {
-            unit.UpdateUnitDamageHits(2, true);
+            unit.UpdateUnitPowerHits(2, true);
         }
         else if (curEffectName == EffectName.HEALINGUP)
         {
@@ -310,20 +310,20 @@ public class Effect : MonoBehaviour
         // Make bleed scale with recover buff // TODO
 
         if (curEffectName == EffectName.BLEED)
-            unitTarget.UpdateUnitCurHealth(-power, true);
+            unitTarget.UpdateUnitCurHealth(-power, true, false, true, true, true);
+        else if (curEffectName == EffectName.POISON)
+            unitTarget.UpdateUnitCurHealth(-power, true, false, true, true, true);
         else if (curEffectName == EffectName.RECOVER)
             unitTarget.UpdateUnitCurHealth((int)newHealingPower);
-        else if (curEffectName == EffectName.POISON)
-        {
-            unitTarget.UpdateUnitCurHealth(-power, true);
-        }
+
 
         if (curEffectName == EffectName.BLEED)
             unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this));
-        else if (curEffectName == EffectName.RECOVER)
-            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI((int)newHealingPower, false, false, this));
         else if (curEffectName == EffectName.POISON)
             unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this));
+        else if (curEffectName == EffectName.RECOVER)
+            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI((int)newHealingPower, false, false, this));
+
     }
 }
 

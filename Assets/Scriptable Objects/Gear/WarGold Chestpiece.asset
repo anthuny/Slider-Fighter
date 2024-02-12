@@ -16,8 +16,8 @@ MonoBehaviour:
   gearType: chestpiece
   gearRarity: rare
   gearIcon: {fileID: 21300000, guid: e6adbec5cacbda34fae2da5fede2500f, type: 3}
-  bonusHealth: 150
+  bonusHealth: 175
   bonusDamage: 2
   bonusHealing: 0
-  bonusDefense: 8
-  bonusSpeed: -2
+  bonusDefense: 14
+  bonusSpeed: -5

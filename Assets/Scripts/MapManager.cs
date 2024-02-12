@@ -153,8 +153,16 @@ public class MapManager : MonoBehaviour
 
     public void Setup()
     {
+        OwnedLootInven.Instance.ResetOwnedGear();
+
+        OwnedLootInven.Instance.LoadStartingLoot();
+
         // Spawn Starter Ally
         GameManager.Instance.SpawnAllies();
+
+        GameManager.Instance.UpdateAllyVisibility(false);
+
+        GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);
 
         ToggleMapVisibility(true, true);
 
@@ -288,9 +296,14 @@ public class MapManager : MonoBehaviour
     {
         if (toggle)
         {
-            GameManager.Instance.UpdateAllyVisibility(false);
+            //GameManager.Instance.UpdateAllyVisibility(false);
 
-            GearRewards.Instance.ResetRewards();
+            GameManager.Instance.ToggleAllyUnitSelection(false);
+
+            if (RoomManager.Instance.GetRoomsCleared() == 0)
+                GearRewards.Instance.ResetRewards(false);
+            else
+                GearRewards.Instance.ResetRewards(true);
 
             // If items didnt get wiped from hero unit spawning scene, wipe them here (it blocks mid screen taps)
             ItemRewardManager.Instance.ResetRewardsTable();
@@ -337,6 +350,12 @@ public class MapManager : MonoBehaviour
             int diffCount = RoomManager.Instance.GetFloorCount();
             mapOverlay.UpdateRoomCountText(diffCount.ToString());
             mapOverlay.UpdateFloorNameText(activeFloor.floorName, activeFloor.floorColour);
+
+            for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+            {
+                //Debug.Log("Turning off unit dispslay");
+                GameManager.Instance.activeRoomAllies[i].ToggleUnitDisplay(false);
+            }
         }
         else
         {
@@ -344,6 +363,24 @@ public class MapManager : MonoBehaviour
 
             map.UpdateAlpha(0);
             //ToggleMapScroll(false);
+        }
+    }
+
+    public void UpdateEnterRoomButton()
+    {
+        if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING)
+        {
+            mapOverlay.ToggleEnterRoomButton(false);
+        }
+        else if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.STARTING
+            && !RoomManager.Instance.GetActiveRoom().GetIsCompleted())
+        {
+            mapOverlay.ToggleEnterRoomButton(true);
+        }
+        else if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.STARTING
+    && RoomManager.Instance.GetActiveRoom().GetIsCompleted())
+        {
+            mapOverlay.ToggleEnterRoomButton(false);
         }
     }
   

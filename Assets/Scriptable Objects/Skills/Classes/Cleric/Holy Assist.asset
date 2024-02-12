@@ -19,17 +19,18 @@ MonoBehaviour:
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: fe0215b0a8ac2bf4985549b5dd98104e, type: 3}
   skillName: HOLY ASSIST
-  skillDescr: Target all allies, cast Recovery effect
-  skillTabDescr: Target all allies, cast Recovery effect
+  skillDescr: Target all allies, Cleanse 5 negative effects, Cast Recovery effect
+  skillTabDescr: Target all allies, Cleanse 5 negative effects, Cast Recovery effect
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
   startingSkillPower: 0
   curSkillPower: 0
   skillAttackAccMult: 1
-  skillAttackCount: 1
+  skillBaseHitOutput: 1
+  skillHitAttempts: 1
   projectileSpeed: 0
-  skillCooldown: 0
+  skillCooldown: 3
   curCooldown: 0
   skillSelectionCount: 3
   isSelfCast: 0
@@ -39,8 +40,8 @@ MonoBehaviour:
   isReviving: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
-  isCleansingEffectRandom: 0
-  cleanseCount: 0
+  isCleansingEffectRandom: 1
+  cleanseCount: 5
   special: 0
   effect: {fileID: 11400000, guid: e854f94542f31b34ba8a3b2545ed0984, type: 2}
   effectTurnLength: 1
@@ -60,6 +61,7 @@ MonoBehaviour:
   targetEffectVisualAC: {fileID: 9100000, guid: 2b088e935cf2110469841cdbbbcd1ddc, type: 2}
   skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
   repeatLaunchSFX: 0
+  giveExtraDesc: 1
   projectileLaunch: {fileID: 0}
   skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
   skillHitAdditional: {fileID: 0}

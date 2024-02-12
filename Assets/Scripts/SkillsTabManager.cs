@@ -20,7 +20,8 @@ public class SkillsTabManager : MonoBehaviour
 
     public UIElement skillDescUI;
     public UIElement powerStatUI;
-    public UIElement hitsStatUI;
+    public UIElement hitsRemainingStatUI;
+    public UIElement baseHitsStatsUI;
     public UIElement cdStatUI;
     public UIElement maxTargetsStatUI;
     public UIElement hitEffectChanceUI;
@@ -61,30 +62,15 @@ public class SkillsTabManager : MonoBehaviour
         UpdateSkillDescription("");
     }
 
-    void OnApplicationQuit()
+    public void UpdateProgressSlider(SkillData skill)
     {
-        // Reset skill points of each skill to 0 on ally first start
-
-        /*
-        for (int i = 0; i < activeRoomAllies.Count; i++)
-        {
-            activeRoomAllies[i].unitData.UpdateCurSkills(activeRoomAllies[i].GetStartingSkills());
-        }
-        */
-    }
-
-    public void UpdateProgressSlider()
-    {
-        selectedSkillBase.gameObject.GetComponent<Slot>().UpdateProgressSlider();
+        selectedSkillBase.gameObject.GetComponent<Slot>().UpdateProgressSlider(skill, false);
     }
 
     public void SkillPointAdd(int skillUpgradeType = 0, bool doProgressSlider = true)
     {
+        // Check to disable buttons if no points remain for the ally  
 
-
-        // Check to disable buttons if no points remain for the ally
-
-        
         // Increase skill point
         if (skillUpgradeType == 0)
         {
@@ -97,26 +83,48 @@ public class SkillsTabManager : MonoBehaviour
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
 
-                selectedSkillBase.gameObject.GetComponent<Slot>().IncreaseProgressSlider();
+                selectedSkillBase.gameObject.GetComponent<Slot>().UpdateProgressSlider(activeSkillBase, true);
+
+                activeSkillBase.curSkillLevel++;
             }
         }
         else if (skillUpgradeType == 1)
         {
             activeSkillBase.upgradeIncPowerCount++;
+            activeSkillBase.curSkillLevel++;
         }
         else if (skillUpgradeType == 2)
         {
             activeSkillBase.upgradeIncEffectCount++;
+            activeSkillBase.curSkillLevel++;
         }
 
-        activeSkillBase.curSkillLevel++;
-        selectedSkillBase.UpdateSkillLevelText(activeSkillBase.curSkillLevel);
+        if (skillUpgradeType == 0)
+        {
+            if (doProgressSlider)
+            {
+                selectedSkillBase.UpdateSkillLevelText(activeSkillBase.curSkillLevel);
 
-        UpdateSkillUpgradesText();
+                UpdateSkillUpgradesText();
 
-        SkillAddPoint();
+                SkillAddPoint();
 
-        UpdateSkillStatDetails();
+                UpdateSkillStatDetails();
+                return;
+            }
+        }
+        else
+        {
+            selectedSkillBase.UpdateSkillLevelText(activeSkillBase.curSkillLevel);
+
+            UpdateSkillUpgradesText();
+
+            SkillAddPoint();
+
+            UpdateSkillStatDetails();
+        }
+
+
     }
 
     public void ResetAllySkllls(UnitFunctionality unit)
@@ -162,259 +170,51 @@ public class SkillsTabManager : MonoBehaviour
 
             }
         }
-
-        /*
-        if (GetSelectedSkillSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.MAIN)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearMainAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearMainAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetSlotName() == GetSelectedGearSlot().GetSlotName())
-                    {
-                        // Remove saved equipped gear piece (data side)
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)
-                        {
-                            UpdateEquippedGearPiece("helmMain", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Slot.SlotType.CHESTPIECE)
-                        {
-                            UpdateEquippedGearPiece("chestMain", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Slot.SlotType.BOOTS)
-                        {
-                            UpdateEquippedGearPiece("bootsMain", null, false);
-                        }
-
-                        // Update unit stats when unequiping
-                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllyMain(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-        else if (GetSelectedBaseGearSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.SECOND)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearSecondAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetSlotName() == GetSelectedGearSlot().GetSlotName())
-                    {
-                        // Remove saved equipped gear piece (data side)
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)
-                        {
-                            UpdateEquippedGearPiece("helmSecond", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotType.CHESTPIECE)
-                        {
-                            UpdateEquippedGearPiece("chestSecond", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotType.BOOTS)
-                        {
-                            UpdateEquippedGearPiece("bootsSecond", null, false);
-                        }
-
-                        // Update unit stats when unequiping
-                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllySecond(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-        else if (GetSelectedBaseGearSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.THIRD)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearThirdAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetSlotName() == GetSelectedGearSlot().GetSlotName())
-                    {
-                        // Remove saved equipped gear piece (data side)
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)
-                        {
-                            UpdateEquippedGearPiece("helmThird", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotType.CHESTPIECE)
-                        {
-                            UpdateEquippedGearPiece("chestThird", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotType.BOOTS)
-                        {
-                            UpdateEquippedGearPiece("bootsThird", null, false);
-                        }
-
-                        // Update unit stats when unequiping
-                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllyThird(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Remove gear icon display
-        GetSelectedBaseGearSlot().ResetGearSlot(true, true);
-
-        // Remove gear icon details (name / stats)
-        ClearAllGearStats();
-        */
     }
 
     public void EquipSkill(Slot skill)
     {
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
-
-
-
-        /*
-        Slot removedGear = null;
-
-        // Remove current equipt item, and place into owned gear
-
-        if (GetSelectedSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.MAIN)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearMainAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearMainAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetSlotName() == skill.GetSlotName())
-                    {
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllyMain(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-        else if (GetSelectedSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.SECOND)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearSecondAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetSlotName() == skill.GetSlotName())
-                    {
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllySecond(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-        else if (GetSelectedSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.THIRD)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearThirdAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetSlotName() == skill.GetSlotName())
-                    {
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllyThird(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        // Remove gear from owned gear list when equipping
-        // Add gear to worn gear
-        for (int i = 0; i < OwnedLootInven.Instance.ownedGear.Count; i++)
-        {
-            if (OwnedLootInven.Instance.ownedGear[i].GetSlotName() == skill.GetSlotName())
-            {
-                removedGear = OwnedLootInven.Instance.ownedGear[i];
-
-                OwnedLootInven.Instance.RemoveOwnedGear(removedGear);
-
-                if (GetSelectedSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.MAIN)
-                    OwnedLootInven.Instance.AddWornGearAllyMain(removedGear);
-                else if (GetSelectedSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.SECOND)
-                    OwnedLootInven.Instance.AddWornGearAllySecond(removedGear);
-                else if (GetSelectedSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.THIRD)
-                    OwnedLootInven.Instance.AddWornGearAllyThird(removedGear);
-                break;
-            }
-        }
-
-        */
-
-        /*
-        GetSelectedSlot().UpdateGearBonusHealth(skill.GetBonusHealth());
-        GetSelectedSlot().UpdateGearBonusHealing(skill.GetBonusHealing());
-        GetSelectedSlot().UpdateGearBonusDefense(skill.GetBonusDefense());
-        GetSelectedSlot().UpdateGearBonusDamage(skill.GetBonusDamage());
-        GetSelectedSlot().UpdateGearBonusSpeed(skill.GetBonusSpeed());
-        */
-
-
-
-        // Update unit stats with stats from gear
-        //UpdateUnitStatsEquip(skill);
-
-        // Show combined calculated values next to unit
     }
 
     public void UpdateSkillUpgradesText()
     {
         selectedSkillBase.skillUpgradesUI.UpdateContentText(activeSkillBase.upgradeIncTargetCount.ToString());
-        selectedSkillBase.skillUpgradesUI.UpdateContentText2(activeSkillBase.GetCalculatedSkillPower().ToString() + "%");
+        selectedSkillBase.skillUpgradesUI.UpdateContentText2(activeSkillBase.GetCalculatedSkillPower().ToString());
         selectedSkillBase.skillUpgradesUI.UpdateContentText3(activeSkillBase.GetCalculatedSkillEffectChance().ToString() + "%");
 
         //Debug.Log(activeSkillBase.GetCalculatedSkillSelectionCount().ToString());
     }
 
-    void UpdateSkillStatsDisplay(int power = 0, int hits = 0, int cd = 0, int maxTargets = 0, int hitEffectChance = 0)
+    void ToggleAllStatsVisual(bool toggle)
     {
+        if (toggle)
+        {
+            powerStatUI.UpdateAlpha(1);
+            hitsRemainingStatUI.UpdateAlpha(1);
+            baseHitsStatsUI.UpdateAlpha(1);
+            cdStatUI.UpdateAlpha(1);
+            maxTargetsStatUI.UpdateAlpha(1);
+            hitEffectChanceUI.UpdateAlpha(1);
+        }
+        else
+        {
+            powerStatUI.UpdateAlpha(0);
+            hitsRemainingStatUI.UpdateAlpha(0);
+            baseHitsStatsUI.UpdateAlpha(0);
+            cdStatUI.UpdateAlpha(0);
+            maxTargetsStatUI.UpdateAlpha(0);
+            hitEffectChanceUI.UpdateAlpha(0);
+        }
+    }
+
+    void UpdateSkillStatsDisplay(int power = 0, int hitsRemainingMax = 0, int baseHits = 0, int cd = 0, int maxTargets = 0, int hitEffectChance = 0)
+    {
+        ToggleAllStatsVisual(true);
+
         powerStatUI.UpdateContentText(power.ToString());
-        hitsStatUI.UpdateContentText(hits.ToString());
+        hitsRemainingStatUI.UpdateContentText(hitsRemainingMax.ToString());
+        baseHitsStatsUI.UpdateContentText(baseHits.ToString());
         cdStatUI.UpdateContentText(cd.ToString());
         maxTargetsStatUI.UpdateContentText(maxTargets.ToString());
         hitEffectChanceUI.UpdateContentText(hitEffectChance.ToString());
@@ -425,22 +225,23 @@ public class SkillsTabManager : MonoBehaviour
     void ClearSkillStatsDisplay()
     {
         powerStatUI.UpdateContentText("");
-        hitsStatUI.UpdateContentText("");
+        hitsRemainingStatUI.UpdateContentText("");
+        baseHitsStatsUI.UpdateContentText("");
         cdStatUI.UpdateContentText("");
         maxTargetsStatUI.UpdateContentText("");
         hitEffectChanceUI.UpdateContentText("");
+
+        ToggleAllStatsVisual(false);
     }
 
     public void UpdateSkillStatDetails()
     {
-        ClearAllSkillsStats();
-
         if (activeSkillBase != null)
         {
             //Debug.Log(activeSkillBase);
             UpdateActiveSkillNameText(activeSkillBase.skillName);
             UpdateSkillDescription(activeSkillBase.skillTabDescr);
-            UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillAttackCount, activeSkillBase.skillCooldown, activeSkillBase.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(activeSkillBase.GetCalculatedSkillEffectStat()));
+            UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillHitAttempts, activeSkillBase.skillBaseHitOutput + activeSkillBase.upgradeIncPowerCount, activeSkillBase.skillCooldown, activeSkillBase.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(activeSkillBase.GetCalculatedSkillEffectStat()));
         }
         else
         {
@@ -449,46 +250,6 @@ public class SkillsTabManager : MonoBehaviour
             UpdateSkillDescription("");
             ClearSkillStatsDisplay();
         }
-
-
-        /*
-        // Gear Stats Update
-        for (int i = 0; i < 5; i++)
-        {
-            GameObject spawnedStat = Instantiate(gearStatGO, gearStatsUI.transform.position, Quaternion.identity);
-            spawnedStat.transform.SetParent(gearStatsUI.transform);
-            spawnedStat.transform.localPosition = Vector2.zero;
-            spawnedStat.transform.localScale = Vector2.one;
-
-            UIElement statUI = spawnedStat.GetComponent<UIElement>();
-
-            // Update Skill stat UI
-            if (i == 0)
-                statUI.UpdateContentText(SelectedOwnedSlot().GetBonusHealth().ToString());
-            else if (i == 1)
-                statUI.UpdateContentText(SelectedOwnedSlot().GetBonusDamage().ToString());
-            else if (i == 2)
-                statUI.UpdateContentText(SelectedOwnedSlot().GetBonusHealing().ToString());
-            else if (i == 3)
-                statUI.UpdateContentText(SelectedOwnedSlot().GetBonusDefense().ToString());
-            else if (i == 4)
-                statUI.UpdateContentText(SelectedOwnedSlot().GetBonusSpeed().ToString());
-
-
-        }
-        */
-
-
-
-        //GetSelectedSlot().UpdateSlotImage(GetSelectedSlot().GetGearImage());
-
-        // Gear Skill Name Update
-
-
-        //UpdateSkillDescription(SelectedOwnedSlot().d)
-        // Gear Skill Description Update
-
-
     }
 
     public void UpdateSkillDescription(string desc)
@@ -506,35 +267,14 @@ public class SkillsTabManager : MonoBehaviour
         selectedOwnedSlot = gear;
     }
 
-    public void ClearAllSkillsStats()
-    {
-        /*
-        // Clear all gear stats
-        GameObject gearStatGO = gearStatsUI.gameObject;
-        for (int i = 0; i < gearStatGO.transform.childCount; i++)
-        {
-            Destroy(gearStatGO.transform.GetChild(i).gameObject);
-        }
-        */
-
-        /*
-        GameObject gearDescGO = skillDescUI.gameObject;
-        for (int x = 0; x < gearDescGO.transform.childCount; x++)
-        {
-            Destroy(gearDescGO.transform.GetChild(x).gameObject);
-        }
-        */
-    }
-
-
     public void TriggerStat(string statType, float power)
     {
         // Basic Stats
         if (statType == "HPBONUS")
         {
-            float tempAddedHealth = (power / 100f) * GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth();
-            float newMaxHealth = GameManager.Instance.GetActiveUnitFunctionality().GetUnitMaxHealth() + tempAddedHealth;
-            GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitMaxHealth((int)newMaxHealth, true);
+            float tempAddedHealth = (power / 100f) * GameManager.Instance.GetActiveAlly().GetUnitMaxHealth();
+            float newMaxHealth = GameManager.Instance.GetActiveAlly().GetUnitMaxHealth() + tempAddedHealth;
+            GameManager.Instance.GetActiveAlly().UpdateUnitMaxHealth((int)newMaxHealth, true);
         }
         else if (statType == "DMGBONUS")
         {
@@ -552,27 +292,6 @@ public class SkillsTabManager : MonoBehaviour
         {
             GetActiveUnit().UpdateSpeedIncPerLv((int)power);
         }
-
-
-        /*
-        // Advanced Stats
-        else if (statType == "DMGLINEBONUS")
-        {
-            GetActiveUnit().IncDamageLineBonus();
-        }
-        else if (statType == "HEALINGLINEBONUS")
-        {
-            GetActiveUnit().IncHealingLineBonus();
-        }
-        else if (statType == "COOLDOWNREDUCBONUS")
-        {
-            GetActiveUnit().IncCooldownReducBonus();
-        }
-        else if (statType == "ITEMPROCBONUS")
-        {
-            GetActiveUnit().RerollItemCount();
-        }
-        */
     }
 
     public void ToggleMasteryPagebool (bool toggle)
@@ -598,40 +317,6 @@ public class SkillsTabManager : MonoBehaviour
         statPageCount = 0;
     }
 
-    /*
-    public void ChangeStatPage(bool inc)
-    {     
-        int prevStatCount = statPageCount;
-
-        if (inc)
-            statPageCount++;
-        else
-            statPageCount--;
-        
-        // FORWARD
-        // Moving from base to adv
-        if (prevStatCount == 0 && statPageCount == 1)  // Change from Offense to Defense
-            UpdateStatPage();
-
-        //BACKWARD
-        // Moving from adv to base
-        if (prevStatCount == 0 && statPageCount == -1)
-            UpdateStatPage();
-
-        // RETURNING TO STANDARD
-        if (statPageCount == 0)
-            UpdateStatPage();
-
-        // If looping, go back to original page, resetting
-        if (prevStatCount == 1 && statPageCount == 2 || prevStatCount == -1 && statPageCount == -2)
-        {
-            statPageCount = 0;
-            UpdateStatPage();
-        }
-
-    }
-    */
-
     public void UpdateStatPage()
     {
         //ToggleToMapButton(true);
@@ -654,6 +339,8 @@ public class SkillsTabManager : MonoBehaviour
 
         SetupSkillsTab(unit);
 
+        if (GameManager.Instance.activeRoomAllies.Count == 1)
+            GameManager.Instance.GetActiveAlly().SetPositionAndParent(GameManager.Instance.allySpawnPositions[0]);
     }
 
     // Ensure there is only 1 of each skill, skills added, have 
@@ -714,7 +401,7 @@ public class SkillsTabManager : MonoBehaviour
     public void SetupSkillsTab(UnitFunctionality unit)
     {
         UpdateActiveUnit(unit);
-        
+
         selectedSkillBase = skillBase1;
         UpdateUnspentPointsText(CalculateUnspentSkillPoints());
 
@@ -762,6 +449,12 @@ public class SkillsTabManager : MonoBehaviour
         //statsBase1.UpdateContentSubText(statsBase1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(0).statMaxAmount);
 
         UpdateUnspentPointsText(CalculateUnspentSkillPoints());
+
+        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        {
+            GameManager.Instance.activeRoomAllies[i].ToggleUnitDisplay(true);
+        }
+
     }
 
     public void UpdateLockedSkills()
@@ -795,64 +488,12 @@ public class SkillsTabManager : MonoBehaviour
         if (GetSelectedSkillSlot().GetIsLocked())
             return;
 
-        //int maxAmount = GetActiveSkillBase().maxSkillLevel;
-
-        // if mastery points are maxed already, stop
-        //if (GetSelectedSkillSlot().GetStatPointsAdded() >= maxAmount)
-        //    return;
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
         GetSelectedSkillSlot().UpdateStatPoindsAdded(true, false, 0, false);
-        //GetSelectedSkillSlot().UpdateContentSubText(GetSelectedSkillSlot().GetStatPointsAdded().ToString());
 
-        /*
-        if (GetSelectedSkillSlot().curStatType == UIElement.StatType.SKILLSLOT1)
-        {
-            TriggerStat("HPBONUS", 1.5f);
-        }
-        else if (GetSelectedSkillSlot().curStatType == UIElement.StatType.SKILLSLOT2)
-        {
-            TriggerStat("DMGBONUS", 5f);
-        }
-        if (GetSelectedSkillSlot().curStatType == UIElement.StatType.SKILLSLOT3)
-        {
-            TriggerStat("HEALINGBONUS", 5f);
-        }
-        else if (GetSelectedSkillSlot().curStatType == UIElement.StatType.SKILLSLOT4)
-        {
-            TriggerStat("SPEEDBONUS", 5f);
-        }
-        */
-        //CheckIfStatShouldBeLocked();
-    }
-
-    public void CheckIfStatShouldBeLocked()
-    {
-        
-        // Check if mastery should be locked or not
-        /*
-        statsBase1.CheckIfThreshholdPassed(true);
-        statsBase2.CheckIfThreshholdPassed(true);
-        statsBase3.CheckIfThreshholdPassed(true);
-        statsBase4.CheckIfThreshholdPassed(true);
-        statsBase5.CheckIfThreshholdPassed(true);
-        */
-
-
-        /*
-        // Force L2/R2 and L4/R4 to be unique. only of of each can be used
-        if (statsBase2.GetMasteryPointsAdded() >= 1)
-            masteryR2.UpdateIsLocked(true);
-        else if (masteryR2.GetMasteryPointsAdded() >= 1)
-            statsBase2.UpdateIsLocked(true);
-
-        if (statsBase4.GetMasteryPointsAdded() >= 1)
-            masteryR4.UpdateIsLocked(true);
-        else if (masteryR4.GetMasteryPointsAdded() >= 1)
-            statsBase4.UpdateIsLocked(true);
-        */
     }
 
     public void StatRemovePoint()
@@ -867,66 +508,6 @@ public class SkillsTabManager : MonoBehaviour
             return;
 
         GetSelectedSkillSlot().UpdateStatPoindsAdded(false);
-        //GetSelectedSkillSlot().UpdateContentSubText(GetSelectedSkillSlot().GetStatPointsAdded().ToString() + " / " + maxAmount);
-        
-        /*
-        // Force L2/R2 and L4/R4 to be unique. only of of each can be used
-        if (statsBase2.GetMasteryPointsAdded() != 0)
-        {
-            masteryR2.UpdateIsLocked(true);
-            statsBase2.UpdateIsLocked(false);
-            //masteryL2.CheckIfThreshholdPassed();
-        }
-        else if (masteryR2.GetMasteryPointsAdded() != 0)
-        {
-            statsBase2.UpdateIsLocked(true);
-            masteryR2.UpdateIsLocked(false);
-           // masteryR2.CheckIfThreshholdPassed();
-        }
-
-        if (masteryR2.GetMasteryPointsAdded() != 0)
-        {
-            statsBase2.UpdateIsLocked(true);
-            masteryR2.UpdateIsLocked(false);
-            //masteryR2.CheckIfThreshholdPassed();
-        }
-        else if (statsBase2.GetMasteryPointsAdded() != 0)
-        {
-            masteryR2.UpdateIsLocked(true);
-            statsBase2.UpdateIsLocked(false);
-            //masteryL2.CheckIfThreshholdPassed();
-        }
-
-        if (statsBase4.GetMasteryPointsAdded() != 0)
-        {
-            masteryR4.UpdateIsLocked(true);
-            statsBase4.UpdateIsLocked(false);
-        }
-        else if (masteryR4.GetMasteryPointsAdded() != 0)
-        {
-            statsBase4.UpdateIsLocked(true);
-            masteryR4.UpdateIsLocked(false);
-        }
-
-        if (masteryR4.GetMasteryPointsAdded() != 0)
-        {
-            statsBase4.UpdateIsLocked(true);
-            masteryR4.UpdateIsLocked(false);
-        }
-        else if (statsBase4.GetMasteryPointsAdded() != 0)
-        {
-            masteryR4.UpdateIsLocked(true);
-            statsBase4.UpdateIsLocked(false);
-        }
-
-        statsBase2.CheckIfThreshholdPassed();
-        masteryR2.CheckIfThreshholdPassed();
-        statsBase3.CheckIfThreshholdPassed();
-        masteryR3.CheckIfThreshholdPassed();
-        statsBase4.CheckIfThreshholdPassed(true);
-        masteryR4.CheckIfThreshholdPassed(true);
-
-        */
     }
 
     public void UpdateSelectedSkillBase(ButtonFunctionality statButton = null)
@@ -935,7 +516,7 @@ public class SkillsTabManager : MonoBehaviour
         {
             //if (GameManager.Instance.activeTeam.Count == 1)
             //    return;
-
+            Debug.Log("force selecting skill 1");
             selectedSkillBase = skillBase1;
 
             //if (GetActiveUnit().GetSkillBaseSlot(0) == null)
@@ -945,6 +526,8 @@ public class SkillsTabManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("selecting skill updating base  " + statButton.curMasteryType);
+
             if (statButton.curMasteryType == ButtonFunctionality.MasteryType.Skill1)
             {
                 selectedSkillBase = skillBase1;
@@ -1057,147 +640,29 @@ public class SkillsTabManager : MonoBehaviour
         // Bug todo - 2nd / 3rd ally arent having their gear saved.
 
         if (slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
-        {
             UpdateSelectedBaseSlot(slot);
-
-            //selectedBaseSlot.ResetGearSlot(true, false);
-
-            //OwnedLootInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedSlot());
-        }
         else
         {
-            //GetSelectedBaseSlot().UpdateSlotImage(slot.GetSlotImage());
-            //GetSelectedBaseSlot().UpdateCurSlotType(Slot.SlotType.SKILL);
-
-            //GetSelectedBaseSlot().UpdateSlotImage(slot.skill.skillSprite);
-            //GetSelectedBaseSlot().UpdateSlotName(slot.GetSlotName());
-
-            //
-
             AdjustActiveSkills(GetActiveUnit(), slot.skill, activeSkillBase);
             SetupSkillsTab(GetActiveUnit());
 
-            //UpdateSelectedSkillBase();
-
-
-
-            //Debug.Log(slot.GetSlotImage().name);
-            //UpdateSelectedBaseSlot(slot);
             UpdateSelectedOwnedSlot(slot);
             UpdateSelectedBaseSlot(selectedBaseSlot);
-            // Update UI
-            //UpdateActiveSkillNameText(slot.GetSlotName());
+
             UpdateSkillStatDetails();
 
-            UpdateProgressSlider();
-
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(false, "", false);
-            //OwnedLootInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedSlot());
 
-
-
+            // Toggle main gear selection on
             if (!slot.isEmpty && select)
-            {
-                /*
-                GearPiece gearPiece = new GearPiece();
-
-                if (selectedBaseSlot.GetGearOwnedBy() == Slot.SlotOwnedBy.MAIN)
-                {
-                    if (slot.curGearType == Slot.SlotType.HELMET)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("helmMain", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.CHESTPIECE)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("chestMain", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.LEGGINGS)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("legsMain", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.BOOTS)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("bootsMain", gearPiece);
-                    }
-                }
-                if (selectedBaseSlot.GetGearOwnedBy() == Slot.SlotOwnedBy.SECOND)
-                {
-                    if (slot.curGearType == Slot.SlotType.HELMET)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("helmSecond", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.CHESTPIECE)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("chestSecond", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.LEGGINGS)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("legsSecond", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.BOOTS)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("bootsSecond", gearPiece);
-                    }
-                }
-                if (selectedBaseSlot.GetGearOwnedBy() == Slot.SlotOwnedBy.THIRD)
-                {
-                    if (slot.curGearType == Slot.SlotType.HELMET)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("helmThird", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.CHESTPIECE)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("chestThird", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.LEGGINGS)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("legsThird", gearPiece);
-                    }
-                    else if (slot.curGearType == Slot.SlotType.BOOTS)
-                    {
-                        gearPiece.UpdateGearPiece(slot.GetGearName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetGearImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
-                        UpdateEquippedGearPiece("bootsThird", gearPiece);
-                    }
-                }
-                */
-                // Toggle main gear selection on
                 GetSelectedBaseSlot().ToggleSlotSelection(true);
-
-                // Display inven
-                //EquipItem(slot);
-            }
         }
 
-        // Reference owned item, if the player currently already owns the selected piece of gear.
-        //GearPiece newGearPiece = OwnedGearInven.Instance.GetGearPiece(gear);
-
+        UpdateProgressSlider(slot.skill);
 
         // If gear is NOT empty, put gear in it
         if (!slot.isEmpty)
         {
-            /*
-            // Initialize gear base data
-            gear.UpdateGearImage(newGearPiece.gearIcon);
-            gear.UpdateGearName(newGearPiece.gearName);
-            gear.UpdateGearBonusHealth(newGearPiece.bonusHealth);
-            gear.UpdateGearBonusDamage(newGearPiece.bonusDamage);
-            gear.UpdateGearBonusHealing(newGearPiece.bonusHealing);
-            gear.UpdateGearBonusDefense(newGearPiece.bonusDefense);
-            gear.UpdateGearBonusSpeed(newGearPiece.bonusSpeed);
-
-            */
-
             UpdateSelectedOwnedSlot(slot);
 
             // Update UI
@@ -1208,81 +673,11 @@ public class SkillsTabManager : MonoBehaviour
         // If gear IS empty, dont put gear in it, display it as empty
         else
         {
-            /*
-            if (gear.GetCurGearStatis() != Gear.GearStatis.DEFAULT)
-            {
-                // Initialize gear base data
-                gear.ResetGearSlot(true);
 
-            }
-            else
-            {
-                // Initialize gear base data
-                //gear.ResetGearSlot(true, true);
-            }
-            */
-
-            //ClearAllGearStats();
-            //UpdateGearNameText("");
         }
     }
 
-    /*
-    public void UpdateGearNameText(string name)
-    {
-        gearNameText.UpdateContentText(name);
-    }
-
-    public void UpdateGearStatDetails()
-    {
-        ClearAllGearStats();
-
-        // Gear Stats Update
-        for (int i = 0; i < 5; i++)
-        {
-            GameObject spawnedStat = Instantiate(gearStatGO, gearStatsUI.transform.position, Quaternion.identity);
-            spawnedStat.transform.SetParent(gearStatsUI.transform);
-            spawnedStat.transform.localPosition = Vector2.zero;
-            spawnedStat.transform.localScale = Vector2.one;
-
-            UIElement statUI = spawnedStat.GetComponent<UIElement>();
-
-            // Update gear stat UI
-            if (i == 0)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusHealth().ToString());
-            else if (i == 1)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusDamage().ToString());
-            else if (i == 2)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusHealing().ToString());
-            else if (i == 3)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusDefense().ToString());
-            else if (i == 4)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusSpeed().ToString());
-
-            // Gear Stat Name Update
-            gearNameText.UpdateContentText(GetSelectedGearSlot().GetGearName());
-        }
-
-        // Gear Stat Description Update
-
-
-    }
-    public void UpdateSkillDescription(SkillBase stat = null)
-    {
-        if (stat == null)
-        {
-            skillDesc.UpdateContentText("");
-            skillDesc.UpdateContentSubText("");
-            //skillFillAmount.UpdateContentSubText("");
-            return;
-        }
-
-        skillDesc.UpdateContentText(stat.skillBaseName);
-        skillDesc.UpdateContentSubText(stat.skillBaseDesc);
-        //statFillAmount.UpdateContentSubText(" / " + stat.statMaxAmount.ToString());
-    }
-
-    */
+    
     public void UpdateUnspentPointsText(int count)
     {
         if (count == 0)
@@ -1298,7 +693,6 @@ public class SkillsTabManager : MonoBehaviour
             unspentPointsText.UpdateContentText(count.ToString());
         }
     }
-
 
     public int CalculateUnspentSkillPoints()
     {
@@ -1347,10 +741,6 @@ public class SkillsTabManager : MonoBehaviour
                 UpdateSpentSkillPoints(-1);
         }
 
-        /*
-        if (GetSelectedSkillSlot().GetStatPointsAdded() > GetActiveSkillBase().maxSkillLevel)
-            GetActiveUnit().UpdateSpentSkillPoints(-1);
-        */
 
         UpdateUnspentPointsText(CalculateUnspentSkillPoints());
     }

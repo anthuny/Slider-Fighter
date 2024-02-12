@@ -16,18 +16,18 @@ MonoBehaviour:
   unitValue: 2
   unitSprite: {fileID: 21300000, guid: 34d9e4090ee8996408dba62e1ccdd554, type: 2}
   unitIcon: {fileID: 21300000, guid: c47b9485a3af83645a8c10c0ad652766, type: 3}
-  unitColour: {r: 1, g: 0.99602, b: 0.8726415, a: 1}
+  unitColour: {r: 1, g: 0.9851752, b: 0.5330188, a: 1}
   unitName: Cleric
-  startingSpeed: 18
+  startingSpeed: 15
   startingDefense: 4
   startingPower: 35
   startingHealingPower: 0
   startingMaxHealth: 550
   speedIncPerLv: 1
   powerIncPerLv: 4
-  healingPowerIncPerLv: 2
+  healingPowerIncPerLv: 6
   defenseIncPerLv: 1
-  maxHealthIncPerLv: 50
+  maxHealthIncPerLv: 75
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 129df5a673002e841b7e8ac49594e263, type: 3}
   curSkills:

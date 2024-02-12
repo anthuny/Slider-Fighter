@@ -118,7 +118,7 @@ public class Weapon : MonoBehaviour
 
     public void UpdateWeaponDetails(bool playerMissed = false)
     {
-        hitsRemaining = GameManager.Instance.GetActiveSkill().skillAttackCount - hitsPerformed;
+        hitsRemaining = GameManager.Instance.GetActiveSkill().skillHitAttempts - hitsPerformed;
 
         if (hitsRemaining >= 3)
         {
@@ -164,17 +164,20 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public IEnumerator UpdateWeaponAccumulatedHits(int hits)
+    public IEnumerator UpdateWeaponAccumulatedHits(int hits, bool doExtras = true)
     {
         for (int i = 0; i < hits; i++)
         {
             accumulatedHits++;
             hitsAccumulatedText.UpdateContentText(accumulatedHits.ToString());
 
-            hitsAccumulatedText.AnimateUI();
+            if (doExtras)
+            {
+                hitsAccumulatedText.AnimateUI();
 
-            // Button Click SFX
-            AudioManager.Instance.Play("Button_Click");
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+            }
 
             yield return new WaitForSeconds(accumulatedHitsTimeBetween);
         }
@@ -458,9 +461,9 @@ public class Weapon : MonoBehaviour
             int finalHitCount = 0;
 
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                finalHitCount = hitAccuracy;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput;
             else
-                finalHitCount = hitAccuracy;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput;
 
             // If user missed on first hit, send 1 hit count
             if (hitAccuracy == 0)
@@ -475,7 +478,7 @@ public class Weapon : MonoBehaviour
                 calculatedPower = 0;
             }
 
-            StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, finalHitCount, effectHitAccuracy));
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, finalHitCount, effectHitAccuracy+1));
         }
     }
 

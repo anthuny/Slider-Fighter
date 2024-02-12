@@ -19,15 +19,16 @@ MonoBehaviour:
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
   skillName: WHIRLWIND
-  skillDescr: Target up to
-  skillTabDescr: Target multiple enemies, dealing damage
+  skillDescr: Target 3 base enemies, dealing damage
+  skillTabDescr: Target 3 base enemies, dealing damage
   startingSkillLevel: 0
   curSkillLevel: 0
-  pointsAdded: 1
-  startingSkillPower: 4
-  curSkillPower: 4
+  pointsAdded: 0
+  startingSkillPower: 6
+  curSkillPower: 6
   skillAttackAccMult: 1
-  skillAttackCount: 3
+  skillBaseHitOutput: 3
+  skillHitAttempts: 2
   projectileSpeed: 1
   skillCooldown: 2
   curCooldown: 0
@@ -59,6 +60,9 @@ MonoBehaviour:
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: de68bf11f3ddf4d4482781d4ef21afdc, type: 3}
+  repeatLaunchSFX: 1
+  giveExtraDesc: 1
+  projectileLaunch: {fileID: 0}
   skillHit: {fileID: 8300000, guid: f6869df06c510324290acef8c918416f, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 1

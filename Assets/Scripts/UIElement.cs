@@ -231,22 +231,48 @@ public class UIElement : MonoBehaviour
 
     public void ToggleLockedSkill()
     {
-        //Debug.Log(GetSkillPointThreshhold());
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() < GetSkillPointThreshhold())
+        // In Combat
+        if (GameManager.Instance.playerInCombat)
         {
-            //Debug.Log(toggle);
-            ToggleLockedImage(true);
-            UpdateIsLocked(true);
-            //ToggleLockedImage(toggle);
-            buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = true;
+            //Debug.Log(GetSkillPointThreshhold());
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() < GetSkillPointThreshhold())
+            {
+                //Debug.Log("Unit Level = " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() + " " + GetSkillPointThreshhold());
+                //Debug.Log(toggle);
+                ToggleLockedImage(true);
+                UpdateIsLocked(true);
+                //ToggleLockedImage(toggle);
+                buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = true;
+            }
+            else
+            {
+                //Debug.Log(toggle);
+                ToggleLockedImage(false);
+                UpdateIsLocked(false);
+                //ToggleLockedImage(toggle);
+                buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = false;
+            }
         }
-        else
+        // In skills tab
+        else if (SkillsTabManager.Instance.playerInSkillTab)
         {
-            //Debug.Log(toggle);
-            ToggleLockedImage(false);
-            UpdateIsLocked(false);
-            //ToggleLockedImage(toggle);
-            buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = false;
+            //Debug.Log(GetSkillPointThreshhold());
+            if (GameManager.Instance.GetActiveAlly().GetUnitLevel() < GetSkillPointThreshhold())
+            {
+                //Debug.Log(toggle);
+                ToggleLockedImage(true);
+                UpdateIsLocked(true);
+                //ToggleLockedImage(toggle);
+                buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = true;
+            }
+            else
+            {
+                //Debug.Log(toggle);
+                ToggleLockedImage(false);
+                UpdateIsLocked(false);
+                //ToggleLockedImage(toggle);
+                buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = false;
+            }
         }
     }
 
@@ -542,7 +568,7 @@ public class UIElement : MonoBehaviour
     {
         if (buttonCG == null)
         {
-            Debug.Log(gameObject.name);
+            Debug.Log(gameObject.name  + " error");
         }
 
         if (toggle)

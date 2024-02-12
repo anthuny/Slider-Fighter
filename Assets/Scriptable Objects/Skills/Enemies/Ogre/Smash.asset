@@ -27,7 +27,8 @@ MonoBehaviour:
   startingSkillPower: 6
   curSkillPower: 6
   skillAttackAccMult: 1
-  skillAttackCount: 1
+  skillBaseHitOutput: 1
+  skillHitAttempts: 1
   projectileSpeed: 12
   skillCooldown: 0
   curCooldown: 0
@@ -55,7 +56,13 @@ MonoBehaviour:
   skillPowerIcon: {fileID: 0}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
+  projectileAllowIdle: 0
   projectileAC: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 46f545a55e2047b4ab2d6b9c692c3782, type: 3}
+  repeatLaunchSFX: 1
+  giveExtraDesc: 1
+  projectileLaunch: {fileID: 0}
   skillHit: {fileID: 8300000, guid: fdb49418ee4cfa4438bc20c930710945, type: 3}
+  skillHitAdditional: {fileID: 0}
   originalIndex: 0

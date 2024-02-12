@@ -104,16 +104,54 @@ public class OwnedLootInven : MonoBehaviour
         return ownedLootOpened;
     }
 
-    private void Start()
+    public void MoveGearToOwnedLootTab(Transform trans)
     {
-        //ToggleOwnedGearDisplay(false);
-        ToggleOwnedSlotEquipButton(false);
+        for (int i = 0; i < trans.childCount; i++)
+        {
+            GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+            // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+            go.transform.localPosition = new Vector2(1000, 1000);
+            go.transform.localScale = Vector2.one;
 
+            Slot gear = go.GetComponent<Slot>();
+            ownedGear.Add(gear);
+
+            gear.UpdateLootGearAlpha(false);
+
+            int newIndex = ownedGear.IndexOf(gear);
+
+            if (ownedGear.Count > newIndex)
+                return;
+
+            ownedGear[newIndex].UpdateSlotImage(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearIcon);
+            if (trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearType == "helmet")
+                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotType.HELMET);
+            else if (trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearType == "chestpiece")
+                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+            else if (trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearType == "boots")
+                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+            GearRewards.Instance.IncrementSpawnedGearCount();
+
+            ownedGear[newIndex].UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+            ownedGear[newIndex].UpdateSlotName(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearName);
+            ownedGear[newIndex].UpdateGearBonusHealth(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.bonusHealth);
+            ownedGear[newIndex].UpdateGearBonusDamage(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.bonusDamage);
+            ownedGear[newIndex].UpdateGearBonusHealing(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.bonusHealing);
+            ownedGear[newIndex].UpdateGearBonusDefense(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.bonusDefense);
+            ownedGear[newIndex].UpdateGearBonusSpeed(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.bonusSpeed);
+            ownedGear[newIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
+            ownedGear[newIndex].ToggleEquipButton(false);
+        }
+    }
+
+    public void LoadStartingLoot()
+    {
         for (int i = 0; i < startingGearPieces.Count; i++)
         {
             GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
             // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-            go.transform.localPosition = new Vector2(1000,1000);
+            go.transform.localPosition = new Vector2(1000, 1000);
             go.transform.localScale = Vector2.one;
 
             Slot gear = go.GetComponent<Slot>();
@@ -129,6 +167,9 @@ public class OwnedLootInven : MonoBehaviour
             else if (startingGearPieces[i].gearType == "boots")
                 ownedGear[i].UpdateCurSlotType(Slot.SlotType.BOOTS);
 
+            GearRewards.Instance.IncrementSpawnedGearCount();
+
+            ownedGear[i].UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
             ownedGear[i].UpdateSlotName(startingGearPieces[i].gearName);
             ownedGear[i].UpdateGearBonusHealth(startingGearPieces[i].bonusHealth);
             ownedGear[i].UpdateGearBonusDamage(startingGearPieces[i].bonusDamage);
@@ -173,8 +214,15 @@ public class OwnedLootInven : MonoBehaviour
             //ownedItems[x].UpdateGearStatis(Gear.GearStatis.OWNED);
             ownedItems[x].ToggleEquipButton(false);
             //ownedItems
-            
         }
+    }
+
+    private void Start()
+    {
+        //ToggleOwnedGearDisplay(false);
+        ToggleOwnedSlotEquipButton(false);
+
+
     }
 
     /*
@@ -209,18 +257,21 @@ public class OwnedLootInven : MonoBehaviour
     {
         if (toggle)
         {
-            //Debug.Log("starting 3");
-            ownedLootUI.UpdateAlpha(1);
-
-            //ToggleOwnedGearEquipButton(true);
-        
             if (titleText == "Owned Gear")
                 FillOwnedGearSlots(0);
             else if (titleText == "Owned Items")
                 FillOwnedGearSlots(1);
             else if (titleText == "Ally Skills")
-                FillOwnedGearSlots(2);
-            
+            {
+                if (SkillsTabManager.Instance.activeSkillBase != null)
+                    FillOwnedGearSlots(2);
+                else
+                    return;
+            }
+
+            //Debug.Log("starting 3");
+            ownedLootUI.UpdateAlpha(1);
+
             ownedLootOpened = true;
 
             UpdateOwnedTitleTextUI(titleText);
@@ -232,10 +283,12 @@ public class OwnedLootInven : MonoBehaviour
             ToggleOwnedSlotEquipButton(false);
             ownedLootOpened = false;
 
+            //TeamGearManager.Instance.ToggleGearButtons(false);
+
             if (disableSelections)
             {
                 // Update UI
-                SkillsTabManager.Instance.activeSkillBase = null;
+                //SkillsTabManager.Instance.activeSkillBase = null;
                 SkillsTabManager.Instance.UpdateSkillStatDetails();
                 SkillsTabManager.Instance.UpdateActiveSkillNameText("");
                 SkillsTabManager.Instance.ResetSkillsBaseSelection();
@@ -291,8 +344,10 @@ public class OwnedLootInven : MonoBehaviour
 
             for (int x = 0; x < 4; x++)
             {
-                ownedSkills.Add(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(x));
+                ownedSkills.Add(GameManager.Instance.GetActiveAlly().GetSkill(x));
             }
+
+            TeamGearManager.Instance.ToggleAllSlotsClickable(true, true, false);
 
             // int index = 0;
             for (int i = 0; i < ownedLootSlots.Count; i++)
@@ -393,6 +448,8 @@ public class OwnedLootInven : MonoBehaviour
             int index = 0;
 
             gears.Clear();
+
+            TeamGearManager.Instance.ToggleAllSlotsClickable(true, true);
 
             // int index = 0;
             for (int i = 0; i < ownedGear.Count; i++)

@@ -84,10 +84,5 @@ public class DefeatedEnemies : MonoBehaviour
 
             yield return new WaitForSeconds(timeBetweenEnemiesDisplay);
         }
-        
-        // After all units are displayed, then display gear rewards
-        GearRewards.Instance.ToggleGearRewardsTab(true);
-
-        GearRewards.Instance.FillGearRewardsTable();
     }
 }

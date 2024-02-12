@@ -94,7 +94,7 @@ public class TeamItemsManager : MonoBehaviour
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
+            unitFunc.UpdateUnitPowerHits(gear.GetBonusDamage(), true);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
             unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
@@ -107,7 +107,7 @@ public class TeamItemsManager : MonoBehaviour
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
+            unitFunc.UpdateUnitPowerHits(gear.GetBonusDamage(), true);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
             unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
@@ -120,7 +120,7 @@ public class TeamItemsManager : MonoBehaviour
 
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), true);
+            unitFunc.UpdateUnitPowerHits(gear.GetBonusDamage(), true);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), true);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
             unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
@@ -137,7 +137,7 @@ public class TeamItemsManager : MonoBehaviour
 
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
+            unitFunc.UpdateUnitPowerHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
             unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
@@ -150,7 +150,7 @@ public class TeamItemsManager : MonoBehaviour
 
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
+            unitFunc.UpdateUnitPowerHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
             unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
@@ -163,7 +163,7 @@ public class TeamItemsManager : MonoBehaviour
 
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitDamageHits(gear.GetBonusDamage(), false);
+            unitFunc.UpdateUnitPowerHits(gear.GetBonusDamage(), false);
             unitFunc.UpdateUnitHealingHits(gear.GetBonusHealing(), false);
             unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
             unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);

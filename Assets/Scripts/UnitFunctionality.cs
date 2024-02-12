@@ -48,8 +48,9 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int maxHealth;
     [SerializeField] private int curLevel;
 
-    public int curDamageHits;
+    public int curPowerHits;
     private int curHealingHits;
+    //public int curPowerHits;
     private float curExp;
     private float maxExp;
     [SerializeField] private int curSpeedIncPerLv = 0;
@@ -163,7 +164,27 @@ public class UnitFunctionality : MonoBehaviour
     public int skill2CurCooldown;
     public int skill3CurCooldown;
 
+    public Canvas visualCanvas;
     //public bool unitDouble;
+
+    public void ToggleUnitBottomStats(bool toggle)
+    {
+        ToggleUnitHealthBar(toggle);
+        ToggleUnitAttackBar(toggle);
+        ToggleActionNextBar(toggle);
+        ToggleUnitLevelImage(toggle);
+    }
+
+    public void UpdateSorting(int newSortingVal)
+    {
+        visualCanvas.sortingOrder = newSortingVal;
+    }
+
+    public void ToggleSelectUnitButton(bool toggle)
+    {
+        selectUnitButton.ToggleButton(toggle);
+    }
+
 
     public void ToggleTooltipStats(bool toggle)
     {
@@ -389,7 +410,9 @@ public class UnitFunctionality : MonoBehaviour
     void SetupFlashHit()
     {
         hitFlash = GetComponentInChildren<SimpleFlash>();
-        uiElement = hitFlash.gameObject.GetComponent<UIElement>();
+
+        if (hitFlash != null)
+            uiElement = hitFlash.gameObject.GetComponent<UIElement>();
     }
 
     public SimpleFlash GetHitFlash()
@@ -651,6 +674,13 @@ public class UnitFunctionality : MonoBehaviour
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         // Do unit's turn automatically if its on idle battle
+        if (isDead)
+        {
+            //GameManager.Instance.UpdateTurnOrder();
+            //yield break;
+        }
+
+
         if (GetIdleBattle() && GameManager.Instance.activeRoomAllies.Count >= 1 && !isDead)
         {
             yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
@@ -698,9 +728,9 @@ public class UnitFunctionality : MonoBehaviour
             int skillAttackCount;
 
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                skillAttackCount = GameManager.Instance.GetActiveSkill().skillAttackCount + GetUnitDamageHits();
+                skillAttackCount = GameManager.Instance.GetActiveSkill().GetCalculatedSkillHitAmount() + GetUnitPowerHits();
             else
-                skillAttackCount = GameManager.Instance.GetActiveSkill().skillAttackCount + GetUnitHealingHits();
+                skillAttackCount = GameManager.Instance.GetActiveSkill().GetCalculatedSkillHitAmount() + GetUnitHealingHits();
 
             StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, skillAttackCount, effectCount));
 
@@ -750,42 +780,49 @@ public class UnitFunctionality : MonoBehaviour
         if (activeEffects.Count >= 1)
         {
             if (activeEffects[0] == null)
-                yield return null;
+            {
+                //if (turnStart)
+                    //GameManager.Instance.ContinueTurnOrder();
+
+                //yield break;
+            }
         }
 
         for (int i = 0; i < activeEffects.Count; i++)
         {
-
-            if (parry)
+            if (activeEffects[i] != null)
             {
-                if (activeEffects[i].curEffectName == Effect.EffectName.PARRY)
+                if (parry)
                 {
-                    activeEffects[i].TriggerPowerEffect(this);
-                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
-                    activeEffects[i].ReduceTurnCountText(this);
+                    if (activeEffects[i].curEffectName == Effect.EffectName.PARRY)
+                    {
+                        activeEffects[i].TriggerPowerEffect(this);
+                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                        activeEffects[i].ReduceTurnCountText(this);
+                    }
                 }
-            }
 
-            if (turnStart)
-            {
-                if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
+                if (turnStart)
                 {
-                    activeEffects[i].TriggerPowerEffect(this);
-                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
-                    activeEffects[i].ReduceTurnCountText(this);
+                    if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
+                    {
+                        activeEffects[i].TriggerPowerEffect(this);
+                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                        activeEffects[i].ReduceTurnCountText(this);
 
-                    yield return new WaitForSeconds(.5f);
+                        yield return new WaitForSeconds(.5f);
+                    }
                 }
-            }
-            else
-            {
-                if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
+                else
                 {
-                    activeEffects[i].TriggerPowerEffect(this);
-                    TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
-                    activeEffects[i].ReduceTurnCountText(this);
+                    if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
+                    {
+                        activeEffects[i].TriggerPowerEffect(this);
+                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                        activeEffects[i].ReduceTurnCountText(this);
 
-                    yield return new WaitForSeconds(.5f);
+                        yield return new WaitForSeconds(.5f);
+                    }
                 }
             }
         }
@@ -800,16 +837,22 @@ public class UnitFunctionality : MonoBehaviour
         yield return new WaitForSeconds(.5f);
 
         // Continue turn order system after effects have been depleted from turn start
-        if (turnStart)
+        if (turnStart && !isDead)
             GameManager.Instance.ContinueTurnOrder();
+        //else if (turnStart && isDead)
+            
     }
 
 
-    public IEnumerator UnitEndTurn()
+    public IEnumerator UnitEndTurn(bool waitLong = false)
     {
-        yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
-
+        if (waitLong)
+            yield return new WaitForSeconds(1.25f);
+        else
+            yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
         // End turn
+
+        //Debug.Log("bbb");
         GameManager.Instance.UpdateTurnOrder();
     }
 
@@ -1053,7 +1096,7 @@ public class UnitFunctionality : MonoBehaviour
             int rand = Random.Range(1, 5);
             //Debug.Log(rand);
 
-            Debug.Log(rand);
+            //Debug.Log(rand);
             if (rand == 1)  // Skill 1
             {
                 if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive)
@@ -1119,9 +1162,9 @@ public class UnitFunctionality : MonoBehaviour
                 for (int x = 0; x < effectHitAcc; x++)
                 {
                     // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().curEffectHitChance != 0 && byPassAcc)
+                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc)
                     {
-                        Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
+                        //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
 
                         int rand = Random.Range(1, 101);
                         if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
@@ -1150,7 +1193,7 @@ public class UnitFunctionality : MonoBehaviour
                 GameObject go = null;
 
                 // Determining whether the effect hits, If it fails, stop
-                if (GameManager.Instance.GetActiveSkill().curEffectHitChance != 0 && byPassAcc)
+                if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc)
                 {
                     if (m == 0)
                     {
@@ -1269,17 +1312,26 @@ public class UnitFunctionality : MonoBehaviour
     int healCount = 0;
     int damageCount = 0;
 
-    public void ResetPowerUI()
+    public void ResetPowerUI(bool destroyPower = false)
     {
         damageCount = 0;
         healCount = 0;
         prevPowerUI = null;
+
+        if (destroyPower)
+        {
+            for (int i = 0; i < powerUIParent.childCount; i++)
+            {
+                Destroy(powerUIParent.GetChild(i).gameObject);
+            }
+        }
     }
 
     public IEnumerator SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false)
     {
-        if (GameManager.Instance.GetActiveSkill() == null)
-            yield break;
+        //Debug.Log("power = " + power);
+        //if (GameManager.Instance.GetActiveSkill() == null)
+        //    yield break;
 
 
         // Play Audio
@@ -1501,6 +1553,19 @@ public class UnitFunctionality : MonoBehaviour
             AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().projectileLaunch.name);
     }
 
+    public void ToggleTextAlert(bool toggle)
+    {
+        if (toggle)
+        {
+            statUI.UpdateAlpha(1, false, 0, true);
+        }
+        else
+        {
+            statUI.UpdateAlpha(0, false, 0, true);
+        }
+
+    }
+
     public void ResetDamageHealCount()
     {
         healCount = 0;
@@ -1573,8 +1638,10 @@ public class UnitFunctionality : MonoBehaviour
         isDead = false;
     }
 
-    IEnumerator EnsureUnitIsDead()
+    IEnumerator EnsureUnitIsDead(bool effect = false)
     {
+        //Debug.Log("ensuring health");
+
         // If unit's health is 0 or lower
         if (curHealth <= 0 && !isDead)
         {
@@ -1588,6 +1655,23 @@ public class UnitFunctionality : MonoBehaviour
 
             AudioManager.Instance.Play(deathClip.name);
 
+            if (effect)
+            {
+                int val = 0;
+                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+                {
+                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].curUnitType == UnitType.ENEMY)
+                    {
+                        val++;
+                    }
+                }
+                if (curHealth <= 0 && val != 0)
+                {
+                    //Debug.Log("111");
+                    StartCoroutine(UnitEndTurn(true));  // end unit turn
+                }
+            }
+
             GameManager.Instance.RemoveUnitFromTurnOrder(this);
 
             yield return new WaitForSeconds(1.2f);
@@ -1596,7 +1680,7 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void ReviveUnit()
+    public void ReviveUnit(int acc)
     {
         isDead = false;
 
@@ -1605,14 +1689,15 @@ public class UnitFunctionality : MonoBehaviour
         GameManager.Instance.AddUnitFromTurnOrder(this);
 
         // Play revive SFX
-        AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+        //AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
         AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHitAdditional.name);
 
         animator.SetTrigger("Idle");
 
         // Heal ally
-        float val = (75f / 100f) * GetUnitMaxHealth();
-        SpawnPowerUI(val, false, false, null, false);
+        float valAcc = 10 + (acc * 15);
+        float val = (valAcc / 100f) * GetUnitMaxHealth();
+        StartCoroutine(SpawnPowerUI(val, false, false, null, false));
         UpdateUnitCurHealth((int)val, false, false, false);
     }
 
@@ -1677,12 +1762,12 @@ public class UnitFunctionality : MonoBehaviour
                 ResetPowerUI();
 
                 UpdateUnitCurHealth((int)levelUpHeal, false, false);
-                SpawnPowerUI(levelUpHeal, false, false, null, false);
+                StartCoroutine(SpawnPowerUI(levelUpHeal, false, false, null, false));
 
                 // This isnt working
                 //SpawnPowerUI(levelUpHeal, false, false, null, false);
 
-                UpdateUnitDamageHits(1, true);
+                UpdateUnitPowerHits(1, true);
                 UpdateUnitHealingHits(1, true);
 
                 UpdateUnitLevelImage();
@@ -1785,7 +1870,7 @@ public class UnitFunctionality : MonoBehaviour
         return maxExp;
     }
 
-    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true)
+    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true, bool triggerHitSFX = true, bool effect = false)
     {
         if (isDead)
             return;
@@ -1837,7 +1922,8 @@ public class UnitFunctionality : MonoBehaviour
                        
                         if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
                         {
-                            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                            if (triggerHitSFX)
+                                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
                         }
                         
                         StartCoroutine(PlaySoundDelay(.1f));
@@ -1869,8 +1955,7 @@ public class UnitFunctionality : MonoBehaviour
                 curHealth = 0;
         }
 
-
-        UpdateUnitHealthVisual();
+        UpdateUnitHealthVisual(effect);
     }
 
     IEnumerator PlaySoundDelay(float time, bool damage = true)
@@ -1920,14 +2005,14 @@ public class UnitFunctionality : MonoBehaviour
         UpdateUnitHealthVisual();
     }
 
-    void UpdateUnitHealthVisual()
+    void UpdateUnitHealthVisual(bool effect = false)
     {
         ToggleUnitHealthBar(true);
 
         unitHealthBar.fillAmount = (float)curHealth / (float)maxHealth;
 
         if (CheckIfUnitIsDead())
-            StartCoroutine(EnsureUnitIsDead());
+            StartCoroutine(EnsureUnitIsDead(effect));
     }
 
     public int GetCurAttackCharge()
@@ -1966,25 +2051,25 @@ public class UnitFunctionality : MonoBehaviour
             if (GameManager.Instance.activeRoomAllies.Count == 1)
                 attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomAllies.Count == 2)
-                attackChargeTurnStart *= 4;
+                attackChargeTurnStart *= 5;
             else if (GameManager.Instance.activeRoomAllies.Count == 3)
-                attackChargeTurnStart *= 2;
+                attackChargeTurnStart *= 4;
         }
         // If unit is enemy, give more exp the lower allies there are on team
         else
         {
             if (GameManager.Instance.activeRoomEnemies.Count == 1)
-                attackChargeTurnStart *= 7;
+                attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomEnemies.Count == 2)
                 attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomEnemies.Count == 3)
-                attackChargeTurnStart *= 5;
+                attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomEnemies.Count == 4)
-                attackChargeTurnStart *= 4;
+                attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomEnemies.Count == 5)
-                attackChargeTurnStart *= 3;
+                attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomEnemies.Count == 6)
-                attackChargeTurnStart *= 2;
+                attackChargeTurnStart *= 6;
         }
 
         attackChargeTurnStart /= 3;
@@ -2006,7 +2091,7 @@ public class UnitFunctionality : MonoBehaviour
 
         unitAttackBar.fillAmount = (float)curAttackCharge / 100f;
     }
-    void UpdateUnitAttackBarNextVisual()
+    public void UpdateUnitAttackBarNextVisual()
     {
         //ToggleUnitAttackBar(true);
 
@@ -2179,17 +2264,17 @@ public class UnitFunctionality : MonoBehaviour
         return curDefense;
     }
     
-    public void UpdateUnitDamageHits(int newDmgHits, bool inc = true)
+    public void UpdateUnitPowerHits(int newDmgHits, bool inc = true)
     {
         if (inc)
-            curDamageHits += newDmgHits;
+            curPowerHits += newDmgHits;
         else
-            curDamageHits -= newDmgHits;
+            curPowerHits -= newDmgHits;
     }
 
-    public int GetUnitDamageHits()
+    public int GetUnitPowerHits()
     {
-        return curDamageHits;
+        return curPowerHits;
     }
 
     public void UpdateUnitHealingHits(int newHealHits, bool inc = true)
@@ -2264,8 +2349,10 @@ public class UnitFunctionality : MonoBehaviour
     }
     */
 
-    void ToggleUnitDisplay(bool toggle)
+    public void ToggleUnitDisplay(bool toggle)
     {
+        //Debug.Log("toggling " + toggle);
+
         if (toggle)
             unitVisuals.UpdateAlpha(1);
         else

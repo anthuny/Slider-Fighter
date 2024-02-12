@@ -33,7 +33,8 @@ public class SkillData : ScriptableObject
     [Tooltip("For each of this, each accuracy hit will create x 1 power text appear")]
     public int skillAttackAccMult = 1;
     [Tooltip("The base amount of hit lines a skill will do on (with at least bad or higher accuracy with Attack Bar")]
-    public int skillAttackCount = 0;
+    public int skillBaseHitOutput = 1;
+    public int skillHitAttempts = 1;
     public int projectileSpeed = 1;
     public int skillCooldown;
     public int curCooldown;
@@ -84,6 +85,7 @@ public class SkillData : ScriptableObject
     public RuntimeAnimatorController targetEffectVisualAC;
     public AudioClip skillLaunch;
     public bool repeatLaunchSFX = true;
+    public bool giveExtraDesc = true;
     public AudioClip projectileLaunch;
     public AudioClip skillHit;
     public AudioClip skillHitAdditional;
@@ -101,23 +103,30 @@ public class SkillData : ScriptableObject
 
     public int GetCalculatedSkillPower()
     {
-        float val = upgradeIncPowerCount * 25;
+        float val = upgradeIncPowerCount;
 
         return (int)val;
     }
 
     public int GetCalculatedSkillPowerStat()
     {
-        float val = startingSkillPower + (((25f / 100f) * startingSkillPower) * upgradeIncPowerCount);
+        //float val = startingSkillPower + (((25f / 100f) * startingSkillPower) * upgradeIncPowerCount);
+        float val = startingSkillPower;
         //Debug.Log("float in skilldata is " + val);
 
         curSkillPower = Mathf.RoundToInt(val);
         return Mathf.RoundToInt(val);
     }
 
+    public int GetCalculatedSkillHitAmount()
+    {
+        int val = skillBaseHitOutput + upgradeIncPowerCount;
+        return val;
+    }
+
     public int GetCalculatedSkillEffectStat()
     {
-        float val = startingEffectHitChance + (((15f / 100f) * startingEffectHitChance) * upgradeIncEffectCount);
+        float val = startingEffectHitChance + (upgradeIncEffectCount * 15);
         //Debug.Log("float in skilldata is " + val);
 
         curEffectHitChance = Mathf.RoundToInt(val);

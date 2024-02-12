@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -5.7}
+  m_AnchoredPosition: {x: 0, y: -5.700001}
   m_SizeDelta: {x: 84.39, y: 56.54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3749853549591752442
@@ -60,9 +60,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -851,19 +851,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2343276831451934893}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8076665854013705264}
-        m_TargetAssemblyTypeName: ButtonFunctionality, Assembly-CSharp
-        m_MethodName: SelectUnit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &15862627117551435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,8 +930,8 @@ MonoBehaviour:
   isEnabled: 0
   isLocked: 0
   mainButton: {fileID: 0}
-  mainUIelement: {fileID: 7300516354003223460}
-  isStatButton: 0
+  mainUIelement: {fileID: 1745714568771992814}
+  isStatButton: 1
 --- !u!225 &2066864826607443922
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -970,12 +958,12 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 255
   m_TargetDisplay: 0
 --- !u!114 &391373599517130311
 MonoBehaviour:
@@ -1062,7 +1050,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 0%
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1b03d4fa00e127b4391ec82e6bbe5171, type: 2}
   m_sharedMaterial: {fileID: -6006359576746837634, guid: 1b03d4fa00e127b4391ec82e6bbe5171, type: 2}
@@ -1210,8 +1198,9 @@ GameObject:
   - component: {fileID: 244727063565343060}
   - component: {fileID: 7986881673347805925}
   - component: {fileID: 3271830775511554709}
-  - component: {fileID: 7300516354003223460}
-  - component: {fileID: 1779086236312049891}
+  - component: {fileID: 6567837856668878985}
+  - component: {fileID: 92519828682452795}
+  - component: {fileID: 1745714568771992814}
   m_Layer: 0
   m_Name: Skill Upgrade - Increase Targets Multiple
   m_TagString: Untagged
@@ -1267,7 +1256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
   m_OnCullStateChanged:
@@ -1283,7 +1272,40 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7300516354003223460
+--- !u!223 &6567837856668878985
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6352433407127514740}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 195
+  m_TargetDisplay: 0
+--- !u!225 &92519828682452795
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6352433407127514740}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &1745714568771992814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1327,21 +1349,9 @@ MonoBehaviour:
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
   tooltipStats: {fileID: 8433638122658183972}
-  statText: Increase Skill Max Targets
+  statText: Increase Skill Max Targets by +1
   originalScaleText: 0
   isEnabled: 0
---- !u!225 &1779086236312049891
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6352433407127514740}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!1 &7384882992456320092
 GameObject:
   m_ObjectHideFlags: 0
@@ -1585,6 +1595,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 244727063565343060}
     m_Modifications:
+    - target: {fileID: 4050831211350253290, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050831211350253290, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1615,11 +1633,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 330
+      value: 358
       objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 165
+      value: 178
       objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1651,11 +1669,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10.94
       objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 150
+      value: 188.6
       objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1669,9 +1687,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5900611644299071924, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: isEnabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6494440724678162373, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_Name
       value: Tooltip
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945272860855257100, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945272860855257100, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_fontSize
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945272860855257100, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8119183357713795503, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 347.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 8119183357713795503, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 165.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 8119183357713795503, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 180.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 8119183357713795503, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -91.13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}

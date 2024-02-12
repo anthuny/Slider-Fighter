@@ -18,21 +18,18 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: 369c9c33723a04c488181b4401129132, type: 3}
   unitColour: {r: 1, g: 1, b: 1, a: 1}
   unitName: Ogre
-  startingSpeed: 15
+  startingSpeed: 10
   startingDefense: 5
   startingPower: 25
   startingHealingPower: 1
   startingMaxHealth: 350
   speedIncPerLv: 1
-  powerIncPerLv: 4
+  powerIncPerLv: 2
   healingPowerIncPerLv: 1
   defenseIncPerLv: 2
-  maxHealthIncPerLv: 200
-  startingEnergy: 3
-  startingUnitStartTurnEnergyGain: 2
+  maxHealthIncPerLv: 110
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 0466ba9086c72924887a2160d397deed, type: 3}
-  projectileSprite: {fileID: 21300000, guid: 76072c13e8f104c408568746bd873877, type: 3}
   curSkills:
   - {fileID: 11400000, guid: 0ece016a063e5bd4dbaf5acd12330b43, type: 2}
   - {fileID: 11400000, guid: 8d7a5f633b611624ebfab7e379ed0b4f, type: 2}

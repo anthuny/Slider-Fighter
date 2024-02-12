@@ -18,21 +18,18 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: d4872ca97d36c34459e1927d43a1e97a, type: 3}
   unitColour: {r: 0.6, g: 0.8980393, b: 0.3137255, a: 1}
   unitName: Slime
-  startingSpeed: 12
-  startingDefense: 1
+  startingSpeed: 10
+  startingDefense: 2
   startingPower: 25
   startingHealingPower: 1
   startingMaxHealth: 300
   speedIncPerLv: 1
-  powerIncPerLv: 4
+  powerIncPerLv: 1
   healingPowerIncPerLv: 0.25
   defenseIncPerLv: 1
-  maxHealthIncPerLv: 150
-  startingEnergy: 3
-  startingUnitStartTurnEnergyGain: 2
+  maxHealthIncPerLv: 85
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 1bf1a9c9f88998b48906be4d2431acc9, type: 3}
-  projectileSprite: {fileID: 21300000, guid: 9643bfb5474702d4caedeed7875ae076, type: 3}
   curSkills:
   - {fileID: 11400000, guid: 00b1e19f336e1674a82f75de3538fac2, type: 2}
   - {fileID: 11400000, guid: 977fd1e4fdc117642a74c56e52ad4314, type: 2}

@@ -40,6 +40,8 @@ public class GearRewards : MonoBehaviour
     [Space(3)]
     [SerializeField] private List<GearPiece> allGearPiecesLegendary = new List<GearPiece>();
 
+    public int spawnedGearCount;
+
     private void Awake()
     {
         Instance = this;
@@ -52,21 +54,21 @@ public class GearRewards : MonoBehaviour
         Setup();
     }
 
-    public void ResetRewards()
+    public void ResetRewards(bool toggle)
     {
-        ResetRewardsTable();
+        ResetRewardsTable(toggle);
         rewardsTextUI.UpdateAlpha(0);
         ToggleGearRewardsTab(false);
     }
 
     public void Setup()
     {
-        ResetRewards();
+        ResetRewards(false);
 
         rewardsTextUI.UpdateAlpha(1);
         ToggleGearRewardsTab(true);
 
-        ResetRewardsTable();
+        //ResetRewardsTable();
     }
 
     public void ToggleGearRewardsTab(bool toggle)
@@ -99,8 +101,11 @@ public class GearRewards : MonoBehaviour
         GameManager.Instance.ResetEnemiesKilledCount();
     }
 
-    public void ResetRewardsTable()
+    public void ResetRewardsTable(bool moveGearFromPostGame = true)
     {
+        if (moveGearFromPostGame)
+            OwnedLootInven.Instance.MoveGearToOwnedLootTab(recievedGearParent);
+
         foreach (Transform child in recievedGearParent)
         {
             Destroy(child.gameObject);
@@ -234,6 +239,7 @@ public class GearRewards : MonoBehaviour
                     OwnedLootInven.Instance.AddOwnedGear(slot);
                 }
 
+
                 // Update gear type
                 if (newGear.gearType == "helmet")
                 {
@@ -248,7 +254,10 @@ public class GearRewards : MonoBehaviour
                     slot.UpdateCurSlotType(Slot.SlotType.BOOTS);
                 }
 
+                IncrementSpawnedGearCount();
+
                 // Initialize gear base data
+                slot.UpdateSlotCode(spawnedGearCount);
                 slot.UpdateSlotImage(newGear.gearIcon);
                 slot.UpdateSlotImage(newGear.gearIcon);
                 slot.UpdateSlotName(newGear.gearName);
@@ -257,11 +266,14 @@ public class GearRewards : MonoBehaviour
                 slot.UpdateGearBonusHealing(newGear.bonusHealing);
                 slot.UpdateGearBonusDefense(newGear.bonusDefense);
                 slot.UpdateGearBonusSpeed(newGear.bonusSpeed);
+                slot.UpdateLinkedGearPiece(newGear);
 
                 // Disable owned gear button for unowned loot
                 slot.ToggleOwnedGearButton(false);
                 // Show full visibility of Gear
                 slot.UpdateLootGearAlpha(true);
+
+
             }
         }
 
@@ -269,6 +281,10 @@ public class GearRewards : MonoBehaviour
         //StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
     }
 
+    public void IncrementSpawnedGearCount()
+    {
+        spawnedGearCount++;
+    }
     IEnumerator GiveGold()
     {       
         // Give gold

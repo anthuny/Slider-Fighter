@@ -27,7 +27,8 @@ MonoBehaviour:
   startingSkillPower: 0
   curSkillPower: 0
   skillAttackAccMult: 1
-  skillAttackCount: 0
+  skillBaseHitOutput: 3
+  skillHitAttempts: 1
   projectileSpeed: 0
   skillCooldown: 3
   curCooldown: 0
@@ -46,7 +47,7 @@ MonoBehaviour:
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
-  baseEffectApplyCount: 2
+  baseEffectApplyCount: 3
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
@@ -60,6 +61,7 @@ MonoBehaviour:
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 4bd5087bf0065ed428fb022d3b7658a4, type: 3}
   repeatLaunchSFX: 1
+  giveExtraDesc: 1
   projectileLaunch: {fileID: 0}
   skillHit: {fileID: 0}
   skillHitAdditional: {fileID: 0}

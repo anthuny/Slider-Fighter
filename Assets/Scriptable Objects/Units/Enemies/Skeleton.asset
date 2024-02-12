@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   curUnitType: 1
-  unitValue: 1
+  unitValue: 2
   unitSprite: {fileID: -1239719131, guid: fbe5805802964d7489180c0dedd510b7, type: 3}
   unitIcon: {fileID: 21300000, guid: 79e49d6df08cbb647a21eaea4d88d7b5, type: 3}
   unitColour: {r: 1, g: 1, b: 1, a: 1}
@@ -24,15 +24,12 @@ MonoBehaviour:
   startingHealingPower: 1
   startingMaxHealth: 250
   speedIncPerLv: 1
-  powerIncPerLv: 4
+  powerIncPerLv: 2
   healingPowerIncPerLv: 0.25
   defenseIncPerLv: 1
-  maxHealthIncPerLv: 150
-  startingEnergy: 3
-  startingUnitStartTurnEnergyGain: 2
+  maxHealthIncPerLv: 85
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 331353af287293145ab1b5e34a76a747, type: 3}
-  projectileSprite: {fileID: 21300000, guid: 9643bfb5474702d4caedeed7875ae076, type: 3}
   curSkills:
   - {fileID: 11400000, guid: ef7e34baebbe15c4380a72d7ef6ff189, type: 2}
   - {fileID: 11400000, guid: 35a840c5b49c2194381a1f0a12d398dc, type: 2}
