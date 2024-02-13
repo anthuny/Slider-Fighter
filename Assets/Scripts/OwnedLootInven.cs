@@ -280,6 +280,7 @@ public class OwnedLootInven : MonoBehaviour
         {
             ownedLootUI.UpdateAlpha(0);
 
+            SkillsTabManager.Instance.ToggleSelectedSlotDetailsButton(false);
             ToggleOwnedSlotEquipButton(false);
             ownedLootOpened = false;
 
@@ -416,7 +417,7 @@ public class OwnedLootInven : MonoBehaviour
                             ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusSpeed(ownedSkills[i].GetBonusSpeed());
                             */
                             ownedLootSlots[ownedGearSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
-                            ownedLootSlots[ownedGearSlotIndex].ToggleEquipButton(true);
+                            ownedLootSlots[ownedGearSlotIndex].ToggleEquipButton(false);
                             ownedLootSlots[ownedGearSlotIndex].isEmpty = false;
 
                             ownedLootSlots[ownedGearSlotIndex].skill = ownedSkills[i];
@@ -610,6 +611,14 @@ public class OwnedLootInven : MonoBehaviour
         {
             ownedLootSlots[i].gameObject.GetComponent<UIElement>().ToggleButton(toggle);
             ownedLootSlots[i].gameObject.GetComponent<UIElement>().ToggleButton2(toggle);
+        }
+    }
+
+    public void ResetOwnedSlotEquipButton()
+    {
+        for (int i = 0; i < ownedLootSlots.Count; i++)
+        {
+            ownedLootSlots[i].ToggleEquipButton(false);
         }
     }
 }

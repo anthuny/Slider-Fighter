@@ -352,53 +352,64 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
     }
 
+    // Owned slot select main
     public void ButtonSelectGear()
     {
-        if (OwnedLootInven.Instance.ownedLootOpened)
-            return;
-
-        // If owned gear tab is opened, do not allow selecting a new gear
-        if (slot != null)
+        if (TeamGearManager.Instance.playerInGearTab)
         {
-            // Do not allow selection for base gear slots that already have gear in it
-            if (!slot.isEmpty && OwnedLootInven.Instance.GetOwnedLootOpened())
-                return;
+            //if (OwnedLootInven.Instance.ownedLootOpened)
+                //return;
 
-            if (OwnedLootInven.Instance.GetOwnedLootOpened() && slot.GetCurGearStatis() == Slot.SlotStatis.UNOWNED)
-                return;
+            // If owned gear tab is opened, do not allow selecting a new gear
+            if (slot != null)
+            {
+                // If player selects a gear in the rewards for post game battle screen, stop
+                if (slot.GetCurGearStatis() == Slot.SlotStatis.REWARD)
+                    return;
+            }
 
-            // If player selects an owned gear piece (todo: need to make this functional
-            //if (OwnedGearInven.Instance.GetOwnedGearOpened() && gear.GetCurGearStatis() == Gear.GearStatis.OWNED)
-            //    return;
-
-            // If player selects a gear in the rewards for post game battle screen, stop
-            if (slot.GetCurGearStatis() == Slot.SlotStatis.REWARD)
+            // If the BG is selected
+            if (curMasteryType == MasteryType.BG)
+            {
+                OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
                 return;
+            }
+
+            OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
+
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            if (slot != null)
+                TeamGearManager.Instance.GearSelection(slot, false);
         }
-
-        // If the BG is selected
-        if (curMasteryType == MasteryType.BG)
+        else if (SkillsTabManager.Instance.playerInSkillTab)
         {
-            OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
-            return;
-        }
+            // If owned gear tab is opened, do not allow selecting a new gear
+            if (slot != null)
+            {
+                // If player selects a gear in the rewards for post game battle screen, stop
+                if (slot.GetCurGearStatis() == Slot.SlotStatis.REWARD)
+                    return;
+            }
 
-        OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
+            // If the BG is selected
+            if (curMasteryType == MasteryType.BG)
+            {
+                OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
+                return;
+            }
 
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+            OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
 
-        if (slot != null)
-            TeamGearManager.Instance.GearSelection(slot);
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
 
-        // Display inven
-        if (slot.isEmpty && slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
-        {
-            TeamGearManager.Instance.ToggleAllSlotsClickable(true, true, true, true);
-
-            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
-            //OwnedGearInven.Instance.ToggleOwnedGearEquipButton(true);
-
+            if (slot != null)
+            {
+                if (!slot.isEmpty)
+                    SkillsTabManager.Instance.SkillSelection(slot, false);
+            }
         }
     }
 
@@ -428,9 +439,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 Debug.Log("ccc");
                 SkillsTabManager.Instance.UpdateSelectedSkillBase(SkillsTabManager.Instance.selectedSkillBase.buttonCG.GetComponent<ButtonFunctionality>());
 
-                SkillsTabManager.Instance.SkillSelection(slot);
 
 
+                SkillsTabManager.Instance.SkillSelection(slot, true);
 
                 //ButtonSlotDetails(false);
 
@@ -441,7 +452,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
                 //if (SkillsTabManager.Instance.selectedSkillBase.curStatType = UIElement.StatType.SKILLSLOT1)
 
-                
+
                 SkillsTabManager.Instance.UpdateSkillStatDetails();
             }
         }
@@ -474,6 +485,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             TeamGearManager.Instance.ToggleAllSlotsClickable(false, true, false, false);
 
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false, "", true);
+
+        SkillsTabManager.Instance.UpdateSelectedOwnedSlot(null);
+        SkillsTabManager.Instance.UpdateSkillStatDetailsSpecific(SkillsTabManager.Instance.GetActiveSkillBase());
     }
 
     public void GearUnEquip()
@@ -751,12 +765,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void MasteryChangeUnit()
     {
-
-
-        //TeamSetup.Instance.ResetStatPageCount();
-
-        //TeamSetup.Instance.GetActiveUnit().UpdateLastOpenedMastery(TeamSetup.Instance.activeStatType);
-        Debug.Log("Sssssssssssss");
         //if (GameManager.Instance.activeTeam.Count != 1)
         GameManager.Instance.SkillsTabChangeAlly(true, false, true, true);
 

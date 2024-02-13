@@ -172,11 +172,6 @@ public class SkillsTabManager : MonoBehaviour
         }
     }
 
-    public void EquipSkill(Slot skill)
-    {
-        OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
-    }
-
     public void UpdateSkillUpgradesText()
     {
         selectedSkillBase.skillUpgradesUI.UpdateContentText(activeSkillBase.upgradeIncTargetCount.ToString());
@@ -251,6 +246,25 @@ public class SkillsTabManager : MonoBehaviour
             ClearSkillStatsDisplay();
         }
     }
+
+    public void UpdateSkillStatDetailsSpecific(SkillData skill)
+    {
+        if (skill != null)
+        {
+            //Debug.Log(activeSkillBase);
+            UpdateActiveSkillNameText(skill.skillName);
+            UpdateSkillDescription(skill.skillTabDescr);
+            UpdateSkillStatsDisplay(skill.GetCalculatedSkillPowerStat(), skill.skillHitAttempts, skill.skillBaseHitOutput + skill.upgradeIncPowerCount, skill.skillCooldown, skill.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(skill.GetCalculatedSkillEffectStat()));
+        }
+        else
+        {
+            //Debug.Log("active skill base missing");
+            UpdateActiveSkillNameText("");
+            UpdateSkillDescription("");
+            ClearSkillStatsDisplay();
+        }
+    }
+
 
     public void UpdateSkillDescription(string desc)
     {
@@ -402,7 +416,7 @@ public class SkillsTabManager : MonoBehaviour
     {
         UpdateActiveUnit(unit);
 
-        selectedSkillBase = skillBase1;
+        //selectedSkillBase = skillBase1;
         UpdateUnspentPointsText(CalculateUnspentSkillPoints());
 
         UpdateUnitLevelText(GetActiveUnit().GetUnitLevel().ToString());
@@ -416,7 +430,7 @@ public class SkillsTabManager : MonoBehaviour
         //ToggleSkillBaseSelection(skillBase1, true);
 
         UpdateSkillStatDetails();
-
+        
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
         skillBase1.UpdateContentImage(unit.GetSkill(0).skillSprite);
@@ -606,6 +620,7 @@ public class SkillsTabManager : MonoBehaviour
 
     public void UpdateSelectedBaseSlot(Slot slot)
     {
+        Debug.Log("setting slot " + slot.GetSlotName());
         ResetSkillsBaseSelection();
 
         selectedBaseSlot = slot;
@@ -614,8 +629,20 @@ public class SkillsTabManager : MonoBehaviour
 
         slot.ToggleSlotSelection(true);
 
-        slot.GetComponent<UIElement>().skillUpgradesUI.UpdateAlpha(1);
+        if (slot.GetComponent<UIElement>().skillUpgradesUI != null)
+            slot.GetComponent<UIElement>().skillUpgradesUI.UpdateAlpha(1);
 
+    }
+
+    public void ToggleSelectedSlotDetailsButton(bool toggle = true)
+    {
+        skillBase1.slot.ToggleEquipButton(false);
+        skillBase2.slot.ToggleEquipButton(false);
+        skillBase3.slot.ToggleEquipButton(false);
+        skillBase4.slot.ToggleEquipButton(false);
+
+        if (selectedBaseSlot != null)
+            selectedBaseSlot.ToggleEquipButton(toggle);
     }
 
     void ResetBaseSkillUpgradesDisplay()
@@ -635,49 +662,50 @@ public class SkillsTabManager : MonoBehaviour
 
         // Enable selected gear slot border
         slot.ToggleSlotSelection(true);
-        //OwnedLootInven.Instance.FillOwnedGearSlots();
 
-        // Bug todo - 2nd / 3rd ally arent having their gear saved.
-
-        if (slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
-            UpdateSelectedBaseSlot(slot);
-        else
-        {
-            AdjustActiveSkills(GetActiveUnit(), slot.skill, activeSkillBase);
-            SetupSkillsTab(GetActiveUnit());
-
-            UpdateSelectedOwnedSlot(slot);
-            UpdateSelectedBaseSlot(selectedBaseSlot);
-
-            UpdateSkillStatDetails();
-
-            OwnedLootInven.Instance.ToggleOwnedGearDisplay(false, "", false);
-
-            // Toggle main gear selection on
-            if (!slot.isEmpty && select)
-                GetSelectedBaseSlot().ToggleSlotSelection(true);
-        }
+        ToggleSelectedSlotDetailsButton(true);
 
         UpdateProgressSlider(slot.skill);
-
-        // If gear is NOT empty, put gear in it
-        if (!slot.isEmpty)
+        UpdateSkillStatDetails();
+        if (slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
+        {
+            UpdateSelectedBaseSlot(slot);
+            AdjustActiveSkills(GetActiveUnit(), slot.skill, activeSkillBase);
+            UpdateSkillStatDetails();
+        }
+        else
         {
             UpdateSelectedOwnedSlot(slot);
 
-            // Update UI
-            UpdateSkillStatDetails();
+            if (select)
+            {
+                UpdateSelectedBaseSlot(selectedBaseSlot);
+                //UpdateSelectedBaseSlot(slot);
 
-        }
+                AdjustActiveSkills(GetActiveUnit(), slot.skill, activeSkillBase);
+                SetupSkillsTab(GetActiveUnit());
+                UpdateSkillStatDetails();
+            }
+            else
+            {
+                OwnedLootInven.Instance.ResetOwnedSlotEquipButton();
+                OwnedLootInven.Instance.ownedLootSlots[OwnedLootInven.Instance.ownedLootSlots.IndexOf(slot)].ToggleEquipButton(true);
+                UpdateSkillStatDetailsSpecific(slot.skill);
+            }
 
-        // If gear IS empty, dont put gear in it, display it as empty
-        else
-        {
 
+            //if (select)
+            //OwnedLootInven.Instance.ToggleOwnedGearDisplay(false, "", false);
+
+            // Toggle main gear selection on
+            if (!slot.isEmpty)
+            {
+                UpdateSelectedOwnedSlot(slot);
+                GetSelectedSlot().ToggleSlotSelection(true);
+            }
         }
     }
 
-    
     public void UpdateUnspentPointsText(int count)
     {
         if (count == 0)
@@ -685,11 +713,13 @@ public class SkillsTabManager : MonoBehaviour
             unspentPointsText.UpdateContentText("");
 
             // Disable add point buttons and visuals
-            selectedSkillBase.gameObject.GetComponent<Slot>().ToggleSkillUpgradeButtons(false);
+            if (selectedSkillBase != null)
+                selectedSkillBase.gameObject.GetComponent<Slot>().ToggleSkillUpgradeButtons(false);
         }
         else
         {
-            selectedSkillBase.gameObject.GetComponent<Slot>().ToggleSkillUpgradeButtons(true);
+            if (selectedSkillBase != null)
+                selectedSkillBase.gameObject.GetComponent<Slot>().ToggleSkillUpgradeButtons(true);
             unspentPointsText.UpdateContentText(count.ToString());
         }
     }

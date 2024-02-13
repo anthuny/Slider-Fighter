@@ -1091,24 +1091,28 @@ public class TeamGearManager : MonoBehaviour
         }
     }
 
-    public void GearSelection(Slot gear, bool select = true)
+    public void GearSelection(Slot slot, bool select = false)
     {
         // Disable all gear selection border
         ResetAllBaseGearSelections();
 
         // Enable selected gear slot border
-        gear.ToggleSlotSelection(true);
+        slot.ToggleSlotSelection(true);
         //OwnedGearInven.Instance.FillOwnedGearSlots();
 
         // Bug todo - 2nd / 3rd ally arent having their gear saved.
 
-        if (gear.curSlotStatis == Slot.SlotStatis.DEFAULT)
+        if (slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
         {
-            UpdateSelectedBaseGearSlot(gear);
+            UpdateSelectedBaseGearSlot(slot);
 
-            UpdateSelectedGearSlot(gear);
+            UpdateSelectedGearSlot(slot);
 
             OwnedLootInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedBaseGearSlot());
+
+            // Toggle main gear selection on
+            GetSelectedBaseGearSlot().ToggleSlotSelection(true);
+            GetSelectedGearSlot().ToggleSlotSelection(true);
         }
         else
         {
@@ -1118,73 +1122,75 @@ public class TeamGearManager : MonoBehaviour
 
 
             }
-            UpdateSelectedGearSlot(gear);
+            UpdateSelectedGearSlot(slot);
             OwnedLootInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedGearSlot());
+            SkillsTabManager.Instance.UpdateSelectedOwnedSlot(slot);
 
-            if (!gear.isEmpty && select)
+            GetSelectedGearSlot().ToggleSlotSelection(true);
+            if (!slot.isEmpty && select)
             {
                 GearPiece gearPiece = new GearPiece();
 
                 if (GetSelectedBaseGearSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.MAIN)
                 {
-                    if (gear.curGearType == Slot.SlotType.HELMET)
+                    if (slot.curGearType == Slot.SlotType.HELMET)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("helmMain", gearPiece);
                     }
-                    else if (gear.curGearType == Slot.SlotType.CHESTPIECE)
+                    else if (slot.curGearType == Slot.SlotType.CHESTPIECE)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("chestMain", gearPiece);
                     }
-                    else if (gear.curGearType == Slot.SlotType.BOOTS)
+                    else if (slot.curGearType == Slot.SlotType.BOOTS)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("bootsMain", gearPiece);
                     }
                 }
                 if (GetSelectedBaseGearSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.SECOND)
                 {
-                    if (gear.curGearType == Slot.SlotType.HELMET)
+                    if (slot.curGearType == Slot.SlotType.HELMET)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("helmSecond", gearPiece);
                     }
-                    else if (gear.curGearType == Slot.SlotType.CHESTPIECE)
+                    else if (slot.curGearType == Slot.SlotType.CHESTPIECE)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("chestSecond", gearPiece);
                     }
-                    else if (gear.curGearType == Slot.SlotType.BOOTS)
+                    else if (slot.curGearType == Slot.SlotType.BOOTS)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("bootsSecond", gearPiece);
                     }
                 }
                 if (GetSelectedBaseGearSlot().GetGearOwnedBy() == Slot.SlotOwnedBy.THIRD)
                 {
-                    if (gear.curGearType == Slot.SlotType.HELMET)
+                    if (slot.curGearType == Slot.SlotType.HELMET)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("helmThird", gearPiece);
                     }
-                    else if (gear.curGearType == Slot.SlotType.CHESTPIECE)
+                    else if (slot.curGearType == Slot.SlotType.CHESTPIECE)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("chestThird", gearPiece);
                     }
-                    else if (gear.curGearType == Slot.SlotType.BOOTS)
+                    else if (slot.curGearType == Slot.SlotType.BOOTS)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
+                        gearPiece.UpdateGearPiece(slot.GetSlotName(), slot.GetCurGearType().ToString(), slot.GetRarity().ToString(), slot.GetSlotImage(), slot.GetBonusHealth(), slot.GetBonusDamage(), slot.GetBonusHealing(), slot.GetBonusDefense(), slot.GetBonusSpeed());
                         UpdateEquippedGearPiece("bootsThird", gearPiece);
                     }
                 }
 
-                // Toggle main gear selection on
-                GetSelectedBaseGearSlot().ToggleSlotSelection(true);
+
 
                 // Display inven
-                EquipGear(gear);
+                if (select)
+                    EquipGear(slot);
             }
         }
 
@@ -1193,7 +1199,7 @@ public class TeamGearManager : MonoBehaviour
 
 
         // If gear is NOT empty, put gear in it
-        if (!gear.isEmpty)
+        if (!slot.isEmpty)
         {
             /*
             // Initialize gear base data
@@ -1208,7 +1214,7 @@ public class TeamGearManager : MonoBehaviour
             */
             // Update UI
             UpdateGearStatDetails();
-            UpdateGearNameText(gear.GetSlotName());
+            UpdateGearNameText(slot.GetSlotName());
         }
 
         // If gear IS empty, dont put gear in it, display it as empty

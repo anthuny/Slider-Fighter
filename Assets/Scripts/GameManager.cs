@@ -743,6 +743,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 UnitFunctionality unit = activeRoomAllies[0];
                 activeRoomAllies.RemoveAt(0);
                 activeRoomAllies.Add(unit);
+
+                SkillsTabManager.Instance.ToggleSelectedSlotDetailsButton(false);
                 //Debug.Log("asdasd");
             }
 
