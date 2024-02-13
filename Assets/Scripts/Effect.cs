@@ -183,7 +183,7 @@ public class Effect : MonoBehaviour
         {
             // healing recieved is halved while on
             targetUnit.ToggleUnitPoisoned(true);
-            targetUnit.UpdateUnitHealingRecieved(.5f);
+            targetUnit.UpdateUnitHealingRecieved(.8f);
 
         }
         else if (curEffectName == EffectName.POWERUP)

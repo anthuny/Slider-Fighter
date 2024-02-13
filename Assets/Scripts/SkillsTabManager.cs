@@ -412,12 +412,13 @@ public class SkillsTabManager : MonoBehaviour
         UpdateStatPage();
     }
 
-    public void SetupSkillsTab(UnitFunctionality unit)
+    public void SetupSkillsTab(UnitFunctionality unit, bool updateSkillUpgrades = true)
     {
         UpdateActiveUnit(unit);
 
         //selectedSkillBase = skillBase1;
-        UpdateUnspentPointsText(CalculateUnspentSkillPoints());
+        if (updateSkillUpgrades)
+            UpdateUnspentPointsText(CalculateUnspentSkillPoints());
 
         UpdateUnitLevelText(GetActiveUnit().GetUnitLevel().ToString());
 
@@ -462,7 +463,8 @@ public class SkillsTabManager : MonoBehaviour
         //ToggleSkillBaseSelection(skillBase1, true);
         //statsBase1.UpdateContentSubText(statsBase1.GetStatPointsAdded().ToString() + " / " + unit.GetCurrentStat(0).statMaxAmount);
 
-        UpdateUnspentPointsText(CalculateUnspentSkillPoints());
+        if (updateSkillUpgrades)
+            UpdateUnspentPointsText(CalculateUnspentSkillPoints());
 
         for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
         {
@@ -636,6 +638,8 @@ public class SkillsTabManager : MonoBehaviour
 
     public void ToggleSelectedSlotDetailsButton(bool toggle = true)
     {
+        Debug.Log("Toggling sign " + toggle);
+
         skillBase1.slot.ToggleEquipButton(false);
         skillBase2.slot.ToggleEquipButton(false);
         skillBase3.slot.ToggleEquipButton(false);
@@ -663,7 +667,7 @@ public class SkillsTabManager : MonoBehaviour
         // Enable selected gear slot border
         slot.ToggleSlotSelection(true);
 
-        ToggleSelectedSlotDetailsButton(true);
+
 
         UpdateProgressSlider(slot.skill);
         UpdateSkillStatDetails();
@@ -683,7 +687,7 @@ public class SkillsTabManager : MonoBehaviour
                 //UpdateSelectedBaseSlot(slot);
 
                 AdjustActiveSkills(GetActiveUnit(), slot.skill, activeSkillBase);
-                SetupSkillsTab(GetActiveUnit());
+                SetupSkillsTab(GetActiveUnit(), false);
                 UpdateSkillStatDetails();
             }
             else
@@ -704,6 +708,8 @@ public class SkillsTabManager : MonoBehaviour
                 GetSelectedSlot().ToggleSlotSelection(true);
             }
         }
+
+        ToggleSelectedSlotDetailsButton(true);
     }
 
     public void UpdateUnspentPointsText(int count)

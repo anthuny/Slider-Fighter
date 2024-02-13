@@ -24,14 +24,14 @@ MonoBehaviour:
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
-  startingSkillPower: 30
-  curSkillPower: 30
+  startingSkillPower: 45
+  curSkillPower: 45
   skillAttackAccMult: 1
   skillBaseHitOutput: 2
   skillHitAttempts: 1
   projectileSpeed: 9
   skillCooldown: 2
-  curCooldown: 0
+  curCooldown: 1
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0

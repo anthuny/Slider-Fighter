@@ -1127,7 +1127,14 @@ public class TeamGearManager : MonoBehaviour
             SkillsTabManager.Instance.UpdateSelectedOwnedSlot(slot);
 
             GetSelectedGearSlot().ToggleSlotSelection(true);
-            if (!slot.isEmpty && select)
+
+            if (!select)
+            {
+                OwnedLootInven.Instance.ResetOwnedSlotEquipButton();
+                OwnedLootInven.Instance.ownedLootSlots[OwnedLootInven.Instance.ownedLootSlots.IndexOf(slot)].ToggleEquipButton(true);
+            }
+
+            if (select)
             {
                 GearPiece gearPiece = new GearPiece();
 
@@ -1199,20 +1206,8 @@ public class TeamGearManager : MonoBehaviour
 
 
         // If gear is NOT empty, put gear in it
-        if (!slot.isEmpty)
+        if (!slot.isEmpty && !select)
         {
-            /*
-            // Initialize gear base data
-            gear.UpdateGearImage(newGearPiece.gearIcon);
-            gear.UpdateGearName(newGearPiece.gearName);
-            gear.UpdateGearBonusHealth(newGearPiece.bonusHealth);
-            gear.UpdateGearBonusDamage(newGearPiece.bonusDamage);
-            gear.UpdateGearBonusHealing(newGearPiece.bonusHealing);
-            gear.UpdateGearBonusDefense(newGearPiece.bonusDefense);
-            gear.UpdateGearBonusSpeed(newGearPiece.bonusSpeed);
-
-            */
-            // Update UI
             UpdateGearStatDetails();
             UpdateGearNameText(slot.GetSlotName());
         }
@@ -1220,20 +1215,6 @@ public class TeamGearManager : MonoBehaviour
         // If gear IS empty, dont put gear in it, display it as empty
         else
         {
-            /*
-            if (gear.GetCurGearStatis() != Gear.GearStatis.DEFAULT)
-            {
-                // Initialize gear base data
-                gear.ResetGearSlot(true);
-
-            }
-            else
-            {
-                // Initialize gear base data
-                //gear.ResetGearSlot(true, true);
-            }
-            */
-
             ClearAllGearStats();
             UpdateGearNameText("");
         }

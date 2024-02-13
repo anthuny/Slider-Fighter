@@ -334,6 +334,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (mainButton.isLocked)
                 return;
         }
+
+        AudioManager.Instance.Play("Button_Click");
+
         if (SkillsTabManager.Instance.playerInSkillTab)
         {
             //SkillSlotSelection();
@@ -377,11 +380,14 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
             OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
 
-            // Button Click SFX
-            AudioManager.Instance.Play("Button_Click");
-
             if (slot != null)
                 TeamGearManager.Instance.GearSelection(slot, false);
+
+            if (slot.isEmpty)
+                ButtonSlotDetails();
+            // Button Click SFX
+            else
+                AudioManager.Instance.Play("Button_Click");
         }
         else if (SkillsTabManager.Instance.playerInSkillTab)
         {
@@ -417,29 +423,23 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public void EquipGear()
     {
         // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
-
+        //AudioManager.Instance.Play("Button_Click");
 
         if (slot != null)
         {
             if (TeamGearManager.Instance.playerInGearTab)
             {
+                AudioManager.Instance.Play("Button_Click");
+
                 TeamGearManager.Instance.UnequipGear();
 
-                TeamGearManager.Instance.GearSelection(slot);
+                TeamGearManager.Instance.GearSelection(slot, true);
+                SkillsTabManager.Instance.UpdateSkillStatDetails();
             }
             else if (SkillsTabManager.Instance.playerInSkillTab)
             {
-                //SkillsTabManager.Instance.UnequipSkill();
-
-
-
-                //SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
-
-                Debug.Log("ccc");
+                //Debug.Log("ccc");
                 SkillsTabManager.Instance.UpdateSelectedSkillBase(SkillsTabManager.Instance.selectedSkillBase.buttonCG.GetComponent<ButtonFunctionality>());
-
-
 
                 SkillsTabManager.Instance.SkillSelection(slot, true);
 
@@ -447,11 +447,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
                 //SkillsTabManager.Instance.UpdateSkillStatDetails();
                 SkillsTabManager.Instance.selectedSkillBase.buttonCG.GetComponent<ButtonFunctionality>().SkillSlotSelection();
-
-                // doing this doesnt work get rid of if statement figre outa dif way 
-
-                //if (SkillsTabManager.Instance.selectedSkillBase.curStatType = UIElement.StatType.SKILLSLOT1)
-
 
                 SkillsTabManager.Instance.UpdateSkillStatDetails();
             }
@@ -488,6 +483,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         SkillsTabManager.Instance.UpdateSelectedOwnedSlot(null);
         SkillsTabManager.Instance.UpdateSkillStatDetailsSpecific(SkillsTabManager.Instance.GetActiveSkillBase());
+
+        TeamGearManager.Instance.UpdateGearNameText("");
+        TeamGearManager.Instance.ClearAllGearStats();
     }
 
     public void GearUnEquip()
@@ -550,7 +548,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             //SkillsTabManager.Instance.skillBase4.UpdateContentSubText(SkillsTabManager.Instance.skillBase4.GetStatPointsAdded().ToString());
         }
 
-        Debug.Log("bbb");
+        //Debug.Log("bbb");
         SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
 
         if (slot != null)
@@ -559,7 +557,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
 
 
-        SkillsTabManager.Instance.UpdateUnspentPointsText(SkillsTabManager.Instance.CalculateUnspentSkillPoints());
+        if (!OwnedLootInven.Instance.ownedLootOpened)
+            SkillsTabManager.Instance.UpdateUnspentPointsText(SkillsTabManager.Instance.CalculateUnspentSkillPoints());
 
 
         //OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Ally Skills");

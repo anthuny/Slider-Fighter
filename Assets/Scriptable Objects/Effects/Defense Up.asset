@@ -16,8 +16,8 @@ MonoBehaviour:
   curEffectType: 1
   curEffectName: 18
   effectName: DEFENSE UP
-  effectDesc: Increase Defense by 25%
+  effectDesc: Increase Defense by 20%
   effectIcon: {fileID: 21300000, guid: 268387cb6f194354d9ea80c476664fcd, type: 3}
-  powerPercent: 25
+  powerPercent: 20
   powerAmp: 0
   titleTextColour: {r: 0.4009434, g: 0.5219066, b: 1, a: 1}

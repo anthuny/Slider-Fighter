@@ -1481,7 +1481,10 @@ public class UnitFunctionality : MonoBehaviour
 
             int finalPower = (int)power;
             float finalPower2 = finalPower;
-            finalPower2 *= curHealingRecieved;
+
+            if (effect != null)
+                finalPower2 *= curHealingRecieved;
+
             int finalPower3 = (int)finalPower2;
             powerText.UpdatePowerText(finalPower3.ToString());   // Update Power Text
         }

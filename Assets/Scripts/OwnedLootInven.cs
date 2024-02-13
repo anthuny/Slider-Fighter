@@ -593,6 +593,9 @@ public class OwnedLootInven : MonoBehaviour
         // Make all empty owned gear slots display nothing 
         for (int x = 0; x < ownedLootSlots.Count; x++)
         {
+            //Debug.Log("setting empty");
+            ownedLootSlots[x].ToggleEquipButton(false);
+
             if (ownedLootSlots[x].isEmpty)
             {
                 //Debug.Log("setting empty");
