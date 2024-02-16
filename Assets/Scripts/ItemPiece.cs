@@ -16,6 +16,7 @@ public class ItemPiece : ScriptableObject
     public int effectAddedTurnLength = 1;
 
     public int itemPower;
+    public int threshHoldAmount;
 
     public bool isBaseHealing;
     public bool isLifestealing;
@@ -42,4 +43,21 @@ public class ItemPiece : ScriptableObject
     public int power;
     public int procChance;
     public RuntimeAnimatorController ac;
+    public int maxUsesPerCombat = 5;
+
+    public void UpdateItemPiece(string newName, string itemRarity, Sprite itemIcon)
+    {
+        this.itemName = newName;
+        //this.gearType = gearType;
+        if (itemRarity == "common")
+            curRarity = Rarity.COMMON;
+        else if (itemRarity == "rare")
+            curRarity = Rarity.RARE;
+        else if (itemRarity == "epic")
+            curRarity = Rarity.EPIC;
+        else if (itemRarity == "legendary")
+            curRarity = Rarity.LEGENDARY;
+
+        this.itemSprite = itemIcon;
+    }
 }

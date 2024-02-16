@@ -13,7 +13,7 @@ public class OwnedLootInven : MonoBehaviour
     public bool ownedLootOpened = false;
 
     public List<Slot> ownedGear = new List<Slot>();
-    public List<Item> ownedItems = new List<Item>();
+    public List<Slot> ownedItems = new List<Slot>();
     public List<SkillData> ownedSkills = new List<SkillData>();
     public List<GearPiece> ownedGearPieces = new List<GearPiece>();
     public List<ItemPiece> ownedItemPieces = new List<ItemPiece>();
@@ -99,22 +99,95 @@ public class OwnedLootInven : MonoBehaviour
         wornGearThirdAlly.Clear();
     }
 
+
+
+    public void AddWornItemAllyMain(Slot item)
+    {
+        wornItemsMainAlly.Add(item);
+    }
+    public void AddWornItemAllySecond(Slot item)
+    {
+        wornItemsSecondAlly.Add(item);
+    }
+    public void AddWornItemAllyThird(Slot item)
+    {
+        wornItemsThirdAlly.Add(item);
+    }
+
+    public List<Slot> GetWornItemMainAlly()
+    {
+        return wornItemsMainAlly;
+    }
+    public List<Slot> GetWornItemSecondAlly()
+    {
+        return wornItemsSecondAlly;
+    }
+    public List<Slot> GetWornItemThirdAlly()
+    {
+        return wornItemsThirdAlly;
+    }
+
+    public void RemoveOwnedItem(Slot item)
+    {
+        ownedItems.Remove(item);
+    }
+
+    public void RemoveWornItemAllyMain(Slot item)
+    {
+        wornItemsMainAlly.Remove(item);
+    }
+    public void RemoveWornItemAllySecond(Slot item)
+    {
+        wornItemsSecondAlly.Remove(item);
+    }
+    public void RemoveWornItemAllyThird(Slot item)
+    {
+        wornItemsThirdAlly.Remove(item);
+    }
+
+    public void ResetWornItemsAllyMain()
+    {
+        wornItemsMainAlly.Clear();
+    }
+
+    public void ResetWornItemsAllySecond()
+    {
+        wornItemsSecondAlly.Clear();
+    }
+
+    public void ResetWornItemsAllyThird()
+    {
+        wornItemsThirdAlly.Clear();
+    }
+
     public bool GetOwnedLootOpened()
     {
         return ownedLootOpened;
     }
 
-    public void MoveGearToOwnedLootTab(Transform trans)
+    public void MoveLootToOwnedLootTab(Transform trans)
     {
-        for (int i = 0; i < trans.childCount; i++)
+        List<Transform> allTrans = new List<Transform>();
+
+        for (int x = 0; x < trans.childCount; x++)
         {
-            GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+            if (trans.GetChild(x).GetComponent<Slot>())
+                allTrans.Add(trans.GetChild(x));
+        }
+
+        //Debug.Log("All Gear count = " + allTrans.Count);
+
+        for (int i = 0; i < allTrans.Count; i++)
+        {
+            GameObject go = allTrans[i].gameObject;
+            go.transform.SetParent(ownedLootUI.transform);
+
             // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
             go.transform.localPosition = new Vector2(1000, 1000);
             go.transform.localScale = Vector2.one;
 
             Slot gear = go.GetComponent<Slot>();
-            ownedGear.Add(gear);
+            //ownedGear.Add(gear);
 
             gear.UpdateLootGearAlpha(false);
 
@@ -131,7 +204,7 @@ public class OwnedLootInven : MonoBehaviour
             else if (trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearType == "boots")
                 ownedGear[newIndex].UpdateCurSlotType(Slot.SlotType.BOOTS);
 
-            GearRewards.Instance.IncrementSpawnedGearCount();
+            //GearRewards.Instance.IncrementSpawnedGearCount();
 
             ownedGear[newIndex].UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
             ownedGear[newIndex].UpdateSlotName(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearName);
@@ -141,7 +214,7 @@ public class OwnedLootInven : MonoBehaviour
             ownedGear[newIndex].UpdateGearBonusDefense(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.bonusDefense);
             ownedGear[newIndex].UpdateGearBonusSpeed(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.bonusSpeed);
             ownedGear[newIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
-            ownedGear[newIndex].ToggleEquipButton(false);
+            ownedGear[newIndex].ToggleEquipButton(false);            
         }
     }
 
@@ -187,33 +260,16 @@ public class OwnedLootInven : MonoBehaviour
             go.transform.localPosition = new Vector2(1000, 1000);
             go.transform.localScale = Vector2.one;
 
-            Item item = go.GetComponent<Item>();
+            Slot item = go.GetComponent<Slot>();
             ownedItems.Add(item);
 
-            item.UpdateGearAlpha(false);
+            //item.UpdateGearAlpha(false);
 
-            ownedItems[x].UpdateGearImage(startingItemPieces[x].itemSprite);
+            ownedItems[x].UpdateSlotImage(startingItemPieces[x].itemSprite);
 
-            /*
-            if (startingGearPieces[x].gearType == "helmet")
-                ownedItems[x].UpdateCurGearType(Gear.GearType.HELMET);
-            else if (startingGearPieces[x].gearType == "chestpiece")
-                ownedItems[x].UpdateCurGearType(Gear.GearType.CHESTPIECE);
-            else if (startingGearPieces[x].gearType == "leggings")
-                ownedItems[x].UpdateCurGearType(Gear.GearType.LEGGINGS);
-            else if (startingGearPieces[x].gearType == "boots")
-                ownedItems[x].UpdateCurGearType(Gear.GearType.BOOTS);
-            */
-
-            ownedItems[x].UpdateGearName(startingItemPieces[x].itemName);
-            //ownedGear[x].UpdateGearBonusHealth(startingItemPieces[x].bonusHealth);
-            //ownedGear[x].UpdateGearBonusDamage(startingItemPieces[x].bonusDamage);
-            //ownedGear[x].UpdateGearBonusHealing(startingItemPieces[x].bonusHealing);
-            //ownedGear[x].UpdateGearBonusDefense(startingItemPieces[x].bonusDefense);
-            //ownedGear[x].UpdateGearBonusSpeed(startingItemPieces[x].bonusSpeed);
-            //ownedItems[x].UpdateGearStatis(Gear.GearStatis.OWNED);
+            ownedItems[x].UpdateSlotName(startingItemPieces[x].itemName);
+            ownedItems[x].linkedItemPiece = startingItemPieces[x];
             ownedItems[x].ToggleEquipButton(false);
-            //ownedItems
         }
     }
 
@@ -236,6 +292,16 @@ public class OwnedLootInven : MonoBehaviour
         ownedGearPieces.Clear();
     }
     */
+
+    public void AddOwnedItems(Slot item)
+    {
+        ownedItems.Add(item);
+    }
+
+    public void ResetOwnedItems()
+    {
+        ownedItems.Clear();
+    }
 
     public void AddOwnedGear(Slot gear)
     {
@@ -319,17 +385,111 @@ public class OwnedLootInven : MonoBehaviour
 
         //ClearOwnedItemsSlotsSelection();
 
-        int ownedGearSlotIndex = 0;
+        int ownedItemSlotIndex = 0;
 
         for (int x = 0; x < ownedLootSlots.Count; x++)
         {
-            ownedLootSlots[x].ResetGearSlot(true, false);
+            ownedLootSlots[x].ResetSlot(true, false);
         }
 
         // If item
         if (slotType == 1)
         {
+            ownedItemPieces.Clear();
+            List<ItemPiece> ownedItemPiece = new List<ItemPiece>();
+            ownedItemSlotIndex = 0;
+            wornSkillsAlly.Clear();
 
+            for (int x = 0; x < ownedItems.Count; x++)
+            {
+                ownedItemPieces.Add(ownedItems[x].linkedItemPiece);
+            }
+
+            TeamGearManager.Instance.ToggleAllSlotsClickable(true, true, false);
+
+            // int index = 0;
+            for (int i = 0; i < ownedLootSlots.Count; i++)
+            {
+                // Safety
+                if (ownedItemPieces.Count > i)
+                {
+                    /*
+                    // If unit is currently selecting a skill, AND check if not already hidden, then dont display it in owned skills
+                    if (!ownedItemPiece.Contains(ownedItemPieces[i]))
+                    {
+                        ownedItemPiece.Add(ownedItemPieces[i]);
+                        //ToggleOwnedGearEquipButton(false);
+
+
+                        ownedLootSlots[i].ToggleEquipButton(false);
+                        ownedLootSlots[i].UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
+                        ownedLootSlots[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
+                        ownedLootSlots[i].isEmpty = true;
+
+                        //index++;
+                        Debug.Log("aaa");
+                    }
+                    */
+                    // Ensure only the active unit's skills show in owned skills
+
+                    //Debug.Log("bbb");
+                    // if an item is equipped, skip it in the own inventory display
+                    //if (!gears.Contains(wornGear[i]))                      
+
+                    ToggleOwnedSlotEquipButton(true);
+
+                    //Debug.Log("owned skills count " + ownedSkills.Count);
+                    //Debug.Log("index " + ownedGearSlotIndex);
+
+                    if (ownedItemPieces.Count > ownedItemSlotIndex)
+                    {
+                        /*
+                        if (ownedSkillData.Contains(ownedSkills[i]))
+                        {
+                            if (i != 0)
+                                i--;
+                        }
+                        */
+
+                        //wornSkillsAlly.Add(SkillsTabManager.Instance.selectedOwnedSlot);
+                        // Update gear icon
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedItemPieces[i].itemSprite);
+                        //ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.ITEM);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedItemPieces[i].itemName);
+
+                        ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(false);
+                        /*
+                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealth(ownedSkills[i].GetBonusHealth());
+                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDamage(ownedSkills[i].GetBonusDamage());
+                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealing(ownedSkills[i].GetBonusHealing());
+                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDefense(ownedSkills[i].GetBonusDefense());
+                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusSpeed(ownedSkills[i].GetBonusSpeed());
+                        */
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
+                        ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(false);
+                        ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
+                        ownedLootSlots[ownedItemSlotIndex].UpdateLinkedItemPiece(ownedItemPieces[i]);
+
+                        //ownedLootSlots[ownedItemSlotIndex].skill = ownedSkills[i];
+
+                        ownedItemSlotIndex++;
+                    }
+                }
+                /*
+                else
+                {
+                    ownedSkillData.Add(ownedSkills[i]);
+                    //ToggleOwnedGearEquipButton(false);
+
+
+                    ownedLootSlots[i].ToggleEquipButton(false);
+                    ownedLootSlots[i].UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
+                    ownedLootSlots[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
+                    ownedLootSlots[i].isEmpty = true;
+                }
+                */
+
+            }
         }
         // If skill
         else if (slotType == 2)
@@ -340,7 +500,7 @@ public class OwnedLootInven : MonoBehaviour
 
             ownedSkills.Clear();
             List<SkillData> ownedSkillData = new List<SkillData>();
-            ownedGearSlotIndex = 0;
+            ownedItemSlotIndex = 0;
             wornSkillsAlly.Clear();
 
             for (int x = 0; x < 4; x++)
@@ -392,7 +552,7 @@ public class OwnedLootInven : MonoBehaviour
                         //Debug.Log("owned skills count " + ownedSkills.Count);
                         //Debug.Log("index " + ownedGearSlotIndex);
 
-                        if (ownedSkills.Count > ownedGearSlotIndex)
+                        if (ownedSkills.Count > ownedItemSlotIndex)
                         {
                             /*
                             if (ownedSkillData.Contains(ownedSkills[i]))
@@ -404,11 +564,11 @@ public class OwnedLootInven : MonoBehaviour
 
                             //wornSkillsAlly.Add(SkillsTabManager.Instance.selectedOwnedSlot);
                             // Update gear icon
-                            ownedLootSlots[ownedGearSlotIndex].UpdateSlotImage(ownedSkills[i].skillSprite);
+                            ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedSkills[i].skillSprite);
                             //ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.ITEM);
-                            ownedLootSlots[ownedGearSlotIndex].UpdateSlotName(ownedSkills[i].skillName);
+                            ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedSkills[i].skillName);
 
-                            ownedLootSlots[ownedGearSlotIndex].UpdateIconSkillSize(true);
+                            ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(true);
                             /*
                             ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealth(ownedSkills[i].GetBonusHealth());
                             ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDamage(ownedSkills[i].GetBonusDamage());
@@ -416,13 +576,13 @@ public class OwnedLootInven : MonoBehaviour
                             ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDefense(ownedSkills[i].GetBonusDefense());
                             ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusSpeed(ownedSkills[i].GetBonusSpeed());
                             */
-                            ownedLootSlots[ownedGearSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
-                            ownedLootSlots[ownedGearSlotIndex].ToggleEquipButton(false);
-                            ownedLootSlots[ownedGearSlotIndex].isEmpty = false;
+                            ownedLootSlots[ownedItemSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
+                            ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(false);
+                            ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
 
-                            ownedLootSlots[ownedGearSlotIndex].skill = ownedSkills[i];
+                            ownedLootSlots[ownedItemSlotIndex].skill = ownedSkills[i];
 
-                            ownedGearSlotIndex++;
+                            ownedItemSlotIndex++;
                         }
                     }
                 }
@@ -527,19 +687,19 @@ public class OwnedLootInven : MonoBehaviour
                     {
                         //Debug.Log("loading owned gear helm");
                         // Update gear icon
-                        ownedLootSlots[ownedGearSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.HELMET);
-                        ownedLootSlots[ownedGearSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealing(ownedGear[i].GetBonusHealing());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDefense(ownedGear[i].GetBonusDefense());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusSpeed(ownedGear[i].GetBonusSpeed());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
-                        ownedLootSlots[ownedGearSlotIndex].ToggleEquipButton(true);
-                        ownedLootSlots[ownedGearSlotIndex].isEmpty = false;
-                        ownedLootSlots[ownedGearSlotIndex].ToggleOwnedGearButton(true);
-                        ownedGearSlotIndex++;
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotType.HELMET);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealing(ownedGear[i].GetBonusHealing());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDefense(ownedGear[i].GetBonusDefense());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusSpeed(ownedGear[i].GetBonusSpeed());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
+                        ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(true);
+                        ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
+                        ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
+                        ownedItemSlotIndex++;
                     }
                 }
                 else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotType.CHESTPIECE)
@@ -548,20 +708,20 @@ public class OwnedLootInven : MonoBehaviour
                     {
                         //Debug.Log("loading owned gear chest");
                         // Update gear icon
-                        ownedLootSlots[ownedGearSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                        ownedLootSlots[ownedGearSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealing(ownedGear[i].GetBonusHealing());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDefense(ownedGear[i].GetBonusDefense());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusSpeed(ownedGear[i].GetBonusSpeed());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
-                        ownedLootSlots[ownedGearSlotIndex].ToggleEquipButton(true);
-                        ownedLootSlots[ownedGearSlotIndex].isEmpty = false;
-                        ownedLootSlots[ownedGearSlotIndex].ToggleOwnedGearButton(true);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealing(ownedGear[i].GetBonusHealing());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDefense(ownedGear[i].GetBonusDefense());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusSpeed(ownedGear[i].GetBonusSpeed());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
+                        ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(true);
+                        ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
+                        ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
 
-                        ownedGearSlotIndex++;
+                        ownedItemSlotIndex++;
                     }
                 }
                 else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotType.BOOTS)
@@ -570,23 +730,23 @@ public class OwnedLootInven : MonoBehaviour
                     {
                         //Debug.Log("loading owned gear boots");
                         // Update gear icon
-                        ownedLootSlots[ownedGearSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.BOOTS);
-                        ownedLootSlots[ownedGearSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusHealing(ownedGear[i].GetBonusHealing());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusDefense(ownedGear[i].GetBonusDefense());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearBonusSpeed(ownedGear[i].GetBonusSpeed());
-                        ownedLootSlots[ownedGearSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
-                        ownedLootSlots[ownedGearSlotIndex].ToggleEquipButton(true);
-                        ownedLootSlots[ownedGearSlotIndex].isEmpty = false;
-                        ownedLootSlots[ownedGearSlotIndex].ToggleOwnedGearButton(true);
-                        ownedGearSlotIndex++;
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotType.BOOTS);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealing(ownedGear[i].GetBonusHealing());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDefense(ownedGear[i].GetBonusDefense());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusSpeed(ownedGear[i].GetBonusSpeed());
+                        ownedLootSlots[ownedItemSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
+                        ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(true);
+                        ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
+                        ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
+                        ownedItemSlotIndex++;
                     }
                 }
 
-                ownedLootSlots[ownedGearSlotIndex].UpdateIconSkillSize(false);
+                ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(false);
             }
         }
 

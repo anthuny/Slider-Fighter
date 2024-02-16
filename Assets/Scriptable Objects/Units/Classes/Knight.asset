@@ -18,7 +18,7 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: 325b656c97439ea479d694a14f60ff03, type: 3}
   unitColour: {r: 0.3915094, g: 0.7535864, b: 1, a: 1}
   unitName: Knight
-  startingSpeed: 12
+  startingSpeed: 8
   startingDefense: 10
   startingPower: 35
   startingHealingPower: 0

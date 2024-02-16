@@ -20,6 +20,7 @@ MonoBehaviour:
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 15
+  threshHoldAmount: 30
   isBaseHealing: 1
   isLifestealing: 0
   isDamageNegating: 0
@@ -41,3 +42,4 @@ MonoBehaviour:
   power: 0
   procChance: 0
   ac: {fileID: 0}
+  maxUsesPerCombat: 4

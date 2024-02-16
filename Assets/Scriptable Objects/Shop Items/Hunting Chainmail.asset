@@ -16,9 +16,10 @@ MonoBehaviour:
   itemName: Hunting Chainmail
   itemDesc: Add Defense Up (1)  - On Turn Start. using 1 charge.
   itemSprite: {fileID: 21300000, guid: 490c19b0051526d4bb8a3dd99bc375a2, type: 3}
-  effectAdded: {fileID: 11400000, guid: 0abfc7040d3eb7e4da2698486445dc5a, type: 2}
+  effectAdded: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
   effectAddedTurnLength: 1
   itemPower: 0
+  threshHoldAmount: 0
   isBaseHealing: 0
   isLifestealing: 0
   isDamageNegating: 0
@@ -40,3 +41,4 @@ MonoBehaviour:
   power: 0
   procChance: 0
   ac: {fileID: 0}
+  maxUsesPerCombat: 4

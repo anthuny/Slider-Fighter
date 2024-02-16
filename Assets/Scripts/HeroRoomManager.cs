@@ -75,6 +75,8 @@ public class HeroRoomManager : MonoBehaviour
         }
         else
         {
+            GameManager.Instance.ResetAlliesExpVisual();
+
             if (overrideSpawning)
             {
                 TogglePlayedOffered(true);

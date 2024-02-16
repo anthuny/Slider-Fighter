@@ -1419,6 +1419,9 @@ MonoBehaviour:
   goldtextUI: {fileID: 8448886624976684352}
   isGold: 0
   isEmpty: 1
+  code: 0
+  linkedGearPiece: {fileID: 0}
+  baseSlot: 1
 --- !u!1 &8730867197212519636
 GameObject:
   m_ObjectHideFlags: 0

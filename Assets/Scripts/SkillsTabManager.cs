@@ -162,7 +162,7 @@ public class SkillsTabManager : MonoBehaviour
                 {
                     if (activeSkillBase.skillName == GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetSkill(x).skillName)
                     {
-                        selectedBaseSlot.ResetGearSlot(true, false);
+                        selectedBaseSlot.ResetSlot(true, false);
                         selectedBaseSlot.UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
                         selectedBaseSlot.UpdateCurSlotType(Slot.SlotType.EMPTY);
                     }

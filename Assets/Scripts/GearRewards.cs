@@ -31,6 +31,7 @@ public class GearRewards : MonoBehaviour
     [Tooltip("% chance of gear dropping as rarity Legendary")]
     [SerializeField] private int gearLegendaryPerc;
 
+    [Header("Gear")]
     [Space(5)]
     [SerializeField] private List<GearPiece> allGearPiecesCommon = new List<GearPiece>();
     [Space(3)]
@@ -39,6 +40,17 @@ public class GearRewards : MonoBehaviour
     [SerializeField] private List<GearPiece> allGearPiecesEpic = new List<GearPiece>();
     [Space(3)]
     [SerializeField] private List<GearPiece> allGearPiecesLegendary = new List<GearPiece>();
+    
+    [Space(5)]
+    [Header("Items")]
+    [Space(5)]
+    [SerializeField] private List<ItemPiece> allItemPiecesCommon = new List<ItemPiece>();
+    [Space(3)]
+    [SerializeField] private List<ItemPiece> allItemPiecesRare = new List<ItemPiece>();
+    [Space(3)]
+    [SerializeField] private List<ItemPiece> allItemPiecesEpic = new List<ItemPiece>();
+    [Space(3)]
+    [SerializeField] private List<ItemPiece> allItemPiecesLegendary = new List<ItemPiece>();
 
     public int spawnedGearCount;
 
@@ -104,11 +116,27 @@ public class GearRewards : MonoBehaviour
     public void ResetRewardsTable(bool moveGearFromPostGame = true)
     {
         if (moveGearFromPostGame)
-            OwnedLootInven.Instance.MoveGearToOwnedLootTab(recievedGearParent);
+            OwnedLootInven.Instance.MoveLootToOwnedLootTab(recievedGearParent);
 
         foreach (Transform child in recievedGearParent)
         {
-            Destroy(child.gameObject);
+            if (moveGearFromPostGame)
+            {
+                if (child.GetComponent<Slot>() != null)
+                {
+                    int indexThing = -1;
+                    indexThing = OwnedLootInven.Instance.ownedGear.IndexOf(child.GetComponent<Slot>());
+
+                    if (indexThing == -1)
+                        continue;
+
+                    //if (indexThing < OwnedLootInven.Instance.ownedGear.Count && OwnedLootInven.Instance.ownedGear.Count > 0)
+                    //OwnedLootInven.Instance.ownedGear.RemoveAt(indexThing);
+                }
+            }
+
+            if (!moveGearFromPostGame && child.GetComponent<Slot>() == null)
+                Destroy(child.gameObject);
         }
     }
 
@@ -140,7 +168,39 @@ public class GearRewards : MonoBehaviour
                 go.transform.localScale = new Vector2(1, 1);
 
                 UIElement uIElement = go.GetComponent<UIElement>();
+                Slot slot = go.GetComponent<Slot>();
 
+
+
+                uIElement.ToggleButton(false);
+
+                ItemPiece newItem = ItemRewardManager.Instance.selectedItem;
+
+                OwnedLootInven.Instance.AddOwnedItems(slot);
+
+                /*
+                // Determine what rarity this item is, and reference it
+                if (slot.GetRarity() == Slot.Rarity.COMMON)
+                {
+                    int rand = Random.Range(0, allItemPiecesCommon.Count);
+                    newItem = allItemPiecesCommon[rand];
+                }
+                else if (slot.GetRarity() == Slot.Rarity.RARE)
+                {
+                    int rand = Random.Range(0, allItemPiecesRare.Count);
+                    newItem = allItemPiecesRare[rand];
+                }
+                else if (slot.GetRarity() == Slot.Rarity.EPIC)
+                {
+                    int rand = Random.Range(0, allItemPiecesEpic.Count);
+                    newItem = allItemPiecesEpic[rand];
+                }
+                else if (slot.GetRarity() == Slot.Rarity.LEGENDARY)
+                {
+                    int rand = Random.Range(0, allItemPiecesLegendary.Count);
+                    newItem = allItemPiecesLegendary[rand];
+                }
+                */
                 // Set item
                 uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
                 uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
@@ -161,8 +221,15 @@ public class GearRewards : MonoBehaviour
                 {
                     uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
                 }
+                slot.UpdateSlotImage(newItem.itemSprite);
 
-                uIElement.ToggleButton(false);
+                slot.UpdateSlotName(newItem.itemName);
+                slot.UpdateLinkedItemPiece(newItem);
+
+                // Disable owned gear button for unowned loot
+                //slot.ToggleOwnedGearButton(false);
+                // Show full visibility of Gear
+                slot.UpdateLootGearAlpha(true);
             }
 
             int gearChance = Random.Range(0, 101);
@@ -259,7 +326,6 @@ public class GearRewards : MonoBehaviour
                 // Initialize gear base data
                 slot.UpdateSlotCode(spawnedGearCount);
                 slot.UpdateSlotImage(newGear.gearIcon);
-                slot.UpdateSlotImage(newGear.gearIcon);
                 slot.UpdateSlotName(newGear.gearName);
                 slot.UpdateGearBonusHealth(newGear.bonusHealth);
                 slot.UpdateGearBonusDamage(newGear.bonusDamage);
@@ -272,8 +338,6 @@ public class GearRewards : MonoBehaviour
                 slot.ToggleOwnedGearButton(false);
                 // Show full visibility of Gear
                 slot.UpdateLootGearAlpha(true);
-
-
             }
         }
 

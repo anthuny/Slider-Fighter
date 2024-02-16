@@ -65,6 +65,43 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
+    #region Menu Overlay (Kill Run / Pause  Game)
+    public void ToggleMenuOverlay()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        if (MenuOverlay.Instance.menuOverlayOpened)
+        {
+            MenuOverlay.Instance.ToggleMenuOverlay(false);
+        }
+        else
+            MenuOverlay.Instance.ToggleMenuOverlay(true);
+    }
+
+    public void ToggleKillRunPrompt()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        MenuOverlay.Instance.ToggleKillRunPrompt(true);
+    }
+
+    public void DisableKillRunPrompt()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+        MenuOverlay.Instance.ToggleKillRunPrompt(false);
+    }
+
+    public void KillRunResponse(bool killRun = false)
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+        MenuOverlay.Instance.KillRunPrompt(killRun);
+    }
+    #endregion
+
     public void MenuSelectAlly()
     {
         if (!buttonLocked)
@@ -73,7 +110,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             AudioManager.Instance.Play("Button_Click");
 
             CharacterCarasel.Instance.SelectAlly(this);
+
+            UpdateLog.Instance.ToggleUpdateLog(false);
+            UpdateLog.Instance.ToggleUpdateLogbutton(false);
         }
+    }
+
+    public void ButtonMenuToggleUpdateLog()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        if (UpdateLog.Instance.updateLogIsOpen)
+            UpdateLog.Instance.ToggleUpdateLog(false);
+        else
+            UpdateLog.Instance.ToggleUpdateLog(true);
     }
 
     public IEnumerator MenuUnitSelection()
@@ -340,7 +391,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (SkillsTabManager.Instance.playerInSkillTab)
         {
             //SkillSlotSelection();
-            Debug.Log("aa");
+            //Debug.Log("aa");
             //SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
 
             if (!OwnedLootInven.Instance.ownedLootOpened)
@@ -360,9 +411,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         if (TeamGearManager.Instance.playerInGearTab)
         {
-            //if (OwnedLootInven.Instance.ownedLootOpened)
-                //return;
-
             // If owned gear tab is opened, do not allow selecting a new gear
             if (slot != null)
             {
@@ -378,16 +426,76 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 return;
             }
 
-            OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
+            if (slot.isEmpty)
+            {
+                if (OwnedLootInven.Instance.ownedLootOpened)
+                {
+                    OwnedLootInven.Instance.ResetOwnedSlotEquipButton();
+                    return;
+                }
+            }
 
+            OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
             if (slot != null)
-                TeamGearManager.Instance.GearSelection(slot, false);
+            {
+                if (!OwnedLootInven.Instance.ownedLootOpened)
+                {
+                    //if (slot.isEmpty)
+                    TeamGearManager.Instance.GearSelection(slot, false);
+
+                    if (slot.isEmpty)
+                        ButtonSlotDetails();
+                }
+                else
+                {
+                    if (!slot.isEmpty && !slot.baseSlot)
+                        TeamGearManager.Instance.GearSelection(slot, false);
+                }
+            }
+        }
+        else if (TeamItemsManager.Instance.playerInItemTab)
+        {
+            // If owned gear tab is opened, do not allow selecting a new gear
+            if (slot != null)
+            {
+                // If player selects a gear in the rewards for post game battle screen, stop
+                if (slot.GetCurGearStatis() == Slot.SlotStatis.REWARD)
+                    return;
+            }
+
+            // If the BG is selected
+            if (curMasteryType == MasteryType.BG)
+            {
+                OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
+                return;
+            }
 
             if (slot.isEmpty)
-                ButtonSlotDetails();
-            // Button Click SFX
-            else
-                AudioManager.Instance.Play("Button_Click");
+            {
+                if (OwnedLootInven.Instance.ownedLootOpened)
+                {
+                    OwnedLootInven.Instance.ResetOwnedSlotEquipButton();
+                    return;
+                }
+            }
+
+            OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
+            if (slot != null)
+            {
+                if (!OwnedLootInven.Instance.ownedLootOpened)
+                {
+                    //if (slot.isEmpty)
+                    TeamItemsManager.Instance.ItemSelection(slot);
+
+                    if (slot.isEmpty)
+                        ButtonSlotDetails();
+                }
+                else
+                {
+                    if (!slot.isEmpty && !slot.baseSlot)
+                        TeamItemsManager.Instance.ItemSelection(slot);
+                }
+            }
         }
         else if (SkillsTabManager.Instance.playerInSkillTab)
         {
@@ -436,6 +544,15 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 TeamGearManager.Instance.GearSelection(slot, true);
                 SkillsTabManager.Instance.UpdateSkillStatDetails();
             }
+            else if (TeamItemsManager.Instance.playerInItemTab)
+            {
+                AudioManager.Instance.Play("Button_Click");
+
+                TeamItemsManager.Instance.UnequipItem();
+
+                TeamItemsManager.Instance.ItemSelection(slot, true);
+                SkillsTabManager.Instance.UpdateSkillStatDetails();
+            }
             else if (SkillsTabManager.Instance.playerInSkillTab)
             {
                 //Debug.Log("ccc");
@@ -461,8 +578,12 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         Item item = slot.gameObject.GetComponent<Item>();
-        TeamItemsManager.Instance.ItemSelection(slot, item);
-        
+
+        if (slot.isEmpty)
+            TeamItemsManager.Instance.ItemSelection(slot, false);
+        else
+            TeamItemsManager.Instance.ItemSelection(slot, true);
+
         // Display inven
         if (slot.isEmpty)
         {
@@ -484,8 +605,16 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         SkillsTabManager.Instance.UpdateSelectedOwnedSlot(null);
         SkillsTabManager.Instance.UpdateSkillStatDetailsSpecific(SkillsTabManager.Instance.GetActiveSkillBase());
 
-        TeamGearManager.Instance.UpdateGearNameText("");
-        TeamGearManager.Instance.ClearAllGearStats();
+        if (TeamGearManager.Instance.playerInGearTab)
+        {
+            TeamGearManager.Instance.UpdateGearNameText("");
+            TeamGearManager.Instance.ClearAllGearStats();
+        }
+        else if (TeamItemsManager.Instance.playerInItemTab)
+        {
+            TeamItemsManager.Instance.UpdateItemNameText("");
+            TeamItemsManager.Instance.UpdateItemDesc("");
+        }
     }
 
     public void GearUnEquip()
@@ -496,7 +625,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        TeamGearManager.Instance.UnequipGear();
+        if (TeamGearManager.Instance.playerInGearTab)
+            TeamGearManager.Instance.UnequipGear();
+        else if (TeamItemsManager.Instance.playerInItemTab)
+            TeamItemsManager.Instance.UnequipItem();
     }
 
     public void GearSell()

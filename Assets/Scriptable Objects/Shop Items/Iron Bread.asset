@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c98df06682a0b046bbcbdca0e2e04c7, type: 3}
-  m_Name: Hermit Grieves
+  m_Name: Iron Bread
   m_EditorClassIdentifier: 
   curRarity: 0
-  itemName: Hermit Grieves
-  itemDesc: Add Speed Up (1) - On Turn Start. using 1 charge.
-  itemSprite: {fileID: 21300000, guid: b91c875305591e84d82bf22d9ec4a07c, type: 3}
-  effectAdded: {fileID: 11400000, guid: 0abfc7040d3eb7e4da2698486445dc5a, type: 2}
+  itemName: Iron Bread
+  itemDesc: Add Health Up (1) - On Turn Start. using 1 charge.
+  itemSprite: {fileID: 21300000, guid: 30b29a0cafe8ad74aa1811cb3298c465, type: 3}
+  effectAdded: {fileID: 11400000, guid: fef5ba97b42f6a749ae6ad86060c3224, type: 2}
   effectAddedTurnLength: 1
   itemPower: 0
+  threshHoldAmount: 0
   isBaseHealing: 0
   isLifestealing: 0
   isDamageNegating: 0
@@ -40,3 +41,4 @@ MonoBehaviour:
   power: 0
   procChance: 0
   ac: {fileID: 0}
+  maxUsesPerCombat: 4

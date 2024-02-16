@@ -65,6 +65,8 @@ public class CharacterCarasel : MonoBehaviour
         SaveUnlockedAlly("Knight");
         LoadSave();
         LoadCarasel();
+
+        UpdateLog.Instance.ToggleUpdateLogbutton(true);
     }
 
     public void ToggleMenu(bool toggle)

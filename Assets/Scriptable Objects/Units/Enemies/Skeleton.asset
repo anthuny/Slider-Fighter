@@ -18,7 +18,7 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: 79e49d6df08cbb647a21eaea4d88d7b5, type: 3}
   unitColour: {r: 1, g: 1, b: 1, a: 1}
   unitName: Skeleton
-  startingSpeed: 15
+  startingSpeed: 12
   startingDefense: 1
   startingPower: 25
   startingHealingPower: 1

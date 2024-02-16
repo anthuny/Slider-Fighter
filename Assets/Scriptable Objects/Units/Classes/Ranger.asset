@@ -18,7 +18,7 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: 2e60975a96af8444daa50ac973ed19a7, type: 3}
   unitColour: {r: 0.36288777, g: 0.9622642, b: 0.24056605, a: 1}
   unitName: Ranger
-  startingSpeed: 18
+  startingSpeed: 12
   startingDefense: 5
   startingPower: 35
   startingHealingPower: 0
@@ -32,8 +32,8 @@ MonoBehaviour:
   characterPrefab: {fileID: 1415871230302792947, guid: 8fc51ebc57d289c43a80806bfa3ecec8, type: 3}
   curSkills:
   - {fileID: 11400000, guid: c73d0bea0f8ca6e408b0cbd7c9346939, type: 2}
-  - {fileID: 11400000, guid: 43bd87269e8a8af4b993f2342c6320a4, type: 2}
-  - {fileID: 11400000, guid: cc318f8510e168b4388ec5807679be82, type: 2}
   - {fileID: 11400000, guid: e591c0ea94e44dc4f966fed6cf5e0dbf, type: 2}
+  - {fileID: 11400000, guid: cc318f8510e168b4388ec5807679be82, type: 2}
+  - {fileID: 11400000, guid: 43bd87269e8a8af4b993f2342c6320a4, type: 2}
   deathClip: {fileID: 8300000, guid: c278f4be40dfcea4a9c7f17ecd4a78e1, type: 3}
   hitRecievedClip: {fileID: 8300000, guid: 1f91da09a3e411d4283247c2a4fd67b8, type: 3}

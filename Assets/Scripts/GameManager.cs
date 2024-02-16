@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -467,6 +467,10 @@ public class GameManager : MonoBehaviour
                             unitFunct.ResetSkill2Cooldown();
                             unitFunct.ResetSkill3Cooldown();
 
+                            int spawnedUnitLevel = ((RoomManager.Instance.GetFloorCount() * 2) - Random.Range(1,4) + ((RoomManager.Instance.GetFloorCount() * 2)) - 2);
+                            //unitFunct.UpdateUnitLevel(spawnedUnitLevel, 0, true);
+                            unitFunct.UpdateUnitExp(spawnedUnitLevel * (int)unitFunct.GetMaxExp());
+                            
                             SkillsTabManager.Instance.ResetAllySkllls(unitFunct);
                         }
                     }
@@ -888,6 +892,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (activeRoomAllies.Count == 0)
                 activeTeam.Clear();
+
+            activeRoomAllUnitFunctionalitys.Clear();
         }
 
         if (enemies)
@@ -1365,6 +1371,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ResetRoom(false);
 
             TeamGearManager.Instance.ResetGearOwned();
+            TeamItemsManager.Instance.ResetItemOwned();
 
             // Reset map
             //MapManager.instance.ToggleMapVisibility(true, true);
@@ -1527,7 +1534,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             else
             {
                 // rand add +3 to +6 difficulty for the room
-                enemySpawnValue += Random.Range(8, 11) * RoomManager.Instance.GetFloorCount();
+                enemySpawnValue += Random.Range(7, 10) * RoomManager.Instance.GetFloorCount();
                 //enemySpawnValue *= ((RoomManager.Instance.GetFloorCount() * RoomManager.Instance.GetFloorCount()) * 3);
             }
             
@@ -1543,7 +1550,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
             else if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
             {
-                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount() + 1));
+                if (RoomManager.Instance.GetFloorCount() == 1)
+                    enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount() + 1));
+                else
+                    enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount());
             }
             // If room is just a regular enemy room, increment enemyspawnvalue by rooms cleared
             else
@@ -1622,14 +1632,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 2)
                     {
-                        if (rand >= GetAllyLevelAverage() + 7)
+                        if (rand >= GetAllyLevelAverage() + 3)
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
                                 val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
+                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
                                 val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
 
@@ -1641,14 +1651,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 3)
                     {
-                        if (rand >= GetAllyLevelAverage() + 15)
+                        if (rand >= GetAllyLevelAverage() + 7)
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
                                 val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
+                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
                                 val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
 
@@ -1660,14 +1670,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 4)
                     {
-                        if (rand >= GetAllyLevelAverage() + 30)
+                        if (rand >= GetAllyLevelAverage() + 15)
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
                                 val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
+                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
                                 val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
 
@@ -1679,14 +1689,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 5)
                     {
-                        if (rand >= GetAllyLevelAverage() + 75)
+                        if (rand >= GetAllyLevelAverage() + 30)
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
                                 val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
+                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
                                 val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
 
@@ -1702,9 +1712,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         int val = 0;
                         if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                            val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
-                        if (room.curRoomType == RoomMapIcon.RoomType.HERO)
                             val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
+                        if (room.curRoomType == RoomMapIcon.RoomType.HERO)
+                            val = rand - Random.Range(1, 4) * RoomManager.Instance.GetFloorCount();
                         if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
                             val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
 
@@ -1845,6 +1855,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     // Disable unit level image in team setup tab
                     activeRoomAllUnitFunctionalitys[x].ToggleUnitLevelImage(true);
+
+                    activeRoomAllUnitFunctionalitys[x].SetItemUsesMax();
 
                     // Hide level up text
                     activeRoomAllUnitFunctionalitys[x].ToggleTextAlert(false);
@@ -3154,6 +3166,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
 
+        // Turn end
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false));
 
         DetermineTurnOrder();
@@ -3211,12 +3224,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Update allies into position for battle/shop
         UpdateAllAlliesPosition(false, GetActiveUnitType());
 
+        // Turn Start
+
         //Trigger Start turn effects
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false));
+
+
     }
 
     public void ContinueTurnOrder()
     {
+        GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().TriggerItems(true));
+
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
         {
@@ -3594,7 +3613,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public UnitFunctionality GetActiveUnitFunctionality()
     {
-        return activeRoomAllUnitFunctionalitys[0];
+        if (activeRoomAllUnitFunctionalitys.Count > 0)
+            return activeRoomAllUnitFunctionalitys[0];
+        else
+            return null;
     }
 
     public UnitFunctionality GetActiveAlly()

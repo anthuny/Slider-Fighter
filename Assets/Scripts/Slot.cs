@@ -45,6 +45,8 @@ public class Slot : MonoBehaviour
     private int pointsAdded = 0;
     //public bool isLocked;
     public GearPiece linkedGearPiece;
+    public ItemPiece linkedItemPiece;
+    public bool baseSlot = false;
 
     private void Start()
     {
@@ -113,34 +115,27 @@ public class Slot : MonoBehaviour
         progressSlider.contentImage.fillAmount = 0;
     }
 
-    public void ResetGearSlot(bool byPass = false, bool allowGearDefaultClear = false)
+    public void ResetSlot(bool byPass = false, bool allowGearDefaultClear = false)
     {
         if (GetCurGearStatis() == SlotStatis.DEFAULT && !byPass)
             return;
 
         if (allowGearDefaultClear)
         {
-            if (GetGearOwnedBy() == SlotOwnedBy.MAIN)
+            if (GetSlotOwnedBy() == SlotOwnedBy.MAIN)
                 TeamGearManager.Instance.UpdateSlotsBaseDefault(this, null, true, false, false);
-            else if (GetGearOwnedBy() == SlotOwnedBy.SECOND)
+            else if (GetSlotOwnedBy() == SlotOwnedBy.SECOND)
                 TeamGearManager.Instance.UpdateSlotsBaseDefault(this, null, false, true, false);
-            else if (GetGearOwnedBy() == SlotOwnedBy.THIRD)
+            else if (GetSlotOwnedBy() == SlotOwnedBy.THIRD)
                 TeamGearManager.Instance.UpdateSlotsBaseDefault(this, null, false, false, true);
-        }
-        else
-        {
 
-
-            /*
-            if (GetCurGearType() == GearType.HELMET)
-                UpdateGearImage(TeamGearManager.Instance.helmetSlotSprite);
-            else if (GetCurGearType() == GearType.CHESTPIECE)
-                UpdateGearImage(TeamGearManager.Instance.chestSlotSprite);
-            else if (GetCurGearType() == GearType.LEGGINGS)
-                UpdateGearImage(TeamGearManager.Instance.legsSlotSprite);
-            else if (GetCurGearType() == GearType.BOOTS)
-                UpdateGearImage(TeamGearManager.Instance.bootsSlotSprite);
-                */
+            //Debug.Log("assdsdsd");
+            if (GetSlotOwnedBy() == SlotOwnedBy.MAIN)
+                TeamItemsManager.Instance.UpdateSlotsBaseDefault(this, null, true, false, false);
+            else if (GetSlotOwnedBy() == SlotOwnedBy.SECOND)
+                TeamItemsManager.Instance.UpdateSlotsBaseDefault(this, null, false, true, false);
+            else if (GetSlotOwnedBy() == SlotOwnedBy.THIRD)
+                TeamItemsManager.Instance.UpdateSlotsBaseDefault(this, null, false, false, true);
         }
 
         UpdateSlotName("");
@@ -152,12 +147,10 @@ public class Slot : MonoBehaviour
 
         isEmpty = true;
         // Disable gear equip button if its empty
-        //Debug.Log("about to reset " + gameObject.name);
-        //ToggleEquipButton(false);
-
-
         TeamGearManager.Instance.UpdateGearNameText("");
 
+        TeamItemsManager.Instance.UpdateItemNameText("");
+        TeamItemsManager.Instance.UpdateItemDesc("");
         //UpdateCurGearType(GearType.EMPTY);
     }
 
@@ -282,7 +275,7 @@ public class Slot : MonoBehaviour
         curGearOwnedBy = gearOwnedBy;
     }
 
-    public SlotOwnedBy GetGearOwnedBy()
+    public SlotOwnedBy GetSlotOwnedBy()
     {
         return curGearOwnedBy;
     }
@@ -392,5 +385,10 @@ public class Slot : MonoBehaviour
     public void UpdateLinkedGearPiece(GearPiece gearPiece)
     {
         linkedGearPiece = gearPiece;
+    }
+
+    public void UpdateLinkedItemPiece(ItemPiece itemPiece)
+    {
+        linkedItemPiece = itemPiece;
     }
 }

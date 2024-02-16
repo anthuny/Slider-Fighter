@@ -19,8 +19,8 @@ public class UIElement : MonoBehaviour
     public Image contentImage;
     [SerializeField] private UIElement contentImageUI;
     [SerializeField] private UIElement contentImage2UI;
-    [SerializeField] private TextMeshProUGUI contentText;
-    [SerializeField] private TextMeshProUGUI contentText2;
+    public TextMeshProUGUI contentText;
+    public TextMeshProUGUI contentText2;
     [SerializeField] private TextMeshProUGUI contentText3;
     [SerializeField] private Text contentSubText;
     [SerializeField] private TextMeshProUGUI contentSubTextTMP;
@@ -417,7 +417,9 @@ public class UIElement : MonoBehaviour
 
         if (dieAfterDisplay)
         {
-            if (depleteEffect)
+            if (!text)
+                StartCoroutine(HideUIOvertime(GameManager.Instance.skillAlertAppearTime/1.25f, true));
+            else if (depleteEffect)
                 StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillEffectDepleteAppearTime));
             else
                 StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime)); 
@@ -430,9 +432,10 @@ public class UIElement : MonoBehaviour
             contentText.gameObject.transform.localScale = new Vector2(1.3f, 1.3f);
     }
 
-    IEnumerator HideUIOvertime(float time = 0)
+    IEnumerator HideUIOvertime(float time = 0, bool skipResetText = false)
     {
-        ResetAnimateScaleText();
+        if (!skipResetText)
+            ResetAnimateScaleText();
 
         yield return new WaitForSeconds(time);
 
@@ -508,7 +511,7 @@ public class UIElement : MonoBehaviour
         contentImage.color = colour;
     }
 
-    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false)
+    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true)
     {   
         cg = GetComponent<CanvasGroup>();
 
@@ -523,7 +526,7 @@ public class UIElement : MonoBehaviour
         // Make UI element selectable/unselectable
         if (alpha == 1)
         {
-            AnimateUI(depletingEffect);
+            AnimateUI(text);
 
             isEnabled = true;
 

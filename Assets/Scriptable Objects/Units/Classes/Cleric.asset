@@ -18,7 +18,7 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: c47b9485a3af83645a8c10c0ad652766, type: 3}
   unitColour: {r: 1, g: 0.9851752, b: 0.5330188, a: 1}
   unitName: Cleric
-  startingSpeed: 15
+  startingSpeed: 12
   startingDefense: 4
   startingPower: 35
   startingHealingPower: 0

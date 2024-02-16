@@ -154,6 +154,7 @@ public class MapManager : MonoBehaviour
     public void Setup()
     {
         OwnedLootInven.Instance.ResetOwnedGear();
+        OwnedLootInven.Instance.ResetOwnedItems();
 
         OwnedLootInven.Instance.LoadStartingLoot();
 
@@ -230,12 +231,22 @@ public class MapManager : MonoBehaviour
         // If player lost
         else
         {
-            if (tryShowAd)
-                AdManager.Instance.ShowSkippableAd();
-
-            RoomManager.Instance.ResetFloorCount();
-            CharacterCarasel.Instance.ResetMenu();
+            ResetEntireRun(tryShowAd);
         }
+    }
+
+    public void ResetEntireRun(bool tryShowAd)
+    {
+        if (tryShowAd)
+            AdManager.Instance.ShowSkippableAd();
+
+        RoomManager.Instance.ResetFloorCount();
+        CharacterCarasel.Instance.ResetMenu();
+        GameManager.Instance.ResetRoom();
+        GameManager.Instance.ResetRoom(false);
+        GameManager.Instance.activeTeam.Clear();
+
+        //AudioManager.Instance.Play("Room_Lose");
     }
 
     public void UpdateActiveFloor(FloorData floor = null)
@@ -300,10 +311,8 @@ public class MapManager : MonoBehaviour
 
             GameManager.Instance.ToggleAllyUnitSelection(false);
 
-            if (RoomManager.Instance.GetRoomsCleared() == 0)
-                GearRewards.Instance.ResetRewards(false);
-            else
-                GearRewards.Instance.ResetRewards(true);
+
+            GearRewards.Instance.ResetRewards(true);
 
             // If items didnt get wiped from hero unit spawning scene, wipe them here (it blocks mid screen taps)
             ItemRewardManager.Instance.ResetRewardsTable();
