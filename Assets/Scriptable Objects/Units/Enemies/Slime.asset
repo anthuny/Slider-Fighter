@@ -18,11 +18,11 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: d4872ca97d36c34459e1927d43a1e97a, type: 3}
   unitColour: {r: 0.6, g: 0.8980393, b: 0.3137255, a: 1}
   unitName: Slime
-  startingSpeed: 10
-  startingDefense: 2
-  startingPower: 25
+  startingSpeed: 8
+  startingDefense: 3
+  startingPower: 15
   startingHealingPower: 1
-  startingMaxHealth: 300
+  startingMaxHealth: 250
   speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 0.25

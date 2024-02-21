@@ -262,10 +262,10 @@ MonoBehaviour:
   button3CG: {fileID: 0}
   skillLevelText: {fileID: 0}
   startHidden: 0
-  doScalePunch: 0
+  doScalePunch: 1
   dieAfterDisplay: 0
-  scaleIncSize: 1
-  scaleIncTime: 0.25
+  scaleIncSize: 0.3
+  scaleIncTime: 0.2
   vibrato: 5
   elasticity: 0.25
   selectable: 0

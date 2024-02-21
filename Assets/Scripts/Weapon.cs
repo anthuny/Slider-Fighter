@@ -299,6 +299,7 @@ public class Weapon : MonoBehaviour
 
         hitAreaManager.UpdateHitAreaPos();
 
+        ToggleWeaponAccHits(true);
         ToggleWeaponHitsRemainingText(true);
 
         UpdateWeaponDetails();
@@ -461,9 +462,9 @@ public class Weapon : MonoBehaviour
             int finalHitCount = 0;
 
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits();
             else
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits();
 
             // If user missed on first hit, send 1 hit count
             if (hitAccuracy == 0)

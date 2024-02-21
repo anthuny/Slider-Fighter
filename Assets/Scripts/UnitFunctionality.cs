@@ -42,14 +42,18 @@ public class UnitFunctionality : MonoBehaviour
     [Tooltip("Healing amplification this unit recives. This value is multiplied by the healing recieved. 1 = normal, 0 = nothing, 2 = double")]
     public float curHealingRecieved = 1;
     public int curSpeed;
+    public int startingSpeed;
     public int curPower;
     public int curHealingPower;
     public float curDefense;
+
     [SerializeField] private int curHealth;
-    [SerializeField] private int maxHealth;
+    [SerializeField] private int curMaxHealth;
+    [SerializeField] private int startingMaxHealth;
     [SerializeField] private int curLevel;
 
     public int curPowerHits;
+    public int powerHitsRoomStarting;
     private int curHealingHits;
     //public int curPowerHits;
     private float curExp;
@@ -59,7 +63,8 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int curHealingPowerIncPerLv = 0;
     [SerializeField] private float curDefenseIncPerLv = 0;
     [SerializeField] private int maxHealthIncPerLv = 0;
-    public int startingSpeed;
+    public int startingRoomSpeed;
+    public float startingRoomDefense;
     public int startingHealth;
     public int startingDamage;
     public int startingHealing;
@@ -170,16 +175,25 @@ public class UnitFunctionality : MonoBehaviour
     public int item3CurUses;
 
     public Canvas visualCanvas;
+    public int teamIndex;
     //public bool unitDouble;
 
+    public void UpdateStartingMaxHealth(int health)
+    {
+        startingMaxHealth = health;
+    }
 
+    public int GetStartingMaxHealth()
+    {
+        return startingMaxHealth;
+    }
     public void SetItemUsesMax()
     {
         // Find all items that trigger on turn start that ally has
-        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
             //Debug.Log("2");
-            if (this == GameManager.Instance.activeRoomAllies[i])
+            if (this == GameManager.Instance.activeRoomHeroes[i])
             {
                 int index = i;
 
@@ -266,11 +280,14 @@ public class UnitFunctionality : MonoBehaviour
             item3CurUses = 0;
     }
 
-    public void TriggerItemVisualAlert(Sprite sprite)
+    public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true)
     {
         itemVisualAlert.UpdateContentImage(sprite);
 
-        AudioManager.Instance.Play("SFX_ItemTrigger");
+        if (triggered)
+            AudioManager.Instance.Play("SFX_ItemTrigger");
+        else
+            itemVisualAlert.UpdateContentText("");
 
         itemVisualAlert.UpdateAlpha(1, false, 0, false, false);
     }
@@ -403,7 +420,7 @@ public class UnitFunctionality : MonoBehaviour
     }
     public void UpdateMaxHealth(float newVal)
     {
-        maxHealth += (int)newVal;
+        curMaxHealth += (int)newVal;
     }
 
     public int GetSpeedIncPerLv()
@@ -496,7 +513,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitExpVisual(false);
         ToggleUnitBG(false);
-        ResetEffects();
+        ResetEffects(0);
         ToggleHitsRemainingText(false);
 
         //UpdateUnitPowerInc(1);
@@ -544,7 +561,11 @@ public class UnitFunctionality : MonoBehaviour
 
     public void UpdateUnitHealingRecieved(float newVal)
     {
-        curHealingRecieved = newVal;
+        //curHealingRecieved = newVal;
+        curHealingRecieved += newVal;
+
+        if (curHealingRecieved < 0)
+            curHealingRecieved = 0;
     }
 
     public void ResetUnitHealingRecieved()
@@ -789,7 +810,7 @@ public class UnitFunctionality : MonoBehaviour
         }
 
 
-        if (GetIdleBattle() && GameManager.Instance.activeRoomAllies.Count >= 1 && !isDead)
+        if (GetIdleBattle() && GameManager.Instance.activeRoomHeroes.Count >= 1 && !isDead)
         {
             yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
 
@@ -881,6 +902,20 @@ public class UnitFunctionality : MonoBehaviour
             }
         }
     }
+    bool CheckIfItemSucceeds()
+    {
+        int rand = Random.Range(0, 2);
+
+        if (rand == 0)
+            Debug.Log("Item fails");
+        else
+            Debug.Log("Item Succeeds");
+
+        if (rand == 0)
+            return false;
+        else
+            return true;
+    }
 
     public IEnumerator TriggerItems(bool turnStart = false, bool turnEnd = false, bool skillAtack = false, bool alliesAttacked = false, bool enemiesHealed = false, bool selfAttacked = false)
     {
@@ -889,10 +924,10 @@ public class UnitFunctionality : MonoBehaviour
         if (turnStart)
         {
             // Find all items that trigger on turn start that ally has
-            for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
             {
                 //Debug.Log("2");
-                if (this == GameManager.Instance.activeRoomAllies[i])
+                if (this == GameManager.Instance.activeRoomHeroes[i])
                 {
                     //Debug.Log("3");
                     if (turnStart)
@@ -969,10 +1004,9 @@ public class UnitFunctionality : MonoBehaviour
                                             continue;
                                         }
                                     }
-                                    else
+                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
                                     {
-                                        // do functionality
-                                        if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1028,7 +1062,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1084,7 +1130,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1141,7 +1199,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1196,6 +1266,15 @@ public class UnitFunctionality : MonoBehaviour
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
+                                        }
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                         }
                                     }
 
@@ -1274,10 +1353,9 @@ public class UnitFunctionality : MonoBehaviour
                                             continue;
                                         }
                                     }
-                                    else
+                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
                                     {
-                                        // do functionality
-                                        if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1333,7 +1411,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1389,7 +1479,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1446,7 +1548,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1501,6 +1615,15 @@ public class UnitFunctionality : MonoBehaviour
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
+                                        }
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
                                         }
                                     }
 
@@ -1579,10 +1702,9 @@ public class UnitFunctionality : MonoBehaviour
                                             continue;
                                         }
                                     }
-                                    else
+                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
                                     {
-                                        // do functionality
-                                        if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1638,7 +1760,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1694,7 +1828,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1751,7 +1897,19 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
-                                        else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                        }
+                                    }
+                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                    {
+                                        if (CheckIfItemSucceeds())
                                         {
                                             if (x == 0 && item1CurUses > 0)
                                             {
@@ -1807,20 +1965,27 @@ public class UnitFunctionality : MonoBehaviour
                                             yield return new WaitForSeconds(.35f);
                                             continue;
                                         }
+                                        else
+                                        {
+                                            if (x == 0 && item1CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 1 && item2CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                            if (x == 2 && item3CurUses > 1)
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                        }
                                     }
 
                                     yield return new WaitForSeconds(.35f);
                                 }
                             }
                         }
+                        break;
                     }
-
-                    break;
                 }
+                yield return new WaitForSeconds(.5f);
             }
         }
-
-        yield return new WaitForSeconds(.5f);
     }
 
     public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
@@ -2208,7 +2373,7 @@ public class UnitFunctionality : MonoBehaviour
             {
                 // Determining whether the effect hits, If it fails, stop
                 // Add more stacks to the effect that the unit already has
-                for (int x = 0; x < effectHitAcc; x++)
+                for (int x = 0; x < 1; x++)
                 {
                     // Determining whether the effect hits, If it fails, stop
                     if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc)
@@ -2220,7 +2385,11 @@ public class UnitFunctionality : MonoBehaviour
                         {
                             // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
                             activeEffects[i].AddTurnCountText(1);
+                            activeEffects[i].EffectApply(this);
+                            activeEffects[i].UpdateEffectTierImages();
+                            activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+
                         }
                         else
                             continue;
@@ -2228,6 +2397,9 @@ public class UnitFunctionality : MonoBehaviour
                     else
                     {
                         activeEffects[i].AddTurnCountText(1);
+                        activeEffects[i].EffectApply(this);
+                        activeEffects[i].UpdateEffectTierImages();
+                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
                         TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                     }
                 }
@@ -2237,6 +2409,8 @@ public class UnitFunctionality : MonoBehaviour
         // If unit DOES NOT currently have this effect, create it, and start the loop
         if (GetEffect(addedEffect.effectName) == null)
         {
+            Effect effect = null;
+
             for (int m = 0; m < effectHitAcc; m++)
             {
                 GameObject go = null;
@@ -2255,19 +2429,21 @@ public class UnitFunctionality : MonoBehaviour
                             go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
                             go.transform.localScale = new Vector3(1, 1, 1);
 
-                            Effect effect = go.GetComponent<Effect>();
+                            effect = go.GetComponent<Effect>();
                             activeEffects.Add(effect);
                             effect.Setup(addedEffect, targetUnit, 1);
-
+                            activeEffects[m].AddTurnCountText(1);
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-
-                            AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
-                            break;
+                            effect.UpdateEffectTierImages();
+                            effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+                            //AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
                         }
                     }
                     else
-                        continue;
-
+                    {
+                        activeEffects[m].AddTurnCountText(1);
+                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                    }
                 }
                 else
                 {
@@ -2279,14 +2455,18 @@ public class UnitFunctionality : MonoBehaviour
                         go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
                         go.transform.localScale = new Vector3(1, 1, 1);
 
-                        Effect effect = go.GetComponent<Effect>();
+                        effect = go.GetComponent<Effect>();
                         activeEffects.Add(effect);
                         effect.Setup(addedEffect, targetUnit, 1);
-
+                        //activeEffects[m].AddTurnCountText(1);
                         TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-
-                        AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
-                        break;
+                        effect.UpdateEffectTierImages();
+                        effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+                    }
+                    else
+                    {
+                        effect.AddTurnCountText(1);
+                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                     }
                 }
             }
@@ -2294,25 +2474,28 @@ public class UnitFunctionality : MonoBehaviour
 
     }
 
-    public void ResetEffects()
+    public void ResetEffects(float time = .2f)
     {
-        activeEffects.Clear();
-
         if (effectsParent == null)
             return;
+
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            activeEffects[i].EffectRemove(this, false);
+        }
+
+        StartCoroutine(DeleteEffects(time));       
+    }
+
+    IEnumerator DeleteEffects(float time = .2f)
+    {
+        yield return new WaitForSeconds(time);
 
         for (int i = 0; i < effectsParent.childCount; i++)
         {
             Destroy(effectsParent.GetChild(i).gameObject);
         }
     }
-
-    /*
-    public void UpdateUnitProjectileSprite(Sprite sprite)
-    {
-        projectileSprite = sprite;
-    }
-    */
     public void UpdateUnitValue(int val)
     {
         unitValue = val;
@@ -2378,6 +2561,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false)
     {
+        //
         //Debug.Log("power = " + power);
         //if (GameManager.Instance.GetActiveSkill() == null)
         //    yield break;
@@ -2531,8 +2715,14 @@ public class UnitFunctionality : MonoBehaviour
             int finalPower = (int)power;
             float finalPower2 = finalPower;
 
-            if (effect != null)
-                finalPower2 *= curHealingRecieved;
+            /*
+            // Ensure only healing is cut
+            if (!offense)
+            {
+                if (effect != null)
+                    finalPower2 *= curHealingRecieved;
+            }
+            */
 
             int finalPower3 = (int)finalPower2;
             powerText.UpdatePowerText(finalPower3.ToString());   // Update Power Text
@@ -2555,7 +2745,7 @@ public class UnitFunctionality : MonoBehaviour
                         // If unit is able to leach, give them effects they should get.
                         if (targetUnit.isPoisonLeaching)
                         {
-                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
+                            //yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
 
                             targetUnit.TriggerTextAlert("Poison Leach", 1, false);
 
@@ -2565,10 +2755,12 @@ public class UnitFunctionality : MonoBehaviour
 
                             yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
 
+                            /*
                             // Spawn new effect on target unit
                             targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("RECOVER"), targetUnit, 1, 1, false);
 
-                            //yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
+                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
+                            */
                         }
                     }
                 }
@@ -2819,8 +3011,8 @@ public class UnitFunctionality : MonoBehaviour
                 // This isnt working
                 //SpawnPowerUI(levelUpHeal, false, false, null, false);
 
-                UpdateUnitPowerHits(1, true);
-                UpdateUnitHealingHits(1, true);
+                //UpdateUnitPowerHits(1, true);
+                //UpdateUnitHealingHits(1, true);
 
                 UpdateUnitLevelImage();
                 yield break;
@@ -2992,19 +3184,19 @@ public class UnitFunctionality : MonoBehaviour
             {
                 absPower *= curHealingRecieved;
 
-                if (curHealth < maxHealth)
+                if (curHealth < curMaxHealth)
                     curHealth += (int)absPower;
 
-                if (curHealth > maxHealth)
-                    curHealth = maxHealth;
+                if (curHealth > curMaxHealth)
+                    curHealth = curMaxHealth;
             }
         }
         else
         {
             curHealth = (int)absPower;
 
-            if (curHealth > maxHealth)
-                curHealth = maxHealth;
+            if (curHealth > curMaxHealth)
+                curHealth = curMaxHealth;
 
             if (curHealth < 0)
                 curHealth = 0;
@@ -3039,23 +3231,23 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (set)
             {
-                maxHealth = newMaxHealth;
-                curHealth = maxHealth;
+                curMaxHealth = newMaxHealth;
+                curHealth = curMaxHealth;
             }
 
             else
-                maxHealth += newMaxHealth;
+                curMaxHealth += newMaxHealth;
         }
         else
         {
             if (set)
-                maxHealth = newMaxHealth;
+                curMaxHealth = newMaxHealth;
             else
-                maxHealth -= newMaxHealth;
+                curMaxHealth -= newMaxHealth;
         }
 
-        if (curHealth > maxHealth)
-            curHealth = maxHealth;
+        if (curHealth > curMaxHealth)
+            curHealth = curMaxHealth;
 
         UpdateUnitHealthVisual();
     }
@@ -3064,7 +3256,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitHealthBar(true);
 
-        unitHealthBar.fillAmount = (float)curHealth / (float)maxHealth;
+        unitHealthBar.fillAmount = (float)curHealth / (float)curMaxHealth;
 
         if (CheckIfUnitIsDead())
             StartCoroutine(EnsureUnitIsDead(effect));
@@ -3103,12 +3295,12 @@ public class UnitFunctionality : MonoBehaviour
         // If unit is player, give more exp the lower allies there are on team
         if (curUnitType == UnitType.PLAYER)
         {
-            if (GameManager.Instance.activeRoomAllies.Count == 1)
+            if (GameManager.Instance.activeRoomHeroes.Count == 1)
                 attackChargeTurnStart *= 6;
-            else if (GameManager.Instance.activeRoomAllies.Count == 2)
+            else if (GameManager.Instance.activeRoomHeroes.Count == 2)
                 attackChargeTurnStart *= 5;
-            else if (GameManager.Instance.activeRoomAllies.Count == 3)
-                attackChargeTurnStart *= 4;
+            else if (GameManager.Instance.activeRoomHeroes.Count == 3)
+                attackChargeTurnStart *= 3;
         }
         // If unit is enemy, give more exp the lower allies there are on team
         else
@@ -3120,14 +3312,14 @@ public class UnitFunctionality : MonoBehaviour
             else if (GameManager.Instance.activeRoomEnemies.Count == 3)
                 attackChargeTurnStart *= 6;
             else if (GameManager.Instance.activeRoomEnemies.Count == 4)
-                attackChargeTurnStart *= 6;
+                attackChargeTurnStart *= 5;
             else if (GameManager.Instance.activeRoomEnemies.Count == 5)
-                attackChargeTurnStart *= 6;
+                attackChargeTurnStart *= 4;
             else if (GameManager.Instance.activeRoomEnemies.Count == 6)
-                attackChargeTurnStart *= 6;
+                attackChargeTurnStart *= 3;
         }
 
-        attackChargeTurnStart /= 3;
+        attackChargeTurnStart /= 4;
 
         //Debug.Log(GetUnitName() + " 's attack charge = " + attackChargeTurnStart);
         
@@ -3144,13 +3336,14 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitAttackBar(true);
 
+        Debug.Log(GetUnitName() + " Attack Bar = " + (float)curAttackCharge / 100f);
         unitAttackBar.fillAmount = (float)curAttackCharge / 100f;
     }
     public void UpdateUnitAttackBarNextVisual()
     {
         //ToggleUnitAttackBar(true);
-
-        unitAttackBarNext.fillAmount = unitAttackBar.fillAmount + ((float)attackChargeTurnStart / 100f);
+        Debug.Log(GetUnitName() + " Next Bar = " + (float)attackChargeTurnStart / 100f);
+        unitAttackBarNext.fillAmount = ((float)curAttackCharge + (float)attackChargeTurnStart) / 100f;
     }
 
     public void ToggleUnitHealthBar(bool toggle)
@@ -3177,9 +3370,12 @@ public class UnitFunctionality : MonoBehaviour
             attackBarUIElement.UpdateAlpha(0);
     }
 
-    public void UpdateUnitSpeed(int newSpeed)
+    public void UpdateUnitSpeed(int newSpeed, bool set = true)
     {
-        curSpeed = newSpeed;
+        if (set)
+            curSpeed = newSpeed;
+        else
+            curSpeed += newSpeed;
     }
 
     public void UpdateUnitSpeedChange(int newSpeed, bool inc)
@@ -3200,6 +3396,7 @@ public class UnitFunctionality : MonoBehaviour
         oldCurSpeed = oldSpeed;
     }
 
+    /*
     public float GetOldSpeed()
     {
         return oldCurSpeed;
@@ -3209,6 +3406,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         oldCurSpeed = 0;
     }
+    */
 
     public void UpdateUnitOldDefense(int def)
     {
@@ -3301,9 +3499,17 @@ public class UnitFunctionality : MonoBehaviour
     }
 
    
-    public void UpdateUnitDefense(int newDefense)
+    public void UpdateUnitDefense(int newDefense, bool set = true)
     {
-        curDefense = newDefense;
+        if (set)
+            curDefense = newDefense;
+        else
+            curDefense += newDefense;
+    }
+
+    public void ResetUnitDefense()
+    {
+        curDefense = startingRoomDefense;
     }
 
     public void UpdateUnitDefenseChange(int newDef, bool inc)
@@ -3318,13 +3524,37 @@ public class UnitFunctionality : MonoBehaviour
     {
         return curDefense;
     }
+
+    public float GetBlockChance()
+    {
+        //def calculate_block_chance(defense_level):
+        float a = 9;
+        float b = 0.000003f;
+
+        float block_chance = (a * Mathf.Log(GetCurDefense() + 1)) / (b * GetCurDefense() + 1);
+
+        block_chance -= 10;
+        if (block_chance < 0)
+            block_chance = 0;
+
+        return block_chance;   
+    }
+
+    public float GetStartingRoomDefense()
+    {
+        return startingDefense;
+    }
     
     public void UpdateUnitPowerHits(int newDmgHits, bool inc = true)
     {
+        //Debug.Log(GetUnitName() + " updating power hits");
         if (inc)
             curPowerHits += newDmgHits;
         else
             curPowerHits -= newDmgHits;
+
+        if (!HeroRoomManager.Instance.playerInHeroRoomView && GameManager.Instance.playerInCombat)
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveSkill());
     }
 
     public int GetUnitPowerHits()
@@ -3369,7 +3599,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public float GetUnitMaxHealth()
     {
-        return maxHealth;
+        return curMaxHealth;
     }
 
     /*

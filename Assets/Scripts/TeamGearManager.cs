@@ -199,6 +199,8 @@ public class TeamGearManager : MonoBehaviour
         {
             UnitFunctionality unitFunc = GetKnownUnitFunct(true, false, false);
 
+            // Equipping a gear piece, needs to increase max hp by a set amount
+            // set amount = unit starting max health
             unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
             unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
             unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false);
@@ -310,11 +312,7 @@ public class TeamGearManager : MonoBehaviour
         }
 
         // Gear Stat Description Update
-
-
     }
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -323,6 +321,14 @@ public class TeamGearManager : MonoBehaviour
         ClearGearSlots();
         ClearAllGearStats();
         //ResetAllGearSelections();
+
+        StartCoroutine(ToggleGearButtonsCo());
+    }
+
+    IEnumerator ToggleGearButtonsCo()
+    {
+        yield return new WaitForSeconds(0.2f);
+        ToggleGearButtons(false);
     }
 
     private void Awake()
@@ -578,6 +584,9 @@ public class TeamGearManager : MonoBehaviour
 
     public void ToggleAllyGearSets()
     {
+        if (GetKnownUnitFunct(true, false, false) == null)
+            return;
+
         // If ally team has 1 total allies
         if (GameManager.Instance.activeTeam.Count == 1)
         {
@@ -646,9 +655,9 @@ public class TeamGearManager : MonoBehaviour
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
             // Active unit level image for team page
-            for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
             {
-                GameManager.Instance.activeRoomAllies[i].ToggleUnitLevelImage(true);
+                GameManager.Instance.activeRoomHeroes[i].ToggleUnitLevelImage(true);
             }
 
             // Toggle to map button for team gear
@@ -662,8 +671,8 @@ public class TeamGearManager : MonoBehaviour
             ToggleAllSlotsClickable(true, false, true);
 
             // Hide team setup tab arrow buttons
-            SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(false);
-            SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(false);
+            SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(true);
+            SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(true);
 
             // Display gear tab arrow buttons
             teamSetupTabArrowLeftButton.ToggleButton(true);
@@ -867,7 +876,7 @@ public class TeamGearManager : MonoBehaviour
         Slot removedGear = null;
 
         // Remove current equipt item, and place into owned gear
-
+        /*
         if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
         {
             // If play ownst at least 1 item
@@ -877,7 +886,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearMainAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetSlotName() == gear.GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x])
                     {
                         // Add gear into owned gear
                         OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
@@ -898,7 +907,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetSlotName() == gear.GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x])
                     {
                         // Add gear into owned gear
                         OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
@@ -919,7 +928,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetSlotName() == gear.GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x])
                     {
                         // Add gear into owned gear
                         OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
@@ -931,7 +940,7 @@ public class TeamGearManager : MonoBehaviour
                 }
             }
         }
-
+        */
 
         // Remove gear from owned gear list when equipping
         // Add gear to worn gear
@@ -1228,7 +1237,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearMainAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetSlotName() == GetSelectedGearSlot().GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetSlotName() == GetSelectedBaseGearSlot().GetSlotName())
                     {
                         // Remove saved equipped gear piece (data side)
                         if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)
@@ -1266,7 +1275,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetSlotName() == GetSelectedGearSlot().GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x])
                     {
                         // Remove saved equipped gear piece (data side)
                         if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)
@@ -1304,7 +1313,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetSlotName() == GetSelectedGearSlot().GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x])
                     {
                         // Remove saved equipped gear piece (data side)
                         if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)

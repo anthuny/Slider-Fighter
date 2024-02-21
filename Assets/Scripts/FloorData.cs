@@ -13,6 +13,7 @@ public class FloorData : ScriptableObject
     public int sideRoomAmount = 5;
     public int shopRoomCount = 1;
     public int heroRoomCount = 1;
+    public int itemRoomCount = 1;
     public int minRoomValue = 1;
     public int maxRoomValue = 3;
 

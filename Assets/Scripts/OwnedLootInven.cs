@@ -615,6 +615,7 @@ public class OwnedLootInven : MonoBehaviour
             // int index = 0;
             for (int i = 0; i < ownedGear.Count; i++)
             {
+                //ebug.Log("looping owned gear");
                 if (TeamGearManager.Instance.GetSelectedGearSlot() == null)
                 {
                     Debug.LogError("No Selected gear slot when opening owned gear");
@@ -700,6 +701,7 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
                         ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
                         ownedItemSlotIndex++;
+                        //Debug.Log("asdasdasd");
                     }
                 }
                 else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotType.CHESTPIECE)
@@ -722,6 +724,7 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
 
                         ownedItemSlotIndex++;
+                        //Debug.Log("123123123");
                     }
                 }
                 else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotType.BOOTS)
@@ -743,6 +746,7 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
                         ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
                         ownedItemSlotIndex++;
+                        //Debug.Log("456456456");
                     }
                 }
 

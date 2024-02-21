@@ -156,80 +156,59 @@ public class GearRewards : MonoBehaviour
             // Ensure spawned item only spawns once
             if (!ItemRewardManager.Instance.disableItemRewards && !spawnedItem)
             {
-                spawnedItem = true;
-
-                yield return new WaitForSeconds(timeInbetweenRewards);
-
-                // Button Click SFX
-                AudioManager.Instance.Play("Button_Click");
-
-                GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, recievedGearParent.position, Quaternion.identity);
-                go.transform.SetParent(recievedGearParent);
-                go.transform.localScale = new Vector2(1, 1);
-
-                UIElement uIElement = go.GetComponent<UIElement>();
-                Slot slot = go.GetComponent<Slot>();
-
-
-
-                uIElement.ToggleButton(false);
-
-                ItemPiece newItem = ItemRewardManager.Instance.selectedItem;
-
-                OwnedLootInven.Instance.AddOwnedItems(slot);
-
-                /*
-                // Determine what rarity this item is, and reference it
-                if (slot.GetRarity() == Slot.Rarity.COMMON)
+                if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ITEM || RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
                 {
-                    int rand = Random.Range(0, allItemPiecesCommon.Count);
-                    newItem = allItemPiecesCommon[rand];
-                }
-                else if (slot.GetRarity() == Slot.Rarity.RARE)
-                {
-                    int rand = Random.Range(0, allItemPiecesRare.Count);
-                    newItem = allItemPiecesRare[rand];
-                }
-                else if (slot.GetRarity() == Slot.Rarity.EPIC)
-                {
-                    int rand = Random.Range(0, allItemPiecesEpic.Count);
-                    newItem = allItemPiecesEpic[rand];
-                }
-                else if (slot.GetRarity() == Slot.Rarity.LEGENDARY)
-                {
-                    int rand = Random.Range(0, allItemPiecesLegendary.Count);
-                    newItem = allItemPiecesLegendary[rand];
-                }
-                */
-                // Set item
-                uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
-                uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
+                    spawnedItem = true;
 
-                if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.LEGENDARY)
-                {
-                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
-                }
-                else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.EPIC)
-                {
-                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
-                }
-                else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.RARE)
-                {
-                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
-                }
-                else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.COMMON)
-                {
-                    uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
-                }
-                slot.UpdateSlotImage(newItem.itemSprite);
+                    yield return new WaitForSeconds(timeInbetweenRewards);
 
-                slot.UpdateSlotName(newItem.itemName);
-                slot.UpdateLinkedItemPiece(newItem);
+                    // Button Click SFX
+                    AudioManager.Instance.Play("Button_Click");
 
-                // Disable owned gear button for unowned loot
-                //slot.ToggleOwnedGearButton(false);
-                // Show full visibility of Gear
-                slot.UpdateLootGearAlpha(true);
+                    GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, recievedGearParent.position, Quaternion.identity);
+                    go.transform.SetParent(recievedGearParent);
+                    go.transform.localScale = new Vector2(1, 1);
+
+                    UIElement uIElement = go.GetComponent<UIElement>();
+                    Slot slot = go.GetComponent<Slot>();
+
+                    uIElement.ToggleButton(false);
+
+                    ItemPiece newItem = ItemRewardManager.Instance.selectedItem;
+
+                    OwnedLootInven.Instance.AddOwnedItems(slot);
+
+                    // Set item
+                    uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
+                    uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
+
+                    if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.LEGENDARY)
+                    {
+                        uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
+                    }
+                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.EPIC)
+                    {
+                        uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
+                    }
+                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.RARE)
+                    {
+                        uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
+                    }
+                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.COMMON)
+                    {
+                        uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
+                    }
+                    slot.UpdateSlotImage(newItem.itemSprite);
+
+                    slot.UpdateSlotName(newItem.itemName);
+                    slot.UpdateLinkedItemPiece(newItem);
+
+                    // Disable owned gear button for unowned loot
+                    //slot.ToggleOwnedGearButton(false);
+                    // Show full visibility of Gear
+                    slot.UpdateLootGearAlpha(true);
+                }
+
             }
 
             int gearChance = Random.Range(0, 101);

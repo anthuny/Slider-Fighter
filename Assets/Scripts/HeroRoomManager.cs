@@ -37,9 +37,36 @@ public class HeroRoomManager : MonoBehaviour
     {
         GameManager.Instance.SpawnAllies(true);
 
+
+
+
+
         GameManager.Instance.UpdateAllysPositionCombat();
 
         playerInHeroRoomView = true;
+
+        GameManager.Instance.EnsureHeroIsDead();
+        StartCoroutine(GameManager.Instance.HeroRetrievalScene(false));
+
+        GameManager.Instance.UpdateActiveSkill(null);
+
+        GameManager.Instance.ResetSelectedUnits();
+
+        GameManager.Instance.combatOver = true;
+
+        // Toggle player overlay and skill ui off
+        GameManager.Instance.ToggleUIElement(GameManager.Instance.playerAbilities, false);
+        GameManager.Instance.ToggleUIElement(GameManager.Instance.playerAbilityDesc, false);
+        GameManager.Instance.ToggleUIElement(GameManager.Instance.endTurnButtonUI, false);
+        //GameManager.Instance.ToggleUIElement(GameManager.Instance.turnOrder, false);
+        GameManager.Instance.ResetActiveUnitTurnArrow();
+        GameManager.Instance.ToggleAllAlliesStatBar(false);
+
+        // Remove all unit effects and level image for item rewards
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            GameManager.Instance.activeRoomHeroes[i].ResetEffects();
+        }
     }
 
     public Transform GetSpawnLocTrans()
@@ -77,6 +104,8 @@ public class HeroRoomManager : MonoBehaviour
         {
             GameManager.Instance.ResetAlliesExpVisual();
 
+            //SpawnHeroGameManager();
+
             if (overrideSpawning)
             {
                 TogglePlayedOffered(true);
@@ -88,11 +117,24 @@ public class HeroRoomManager : MonoBehaviour
                 TogglePlayedOffered(true);
                 promptUI.UpdateAlpha(0);
                 RemoveSpawnedUnit();
-                StartCoroutine(TimeWaitHerojoining());
+                playerInHeroRoomView = false;
+
+                //GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
             }
+
+            GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
         }
     }
 
+    public void SpawnHeroGameManager()
+    {
+        if (GameManager.Instance.activeRoomHeroes.Count < 3)
+            SpawnHero();
+        else
+        {
+            GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
+        }
+    }
     IEnumerator TimeWaitHerojoining()
     {
         yield return new WaitForSeconds(timeWaitAfterHeroJoining);
@@ -100,7 +142,7 @@ public class HeroRoomManager : MonoBehaviour
         //GetHeroRoomUI().UpdateAlpha(0);
         //Destroy(GetHeroRoomUI().gameObject);
 
-        GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
+        //GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
         //StartCoroutine(GameManager.Instance.HeroRetrievalScene());
         GameManager.Instance.UpdateAllAlliesPosition(true);
         RoomManager.Instance.ToggleInteractable(false);
@@ -123,9 +165,9 @@ public class HeroRoomManager : MonoBehaviour
         RoomManager.Instance.ToggleInteractable(false);
 
         GameManager.Instance.RemoveUnit(GameManager.Instance.spawnedUnitFunctionality);
-        //GameManager.Instance.removeu
+        Debug.Log("Destroying unit " + GameManager.Instance.spawnedUnitFunctionality);
 
-        GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
+
 
         StartCoroutine(DestroySpawnedUnit());
     }

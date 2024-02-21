@@ -178,7 +178,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 7738427405295108551}
   m_OnClick:
     m_PersistentCalls:
@@ -221,7 +221,7 @@ MonoBehaviour:
   button2CG: {fileID: 0}
   button3CG: {fileID: 0}
   skillLevelText: {fileID: 0}
-  startHidden: 0
+  startHidden: 1
   doScalePunch: 0
   dieAfterDisplay: 0
   scaleIncSize: 1
@@ -250,9 +250,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 554740725148644761}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &8269492507650576635
 MonoBehaviour:
@@ -1421,6 +1421,7 @@ MonoBehaviour:
   isEmpty: 1
   code: 0
   linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
   baseSlot: 1
 --- !u!1 &8730867197212519636
 GameObject:

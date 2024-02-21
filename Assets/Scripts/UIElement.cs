@@ -397,9 +397,9 @@ public class UIElement : MonoBehaviour
 
             if (doScalePunch)
                 contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
-
+            //contentText.gameObject.transform.DORestart();
             AnimateUIMaxCap();
-
+            StartCoroutine(HideUIOvertime(0, false, false));
             ResetAnimateScaleText();
         }
         else
@@ -432,15 +432,15 @@ public class UIElement : MonoBehaviour
             contentText.gameObject.transform.localScale = new Vector2(1.3f, 1.3f);
     }
 
-    IEnumerator HideUIOvertime(float time = 0, bool skipResetText = false)
+    IEnumerator HideUIOvertime(float time = 0, bool skipResetText = false, bool turnOff = true)
     {
         if (!skipResetText)
             ResetAnimateScaleText();
 
         yield return new WaitForSeconds(time);
 
-        UpdateAlpha(0);
-
+        if (turnOff)
+            UpdateAlpha(0);
     }
 
     public IEnumerator ChangeTextColourTime(Color newColor, float time = 1)
@@ -455,7 +455,7 @@ public class UIElement : MonoBehaviour
     public void ResetAnimateScaleText()
     {
         contentText.gameObject.transform.localScale = new Vector3(originalScaleText, originalScaleText);
-
+        //Debug.Log("")
         contentText.gameObject.transform.DORestart();
         //contentText.gameObject.transform.DOKill(true);
     }

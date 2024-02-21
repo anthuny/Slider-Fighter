@@ -209,9 +209,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Face left for combat
 
         // Make all allies face left for combat
-        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
-            GameManager.Instance.activeRoomAllies[i].UpdateFacingDirection(false);
+            GameManager.Instance.activeRoomHeroes[i].UpdateFacingDirection(false);
         }
 
         GameManager.Instance.UpdateAllysPositionCombat();
@@ -235,10 +235,19 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void ButtonOpenMap()
     {
+        Debug.Log("!");
         // If owned gear is opened, do not allow map button to be selected
         if (OwnedLootInven.Instance.GetOwnedLootOpened())
             return;
 
+        //GameManager.Instance.activeRoomHeroesBase.Reverse();
+        /*
+        if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab || SkillsTabManager.Instance.playerInSkillTab)
+            GameManager.Instance.SetActiveHeroToBase();
+        else
+            GameManager.Instance.SetHeroFormation();
+        //
+        */
         SettingsManager.Instance.ToggleSettingsButton(true);
 
         // Button Click SFX
@@ -372,9 +381,25 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.HERO)
-            StartCoroutine(GameManager.Instance.HeroRetrievalScene());
+        {
+            if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
+            {
+                GameManager.Instance.EnsureHeroIsDead();
+                StartCoroutine(GameManager.Instance.HeroRetrievalScene(false));
+
+                StartCoroutine(ConfrimItemCo());
+            }
+        }
+
         else
             StartCoroutine(GameManager.Instance.SetupPostBattleUI(GameManager.Instance.playerWon));
+    }
+
+    IEnumerator ConfrimItemCo()
+    {
+        yield return new WaitForSeconds(.35f);
+
+        HeroRoomManager.Instance.SpawnHeroGameManager();
     }
 
     public void ButtonSlotDetails(bool openedOwnedSlots = true)
@@ -802,9 +827,12 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     // Gear tab to Skill tab
     public void ButtonSkillsTabFromGearTab()
-    {        
+    {
+        //Debug.Log("@");
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
+
+        //GameManager.Instance.SetHeroFormation();
 
         // Disable Owned Gear Display
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
@@ -815,6 +843,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         //TeamSetup.Instance.ResetStatPageCount();
 
+        //SkillsTabManager.Instance.
         SkillsTabManager.Instance.ToggleOwnedSkillSlotsClickable(true);
 
         GameManager.Instance.SkillsTabChangeAlly(true, false, true);
@@ -848,6 +877,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
+
+        //GameManager.Instance.SetActiveHeroToBase();
 
         TeamGearManager.Instance.playerInGearTab = false;
         SkillsTabManager.Instance.playerInSkillTab = false;
@@ -928,7 +959,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);
 
 
-        if (GameManager.Instance.activeRoomAllies.Count > 0)
+        if (GameManager.Instance.activeRoomHeroes.Count > 0)
         {
             if (GameManager.Instance.GetActiveAlly())
             {
@@ -1017,6 +1048,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.ReduceAllPlayerHealth();
     }
 
+    public void AddEnemyHPButton()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        GameManager.Instance.IncreaseAllEnemyHealth();
+    }
+    public void AddAllyHPButton()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        GameManager.Instance.IncreaseAllPlayerHealth();
+    }
+
     public void EndTurnButton()
     {
         if (disabled)
@@ -1070,7 +1116,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        HeroRoomManager.Instance.TogglePrompt(false, false);
+        HeroRoomManager.Instance.TogglePrompt(false, false, true);
     }
 
     public void HeroRoomPromptNo()
@@ -1078,7 +1124,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        HeroRoomManager.Instance.TogglePrompt(false);
+        HeroRoomManager.Instance.TogglePrompt(false, true, false);
     }
 
     public void SelectSkill0()

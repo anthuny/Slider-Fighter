@@ -114,13 +114,13 @@ public class MenuUnitDisplay : MonoBehaviour
 
     public void ResetUnitStats()
     {
-        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
-            GameManager.Instance.activeRoomAllies[i].prevStatHealth = 0;
-            GameManager.Instance.activeRoomAllies[i].prevStatPower = 0;
-            GameManager.Instance.activeRoomAllies[i].prevStatHealingPower = 0;
-            GameManager.Instance.activeRoomAllies[i].prevStatDefense = 0;
-            GameManager.Instance.activeRoomAllies[i].prevStatSpeed = 0;
+            GameManager.Instance.activeRoomHeroes[i].prevStatHealth = 0;
+            GameManager.Instance.activeRoomHeroes[i].prevStatPower = 0;
+            GameManager.Instance.activeRoomHeroes[i].prevStatHealingPower = 0;
+            GameManager.Instance.activeRoomHeroes[i].prevStatDefense = 0;
+            GameManager.Instance.activeRoomHeroes[i].prevStatSpeed = 0;
         }
     }
 

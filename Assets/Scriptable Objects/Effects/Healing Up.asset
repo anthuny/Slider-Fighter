@@ -16,7 +16,7 @@ MonoBehaviour:
   curEffectType: 1
   curEffectName: 6
   effectName: HEALINGUP
-  effectDesc: Increase healing hits by 2
+  effectDesc: Increase healing hits by 1
   effectIcon: {fileID: 21300000, guid: 6271db492c5c6e74d8ee88d4980f1b2e, type: 3}
   powerPercent: 0
   powerAmp: 0

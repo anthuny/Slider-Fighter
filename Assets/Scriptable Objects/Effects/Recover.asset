@@ -16,8 +16,8 @@ MonoBehaviour:
   curEffectType: 1
   curEffectName: 8
   effectName: RECOVER
-  effectDesc: Receive a heal equal to 15% maximum health, at the end of turn
+  effectDesc: Receive a heal equal to 5% maximum health, at the end of turn
   effectIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
-  powerPercent: 15
+  powerPercent: 5
   powerAmp: 0
   titleTextColour: {r: 0.3881306, g: 1, b: 0.24056602, a: 1}

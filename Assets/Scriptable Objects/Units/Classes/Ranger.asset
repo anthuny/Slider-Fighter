@@ -18,9 +18,9 @@ MonoBehaviour:
   unitIcon: {fileID: 21300000, guid: 2e60975a96af8444daa50ac973ed19a7, type: 3}
   unitColour: {r: 0.36288777, g: 0.9622642, b: 0.24056605, a: 1}
   unitName: Ranger
-  startingSpeed: 12
+  startingSpeed: 8
   startingDefense: 5
-  startingPower: 35
+  startingPower: 25
   startingHealingPower: 0
   startingMaxHealth: 600
   speedIncPerLv: 2

@@ -336,9 +336,9 @@ public class SkillsTabManager : MonoBehaviour
         //ToggleToMapButton(true);
 
         // Active unit level image for team page
-        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
-            GameManager.Instance.activeRoomAllies[i].ToggleUnitLevelImage(true);
+            GameManager.Instance.activeRoomHeroes[i].ToggleUnitLevelImage(true);
         }
 
         UnitFunctionality unit = GetActiveUnit();
@@ -353,7 +353,7 @@ public class SkillsTabManager : MonoBehaviour
 
         SetupSkillsTab(unit);
 
-        if (GameManager.Instance.activeRoomAllies.Count == 1)
+        if (GameManager.Instance.activeRoomHeroes.Count == 1)
             GameManager.Instance.GetActiveAlly().SetPositionAndParent(GameManager.Instance.allySpawnPositions[0]);
     }
 
@@ -466,9 +466,9 @@ public class SkillsTabManager : MonoBehaviour
         if (updateSkillUpgrades)
             UpdateUnspentPointsText(CalculateUnspentSkillPoints());
 
-        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
-            GameManager.Instance.activeRoomAllies[i].ToggleUnitDisplay(true);
+            GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(true);
         }
 
     }
@@ -622,7 +622,7 @@ public class SkillsTabManager : MonoBehaviour
 
     public void UpdateSelectedBaseSlot(Slot slot)
     {
-        Debug.Log("setting slot " + slot.GetSlotName());
+        //Debug.Log("setting slot " + slot.GetSlotName());
         ResetSkillsBaseSelection();
 
         selectedBaseSlot = slot;
@@ -638,7 +638,7 @@ public class SkillsTabManager : MonoBehaviour
 
     public void ToggleSelectedSlotDetailsButton(bool toggle = true)
     {
-        Debug.Log("Toggling sign " + toggle);
+        //Debug.Log("Toggling sign " + toggle);
 
         skillBase1.slot.ToggleEquipButton(false);
         skillBase2.slot.ToggleEquipButton(false);
@@ -740,12 +740,12 @@ public class SkillsTabManager : MonoBehaviour
         int spentPoints = 0;
 
         //  error check with starting with allies 
-        if (GameManager.Instance.activeRoomAllies.Count > 0)
+        if (GameManager.Instance.activeRoomHeroes.Count > 0)
         {
             for (int i = 0; i < GameManager.Instance.activeTeam.Count; i++)
             {
-                unitsCombinedLevel += GameManager.Instance.activeRoomAllies[i].GetUnitLevel() * skillPointsPerLv;
-                spentPoints += GameManager.Instance.activeRoomAllies[i].GetSpentSkillPoints();
+                unitsCombinedLevel += GameManager.Instance.activeRoomHeroes[i].GetUnitLevel() * skillPointsPerLv;
+                spentPoints += GameManager.Instance.activeRoomHeroes[i].GetSpentSkillPoints();
             }
         }
 
@@ -798,9 +798,9 @@ public class SkillsTabManager : MonoBehaviour
 
     void ResetSpendStatPoints()
     {
-        for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
-            GameManager.Instance.activeRoomAllies[i].ResetSpentStatPoints();
+            GameManager.Instance.activeRoomHeroes[i].ResetSpentStatPoints();
         }
     }
 

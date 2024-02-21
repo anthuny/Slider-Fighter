@@ -273,7 +273,7 @@ public class TeamItemsManager : MonoBehaviour
             ally1ItemsTabUI.UpdateAlpha(1);
 
             // Display unit level image
-            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[0].GetUnitLevel());
+            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomHeroes[0].GetUnitLevel());
 
             // Update visible character ally 
             ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
@@ -290,8 +290,8 @@ public class TeamItemsManager : MonoBehaviour
             ally2ItemsTabUI.UpdateAlpha(1);
 
             // Display unit level image
-            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[0].GetUnitLevel());
-            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[1].GetUnitLevel());
+            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomHeroes[0].GetUnitLevel());
+            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomHeroes[1].GetUnitLevel());
 
             // Update visible character ally 
             ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
@@ -309,9 +309,9 @@ public class TeamItemsManager : MonoBehaviour
             ally3ItemsTabUI.UpdateAlpha(1);
 
             // Display unit level image
-            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[0].GetUnitLevel());
-            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[1].GetUnitLevel());
-            ally3MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomAllies[2].GetUnitLevel());
+            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomHeroes[0].GetUnitLevel());
+            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomHeroes[1].GetUnitLevel());
+            ally3MenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomHeroes[2].GetUnitLevel());
 
             // Update visible character ally 
             ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
@@ -332,9 +332,9 @@ public class TeamItemsManager : MonoBehaviour
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
             // Active unit level image for team page
-            for (int i = 0; i < GameManager.Instance.activeRoomAllies.Count; i++)
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
             {
-                GameManager.Instance.activeRoomAllies[i].ToggleUnitLevelImage(true);
+                GameManager.Instance.activeRoomHeroes[i].ToggleUnitLevelImage(true);
             }
 
             // Toggle to map button for team gear

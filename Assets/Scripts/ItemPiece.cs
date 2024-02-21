@@ -11,6 +11,7 @@ public class ItemPiece : ScriptableObject
     public string itemName;
     public string itemDesc;
     public Sprite itemSprite;
+    public Sprite itemSpriteFail;
 
     public EffectData effectAdded;
     public int effectAddedTurnLength = 1;

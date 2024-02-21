@@ -59,6 +59,8 @@ public class UpdateLog : MonoBehaviour
     {
         ResetCurrentUpdateLogTexts();
 
+        updateLogTexts.Reverse();
+
         for (int i = 0; i < updateLogTexts.Count; i++)
         {
             GameObject go = Instantiate(updateLogTextAreaGO, updateLogContents.position, Quaternion.identity);

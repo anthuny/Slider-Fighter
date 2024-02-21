@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b1acb7c48ac8e4794d42cad5696501, type: 3}
   m_Name: Added Item Tab Functionality
   m_EditorClassIdentifier: 
-  updateLogPreText: 17/02/24 - Feature - Added item tab functionality
+  updateLogPreText: 17/02/24 - Added item tab functionality
   updateLogText: Item tab now correctly saves items collected through combat. Each
     hero can equip up to 3 items. Each item consumes 1 charge on use, having 3 charges
     per combat, resetting at the start of each combat room.

@@ -332,7 +332,7 @@ public class ItemRewardManager : MonoBehaviour
             }
             if (allItemCommon.Count > 0)
             {
-                if (itemChance > itemCommonPerc)
+                if (itemChance >= itemCommonPerc)
                 {
                     // spawn Common item
                     int rand = Random.Range(0, allItemCommon.Count);

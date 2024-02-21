@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curRarity: 0
   itemName: Hunting Chainmail
-  itemDesc: Add Defense Up (1)  - On Turn Start. using 1 charge.
+  itemDesc: 50% chance to Add Defense Up (1)  - On Turn Start. using 1 charge. (Gain
+    3 charge per combat start)
   itemSprite: {fileID: 21300000, guid: 490c19b0051526d4bb8a3dd99bc375a2, type: 3}
+  itemSpriteFail: {fileID: 21300000, guid: 87d84f5e78a3af1479db8590da46f5ce, type: 3}
   effectAdded: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
   effectAddedTurnLength: 1
   itemPower: 0

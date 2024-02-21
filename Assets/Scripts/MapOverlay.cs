@@ -59,6 +59,12 @@ public class MapOverlay : MonoBehaviour
             UpdateRoomTypeTextColour(MapManager.Instance.roomEnemyColour);
             UpdateRoomSubText("ROOM");
         }
+        else if (roomType == RoomMapIcon.RoomType.ITEM)
+        {
+            UpdateRoomTypeText("ITEM");
+            UpdateRoomTypeTextColour(MapManager.Instance.roomShopColour);
+            UpdateRoomSubText("ROOM");
+        }
         else if (roomType == RoomMapIcon.RoomType.BOSS)
         {
             UpdateRoomTypeText("BOSS");

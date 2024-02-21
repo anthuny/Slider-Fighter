@@ -26,8 +26,8 @@ MonoBehaviour:
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
-  startingSkillPower: 4
-  curSkillPower: 4
+  startingSkillPower: 8
+  curSkillPower: 8
   skillAttackAccMult: 1
   skillBaseHitOutput: 1
   skillHitAttempts: 1
@@ -47,8 +47,8 @@ MonoBehaviour:
   special: 0
   effect: {fileID: 11400000, guid: a0a448b2d3383c44b82ac9431b0bd644, type: 2}
   effectTurnLength: 1
-  curEffectHitChance: 35
-  startingEffectHitChance: 35
+  curEffectHitChance: 10
+  startingEffectHitChance: 10
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0

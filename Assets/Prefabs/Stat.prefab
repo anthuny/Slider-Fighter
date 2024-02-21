@@ -143,29 +143,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 316701890705493069}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 7160324061442494998}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
   startHidden: 0
   doScalePunch: 1
   dieAfterDisplay: 0
-  scaleIncSize: 1
-  scaleIncTime: 0.25
+  scaleIncSize: 0.75
+  scaleIncTime: 0.2
   vibrato: 5
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
   lockedImage: {fileID: 0}
-  statPointsThreshhold: 0
+  unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
   originalScaleText: 0
+  isEnabled: 0
 --- !u!114 &4951853902055784925
 MonoBehaviour:
   m_ObjectHideFlags: 0

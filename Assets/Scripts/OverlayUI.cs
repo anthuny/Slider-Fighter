@@ -35,6 +35,8 @@ public class OverlayUI : MonoBehaviour
     [SerializeField] private Color powerDamageColour;
     [SerializeField] private Color powerHealColour;
 
+    private int oldHits;
+
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int baseHitCount, bool attack,
         int skillTargetCount, int skillPower, int skillCooldown, int hitAttemptCount, float accuracyCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
     {
@@ -172,6 +174,11 @@ public class OverlayUI : MonoBehaviour
     private void UpdateSkillDetailsBaseHits(int count)
     {
         skillDetailsBaseHitsUI.UpdateContentText(count.ToString());
+
+        //if (count != oldHits)
+          //  skillDetailsBaseHitsUI.AnimateUI();
+
+        //oldHits = count;
     }
     private void UpdateSkillDetailsAccuracyText(int count)
     {

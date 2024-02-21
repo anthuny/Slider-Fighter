@@ -23,14 +23,14 @@ MonoBehaviour:
   skillTabDescr: Target 4 base enemies, dealing damage
   startingSkillLevel: 0
   curSkillLevel: 0
-  pointsAdded: 6
-  startingSkillPower: 6
-  curSkillPower: 6
+  pointsAdded: 0
+  startingSkillPower: 16
+  curSkillPower: 16
   skillAttackAccMult: 1
   skillBaseHitOutput: 2
   skillHitAttempts: 2
   projectileSpeed: 12
-  skillCooldown: 2
+  skillCooldown: 1
   curCooldown: 0
   skillSelectionCount: 4
   isSelfCast: 0
