@@ -30,7 +30,7 @@ public class Effect : MonoBehaviour
     public bool isSelfCast;
 
     [SerializeField] private TextMeshProUGUI effectTurnCountText;
-    public int turnCountRemaining;
+    public int turnCountRemaining = 0;
 
     private Image effectIconImage;
     bool initialUse;
@@ -40,7 +40,7 @@ public class Effect : MonoBehaviour
     public Color titleTextColour;
 
     public float addedStat;
-    public int effectPowerStacks = 1;
+    public int effectPowerStacks = 0;
     [SerializeField] private GameObject effectTierGO;
 
     private void Awake()
@@ -158,7 +158,13 @@ public class Effect : MonoBehaviour
 
     public void AddTurnCountText(int turns)
     {
-        turnCountRemaining += turns;
+        if (turns == 0)
+        {
+            turnCountRemaining = 0;
+        }
+        else
+            turnCountRemaining += turns;
+        
         effectTurnCountText.text = turnCountRemaining.ToString();
 
         // Ensure there is a cap
@@ -384,13 +390,15 @@ public class Effect : MonoBehaviour
         power = (int)tempPower;
         float newHealingPower = power;
 
+        newHealingPower *= effectPowerStacks;
+
         // Ensure only healing is cut
         if (curEffectType == EffectType.SUPPORT)
         {
             newHealingPower *= unitTarget.curHealingRecieved;
         }
 
-        newHealingPower *= effectPowerStacks;
+
 
         // Debug.Log("power = " + power);
 
@@ -406,9 +414,9 @@ public class Effect : MonoBehaviour
 
 
         if (curEffectName == EffectName.BLEED)
-            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this));
+            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this, false));
         else if (curEffectName == EffectName.POISON)
-            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this));
+            unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this, false, true));
         else if (curEffectName == EffectName.RECOVER)
             unitTarget.StartCoroutine(unitTarget.SpawnPowerUI((int)newHealingPower, false, false, this));
 

@@ -65,6 +65,7 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int maxHealthIncPerLv = 0;
     public int startingRoomSpeed;
     public float startingRoomDefense;
+    public int startingRoomMaxHealth;
     public int startingHealth;
     public int startingDamage;
     public int startingHealing;
@@ -1056,7 +1057,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("POWERUP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1124,7 +1125,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1192,7 +1193,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
 
 
@@ -1261,7 +1262,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1405,7 +1406,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("POWERUP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1473,7 +1474,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1541,7 +1542,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
 
 
@@ -1610,7 +1611,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1754,7 +1755,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("POWERUP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1822,7 +1823,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1890,7 +1891,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
 
 
@@ -1959,7 +1960,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
-                                            AddUnitEffect(effect, this, 1, 1, false);
+                                            AddUnitEffect(effect, this, 1, 1, false, true);
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -2359,7 +2360,7 @@ public class UnitFunctionality : MonoBehaviour
         return null;
     }
 
-    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true)
+    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
         // If player miss, do not apply effect
         if (effectHitAcc == 0 || targetUnit.isParrying)
@@ -2394,7 +2395,7 @@ public class UnitFunctionality : MonoBehaviour
                         else
                             continue;
                     }
-                    else
+                    else if (item || byPassAcc)
                     {
                         activeEffects[i].AddTurnCountText(1);
                         activeEffects[i].EffectApply(this);
@@ -2411,7 +2412,7 @@ public class UnitFunctionality : MonoBehaviour
         {
             Effect effect = null;
 
-            for (int m = 0; m < effectHitAcc; m++)
+            for (int m = 0; m < 1; m++)
             {
                 GameObject go = null;
 
@@ -2431,21 +2432,18 @@ public class UnitFunctionality : MonoBehaviour
 
                             effect = go.GetComponent<Effect>();
                             activeEffects.Add(effect);
-                            effect.Setup(addedEffect, targetUnit, 1);
-                            activeEffects[m].AddTurnCountText(1);
+                            effect.Setup(addedEffect, targetUnit, effectHitAcc);
+                            //activeEffects[m].AddTurnCountText(1);
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                             effect.UpdateEffectTierImages();
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-                            //AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
+
+                            //if (effectHitAcc != 1)
+                              //  AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
                         }
                     }
-                    else
-                    {
-                        activeEffects[m].AddTurnCountText(1);
-                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                    }
                 }
-                else
+                else if (item || byPassAcc)
                 {
                     if (m == 0)
                     {
@@ -2457,16 +2455,14 @@ public class UnitFunctionality : MonoBehaviour
 
                         effect = go.GetComponent<Effect>();
                         activeEffects.Add(effect);
-                        effect.Setup(addedEffect, targetUnit, 1);
+                        effect.Setup(addedEffect, targetUnit, effectHitAcc);
                         //activeEffects[m].AddTurnCountText(1);
                         TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                         effect.UpdateEffectTierImages();
                         effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-                    }
-                    else
-                    {
-                        effect.AddTurnCountText(1);
-                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+
+                        //if (effectHitAcc != 1)
+                         //   AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
                     }
                 }
             }
@@ -2559,7 +2555,7 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public IEnumerator SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false)
+    public IEnumerator SpawnPowerUI(float power = 10f, bool isParrying = false, bool offense = false, Effect effect = null, bool isBlocked = false, bool effectTick = false)
     {
         //
         //Debug.Log("power = " + power);
@@ -2730,7 +2726,7 @@ public class UnitFunctionality : MonoBehaviour
         else
             Destroy(prevPowerUI.gameObject);
 
-        if (offense)
+        if (offense && effectTick)
         {
             if (effect != null)
             {
@@ -3169,7 +3165,7 @@ public class UnitFunctionality : MonoBehaviour
                        
                         if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
                         {
-                            if (triggerHitSFX)
+                            if (triggerHitSFX && GameManager.Instance.GetActiveSkill().skillHit != null)
                                 AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
                         }
                         
@@ -3293,33 +3289,51 @@ public class UnitFunctionality : MonoBehaviour
         CalculateUnitAttackChargeTurnStart();
 
         // If unit is player, give more exp the lower allies there are on team
-        if (curUnitType == UnitType.PLAYER)
+
+
+        if (GameManager.Instance.activeRoomEnemies.Count == 1)
         {
-            if (GameManager.Instance.activeRoomHeroes.Count == 1)
-                attackChargeTurnStart *= 6;
-            else if (GameManager.Instance.activeRoomHeroes.Count == 2)
-                attackChargeTurnStart *= 5;
-            else if (GameManager.Instance.activeRoomHeroes.Count == 3)
-                attackChargeTurnStart *= 3;
-        }
-        // If unit is enemy, give more exp the lower allies there are on team
-        else
-        {
-            if (GameManager.Instance.activeRoomEnemies.Count == 1)
-                attackChargeTurnStart *= 6;
-            else if (GameManager.Instance.activeRoomEnemies.Count == 2)
-                attackChargeTurnStart *= 6;
-            else if (GameManager.Instance.activeRoomEnemies.Count == 3)
-                attackChargeTurnStart *= 6;
-            else if (GameManager.Instance.activeRoomEnemies.Count == 4)
-                attackChargeTurnStart *= 5;
-            else if (GameManager.Instance.activeRoomEnemies.Count == 5)
-                attackChargeTurnStart *= 4;
-            else if (GameManager.Instance.activeRoomEnemies.Count == 6)
-                attackChargeTurnStart *= 3;
+            attackChargeTurnStart *= 6;
         }
 
-        attackChargeTurnStart /= 4;
+        else if (GameManager.Instance.activeRoomEnemies.Count == 2)
+        {
+            attackChargeTurnStart *= 6;
+        }
+
+        else if (GameManager.Instance.activeRoomEnemies.Count == 3)
+        {
+            attackChargeTurnStart *= 6;
+        }
+
+        else if (GameManager.Instance.activeRoomEnemies.Count == 4)
+        {
+            attackChargeTurnStart *= 6;
+        }
+
+        else if (GameManager.Instance.activeRoomEnemies.Count == 5)
+        {
+            if (curUnitType == UnitType.ENEMY)
+                attackChargeTurnStart *= 5;
+        }
+
+        else if (GameManager.Instance.activeRoomEnemies.Count == 6)
+        {
+            if (curUnitType == UnitType.ENEMY)
+                attackChargeTurnStart *= 4;
+        }
+
+        int diff = GameManager.Instance.activeRoomEnemies.Count - GameManager.Instance.activeRoomHeroes.Count;
+        if (diff > 1 && curUnitType == UnitType.ENEMY)
+        {
+            attackChargeTurnStart /= 6;
+        }
+        else
+        {
+            attackChargeTurnStart /= 4;
+        }
+
+
 
         //Debug.Log(GetUnitName() + " 's attack charge = " + attackChargeTurnStart);
         
@@ -3336,13 +3350,13 @@ public class UnitFunctionality : MonoBehaviour
     {
         ToggleUnitAttackBar(true);
 
-        Debug.Log(GetUnitName() + " Attack Bar = " + (float)curAttackCharge / 100f);
+        //Debug.Log(GetUnitName() + " Attack Bar = " + (float)curAttackCharge / 100f);
         unitAttackBar.fillAmount = (float)curAttackCharge / 100f;
     }
     public void UpdateUnitAttackBarNextVisual()
     {
         //ToggleUnitAttackBar(true);
-        Debug.Log(GetUnitName() + " Next Bar = " + (float)attackChargeTurnStart / 100f);
+        //Debug.Log(GetUnitName() + " Next Bar = " + (float)attackChargeTurnStart / 100f);
         unitAttackBarNext.fillAmount = ((float)curAttackCharge + (float)attackChargeTurnStart) / 100f;
     }
 

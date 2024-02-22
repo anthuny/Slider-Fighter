@@ -47,7 +47,7 @@ public class Slot : MonoBehaviour
     public GearPiece linkedGearPiece;
     public ItemPiece linkedItemPiece;
     public bool baseSlot = false;
-
+    public bool isSelected;
     private void Start()
     {
         ToggleSlotSelection(false);
@@ -335,6 +335,7 @@ public class Slot : MonoBehaviour
     public void ToggleSlotSelection(bool toggle)
     {
         //Debug.Log("Toggling Slot " + toggle);
+        isSelected = toggle;
 
         if (toggle)
             slotSelectionUI.UpdateAlpha(1);

@@ -582,6 +582,23 @@ public class TeamGearManager : MonoBehaviour
             UpdateGearSlotsBase(true, true, true);
     }
 
+    public void ResetAllGearSelections()
+    {
+        //Debug.Log("resetting");
+        for (int x = 0; x < ally1GearSlots.Count; x++)
+        {
+            ally1GearSlots[x].ToggleSlotSelection(false);
+        }
+        for (int y = 0; y < ally1GearSlots.Count; y++)
+        {
+            ally2GearSlots[y].ToggleSlotSelection(false);
+        }
+        for (int z = 0; z < ally1GearSlots.Count; z++)
+        {
+            ally3GearSlots[z].ToggleSlotSelection(false);
+        }
+    }
+
     public void ToggleAllyGearSets()
     {
         if (GetKnownUnitFunct(true, false, false) == null)

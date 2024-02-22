@@ -415,10 +415,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (SkillsTabManager.Instance.playerInSkillTab)
         {
-            //SkillSlotSelection();
-            //Debug.Log("aa");
-            //SkillsTabManager.Instance.UpdateSelectedSkillBase(this);
-
             if (!OwnedLootInven.Instance.ownedLootOpened)
             {
                 if (openedOwnedSlots && SkillsTabManager.Instance.activeSkillBase != null)
@@ -426,9 +422,34 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             }
         }
         else if (TeamGearManager.Instance.playerInGearTab)
-            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
+        {
+            if (!OwnedLootInven.Instance.ownedLootOpened)
+            {
+                if (openedOwnedSlots)
+                {
+                    TeamGearManager.Instance.ResetAllGearSelections();
+                    TeamGearManager.Instance.UpdateSelectedBaseGearSlot(slot);
+                    TeamGearManager.Instance.UpdateSelectedGearSlot(slot);
+                    slot.ToggleSlotSelection(true);
+                    OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Gear");
+                }
+            }
+        }
+
         else if (TeamItemsManager.Instance.playerInItemTab)
-            OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
+        {
+            if (!OwnedLootInven.Instance.ownedLootOpened)
+            {
+                if (openedOwnedSlots)
+                {
+                    TeamItemsManager.Instance.ResetAllItemSelections();
+                    TeamItemsManager.Instance.UpdateSelectedBaseItemSlot(slot);
+                    TeamItemsManager.Instance.UpdateSelectedItemSlot(slot);
+                    slot.ToggleSlotSelection(true);
+                    OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
+                }
+            }
+        }
     }
 
     // Owned slot select main

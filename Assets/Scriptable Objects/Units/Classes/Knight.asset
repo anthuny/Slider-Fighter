@@ -20,7 +20,7 @@ MonoBehaviour:
   unitName: Knight
   startingSpeed: 8
   startingDefense: 10
-  startingPower: 25
+  startingPower: 35
   startingHealingPower: 0
   startingMaxHealth: 750
   speedIncPerLv: 1

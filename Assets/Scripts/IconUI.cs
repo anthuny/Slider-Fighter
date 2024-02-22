@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public class IconUI : MonoBehaviour
 {
     Image image;
     [SerializeField] private UIElement selectImage;
     [SerializeField] private UIElement hiddenImage;
+    [SerializeField] private TextMeshProUGUI skillLevelText;
 
     private void Awake()
     {
@@ -23,6 +24,10 @@ public class IconUI : MonoBehaviour
         image.color = colour;
     }
 
+    public void UpdateSkillLevelText(int level)
+    {
+        skillLevelText.text = level.ToString();
+    }
     public void ToggleSelectImage(bool toggle)
     {
         if (toggle)

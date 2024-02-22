@@ -462,13 +462,15 @@ public class Weapon : MonoBehaviour
             int finalHitCount = 0;
 
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits();
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncPowerCount;
             else
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits();
-
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncPowerCount;
             // If user missed on first hit, send 1 hit count
+            bool miss = false;
+
             if (hitAccuracy == 0)
             {
+                miss = true;
                 finalHitCount = 1;
                 calculatedPower = 0;
             }
@@ -479,7 +481,7 @@ public class Weapon : MonoBehaviour
                 calculatedPower = 0;
             }
 
-            StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, finalHitCount, effectHitAccuracy+1));
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, finalHitCount, effectHitAccuracy+1, miss));
         }
     }
 

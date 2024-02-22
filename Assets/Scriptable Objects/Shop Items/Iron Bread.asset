@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c98df06682a0b046bbcbdca0e2e04c7, type: 3}
   m_Name: Iron Bread
   m_EditorClassIdentifier: 
-  curRarity: 0
+  curRarity: 1
   itemName: Iron Bread
   itemDesc: 50% chance to Add Health Up (1) - On Turn Start. using 1 charge. (Gain
     3 charge per combat start)
