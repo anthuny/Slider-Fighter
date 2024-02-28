@@ -31,7 +31,7 @@ MonoBehaviour:
   skillHitAttempts: 2
   projectileSpeed: 10
   skillCooldown: 1
-  curCooldown: 0
+  curCooldown: 2
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0

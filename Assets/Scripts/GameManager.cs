@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour
     bool hasBeenLuckyHit;
     public bool selectingUnitsAllowed;
     bool firstTimeRoomStart = true;
-    public Weapon activeWeapon;
+    public WeaponManager activeWeapon;
     public int powerUISpawnCount;
     bool roomDefeated;
 
@@ -359,14 +359,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Weapon GetActiveWeapon()
+    public WeaponManager GetActiveWeapon()
     {
         return activeWeapon;
     }
 
     public void SetActiveWeapon()
     {
-        activeWeapon = playerWeapon.GetComponent<Weapon>();
+        activeWeapon = playerWeapon.GetComponent<WeaponManager>();
     }
 
     public void AddUnitToTeam(UnitData unit)
@@ -509,11 +509,16 @@ public class GameManager : MonoBehaviour
                             unitFunct.ResetSkill2Cooldown();
                             unitFunct.ResetSkill3Cooldown();
 
-                            int spawnedUnitLevel = ((RoomManager.Instance.GetFloorCount() * 2) - Random.Range(1,4) + ((RoomManager.Instance.GetFloorCount() * 2)) - 2);
+                            int spawnedUnitLevel = ((RoomManager.Instance.GetFloorCount() + 2 + (RoomManager.Instance.GetFloorCount() * 2)) * RoomManager.Instance.GetFloorCount()) + Random.Range(1, 3);
+                            Debug.Log("spawnedUnitLevel = " + spawnedUnitLevel);
                             //unitFunct.UpdateUnitLevel(spawnedUnitLevel, 0, true);
-                            unitFunct.UpdateUnitExp(spawnedUnitLevel * (int)unitFunct.GetMaxExp());
+                            float newExpStarting = (maxExpStarting) * spawnedUnitLevel;
+                            unitFunct.UpdateUnitExp((int)newExpStarting);
+
+                            //Debug.Log("unit max xp " + maxExpStarting);
                             
                             SkillsTabManager.Instance.ResetAllySkllls(unitFunct);
+                            break;
                         }
                     }
 
@@ -1198,6 +1203,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 activeRoomHeroes[i].UpdateUnitMaxHealth(activeRoomHeroes[i].startingRoomMaxHealth, true, false);
                 activeRoomHeroes[i].curSpeed = activeRoomHeroes[i].startingRoomSpeed;
                 activeRoomHeroes[i].curDefense = activeRoomHeroes[i].startingRoomDefense;
+                activeRoomHeroes[i].ResetUnitHealingRecieved();
             }
         }
 
@@ -1471,7 +1477,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         ToggleUIElementFull(playerWeaponChild, false);
         ToggleUIElement(playerWeaponBackButton, false);
 
-        Weapon.Instance.ToggleAttackButtonInteractable(false);
+        WeaponManager.Instance.ToggleAttackButtonInteractable(false);
 
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(playerAbilityDesc, true);
@@ -1487,8 +1493,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (!CheckIfAnyUnitsSelected())
             return;
 
-        Weapon.Instance.DisableAlertUI();
-        Weapon.Instance.ToggleEnabled(true);
+        WeaponManager.Instance.DisableAlertUI();
+        WeaponManager.Instance.ToggleEnabled(true);
 
         // Update weapona accumulated hits with skill base hits
         SkillData skill = GameManager.Instance.GetActiveSkill();
@@ -1500,9 +1506,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else
             powerHitsAdditional = GetActiveUnitFunctionality().curPowerHits;
 
-        StartCoroutine(Weapon.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncPowerCount + powerHitsAdditional, false));
+        StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncPowerCount + powerHitsAdditional, false));
 
-        Weapon.Instance.StartHitLine();
+        WeaponManager.Instance.StartHitLine();
 
         AudioManager.Instance.PauseCombatMusic(true);
 
@@ -1520,7 +1526,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         ToggleUIElement(playerWeaponBackButton, true);
         ToggleEndTurnButton(false);
 
-        Weapon.Instance.ToggleAttackButtonInteractable(true);
+        WeaponManager.Instance.ToggleAttackButtonInteractable(true);
     }
     #endregion
 
@@ -2232,6 +2238,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1, bool miss = false)
     {
+        GetActiveUnitFunctionality().ToggleHeroWeapon(false);
         /*
         if (hitCount != 0)
             hitCount++;
@@ -2651,7 +2658,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // Resume combat music
             AudioManager.Instance.PauseCombatMusic(false);
 
-            Weapon.Instance.ResetAcc();
+            WeaponManager.Instance.ResetAcc();
 
             //SetupPlayerUI();
             //Debug.Log("222");
@@ -3443,20 +3450,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
         }
 
-        // Skip unit turn if all skills are on cooldown
-        if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(0)) > 0 || SkillsTabManager.Instance.skillBase1.GetIsLocked())
-        {
-            if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(1)) > 0 || SkillsTabManager.Instance.skillBase2.GetIsLocked())
-            {
-                if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(2)) > 0 || SkillsTabManager.Instance.skillBase3.GetIsLocked())
-                {
-                    if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(3)) > 0 || SkillsTabManager.Instance.skillBase4.GetIsLocked())
-                    {
-                        StartCoroutine(SkipTurnAfterWait());
-                    }
-                }
-            }
-        }
+       
+        if (CheckSkipUnitTurn(GetActiveUnitFunctionality()))
+            StartCoroutine(SkipTurnAfterWait());
 
         bool byPass = false;
         bool deadTargetsRemain = false;
@@ -3501,6 +3497,40 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         */
     }
 
+    public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
+    {
+        // Skip unit turn if all skills are on cooldown
+        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) > 0 || SkillsTabManager.Instance.skillBase1.GetIsLocked())
+        {
+            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) > 0 || SkillsTabManager.Instance.skillBase2.GetIsLocked())
+            {
+                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 0 || SkillsTabManager.Instance.skillBase3.GetIsLocked())
+                {
+                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) > 0 || SkillsTabManager.Instance.skillBase4.GetIsLocked())
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+    }
     IEnumerator SkipTurnAfterWait()
     {
         yield return new WaitForSeconds(.75f);
@@ -4179,6 +4209,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     IEnumerator AttackButtonCont()
     {
         yield return new WaitForSeconds(skillAlertAppearTime / 2);
+
+        // Update to correct visual weapon to use for each unit
+        //if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            //WeaponManager.Instance.SetEnemyWeapon("Enemy");
+        //else
+        //{
+        WeaponManager.Instance.SetHeroWeapon(GetActiveUnitFunctionality().GetUnitName());
+        //}
+
         SetupPlayerWeaponUI();
     }
 

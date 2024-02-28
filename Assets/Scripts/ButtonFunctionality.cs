@@ -495,7 +495,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 else
                 {
                     if (!slot.isEmpty && !slot.baseSlot)
+                    {
+                        // Button Click SFX
+                        AudioManager.Instance.Play("Button_Click");
                         TeamGearManager.Instance.GearSelection(slot, false);
+                    }
                 }
             }
         }
@@ -1411,47 +1415,50 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     IEnumerator SelectUnitCo()
     {
-        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        if (unit != null)
         {
-            // Button Click SFX
-            AudioManager.Instance.Play("Button_Click");
-
-            if (GameManager.Instance.IsEnemyTaunting().Count >= 1)
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.CheckSkipUnitTurn(unit))
             {
-                for (int i = 0; i < GameManager.Instance.IsEnemyTaunting().Count; i++)
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
+                if (GameManager.Instance.IsEnemyTaunting().Count >= 1)
                 {
-                    if (GameManager.Instance.IsEnemyTaunting()[i] == unitFunctionality)
+                    for (int i = 0; i < GameManager.Instance.IsEnemyTaunting().Count; i++)
                     {
-                        GameManager.Instance.targetUnit(unitFunctionality);
-                        unitIsSelected = true;
-                    }
-                    else
-                    {
-                        // Check if active skill targets allies, and is player type, then allow it
-                        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        if (GameManager.Instance.IsEnemyTaunting()[i] == unitFunctionality)
                         {
-                            unitIsSelected = true;
                             GameManager.Instance.targetUnit(unitFunctionality);
+                            unitIsSelected = true;
                         }
+                        else
+                        {
+                            // Check if active skill targets allies, and is player type, then allow it
+                            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                unitIsSelected = true;
+                                GameManager.Instance.targetUnit(unitFunctionality);
+                            }
 
+                        }
                     }
-                }
 
-                yield break;
-            }
-            else
-            {
-                // Do not ally selection of enemy units  behind the hero offering, it obstructs selecting new hero
-                if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY && HeroRoomManager.Instance.playerInHeroRoomView)
                     yield break;
+                }
                 else
                 {
-                    isHeldDownUnit = false;
-                    StartCoroutine(HeldDownCooldown());
-                    GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
+                    // Do not ally selection of enemy units  behind the hero offering, it obstructs selecting new hero
+                    if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY && HeroRoomManager.Instance.playerInHeroRoomView)
+                        yield break;
+                    else
+                    {
+                        isHeldDownUnit = false;
+                        StartCoroutine(HeldDownCooldown());
+                        GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
 
-                    unitIsSelected = true;
-                    GameManager.Instance.targetUnit(unitFunctionality);
+                        unitIsSelected = true;
+                        GameManager.Instance.targetUnit(unitFunctionality);
+                    }
                 }
             }
         }

@@ -20,4 +20,4 @@ MonoBehaviour:
   bonusDamage: 0
   bonusHealing: 2
   bonusDefense: 0
-  bonusSpeed: 5
+  bonusSpeed: 2

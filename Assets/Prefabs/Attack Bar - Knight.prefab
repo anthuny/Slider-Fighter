@@ -790,7 +790,7 @@ RectTransform:
   m_GameObject: {fileID: 1304895985316156215}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8039579666961004750}
@@ -802,7 +802,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -12, y: 0}
+  m_AnchoredPosition: {x: -12, y: 35}
   m_SizeDelta: {x: 192, y: 595}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1710815862430561245
@@ -1528,7 +1528,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 752.9}
+  m_AnchoredPosition: {x: 0, y: 807.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2975026412791217700
@@ -1579,10 +1579,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2975026413661297333}
   - component: {fileID: 2975026413661297335}
+  - component: {fileID: 2173936197525815844}
   - component: {fileID: 2975026413661297332}
   - component: {fileID: 5977141432458855553}
   m_Layer: 5
-  m_Name: Attack Bar
+  m_Name: Attack Bar - Knight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1624,6 +1625,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2975026413661297330}
   m_CullTransparentMesh: 1
+--- !u!114 &2173936197525815844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2975026413661297330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce057cb7a92f504abcb83f7987acbaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineSpeed: 7
+  ownedUnitName: Knight
+  hitLine: {fileID: 2975026414588473772}
+  topBarBorder: {fileID: 2975026414236010350}
+  botBarBorder: {fileID: 2975026412791217698}
+  weaponHitAreas:
+  - {fileID: 8904338333377053809}
+  - {fileID: 4691450821942204459}
+  - {fileID: 2219667066913044245}
+  - {fileID: 4085748851664176214}
+  - {fileID: 5438279432160592253}
+  hitAlertText: {fileID: 368147839759038056}
+  weaponUI: {fileID: 7497994833584598801}
+  hitAreaManager: {fileID: 676994814757722275}
 --- !u!114 &2975026413661297332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1704,7 +1731,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -25.03003}
+  m_AnchoredPosition: {x: 0, y: -81.2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2975026414236010336
@@ -1851,7 +1878,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 400, y: 0.808023}
+  m_Size: {x: 400, y: 1.1606393}
   m_EdgeRadius: 0
 --- !u!50 &944807801
 Rigidbody2D:
@@ -3320,7 +3347,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6333322676041710368}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3330,8 +3357,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2.1407}
-  m_SizeDelta: {x: 402.63, y: 2376.2}
+  m_AnchoredPosition: {x: -17.900002, y: -2.1}
+  m_SizeDelta: {x: 748.8, y: 3395}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2558329609376420114
 CanvasRenderer:
@@ -3357,7 +3384,7 @@ MonoBehaviour:
   m_Color: {r: 0.6509434, g: 0.6509434, b: 0.6509434, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3395,7 +3422,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 400, y: 2326.2417}
+  m_Size: {x: 727.6775, y: 3751.1}
   m_EdgeRadius: 0
 --- !u!114 &5438279432160592253
 MonoBehaviour:
@@ -3796,7 +3823,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 141.1}
+  m_AnchoredPosition: {x: 0, y: 173.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &676994814757722275
@@ -3812,8 +3839,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 8039579666961004750}
-  minYPos: 150
-  maxYPos: 295
+  minYPos: 173.5
+  maxYPos: 281.7
+  weaponRanges:
+  - {fileID: 11400000, guid: f2c8bfe7cdfd5f047b5f635bc00850eb, type: 2}
 --- !u!1 &7737575430368982495
 GameObject:
   m_ObjectHideFlags: 0
@@ -3850,7 +3879,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 768.1, y: 12}
+  m_SizeDelta: {x: 768.1, y: 15.32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7924239053833821442
 CanvasRenderer:
@@ -3873,7 +3902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.98039216, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3946,3 +3975,4 @@ MonoBehaviour:
   hitAreasTrans: {fileID: 2263255527767677856}
   minYPos: 70
   maxYPos: 295
+  weaponRanges: []

@@ -314,6 +314,21 @@ public class MapManager : MonoBehaviour
 
             //GameManager.Instance.UpdateAllyVisibility(false);
 
+            // Update unit map icon
+            if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count != 0)
+            {
+                string unitName = GameManager.Instance.activeTeam[0].unitName;
+
+                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+                {
+                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName)
+                    {
+                        unitMapIcon.UpdateUnitName(GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName());
+                        unitMapIcon.UpdateIconAnimator(GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetAnimator().runtimeAnimatorController);
+                    }
+                }
+            }
+
             SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(false);
             SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(false);
 
@@ -502,20 +517,6 @@ public class MapManager : MonoBehaviour
 
         // Updating unit map icon starting position
         unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
-
-        if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count != 0)
-        {
-            string unitName = GameManager.Instance.activeTeam[0].unitName;
-
-            for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
-            {
-                if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName)
-                {
-                    unitMapIcon.UpdateUnitName(GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName());
-                    unitMapIcon.UpdateIconAnimator(GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetAnimator().runtimeAnimatorController);
-                }
-            }
-        }
     }
 
     void CheckIfMapIsPossible(bool resetting = true)

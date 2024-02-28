@@ -390,7 +390,7 @@ public class Effect : MonoBehaviour
         power = (int)tempPower;
         float newHealingPower = power;
 
-        newHealingPower *= effectPowerStacks;
+
 
         // Ensure only healing is cut
         if (curEffectType == EffectType.SUPPORT)
@@ -398,7 +398,7 @@ public class Effect : MonoBehaviour
             newHealingPower *= unitTarget.curHealingRecieved;
         }
 
-
+        newHealingPower *= effectPowerStacks;
 
         // Debug.Log("power = " + power);
 

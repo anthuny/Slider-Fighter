@@ -19,5 +19,5 @@ MonoBehaviour:
   bonusHealth: 175
   bonusDamage: 2
   bonusHealing: 0
-  bonusDefense: 14
+  bonusDefense: 8
   bonusSpeed: -5

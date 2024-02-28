@@ -15,14 +15,19 @@ public class WeaponHitArea : MonoBehaviour
         collider = GetComponent<BoxCollider2D>();
     }
 
+    public void SetHitLinePosition()
+    {
+        Debug.Log("Setting y pos " + gameObject.transform.position.y);
+        WeaponManager.Instance.hitLine.position = new Vector2(WeaponManager.Instance.hitLine.position.x, gameObject.transform.position.y);
+    }
     public IEnumerator HitArea()
     {
         if (curHitAreaType == HitAreaType.PERFECT)
         {
-            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.PERFECT);
+            WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.PERFECT);
 
-            Weapon.Instance.CalculatePower(curHitAreaType);
-            Weapon.Instance.TriggerHitAlertText(curHitAreaType);
+            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
 
@@ -36,10 +41,10 @@ public class WeaponHitArea : MonoBehaviour
         }
         else if (curHitAreaType == HitAreaType.GREAT)
         {
-            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.GREAT);
+            WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.GREAT);
 
-            Weapon.Instance.CalculatePower(curHitAreaType);
-            Weapon.Instance.TriggerHitAlertText(curHitAreaType);
+            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
 
@@ -51,10 +56,10 @@ public class WeaponHitArea : MonoBehaviour
         }
         else if (curHitAreaType == HitAreaType.GOOD)
         {
-            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.GOOD);
+            WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.GOOD);
 
-            Weapon.Instance.CalculatePower(curHitAreaType);
-            Weapon.Instance.TriggerHitAlertText(curHitAreaType);
+            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
 
@@ -64,10 +69,10 @@ public class WeaponHitArea : MonoBehaviour
         }
         else if (curHitAreaType == HitAreaType.BAD)
         {
-            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.BAD);
+            WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.BAD);
 
-            Weapon.Instance.CalculatePower(curHitAreaType);
-            Weapon.Instance.TriggerHitAlertText(curHitAreaType);
+            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
 
@@ -75,10 +80,10 @@ public class WeaponHitArea : MonoBehaviour
         }
         else if (curHitAreaType == HitAreaType.MISS)
         {
-            Weapon.Instance.UpdateHitAreaType(Weapon.HitAreaType.MISS);
+            WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.MISS);
 
-            Weapon.Instance.CalculatePower(curHitAreaType);
-            Weapon.Instance.TriggerHitAlertText(curHitAreaType);
+            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
 

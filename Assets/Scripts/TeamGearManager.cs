@@ -1292,7 +1292,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x])
+                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetSlotName() == GetSelectedBaseGearSlot().GetSlotName())
                     {
                         // Remove saved equipped gear piece (data side)
                         if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)
@@ -1330,7 +1330,7 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x])
+                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetSlotName() == GetSelectedBaseGearSlot().GetSlotName())
                     {
                         // Remove saved equipped gear piece (data side)
                         if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotType.HELMET)

@@ -395,11 +395,13 @@ public class UIElement : MonoBehaviour
 
             ResetAnimateScaleText();
 
+            //StartCoroutine(HideUIOvertime(0, false, false));
+            //ResetAnimateScaleText();
+
             if (doScalePunch)
                 contentText.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
             //contentText.gameObject.transform.DORestart();
             AnimateUIMaxCap();
-            StartCoroutine(HideUIOvertime(0, false, false));
             ResetAnimateScaleText();
         }
         else
@@ -628,7 +630,7 @@ public class UIElement : MonoBehaviour
         mainText.text = alertText;
         //mainText.color = mainText.color = color;
         mainText.colorGradientPreset = gradient;
-        mainText.color = Weapon.Instance.defaultColour;
+        mainText.color = WeaponManager.Instance.defaultColour;
 
         AnimateUI();
 

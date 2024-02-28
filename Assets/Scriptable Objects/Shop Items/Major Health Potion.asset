@@ -20,7 +20,7 @@ MonoBehaviour:
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
-  itemPower: 45
+  itemPower: 50
   threshHoldAmount: 50
   isBaseHealing: 1
   isLifestealing: 0

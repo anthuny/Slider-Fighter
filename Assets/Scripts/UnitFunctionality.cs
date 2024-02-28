@@ -12,13 +12,15 @@ public class UnitFunctionality : MonoBehaviour
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
+    public HeroWeapon heroWeapon;
+    public UIElement heroWeaponUI;
     public ButtonFunctionality selectUnitButton;
     [SerializeField] private Color effectTitleColour;
     [SerializeField] private UIElement tooltipStats;
     [SerializeField] private UIElement tooltipEffect;
     [SerializeField] private UIElement statHealth;
     [SerializeField] private UIElement statPower;
-    [SerializeField] private UIElement statHealingPower;
+    [SerializeField] private UIElement statHealingPower; 
     [SerializeField] private UIElement statDefense;
     [SerializeField] private UIElement statSpeed;
     [SerializeField] private UIElement unitLevelImage;
@@ -178,6 +180,14 @@ public class UnitFunctionality : MonoBehaviour
     public Canvas visualCanvas;
     public int teamIndex;
     //public bool unitDouble;
+
+    public void ToggleHeroWeapon(bool toggle = true)
+    {
+        if (toggle)
+            heroWeaponUI.UpdateAlpha(1);
+        else
+            heroWeaponUI.UpdateAlpha(0);
+    }
 
     public void UpdateStartingMaxHealth(int health)
     {
@@ -516,6 +526,7 @@ public class UnitFunctionality : MonoBehaviour
         ToggleUnitBG(false);
         ResetEffects(0);
         ToggleHitsRemainingText(false);
+        ToggleHeroWeapon(false);
 
         //UpdateUnitPowerInc(1);
         //sUpdateUnitHealingPowerInc(1);
@@ -560,18 +571,21 @@ public class UnitFunctionality : MonoBehaviour
         return curHealingRecieved;
     }
 
-    public void UpdateUnitHealingRecieved(float newVal)
+    public void UpdateUnitHealingRecieved(float newVal, bool set = false)
     {
         //curHealingRecieved = newVal;
-        curHealingRecieved += newVal;
+        if (!set)
+            curHealingRecieved += newVal;
+        else
+            curHealingRecieved = newVal;
 
         if (curHealingRecieved < 0)
             curHealingRecieved = 0;
     }
 
-    public void ResetUnitHealingRecieved()
+    public void ResetUnitHealingRecieved(bool set = true)
     {
-        UpdateUnitHealingRecieved(1);
+        UpdateUnitHealingRecieved(1, set);
     }
 
     public void ToggleUnitLevelImage(bool toggle)
@@ -840,29 +854,8 @@ public class UnitFunctionality : MonoBehaviour
 
             // Adjust power based on skill effect amp on target then send it 
 
-            int totalPower = GameManager.Instance.activeSkill.GetCalculatedSkillPowerStat() + GameManager.Instance.GetActiveUnitFunctionality().curPower;
+            WeaponManager.Instance.SetEnemyWeapon(this);
 
-            //totalPower += //GameManager.Instance.randomBaseOffset*2;
-            totalPower = GameManager.Instance.RandomisePower(totalPower);
-
-            if (GameManager.Instance.activeSkill.curSkillPower == 0)
-                totalPower = 0;
-
-            int effectCount;
-
-            if (GameManager.Instance.GetActiveSkill().baseEffectApplyCount == 0)
-                effectCount = 1;
-            else
-                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount;
-
-            int skillAttackCount;
-
-            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                skillAttackCount = GameManager.Instance.GetActiveSkill().GetCalculatedSkillHitAmount() + GetUnitPowerHits();
-            else
-                skillAttackCount = GameManager.Instance.GetActiveSkill().GetCalculatedSkillHitAmount() + GetUnitHealingHits();
-
-            StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, skillAttackCount, effectCount));
 
             /*
             // End turn 
@@ -873,6 +866,33 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
+    public void StartEnemyAttack()
+    {
+        int totalPower = GameManager.Instance.activeSkill.GetCalculatedSkillPowerStat() + GameManager.Instance.GetActiveUnitFunctionality().curPower;
+
+        //totalPower += //GameManager.Instance.randomBaseOffset*2;
+        totalPower = GameManager.Instance.RandomisePower(totalPower);
+
+        if (GameManager.Instance.activeSkill.curSkillPower == 0)
+            totalPower = 0;
+
+        int effectCount;
+
+        if (GameManager.Instance.GetActiveSkill().baseEffectApplyCount == 0)
+            effectCount = 1;
+        else
+            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount;
+
+        int skillAttackCount;
+
+        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+            skillAttackCount = GameManager.Instance.GetActiveSkill().GetCalculatedSkillHitAmount() + GetUnitPowerHits();
+        else
+            skillAttackCount = GameManager.Instance.GetActiveSkill().GetCalculatedSkillHitAmount() + GetUnitHealingHits();
+
+        StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, skillAttackCount, effectCount));
+
+    }
     public void DecreaseRandomNegativeEffect()
     {
         //Debug.Log("Attempting to remove effect");
@@ -996,7 +1016,7 @@ public class UnitFunctionality : MonoBehaviour
                                             }
 
                                             ItemPiece item = TeamItemsManager.Instance.equippedItemsMain[x];
-                                            float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
+                                            float healAmount = ((float)item.itemPower / 100f) * startingRoomMaxHealth;
                                             UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
                                             StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
@@ -3315,25 +3335,27 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (curUnitType == UnitType.ENEMY)
                 attackChargeTurnStart *= 5;
+            else
+                attackChargeTurnStart *= 6;
         }
 
         else if (GameManager.Instance.activeRoomEnemies.Count == 6)
         {
             if (curUnitType == UnitType.ENEMY)
                 attackChargeTurnStart *= 4;
+            else
+                attackChargeTurnStart *= 6;
         }
 
         int diff = GameManager.Instance.activeRoomEnemies.Count - GameManager.Instance.activeRoomHeroes.Count;
         if (diff > 1 && curUnitType == UnitType.ENEMY)
         {
-            attackChargeTurnStart /= 6;
-        }
-        else
-        {
             attackChargeTurnStart /= 4;
         }
-
-
+        else if (diff <= 1 || curUnitType == UnitType.PLAYER)
+        {
+            attackChargeTurnStart /= 6;
+        }
 
         //Debug.Log(GetUnitName() + " 's attack charge = " + attackChargeTurnStart);
         

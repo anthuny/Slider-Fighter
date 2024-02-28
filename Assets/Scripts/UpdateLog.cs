@@ -33,6 +33,11 @@ public class UpdateLog : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        updateLogTexts.Reverse();
+    }
+
     public void ToggleUpdateLog(bool toggle = true)
     {
         if (toggle)
@@ -58,8 +63,6 @@ public class UpdateLog : MonoBehaviour
     void PopulateUpdateLog()
     {
         ResetCurrentUpdateLogTexts();
-
-        updateLogTexts.Reverse();
 
         for (int i = 0; i < updateLogTexts.Count; i++)
         {
