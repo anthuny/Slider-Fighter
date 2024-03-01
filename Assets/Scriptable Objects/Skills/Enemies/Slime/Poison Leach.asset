@@ -24,10 +24,10 @@ MonoBehaviour:
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
-  startingSkillPower: 0
-  curSkillPower: 0
+  startingSkillPower: 1
+  curSkillPower: 1
   skillAttackAccMult: 1
-  skillBaseHitOutput: 22
+  skillBaseHitOutput: 2
   skillHitAttempts: 1
   projectileSpeed: 0
   skillCooldown: 0
@@ -42,12 +42,12 @@ MonoBehaviour:
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
-  special: 0
-  effect: {fileID: 0}
-  effectTurnLength: 0
+  special: 1
+  effect: {fileID: 11400000, guid: fef5ba97b42f6a749ae6ad86060c3224, type: 2}
+  effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
-  baseEffectApplyCount: 0
+  baseEffectApplyCount: 1
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0

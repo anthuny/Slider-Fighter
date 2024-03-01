@@ -31,7 +31,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private float pausedMovementTime = .2f;
     public float timePostHit = .85f;
     bool goingUp;
-    bool isStopped;
+    public bool isStopped;
     [SerializeField] private List<WeaponHitArea> weaponHitAreas = new List<WeaponHitArea>();
     [SerializeField] Image attackButton;
 
@@ -49,6 +49,9 @@ public class WeaponManager : MonoBehaviour
     public TMP_ColorGradient goodHitAlertTextGradient;
     public TMP_ColorGradient badHitAlertTextGradient;
     public TMP_ColorGradient missHitAlertTextGradient;
+    public Color flashOnColour;
+    public Color flashOffColour;
+    public float flashDuration;
     public float hitAlertTriggerDuration = 1f;
 
     public HitAreaManager hitAreaManager;
@@ -65,7 +68,7 @@ public class WeaponManager : MonoBehaviour
     int accumulatedHits = 0;
 
     bool stopHitLine;
-    int hitsRemaining;
+    public int hitsRemaining;
 
     public bool autoHitPerfect;
     public bool autoHitGood;
@@ -97,7 +100,7 @@ public class WeaponManager : MonoBehaviour
         curHitAreaType = hitAreaType;
     }
 
-    public void SetEnemyWeapon(UnitFunctionality unit)
+    public void SetEnemyWeapon(UnitFunctionality unit, bool resetWeapon = true)
     {
         if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
         {
@@ -110,47 +113,57 @@ public class WeaponManager : MonoBehaviour
             weaponLineSpeed = unit.heroWeapon.lineSpeed;
             hitAreaManager = unit.heroWeapon.hitAreaManager;
             hitAlertText = unit.heroWeapon.hitAlertText;
+            hitsRemainingText = unit.heroWeapon.hitsRemainingText;
+            hitsAccumulatedText = unit.heroWeapon.hitsAccumulatedText;
             unit.ToggleHeroWeapon();
         }
 
         //Debug.Log("a");
-        StartHitLine();
+        StartHitLine(resetWeapon);
         StartCoroutine(CalculateEnemyHitAcc());
     }
 
     IEnumerator CalculateEnemyHitAcc()
     {
         //Debug.Log("1");
-        yield return new WaitForSeconds(Random.Range(.3f, 1.25f));
+        yield return new WaitForSeconds(Random.Range(0.75f, 1.3f));
 
         int rand = Random.Range(1, 101);
 
+        // high rand == lower accuracy
+        // low rand = higher accuracy
+
+        rand -= (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() * 2) - 1;
+
+        if (rand < 1)
+            rand = 1;
+
         // Perfect
-        if (rand >= 1 && rand <= 5)
+        if (rand >= 1 && rand <= 8) // old high = 8
         {
             curHitAreaType = HitAreaType.PERFECT;
             autoHitPerfect = true;
         }
         // Good
-        else if (rand > 5 && rand <= 35)
+        else if (rand > 8 && rand <= 48)
         {
             curHitAreaType = HitAreaType.GOOD;
             autoHitGood = true;
         }
         // Bad
-        else if (rand > 35 && rand <= 70)
+        else if (rand > 48 && rand <= 84)
         {
             curHitAreaType = HitAreaType.BAD;
             autoHitBad = true;
         }
         // Miss
-        else if (rand > 70 && rand <= 100)
+        else if (rand > 84 && rand <= 100)
         {
             curHitAreaType = HitAreaType.MISS;
             autoHitMiss = true;
         }
 
-        Debug.Log(curHitAreaType);
+        Debug.Log("rand = " + rand);
     }
     private void FixedUpdate()
     {
@@ -169,6 +182,10 @@ public class WeaponManager : MonoBehaviour
                         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
                             isStopped = true;
 
+
+
+                        //yield return new WaitForSeconds(flashDuration / 2);
+
                         StartCoroutine(StopHitLine());
                         weaponHitAreas[i].SetHitLinePosition();
                         break;
@@ -184,6 +201,10 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
                     {
+                        //GameManager.Instance.GetActiveUnitFunctionality().heroWeapon.WeaponFlash(flashOnColour, flashOffColour, flashDuration);
+
+                        //yield return new WaitForSeconds(flashDuration / 2);
+
                         StartCoroutine(StopHitLine());
                         weaponHitAreas[i].SetHitLinePosition();
                         break;
@@ -199,6 +220,10 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
                     {
+                        //GameManager.Instance.GetActiveUnitFunctionality().heroWeapon.WeaponFlash(flashOnColour, flashOffColour, flashDuration);
+
+                        //yield return new WaitForSeconds(flashDuration / 2);
+
                         StartCoroutine(StopHitLine());
                         weaponHitAreas[i].SetHitLinePosition();
                         break;
@@ -214,6 +239,10 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
                     {
+                        //GameManager.Instance.GetActiveUnitFunctionality().heroWeapon.WeaponFlash(flashOnColour, flashOffColour, flashDuration);
+
+                        //yield return new WaitForSeconds(flashDuration / 2);
+
                         StartCoroutine(StopHitLine());
                         //weaponHitAreas[i].SetHitLinePosition();
                         break;
@@ -225,6 +254,7 @@ public class WeaponManager : MonoBehaviour
         AttackBarDisabledTimer();
         MoveHitLine();
     }
+
     public void SetHeroWeapon(string unitName)
     {
         // Disable all weapons
@@ -248,6 +278,8 @@ public class WeaponManager : MonoBehaviour
                 weaponUI = heroWeapons[i].weaponUI;
                 weaponLineSpeed = heroWeapons[i].lineSpeed;
                 hitAreaManager = heroWeapons[i].hitAreaManager;
+                hitsRemainingText = heroWeapons[i].hitsRemainingText;
+                hitsAccumulatedText = heroWeapons[i].hitsAccumulatedText;
                 break;
             }
             else if (heroWeapons[i].ownedUnitName == "Ranger" && unitName == "Ranger")
@@ -262,6 +294,8 @@ public class WeaponManager : MonoBehaviour
                 weaponUI = heroWeapons[i].weaponUI;
                 weaponLineSpeed = heroWeapons[i].lineSpeed;
                 hitAreaManager = heroWeapons[i].hitAreaManager;
+                hitsRemainingText = heroWeapons[i].hitsRemainingText;
+                hitsAccumulatedText = heroWeapons[i].hitsAccumulatedText;
                 break;
             }
             else if (heroWeapons[i].ownedUnitName == "Cleric" && unitName == "Cleric")
@@ -276,6 +310,8 @@ public class WeaponManager : MonoBehaviour
                 weaponUI = heroWeapons[i].weaponUI;
                 weaponLineSpeed = heroWeapons[i].lineSpeed;
                 hitAreaManager = heroWeapons[i].hitAreaManager;
+                hitsRemainingText = heroWeapons[i].hitsRemainingText;
+                hitsAccumulatedText = heroWeapons[i].hitsAccumulatedText;
                 break;
             }
         }
@@ -307,7 +343,7 @@ public class WeaponManager : MonoBehaviour
         hitsRemainingText.UpdateAlpha(0);
     }
 
-    public void UpdateWeaponDetails(bool playerMissed = false)
+    public void UpdateWeaponDetails(bool playerMissed = false, bool hero = false)
     {
         hitsRemaining = GameManager.Instance.GetActiveSkill().skillHitAttempts - hitsPerformed;
 
@@ -316,21 +352,24 @@ public class WeaponManager : MonoBehaviour
             hitsRemainingText.UpdateContentTextColour(threeHitRemainingTextColour);
             hitsRemainingText.UpdateContentSubTextTMPColour(threeHitRemainingTextColour);
             hitsRemainingText.UpdateAlpha(1);
-            hitAreaManager.UpdateHitAreaPos();
+            if (!hero)
+                hitAreaManager.UpdateHitAreaPos();
         }
         else if (hitsRemaining == 2)
         {
             hitsRemainingText.UpdateContentTextColour(twoHitRemainingTextColour);
             hitsRemainingText.UpdateContentSubTextTMPColour(twoHitRemainingTextColour);
             hitsRemainingText.UpdateAlpha(1);
-            hitAreaManager.UpdateHitAreaPos();
+            if (!hero)
+                hitAreaManager.UpdateHitAreaPos();
         }
         else if (hitsRemaining == 1)
         {
             hitsRemainingText.UpdateContentTextColour(oneHitRemainingTextColour);
             hitsRemainingText.UpdateContentSubTextTMPColour(oneHitRemainingTextColour);
             hitsRemainingText.UpdateAlpha(1);
-            hitAreaManager.UpdateHitAreaPos();
+            if (!hero)
+                hitAreaManager.UpdateHitAreaPos();
         }
         else if (hitsRemaining == 0)
         {
@@ -411,12 +450,15 @@ public class WeaponManager : MonoBehaviour
 
     void MoveHitLine()
     {
-        FlipHitLineDirection();
+        if (!isStopped)
+        {
+            FlipHitLineDirection();
 
-        if (goingUp)
-            hitLine.Translate(Vector2.up * weaponLineSpeed * Time.deltaTime);
-        else
-            hitLine.Translate(Vector2.down * weaponLineSpeed * Time.deltaTime);
+            if (goingUp)
+                hitLine.Translate(Vector2.up * weaponLineSpeed * Time.deltaTime);
+            else
+                hitLine.Translate(Vector2.down * weaponLineSpeed * Time.deltaTime);
+        }
     }
 
     public void HitWeapon()
@@ -472,8 +514,9 @@ public class WeaponManager : MonoBehaviour
                 goingUp = true;
         }
     }
-    public void StartHitLine()
+    public void StartHitLine(bool resetAcc = true)
     {
+        //Debug.Log("starting hit line");
         isStopped = false;
 
         autoHitMiss = false;
@@ -481,11 +524,30 @@ public class WeaponManager : MonoBehaviour
         autoHitGood = false;
         autoHitBad = false;
 
-        ResetAcc();
-
-        ResetWeaponAccHits();
+        if (resetAcc)
+        {
+            ResetAcc();
+            ResetWeaponAccHits();
+        }
 
         hitAreaManager.UpdateHitAreaPos();
+        
+        if (resetAcc)
+        {
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                StartCoroutine(UpdateWeaponAccumulatedHits(hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel()-1, true));
+            else
+                StartCoroutine(UpdateWeaponAccumulatedHits(hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput - 2, true));
+        }
+        else
+        {
+            //StartCoroutine(UpdateWeaponAccumulatedHits(hitAccuracy, true));
+        }
+
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        {
+            ToggleHitAreasDisplay(true);
+        }
 
         ToggleWeaponAccHits(true);
         ToggleWeaponHitsRemainingText(true);
@@ -533,14 +595,18 @@ public class WeaponManager : MonoBehaviour
 
     public IEnumerator StopHitLine()
     {
-        //Debug.Log("stopping hit line");
+        Debug.Log("stopping hit line");
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             stopHitLine = false;
         else
         {
             isStopped = true;
-            stopHitLine = true;
+            stopHitLine = false;
+
+            GameManager.Instance.GetActiveUnitFunctionality().heroWeapon.WeaponFlash(flashOnColour, flashOffColour, flashDuration);
+
+            //yield return new WaitForSeconds(flashDuration / 2f);
         }
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
@@ -555,6 +621,7 @@ public class WeaponManager : MonoBehaviour
                     // If player missed with recent tap, cause it to be the last
                     if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.MISS)
                         stopHitLine = true;
+
 
                     int acc = 0;
 
@@ -643,6 +710,7 @@ public class WeaponManager : MonoBehaviour
                         // Power calculated here
                         weaponHitAreas[i].StartCoroutine("HitArea");
                         weaponHitAreas[i].SetHitLinePosition();
+                        UpdateWeaponDetails(false, true);
                         break;
                     }
                 }
@@ -653,9 +721,12 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.GOOD)
                     {
+                        hitsPerformed++;
+
                         // Power calculated here
                         weaponHitAreas[i].StartCoroutine("HitArea");
                         weaponHitAreas[i].SetHitLinePosition();
+                        UpdateWeaponDetails(false, true);
                         break;
                     }
                 }
@@ -666,9 +737,12 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.BAD)
                     {
+                        hitsPerformed++;
+
                         // Power calculated here
                         weaponHitAreas[i].StartCoroutine("HitArea");
                         weaponHitAreas[i].SetHitLinePosition();
+                        UpdateWeaponDetails(false, true);
                         break;
                     }
                 }
@@ -679,13 +753,18 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.MISS)
                     {
+                        hitsPerformed++;
+
                         // Power calculated here
                         weaponHitAreas[i].StartCoroutine("HitArea");
+                        ToggleHitAreasDisplay(false);
                         //weaponHitAreas[i].SetHitLinePosition();
 
                         // If player missed with recent tap, cause it to be the last
                         if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.MISS)
                             stopHitLine = true;
+
+                        UpdateWeaponDetails(true, true);
                         break;
                     }
                 }
@@ -735,7 +814,7 @@ public class WeaponManager : MonoBehaviour
 
             ToggleWeaponAccHits(true);
 
-            isStopped = false;
+            //
 
             if (curHitAreaType == HitAreaType.MISS)
             {
@@ -751,10 +830,28 @@ public class WeaponManager : MonoBehaviour
             }
 
             DisableAttackBar();
+
+            //isStopped = false;
+
+            if (hitsRemaining >= 1)
+            {
+                SetEnemyWeapon(GameManager.Instance.GetActiveUnitFunctionality(), false);
+            }
+
+            if (curHitAreaType != HitAreaType.MISS)
+                UpdateWeaponDetails(false, false);
+
+            if (hitsRemaining <= 0)
+            {
+                stopHitLine = true;
+                isStopped = true;
+            }
+            //else
+                //isStopped = false;
         }
 
 
-        if (stopHitLine)
+        if (stopHitLine && hitsRemaining <= 0)
         {
             isStopped = true;
 
@@ -780,9 +877,9 @@ public class WeaponManager : MonoBehaviour
             GameManager.Instance.ResetButton(GameManager.Instance.weaponBackButton);    // Enable weapon back button only when damage has gone through
 
             if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
-                isStopped = false;  // Resume attack bar 
-            //else
-                //isStopped = false;  // Resume attack bar 
+                isStopped = true;  // Resume attack bar 
+            else
+                isStopped = true;  // Resume attack bar 
 
             int finalHitCount = 0;
 
@@ -810,6 +907,13 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
+    public void ToggleHitAreasDisplay(bool toggle = true)
+    {
+        for (int i = 0; i < weaponHitAreas.Count; i++)
+        {
+            weaponHitAreas[i].ToggleHitAreaDisplay(toggle);
+        }
+    }
     public void DisableAlertUI()
     {
         hitAlertText.DisableAlertUI();

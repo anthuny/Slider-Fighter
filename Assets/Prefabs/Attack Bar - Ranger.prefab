@@ -1478,7 +1478,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 255
+  m_SortingOrder: 400
   m_TargetDisplay: 0
 --- !u!1 &5297432986638560883
 GameObject:
@@ -1931,7 +1931,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 300
+  m_SortingOrder: 401
   m_TargetDisplay: 0
 --- !u!1 &6113540342994884721
 GameObject:
@@ -3931,6 +3931,9 @@ MonoBehaviour:
   hitAlertText: {fileID: 5864118596491854697}
   weaponUI: {fileID: 4356211030012254736}
   hitAreaManager: {fileID: 2977225951810712230}
+  flashUI: {fileID: 0}
+  hitsRemainingText: {fileID: 7338289294235616892}
+  hitsAccumulatedText: {fileID: 1216779240955831731}
 --- !u!114 &9021570472787931061
 MonoBehaviour:
   m_ObjectHideFlags: 0

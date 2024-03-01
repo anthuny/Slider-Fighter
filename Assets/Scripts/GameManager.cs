@@ -1967,6 +1967,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 // Enable allies level image for combat
                 if (activeRoomAllUnitFunctionalitys[x].curUnitType == UnitFunctionality.UnitType.PLAYER)
                 {
+                    activeRoomAllUnitFunctionalitys[x].ToggleUnitHitsRemaining(true);
+
                     // Disable unit level image in team setup tab
                     activeRoomAllUnitFunctionalitys[x].ToggleUnitLevelImage(true);
 
@@ -1980,44 +1982,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 // If unit in room is an ENEMY
                 else
                 {
-                    /*
-                    int roomChallengeCount = (RoomManager.Instance.GetFloorCount()) + floorDiff;
-
-                    // Randomise enemy unit Level
-                    int rand = Random.Range(1, 11);
-                    if (rand >= 1 && rand < 8) // 70%
-                    {
-                        // Stay same level
-                        activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(1 + RoomManager.Instance.GetFloorCount() - 1, 0, true);
-                    }
-                    else if (rand >= 8 && rand < 10) // 20%
-                    {
-                        // Increase lv mildly
-                        activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(RoomManager.Instance.GetFloorCount(), 0, true);
-                    }
-                    else if (rand >= 9) // 10%
-                    {
-                        // Ensure player is NOT on floor one, Increase lv greatly
-                        if (RoomManager.Instance.GetFloorCount() != 1)
-                        {
-                            activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(RoomManager.Instance.GetFloorCount() + 1, 0, true);
-                        }
-                        else
-                        {
-                            // Stay same level
-                            activeRoomAllUnitFunctionalitys[x].UpdateUnitLevel(1 + RoomManager.Instance.GetFloorCount() - 1, 0, true);
-                        }
-                    }
-
-                    // Calculate unit value
-                    int unitValue = activeRoomAllUnitFunctionalitys[x].GetUnitLevel() + activeRoomAllUnitFunctionalitys[x].GetUnitValue();
-
-                    // Add to unit value to current challenge count. If reached max difficulty, stop.
-                    if (curChallengeCount < roomChallengeCount)
-                        curChallengeCount += unitValue;
-                    else
-                        break;
-                    */
+                    activeRoomAllUnitFunctionalitys[x].ToggleUnitHitsRemaining(false);
                 }
 
                 // Update unit energy bar on

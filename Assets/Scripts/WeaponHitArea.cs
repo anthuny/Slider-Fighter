@@ -17,9 +17,18 @@ public class WeaponHitArea : MonoBehaviour
 
     public void SetHitLinePosition()
     {
-        Debug.Log("Setting y pos " + gameObject.transform.position.y);
-        WeaponManager.Instance.hitLine.position = new Vector2(WeaponManager.Instance.hitLine.position.x, gameObject.transform.position.y);
+        //Debug.Log("Setting y pos " + gameObject.transform.localPosition.y);
+        WeaponManager.Instance.hitLine.localPosition = new Vector2(WeaponManager.Instance.hitLine.localPosition.x, gameObject.transform.localPosition.y);
     }
+
+    public void ToggleHitAreaDisplay(bool toggle = true)
+    {
+        if (toggle)
+            gameObject.GetComponent<UIElement>().UpdateAlpha(1);
+        else
+            gameObject.GetComponent<UIElement>().UpdateAlpha(0);
+    }
+
     public IEnumerator HitArea()
     {
         if (curHitAreaType == HitAreaType.PERFECT)

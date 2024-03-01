@@ -16,7 +16,7 @@ MonoBehaviour:
   curEffectType: 0
   curEffectName: 1
   effectName: POISON
-  effectDesc: Healing recieved reduced by 5%. Receive damage equal to 5% maximum
+  effectDesc: Healing recieved reduced by 5% x tier. Receive damage equal to 5% maximum
     health at the start of turn
   effectIcon: {fileID: 21300000, guid: 85240c9bd9e2c494eafb0b77024a979c, type: 3}
   powerPercent: 5

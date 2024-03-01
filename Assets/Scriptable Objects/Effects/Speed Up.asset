@@ -16,7 +16,7 @@ MonoBehaviour:
   curEffectType: 1
   curEffectName: 9
   effectName: SPEED UP
-  effectDesc: Increase speed by 15%
+  effectDesc: Increase speed by 15% x tier
   effectIcon: {fileID: 21300000, guid: 51dff563859a4da42a3e53f7ded2b2f3, type: 3}
   powerPercent: 15
   powerAmp: 0

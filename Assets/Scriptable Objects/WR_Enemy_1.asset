@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 760ff36a381fb1b43a7caf59621b2b01, type: 3}
   m_Name: WR_Enemy_1
   m_EditorClassIdentifier: 
-  maxFloat: 153
-  minFloat: -98
+  maxFloat: 188.4
+  minFloat: -102.6

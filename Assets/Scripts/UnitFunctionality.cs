@@ -12,6 +12,8 @@ public class UnitFunctionality : MonoBehaviour
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
+    [SerializeField] private UIElement heroHitsAccTextPos;
+    [SerializeField] private UIElement enemyHitsAccTextPos;
     public HeroWeapon heroWeapon;
     public UIElement heroWeaponUI;
     public ButtonFunctionality selectUnitButton;
@@ -267,6 +269,16 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ToggleUnitHitsRemaining(bool hero = true)
+    {
+        if (hero)
+            hitsRemainingText.gameObject.transform.SetParent(heroHitsAccTextPos.gameObject.transform);
+        else
+            hitsRemainingText.gameObject.transform.SetParent(enemyHitsAccTextPos.gameObject.transform);
+
+        hitsRemainingText.gameObject.transform.localPosition = Vector2.zero;
     }
 
     public void DecreaseUsesItem1()
@@ -881,7 +893,13 @@ public class UnitFunctionality : MonoBehaviour
         if (GameManager.Instance.GetActiveSkill().baseEffectApplyCount == 0)
             effectCount = 1;
         else
-            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount;
+        {
+            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitPowerHits();
+            else
+                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitHealingHits();
+        }
+
 
         int skillAttackCount;
 
