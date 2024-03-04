@@ -126,7 +126,7 @@ public class WeaponManager : MonoBehaviour
     IEnumerator CalculateEnemyHitAcc()
     {
         //Debug.Log("1");
-        yield return new WaitForSeconds(Random.Range(0.75f, 1.3f));
+        yield return new WaitForSeconds(Random.Range(0.3f, 0.75f));
 
         int rand = Random.Range(1, 101);
 
@@ -139,25 +139,25 @@ public class WeaponManager : MonoBehaviour
             rand = 1;
 
         // Perfect
-        if (rand >= 1 && rand <= 8) // old high = 8
+        if (rand >= 1 && rand <= 4) // old high = 8
         {
             curHitAreaType = HitAreaType.PERFECT;
             autoHitPerfect = true;
         }
         // Good
-        else if (rand > 8 && rand <= 48)
+        else if (rand > 4 && rand <= 48)
         {
             curHitAreaType = HitAreaType.GOOD;
             autoHitGood = true;
         }
         // Bad
-        else if (rand > 48 && rand <= 84)
+        else if (rand > 48 && rand <= 92)
         {
             curHitAreaType = HitAreaType.BAD;
             autoHitBad = true;
         }
         // Miss
-        else if (rand > 84 && rand <= 100)
+        else if (rand > 92 && rand <= 100) // old miss 84
         {
             curHitAreaType = HitAreaType.MISS;
             autoHitMiss = true;
@@ -343,7 +343,7 @@ public class WeaponManager : MonoBehaviour
         hitsRemainingText.UpdateAlpha(0);
     }
 
-    public void UpdateWeaponDetails(bool playerMissed = false, bool hero = false)
+    public void UpdateWeaponDetails(bool playerMissed = false, bool hero = true)
     {
         hitsRemaining = GameManager.Instance.GetActiveSkill().skillHitAttempts - hitsPerformed;
 
@@ -352,7 +352,7 @@ public class WeaponManager : MonoBehaviour
             hitsRemainingText.UpdateContentTextColour(threeHitRemainingTextColour);
             hitsRemainingText.UpdateContentSubTextTMPColour(threeHitRemainingTextColour);
             hitsRemainingText.UpdateAlpha(1);
-            if (!hero)
+            if (hero)
                 hitAreaManager.UpdateHitAreaPos();
         }
         else if (hitsRemaining == 2)
@@ -360,7 +360,7 @@ public class WeaponManager : MonoBehaviour
             hitsRemainingText.UpdateContentTextColour(twoHitRemainingTextColour);
             hitsRemainingText.UpdateContentSubTextTMPColour(twoHitRemainingTextColour);
             hitsRemainingText.UpdateAlpha(1);
-            if (!hero)
+            if (hero)
                 hitAreaManager.UpdateHitAreaPos();
         }
         else if (hitsRemaining == 1)
@@ -368,7 +368,7 @@ public class WeaponManager : MonoBehaviour
             hitsRemainingText.UpdateContentTextColour(oneHitRemainingTextColour);
             hitsRemainingText.UpdateContentSubTextTMPColour(oneHitRemainingTextColour);
             hitsRemainingText.UpdateAlpha(1);
-            if (!hero)
+            if (hero)
                 hitAreaManager.UpdateHitAreaPos();
         }
         else if (hitsRemaining == 0)
@@ -409,7 +409,12 @@ public class WeaponManager : MonoBehaviour
                 AudioManager.Instance.Play("Button_Click");
             }
 
-            yield return new WaitForSeconds(accumulatedHitsTimeBetween);
+            if (hits <= 5)
+            {
+                yield return new WaitForSeconds(accumulatedHitsTimeBetween);
+            }
+            else
+                yield return new WaitForSeconds(0.01f);
         }
     }
 
@@ -530,7 +535,7 @@ public class WeaponManager : MonoBehaviour
             ResetWeaponAccHits();
         }
 
-        hitAreaManager.UpdateHitAreaPos();
+        //hitAreaManager.UpdateHitAreaPos();
         
         if (resetAcc)
         {
@@ -595,7 +600,7 @@ public class WeaponManager : MonoBehaviour
 
     public IEnumerator StopHitLine()
     {
-        Debug.Log("stopping hit line");
+        //sDebug.Log("stopping hit line");
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             stopHitLine = false;
@@ -683,14 +688,14 @@ public class WeaponManager : MonoBehaviour
                     if (curHitAreaType == HitAreaType.MISS)
                     {
                         ToggleWeaponHitsRemainingText(false);
-                        UpdateWeaponDetails(true);
+                        UpdateWeaponDetails(true, false);
                     }
                     else
                     {
-                        if (stopHitLine == false)
-                        {
-                            UpdateWeaponDetails();
-                        }
+                        //if (stopHitLine == false)
+                        //{
+                        UpdateWeaponDetails(false, true);
+                        //}
                     }
 
                     DisableAttackBar();
@@ -710,7 +715,7 @@ public class WeaponManager : MonoBehaviour
                         // Power calculated here
                         weaponHitAreas[i].StartCoroutine("HitArea");
                         weaponHitAreas[i].SetHitLinePosition();
-                        UpdateWeaponDetails(false, true);
+                        UpdateWeaponDetails(false, false);
                         break;
                     }
                 }
@@ -726,7 +731,7 @@ public class WeaponManager : MonoBehaviour
                         // Power calculated here
                         weaponHitAreas[i].StartCoroutine("HitArea");
                         weaponHitAreas[i].SetHitLinePosition();
-                        UpdateWeaponDetails(false, true);
+                        UpdateWeaponDetails(false, false);
                         break;
                     }
                 }
@@ -742,7 +747,7 @@ public class WeaponManager : MonoBehaviour
                         // Power calculated here
                         weaponHitAreas[i].StartCoroutine("HitArea");
                         weaponHitAreas[i].SetHitLinePosition();
-                        UpdateWeaponDetails(false, true);
+                        UpdateWeaponDetails(false, false);
                         break;
                     }
                 }
@@ -764,7 +769,7 @@ public class WeaponManager : MonoBehaviour
                         if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.MISS)
                             stopHitLine = true;
 
-                        UpdateWeaponDetails(true, true);
+                        UpdateWeaponDetails(true, false);
                         break;
                     }
                 }
@@ -819,13 +824,13 @@ public class WeaponManager : MonoBehaviour
             if (curHitAreaType == HitAreaType.MISS)
             {
                 ToggleWeaponHitsRemainingText(false);
-                UpdateWeaponDetails(true);
+                UpdateWeaponDetails(true, false);
             }
             else
             {
                 if (stopHitLine == false)
                 {
-                    UpdateWeaponDetails();
+                    UpdateWeaponDetails(false, false);
                 }
             }
 

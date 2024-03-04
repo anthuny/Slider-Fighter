@@ -1998,6 +1998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 4613734004499390940}
+  bgHitAreaTrans: {fileID: 0}
   minYPos: 70
   maxYPos: 295
   weaponRanges: []
@@ -2133,6 +2134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 3530161662993777330}
+  bgHitAreaTrans: {fileID: 0}
   minYPos: -98
   maxYPos: 153
   weaponRanges:
@@ -4177,7 +4179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce057cb7a92f504abcb83f7987acbaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineSpeed: 3
+  lineSpeed: 4
   ownedUnitName: Enemy
   hitLine: {fileID: 8513666462679337936}
   topBarBorder: {fileID: 8513666462394268946}

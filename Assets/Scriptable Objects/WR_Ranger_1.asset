@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 760ff36a381fb1b43a7caf59621b2b01, type: 3}
   m_Name: WR_Ranger_1
   m_EditorClassIdentifier: 
-  maxFloat: -347.4
-  minFloat: -429.2
+  maxFloat: -562.7
+  minFloat: -662.7
