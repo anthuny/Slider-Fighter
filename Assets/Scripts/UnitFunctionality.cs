@@ -18,7 +18,11 @@ public class UnitFunctionality : MonoBehaviour
     public UIElement heroWeaponUI;
     public ButtonFunctionality selectUnitButton;
     [SerializeField] private Color effectTitleColour;
+    [SerializeField] private GameObject toolTipItemGO;
+    [SerializeField] private GameObject tooltipGearGO;
     [SerializeField] private UIElement tooltipStats;
+    [SerializeField] private UIElement tooltipItems;
+    [SerializeField] private UIElement tooltipGear;
     [SerializeField] private UIElement tooltipEffect;
     [SerializeField] private UIElement statHealth;
     [SerializeField] private UIElement statPower;
@@ -183,6 +187,159 @@ public class UnitFunctionality : MonoBehaviour
     public int teamIndex;
     //public bool unitDouble;
 
+    public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f)
+    {
+        Debug.Log("max charges = " + maxCharges);
+        Debug.Log("cur charges = " + curCharges);
+
+        bool enabled = false;
+
+        int count = 0;
+        int index = 0;
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomHeroes[i] == this)
+            {
+                if (i == 0)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                    index = 0;
+                    break;
+                }
+                else if (i == 1)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                    index = 1;
+                    break;
+                }
+                else if (i == 2)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                    index = 2;
+                    break;
+                }
+            }
+        }
+
+        if (count > 0)
+        {
+            enabled = true;
+            tooltipItems.UpdateAlpha(1);
+        }
+        else
+        {
+            enabled = false;
+            tooltipItems.UpdateAlpha(0);
+        }
+
+        // Destroy all existing items
+        for (int i = 0; i < tooltipItems.transform.childCount; i++)
+        {
+            Destroy(tooltipItems.transform.GetChild(i).gameObject);
+        }
+ 
+        /*
+        if (index == 0)
+            count = TeamItemsManager.Instance.equippedItemsMain.Count;
+        else if (index == 1)
+            count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+        else if (index == 2)
+            count = TeamItemsManager.Instance.equippedItemsThird.Count;
+        */
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject go = Instantiate(toolTipItemGO, tooltipItems.transform.position, Quaternion.identity);
+            go.transform.SetParent(tooltipItems.transform);
+
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localScale = Vector3.one;
+
+            // Set gear data
+            if (index == 0)
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSprite);
+            else if (index == 1)
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSprite);
+            else if (index == 2)
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSprite);
+
+            go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
+        }
+    }
+
+    public void UpdateToolTipGear()
+    {
+        bool enabled = false;
+
+        int count = 0;
+        int index = 0;
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomHeroes[i] == this)
+            {
+                if (i == 0)
+                {
+                    count = OwnedLootInven.Instance.GetWornGearMainAlly().Count;
+                    index = 0;
+                    break;
+                }
+                else if (i == 1)
+                {
+                    count = OwnedLootInven.Instance.GetWornGearSecondAlly().Count;
+                    index = 1;
+                    break;
+                }
+                else if (i == 2)
+                {
+                    count = OwnedLootInven.Instance.GetWornGearThirdAlly().Count;
+                    index = 2;
+                    break;
+                }
+            }
+        }
+
+        if (count > 0)
+        {
+            enabled = true;
+            tooltipGear.UpdateAlpha(1);
+        }
+        else
+        {
+            enabled = false;
+            tooltipGear.UpdateAlpha(0);
+        }
+
+        // Destroy all existing items
+        for (int i = 0; i < tooltipGear.transform.childCount; i++)
+        {
+            Destroy(tooltipGear.transform.GetChild(i).gameObject);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject go = Instantiate(tooltipGearGO, tooltipGear.transform.position, Quaternion.identity);
+            go.transform.SetParent(tooltipGear.transform);
+
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localScale = Vector3.one;
+
+            // Set gear data
+            if (index == 0)
+            {
+                go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
+            }
+            else if (index == 1)
+            {
+                go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
+            }
+            else if (index == 2)
+            {
+                go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
+            }
+        }
+    }
+
     public void ToggleHeroWeapon(bool toggle = true)
     {
         if (toggle)
@@ -285,22 +442,127 @@ public class UnitFunctionality : MonoBehaviour
     {
         item1CurUses--;
         itemVisualAlert.UpdateContentText((item1CurUses-1).ToString());
+
         if (item1CurUses < 0)
             item1CurUses = 0;
+
+        int count = 0;
+
+        int index = 0;
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomHeroes[i] == this)
+            {
+                if (i == 0)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                    index = 0;
+                    break;
+                }
+                else if (i == 1)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                    index = 1;
+                    break;
+                }
+                else if (i == 2)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                    index = 2;
+                    break;
+                }
+            }
+        }
+
+        if (index == 0)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat, item1CurUses);
+        else if (index == 1)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat, item1CurUses);
+        else if (index == 2)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat, item1CurUses);
     }
     public void DecreaseUsesItem2()
     {
         item2CurUses--;
         itemVisualAlert.UpdateContentText((item2CurUses-1).ToString());
+
         if (item2CurUses < 0)
             item2CurUses = 0;
+
+        int count = 0;
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomHeroes[i] == this)
+            {
+                if (i == 0)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                    break;
+                }
+                else if (i == 1)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                    break;
+                }
+                else if (i == 2)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                    break;
+                }
+            }
+        }
+
+        int index = 0;
+
+        if (count == 0)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat, item2CurUses);
+        else if (count == 1)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat, item2CurUses);
+        else if (count == 2)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat, item2CurUses);
     }
+
     public void DecreaseUsesItem3()
     {
         item3CurUses--;
         itemVisualAlert.UpdateContentText((item3CurUses-1).ToString());
         if (item3CurUses < 0)
             item3CurUses = 0;
+
+        int count = 0;
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomHeroes[i] == this)
+            {
+                if (i == 0)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                    break;
+                }
+                else if (i == 1)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                    break;
+                }
+                else if (i == 2)
+                {
+                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                    break;
+                }
+            }
+        }
+
+        int index = 0;
+
+        if (count == 0)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat, item3CurUses);
+        else if (count == 1)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat, item3CurUses);
+        else if (count == 2)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat, item3CurUses);
     }
 
     public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true)
@@ -346,6 +608,12 @@ public class UnitFunctionality : MonoBehaviour
             {
                 UpdateTooltipStats();
                 tooltipStats.UpdateAlpha(1);
+
+                //if (curUnitType == UnitType.PLAYER)
+                //{
+                UpdateTooltipItems();
+                UpdateToolTipGear();
+                //}
             }
         }
         else
@@ -2785,7 +3053,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait*2);
 
-                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, false);
+                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, true);
 
                             yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
 

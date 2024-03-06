@@ -27,10 +27,10 @@ MonoBehaviour:
   startingSkillPower: 0
   curSkillPower: 0
   skillAttackAccMult: 1
-  skillBaseHitOutput: 3
+  skillBaseHitOutput: 1
   skillHitAttempts: 1
   projectileSpeed: 0
-  skillCooldown: 3
+  skillCooldown: 2
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 1

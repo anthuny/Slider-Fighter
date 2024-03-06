@@ -235,7 +235,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void ButtonOpenMap()
     {
-        Debug.Log("!");
+        //Debug.Log("!");
         // If owned gear is opened, do not allow map button to be selected
         if (OwnedLootInven.Instance.GetOwnedLootOpened())
             return;

@@ -139,7 +139,7 @@ public class WeaponManager : MonoBehaviour
             rand = 1;
 
         // Perfect
-        if (rand >= 1 && rand <= 4) // old high = 8
+        if (rand >= 1 && rand <= 4) // old high = 4
         {
             curHitAreaType = HitAreaType.PERFECT;
             autoHitPerfect = true;
@@ -889,9 +889,9 @@ public class WeaponManager : MonoBehaviour
             int finalHitCount = 0;
 
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncPowerCount;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
             else
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncPowerCount;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
             // If user missed on first hit, send 1 hit count
             bool miss = false;
 
@@ -921,7 +921,8 @@ public class WeaponManager : MonoBehaviour
     }
     public void DisableAlertUI()
     {
-        hitAlertText.DisableAlertUI();
+        if (hitAlertText != null)
+            hitAlertText.DisableAlertUI();
     }
 
     public void CalculatePower(WeaponHitArea.HitAreaType curHitAreaType)

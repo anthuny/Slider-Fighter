@@ -90,12 +90,12 @@ public class SkillsTabManager : MonoBehaviour
         }
         else if (skillUpgradeType == 1)
         {
-            activeSkillBase.upgradeIncPowerCount++;
+            activeSkillBase.upgradeIncPowerCount += 2;
             activeSkillBase.curSkillLevel++;
         }
         else if (skillUpgradeType == 2)
         {
-            activeSkillBase.upgradeIncEffectCount++;
+            activeSkillBase.upgradeIncHitsCount++;
             activeSkillBase.curSkillLevel++;
         }
 
@@ -176,7 +176,7 @@ public class SkillsTabManager : MonoBehaviour
     {
         selectedSkillBase.skillUpgradesUI.UpdateContentText(activeSkillBase.upgradeIncTargetCount.ToString());
         selectedSkillBase.skillUpgradesUI.UpdateContentText2(activeSkillBase.GetCalculatedSkillPower().ToString());
-        selectedSkillBase.skillUpgradesUI.UpdateContentText3(activeSkillBase.GetCalculatedSkillEffectChance().ToString() + "%");
+        selectedSkillBase.skillUpgradesUI.UpdateContentText3(activeSkillBase.GetCalculatedSkillEffectChance().ToString());
 
         //Debug.Log(activeSkillBase.GetCalculatedSkillSelectionCount().ToString());
     }
@@ -236,7 +236,7 @@ public class SkillsTabManager : MonoBehaviour
             //Debug.Log(activeSkillBase);
             UpdateActiveSkillNameText(activeSkillBase.skillName);
             UpdateSkillDescription(activeSkillBase.skillTabDescr);
-            UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillHitAttempts, activeSkillBase.skillBaseHitOutput + activeSkillBase.upgradeIncPowerCount, activeSkillBase.skillCooldown, activeSkillBase.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(activeSkillBase.GetCalculatedSkillEffectStat()));
+            UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillHitAttempts, activeSkillBase.skillBaseHitOutput + activeSkillBase.upgradeIncHitsCount, activeSkillBase.skillCooldown, activeSkillBase.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(activeSkillBase.GetCalculatedSkillEffectStat()));
         }
         else
         {
@@ -254,7 +254,7 @@ public class SkillsTabManager : MonoBehaviour
             //Debug.Log(activeSkillBase);
             UpdateActiveSkillNameText(skill.skillName);
             UpdateSkillDescription(skill.skillTabDescr);
-            UpdateSkillStatsDisplay(skill.GetCalculatedSkillPowerStat(), skill.skillHitAttempts, skill.skillBaseHitOutput + skill.upgradeIncPowerCount, skill.skillCooldown, skill.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(skill.GetCalculatedSkillEffectStat()));
+            UpdateSkillStatsDisplay(skill.GetCalculatedSkillPowerStat(), skill.skillHitAttempts, skill.skillBaseHitOutput + skill.upgradeIncHitsCount, skill.skillCooldown, skill.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(skill.GetCalculatedSkillEffectStat()));
         }
         else
         {
@@ -532,7 +532,7 @@ public class SkillsTabManager : MonoBehaviour
         {
             //if (GameManager.Instance.activeTeam.Count == 1)
             //    return;
-            Debug.Log("force selecting skill 1");
+            //Debug.Log("force selecting skill 1");
             selectedSkillBase = skillBase1;
 
             //if (GetActiveUnit().GetSkillBaseSlot(0) == null)
@@ -542,7 +542,7 @@ public class SkillsTabManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("selecting skill updating base  " + statButton.curMasteryType);
+            //Debug.Log("selecting skill updating base  " + statButton.curMasteryType);
 
             if (statButton.curMasteryType == ButtonFunctionality.MasteryType.Skill1)
             {

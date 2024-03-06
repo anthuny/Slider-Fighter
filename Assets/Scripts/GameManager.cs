@@ -1506,7 +1506,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else
             powerHitsAdditional = GetActiveUnitFunctionality().curPowerHits;
 
-        StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncPowerCount + powerHitsAdditional, false));
+        StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncHitsCount + powerHitsAdditional, false));
 
         WeaponManager.Instance.StartHitLine();
 

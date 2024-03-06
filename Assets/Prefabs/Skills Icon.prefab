@@ -303,9 +303,9 @@ MonoBehaviour:
   contentImage: {fileID: 5259889019705451123}
   contentImageUI: {fileID: 0}
   contentImage2UI: {fileID: 0}
-  contentText: {fileID: 5175577135997222088}
-  contentText2: {fileID: 8468759559782208587}
-  contentText3: {fileID: 622400475874870787}
+  contentText: {fileID: 622400475874870787}
+  contentText2: {fileID: 5175577135997222088}
+  contentText3: {fileID: 8468759559782208587}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 5259889019705451127}
@@ -1774,9 +1774,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8124005985215497398}
-  - {fileID: 4821666823740501045}
   - {fileID: 980204148192941822}
+  - {fileID: 4821666823740501045}
+  - {fileID: 8124005985215497398}
   m_Father: {fileID: 2698815206753589006}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2856,6 +2856,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 188
       objectReference: {fileID: 0}
+    - target: {fileID: 1773175423584979088, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b9d3659108f11b94d9fc10b1c8afab91, type: 3}
     - target: {fileID: 3663812750556576042, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 80.7
@@ -2870,7 +2874,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2952,13 +2956,21 @@ PrefabInstance:
       propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7600474131149892358, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: statText
+      value: Increase skill base power by +2
+      objectReference: {fileID: 0}
     - target: {fileID: 7751331016326035524, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 201.2
       objectReference: {fileID: 0}
     - target: {fileID: 7913974500228217969, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_Name
-      value: Skill Upgrade - Increase Accuracy
+      value: Skill Upgrade - Increase Base Power
+      objectReference: {fileID: 0}
+    - target: {fileID: 8151838329458864031, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonAddSkillPointIncreasePower
       objectReference: {fileID: 0}
     - target: {fileID: 8494982871291820950, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_fontColorGradient.topRight.b
@@ -3104,6 +3116,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 82.10001
       objectReference: {fileID: 0}
+    - target: {fileID: 1745714568771992814, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
+      propertyPath: statText
+      value: 'Increase Skill Max Targets by +1 (req: 3 points)'
+      objectReference: {fileID: 0}
     - target: {fileID: 4599875215399494410, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -114.5
@@ -3198,7 +3214,7 @@ PrefabInstance:
     - target: {fileID: 1773175423584979088, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 46eaf90d78eeffd43a7bfcf6c7fff364, type: 3}
+      objectReference: {fileID: 21300000, guid: 7e5a60419ff26f149aa879fd29e4c936, type: 3}
     - target: {fileID: 3663812750556576042, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 84.50004
@@ -3213,7 +3229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3309,7 +3325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8151838329458864031, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ButtonAddSkillPointIncreasePower
+      value: ButtonAddSkillPointIncreaseEffect
       objectReference: {fileID: 0}
     - target: {fileID: 8494982871291820950, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_fontColorGradient.topRight.b

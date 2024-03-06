@@ -74,8 +74,8 @@ public class SkillData : ScriptableObject
     [Tooltip("Percentage increase of power when targeting a unit with an effect")]
     public int percIncPower;
     public int upgradeIncTargetCount = 0;
+    public int upgradeIncHitsCount = 0;
     public int upgradeIncPowerCount = 0;
-    public int upgradeIncEffectCount = 0;
 
     public Sprite skillPowerIcon;
     public Sprite skillProjectile;
@@ -103,7 +103,7 @@ public class SkillData : ScriptableObject
 
     public int GetCalculatedSkillPower()
     {
-        float val = upgradeIncPowerCount;
+        float val = upgradeIncHitsCount;
 
         return (int)val;
     }
@@ -111,31 +111,33 @@ public class SkillData : ScriptableObject
     public int GetCalculatedSkillPowerStat()
     {
         //float val = startingSkillPower + (((25f / 100f) * startingSkillPower) * upgradeIncPowerCount);
-        float val = startingSkillPower;
+        //float val = startingSkillPower;
+        float val = curSkillPower + upgradeIncPowerCount;
         //Debug.Log("float in skilldata is " + val);
 
-        curSkillPower = Mathf.RoundToInt(val);
+        //curSkillPower = Mathf.RoundToInt(val);
         return Mathf.RoundToInt(val);
     }
 
     public int GetCalculatedSkillHitAmount()
     {
-        int val = skillBaseHitOutput + upgradeIncPowerCount;
+        int val = skillBaseHitOutput + upgradeIncHitsCount;
         return val;
     }
 
     public int GetCalculatedSkillEffectStat()
     {
-        float val = startingEffectHitChance + (upgradeIncEffectCount * 15);
+        //float val = upgradeIncPowerCount;
         //Debug.Log("float in skilldata is " + val);
 
-        curEffectHitChance = Mathf.RoundToInt(val);
-        return Mathf.RoundToInt(val);
+        curEffectHitChance = startingEffectHitChance;
+        //Mathf.RoundToInt(val);
+        return Mathf.RoundToInt(curEffectHitChance);
     }
 
     public int GetCalculatedSkillEffectChance()
     {
-        float val = upgradeIncEffectCount * 15f;
+        float val = upgradeIncPowerCount;
 
         return (int)val;
     }
@@ -149,8 +151,8 @@ public class SkillData : ScriptableObject
         curCooldown = 0;
 
         upgradeIncTargetCount = 0;
+        upgradeIncHitsCount = 0;
         upgradeIncPowerCount = 0;
-        upgradeIncEffectCount = 0;
     }
 
 }

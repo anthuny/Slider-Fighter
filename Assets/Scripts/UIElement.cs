@@ -313,6 +313,11 @@ public class UIElement : MonoBehaviour
         contentImage2UI.UpdateContentImage(sprite);
     }
 
+    public void UpdateSlider(float maxCharges = 1f, float curCharges = 0f)
+    {
+        contentImage2UI.GetComponent<Image>().fillAmount = (curCharges / maxCharges);
+    }
+
     public bool GetIsSelectable()
     {
         return selectable;

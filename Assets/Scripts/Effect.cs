@@ -40,8 +40,9 @@ public class Effect : MonoBehaviour
     public Color titleTextColour;
 
     public float addedStat;
-    public int effectPowerStacks = 0;
+    public int effectPowerStacks = 1;
     [SerializeField] private GameObject effectTierGO;
+    bool doOnce = false;
 
     private void Awake()
     {
@@ -370,8 +371,8 @@ public class Effect : MonoBehaviour
 
         //if (unit.GetEffects().Count == 0)
         //unit.ResetEffects();
-        effectPowerStacks = 0;
-
+        effectPowerStacks = 1;
+        doOnce = false;
         if (this != null)
         {
             if (gameObject != null)
@@ -396,6 +397,12 @@ public class Effect : MonoBehaviour
         if (curEffectType == EffectType.SUPPORT)
         {
             newHealingPower *= unitTarget.curHealingRecieved;
+        }
+
+        if (effectPowerStacks == 2 && !doOnce)
+        {
+            doOnce = true;
+            effectPowerStacks--;
         }
 
         newHealingPower *= effectPowerStacks;
