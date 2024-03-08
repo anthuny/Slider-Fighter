@@ -133,7 +133,11 @@ public class WeaponManager : MonoBehaviour
         // high rand == lower accuracy
         // low rand = higher accuracy
 
-        rand -= (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() * 2) - 1;
+        rand -= (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() * 2);
+        rand += 6;
+
+        if (rand > 100)
+            rand = 100;
 
         if (rand < 1)
             rand = 1;
@@ -145,19 +149,19 @@ public class WeaponManager : MonoBehaviour
             autoHitPerfect = true;
         }
         // Good
-        else if (rand > 4 && rand <= 48)
+        else if (rand > 2 && rand <= 48)
         {
             curHitAreaType = HitAreaType.GOOD;
             autoHitGood = true;
         }
         // Bad
-        else if (rand > 48 && rand <= 92)
+        else if (rand > 48 && rand <= 95)
         {
             curHitAreaType = HitAreaType.BAD;
             autoHitBad = true;
         }
         // Miss
-        else if (rand > 92 && rand <= 100) // old miss 84
+        else if (rand > 95 && rand <= 100) // old miss 92
         {
             curHitAreaType = HitAreaType.MISS;
             autoHitMiss = true;

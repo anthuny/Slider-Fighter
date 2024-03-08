@@ -779,16 +779,16 @@ public class TeamItemsManager : MonoBehaviour
                 itemPiece = item.linkedItemPiece;
 
                 itemPiece.UpdateItemPiece(item.GetSlotName(), item.GetRarity().ToString(), item.GetSlotImage());
-                Debug.Log("111");
+                //Debug.Log("111");
                 if (GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
                 {
-                    Debug.Log("aaa");
+                    //Debug.Log("aaa");
                     itemPiece.UpdateItemPiece(item.GetSlotName(), item.GetRarity().ToString(), item.GetSlotImage());
                     UpdateEquippedItemPiece("ItemMain", itemPiece);
                 }
                 if (GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
                 {
-                    Debug.Log("bbb");
+                    //Debug.Log("bbb");
                     itemPiece.UpdateItemPiece(item.GetSlotName(), item.GetRarity().ToString(), item.GetSlotImage());
                     UpdateEquippedItemPiece("ItemSecond", itemPiece);
                 }

@@ -62,7 +62,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public int curPowerHits;
     public int powerHitsRoomStarting;
-    private int curHealingHits;
+    public int curHealingHits;
     //public int curPowerHits;
     private float curExp;
     private float maxExp;
@@ -187,7 +187,7 @@ public class UnitFunctionality : MonoBehaviour
     public int teamIndex;
     //public bool unitDouble;
 
-    public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f)
+    public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         Debug.Log("max charges = " + maxCharges);
         Debug.Log("cur charges = " + curCharges);
@@ -237,7 +237,7 @@ public class UnitFunctionality : MonoBehaviour
         {
             Destroy(tooltipItems.transform.GetChild(i).gameObject);
         }
- 
+
         /*
         if (index == 0)
             count = TeamItemsManager.Instance.equippedItemsMain.Count;
@@ -247,6 +247,8 @@ public class UnitFunctionality : MonoBehaviour
             count = TeamItemsManager.Instance.equippedItemsThird.Count;
         */
 
+        bool doneOnce = false;
+
         for (int i = 0; i < count; i++)
         {
             GameObject go = Instantiate(toolTipItemGO, tooltipItems.transform.position, Quaternion.identity);
@@ -255,15 +257,61 @@ public class UnitFunctionality : MonoBehaviour
             go.transform.localPosition = Vector3.zero;
             go.transform.localScale = Vector3.one;
 
+            int newCurCharges = -1;
+
+            if (i == 0)
+                newCurCharges = item1CurUses;
+            else if (i == 1)
+                newCurCharges = item2CurUses;
+            else if(i == 2)
+                newCurCharges = item3CurUses;
+
             // Set gear data
             if (index == 0)
+            {
                 go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSprite);
-            else if (index == 1)
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSprite);
-            else if (index == 2)
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSprite);
 
-            go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat-1, newCurCharges);
+                //Debug.Log(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1);
+                //Debug.Log(item1CurUses);
+            }
+            else if (index == 1)
+            {
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSprite);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat-1, newCurCharges);
+                //Debug.Log(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1);
+                //Debug.Log(item2CurUses);
+            }
+            else if (index == 2)
+            {
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSprite);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat-1, newCurCharges);
+                //Debug.Log(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1);
+                //Debug.Log(item3CurUses);
+            }
+
+
+            if (itemIndex == i && !doneOnce)
+            {
+                doneOnce = true;
+                if (index == 0)
+                {
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSprite);
+                    go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
+                }
+                else if (index == 1)
+                {
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSprite);
+                    go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
+                }
+                else if (index == 2)
+                {
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSprite);
+                    go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
+                }
+
+                //               continue;
+            }
         }
     }
 
@@ -373,17 +421,17 @@ public class UnitFunctionality : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 0)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                            item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat-1;
                     }
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 1)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                            item2CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            item2CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 2)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                            item3CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            item3CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                 }
                 else if (index == 1)
@@ -392,17 +440,17 @@ public class UnitFunctionality : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 0)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0])
-                            item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                     if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 1)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1])
-                            item2CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            item2CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                     if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 2)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2])
-                            item3CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            item3CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                 }
                 else if (index == 2)
@@ -411,17 +459,17 @@ public class UnitFunctionality : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 0)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0])
-                            item1CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            item1CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                     if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 1)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1])
-                            item2CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            item2CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                     if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 2)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2])
-                            item3CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            item3CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                 }
             }
@@ -441,10 +489,10 @@ public class UnitFunctionality : MonoBehaviour
     public void DecreaseUsesItem1()
     {
         item1CurUses--;
-        itemVisualAlert.UpdateContentText((item1CurUses-1).ToString());
+        itemVisualAlert.UpdateContentText((item1CurUses).ToString());
 
-        if (item1CurUses < 0)
-            item1CurUses = 0;
+        //if (item1CurUses < 0)
+        //    item1CurUses = 0;
 
         int count = 0;
 
@@ -476,21 +524,23 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat, item1CurUses);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat-1, item1CurUses, 0);
         else if (index == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat, item1CurUses);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat - 1, item1CurUses, 0);
         else if (index == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat, item1CurUses);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat - 1, item1CurUses, 0);
     }
     public void DecreaseUsesItem2()
     {
         item2CurUses--;
-        itemVisualAlert.UpdateContentText((item2CurUses-1).ToString());
+        itemVisualAlert.UpdateContentText((item2CurUses).ToString());
 
-        if (item2CurUses < 0)
-            item2CurUses = 0;
 
         int count = 0;
+
+        int index = 0;
+
+        //Debug.Log("decreasing item 2");
 
         for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
@@ -499,39 +549,39 @@ public class UnitFunctionality : MonoBehaviour
                 if (i == 0)
                 {
                     count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                    index = 0;
                     break;
                 }
                 else if (i == 1)
                 {
                     count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                    index = 1;
                     break;
                 }
                 else if (i == 2)
                 {
                     count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                    index = 2;
                     break;
                 }
             }
         }
 
-        int index = 0;
-
-        if (count == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat, item2CurUses);
-        else if (count == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat, item2CurUses);
-        else if (count == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat, item2CurUses);
+        if (index == 0)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat - 1, item2CurUses, 1);
+        else if (index == 1)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat - 1, item2CurUses, 1);
+        else if (index == 2)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat - 1, item2CurUses, 1);
     }
 
     public void DecreaseUsesItem3()
     {
         item3CurUses--;
-        itemVisualAlert.UpdateContentText((item3CurUses-1).ToString());
-        if (item3CurUses < 0)
-            item3CurUses = 0;
+        itemVisualAlert.UpdateContentText((item3CurUses).ToString());
 
         int count = 0;
+        int index = 0;
 
         for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
@@ -540,29 +590,30 @@ public class UnitFunctionality : MonoBehaviour
                 if (i == 0)
                 {
                     count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                    index = 0;
                     break;
                 }
                 else if (i == 1)
                 {
                     count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                    index = 1;
                     break;
                 }
                 else if (i == 2)
                 {
                     count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                    index = 2;
                     break;
                 }
             }
         }
 
-        int index = 0;
-
-        if (count == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat, item3CurUses);
-        else if (count == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat, item3CurUses);
-        else if (count == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat, item3CurUses);
+        if (index == 0)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat - 1, item3CurUses, 2);
+        else if (index == 1)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat - 1, item3CurUses, 2);
+        else if (index == 2)
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat - 1, item3CurUses, 2);
     }
 
     public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true)
@@ -611,9 +662,72 @@ public class UnitFunctionality : MonoBehaviour
 
                 //if (curUnitType == UnitType.PLAYER)
                 //{
-                UpdateTooltipItems();
+                int count = 0;
+
+                int index = 0;
+
+
+                for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+                {
+                    if (GameManager.Instance.activeRoomHeroes[i] == this)
+                    {
+                        if (i == 0)
+                        {
+                            count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                            index = 0;
+                            break;
+                        }
+                        else if (i == 1)
+                        {
+                            count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                            index = 1;
+                            break;
+                        }
+                        else if (i == 2)
+                        {
+                            count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                            index = 2;
+                            break;
+                        }
+                    }
+                }
+
+                // see if this works 
+                for (int x = 0; x < count; x++)
+                {
+                    if (x == 0)
+                    {
+                        if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - 1, item1CurUses, 0);
+                        else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - 1, item1CurUses, 0);
+                        else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - 1, item1CurUses, 0);
+                    }
+                    else if (x == 1)
+                    {
+                        if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - 1, item2CurUses, 1);
+                        else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - 1, item2CurUses, 1);
+                        else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - 1, item2CurUses, 1);
+                    }
+                    else if (x == 2)
+                    {
+                        if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - 1, item3CurUses, 2);
+                        else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - 1, item3CurUses, 2);
+                        else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - 1, item3CurUses, 2);
+                    }
+                }
+
                 UpdateToolTipGear();
-                //}
+
+                if (count == 0)
+                    tooltipItems.UpdateAlpha(0);
             }
         }
         else
@@ -1158,15 +1272,11 @@ public class UnitFunctionality : MonoBehaviour
 
         int effectCount;
 
-        if (GameManager.Instance.GetActiveSkill().baseEffectApplyCount == 0)
-            effectCount = 1;
+
+        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitPowerHits()-1;
         else
-        {
-            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitPowerHits();
-            else
-                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitHealingHits();
-        }
+            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitHealingHits()-1;
 
 
         int skillAttackCount;
@@ -1254,7 +1364,7 @@ public class UnitFunctionality : MonoBehaviour
                                         // Check if unit is low enough health to trigger item
                                         if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.equippedItemsMain[x].threshHoldAmount)
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1265,7 +1375,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1276,7 +1386,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1288,15 +1398,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1315,10 +1425,10 @@ public class UnitFunctionality : MonoBehaviour
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1326,7 +1436,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1337,7 +1447,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1349,15 +1459,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1371,19 +1481,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1394,7 +1506,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1405,7 +1517,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1417,15 +1529,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1439,19 +1551,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1462,7 +1576,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1473,7 +1587,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1485,15 +1599,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1508,19 +1622,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1531,7 +1647,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1542,7 +1658,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1554,15 +1670,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1576,12 +1692,14 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
                                                 TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
 
@@ -1603,7 +1721,7 @@ public class UnitFunctionality : MonoBehaviour
                                         // Check if unit is low enough health to trigger item
                                         if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.equippedItemsSecond[x].threshHoldAmount)
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1614,7 +1732,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1625,7 +1743,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1636,16 +1754,16 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x 
+                                                == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1664,7 +1782,7 @@ public class UnitFunctionality : MonoBehaviour
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1675,7 +1793,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1686,7 +1804,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1698,15 +1816,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1720,19 +1838,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1743,7 +1863,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1754,7 +1874,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1766,15 +1886,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1788,19 +1908,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1811,7 +1933,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1822,7 +1944,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1834,15 +1956,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1857,19 +1979,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1880,7 +2004,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1891,7 +2015,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1903,15 +2027,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -1925,12 +2049,14 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
 
@@ -1952,7 +2078,7 @@ public class UnitFunctionality : MonoBehaviour
                                         // Check if unit is low enough health to trigger item
                                         if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.equippedItemsThird[x].threshHoldAmount)
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -1963,7 +2089,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -1974,7 +2100,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -1985,18 +2111,16 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-
-                                            if (x == 0 && item1CurUses <= 0)
+                                            else
                                             {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= 0)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= 0)
-                                            {
-                                                continue;
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
                                             }
 
                                             ItemPiece item = TeamItemsManager.Instance.equippedItemsThird[x];
@@ -2013,7 +2137,7 @@ public class UnitFunctionality : MonoBehaviour
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -2024,7 +2148,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -2035,7 +2159,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -2047,15 +2171,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -2069,19 +2193,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -2092,7 +2218,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -2103,7 +2229,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -2115,15 +2241,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -2137,19 +2263,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -2160,7 +2288,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -2171,7 +2299,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -2183,15 +2311,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -2206,19 +2334,21 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
                                     else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
                                     {
                                         if (CheckIfItemSucceeds())
                                         {
-                                            if (x == 0 && item1CurUses > 0)
+                                            if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
                                                 if (item1CurUses == 1)
@@ -2229,7 +2359,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 1 && item2CurUses > 0)
+                                            else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
                                                 if (item2CurUses == 1)
@@ -2240,7 +2370,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            else if (x == 2 && item3CurUses > 0)
+                                            else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
                                                 if (item3CurUses == 1)
@@ -2252,15 +2382,15 @@ public class UnitFunctionality : MonoBehaviour
                                                 }
                                             }
 
-                                            if (x == 0 && item1CurUses <= 0)
+                                            if (x == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 1 && item2CurUses <= 0)
+                                            else if (x == 1 && item2CurUses <= -1)
                                             {
                                                 continue;
                                             }
-                                            else if (x == 2 && item3CurUses <= 0)
+                                            else if (x == 2 && item3CurUses <= -1)
                                             {
                                                 continue;
                                             }
@@ -2274,12 +2404,14 @@ public class UnitFunctionality : MonoBehaviour
                                         }
                                         else
                                         {
+                                            /*
                                             if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                             if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteFail, false);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                            */
                                         }
                                     }
 
@@ -2368,7 +2500,7 @@ public class UnitFunctionality : MonoBehaviour
     public IEnumerator UnitEndTurn(bool waitLong = false)
     {
         if (waitLong)
-            yield return new WaitForSeconds(1.25f);
+            yield return new WaitForSeconds(0f);    // old was 1.25f
         else
             yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
         // End turn
@@ -2694,9 +2826,11 @@ public class UnitFunctionality : MonoBehaviour
                             activeEffects[i].AddTurnCountText(1);
                             activeEffects[i].EffectApply(this);
                             activeEffects[i].UpdateEffectTierImages();
-                            activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                            if (activeEffects[i] != null)
+                                activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                            else
+                                return;
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-
                         }
                         else
                             continue;
@@ -2706,7 +2840,11 @@ public class UnitFunctionality : MonoBehaviour
                         activeEffects[i].AddTurnCountText(1);
                         activeEffects[i].EffectApply(this);
                         activeEffects[i].UpdateEffectTierImages();
-                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                        if (activeEffects[i] != null)
+                            activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                        else
+                            return;
+
                         TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                     }
                 }

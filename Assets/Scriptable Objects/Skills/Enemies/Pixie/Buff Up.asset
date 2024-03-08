@@ -47,12 +47,12 @@ MonoBehaviour:
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
-  baseEffectApplyCount: 3
+  baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
-  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

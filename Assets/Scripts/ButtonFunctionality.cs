@@ -540,6 +540,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     if (slot.isEmpty)
                         ButtonSlotDetails();
                 }
+
                 else
                 {
                     if (!slot.isEmpty && !slot.baseSlot)
@@ -622,6 +623,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void SelectBaseItem()
     {
+        if (OwnedLootInven.Instance.ownedLootOpened)
+            return;
+
         OwnedLootInven.Instance.ClearOwnedItemsSlotsSelection();
 
         // Button Click SFX

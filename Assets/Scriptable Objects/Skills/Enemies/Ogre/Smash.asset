@@ -51,8 +51,8 @@ MonoBehaviour:
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
-  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 0}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

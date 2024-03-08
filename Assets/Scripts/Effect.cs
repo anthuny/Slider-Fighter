@@ -51,7 +51,21 @@ public class Effect : MonoBehaviour
 
     public void UpdateEffectTierImages(int count = 1)
     {
-        Transform parent = gameObject.transform.GetChild(0).transform;
+        if (this == null)
+            return;
+
+        if (gameObject == null)
+            return;
+        if (gameObject.transform.childCount == 0)
+            return;
+
+        if (gameObject.transform.GetChild(0) == null)
+        {
+            return;
+        }
+
+        Transform parent = null;
+        parent = gameObject.transform.GetChild(0).transform;
 
         for (int i = 0; i < count; i++)
         {

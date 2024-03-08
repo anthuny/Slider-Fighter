@@ -27,7 +27,7 @@ MonoBehaviour:
   startingSkillPower: 0
   curSkillPower: 0
   skillAttackAccMult: 1
-  skillBaseHitOutput: 1
+  skillBaseHitOutput: 0
   skillHitAttempts: 1
   projectileSpeed: 0
   skillCooldown: 2
@@ -47,12 +47,12 @@ MonoBehaviour:
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
-  baseEffectApplyCount: 3
+  baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
-  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 0}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

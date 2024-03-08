@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curRarity: 1
   itemName: Major Health Potion
-  itemDesc: 45% Heal (On Turn Start - If unit is below 50% HP, activate, using 1
+  itemDesc: 75% Heal (On Turn Start - If unit is below 50% HP, activate, using 1
     charge. (Gain 1 charge per combat start)
   itemSprite: {fileID: 21300000, guid: 3de463bd543dc6344a22c032cf9dfee7, type: 3}
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
-  itemPower: 50
+  itemPower: 75
   threshHoldAmount: 50
   isBaseHealing: 1
   isLifestealing: 0
