@@ -17,6 +17,7 @@ MonoBehaviour:
   itemDesc: Cleanse Poison (On Turn Start - if unit has poison stacks, cleanse all
     stacks). using 1 charge.
   itemSprite: {fileID: 21300000, guid: df781626fcf4e44409a1110582b92a70, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 0

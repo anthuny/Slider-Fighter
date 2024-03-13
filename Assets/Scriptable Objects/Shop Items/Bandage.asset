@@ -17,6 +17,7 @@ MonoBehaviour:
   itemDesc: Cleanse Bleed (On Turn Start - if unit has bleed stacks, cleanse all
     stacks). using 1 charge.
   itemSprite: {fileID: 21300000, guid: 7027f0ebc818fcb49b6ba525b415e61c, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 0

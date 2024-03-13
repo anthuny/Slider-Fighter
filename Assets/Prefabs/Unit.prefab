@@ -2057,7 +2057,7 @@ RectTransform:
   m_GameObject: {fileID: 2265644694641617985}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 154.30492, y: 154.30492, z: 154.30492}
+  m_LocalScale: {x: 35, y: 35, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2062125042448422712}
@@ -2121,11 +2121,15 @@ MonoBehaviour:
   focusImageGO: {fileID: 2265644694641617985}
   focusImageUI: {fileID: 3027606193029678876}
   cg: {fileID: 8096061992818073504}
-  startingFocusScale: 35
-  endingFocusScale: 2000
-  growSpeed: 0.1
+  startingFocusScale: 1
+  endingFocusScale: 500
+  growSpeed: 0.85
   alphaDecreaseInterval: 0.05
   alphaDecreaseSpeed: 2.5
+  allowFadeAway: 1
+  innerTransform: {fileID: 0}
+  doInnerExtra: 0
+  resetMap: 0
 --- !u!114 &3027606193029678876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3933,6 +3937,7 @@ MonoBehaviour:
   curLevel: 0
   curPowerHits: 0
   powerHitsRoomStarting: 0
+  curHealingHits: 0
   curSpeedIncPerLv: 0
   curPowerIncPerLv: 0
   curHealingPowerIncPerLv: 0
@@ -4017,6 +4022,7 @@ MonoBehaviour:
   item3CurUses: 0
   visualCanvas: {fileID: 1173730293756695858}
   teamIndex: 0
+  purchased: 0
 --- !u!114 &7414491478435158705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5775,6 +5781,7 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
 --- !u!225 &1727944501489654778
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8124,6 +8131,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12fddd4e16ad9ed478f41512355acf5d, type: 3}
+--- !u!1 &656541394227451365 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1414190591669720661, guid: 12fddd4e16ad9ed478f41512355acf5d, type: 3}
+  m_PrefabInstance: {fileID: 1926615070002381744}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &1083366253580252326
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656541394227451365}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!224 &720710292969332927 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1206063116506342159, guid: 12fddd4e16ad9ed478f41512355acf5d, type: 3}

@@ -149,7 +149,7 @@ public class MapManager : MonoBehaviour
             ToggleMapVisibility(true, true);
         // Complete Room
         if (Input.GetKeyDown(KeyCode.N) && !CheckIfAnyHiddenMainRooms() && selectedRoom != startingRoom)
-            ClearRoom();
+            ClearRoom(false, false);
         if (Input.GetKeyDown(KeyCode.V))
             ResetMap();
     }
@@ -167,6 +167,8 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.UpdateAllyVisibility(false);
 
         GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);
+
+        GameManager.Instance.TriggerTransitionSequence();
 
         ToggleMapVisibility(true, true);
 
@@ -200,7 +202,7 @@ public class MapManager : MonoBehaviour
             return false;
     }
 
-    public void ClearRoom(bool tryShowAd = false)
+    public void ClearRoom(bool tryShowAd = false, bool forceEnd = false)
     {
         // Do not allow room clear if selected room is the starting room
         if (selectedRoom == startingRoom)
@@ -236,6 +238,9 @@ public class MapManager : MonoBehaviour
         {
             ResetEntireRun(tryShowAd);
         }
+
+        if (forceEnd)
+            ResetEntireRun(tryShowAd);
     }
 
     public void ResetEntireRun(bool tryShowAd)
@@ -248,7 +253,7 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.ResetRoom();
         GameManager.Instance.ResetRoom(false);
         GameManager.Instance.activeTeam.Clear();
-
+        GameManager.Instance.playerLost = false;
         //AudioManager.Instance.Play("Room_Lose");
     }
 
@@ -310,6 +315,20 @@ public class MapManager : MonoBehaviour
     {
         if (toggle)
         {
+            //Debug.Log("toggling map on");
+
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                // Hide level up text
+                GameManager.Instance.activeRoomHeroes[i].ToggleTextAlert(false);
+            }
+
+            ShopManager.Instance.TogglePlayerInShopRoom(false);
+            ShopManager.Instance.ToggleFallenHeroPrompt(false);
+            ShopManager.Instance.ToggleAllFallenHeroSelection(false);
+
+            MapManager.Instance.UpdateMapGoldText();
+
             //GameManager.Instance.SetHeroFormation();
 
             //GameManager.Instance.UpdateAllyVisibility(false);
@@ -368,7 +387,7 @@ public class MapManager : MonoBehaviour
             {
                 mapOverlay.ToggleEnterRoomButton(false);
                 mapOverlay.ToggleTeamPageButton(true);
-            }            
+            }
             else
                 mapOverlay.ToggleTeamPageButton(true);
 
@@ -390,6 +409,11 @@ public class MapManager : MonoBehaviour
             }
 
             GameManager.Instance.SetHeroFormation();
+
+            
+            GameManager.Instance.transitionSequienceUI.UpdateAlpha(0);
+            GameManager.Instance.transitionSprite.resetMap = false;
+
         }
         else
         {

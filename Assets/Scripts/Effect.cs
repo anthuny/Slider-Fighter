@@ -88,7 +88,7 @@ public class Effect : MonoBehaviour
             Destroy(parent.GetChild(i).gameObject);
         }
     }
-    public void Setup(EffectData effect, UnitFunctionality targetUnit, int turnDuration = 1)
+    public void Setup(EffectData effect, UnitFunctionality targetUnit, int turnDuration = 1, bool doFullSetup = true)
     {
         ClearEffectTierImages();
 
@@ -157,7 +157,9 @@ public class Effect : MonoBehaviour
         }
 
         UpdateEffectIcon(effect);
-        AddTurnCountText(turnDuration);
+
+        if (doFullSetup)
+            AddTurnCountText(turnDuration);
 
         transform.GetComponentInParent<CanvasGroup>().alpha = 1;
 
@@ -204,7 +206,7 @@ public class Effect : MonoBehaviour
     {
         //EffectApply(unit);
 
-        if (turnCountRemaining == 1)
+        if (turnCountRemaining <= 1)
             RemoveEffect(unit);
 
         turnCountRemaining--;

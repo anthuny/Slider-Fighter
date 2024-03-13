@@ -24,7 +24,7 @@ MonoBehaviour:
   startingHealingPower: 2
   startingMaxHealth: 200
   speedIncPerLv: 2
-  powerIncPerLv: 2
+  powerIncPerLv: 3
   healingPowerIncPerLv: 4
   defenseIncPerLv: 1
   maxHealthIncPerLv: 70

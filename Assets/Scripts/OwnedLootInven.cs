@@ -218,6 +218,612 @@ public class OwnedLootInven : MonoBehaviour
         }
     }
 
+    public void MoveGearAndItemsToOwnedLoot(UnitFunctionality unit)
+    {
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (unit.GetUnitName() == GameManager.Instance.activeRoomHeroes[i].GetUnitName())
+            {
+                if (i == 0)
+                {
+                    // Items
+                    for (int x = 0; x < wornItemsMainAlly.Count; x++)
+                    {
+                        string itemName = wornItemsMainAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allItemPiecesCommon.Count; a++)
+                        {
+                            if (itemName == GearRewards.Instance.allItemPiecesCommon[a].itemName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedItems.Add(gear);
+
+
+                                gear.UpdateLootGearAlpha(false);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
+                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+                                //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
+                                gear.ToggleEquipButton(false);
+
+                                Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allItemPiecesRare.Count; b++)
+                        {
+                            if (itemName == GearRewards.Instance.allItemPiecesRare[b].itemName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedItems.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
+                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                //GearRewards.Instance.IncrementSpawnedGearCount();
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
+                                gear.ToggleEquipButton(false);
+
+                                Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+
+                    for (int x = 0; x < wornGearMainAlly.Count; x++)
+                    {
+                        string gearName = wornGearMainAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                               //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                               //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+                }
+                else if (i == 1)
+                {
+                    for (int x = 0; x < wornItemsSecondAlly.Count; x++)
+                    {
+                        string itemName = wornItemsSecondAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allItemPiecesCommon.Count; a++)
+                        {
+                            if (itemName == GearRewards.Instance.allItemPiecesCommon[a].itemName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedItems.Add(gear);
+
+
+                                gear.UpdateLootGearAlpha(false);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
+                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                //GearRewards.Instance.IncrementSpawnedGearCount();
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
+                                gear.ToggleEquipButton(false);
+
+                                Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allItemPiecesRare.Count; b++)
+                        {
+                            if (itemName == GearRewards.Instance.allItemPiecesRare[b].itemName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedItems.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
+                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                //GearRewards.Instance.IncrementSpawnedGearCount();
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
+                                gear.ToggleEquipButton(false);
+
+                                Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+
+                    for (int x = 0; x < wornGearSecondAlly.Count; x++)
+                    {
+                        string gearName = wornGearSecondAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                               //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                               //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+                }
+                else if (i == 2)
+                {
+                    for (int x = 0; x < wornItemsThirdAlly.Count; x++)
+                    {
+                        string itemName = wornItemsThirdAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allItemPiecesCommon.Count; a++)
+                        {
+                            if (itemName == GearRewards.Instance.allItemPiecesCommon[a].itemName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedItems.Add(gear);
+
+
+                                gear.UpdateLootGearAlpha(false);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
+                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                //GearRewards.Instance.IncrementSpawnedGearCount();
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
+                                gear.ToggleEquipButton(false);
+
+                                Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allItemPiecesRare.Count; b++)
+                        {
+                            if (itemName == GearRewards.Instance.allItemPiecesRare[b].itemName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedItems.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
+                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                //GearRewards.Instance.IncrementSpawnedGearCount();
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
+                                gear.ToggleEquipButton(false);
+
+                                Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+
+                    for (int x = 0; x < wornGearThirdAlly.Count; x++)
+                    {
+                        string gearName = wornGearThirdAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                               //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                               //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+                }
+
+
+
+                /*
+                else if (i == 1)
+                {
+                    for (int x = 0; x < wornGearSecondAlly.Count; x++)
+                    {
+                        string gearName = wornGearSecondAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                                //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                                //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+                }
+                else if (i == 2)
+                {
+                    for (int x = 0; x < wornGearThirdAlly.Count; x++)
+                    {
+                        string gearName = wornGearThirdAlly[x].GetSlotName();
+
+                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                                //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+
+                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+                        {
+                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
+                            {
+                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                                go.transform.localPosition = new Vector2(1000, 1000);
+                                go.transform.localScale = Vector2.one;
+
+                                Slot gear = go.GetComponent<Slot>();
+                                ownedGear.Add(gear);
+
+                                gear.UpdateLootGearAlpha(false);
+
+                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                                GearRewards.Instance.IncrementSpawnedGearCount();
+
+                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                                gear.ToggleEquipButton(false);
+
+                                //Debug.Log("adding " + gear.GetSlotName());
+                            }
+                        }
+                    }
+                }
+                */
+            }
+        }
+    }
+
     public void LoadStartingLoot()
     {
         for (int i = 0; i < startingGearPieces.Count; i++)

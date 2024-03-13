@@ -17,6 +17,7 @@ MonoBehaviour:
   itemDesc: Attack bar size is increased by 5%. Each skill use is 1 charge cost.
     (Reset to default after an attack)
   itemSprite: {fileID: 21300000, guid: b5cdb2dfa755d7f4cba9f19cfaebe326, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 5

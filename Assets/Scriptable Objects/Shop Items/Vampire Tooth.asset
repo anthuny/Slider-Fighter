@@ -17,6 +17,7 @@ MonoBehaviour:
   itemDesc: Heal 10% of the damage you deal to enemies. using 1 charge per skill
     attack.
   itemSprite: {fileID: 21300000, guid: 2e278b2ab896c9b42b1abda1a8a5e6dc, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 10

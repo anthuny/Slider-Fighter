@@ -74,7 +74,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 490c19b0051526d4bb8a3dd99bc375a2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -136,11 +136,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -152,8 +160,16 @@ MonoBehaviour:
   selectBorder: {fileID: 0}
   statPointsAdded: 0
   lockedImage: {fileID: 0}
-  statPointsThreshhold: 0
+  unlockedPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
 --- !u!225 &8733777640031525376
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -240,7 +256,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -51, y: -153.1}
+  m_AnchoredPosition: {x: 17.9, y: -153.1}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7059071883796537259
@@ -506,11 +522,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
+  curRarity: 0
   contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -522,8 +546,16 @@ MonoBehaviour:
   selectBorder: {fileID: 0}
   statPointsAdded: 0
   lockedImage: {fileID: 0}
-  statPointsThreshhold: 0
+  unlockedPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
 --- !u!225 &2592876863712991764
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -649,10 +681,25 @@ MonoBehaviour:
   buttonSelectionCG: {fileID: 5899579099612982651}
   disabled: 0
   UIbutton: {fileID: 0}
+  itemParent: {fileID: 4246308695572226124}
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0
-  gear: {fileID: 0}
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDownUnit: 0
+  isHeldDownStat: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
+  isLocked: 0
+  mainButton: {fileID: 0}
+  mainUIelement: {fileID: 0}
+  isStatButton: 0
 --- !u!225 &5899579099612982651
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -18,7 +18,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     private ShopItem shopItem;
     [SerializeField] private bool disabled;
     [SerializeField] private UIElement UIbutton;
-    [SerializeField] private UIElement itemParent;
+    public UIElement itemParent;
 
 
     [SerializeField] private bool startDisabled;
@@ -45,6 +45,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public ButtonFunctionality mainButton;
     public UIElement mainUIelement;
     public bool isStatButton;
+    public UIElement selectBorder;
 
     private void Awake()
     {
@@ -102,7 +103,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     }
     #endregion
 
-    public void MenuSelectAlly()
+    public void MenuSelectHero()
     {
         if (!buttonLocked)
         {
@@ -129,12 +130,16 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public IEnumerator MenuUnitSelection()
     {
-        yield return new WaitForSeconds(1.5f);
-
-        CharacterCarasel.Instance.ToggleMenu(false);
-
         // Allow button selection
         buttonLocked = false;
+
+        yield return new WaitForSeconds(1.5f);
+
+        GameManager.Instance.TriggerTransitionSequence();
+
+
+
+
     }
     public void MenuLeftArrowCarasel()
     {
@@ -249,6 +254,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         //
         */
         SettingsManager.Instance.ToggleSettingsButton(true);
+
+        ShopManager.Instance.ClearFallenHeroesVisuals();
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
@@ -367,7 +374,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (itemParent != null)
         {
             ItemRewardManager.Instance.selectedItemName = itemParent.GetItemName();
-            itemParent.ToggleSelected(true, true);
+            //itemParent.ToggleSelected(true, true);
         }
 
         ItemRewardManager.Instance.UpdateItemDescription(true);
@@ -766,7 +773,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         ShopManager.Instance.GetActiveRoom().hasEntered = false;
         ShopManager.Instance.GetActiveRoom().ClearPurchasedItems();
-        ShopManager.Instance.FillShopItems(true, false);
+        //ShopManager.Instance.FillShopItems(true, false);
 
 
 
@@ -965,6 +972,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void PostBattleToMapButton()
     {
+        GameManager.Instance.TriggerTransitionSequence();
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -980,7 +989,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Disable post battle UI
         GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
-        GameManager.Instance.map.ClearRoom(true);
+        GameManager.Instance.map.ClearRoom(true, false);
 
         GameManager.Instance.ResetRoom(true);
 
@@ -1062,6 +1071,35 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.SetupPlayerWeaponUI();
     }
 
+    public void IncHero1HP()
+    {
+        GameManager.Instance.activeRoomHeroes[0].UpdateUnitCurHealth((int)GameManager.Instance.activeRoomHeroes[0].GetUnitMaxHealth(), true, true);
+    }
+
+    public void IncHero2HP()
+    {
+        GameManager.Instance.activeRoomHeroes[1].UpdateUnitCurHealth((int)GameManager.Instance.activeRoomHeroes[1].GetUnitMaxHealth(), true, true);
+    }
+
+    public void IncHero3HP()
+    {
+        GameManager.Instance.activeRoomHeroes[2].UpdateUnitCurHealth((int)GameManager.Instance.activeRoomHeroes[2].GetUnitMaxHealth(), true, true);
+    }
+
+    public void DecHero1HP()
+    {
+        GameManager.Instance.activeRoomHeroes[0].UpdateUnitCurHealth(1, true, true);
+    }
+
+    public void DecHero2HP()
+    {
+        GameManager.Instance.activeRoomHeroes[1].UpdateUnitCurHealth(1, true, true);
+    }
+
+    public void DecHero3HP()
+    {
+        GameManager.Instance.activeRoomHeroes[2].UpdateUnitCurHealth(1, true, true);
+    }
     public void MinusEnemyHPButton()
     {
         // Button Click SFX
@@ -1139,6 +1177,46 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         return selected;
     }
+
+    public void FallenHeroPromptYes()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        int cost = 0;
+
+        for (int i = 0; i < ShopManager.Instance.fallenHeroButtons.Count; i++)
+        {
+            if (ShopManager.Instance.fallenHeroButtons[i].gameObject.GetComponentInParent<MenuUnitDisplay>())
+            {
+                cost = ShopManager.Instance.fallenHeroButtons[i].gameObject.GetComponentInParent<MenuUnitDisplay>().cost;
+                
+                Debug.Log("cost = " + cost);
+
+                if (cost <= ShopManager.Instance.GetPlayerGold())
+                {
+                    ShopManager.Instance.UpdatePlayerGold(-ShopManager.Instance.fallenHeroButtons[i].gameObject.GetComponentInParent<MenuUnitDisplay>().cost);
+
+                    ShopManager.Instance.ToggleFallenHeroPrompt(false);
+
+                    ShopManager.Instance.ToggleAllFallenHeroSelection(false);
+
+                    ShopManager.Instance.ReviveFallenHero(ShopManager.Instance.selectedFallenUnitName);
+                }
+            }
+        }
+    }
+
+    public void FallenHeroPromptNo()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        ShopManager.Instance.ToggleFallenHeroPrompt(false);
+
+        ShopManager.Instance.ToggleAllFallenHeroSelection(false);
+    }
+
 
     public void HeroRoomPromptYes()
     {
@@ -1398,6 +1476,22 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
+    public void ToggleSelection(bool toggle = true)
+    {
+        selectBorder.ToggleSelected(toggle);
+    }
+
+    public void SelectFallenHero()
+    {
+        ShopManager.Instance.ToggleAllFallenHeroSelection(false);
+
+        ToggleSelection(true);
+
+        ShopManager.Instance.ToggleFallenHeroPrompt(true);
+
+        ShopManager.Instance.selectedFallenUnitName = GetComponentInParent<MenuUnitDisplay>().unitName; 
+    }
+
     public void SelectUnit()
     {
         if (!GameManager.Instance.combatOver)
@@ -1421,7 +1515,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         if (unit != null)
         {
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.CheckSkipUnitTurn(unit))
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.CheckSkipUnitTurn(GameManager.Instance.GetActiveUnitFunctionality()))
             {
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");

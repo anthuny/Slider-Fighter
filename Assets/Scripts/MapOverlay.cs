@@ -13,6 +13,10 @@ public class MapOverlay : MonoBehaviour
     [SerializeField] private UIElement roomCountText;
     [SerializeField] private UIElement floorName;
 
+    [SerializeField] private UIElement playerGoldTextShopRoom;
+    [SerializeField] private UIElement floorNameShopRoom;
+    [SerializeField] private UIElement roomCountTextShopRoom;
+
     [HideInInspector]
     public UIElement uiElement;
 
@@ -124,21 +128,28 @@ public class MapOverlay : MonoBehaviour
     public void UpdatePlayerGoldText(string text)
     {
         playerGoldText.UpdateContentText(text);
+        //playerGoldTextShopRoom.UpdateContentText(text);
     }
 
     public void ResetPlayerGoldText()
     {
         playerGoldText.UpdateContentText("0");
+        //playerGoldTextShopRoom.UpdateContentText("0");
     }
 
     public void UpdateFloorNameText(string text, Color color)
     {
         floorName.UpdateContentText(text);
         floorName.UpdateContentTextColour(color);
+
+        //floorNameShopRoom.UpdateContentText(text);
+        //floorNameShopRoom.UpdateContentTextColour(color);
     }
 
     public void UpdateRoomCountText(string text)
     {
+        Debug.Log("text = " + text);
         roomCountText.UpdateContentText(text);
+        //oomCountTextShopRoom.UpdateContentText(text);
     }
 }

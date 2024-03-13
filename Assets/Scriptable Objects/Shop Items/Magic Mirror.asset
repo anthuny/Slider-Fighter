@@ -17,6 +17,7 @@ MonoBehaviour:
   itemDesc: Reflect applied effects on you to caster. using 1 charge per effect lot
     recieved.
   itemSprite: {fileID: 21300000, guid: f684ee25b6da5e04194e0c8dca092152, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 25

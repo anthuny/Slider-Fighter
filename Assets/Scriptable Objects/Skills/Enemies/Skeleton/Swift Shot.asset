@@ -43,10 +43,10 @@ MonoBehaviour:
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 0
-  effect: {fileID: 0}
-  effectTurnLength: 0
-  curEffectHitChance: 0
-  startingEffectHitChance: 0
+  effect: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
+  effectTurnLength: 1
+  curEffectHitChance: 35
+  startingEffectHitChance: 35
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0

@@ -999,6 +999,70 @@ public class TeamGearManager : MonoBehaviour
         // Show combined calculated values next to unit
     }
 
+    public void ResetHeroGearOwned(int heroIndex)
+    {
+        if (heroIndex == 0)
+        {
+            equippedHelmetMain = null;
+            equippedChestpieceMain = null;
+            equippedBootsMain = null;
+
+            OwnedLootInven.Instance.ResetWornGearAllyMain();
+
+            ally1MenuUnitDisplay.ResetUnitStats();
+
+            for (int i = 0; i < 3; i++)
+            {
+                ally1GearSlots[i].isEmpty = true;
+            }
+
+            ClearAllGearStats();
+            UpdateGearNameText("");
+
+            ClearEmptyGearSlots();
+        }
+        else if (heroIndex == 1)
+        {
+            equippedHelmetSec = null;
+            equippedChestpieceSec = null;
+            equippedBootsSec = null;
+
+            OwnedLootInven.Instance.ResetWornGearAllySecond();
+
+            ally2MenuUnitDisplay.ResetUnitStats();
+
+            for (int i = 0; i < 3; i++)
+            {
+                ally2GearSlots[i].isEmpty = true;
+            }
+
+            ClearAllGearStats();
+            UpdateGearNameText("");
+
+            ClearEmptyGearSlots();
+        }
+        else if (heroIndex == 2)
+        {
+            equippedHelmetThi = null;
+            equippedChestpieceThi = null;
+            equippedBootsThi = null;
+
+            OwnedLootInven.Instance.ResetWornGearAllyThird();
+
+            ally3MenuUnitDisplay.ResetUnitStats();
+
+            for (int i = 0; i < 3; i++)
+            {
+                ally3GearSlots[i].isEmpty = true;
+            }
+
+            ClearAllGearStats();
+            UpdateGearNameText("");
+
+            ClearEmptyGearSlots();
+        }
+    }
+
     public void ResetGearOwned()
     {
         equippedHelmetMain = null;

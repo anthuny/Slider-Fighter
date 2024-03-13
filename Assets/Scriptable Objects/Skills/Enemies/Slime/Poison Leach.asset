@@ -47,7 +47,7 @@ MonoBehaviour:
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
-  baseEffectApplyCount: 1
+  baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0

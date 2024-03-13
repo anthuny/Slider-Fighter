@@ -10,7 +10,15 @@ public class ShopManager : MonoBehaviour
     //[HideInInspector]
     public int playerGold;
     public int playerStartingGold;
-
+    [SerializeField] private int startingReviveCost = 50;
+    public Color shopItemCostDeny;
+    public Color shopItemCostAllow;
+    [SerializeField] private UIElement shopKeeper;
+    [SerializeField] private UIElement shopHeroSign;
+    public List<ButtonFunctionality> fallenHeroButtons = new List<ButtonFunctionality>();
+    [SerializeField] private UIElement fallenHeroPromptUI;
+    [SerializeField] private UIElement fallenHeroesParent;
+    [SerializeField] private GameObject fallenHeroPrefab;
     [SerializeField] private int shopMaxCombatItems = 3;
     [SerializeField] private int shopMaxHealthItems = 3;
     [SerializeField] private List<ItemPiece> shopHealthItems = new List<ItemPiece>();
@@ -41,12 +49,50 @@ public class ShopManager : MonoBehaviour
     private int refreshShopPrice;
     public int refreshShopStartingCost;
     public int refreshShopCostPerLv;
-
+    public string selectedFallenUnitName;
     private bool activeRoomEntered;
 
     [SerializeField] private List<ShopItem> shopItems = new List<ShopItem>();
+    [SerializeField] private List<string> fallenHeroesNamesBase = new List<string>();
 
     RoomMapIcon activeRoom;
+    [SerializeField] private List<string> savedHeroNames = new List<string>();
+    [SerializeField] private List<int> savedHeroCosts = new List<int>();
+
+    public bool playerInShopRoom = false;
+
+    public void ToggleFallenHeroPrompt(bool toggle = true)
+    {
+        if (toggle)
+        {
+            fallenHeroPromptUI.UpdateAlpha(1);
+
+
+            fallenHeroPromptUI.ToggleButton(true);
+            fallenHeroPromptUI.ToggleButton2(true, true);
+        }
+        else
+        {
+            fallenHeroPromptUI.UpdateAlpha(0);
+
+            fallenHeroPromptUI.ToggleButton(false);
+            fallenHeroPromptUI.ToggleButton2(false, true);
+        }
+    }
+
+    public void ToggleAllFallenHeroSelection(bool toggle = true)
+    {
+        for (int i = 0; i < fallenHeroButtons.Count; i++)
+        {
+            fallenHeroButtons[i].ToggleSelection(false);
+
+        }
+    }
+
+    public void TogglePlayerInShopRoom(bool toggle = true)
+    {
+        playerInShopRoom = toggle;
+    }
 
     private void Awake()
     {
@@ -60,6 +106,7 @@ public class ShopManager : MonoBehaviour
 
         // Disable randomiser button
         ToggleRandomiserButton(false);
+        ClearFallenHeroesVisuals();
     }
 
     public void CloseShop()
@@ -286,6 +333,7 @@ public class ShopManager : MonoBehaviour
     
     public void ToggleExitShopButton(bool toggle)
     {
+        Debug.Log("enabling shop button to " + toggle);
         buttonExitShop.ToggleButton(toggle);
     }
 
@@ -304,6 +352,122 @@ public class ShopManager : MonoBehaviour
         randomiser.gameObject.transform.GetChild(0).GetComponent<Image>().raycastTarget = toggle;
     }
 
+    public void ReviveFallenHero(string name)
+    {
+        for (int i = 0; i < GameManager.Instance.fallenHeroes.Count; i++)
+        {
+            if (GameManager.Instance.fallenHeroes[i].GetUnitName() == name)
+            {
+                if (selectedFallenUnitName == name)
+                {
+                    GameManager.Instance.fallenHeroes[i].ReviveUnit(100, true);
+
+                    GameManager.Instance.AddUnitToTeam(GameManager.Instance.fallenHeroes[i].unitData);
+
+                    GameManager.Instance.fallenHeroes[i].purchased = true;
+
+                    GameManager.Instance.AddActiveRoomAllUnitsFunctionality(GameManager.Instance.fallenHeroes[i]);
+
+                    GameManager.Instance.fallenHeroes[i].GetAnimator().SetTrigger("Idle");
+
+                    fallenHeroesNamesBase.Remove(GameManager.Instance.fallenHeroes[i].GetUnitName());
+
+                    GameManager.Instance.fallenHeroes.Remove(GameManager.Instance.fallenHeroes[i]);
+
+                    //savedHeroNames.Remove(GameManager.Instance.GetUnitData(GameManager.Instance.fallenHeroes[i].GetUnitName()).unitName);
+                    //savedHeroCosts.Clear();
+
+                    GameManager.Instance.ResetActiveUnitTurnArrow();
+
+                    // re-display fallen heroes to update the fallen hero being revived and removed
+                    DisplayFallenHeroes();
+                }
+            }
+        }
+    }
+
+    public void ClearFallenHeroesVisuals()
+    {
+        // Clear all previous fallen allies
+        for (int i = 0; i < fallenHeroesParent.gameObject.transform.childCount; i++)
+        {
+            Destroy(fallenHeroesParent.gameObject.transform.GetChild(i).gameObject);
+        }
+
+        fallenHeroButtons.Clear();
+        shopKeeper.UpdateAlpha(0);
+        shopHeroSign.UpdateAlpha(0);
+    }
+    public void DisplayFallenHeroes()
+    {
+        ToggleShopGoldText(true);
+
+        ClearFallenHeroesVisuals();
+
+        shopKeeper.UpdateAlpha(1);
+        shopHeroSign.UpdateAlpha(1);
+
+        int count = GameManager.Instance.fallenHeroes.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject go = Instantiate(fallenHeroPrefab, fallenHeroesParent.transform.position, Quaternion.identity);
+            go.transform.SetParent(fallenHeroesParent.transform);
+            go.transform.localScale = new Vector3(0.85f, 0.85f, 1);
+            go.transform.position = new Vector3(0, 0, 0);
+            go.transform.localPosition = new Vector3(0, 0, 0);
+            go.transform.GetChild(1).transform.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            //go.transform.GetChild(0).transform.lossyScale = new Vector3(1, 1, 1);
+
+
+            MenuUnitDisplay unitDisplay = go.GetComponent<MenuUnitDisplay>();
+            unitDisplay.UpdateUnitDisplay(GameManager.Instance.fallenHeroes[i].GetUnitName());
+
+            int cost = startingReviveCost * RoomManager.Instance.GetFloorCount();
+            int rand2 = Random.Range(1, 3);
+            if (rand2 == 1)
+                cost -= rand2;
+            else if (rand2 == 0)
+                cost += rand2;
+
+            //cost /= 10;
+            //Mathf.Ceil(cost);
+            //cost *= 10;
+
+
+            // Only continue if this hero HAS NOT already been spawned in from the shop before
+            if (!fallenHeroesNamesBase.Contains(unitDisplay.unitName))
+            {
+                fallenHeroesNamesBase.Add(unitDisplay.unitName);
+                
+                unitDisplay.UpdateFallenHeroCost(cost);
+                unitDisplay.UpdateFallenHeroCostColour();
+
+                savedHeroNames.Add(unitDisplay.unitName);
+                savedHeroCosts.Add(cost);
+            }
+            // Continue if this hero HAS already spawned in from the shop before
+            else
+            {
+                if (savedHeroNames.Contains(unitDisplay.unitName))
+                {
+                    if (savedHeroCosts.Count > i)
+                    {
+                        unitDisplay.UpdateFallenHeroCost(savedHeroCosts[i]);
+                        unitDisplay.UpdateFallenHeroCost(savedHeroCosts[i]);
+
+                        unitDisplay.UpdateFallenHeroCostColour();
+                    }
+                }
+            }
+
+            fallenHeroButtons.Add(go.transform.GetChild(1).GetComponent<ButtonFunctionality>());
+
+            go.GetComponent<MenuUnitDisplay>().unitName = GameManager.Instance.fallenHeroes[i].GetUnitName();
+            go.GetComponent<Animator>().SetTrigger("DeathLoop");
+        }
+    }
+
     public void FillShopItems(bool clearItems, bool refreshItems)
     {
         SetActiveRoom(RoomManager.Instance.GetActiveRoom());
@@ -319,7 +483,7 @@ public class ShopManager : MonoBehaviour
 
         itemsParent.UpdateAlpha(1);
 
-        MapManager.Instance.exitShopRoom.UpdateAlpha(1);
+        //MapManager.Instance.exitShopRoom.UpdateAlpha(1);
 
         GameManager.Instance.ResetActiveUnitTurnArrow();
 

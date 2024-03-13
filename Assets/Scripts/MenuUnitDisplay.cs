@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class MenuUnitDisplay : MonoBehaviour
 {
+    [SerializeField] private UIElement fallenHeroCostText;
     public Animator animator;
     [SerializeField] private Image unitImage;
+    public string unitName;
     [SerializeField] private UIElement unitQuestionMarkImage;
     [SerializeField] private bool unitLocked;
     [SerializeField] private UIElement unitLevel;
@@ -17,6 +19,8 @@ public class MenuUnitDisplay : MonoBehaviour
     [SerializeField] private UIElement statHealingPower;
     [SerializeField] private UIElement statDefense;
     [SerializeField] private UIElement statSpeed;
+
+    public int cost;
 
     // todo am here
 
@@ -30,6 +34,27 @@ public class MenuUnitDisplay : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void UpdateFallenHeroCost(int cost)
+    {
+        this.cost = cost;
+
+        fallenHeroCostText.UpdateContentText(cost.ToString());
+    }
+
+    public void UpdateFallenHeroCostColour()
+    {
+        if (cost <= ShopManager.Instance.GetPlayerGold())
+        {
+            // turn text normal
+            fallenHeroCostText.UpdateContentTextColour(ShopManager.Instance.shopItemCostAllow);
+        }
+        else
+        {
+            // turn text red
+            fallenHeroCostText.UpdateContentTextColour(ShopManager.Instance.shopItemCostDeny);
+        }
     }
 
     public void ToggleUnitLevelImage(bool toggle, int newLevel = 0)
@@ -47,14 +72,24 @@ public class MenuUnitDisplay : MonoBehaviour
 
     public void UpdateUnitDisplay(string unitName)
     {
+        this.unitName = unitName;
+
         if (unitName == "Knight")
         {
             animator.runtimeAnimatorController = CharacterCarasel.Instance.warriorAnimator;
             // Adjust size of unit
-            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
+            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab || ShopManager.Instance.playerInShopRoom)
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, -57);
+                if (ShopManager.Instance.playerInShopRoom)
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, -57);
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(3.5f, 3.5f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -72);
+                }
             }
             else
             {
@@ -70,10 +105,18 @@ public class MenuUnitDisplay : MonoBehaviour
             animator.runtimeAnimatorController = CharacterCarasel.Instance.archerAnimator;
 
             // Adjust size of unit
-            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
+            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab || ShopManager.Instance.playerInShopRoom)
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 5.8f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, -17);
+                if (ShopManager.Instance.playerInShopRoom)
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 5.8f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, -17);
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(3.6f, 5f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(15, -25);
+                }
             }
             else
             {
@@ -87,10 +130,18 @@ public class MenuUnitDisplay : MonoBehaviour
             animator.runtimeAnimatorController = CharacterCarasel.Instance.clericAnimator;
 
             // Adjust size of unit
-            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
+            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab || ShopManager.Instance.playerInShopRoom)
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -26);
+                if (ShopManager.Instance.playerInShopRoom)
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -21);
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.5f, 4.5f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -40);
+                }
             }
             else
             {

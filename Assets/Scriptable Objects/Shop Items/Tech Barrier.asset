@@ -17,6 +17,7 @@ MonoBehaviour:
   itemDesc: Negate 25% of other allies health removed when their attacked, and take
     it for yourself. using 1 charge per attack lot.
   itemSprite: {fileID: 21300000, guid: 8f85063ee94386c42939056d73494239, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 25

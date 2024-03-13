@@ -16,6 +16,7 @@ MonoBehaviour:
   itemName: Magic Cleanse
   itemDesc: Remove 1 random effect by (1). Using 1 charge each skill attack
   itemSprite: {fileID: 21300000, guid: 557fb2c737e91d343b81e8773671a03e, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 0

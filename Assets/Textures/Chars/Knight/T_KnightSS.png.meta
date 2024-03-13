@@ -506,6 +506,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: T_KnightSS_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 150
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e675c59d6773fb348a3544bd4f89d357
+      internalID: 1625152732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_KnightSS_19
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 150
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebb159e268d8c41419f9104469126ba5
+      internalID: 719075435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_KnightSS_20
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 150
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f84dc1a9074e32a4ca42823be129d234
+      internalID: -1742047391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -518,6 +581,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       T_KnightSS_16: -1826444065
+      T_KnightSS_19: 719075435
       T_KnightSS_14: -1335209031
       T_KnightSS_15: 895030244
       T_KnightSS_6: 718210988
@@ -528,9 +592,11 @@ TextureImporter:
       T_KnightSS_11: 802917551
       T_KnightSS_2: -820283243
       T_KnightSS_8: -575171605
+      T_KnightSS_20: -1742047391
       T_KnightSS_13: 1492664994
       T_KnightSS_17: 639129628
       T_KnightSS_1: -1023524902
+      T_KnightSS_18: 1625152732
       T_KnightSS_5: 973279032
       T_KnightSS_10: -530672642
       T_KnightSS_9: 605510761

@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
 
     //public bool devMode;
 
+    public UIElement transitionSequienceUI;
+    public CombatUnitFocus transitionSprite;
+    [SerializeField] private UIElement nothingnessUI;
     [SerializeField] private float postBattleTime;
     public List<UnitData> activeTeam = new List<UnitData>();
     //public List<UnitData> allPlayerClasses = new List<UnitData>();
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour
     public List<UnitFunctionality> activeRoomHeroesBase = new List<UnitFunctionality>();
     public List<UnitFunctionality> activeRoomEnemies = new List<UnitFunctionality>();
     private List<UnitFunctionality> oldActiveRoomEnemies = new List<UnitFunctionality>();
+    public List<UnitFunctionality> fallenHeroes = new List<UnitFunctionality>();
 
     [SerializeField] private GameObject unitIcon;
 
@@ -79,7 +83,8 @@ public class GameManager : MonoBehaviour
     public float fillAmountIntervalTimeGap;
     public int expKillGainedPerLv;
     public int expKillGainedStarting;
-    public int goldGainedPerUnit;
+    public int goldGainedPerUnitMin;
+    public int goldGainedPerUnitMax;
     public GameObject unitProjectile;
     public float minProjectileKillDist;
     public float randomXDist;
@@ -214,9 +219,20 @@ public class GameManager : MonoBehaviour
         //SpawnAllies(true);
     }
 
+    public void TriggerTransitionSequence()
+    {
+        transitionSequienceUI.UpdateAlpha(1);
+        transitionSprite.StartFocusTransition();
+    }
+
+    public void DisableTransitionSequence()
+    {
+        transitionSequienceUI.UpdateAlpha(0);
+    }
+
     public void SetHeroFormation()
     {
-        Debug.Log("asd");
+        //Debug.Log("asd");
 
         /*
         List<UnitFunctionality> activeRoomHeroesTemp = new List<UnitFunctionality>();
@@ -379,6 +395,19 @@ public class GameManager : MonoBehaviour
         return activeTeam[count];
     }
 
+    public UnitData GetUnitData(string name)
+    {
+        for (int i = 0; i < activeTeam.Count; i++)
+        {
+            if (activeTeam[i].unitName == name)
+            {
+                return activeTeam[i];
+            }
+        }
+
+        return null;
+    }
+
     public UnitFunctionality GetUnitFunctionality(UnitData unit)
     {
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
@@ -430,12 +459,15 @@ public class GameManager : MonoBehaviour
 
     public void Setup()
     {
+
         // Destroy previous room
         ResetRoom();
 
+
         RoomManager.Instance.SelectFloor();
 
-        StartRoom(RoomManager.Instance.GetActiveRoom(), RoomManager.Instance.GetActiveFloor());
+        GameManager.Instance.StartRoom(RoomManager.Instance.GetActiveRoom(), RoomManager.Instance.GetActiveFloor());
+        //TriggerTransitionSequence();
 
         //ToggleUIElement(turnOrder, false);
 
@@ -447,6 +479,8 @@ public class GameManager : MonoBehaviour
 
         ToggleMap(false);
         postBattleUI.TogglePostBattleUI(false);
+
+
     }
 
     public void SpawnAllies(bool spawnHeroAlly = false, bool byPass = false)
@@ -1164,18 +1198,71 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             if (activeRoomAllUnitFunctionalitys[i].isDead)
             {
-                Debug.Log("Destroying hero");
+                OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot(activeRoomAllUnitFunctionalitys[i]);
+
+                if (i == 0)
+                    OwnedLootInven.Instance.ResetWornGearAllyMain();
+                else if (i == 1)
+                    OwnedLootInven.Instance.ResetWornGearAllySecond();
+                else if (i == 2)
+                    OwnedLootInven.Instance.ResetWornGearAllyThird();
+
+                if (i == 0)
+                    OwnedLootInven.Instance.ResetWornItemsAllyMain();
+                else if (i == 1)
+                    OwnedLootInven.Instance.ResetWornItemsAllySecond();
+                else if (i == 2)
+                    OwnedLootInven.Instance.ResetWornItemsAllyThird();
+
+                TeamGearManager.Instance.ResetHeroGearOwned(i);
+                TeamItemsManager.Instance.ResetHeroItemOwned(i);
+                //Debug.Log("Destroying hero");
                 RemoveUnit(activeRoomAllUnitFunctionalitys[i]);
+            }
+        }
+
+        for (int c = 0; c < activeRoomHeroes.Count; c++)
+        {
+            if (activeRoomHeroes[c].isDead)
+            {
+                OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot(activeRoomHeroes[c]);
+
+                //Debug.Log("resetting gear for " + activeRoomHeroes[c].GetUnitName());
+                if (c == 0)
+                    OwnedLootInven.Instance.ResetWornGearAllyMain();
+                else if (c == 1)
+                    OwnedLootInven.Instance.ResetWornGearAllySecond();
+                else if (c == 2)
+                    OwnedLootInven.Instance.ResetWornGearAllyThird();
+
+                if (c == 0)
+                    OwnedLootInven.Instance.ResetWornItemsAllyMain();
+                else if (c == 1)
+                    OwnedLootInven.Instance.ResetWornItemsAllySecond();
+                else if (c == 2)
+                    OwnedLootInven.Instance.ResetWornItemsAllyThird();
+
+                TeamGearManager.Instance.ResetHeroGearOwned(c);
+                TeamItemsManager.Instance.ResetHeroItemOwned(c);
             }
         }
 
         // Remove dead allies from team when post battle starts, on a win
         for (int i = 0; i < activeRoomHeroes.Count; i++)
         {
+            //Debug.Log(activeRoomHeroes[i].GetUnitName() + " i = " + i);
+
             if (activeRoomHeroes[i].isDead)
             {
-                Debug.Log("Destroying hero");
+                //Debug.Log("Destroying hero " + activeRoomHeroes[i].GetUnitName());
                 RemoveUnit(activeRoomHeroes[i]);
+
+                
+                i--;
+
+                if (i < 0)
+                    i = 0;
+                
             }
         }
     }
@@ -1322,6 +1409,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         if (Input.GetKeyDown(KeyCode.S))
             SpawnAllies(true, true);
+
+        if (Input.GetKeyDown(KeyCode.Y))
+            TriggerTransitionSequence();
     }
 
     // Toggle UI accordingly
@@ -1358,9 +1448,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             defeatedEnemies.DisplayDefeatedEnemies();
         }
+        else
+            ResetRoom(false);
 
         yield return new WaitForSeconds(1f);
-
+        
         UnitFunctionality unitFunctionality = null;
 
         if (playerWon)
@@ -1415,7 +1507,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 }
             }
 
-
             yield return new WaitForSeconds(.5f);
 
             // display gear rewards
@@ -1447,7 +1538,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             playerLost = true;
 
-            ResetRoom(false);
+
 
             TeamGearManager.Instance.ResetGearOwned();
             TeamItemsManager.Instance.ResetItemOwned();
@@ -1933,8 +2024,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     unitFunctionality.UpdateUnitMaxHealth(unit.startingMaxHealth, true);
                 }
 
-                unitFunctionality.UpdateUnitPowerHits(unitFunctionality.GetUnitLevel() - 1);
-                unitFunctionality.UpdateUnitHealingHits(unitFunctionality.GetUnitLevel() - 1);
+                unitFunctionality.UpdateUnitPowerHits(unitFunctionality.GetUnitLevel());
+                unitFunctionality.UpdateUnitHealingHits(unitFunctionality.GetUnitLevel());
 
                 unitFunctionality.UpdateUnitVisual(unit.unitSprite);
                 unitFunctionality.UpdateUnitIcon(unit.unitIcon);
@@ -2050,6 +2141,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // If room type is shop, spawn shop room
         else if (room.curRoomType == RoomMapIcon.RoomType.SHOP)
         {
+            ShopManager.Instance.TogglePlayerInShopRoom();
+
             // Map open SFX
             AudioManager.Instance.Play("Shop_Entered");
 
@@ -2059,7 +2152,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // Update background
             BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetShopForest());
 
-            UpdateAllyVisibility(true, false);
+            UpdateAllyVisibility(true, false, true);
 
             // Update unit energy bar off
             for (int i = 0; i < activeRoomHeroes.Count; i++)
@@ -2073,13 +2166,22 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ResetSelectedUnits();   // Disable all unit selections
             //ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
             ToggleAllowSelection(false);
-
-            ShopManager.Instance.FillShopItems(false, true);
+            ToggleAllyUnitSelection(false);
+            //ShopManager.Instance.FillShopItems(false, true);
 
             // Update allies into position for shop
             UpdateAllAlliesPosition(false, GetActiveUnitType(), false, true);
 
             MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
+
+            for (int i = 0; i < activeRoomHeroes.Count; i++)
+            {
+                activeRoomHeroes[i].ToggleUnitDisplay(true);
+            }
+
+            ShopManager.Instance.ToggleExitShopButton(true);
+
+            ShopManager.Instance.DisplayFallenHeroes();
             return;
         }
 
@@ -3046,8 +3148,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         for (int i = 0; i < activeTeam.Count; i++)
         {
-            if (activeTeam[i].unitName == unitFunctionality.GetUnitName())
+            //Debug.Log(activeTeam[i].unitName + "i = " + i);
+            if (activeTeam[i].unitName == unitFunctionality.GetUnitName() && unitFunctionality.isDead)
+            {
+                //Debug.Log(activeTeam[i].unitName + "removing i = " + i);
                 activeTeam.Remove(activeTeam[i]);
+            }
+
         }
     }
 
@@ -3470,13 +3577,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
     {
         // Skip unit turn if all skills are on cooldown
-        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) > 0 || SkillsTabManager.Instance.skillBase1.GetIsLocked())
+        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) > 0 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
         {
-            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) > 0 || SkillsTabManager.Instance.skillBase2.GetIsLocked())
+            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) > 0 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
             {
-                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 0 || SkillsTabManager.Instance.skillBase3.GetIsLocked())
+                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 0 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
                 {
-                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) > 0 || SkillsTabManager.Instance.skillBase4.GetIsLocked())
+                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) > 0 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
                     {
                         return true;
                     }
@@ -3830,16 +3937,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         //activeRoomAllUnits.Add(unit);
     }
 
-    private void AddActiveRoomAllUnitsFunctionality(UnitFunctionality unitFunctionality)
+    public void AddActiveRoomAllUnitsFunctionality(UnitFunctionality unit)
     {
-        activeRoomAllUnitFunctionalitys.Add(unitFunctionality);
+        activeRoomAllUnitFunctionalitys.Add(unit);
 
-        if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.PLAYER)
-            activeRoomHeroes.Add(unitFunctionality);
-        else if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
-            activeRoomEnemies.Add(unitFunctionality);
+        if (unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+            activeRoomHeroes.Add(unit);
+        else if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+            activeRoomEnemies.Add(unit);
 
-        unitFunctionality.teamIndex = activeRoomHeroes.Count-1;
+        unit.teamIndex = activeRoomHeroes.Count-1;
         //GameManager.Instance.SetHeroFormation();
     }
 
@@ -3919,7 +4026,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Enable exit button until player has selected ally with item
         if (shop)
         {
-            MapManager.Instance.exitShopRoom.UpdateAlpha(1);
+            //MapManager.Instance.exitShopRoom.UpdateAlpha(1);
+            ShopManager.Instance.ToggleExitShopButton(true);
             ShopManager.Instance.selectAlly = false;
         }
 
@@ -3948,6 +4056,73 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         //Debug.Log("earlier - selecting unit " + unit.GetUnitName());
         //Debug.Log("Targeting unit " + unit.GetUnitName());
 
+        // If current room is a shop
+        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP && !unit.purchased)
+        {
+            ToggleAllowSelection(false);
+            ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
+
+            //unit.AddOwnedItems(ShopManager.Instance.GetUnassignedItem());
+
+            GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, nothingnessUI.gameObject.transform.position, Quaternion.identity);
+            go.transform.SetParent(nothingnessUI.gameObject.transform);
+            go.transform.localScale = new Vector2(1, 1);
+
+            UIElement uIElement = go.GetComponent<UIElement>();
+            Slot slot = go.GetComponent<Slot>();
+
+            uIElement.ToggleButton(false);
+
+            ItemPiece newItem = ItemRewardManager.Instance.selectedItem;
+
+            OwnedLootInven.Instance.AddOwnedItems(slot);
+
+            // Set item
+            uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
+            uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
+
+            if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.LEGENDARY)
+            {
+                uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
+            }
+            else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.EPIC)
+            {
+                uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
+            }
+            else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.RARE)
+            {
+                uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
+            }
+            else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.COMMON)
+            {
+                uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
+            }
+            slot.UpdateSlotImage(newItem.itemSprite);
+
+            slot.UpdateSlotName(newItem.itemName);
+            slot.UpdateLinkedItemPiece(newItem);
+
+            // Disable owned gear button for unowned loot
+            //slot.ToggleOwnedGearButton(false);
+            // Show full visibility of Gear
+            slot.UpdateLootGearAlpha(true);
+
+
+
+            if (ShopManager.Instance.GetUnassignedItem().healthItem)
+            {
+                float healthToRegen = (ShopManager.Instance.GetUnassignedItem().power / 100f) * unit.GetUnitMaxHealth();
+                unit.StartCoroutine(unit.SpawnPowerUI(healthToRegen, false, false, null, false));
+                unit.UpdateUnitCurHealth((int)healthToRegen, false, false);
+            }
+
+            ShopManager.Instance.UpdateUnAssignedItem(null);
+
+            // If item is health item, do the effect of it
+
+            StartCoroutine(WaitTimeThenDeselect(shopRemoveSelectTime, unit));
+        }
+
         // Ensure units cant change their selection before asd after attack
         // Allows hero rooms to still allow selection if room is defeated
         if (roomDefeated)
@@ -3970,26 +4145,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 return;
         }
 
-        // If current room is a shop
-        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP)
-        {
-            ToggleAllowSelection(false);
-            ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
 
-            unit.AddOwnedItems(ShopManager.Instance.GetUnassignedItem());
-
-            if (ShopManager.Instance.GetUnassignedItem().healthItem)
-            {
-                float healthToRegen = (ShopManager.Instance.GetUnassignedItem().power / 100f) * unit.GetUnitMaxHealth();
-                unit.StartCoroutine(unit.SpawnPowerUI(healthToRegen, false, false, null, false));
-                unit.UpdateUnitCurHealth((int)healthToRegen, false, false);
-            }
-
-            ShopManager.Instance.UpdateUnAssignedItem(null);
-
-            // If item is health item, do the effect of it
-            StartCoroutine(WaitTimeThenDeselect(shopRemoveSelectTime, unit));            
-        }
 
         if (activeSkill && !combatOver)
         {

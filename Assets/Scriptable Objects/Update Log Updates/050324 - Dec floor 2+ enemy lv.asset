@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b1acb7c48ac8e4794d42cad5696501, type: 3}
   m_Name: 050324 - Dec floor 2+ enemy lv
   m_EditorClassIdentifier: 
-  updateLogPreText: 05/03/24 - Dec floor 2+ enemy lv
+  updateLogPreText: 09/03/24 - Dec floor 2+ enemy lv
   updateLogText: BALANCE - Decreased enemy level for floors 2+

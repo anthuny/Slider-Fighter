@@ -16,6 +16,7 @@ MonoBehaviour:
   itemName: Vamperic Heals
   itemDesc: Heal 25% of each heal an enemy recieves. using 1 charge per heal lot.
   itemSprite: {fileID: 21300000, guid: 2e75a9f9a7769b14ca7365db8f342332, type: 3}
+  itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 25

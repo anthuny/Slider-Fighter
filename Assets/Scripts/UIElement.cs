@@ -39,7 +39,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private float elasticity = .25f;
 
     [SerializeField] private bool selectable;
-    [SerializeField] private UIElement selectBorder;
+    public UIElement selectBorder;
     [SerializeField] private int statPointsAdded;
 
     [SerializeField] private UIElement lockedImage;
@@ -333,6 +333,9 @@ public class UIElement : MonoBehaviour
                 ItemRewardManager.Instance.ClearItemSelection();
 
             selectBorder.UpdateAlpha(1);
+
+            //if (selectBorder.GetComponent<Animator>())
+            //    selectBorder.GetComponent<Animator>();
         }
 
         else

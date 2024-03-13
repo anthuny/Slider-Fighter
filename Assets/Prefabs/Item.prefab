@@ -147,7 +147,7 @@ MonoBehaviour:
   buttonSelectionCG: {fileID: 4402806483487106935}
   disabled: 0
   UIbutton: {fileID: 0}
-  itemParent: {fileID: 0}
+  itemParent: {fileID: 4402806483487106084}
   startDisabled: 0
   playMapMusic: 0
   buttonLocked: 0

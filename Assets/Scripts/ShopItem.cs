@@ -74,9 +74,14 @@ public class ShopItem : MonoBehaviour
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
+        gameObject.GetComponentInChildren<ButtonFunctionality>().ButtonSelectItemCo();
+
         // Purchase the item
         imageUI.UpdateAlpha(0);
         textUI.UpdateAlpha(0);
+
+        GameManager.Instance.ToggleAllowSelection(true);
+        GameManager.Instance.ToggleAllyUnitSelection(true);
 
         MapManager.Instance.UpdateMapGoldText();
         ShopManager.Instance.ToggleShopGoldText(true);
@@ -90,7 +95,9 @@ public class ShopItem : MonoBehaviour
                 if (shopItemName == ShopManager.Instance.GetShopCombatItems()[i].itemName)
                 {
                     // Disable exit button until player has selected ally with item
-                    MapManager.Instance.exitShopRoom.UpdateAlpha(0);
+                    //MapManager.Instance.exitShopRoom.UpdateAlpha(0);
+
+                    ShopManager.Instance.ToggleExitShopButton(false);
 
                     ItemPiece item = ShopManager.Instance.GetShopCombatItems()[i];
                     ShopManager.Instance.GetActiveRoom().AddPurchasedItems(item);
@@ -118,7 +125,10 @@ public class ShopItem : MonoBehaviour
                 if (shopItemName == ShopManager.Instance.GetShopHealthItems()[i].itemName)
                 {
                     // Disable exit button until player has selected ally with item
-                    MapManager.Instance.exitShopRoom.UpdateAlpha(0);
+                    //MapManager.Instance.exitShopRoom.UpdateAlpha(0);
+
+
+                    ShopManager.Instance.ToggleExitShopButton(false);
 
                     ItemPiece item = ShopManager.Instance.GetShopHealthItems()[i];
                     ShopManager.Instance.GetActiveRoom().AddPurchasedItems(item);

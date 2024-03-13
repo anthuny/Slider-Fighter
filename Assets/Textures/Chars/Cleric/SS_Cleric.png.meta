@@ -552,7 +552,7 @@ TextureImporter:
       name: SS_Cleric_20
       rect:
         serializedVersion: 2
-        x: 256
+        x: 0
         y: 64
         width: 64
         height: 64
@@ -573,8 +573,8 @@ TextureImporter:
       name: SS_Cleric_21
       rect:
         serializedVersion: 2
-        x: 256
-        y: 0
+        x: 64
+        y: 64
         width: 64
         height: 64
       alignment: 0
@@ -594,8 +594,8 @@ TextureImporter:
       name: SS_Cleric_22
       rect:
         serializedVersion: 2
-        x: 320
-        y: 0
+        x: 128
+        y: 64
         width: 64
         height: 64
       alignment: 0
@@ -607,48 +607,6 @@ TextureImporter:
       bones: []
       spriteID: 2b95b7e44d094dc4994ecaff254fd28a
       internalID: 1910905473
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SS_Cleric_23
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1e6193f39269e234b831eca772edbddf
-      internalID: 1343570644
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SS_Cleric_24
-      rect:
-        serializedVersion: 2
-        x: 448
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7ab370be05a03fe4dae384db9db1bc04
-      internalID: -495113149
       vertices: []
       indices: 
       edges: []
@@ -665,7 +623,6 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       SS_Cleric_22: 1910905473
-      SS_Cleric_24: -495113149
       SS_Cleric_18: 832405500
       SS_Cleric_14: 7417765
       SS_Cleric_4: -446451971
@@ -688,7 +645,6 @@ TextureImporter:
       SS_Cleric_21: -1805132831
       SS_Cleric_11: 1261862025
       SS_Cleric_16: -203759302
-      SS_Cleric_23: 1343570644
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

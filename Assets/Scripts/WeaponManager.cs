@@ -872,7 +872,10 @@ public class WeaponManager : MonoBehaviour
             ToggleEnabled(false);
 
             if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
                 AudioManager.Instance.StopAttackBarMusic();
+            }
+
 
             //GameManager.Instance.EnableFreeSkillSelection();
             GameManager.Instance.DisableAllSkillSelections(true);
@@ -893,9 +896,9 @@ public class WeaponManager : MonoBehaviour
             int finalHitCount = 0;
 
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount-1;
             else
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount-1;
             // If user missed on first hit, send 1 hit count
             bool miss = false;
 
@@ -912,7 +915,23 @@ public class WeaponManager : MonoBehaviour
                 calculatedPower = 0;
             }
 
-            StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, finalHitCount, effectHitAccuracy+1, miss));
+            int effectCount = 0;
+
+
+            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + effectHitAccuracy-1;
+            else
+                effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GameManager.Instance.GetActiveUnitFunctionality().GetUnitHealingHits() + effectHitAccuracy-1;
+
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                finalHitCount++;
+                effectCount += 2;
+            }
+            else
+                effectCount++;
+
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand((int)calculatedPower, finalHitCount, effectCount, miss));
         }
     }
 

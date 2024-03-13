@@ -401,6 +401,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: T_ArcherSS_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 70
+        width: 50
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 433549ce219f9e3469efd892ffcdb581
+      internalID: 1515665015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ArcherSS_14
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 70
+        width: 50
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14d382dd50c472240a86d35c6c246d40
+      internalID: -1948568786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_ArcherSS_15
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 70
+        width: 50
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 155fc386ea2bdbf4aac1ca0ab1c920f6
+      internalID: -960463870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -412,16 +475,19 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      T_ArcherSS_15: -960463870
       T_ArcherSS_5: -406787253
       T_ArcherSS_9: -2010917914
       T_ArcherSS_10: -379108037
       T_ArcherSS_7: -939104360
       T_ArcherSS_2: 302004686
       T_ArcherSS_0: 1731796005
+      T_ArcherSS_13: 1515665015
       T_ArcherSS_4: 257930557
       T_ArcherSS_3: -682908485
       T_ArcherSS_6: -1844758011
       T_ArcherSS_12: 123720814
+      T_ArcherSS_14: -1948568786
       T_ArcherSS_1: 1834510979
       T_ArcherSS_8: 692341361
       T_ArcherSS_11: 1460354281

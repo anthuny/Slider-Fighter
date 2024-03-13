@@ -185,12 +185,13 @@ public class UnitFunctionality : MonoBehaviour
 
     public Canvas visualCanvas;
     public int teamIndex;
+    public bool purchased = false;
     //public bool unitDouble;
 
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
-        Debug.Log("max charges = " + maxCharges);
-        Debug.Log("cur charges = " + curCharges);
+        //Debug.Log("max charges = " + maxCharges);
+        //Debug.Log("cur charges = " + curCharges);
 
         bool enabled = false;
 
@@ -874,7 +875,7 @@ public class UnitFunctionality : MonoBehaviour
     }
     public void StartFocusUnit()
     {
-        unitFocus.FocusUnit();
+        unitFocus.StartFocusTransition();
     }
 
     public void IncCooldownReducBonus()
@@ -1274,9 +1275,9 @@ public class UnitFunctionality : MonoBehaviour
 
 
         if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitPowerHits()-1;
+            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitPowerHits();
         else
-            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitHealingHits()-1;
+            effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GetUnitHealingHits();
 
 
         int skillAttackCount;
@@ -2800,6 +2801,8 @@ public class UnitFunctionality : MonoBehaviour
 
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
+        Debug.Log("effectHitAcc " + effectHitAcc);
+
         // If player miss, do not apply effect
         if (effectHitAcc == 0 || targetUnit.isParrying)
             return;
@@ -2823,7 +2826,7 @@ public class UnitFunctionality : MonoBehaviour
                         if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                         {
                             // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-                            activeEffects[i].AddTurnCountText(1);
+                            //activeEffects[i].AddTurnCountText(1);
                             activeEffects[i].EffectApply(this);
                             activeEffects[i].UpdateEffectTierImages();
                             if (activeEffects[i] != null)
@@ -2837,7 +2840,7 @@ public class UnitFunctionality : MonoBehaviour
                     }
                     else if (item || byPassAcc)
                     {
-                        activeEffects[i].AddTurnCountText(1);
+                        //activeEffects[i].AddTurnCountText(1);
                         activeEffects[i].EffectApply(this);
                         activeEffects[i].UpdateEffectTierImages();
                         if (activeEffects[i] != null)
@@ -2876,7 +2879,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             effect = go.GetComponent<Effect>();
                             activeEffects.Add(effect);
-                            effect.Setup(addedEffect, targetUnit, effectHitAcc);
+                            effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
                             //activeEffects[m].AddTurnCountText(1);
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                             effect.UpdateEffectTierImages();
@@ -3189,11 +3192,11 @@ public class UnitFunctionality : MonoBehaviour
 
                             targetUnit.TriggerTextAlert("Poison Leach", 1, false);
 
-                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait*2);
+                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
 
                             targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, true);
 
-                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
+                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait/2f);
 
                             /*
                             // Spawn new effect on target unit
@@ -3309,6 +3312,9 @@ public class UnitFunctionality : MonoBehaviour
         // If unit's health is 0 or lower
         if (curHealth <= 0)
         {
+            if (!GameManager.Instance.fallenHeroes.Contains(this) && curUnitType == UnitType.PLAYER)
+                GameManager.Instance.fallenHeroes.Add(this);
+
             return true;
         }
         else
@@ -3364,7 +3370,7 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void ReviveUnit(int acc)
+    public void ReviveUnit(int acc, bool fullhealth = false)
     {
         isDead = false;
 
@@ -3374,15 +3380,29 @@ public class UnitFunctionality : MonoBehaviour
 
         // Play revive SFX
         //AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
-        AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHitAdditional.name);
+        if (GameManager.Instance.GetActiveSkill())
+        {
+            if (GameManager.Instance.GetActiveSkill().skillHitAdditional)
+                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHitAdditional.name);
+        }
 
         animator.SetTrigger("Idle");
 
         // Heal ally
         float valAcc = 10 + (acc * 15);
         float val = (valAcc / 100f) * GetUnitMaxHealth();
-        StartCoroutine(SpawnPowerUI(val, false, false, null, false));
-        UpdateUnitCurHealth((int)val, false, false, false);
+
+        if (fullhealth)
+        {
+            StartCoroutine(SpawnPowerUI(GetUnitMaxHealth(), false, false, null, false));
+            UpdateUnitCurHealth((int)GetUnitMaxHealth(), false, false, false);
+        }
+        else
+        {
+            StartCoroutine(SpawnPowerUI(val, false, false, null, false));
+            UpdateUnitCurHealth((int)val, false, false, false);
+        }
+
     }
 
     public void UpdateUnitExp(int gainedExp)

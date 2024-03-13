@@ -33,24 +33,24 @@ public class GearRewards : MonoBehaviour
 
     [Header("Gear")]
     [Space(5)]
-    [SerializeField] private List<GearPiece> allGearPiecesCommon = new List<GearPiece>();
+    public List<GearPiece> allGearPiecesCommon = new List<GearPiece>();
     [Space(3)]
-    [SerializeField] private List<GearPiece> allGearPiecesRare = new List<GearPiece>();
+    public List<GearPiece> allGearPiecesRare = new List<GearPiece>();
     [Space(3)]
-    [SerializeField] private List<GearPiece> allGearPiecesEpic = new List<GearPiece>();
+    public List<GearPiece> allGearPiecesEpic = new List<GearPiece>();
     [Space(3)]
-    [SerializeField] private List<GearPiece> allGearPiecesLegendary = new List<GearPiece>();
+    public List<GearPiece> allGearPiecesLegendary = new List<GearPiece>();
     
     [Space(5)]
     [Header("Items")]
     [Space(5)]
-    [SerializeField] private List<ItemPiece> allItemPiecesCommon = new List<ItemPiece>();
+    public List<ItemPiece> allItemPiecesCommon = new List<ItemPiece>();
     [Space(3)]
-    [SerializeField] private List<ItemPiece> allItemPiecesRare = new List<ItemPiece>();
+    public List<ItemPiece> allItemPiecesRare = new List<ItemPiece>();
     [Space(3)]
-    [SerializeField] private List<ItemPiece> allItemPiecesEpic = new List<ItemPiece>();
+    public List<ItemPiece> allItemPiecesEpic = new List<ItemPiece>();
     [Space(3)]
-    [SerializeField] private List<ItemPiece> allItemPiecesLegendary = new List<ItemPiece>();
+    public List<ItemPiece> allItemPiecesLegendary = new List<ItemPiece>();
 
     public int spawnedGearCount;
 
@@ -351,7 +351,12 @@ public class GearRewards : MonoBehaviour
 
     int CalculateGoldRecieved()
     {
-        int gold = (GameManager.Instance.goldGainedPerUnit * GameManager.Instance.GetEnemiesKilledCount());
+        int gold = 0;
+
+        for (int i = 0; i < GameManager.Instance.GetEnemiesKilledCount(); i++)
+        {
+            gold += Random.Range(GameManager.Instance.goldGainedPerUnitMin, GameManager.Instance.goldGainedPerUnitMax + 1);
+        }
         return gold;
     }
 }

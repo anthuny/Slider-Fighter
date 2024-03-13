@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 1312161310553083477}
   - component: {fileID: 2812807797627378798}
   - component: {fileID: 7405420529714912903}
+  - component: {fileID: 2549471148917377576}
   m_Layer: 5
   m_Name: Character
   m_TagString: Untagged
@@ -214,6 +215,18 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+--- !u!225 &2549471148917377576
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414190591669720661}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1415871230302792947
 GameObject:
   m_ObjectHideFlags: 0

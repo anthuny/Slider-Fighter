@@ -217,7 +217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8929885256485058258
 Transform:
   m_ObjectHideFlags: 0
@@ -12341,11 +12341,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curMasteryType: 0
-  activeMasteryType: 0
+  curStatType: 0
+  curRarity: 0
   contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
   startHidden: 1
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -12355,10 +12364,18 @@ MonoBehaviour:
   elasticity: 0.25
   selectable: 0
   selectBorder: {fileID: 0}
-  masteryPointsAdded: 0
+  statPointsAdded: 0
   lockedImage: {fileID: 0}
-  masteryPointsThreshhold: 0
+  unlockedPointsThreshhold: 0
   isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
 --- !u!1 &8929885256497286704
 GameObject:
   m_ObjectHideFlags: 0

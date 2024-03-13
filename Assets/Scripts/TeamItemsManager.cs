@@ -657,6 +657,61 @@ public class TeamItemsManager : MonoBehaviour
         // Show combined calculated values next to unit
     }
 
+    public void ResetHeroItemOwned(int heroIndex)
+    {
+        if (heroIndex == 0)
+        {
+            equippedItemsMain.Clear();
+
+            OwnedLootInven.Instance.ResetWornItemsAllyMain();
+
+            //ally1MenuUnitDisplay.ResetUnitStats();
+
+            for (int i = 0; i < 3; i++)
+            {
+                ally1ItemsSlots[i].isEmpty = true;
+                ally1ItemsSlots[i].ResetSlot(true, true);
+            }
+
+            ClearAllGearStats();
+            UpdateItemNameText("");
+        }
+        else if (heroIndex == 1)
+        {
+            equippedItemsSecond.Clear();
+
+            OwnedLootInven.Instance.ResetWornItemsAllySecond();
+
+            //ally2MenuUnitDisplay.ResetUnitStats();
+
+            for (int i = 0; i < 3; i++)
+            {
+                ally2ItemsSlots[i].isEmpty = true;
+                ally2ItemsSlots[i].ResetSlot(true, true);
+            }
+
+            ClearAllGearStats();
+            UpdateItemNameText("");
+        }
+        else if (heroIndex == 2)
+        {
+            equippedItemsThird.Clear();
+
+            OwnedLootInven.Instance.ResetWornItemsAllyThird();
+
+            //ally1MenuUnitDisplay.ResetUnitStats();
+
+            for (int i = 0; i < 3; i++)
+            {
+                ally3ItemsSlots[i].isEmpty = true;
+                ally3ItemsSlots[i].ResetSlot(true, true);
+            }
+
+            ClearAllGearStats();
+            UpdateItemNameText("");
+        }
+    }
+
     public void ResetItemOwned()
     {
         /*
