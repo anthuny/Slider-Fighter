@@ -103,18 +103,26 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     }
     #endregion
 
+    bool menuPlayButtonPressed;
+
     public void MenuSelectHero()
     {
-        if (!buttonLocked)
+        if (!menuPlayButtonPressed)
         {
-            // Button Click SFX
-            AudioManager.Instance.Play("Button_Click");
+            if (!buttonLocked)
+            {
+                menuPlayButtonPressed = true;
 
-            CharacterCarasel.Instance.SelectAlly(this);
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
 
-            UpdateLog.Instance.ToggleUpdateLog(false);
-            UpdateLog.Instance.ToggleUpdateLogbutton(false);
+                CharacterCarasel.Instance.SelectAlly(this);
+
+                UpdateLog.Instance.ToggleUpdateLog(false);
+                UpdateLog.Instance.ToggleUpdateLogbutton(false);
+            }
         }
+
     }
 
     public void ButtonMenuToggleUpdateLog()
@@ -195,13 +203,30 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         SettingsManager.Instance.ToggleSettingsTab();
     }
 
+    bool enterRoomButtonPressed = false;
+
     public void ButtonEnterRoom()
     {
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+        if (!enterRoomButtonPressed)
+        {
+            enterRoomButtonPressed = true;
 
-        // Map Close SFX
-        AudioManager.Instance.Play("Map_Close");
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            // Map Close SFX
+            AudioManager.Instance.Play("Map_Close");
+
+            GameManager.Instance.TriggerTransitionSequence();
+
+            StartCoroutine(ButtonEnterRoomCo());
+        }
+
+    }
+
+    IEnumerator ButtonEnterRoomCo()
+    {
+        yield return new WaitForSeconds(1f);
 
         //GameManager.Instance.UpdateAllyVisibility(true);
 
@@ -209,7 +234,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.ToggleMap(false);
 
         // Enable combat UI
-        GameManager.Instance.Setup();
+        //GameManager.Instance.Setup();
 
         // Face left for combat
 
@@ -220,8 +245,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
 
         GameManager.Instance.UpdateAllysPositionCombat();
-    }
 
+        enterRoomButtonPressed = false;
+    }
     public void ButtonAddSkillPointIncreaseTargets()
     {
         //Debug.Log("a");
@@ -970,12 +996,29 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
     }
 
+    bool postBattleButtonPressed = false;
+
     public void PostBattleToMapButton()
     {
-        GameManager.Instance.TriggerTransitionSequence();
+        if (!postBattleButtonPressed)
+        {
+            postBattleButtonPressed = true;
 
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+                GameManager.Instance.transitionSprite.incMapFloor = true;
+            else
+                GameManager.Instance.transitionSprite.goToMap = true;
+
+            GameManager.Instance.TriggerTransitionSequence();
+        }
+    }
+
+    public IEnumerator PostBattleToMapButtonCo()
+    {
+        yield return new WaitForSeconds(1f);
 
         // Map open SFX
         AudioManager.Instance.Play("Map_Open");
@@ -996,7 +1039,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Update unit sorting
         GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);
 
-
         if (GameManager.Instance.activeRoomHeroes.Count > 0)
         {
             if (GameManager.Instance.GetActiveAlly())
@@ -1005,6 +1047,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 GameManager.Instance.SkillsTabChangeAlly(false, true);
             }
         }
+
+        postBattleButtonPressed = false;
     }
 
     public void WeaponBackButton()

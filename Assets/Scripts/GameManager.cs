@@ -466,7 +466,7 @@ public class GameManager : MonoBehaviour
 
         RoomManager.Instance.SelectFloor();
 
-        GameManager.Instance.StartRoom(RoomManager.Instance.GetActiveRoom(), RoomManager.Instance.GetActiveFloor());
+
         //TriggerTransitionSequence();
 
         //ToggleUIElement(turnOrder, false);
@@ -480,7 +480,7 @@ public class GameManager : MonoBehaviour
         ToggleMap(false);
         postBattleUI.TogglePostBattleUI(false);
 
-
+        StartRoom(RoomManager.Instance.GetActiveRoom(), RoomManager.Instance.GetActiveFloor());
     }
 
     public void SpawnAllies(bool spawnHeroAlly = false, bool byPass = false)
@@ -1049,6 +1049,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ToggleSkillVisibility(true);
 
             MapManager.Instance.UpdateEnterRoomButton();
+
+            transitionSprite.resetMap = false;
+            transitionSprite.AllowFadeOut();
+
         }
     }
 
@@ -2135,7 +2139,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ToggleAllyUnitSelection(true);
             ToggleEnemyUnitSelection(true);
             //Debug.Log("aaa");
-            UpdateTurnOrder();
+
+            transitionSprite.AllowFadeOut();
+
+            Invoke("UpdateTurnOrder", 0);
         }
 
         // If room type is shop, spawn shop room
@@ -2182,6 +2189,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ShopManager.Instance.ToggleExitShopButton(true);
 
             ShopManager.Instance.DisplayFallenHeroes();
+
+            transitionSprite.AllowFadeOut();
             return;
         }
 

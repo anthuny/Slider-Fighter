@@ -168,12 +168,16 @@ public class MapManager : MonoBehaviour
 
         GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);
 
-        GameManager.Instance.TriggerTransitionSequence();
+        //GameManager.Instance.TriggerTransitionSequence();
 
         ToggleMapVisibility(true, true);
 
         // Disable player weapon input 
         GameManager.Instance.ToggleUIElementFull(GameManager.Instance.playerWeaponChild, false);
+
+        GameManager.Instance.transitionSprite.AllowFadeOut();
+
+        GameManager.Instance.transitionSprite.resetMap = false;
     }
 
     public bool CheckIfAnyHiddenMainRooms(int extra = 0)
@@ -411,8 +415,7 @@ public class MapManager : MonoBehaviour
             GameManager.Instance.SetHeroFormation();
 
             
-            GameManager.Instance.transitionSequienceUI.UpdateAlpha(0);
-            GameManager.Instance.transitionSprite.resetMap = false;
+            //GameManager.Instance.transitionSequienceUI.UpdateAlpha(0);
 
         }
         else
@@ -684,12 +687,15 @@ public class MapManager : MonoBehaviour
     void SpawnRoomGenerationA()
     {
         // Calculate room count
-        int min = activeFloor.minRoomCount + RoomManager.Instance.GetMinRoomCountBonus();
-        int max = activeFloor.maxRoomCount + RoomManager.Instance.GetMaxRoomCountBonus();
-        int roomSpawnCount = Random.Range(min, max);
+        int min = activeFloor.minRoomCount + (RoomManager.Instance.GetFloorCount() * 2) -2;
+        int max = activeFloor.maxRoomCount + (RoomManager.Instance.GetFloorCount() * 2) - 2;
+        int roomSpawnCount = Random.Range(min, max+1);
 
-        if (roomSpawnCount > RoomManager.Instance.floorMaxRoomCount)
-            roomSpawnCount = RoomManager.Instance.floorMaxRoomCount;
+        if (roomSpawnCount > RoomManager.Instance.floorMaxRoomCount * (RoomManager.Instance.GetFloorCount() * 2) - 2)
+            roomSpawnCount = RoomManager.Instance.floorMaxRoomCount * (RoomManager.Instance.GetFloorCount() * 2) - 2;
+
+        if (roomSpawnCount >= RoomManager.Instance.floorMaxMainRoomTotalCount)
+            roomSpawnCount = RoomManager.Instance.floorMaxMainRoomTotalCount;
 
         UpdateStartEndRoomHorizontalPos(leftBorder.position.x, rightBorder.position.x);
 
@@ -702,17 +708,7 @@ public class MapManager : MonoBehaviour
 
             if (failedCurAttempts <= maxFailedAttempts)
             {
-                // Instantiate the object prefab
-                GameObject room = Instantiate(roomPrefab);
-
-                // Set the position of the spawned object
-                room.transform.SetParent(roomIconsParent);
-                room.transform.localScale = new Vector2(1, 1);
-
                 Vector2 randomPos = GetRoomSpawnRandomPos();
-                room.transform.position = randomPos;
-
-                UpdateRoomZPosition(room.transform);
 
                 foreach (GameObject obj in spawnedAllRooms)
                 {
@@ -724,13 +720,27 @@ public class MapManager : MonoBehaviour
                         isTooClose = true;
                         failedCurAttempts++;
                         //Debug.Log("DIDNT Spawn FROM ROOM" + distance);
-                        if (i != 0)
-                            i--;
+                        //if (i != 0)
+                        //    i--;
 
-                        Destroy(room);
+                        //Destroy(room);
                         break;
                     }
                 }
+
+                if (isTooClose)
+                    continue;
+
+                // Instantiate the object prefab
+                GameObject room = Instantiate(roomPrefab);
+
+                // Set the position of the spawned object
+                room.transform.SetParent(roomIconsParent);
+                room.transform.localScale = new Vector2(1, 1);
+
+                room.transform.position = randomPos;
+
+                UpdateRoomZPosition(room.transform);
 
                 // If the spawned object is not too close to any other objects, spawn another till capped
                 if (!isTooClose)
@@ -769,10 +779,13 @@ public class MapManager : MonoBehaviour
         #region Spawn Side Rooms
         failedCurAttempts = 0;
 
-        int roomSpawnRoundB = activeFloor.sideRoomAmount + RoomManager.Instance.GetFloorCount();
+        int roomSpawnRoundB = activeFloor.sideRoomAmount * (RoomManager.Instance.GetFloorCount() * 2) - (2 * RoomManager.Instance.GetFloorCount());
 
-        if (roomSpawnRoundB > RoomManager.Instance.floorMaxRoomCount-2)
-            roomSpawnRoundB = RoomManager.Instance.floorMaxRoomCount-2;
+        if (roomSpawnRoundB > RoomManager.Instance.floorMaxRoomCount * (RoomManager.Instance.GetFloorCount() * 2) - (2 * RoomManager.Instance.GetFloorCount()))
+            roomSpawnRoundB = RoomManager.Instance.floorMaxRoomCount * (RoomManager.Instance.GetFloorCount() * 2) - (2 * RoomManager.Instance.GetFloorCount());
+
+        if (roomSpawnRoundB >= RoomManager.Instance.floorMaxSideRoomTotalCount)
+            roomSpawnRoundB = RoomManager.Instance.floorMaxSideRoomTotalCount;
 
         RoomMapIcon roomMapIcon;
 
@@ -781,24 +794,10 @@ public class MapManager : MonoBehaviour
         {
             if (failedCurAttempts <= maxFailedAttempts)
             {
-                //Debug.Log(failedCurAttempts);
-
-                // Instantiate the object prefab
-                GameObject sideRoom = Instantiate(roomPrefab);
-
-                // Set the position of the spawned object
-                sideRoom.transform.SetParent(roomIconsParent);
-                sideRoom.transform.localScale = new Vector2(1, 1);
-                //room.transform.position = new Vector3(randomPos.x, randomPos.y, 0);
-
                 Vector2 randomPos = GetRoomSpawnRandomPos();
-                sideRoom.transform.position = randomPos;
-
-                UpdateRoomZPosition(sideRoom.transform);
 
                 // Check if the spawned object is too close to any other objects
                 bool isTooClose = false;
-
                 float distance;
 
                 foreach (GameObject obj in spawnedAllRooms)
@@ -813,10 +812,13 @@ public class MapManager : MonoBehaviour
                         if (i != 0)
                             i--;
 
-                        Destroy(sideRoom);
-                        return;
+                        //Destroy(sideRoom);
+                        break;
                     }
                 }
+
+                if (isTooClose)
+                    continue;
 
                 // working for reg rooms, gotta make sure other 2work ( chaisn and side rooms)
                 if (!isTooClose)
@@ -835,11 +837,26 @@ public class MapManager : MonoBehaviour
                             if (i != 0)
                                 i--;
 
-                            Destroy(sideRoom);
+                            //Destroy(sideRoom);
                             break;
                         }
                     }
+
+                    if (isTooClose)
+                        continue;
                 }
+
+                // Instantiate the object prefab
+                GameObject sideRoom = Instantiate(roomPrefab);
+
+                // Set the position of the spawned object
+                sideRoom.transform.SetParent(roomIconsParent);
+                sideRoom.transform.localScale = new Vector2(1, 1);
+                //room.transform.position = new Vector3(randomPos.x, randomPos.y, 0);
+
+                sideRoom.transform.position = randomPos;
+
+                UpdateRoomZPosition(sideRoom.transform);
 
                 // If the spawned object is not too close to any other objects, spawn another till capped
                 if (!isTooClose)
@@ -884,16 +901,24 @@ public class MapManager : MonoBehaviour
                 // Make enough shops from the additional room spawns, until enough has been hit for floor
                 int rand = Random.Range(0, spawnedAdditionalRooms.Count - 1);
 
-                RoomMapIcon roomIcon = spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>();
+                RoomMapIcon roomIcon = null;
+
+                if (rand < spawnedAdditionalRooms.Count)
+                    roomIcon = spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>();
+                else
+                {
+                    failedCurAttempts++;
+                    continue;
+                }
 
                 if (failedCurAttempts <= maxFailedAttempts)
                 {
                     // If there is already a shop room, skip it and reset so it can do it again
-                    if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP || roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO || roomIcon.GetRoomType() == RoomMapIcon.RoomType.ITEM)
+                    if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO || roomIcon.GetRoomType() == RoomMapIcon.RoomType.ITEM)
                     {
-                        i--;
-                        if (i < 0)
-                            i = 0;
+                        //i--;
+                        //if (i < 0)
+                        //    i = 0;
                         failedCurAttempts++;
                         continue;
                     }
@@ -920,11 +945,11 @@ public class MapManager : MonoBehaviour
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 // If there is already a shop room, skip it and reset so it can do it again
-                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO || roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP || roomIcon.GetRoomType() == RoomMapIcon.RoomType.ITEM)
+                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP || roomIcon.GetRoomType() == RoomMapIcon.RoomType.ITEM)
                 {
-                    i--;
-                    if (i < 0)
-                        i = 0;
+                    //i--;
+                    //if (i < 0)
+                    //    i = 0;
                     failedCurAttempts++;
                     continue;
                 }
@@ -938,7 +963,7 @@ public class MapManager : MonoBehaviour
 
         int itemRoomCount = activeFloor.itemRoomCount + (RoomManager.Instance.GetFloorCount()-1);
 
-        // Set Hero rooms
+        // Set Item rooms
         for (int i = 0; i < itemRoomCount; i++)
         {
             // Make enough item rooms from the additional room spawns, until enough has been hit for floor
@@ -949,11 +974,11 @@ public class MapManager : MonoBehaviour
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 // If there is already an item room, skip it and reset so it can do it again
-                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.ITEM || roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO || roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP)
+                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO || roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP)
                 {
-                    i--;
-                    if (i < 0)
-                        i = 0;
+                    //i--;
+                    //if (i < 0)
+                    //    i = 0;
                     failedCurAttempts++;
                     continue;
                 }

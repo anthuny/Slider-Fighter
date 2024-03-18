@@ -7,6 +7,8 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private List<FloorData> totalFloors = new List<FloorData>();
     [SerializeField] private int startingFloorDifficulty;
     public int floorMaxRoomCount;
+    public int floorMaxMainRoomTotalCount;
+    public int floorMaxSideRoomTotalCount;
     public int floorMaxShopRoomCount;
     [SerializeField] private float floorDifficultyRandomAmount;
     [SerializeField] private RoomMapIcon activeRoom;
