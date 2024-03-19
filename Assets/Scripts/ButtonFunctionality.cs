@@ -120,9 +120,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
                 UpdateLog.Instance.ToggleUpdateLog(false);
                 UpdateLog.Instance.ToggleUpdateLogbutton(false);
+
+                StartCoroutine(MenuSelectHeroCo());
             }
         }
+    }
 
+    IEnumerator MenuSelectHeroCo()
+    {
+        yield return new WaitForSeconds(2.75f);
+
+        menuPlayButtonPressed = false;
     }
 
     public void ButtonMenuToggleUpdateLog()
@@ -143,12 +151,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         yield return new WaitForSeconds(1.5f);
 
+        GameManager.Instance.transitionSprite.resetMap = true;
+
         GameManager.Instance.TriggerTransitionSequence();
-
-
-
-
     }
+
     public void MenuLeftArrowCarasel()
     {
         // Button Click SFX
@@ -1013,6 +1020,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 GameManager.Instance.transitionSprite.goToMap = true;
 
             GameManager.Instance.TriggerTransitionSequence();
+
+            StartCoroutine(PostBattleToMapButtonCo());
         }
     }
 
@@ -1032,9 +1041,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Disable post battle UI
         GameManager.Instance.postBattleUI.TogglePostBattleUI(false);
 
+        GameManager.Instance.ResetRoom(true);
+
+
         GameManager.Instance.map.ClearRoom(true, false);
 
-        GameManager.Instance.ResetRoom(true);
 
         // Update unit sorting
         GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);

@@ -882,7 +882,8 @@ public class WeaponManager : MonoBehaviour
 
             ToggleAttackButtonInteractable(false);
 
-            yield return new WaitForSeconds(timePostHit);
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                yield return new WaitForSeconds(timePostHit);
 
             GameManager.Instance.SetupPlayerPostHitUI();
 
@@ -898,7 +899,7 @@ public class WeaponManager : MonoBehaviour
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
                 finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount-1;
             else
-                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount-1;
+                finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitHealingHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount-1;
             // If user missed on first hit, send 1 hit count
             bool miss = false;
 

@@ -6,6 +6,7 @@ public class CombatUnitFocus : MonoBehaviour
 {
     [SerializeField] private GameObject focusImageGO;
     [SerializeField] private UIElement focusImageUI;
+    public UIElement floorIncreaseAlertUI;
     [SerializeField] private UIElement loadingTextUI;
     [SerializeField] private CanvasGroup cg;
 
@@ -159,17 +160,17 @@ public class CombatUnitFocus : MonoBehaviour
             {
                 doneOnce3 = true;
 
-                //allowFocusGrowStart = false;
-
                 if (isMainTransition)
                 {
                     if (incMapFloor)
                     {
-                        GameManager.Instance.ToggleMap(true, true, true, true);
+                        //MapManager.Instance.ToggleMapVisibility(true, true, false);
+                        //GameManager.Instance.ToggleMap(true, true, true, true);
+                        GameManager.Instance.map.ClearRoom(true, false);
                     }
                     else if (goToMap)
                     {
-                        GameManager.Instance.ToggleMap(true, false, false, true);
+                        GameManager.Instance.map.ClearRoom(true, false);
                     }
                     else if (!allowFadeAway && resetMap)
                     {
@@ -183,21 +184,27 @@ public class CombatUnitFocus : MonoBehaviour
                             GameManager.Instance.Setup();
                         }
                     }
+                }
+                else
+                {
+                    doneOnce = false;
+                    //doneOnce2 = false;
+                    //doneOnce3 = false;
+                    doneOnce4 = false;
+                    allowFocusGrowStart = false;
+                    incMapFloor = false;
+                    allowFocusGrow = false;
+                    goToMap = false;
 
-                    StartCoroutine(HideLoadingText());
+                    initialTimer = 0;
+                    lastTimer = 0;
 
-                    /*
+                    cg.alpha = 0;
+
                     focusImageGO.transform.localScale = new Vector2(0, 0);
 
                     if (doInnerExtra && innerTransform)
                         innerTransform.localScale = new Vector2(0, 0);
-                    */
-                }
-                else
-                {
-                    initialTimer = 0;
-                    allowFocusGrowStart = false;
-                    cg.alpha = 0;
                 }
             }
         }
@@ -205,20 +212,16 @@ public class CombatUnitFocus : MonoBehaviour
 
     public void AllowFadeOut()
     {
-        /*
-focusImageGO.transform.localScale = new Vector2(0, 0);
-
-if (doInnerExtra && innerTransform)
-    innerTransform.localScale = new Vector2(0, 0);
-*/
         allowFocusGrow = false;
         initialTimer = 0;
         lastTimer = 0;
+
+        StartCoroutine(HideLoadingText());
     }
 
     IEnumerator HideLoadingText()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(0);
 
         loadingTextUI.UpdateAlpha(0);
     }

@@ -360,13 +360,15 @@ public class ShopManager : MonoBehaviour
             {
                 if (selectedFallenUnitName == name)
                 {
-                    GameManager.Instance.fallenHeroes[i].ReviveUnit(100, true);
+                    GameManager.Instance.AddActiveRoomAllUnitsFunctionality(GameManager.Instance.fallenHeroes[i]);
 
                     GameManager.Instance.AddUnitToTeam(GameManager.Instance.fallenHeroes[i].unitData);
 
+                    GameManager.Instance.fallenHeroes[i].ReviveUnit(100, true);
+
                     GameManager.Instance.fallenHeroes[i].purchased = true;
 
-                    GameManager.Instance.AddActiveRoomAllUnitsFunctionality(GameManager.Instance.fallenHeroes[i]);
+
 
                     GameManager.Instance.fallenHeroes[i].GetAnimator().SetTrigger("Idle");
 

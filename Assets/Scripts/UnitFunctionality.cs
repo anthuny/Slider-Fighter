@@ -2498,7 +2498,7 @@ public class UnitFunctionality : MonoBehaviour
     }
 
 
-    public IEnumerator UnitEndTurn(bool waitLong = false)
+    public IEnumerator UnitEndTurn(bool waitLong = false, bool waitExtraLong = false)
     {
         if (waitLong)
             yield return new WaitForSeconds(0f);    // old was 1.25f
@@ -3196,7 +3196,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, true);
 
-                            yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait/2f);
+                            //yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait/2f);
 
                             /*
                             // Spawn new effect on target unit
@@ -3337,6 +3337,8 @@ public class UnitFunctionality : MonoBehaviour
         {
             isDead = true;
 
+            curUnitTurnArrow.UpdateAlpha(0);
+
             ResetEffects();
 
             curHealth = 0;
@@ -3358,7 +3360,12 @@ public class UnitFunctionality : MonoBehaviour
                 if (curHealth <= 0 && val != 0)
                 {
                     //Debug.Log("111");
-                    StartCoroutine(UnitEndTurn(true));  // end unit turn
+
+                    if (curUnitType == UnitType.PLAYER)
+                    {
+                        yield return new WaitForSeconds(.75f);
+                        StartCoroutine(UnitEndTurn(true));  // end unit turn
+                    }
                 }
             }
 
@@ -3374,9 +3381,13 @@ public class UnitFunctionality : MonoBehaviour
     {
         isDead = false;
 
+        GameManager.Instance.AddUnitFromTurnOrder(this);
+
+        GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
+
         ToggleUnitDisplay(true);
 
-        GameManager.Instance.AddUnitFromTurnOrder(this);
+
 
         // Play revive SFX
         //AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
@@ -3485,6 +3496,9 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         yield return new WaitForSeconds(GameManager.Instance.timePostExp);
+
+        // Display exp visual
+        ToggleUnitExpVisual(false);
 
         // Enable post battle to map button for next post battle scene
         StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));

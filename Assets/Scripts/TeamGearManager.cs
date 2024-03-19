@@ -1003,13 +1003,13 @@ public class TeamGearManager : MonoBehaviour
     {
         if (heroIndex == 0)
         {
-            equippedHelmetMain = null;
-            equippedChestpieceMain = null;
-            equippedBootsMain = null;
+            //equippedHelmetMain = null;
+            //equippedChestpieceMain = null;
+            //equippedBootsMain = null;
 
-            OwnedLootInven.Instance.ResetWornGearAllyMain();
+            //OwnedLootInven.Instance.ResetWornGearAllyMain();
 
-            ally1MenuUnitDisplay.ResetUnitStats();
+            //ally1MenuUnitDisplay.ResetUnitStats();
 
             for (int i = 0; i < 3; i++)
             {
@@ -1023,6 +1023,7 @@ public class TeamGearManager : MonoBehaviour
         }
         else if (heroIndex == 1)
         {
+            /*
             equippedHelmetSec = null;
             equippedChestpieceSec = null;
             equippedBootsSec = null;
@@ -1030,7 +1031,7 @@ public class TeamGearManager : MonoBehaviour
             OwnedLootInven.Instance.ResetWornGearAllySecond();
 
             ally2MenuUnitDisplay.ResetUnitStats();
-
+            */
             for (int i = 0; i < 3; i++)
             {
                 ally2GearSlots[i].isEmpty = true;
@@ -1043,6 +1044,7 @@ public class TeamGearManager : MonoBehaviour
         }
         else if (heroIndex == 2)
         {
+            /*
             equippedHelmetThi = null;
             equippedChestpieceThi = null;
             equippedBootsThi = null;
@@ -1055,6 +1057,7 @@ public class TeamGearManager : MonoBehaviour
             {
                 ally3GearSlots[i].isEmpty = true;
             }
+            */
 
             ClearAllGearStats();
             UpdateGearNameText("");

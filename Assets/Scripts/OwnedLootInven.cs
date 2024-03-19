@@ -40,6 +40,94 @@ public class OwnedLootInven : MonoBehaviour
         Instance = this;
     }
 
+    public void UpdateWornGearOwning()
+    {
+        // SWAP GEAR AND ITEMS FROM POSITION 2 TO 1
+        for (int i = 0; i < GameManager.Instance.fallenHeroes.Count; i++)
+        {
+            for (int x = 0; x < GameManager.Instance.activeRoomHeroes.Count; x++)
+            {
+                if (GameManager.Instance.activeRoomHeroes[x].GetUnitName() == GameManager.Instance.fallenHeroes[i].GetUnitName())
+                {
+                    if (x == 0)
+                    {
+                        // lost a main hero, put 2 to 1
+                        if (GameManager.Instance.fallenHeroes.Count == 1)
+                        {
+                            // 2 to 1
+                            wornGearMainAlly = wornGearSecondAlly;
+
+                            TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetSec;
+                            TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceSec;
+                            TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsSec;
+
+                            wornGearSecondAlly.Clear();
+
+                            TeamGearManager.Instance.equippedHelmetSec = null;
+                            TeamGearManager.Instance.equippedChestpieceSec = null;
+                            TeamGearManager.Instance.equippedBootsSec = null;
+
+                            return;
+                        }
+                        else if (GameManager.Instance.fallenHeroes.Count == 2)
+                        {
+                            // 2 to 1
+                            wornGearMainAlly = wornGearSecondAlly;
+
+                            TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetSec;
+                            TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceSec;
+                            TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsSec;
+
+                            wornGearSecondAlly.Clear();
+
+                            TeamGearManager.Instance.equippedHelmetSec = null;
+                            TeamGearManager.Instance.equippedChestpieceSec = null;
+                            TeamGearManager.Instance.equippedBootsSec = null;
+
+                            // 3 to 2
+                            wornGearSecondAlly = wornGearThirdAlly;
+
+                            TeamGearManager.Instance.equippedHelmetSec = TeamGearManager.Instance.equippedHelmetThi;
+                            TeamGearManager.Instance.equippedChestpieceSec = TeamGearManager.Instance.equippedChestpieceThi;
+                            TeamGearManager.Instance.equippedBootsSec = TeamGearManager.Instance.equippedBootsThi;
+
+                            wornGearThirdAlly.Clear();
+
+                            TeamGearManager.Instance.equippedHelmetThi = null;
+                            TeamGearManager.Instance.equippedChestpieceThi = null;
+                            TeamGearManager.Instance.equippedBootsThi = null;
+
+                            return;
+                        }
+                    }
+                    else if (x == 1)
+                    {
+                        // lost a 2nd hero, put 3 to 2
+                        // 3 to 2
+                        wornGearSecondAlly = wornGearThirdAlly;
+
+                        TeamGearManager.Instance.equippedHelmetSec = TeamGearManager.Instance.equippedHelmetThi;
+                        TeamGearManager.Instance.equippedChestpieceSec = TeamGearManager.Instance.equippedChestpieceThi;
+                        TeamGearManager.Instance.equippedBootsSec = TeamGearManager.Instance.equippedBootsThi;
+
+                        wornGearThirdAlly.Clear();
+
+                        TeamGearManager.Instance.equippedHelmetThi = null;
+                        TeamGearManager.Instance.equippedChestpieceThi = null;
+                        TeamGearManager.Instance.equippedBootsThi = null;
+
+                        return;
+                    }
+                    else if (x == 2)
+                    {
+                        // lost a 3rd hero, put 2 to 1, and 3 to 2
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public void AddWornGearAllyMain(Slot gear)
     {
         wornGearMainAlly.Add(gear);
@@ -220,6 +308,7 @@ public class OwnedLootInven : MonoBehaviour
 
     public void MoveGearAndItemsToOwnedLoot(UnitFunctionality unit)
     {
+        Debug.Log(unit.GetUnitName());
         for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
             if (unit.GetUnitName() == GameManager.Instance.activeRoomHeroes[i].GetUnitName())
@@ -254,7 +343,7 @@ public class OwnedLootInven : MonoBehaviour
                                 gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
                                 gear.ToggleEquipButton(false);
 
-                                Debug.Log("adding " + gear.GetSlotName());
+                                //Debug.Log("adding " + gear.GetSlotName());
                             }
                         }
 
@@ -280,7 +369,7 @@ public class OwnedLootInven : MonoBehaviour
                                 gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
                                 gear.ToggleEquipButton(false);
 
-                                Debug.Log("adding " + gear.GetSlotName());
+                                //Debug.Log("adding " + gear.GetSlotName());
                             }
                         }
                     }
@@ -396,7 +485,7 @@ public class OwnedLootInven : MonoBehaviour
                                 gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
                                 gear.ToggleEquipButton(false);
 
-                                Debug.Log("adding " + gear.GetSlotName());
+                                //Debug.Log("adding " + gear.GetSlotName());
                             }
                         }
 
@@ -422,7 +511,7 @@ public class OwnedLootInven : MonoBehaviour
                                 gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
                                 gear.ToggleEquipButton(false);
 
-                                Debug.Log("adding " + gear.GetSlotName());
+                                //Debug.Log("adding " + gear.GetSlotName());
                             }
                         }
                     }
@@ -537,7 +626,7 @@ public class OwnedLootInven : MonoBehaviour
                                 gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
                                 gear.ToggleEquipButton(false);
 
-                                Debug.Log("adding " + gear.GetSlotName());
+                                //Debug.Log("adding " + gear.GetSlotName());
                             }
                         }
 
@@ -563,7 +652,7 @@ public class OwnedLootInven : MonoBehaviour
                                 gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
                                 gear.ToggleEquipButton(false);
 
-                                Debug.Log("adding " + gear.GetSlotName());
+                                //Debug.Log("adding " + gear.GetSlotName());
                             }
                         }
                     }

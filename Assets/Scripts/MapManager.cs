@@ -215,8 +215,7 @@ public class MapManager : MonoBehaviour
             return;
         }
 
-        selectedRoom.ToggleRoomSelected(true);
-        selectedRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
+
 
         //mapOverlay.ToggleEnterRoomButton(false);
 
@@ -242,6 +241,11 @@ public class MapManager : MonoBehaviour
         {
             ResetEntireRun(tryShowAd);
         }
+
+        selectedRoom.ToggleRoomSelected(true);
+
+        if (selectedRoom.curRoomType != RoomMapIcon.RoomType.STARTING)
+            selectedRoom.UpdateRoomColour(roomSelectedClearedColour, true);
 
         if (forceEnd)
             ResetEntireRun(tryShowAd);
@@ -294,10 +298,10 @@ public class MapManager : MonoBehaviour
        //if (room.GetRoomType() != RoomMapIcon.RoomType.STARTING)
         //RefocusCamera();
 
-        if (selectedRoom.GetIsCompleted())
-            selectedRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
+        if (selectedRoom.GetIsCompleted() && room.curRoomType != RoomMapIcon.RoomType.STARTING)
+            selectedRoom.UpdateRoomColour(roomSelectedClearedColour, true);
         else
-            selectedRoom.UpdateRoomSelectedColour(roomSelectedUnclearedColour);
+            selectedRoom.UpdateRoomColour(roomSelectedUnclearedColour);
     }
 
     public void ResetAllSelectedRooms()
@@ -622,7 +626,7 @@ public class MapManager : MonoBehaviour
         ToggleFirstPath(true);
         startingRoom.UpdateIsCompleted(true);
         startingRoom.ToggleRoomSelected(true);
-        startingRoom.UpdateRoomSelectedColour(roomSelectedClearedColour);
+        startingRoom.UpdateRoomColour(roomSelectedClearedColour);
 
         UpdateSelectedRoom(startingRoom);
 
@@ -1094,12 +1098,14 @@ public class MapManager : MonoBehaviour
 
     public void UpdateRoomIconType(RoomMapIcon roomMapIcon, string roomTypeName)
     {
+        Debug.Log("Updating room icon " + roomTypeName);
         if (roomTypeName == "enemy")
         {
             roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.ENEMY);
             roomMapIcon.UpdateRoomDetail(roomEnemySprite);
             roomMapIcon.UpdateRoomiconSize(roomEnemySize);
-            roomMapIcon.UpdateRoomIconColour(roomEnemyColour);
+            if (!roomMapIcon.GetIsCompleted())
+                roomMapIcon.UpdateRoomIconColour(roomEnemyColour);
             roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomEnemySize.x, roomSelectedSizeInc.y + roomEnemySize.y));
         }
         else if (roomTypeName == "starting")
@@ -1123,7 +1129,8 @@ public class MapManager : MonoBehaviour
             roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.HERO);
             roomMapIcon.UpdateRoomDetail(roomHeroSprite);
             roomMapIcon.UpdateRoomiconSize(roomHeroSize);
-            roomMapIcon.UpdateRoomIconColour(roomHeroColour);
+            if (!roomMapIcon.GetIsCompleted())
+                roomMapIcon.UpdateRoomIconColour(roomHeroColour);
             roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomHeroSize.x, roomSelectedSizeInc.y + roomHeroSize.y));
         }
         else if (roomTypeName == "item")
@@ -1131,7 +1138,8 @@ public class MapManager : MonoBehaviour
             roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.ITEM);
             roomMapIcon.UpdateRoomDetail(roomItemSprite);
             roomMapIcon.UpdateRoomiconSize(roomHeroSize);
-            roomMapIcon.UpdateRoomIconColour(roomItemColour);
+            if (!roomMapIcon.GetIsCompleted())
+                roomMapIcon.UpdateRoomIconColour(roomItemColour);
             roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomHeroSize.x, roomSelectedSizeInc.y + roomHeroSize.y));
         }
         else if (roomTypeName == "boss")
@@ -1139,7 +1147,8 @@ public class MapManager : MonoBehaviour
             roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.BOSS);
             roomMapIcon.UpdateRoomDetail(roomBossSprite);
             roomMapIcon.UpdateRoomiconSize(roomBossSize);
-            roomMapIcon.UpdateRoomIconColour(roomBossColour);
+            if (!roomMapIcon.GetIsCompleted())
+                roomMapIcon.UpdateRoomIconColour(roomBossColour);
             roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomBossSize.x, roomSelectedSizeInc.y + roomBossSize.y));
         }
         else if (roomTypeName == "undiscovered")

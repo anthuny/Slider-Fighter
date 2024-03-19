@@ -1064,6 +1064,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             allyPositions.SetParent(ShopManager.Instance.unitsPositionShopTrans);
             allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
             allyPositions.position = ShopManager.Instance.unitsPositionShopTrans.position;
+
+            if (activeRoomHeroes.Count == 1)
+                activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+            else if (activeRoomHeroes.Count == 2)
+            {
+                activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+                activeRoomHeroes[1].SetPositionAndParent(allySpawnPositions[0]);
+            }
+            else if (activeRoomHeroes.Count == 3)
+            {
+                activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+                activeRoomHeroes[1].SetPositionAndParent(allySpawnPositions[0]);
+                activeRoomHeroes[2].SetPositionAndParent(allySpawnPositions[2]);
+            }
             return;
         }
         if (!postBattle)
@@ -1122,6 +1136,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 allyPositions.SetParent(allyTurnPositionTransform);
                 allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
                 allyPositions.position = allyTurnPositionTransform.position;
+
+                if (activeRoomHeroes.Count == 1)
+                    activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+                else if (activeRoomHeroes.Count == 2)
+                {
+                    activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+                    activeRoomHeroes[1].SetPositionAndParent(allySpawnPositions[0]);
+                }
+                else if (activeRoomHeroes.Count == 3)
+                {
+                    activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+                    activeRoomHeroes[1].SetPositionAndParent(allySpawnPositions[0]);
+                    activeRoomHeroes[2].SetPositionAndParent(allySpawnPositions[2]);
+                }
             }
             else
             {
@@ -1137,6 +1165,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             allyPositions.SetParent(allyPostBattlePositionTransform);
             allyPositions.SetPositionAndRotation(new Vector2(0, 0), Quaternion.identity);
             allyPositions.position = allyPostBattlePositionTransform.position;
+
+            if (activeRoomHeroes.Count == 1)
+                activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+            else if (activeRoomHeroes.Count == 2)
+            {
+                activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+                activeRoomHeroes[1].SetPositionAndParent(allySpawnPositions[0]);
+            }
+            else if (activeRoomHeroes.Count == 3)
+            {
+                activeRoomHeroes[0].SetPositionAndParent(allySpawnPositions[1]);
+                activeRoomHeroes[1].SetPositionAndParent(allySpawnPositions[0]);
+                activeRoomHeroes[2].SetPositionAndParent(allySpawnPositions[2]);
+            }
         }
     }
 
@@ -1204,6 +1246,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot(activeRoomAllUnitFunctionalitys[i]);
 
+                /*
                 if (i == 0)
                     OwnedLootInven.Instance.ResetWornGearAllyMain();
                 else if (i == 1)
@@ -1217,6 +1260,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     OwnedLootInven.Instance.ResetWornItemsAllySecond();
                 else if (i == 2)
                     OwnedLootInven.Instance.ResetWornItemsAllyThird();
+                */
+                OwnedLootInven.Instance.UpdateWornGearOwning();
+
 
                 TeamGearManager.Instance.ResetHeroGearOwned(i);
                 TeamItemsManager.Instance.ResetHeroItemOwned(i);
@@ -1232,6 +1278,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot(activeRoomHeroes[c]);
 
                 //Debug.Log("resetting gear for " + activeRoomHeroes[c].GetUnitName());
+
+                /*
                 if (c == 0)
                     OwnedLootInven.Instance.ResetWornGearAllyMain();
                 else if (c == 1)
@@ -1245,6 +1293,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     OwnedLootInven.Instance.ResetWornItemsAllySecond();
                 else if (c == 2)
                     OwnedLootInven.Instance.ResetWornItemsAllyThird();
+                */
+
+                OwnedLootInven.Instance.UpdateWornGearOwning();
 
                 TeamGearManager.Instance.ResetHeroGearOwned(c);
                 TeamItemsManager.Instance.ResetHeroItemOwned(c);
@@ -1489,6 +1540,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             yield return new WaitForSeconds(.5f);
 
+            bool doneOnce = false;
+
             // Give Exp to ally units
             for (int i = 0; i < activeRoomHeroes.Count; i++)
             {
@@ -1498,7 +1551,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     // Give EXP to ally units, NOT a unit that was just added to player's party
                     if (!activeRoomHeroes[i].heroRoomUnit)
+                    {
+                        doneOnce = true;
                         activeRoomHeroes[i].UpdateUnitExp(GetExperienceGained());
+                    }
+
                     else
                     {
                         unitFunctionality = activeRoomHeroes[i];
@@ -1512,6 +1569,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
 
             yield return new WaitForSeconds(.5f);
+
+            if (!doneOnce)
+            {
+                // Enable post battle to map button for next post battle scene
+                StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
+            }
 
             // display gear rewards
             postBattleUI.ToggleRewardsUI(true);
@@ -2315,13 +2378,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1, bool miss = false)
     {
         GetActiveUnitFunctionality().ToggleHeroWeapon(false);
-        /*
-        if (hitCount != 0)
-            hitCount++;
 
-        if (effectHitAcc != -1)
-            effectHitAcc++;
-        */
+        if (miss)
+            power = 0;
 
         // Reset each units power UI
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
@@ -2368,7 +2427,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         }
                     }
 
-                    yield return new WaitForSeconds(timeBetweenProjectile);
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.005f * (GetActiveUnitFunctionality().GetUnitLevel()-1)));
                 }
             }
 
@@ -2675,7 +2734,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 }
 
                 // Time wait in between attacks, shared across all targeted units
-                yield return new WaitForSeconds(timeBetweenPowerUIStack);
+                yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.005f * (GetActiveUnitFunctionality().GetUnitLevel() - 1)));
             }
 
             // Reset each units power UI
@@ -3586,13 +3645,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
     {
         // Skip unit turn if all skills are on cooldown
-        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) > 0 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
+        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 1 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
         {
-            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) > 0 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
+            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 1 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
             {
-                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 0 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
+                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 1 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
                 {
-                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) > 0 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
+                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
                     {
                         return true;
                     }

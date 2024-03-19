@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
@@ -66,7 +67,19 @@ public class RoomManager : MonoBehaviour
         IncrementFloorCount();
         SelectFloor();
 
+        GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateContentText((GetFloorCount()-1).ToString());
+        GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateAlpha(1);
+
+        StartCoroutine(FloorCompletedCo());
         //IncreaseMaxRoomCount();
+    }
+
+    IEnumerator FloorCompletedCo()
+    {
+        yield return new WaitForSeconds(.5f);
+
+        GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateContentText(GetFloorCount().ToString());
+        GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateAlpha(1);
     }
 
     public void IncrementDefaultRoomsCleared()
