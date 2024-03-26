@@ -386,6 +386,8 @@ public class ShopManager : MonoBehaviour
                 }
             }
         }
+
+        TeamGearManager.Instance.ResetGearTab();
     }
 
     public void ClearFallenHeroesVisuals()

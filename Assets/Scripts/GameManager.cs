@@ -483,7 +483,7 @@ public class GameManager : MonoBehaviour
         StartRoom(RoomManager.Instance.GetActiveRoom(), RoomManager.Instance.GetActiveFloor());
     }
 
-    public void SpawnAllies(bool spawnHeroAlly = false, bool byPass = false)
+    public void SpawnHero(bool spawnHeroAlly = false, bool byPass = false)
     {
         // Spawn player units
         if (activeRoomHeroes.Count == 0 || spawnHeroAlly)
@@ -507,6 +507,8 @@ public class GameManager : MonoBehaviour
                     {
                         ownedUnitNames.Add(activeTeam[x].unitName);
                     }
+
+                    TeamGearManager.Instance.ResetGearTab();
 
                     go = Instantiate(baseUnit, HeroRoomManager.Instance.GetSpawnLocTrans());
                     go.transform.SetParent(HeroRoomManager.Instance.GetSpawnLocTrans());
@@ -1239,85 +1241,32 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void EnsureHeroIsDead()
     {
-        // Remove dead allies from team when post battle starts, on a win
-        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
-        {
-            if (activeRoomAllUnitFunctionalitys[i].isDead)
-            {
-                OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot(activeRoomAllUnitFunctionalitys[i]);
-
-                /*
-                if (i == 0)
-                    OwnedLootInven.Instance.ResetWornGearAllyMain();
-                else if (i == 1)
-                    OwnedLootInven.Instance.ResetWornGearAllySecond();
-                else if (i == 2)
-                    OwnedLootInven.Instance.ResetWornGearAllyThird();
-
-                if (i == 0)
-                    OwnedLootInven.Instance.ResetWornItemsAllyMain();
-                else if (i == 1)
-                    OwnedLootInven.Instance.ResetWornItemsAllySecond();
-                else if (i == 2)
-                    OwnedLootInven.Instance.ResetWornItemsAllyThird();
-                */
-                OwnedLootInven.Instance.UpdateWornGearOwning();
-
-
-                TeamGearManager.Instance.ResetHeroGearOwned(i);
-                TeamItemsManager.Instance.ResetHeroItemOwned(i);
-                //Debug.Log("Destroying hero");
-                RemoveUnit(activeRoomAllUnitFunctionalitys[i]);
-            }
-        }
+        OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot();
 
         for (int c = 0; c < activeRoomHeroes.Count; c++)
         {
             if (activeRoomHeroes[c].isDead)
             {
-                OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot(activeRoomHeroes[c]);
-
-                //Debug.Log("resetting gear for " + activeRoomHeroes[c].GetUnitName());
-
-                /*
-                if (c == 0)
-                    OwnedLootInven.Instance.ResetWornGearAllyMain();
-                else if (c == 1)
-                    OwnedLootInven.Instance.ResetWornGearAllySecond();
-                else if (c == 2)
-                    OwnedLootInven.Instance.ResetWornGearAllyThird();
-
-                if (c == 0)
-                    OwnedLootInven.Instance.ResetWornItemsAllyMain();
-                else if (c == 1)
-                    OwnedLootInven.Instance.ResetWornItemsAllySecond();
-                else if (c == 2)
-                    OwnedLootInven.Instance.ResetWornItemsAllyThird();
-                */
-
                 OwnedLootInven.Instance.UpdateWornGearOwning();
 
-                TeamGearManager.Instance.ResetHeroGearOwned(c);
+                TeamGearManager.Instance.ClearEmptyGearSlots();
+
                 TeamItemsManager.Instance.ResetHeroItemOwned(c);
             }
         }
 
         // Remove dead allies from team when post battle starts, on a win
-        for (int i = 0; i < activeRoomHeroes.Count; i++)
+        for (int i = 0; i < fallenHeroes.Count; i++)
         {
-            //Debug.Log(activeRoomHeroes[i].GetUnitName() + " i = " + i);
-
-            if (activeRoomHeroes[i].isDead)
+            if (fallenHeroes[i].isDead)
             {
-                //Debug.Log("Destroying hero " + activeRoomHeroes[i].GetUnitName());
-                RemoveUnit(activeRoomHeroes[i]);
+                //Debug.Log("Destroying hero " + fallenHeroes[i].GetUnitName());
+                RemoveUnit(fallenHeroes[i]);
 
-                
-                i--;
-
-                if (i < 0)
-                    i = 0;
-                
+                if (activeRoomHeroes.Contains(fallenHeroes[i]))
+                { 
+                    activeRoomHeroes.Remove(fallenHeroes[i]);
+                } 
             }
         }
     }
@@ -1463,7 +1412,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.S))
-            SpawnAllies(true, true);
+            SpawnHero(true, true);
 
         if (Input.GetKeyDown(KeyCode.Y))
             TriggerTransitionSequence();
@@ -3208,21 +3157,21 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (activeRoomEnemies.Contains(unitFunctionality))
             activeRoomEnemies.Remove(unitFunctionality);
 
-        if (activeRoomHeroes.Contains(unitFunctionality))
-            activeRoomHeroes.Remove(unitFunctionality);
+
 
         if (activeRoomAllUnitFunctionalitys.Contains(unitFunctionality))
             activeRoomAllUnitFunctionalitys.Remove(unitFunctionality);
 
-        for (int i = 0; i < activeTeam.Count; i++)
+        for (int i = 0; i < fallenHeroes.Count; i++)
         {
-            //Debug.Log(activeTeam[i].unitName + "i = " + i);
-            if (activeTeam[i].unitName == unitFunctionality.GetUnitName() && unitFunctionality.isDead)
+            for (int x = 0; x < activeTeam.Count; x++)
             {
-                //Debug.Log(activeTeam[i].unitName + "removing i = " + i);
-                activeTeam.Remove(activeTeam[i]);
+                if (fallenHeroes[i].GetUnitName() == activeTeam[x].unitName && fallenHeroes[i].isDead)
+                {
+                    //Debug.Log(activeTeam[i].unitName + "removing i = " + i);
+                    activeTeam.Remove(activeTeam[x]);
+                }
             }
-
         }
     }
 

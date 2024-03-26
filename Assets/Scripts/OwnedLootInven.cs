@@ -42,50 +42,353 @@ public class OwnedLootInven : MonoBehaviour
 
     public void UpdateWornGearOwning()
     {
-        // SWAP GEAR AND ITEMS FROM POSITION 2 TO 1
         for (int i = 0; i < GameManager.Instance.fallenHeroes.Count; i++)
         {
+            // SWAP GEAR AND ITEMS FROM POSITION 2 TO 1
             for (int x = 0; x < GameManager.Instance.activeRoomHeroes.Count; x++)
             {
                 if (GameManager.Instance.activeRoomHeroes[x].GetUnitName() == GameManager.Instance.fallenHeroes[i].GetUnitName())
                 {
-                    if (x == 0)
+                    if (GameManager.Instance.fallenHeroes.Count == 1)
                     {
-                        // lost a main hero, put 2 to 1
-                        if (GameManager.Instance.fallenHeroes.Count == 1)
+                        if (x == 0)
                         {
-                            // 2 to 1
-                            wornGearMainAlly = wornGearSecondAlly;
+                            // lost a main hero, put 2 to 1
+                            if (GameManager.Instance.activeRoomHeroes.Count == 2)
+                            {
+                                wornGearMainAlly.Clear();
 
-                            TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetSec;
-                            TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceSec;
-                            TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsSec;
+                                // 2 to 1
+                                for (int t = 0; t < wornGearSecondAlly.Count; t++)
+                                {
+                                    wornGearMainAlly.Add(wornGearSecondAlly[t]);
+                                }
 
-                            wornGearSecondAlly.Clear();
+                                TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetSec;
+                                TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceSec;
+                                TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsSec;
 
-                            TeamGearManager.Instance.equippedHelmetSec = null;
-                            TeamGearManager.Instance.equippedChestpieceSec = null;
-                            TeamGearManager.Instance.equippedBootsSec = null;
+                                wornGearSecondAlly.Clear();
 
-                            return;
+                                TeamGearManager.Instance.equippedHelmetSec = null;
+                                TeamGearManager.Instance.equippedChestpieceSec = null;
+                                TeamGearManager.Instance.equippedBootsSec = null;
+
+                                bool doneHelm = false;
+                                bool doneChest = false;
+                                bool doneBoots = false;
+
+                                for (int l = 0; l < wornGearMainAlly.Count; l++)
+                                {
+                                    if (TeamGearManager.Instance.equippedHelmetMain != null && !doneHelm)
+                                    {
+                                        doneHelm = true;
+
+                                        TeamGearManager.Instance.ally1GearSlots[0].isEmpty = false;
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetMain.gearName);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetMain.bonusHealth);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetMain.bonusHealing);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetMain.bonusDefense);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetMain.bonusDamage);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetMain.bonusSpeed);
+                                    }
+
+                                    else if (TeamGearManager.Instance.equippedChestpieceMain != null && !doneChest)
+                                    {
+                                        doneChest = true;
+
+                                        TeamGearManager.Instance.ally1GearSlots[1].isEmpty = false;
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceMain.gearName);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceMain.bonusHealth);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceMain.bonusHealing);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceMain.bonusDefense);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceMain.bonusDamage);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceMain.bonusSpeed);
+                                    }
+                                    else if (TeamGearManager.Instance.equippedBootsMain != null && !doneBoots)
+                                    {
+                                        doneBoots = true;
+
+                                        TeamGearManager.Instance.ally1GearSlots[2].isEmpty = false;
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsMain.gearName);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsMain.bonusHealth);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsMain.bonusHealing);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsMain.bonusDefense);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsMain.bonusDamage);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsMain.bonusSpeed);
+                                    }
+                                }
+
+                                for (int l = 0; l < wornGearSecondAlly.Count; l++)
+                                {
+                                    if (TeamGearManager.Instance.equippedHelmetSec != null && !doneHelm)
+                                    {
+                                        doneHelm = true;
+
+                                        TeamGearManager.Instance.ally2GearSlots[0].isEmpty = false;
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetSec.gearName);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetSec.bonusHealth);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetSec.bonusHealing);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetSec.bonusDefense);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetSec.bonusDamage);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetSec.bonusSpeed);
+                                    }
+
+                                    else if (TeamGearManager.Instance.equippedChestpieceSec != null && !doneChest)
+                                    {
+                                        doneChest = true;
+
+                                        TeamGearManager.Instance.ally2GearSlots[1].isEmpty = false;
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceSec.gearName);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceSec.bonusHealth);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceSec.bonusHealing);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceSec.bonusDefense);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceSec.bonusDamage);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceSec.bonusSpeed);
+                                    }
+                                    else if (TeamGearManager.Instance.equippedBootsSec != null && !doneBoots)
+                                    {
+                                        doneBoots = true;
+
+                                        TeamGearManager.Instance.ally2GearSlots[2].isEmpty = false;
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsSec.gearName);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsSec.bonusHealth);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsSec.bonusHealing);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsSec.bonusDefense);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsSec.bonusDamage);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsSec.bonusSpeed);
+                                    }
+                                }
+
+                                for (int l = 0; l < wornGearThirdAlly.Count; l++)
+                                {
+                                    if (TeamGearManager.Instance.equippedHelmetThi != null && !doneHelm)
+                                    {
+                                        doneHelm = true;
+
+                                        TeamGearManager.Instance.ally3GearSlots[0].isEmpty = false;
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetThi.gearName);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetThi.bonusHealth);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetThi.bonusHealing);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetThi.bonusDefense);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetThi.bonusDamage);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetThi.bonusSpeed);
+                                    }
+
+                                    else if (TeamGearManager.Instance.equippedChestpieceThi != null && !doneChest)
+                                    {
+                                        doneChest = true;
+
+                                        TeamGearManager.Instance.ally3GearSlots[1].isEmpty = false;
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceThi.gearName);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceThi.bonusHealth);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceThi.bonusHealing);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceThi.bonusDefense);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceThi.bonusDamage);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceThi.bonusSpeed);
+                                    }
+                                    else if (TeamGearManager.Instance.equippedBootsThi != null && !doneBoots)
+                                    {
+                                        doneBoots = true;
+
+                                        TeamGearManager.Instance.ally3GearSlots[2].isEmpty = false;
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsThi.gearName);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsThi.bonusHealth);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsThi.bonusHealing);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsThi.bonusDefense);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsThi.bonusDamage);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsThi.bonusSpeed);
+                                    }
+                                }
+
+                                continue;
+
+                            }
+                            else if (GameManager.Instance.activeRoomHeroes.Count == 3)
+                            {
+                                wornGearMainAlly.Clear();
+
+                                // 2 to 1
+                                for (int t = 0; t < wornGearSecondAlly.Count; t++)
+                                {
+                                    wornGearMainAlly.Add(wornGearSecondAlly[t]);
+                                }
+
+                                TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetSec;
+                                TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceSec;
+                                TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsSec;
+
+                                wornGearSecondAlly.Clear();
+
+                                TeamGearManager.Instance.equippedHelmetSec = null;
+                                TeamGearManager.Instance.equippedChestpieceSec = null;
+                                TeamGearManager.Instance.equippedBootsSec = null;
+
+                                wornGearSecondAlly.Clear();
+
+                                // 3 to 2
+                                for (int t = 0; t < wornGearSecondAlly.Count; t++)
+                                {
+                                    wornGearSecondAlly.Add(wornGearThirdAlly[t]);
+                                }
+
+                                TeamGearManager.Instance.equippedHelmetSec = TeamGearManager.Instance.equippedHelmetThi;
+                                TeamGearManager.Instance.equippedChestpieceSec = TeamGearManager.Instance.equippedChestpieceThi;
+                                TeamGearManager.Instance.equippedBootsSec = TeamGearManager.Instance.equippedBootsThi;
+
+                                wornGearThirdAlly.Clear();
+
+                                TeamGearManager.Instance.equippedHelmetThi = null;
+                                TeamGearManager.Instance.equippedChestpieceThi = null;
+                                TeamGearManager.Instance.equippedBootsThi = null;
+
+                                bool doneHelm = false;
+                                bool doneChest = false;
+                                bool doneBoots = false;
+
+                                for (int l = 0; l < wornGearMainAlly.Count; l++)
+                                {
+                                    if (TeamGearManager.Instance.equippedHelmetMain != null && !doneHelm)
+                                    {
+                                        doneHelm = true;
+
+                                        TeamGearManager.Instance.ally1GearSlots[0].isEmpty = false;
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetMain.gearName);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetMain.bonusHealth);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetMain.bonusHealing);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetMain.bonusDefense);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetMain.bonusDamage);
+                                        TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetMain.bonusSpeed);
+                                    }
+                                    else if (TeamGearManager.Instance.equippedChestpieceMain != null && !doneChest)
+                                    {
+                                        doneChest = true;
+
+                                        TeamGearManager.Instance.ally1GearSlots[1].isEmpty = false;
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceMain.gearName);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceMain.bonusHealth);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceMain.bonusHealing);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceMain.bonusDefense);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceMain.bonusDamage);
+                                        TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceMain.bonusSpeed);
+                                    }
+                                    else if (TeamGearManager.Instance.equippedBootsMain != null && !doneBoots)
+                                    {
+                                        doneBoots = true;
+
+                                        TeamGearManager.Instance.ally1GearSlots[2].isEmpty = false;
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsMain.gearName);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsMain.bonusHealth);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsMain.bonusHealing);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsMain.bonusDefense);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsMain.bonusDamage);
+                                        TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsMain.bonusSpeed);
+                                    }
+                                }
+
+                                bool doneHelm2 = false;
+                                bool doneChest2 = false;
+                                bool doneBoots2 = false;
+
+                                for (int r = 0; r < wornGearSecondAlly.Count; r++)
+                                {
+                                    if (TeamGearManager.Instance.equippedHelmetSec != null && !doneHelm2)
+                                    {
+                                        doneHelm2 = true;
+
+                                        TeamGearManager.Instance.ally2GearSlots[0].isEmpty = false;
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetSec.gearName);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetSec.bonusHealth);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetSec.bonusHealing);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetSec.bonusDefense);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetSec.bonusDamage);
+                                        TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetSec.bonusSpeed);
+                                    }
+
+                                    else if (TeamGearManager.Instance.equippedChestpieceSec != null && !doneChest2)
+                                    {
+                                        doneChest2 = true;
+
+                                        TeamGearManager.Instance.ally2GearSlots[1].isEmpty = false;
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceSec.gearName);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceSec.bonusHealth);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceSec.bonusHealing);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceSec.bonusDefense);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceSec.bonusDamage);
+                                        TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceSec.bonusSpeed);
+                                    }
+                                    else if (TeamGearManager.Instance.equippedBootsSec != null && !doneBoots2)
+                                    {
+                                        doneBoots2 = true;
+
+                                        TeamGearManager.Instance.ally2GearSlots[2].isEmpty = false;
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsSec.gearName);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsSec.bonusHealth);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsSec.bonusHealing);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsSec.bonusDefense);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsSec.bonusDamage);
+                                        TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsSec.bonusSpeed);
+                                    }
+                                }
+
+                                bool doneHelm3 = false;
+                                bool doneChest3 = false;
+                                bool doneBoots3 = false;
+
+                                for (int e = 0; e < wornGearThirdAlly.Count; e++)
+                                {
+                                    if (TeamGearManager.Instance.equippedHelmetThi != null && !doneHelm3)
+                                    {
+                                        doneHelm3 = true;
+
+                                        TeamGearManager.Instance.ally3GearSlots[0].isEmpty = false;
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetThi.gearName);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetThi.bonusHealth);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetThi.bonusHealing);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetThi.bonusDefense);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetThi.bonusDamage);
+                                        TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetThi.bonusSpeed);
+                                    }
+
+                                    else if (TeamGearManager.Instance.equippedChestpieceThi != null && !doneChest3)
+                                    {
+                                        doneChest3 = true;
+
+                                        TeamGearManager.Instance.ally3GearSlots[1].isEmpty = false;
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceThi.gearName);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceThi.bonusHealth);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceThi.bonusHealing);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceThi.bonusDefense);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceThi.bonusDamage);
+                                        TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceThi.bonusSpeed);
+                                    }
+                                    else if (TeamGearManager.Instance.equippedBootsThi != null && !doneBoots3)
+                                    {
+                                        doneBoots3 = true;
+
+                                        TeamGearManager.Instance.ally3GearSlots[2].isEmpty = false;
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsThi.gearName);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsThi.bonusHealth);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsThi.bonusHealing);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsThi.bonusDefense);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsThi.bonusDamage);
+                                        TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsThi.bonusSpeed);
+                                    }
+                                }
+
+                                continue;
+                            }
                         }
-                        else if (GameManager.Instance.fallenHeroes.Count == 2)
+                        else if (x == 1)
                         {
-                            // 2 to 1
-                            wornGearMainAlly = wornGearSecondAlly;
-
-                            TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetSec;
-                            TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceSec;
-                            TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsSec;
-
+                            // lost a 2nd hero, put 3 to 2
                             wornGearSecondAlly.Clear();
-
-                            TeamGearManager.Instance.equippedHelmetSec = null;
-                            TeamGearManager.Instance.equippedChestpieceSec = null;
-                            TeamGearManager.Instance.equippedBootsSec = null;
 
                             // 3 to 2
-                            wornGearSecondAlly = wornGearThirdAlly;
+                            for (int t = 0; t < wornGearThirdAlly.Count; t++)
+                            {
+                                wornGearSecondAlly.Add(wornGearThirdAlly[t]);
+                            }
 
                             TeamGearManager.Instance.equippedHelmetSec = TeamGearManager.Instance.equippedHelmetThi;
                             TeamGearManager.Instance.equippedChestpieceSec = TeamGearManager.Instance.equippedChestpieceThi;
@@ -97,31 +400,497 @@ public class OwnedLootInven : MonoBehaviour
                             TeamGearManager.Instance.equippedChestpieceThi = null;
                             TeamGearManager.Instance.equippedBootsThi = null;
 
-                            return;
+                            bool doneHelm4 = false;
+                            bool doneChest4 = false;
+                            bool doneBoots4 = false;
+
+                            for (int l = 0; l < wornGearMainAlly.Count; l++)
+                            {
+                                if (TeamGearManager.Instance.equippedHelmetMain != null && !doneHelm4)
+                                {
+                                    doneHelm4 = true;
+
+                                    TeamGearManager.Instance.ally1GearSlots[0].isEmpty = false;
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetMain.gearName);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetMain.bonusHealth);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetMain.bonusHealing);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetMain.bonusDefense);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetMain.bonusDamage);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetMain.bonusSpeed);
+                                }
+
+                                else if (TeamGearManager.Instance.equippedChestpieceMain != null && !doneChest4)
+                                {
+                                    doneChest4 = true;
+
+                                    TeamGearManager.Instance.ally1GearSlots[1].isEmpty = false;
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceMain.gearName);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceMain.bonusHealth);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceMain.bonusHealing);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceMain.bonusDefense);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceMain.bonusDamage);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceMain.bonusSpeed);
+                                }
+                                else if (TeamGearManager.Instance.equippedBootsMain != null && !doneBoots4)
+                                {
+                                    doneBoots4 = true;
+
+                                    TeamGearManager.Instance.ally1GearSlots[2].isEmpty = false;
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsMain.gearName);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsMain.bonusHealth);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsMain.bonusHealing);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsMain.bonusDefense);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsMain.bonusDamage);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsMain.bonusSpeed);
+                                }
+                            }
+
+                            bool doneHelm5 = false;
+                            bool doneChest5 = false;
+                            bool doneBoots5 = false;
+
+                            for (int l = 0; l < wornGearSecondAlly.Count; l++)
+                            {
+                                if (TeamGearManager.Instance.equippedHelmetSec != null && !doneHelm5)
+                                {
+                                    doneHelm5 = true;
+
+                                    TeamGearManager.Instance.ally2GearSlots[0].isEmpty = false;
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetSec.gearName);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetSec.bonusHealth);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetSec.bonusHealing);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetSec.bonusDefense);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetSec.bonusDamage);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetSec.bonusSpeed);
+                                }
+
+                                else if (TeamGearManager.Instance.equippedChestpieceSec != null && !doneChest5)
+                                {
+                                    doneChest5 = true;
+
+                                    TeamGearManager.Instance.ally2GearSlots[1].isEmpty = false;
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceSec.gearName);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceSec.bonusHealth);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceSec.bonusHealing);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceSec.bonusDefense);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceSec.bonusDamage);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceSec.bonusSpeed);
+                                }
+                                else if (TeamGearManager.Instance.equippedBootsSec != null && !doneBoots5)
+                                {
+                                    doneBoots5 = true;
+
+                                    TeamGearManager.Instance.ally2GearSlots[2].isEmpty = false;
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsSec.gearName);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsSec.bonusHealth);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsSec.bonusHealing);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsSec.bonusDefense);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsSec.bonusDamage);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsSec.bonusSpeed);
+                                }
+                            }
+
+                            bool doneHelm6 = false;
+                            bool doneChest6 = false;
+                            bool doneBoots6 = false;
+
+                            for (int l = 0; l < wornGearThirdAlly.Count; l++)
+                            {
+                                if (TeamGearManager.Instance.equippedHelmetThi != null && !doneHelm6)
+                                {
+                                    doneHelm6 = true;
+
+                                    TeamGearManager.Instance.ally3GearSlots[0].isEmpty = false;
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetThi.gearName);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetThi.bonusHealth);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetThi.bonusHealing);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetThi.bonusDefense);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetThi.bonusDamage);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetThi.bonusSpeed);
+                                }
+
+                                else if (TeamGearManager.Instance.equippedChestpieceThi != null && !doneChest6)
+                                {
+                                    doneChest6 = true;
+
+                                    TeamGearManager.Instance.ally3GearSlots[1].isEmpty = false;
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceThi.gearName);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceThi.bonusHealth);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceThi.bonusHealing);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceThi.bonusDefense);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceThi.bonusDamage);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceThi.bonusSpeed);
+                                }
+                                else if (TeamGearManager.Instance.equippedBootsThi != null && !doneBoots6)
+                                {
+                                    doneBoots6 = true;
+
+                                    TeamGearManager.Instance.ally3GearSlots[2].isEmpty = false;
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsThi.gearName);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsThi.bonusHealth);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsThi.bonusHealing);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsThi.bonusDefense);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsThi.bonusDamage);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsThi.bonusSpeed);
+                                }
+                            }
+
+                            continue;
                         }
+                        else if (x == 2)
+                        {
+                            /*
+                            wornGearSecondAlly.Clear();
+
+                            // 3 to 2
+                            for (int t = 0; t < wornGearThirdAlly.Count; t++)
+                            {
+                                wornGearSecondAlly.Add(wornGearThirdAlly[t]);
+                            }
+
+                            TeamGearManager.Instance.equippedHelmetSec = TeamGearManager.Instance.equippedHelmetThi;
+                            TeamGearManager.Instance.equippedChestpieceSec = TeamGearManager.Instance.equippedChestpieceThi;
+                            TeamGearManager.Instance.equippedBootsSec = TeamGearManager.Instance.equippedBootsThi;
+
+                            */
+
+                            // Remove unit 3 gear
+                            wornGearThirdAlly.Clear();
+
+                            TeamGearManager.Instance.equippedHelmetThi = null;
+                            TeamGearManager.Instance.equippedChestpieceThi = null;
+                            TeamGearManager.Instance.equippedBootsThi = null;
+
+                            // lost a 3rd hero, put 2 to 1, and 3 to 2
+                            bool doneHelm7 = false;
+                            bool doneChest7 = false;
+                            bool doneBoots7 = false;
+
+                            for (int l = 0; l < wornGearMainAlly.Count; l++)
+                            {
+                                if (TeamGearManager.Instance.equippedHelmetMain != null && !doneHelm7)
+                                {
+                                    doneHelm7 = true;
+
+                                    TeamGearManager.Instance.ally1GearSlots[0].isEmpty = false;
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetMain.gearName);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetMain.bonusHealth);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetMain.bonusHealing);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetMain.bonusDefense);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetMain.bonusDamage);
+                                    TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetMain.bonusSpeed);
+                                }
+
+                                else if (TeamGearManager.Instance.equippedChestpieceMain != null && !doneChest7)
+                                {
+                                    doneChest7 = true;
+
+                                    TeamGearManager.Instance.ally1GearSlots[1].isEmpty = false;
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceMain.gearName);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceMain.bonusHealth);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceMain.bonusHealing);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceMain.bonusDefense);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceMain.bonusDamage);
+                                    TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceMain.bonusSpeed);
+                                }
+                                else if (TeamGearManager.Instance.equippedBootsMain != null && !doneBoots7)
+                                {
+                                    doneBoots7 = true;
+
+                                    TeamGearManager.Instance.ally1GearSlots[2].isEmpty = false;
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsMain.gearName);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsMain.bonusHealth);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsMain.bonusHealing);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsMain.bonusDefense);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsMain.bonusDamage);
+                                    TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsMain.bonusSpeed);
+                                }
+                            }
+
+                            bool doneHelm8 = false;
+                            bool doneChest8 = false;
+                            bool doneBoots8 = false;
+
+                            for (int l = 0; l < wornGearSecondAlly.Count; l++)
+                            {
+                                if (TeamGearManager.Instance.equippedHelmetSec != null && !doneHelm8)
+                                {
+                                    doneHelm8 = true;
+
+                                    TeamGearManager.Instance.ally2GearSlots[0].isEmpty = false;
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetSec.gearName);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetSec.bonusHealth);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetSec.bonusHealing);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetSec.bonusDefense);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetSec.bonusDamage);
+                                    TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetSec.bonusSpeed);
+                                }
+
+                                else if (TeamGearManager.Instance.equippedChestpieceSec != null && !doneChest8)
+                                {
+                                    doneChest8 = true;
+
+                                    TeamGearManager.Instance.ally2GearSlots[1].isEmpty = false;
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceSec.gearName);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceSec.bonusHealth);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceSec.bonusHealing);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceSec.bonusDefense);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceSec.bonusDamage);
+                                    TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceSec.bonusSpeed);
+                                }
+                                else if (TeamGearManager.Instance.equippedBootsSec != null && !doneBoots8)
+                                {
+                                    doneBoots8 = true;
+
+                                    TeamGearManager.Instance.ally2GearSlots[2].isEmpty = false;
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsSec.gearName);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsSec.bonusHealth);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsSec.bonusHealing);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsSec.bonusDefense);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsSec.bonusDamage);
+                                    TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsSec.bonusSpeed);
+                                }
+                            }
+
+                            bool doneHelm9 = false;
+                            bool doneChest9 = false;
+                            bool doneBoots9 = false;
+
+                            for (int l = 0; l < wornGearThirdAlly.Count; l++)
+                            {
+                                if (TeamGearManager.Instance.equippedHelmetThi != null && !doneHelm9)
+                                {
+                                    doneHelm9 = true;
+
+                                    TeamGearManager.Instance.ally3GearSlots[0].isEmpty = false;
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetThi.gearName);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetThi.bonusHealth);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetThi.bonusHealing);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetThi.bonusDefense);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetThi.bonusDamage);
+                                    TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetThi.bonusSpeed);
+                                }
+
+                                else if (TeamGearManager.Instance.equippedChestpieceThi != null && !doneChest9)
+                                {
+                                    doneChest9 = true;
+
+                                    TeamGearManager.Instance.ally3GearSlots[1].isEmpty = false;
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceThi.gearName);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceThi.bonusHealth);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceThi.bonusHealing);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceThi.bonusDefense);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceThi.bonusDamage);
+                                    TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceThi.bonusSpeed);
+                                }
+                                else if (TeamGearManager.Instance.equippedBootsThi != null && !doneBoots9)
+                                {
+                                    doneBoots9 = true;
+
+                                    TeamGearManager.Instance.ally3GearSlots[2].isEmpty = false;
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsThi.gearName);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsThi.bonusHealth);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsThi.bonusHealing);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsThi.bonusDefense);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsThi.bonusDamage);
+                                    TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsThi.bonusSpeed);
+                                }
+                            }
+
+                            continue;
+                        }
+                       
                     }
-                    else if (x == 1)
+                    else if (GameManager.Instance.fallenHeroes.Count == 2)
                     {
-                        // lost a 2nd hero, put 3 to 2
-                        // 3 to 2
-                        wornGearSecondAlly = wornGearThirdAlly;
+                        // Heroes 1 and 2 dying
+                        if (GameManager.Instance.fallenHeroes[0].teamIndex == 0 && GameManager.Instance.fallenHeroes[1].teamIndex == 1
+                            || GameManager.Instance.fallenHeroes[0].teamIndex == 1 && GameManager.Instance.fallenHeroes[1].teamIndex == 0)
+                        {
+                            // put 3 to 1
+                            wornGearMainAlly.Clear();
 
-                        TeamGearManager.Instance.equippedHelmetSec = TeamGearManager.Instance.equippedHelmetThi;
-                        TeamGearManager.Instance.equippedChestpieceSec = TeamGearManager.Instance.equippedChestpieceThi;
-                        TeamGearManager.Instance.equippedBootsSec = TeamGearManager.Instance.equippedBootsThi;
+                            // 3 to 1
+                            for (int t = 0; t < wornGearThirdAlly.Count; t++)
+                            {
+                                wornGearMainAlly.Add(wornGearThirdAlly[t]);
+                            }
 
+                            TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetThi;
+                            TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceThi;
+                            TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsThi;
+                        }
+                        // Heroes 1 and 3 dying
+                        else if (GameManager.Instance.fallenHeroes[0].teamIndex == 0 && GameManager.Instance.fallenHeroes[1].teamIndex == 2
+                            || GameManager.Instance.fallenHeroes[0].teamIndex == 2 && GameManager.Instance.fallenHeroes[1].teamIndex == 0)
+                        {
+                            // put 2 to 1
+                            wornGearMainAlly.Clear();
+
+                            // 2 to 1
+                            for (int t = 0; t < wornGearSecondAlly.Count; t++)
+                            {
+                                wornGearMainAlly.Add(wornGearSecondAlly[t]);
+                            }
+
+                            TeamGearManager.Instance.equippedHelmetMain = TeamGearManager.Instance.equippedHelmetSec;
+                            TeamGearManager.Instance.equippedChestpieceMain = TeamGearManager.Instance.equippedChestpieceSec;
+                            TeamGearManager.Instance.equippedBootsMain = TeamGearManager.Instance.equippedBootsSec;
+                        }
+
+                        // Remove unit 2 gear
+                        wornGearSecondAlly.Clear();
+
+                        TeamGearManager.Instance.equippedHelmetSec = null;
+                        TeamGearManager.Instance.equippedChestpieceSec = null;
+                        TeamGearManager.Instance.equippedBootsSec = null;
+
+                        // Remove unit 3 gear
                         wornGearThirdAlly.Clear();
 
                         TeamGearManager.Instance.equippedHelmetThi = null;
                         TeamGearManager.Instance.equippedChestpieceThi = null;
                         TeamGearManager.Instance.equippedBootsThi = null;
 
-                        return;
-                    }
-                    else if (x == 2)
-                    {
+
                         // lost a 3rd hero, put 2 to 1, and 3 to 2
-                        return;
+                        bool doneHelm7 = false;
+                        bool doneChest7 = false;
+                        bool doneBoots7 = false;
+
+                        // Update gear tab slot visuals
+                        for (int l = 0; l < wornGearMainAlly.Count; l++)
+                        {
+                            if (TeamGearManager.Instance.equippedHelmetMain != null && !doneHelm7)
+                            {
+                                doneHelm7 = true;
+
+                                TeamGearManager.Instance.ally1GearSlots[0].isEmpty = false;
+                                TeamGearManager.Instance.ally1GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetMain.gearName);
+                                TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetMain.bonusHealth);
+                                TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetMain.bonusHealing);
+                                TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetMain.bonusDefense);
+                                TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetMain.bonusDamage);
+                                TeamGearManager.Instance.ally1GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetMain.bonusSpeed);
+                            }
+
+                            else if (TeamGearManager.Instance.equippedChestpieceMain != null && !doneChest7)
+                            {
+                                doneChest7 = true;
+
+                                TeamGearManager.Instance.ally1GearSlots[1].isEmpty = false;
+                                TeamGearManager.Instance.ally1GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceMain.gearName);
+                                TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceMain.bonusHealth);
+                                TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceMain.bonusHealing);
+                                TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceMain.bonusDefense);
+                                TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceMain.bonusDamage);
+                                TeamGearManager.Instance.ally1GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceMain.bonusSpeed);
+                            }
+                            else if (TeamGearManager.Instance.equippedBootsMain != null && !doneBoots7)
+                            {
+                                doneBoots7 = true;
+
+                                TeamGearManager.Instance.ally1GearSlots[2].isEmpty = false;
+                                TeamGearManager.Instance.ally1GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsMain.gearName);
+                                TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsMain.bonusHealth);
+                                TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsMain.bonusHealing);
+                                TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsMain.bonusDefense);
+                                TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsMain.bonusDamage);
+                                TeamGearManager.Instance.ally1GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsMain.bonusSpeed);
+                            }
+                        }
+
+                        bool doneHelm8 = false;
+                        bool doneChest8 = false;
+                        bool doneBoots8 = false;
+
+                        for (int l = 0; l < wornGearSecondAlly.Count; l++)
+                        {
+                            if (TeamGearManager.Instance.equippedHelmetSec != null && !doneHelm8)
+                            {
+                                doneHelm8 = true;
+
+                                TeamGearManager.Instance.ally2GearSlots[0].isEmpty = false;
+                                TeamGearManager.Instance.ally2GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetSec.gearName);
+                                TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetSec.bonusHealth);
+                                TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetSec.bonusHealing);
+                                TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetSec.bonusDefense);
+                                TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetSec.bonusDamage);
+                                TeamGearManager.Instance.ally2GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetSec.bonusSpeed);
+                            }
+
+                            else if (TeamGearManager.Instance.equippedChestpieceSec != null && !doneChest8)
+                            {
+                                doneChest8 = true;
+
+                                TeamGearManager.Instance.ally2GearSlots[1].isEmpty = false;
+                                TeamGearManager.Instance.ally2GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceSec.gearName);
+                                TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceSec.bonusHealth);
+                                TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceSec.bonusHealing);
+                                TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceSec.bonusDefense);
+                                TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceSec.bonusDamage);
+                                TeamGearManager.Instance.ally2GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceSec.bonusSpeed);
+                            }
+                            else if (TeamGearManager.Instance.equippedBootsSec != null && !doneBoots8)
+                            {
+                                doneBoots8 = true;
+
+                                TeamGearManager.Instance.ally2GearSlots[2].isEmpty = false;
+                                TeamGearManager.Instance.ally2GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsSec.gearName);
+                                TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsSec.bonusHealth);
+                                TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsSec.bonusHealing);
+                                TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsSec.bonusDefense);
+                                TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsSec.bonusDamage);
+                                TeamGearManager.Instance.ally2GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsSec.bonusSpeed);
+                            }
+                        }
+
+                        bool doneHelm9 = false;
+                        bool doneChest9 = false;
+                        bool doneBoots9 = false;
+
+                        for (int l = 0; l < wornGearThirdAlly.Count; l++)
+                        {
+                            if (TeamGearManager.Instance.equippedHelmetThi != null && !doneHelm9)
+                            {
+                                doneHelm9 = true;
+
+                                TeamGearManager.Instance.ally3GearSlots[0].isEmpty = false;
+                                TeamGearManager.Instance.ally3GearSlots[0].UpdateSlotName(TeamGearManager.Instance.equippedHelmetThi.gearName);
+                                TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealth(TeamGearManager.Instance.equippedHelmetThi.bonusHealth);
+                                TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusHealing(TeamGearManager.Instance.equippedHelmetThi.bonusHealing);
+                                TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDefense(TeamGearManager.Instance.equippedHelmetThi.bonusDefense);
+                                TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusDamage(TeamGearManager.Instance.equippedHelmetThi.bonusDamage);
+                                TeamGearManager.Instance.ally3GearSlots[0].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedHelmetThi.bonusSpeed);
+                            }
+
+                            else if (TeamGearManager.Instance.equippedChestpieceThi != null && !doneChest9)
+                            {
+                                doneChest9 = true;
+
+                                TeamGearManager.Instance.ally3GearSlots[1].isEmpty = false;
+                                TeamGearManager.Instance.ally3GearSlots[1].UpdateSlotName(TeamGearManager.Instance.equippedChestpieceThi.gearName);
+                                TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealth(TeamGearManager.Instance.equippedChestpieceThi.bonusHealth);
+                                TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusHealing(TeamGearManager.Instance.equippedChestpieceThi.bonusHealing);
+                                TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDefense(TeamGearManager.Instance.equippedChestpieceThi.bonusDefense);
+                                TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusDamage(TeamGearManager.Instance.equippedChestpieceThi.bonusDamage);
+                                TeamGearManager.Instance.ally3GearSlots[1].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedChestpieceThi.bonusSpeed);
+                            }
+                            else if (TeamGearManager.Instance.equippedBootsThi != null && !doneBoots9)
+                            {
+                                doneBoots9 = true;
+
+                                TeamGearManager.Instance.ally3GearSlots[2].isEmpty = false;
+                                TeamGearManager.Instance.ally3GearSlots[2].UpdateSlotName(TeamGearManager.Instance.equippedBootsThi.gearName);
+                                TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealth(TeamGearManager.Instance.equippedBootsThi.bonusHealth);
+                                TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusHealing(TeamGearManager.Instance.equippedBootsThi.bonusHealing);
+                                TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDefense(TeamGearManager.Instance.equippedBootsThi.bonusDefense);
+                                TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusDamage(TeamGearManager.Instance.equippedBootsThi.bonusDamage);
+                                TeamGearManager.Instance.ally3GearSlots[2].UpdateGearBonusSpeed(TeamGearManager.Instance.equippedBootsThi.bonusSpeed);
+                            }
+                        }
+
+                        break;
                     }
                 }
             }
@@ -306,609 +1075,313 @@ public class OwnedLootInven : MonoBehaviour
         }
     }
 
-    public void MoveGearAndItemsToOwnedLoot(UnitFunctionality unit)
+    public void MoveGearAndItemsToOwnedLoot()
     {
-        Debug.Log(unit.GetUnitName());
-        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        // Items main hero
+        for (int x = 0; x < wornItemsMainAlly.Count; x++)
         {
-            if (unit.GetUnitName() == GameManager.Instance.activeRoomHeroes[i].GetUnitName())
+            string itemName = wornItemsMainAlly[x].GetSlotName();
+
+            for (int a = 0; a < GearRewards.Instance.allItemPiecesCommon.Count; a++)
             {
-                if (i == 0)
+                if (itemName == GearRewards.Instance.allItemPiecesCommon[a].itemName)
                 {
-                    // Items
-                    for (int x = 0; x < wornItemsMainAlly.Count; x++)
-                    {
-                        string itemName = wornItemsMainAlly[x].GetSlotName();
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
 
-                        for (int a = 0; a < GearRewards.Instance.allItemPiecesCommon.Count; a++)
-                        {
-                            if (itemName == GearRewards.Instance.allItemPiecesCommon[a].itemName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedItems.Add(gear);
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedItems.Add(gear);
 
 
-                                gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-                                //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
-                                gear.ToggleEquipButton(false);
+                    gear.UpdateLootGearAlpha(false);
+                    gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
+                    gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                    GearRewards.Instance.IncrementSpawnedGearCount();
+                    //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
+                    gear.ToggleEquipButton(false);
 
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-
-                        for (int b = 0; b < GearRewards.Instance.allItemPiecesRare.Count; b++)
-                        {
-                            if (itemName == GearRewards.Instance.allItemPiecesRare[b].itemName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedItems.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
-                                //GearRewards.Instance.IncrementSpawnedGearCount();
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
-                                gear.ToggleEquipButton(false);
-
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
-
-                    for (int x = 0; x < wornGearMainAlly.Count; x++)
-                    {
-                        string gearName = wornGearMainAlly[x].GetSlotName();
-
-                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                               //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-
-                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                               //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
+                    //Debug.Log("adding " + gear.GetSlotName());
                 }
-                else if (i == 1)
+            }
+
+            for (int b = 0; b < GearRewards.Instance.allItemPiecesRare.Count; b++)
+            {
+                if (itemName == GearRewards.Instance.allItemPiecesRare[b].itemName)
                 {
-                    for (int x = 0; x < wornItemsSecondAlly.Count; x++)
-                    {
-                        string itemName = wornItemsSecondAlly[x].GetSlotName();
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
 
-                        for (int a = 0; a < GearRewards.Instance.allItemPiecesCommon.Count; a++)
-                        {
-                            if (itemName == GearRewards.Instance.allItemPiecesCommon[a].itemName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedItems.Add(gear);
 
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedItems.Add(gear);
+                    gear.UpdateLootGearAlpha(false);
+                    gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
+                    gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                    //GearRewards.Instance.IncrementSpawnedGearCount();
+                    gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
+                    gear.ToggleEquipButton(false);
 
-
-                                gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
-                                //GearRewards.Instance.IncrementSpawnedGearCount();
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
-                                gear.ToggleEquipButton(false);
-
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-
-                        for (int b = 0; b < GearRewards.Instance.allItemPiecesRare.Count; b++)
-                        {
-                            if (itemName == GearRewards.Instance.allItemPiecesRare[b].itemName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedItems.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
-                                //GearRewards.Instance.IncrementSpawnedGearCount();
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
-                                gear.ToggleEquipButton(false);
-
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
-
-                    for (int x = 0; x < wornGearSecondAlly.Count; x++)
-                    {
-                        string gearName = wornGearSecondAlly[x].GetSlotName();
-
-                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                               //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-
-                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                               //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
+                    //Debug.Log("adding " + gear.GetSlotName());
                 }
-                else if (i == 2)
+            }
+        }
+
+        // gear main hero
+        for (int x = 0; x < wornGearMainAlly.Count; x++)
+        {
+            string gearName = wornGearMainAlly[x].GetSlotName();
+
+            for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+            {
+                if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
                 {
-                    for (int x = 0; x < wornItemsThirdAlly.Count; x++)
-                    {
-                        string itemName = wornItemsThirdAlly[x].GetSlotName();
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
 
-                        for (int a = 0; a < GearRewards.Instance.allItemPiecesCommon.Count; a++)
-                        {
-                            if (itemName == GearRewards.Instance.allItemPiecesCommon[a].itemName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedItems.Add(gear);
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedGear.Add(gear);
 
 
-                                gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
-                                //GearRewards.Instance.IncrementSpawnedGearCount();
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesCommon[a]);
-                                gear.ToggleEquipButton(false);
+                    gear.UpdateLootGearAlpha(false);
 
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
+                    gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                    if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                        gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                    else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                        gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                    else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                        gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
 
-                        for (int b = 0; b < GearRewards.Instance.allItemPiecesRare.Count; b++)
-                        {
-                            if (itemName == GearRewards.Instance.allItemPiecesRare[b].itemName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
+                    GearRewards.Instance.IncrementSpawnedGearCount();
 
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedItems.Add(gear);
+                    gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                    gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                    gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                    gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                    gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                    gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.ToggleEquipButton(false);
 
-                                gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
-                                //GearRewards.Instance.IncrementSpawnedGearCount();
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.UpdateLinkedItemPiece(GearRewards.Instance.allItemPiecesRare[b]);
-                                gear.ToggleEquipButton(false);
-
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
-
-                    for (int x = 0; x < wornGearThirdAlly.Count; x++)
-                    {
-                        string gearName = wornGearThirdAlly[x].GetSlotName();
-
-                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                               //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-
-                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                               //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
+                    //Debug.Log("adding " + gear.GetSlotName());
                 }
+            }
 
-
-
-                /*
-                else if (i == 1)
+            for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+            {
+                if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
                 {
-                    for (int x = 0; x < wornGearSecondAlly.Count; x++)
-                    {
-                        string gearName = wornGearSecondAlly[x].GetSlotName();
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
 
-                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedGear.Add(gear);
 
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
+                    gear.UpdateLootGearAlpha(false);
 
-                                gear.UpdateLootGearAlpha(false);
+                    gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                    if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                        gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                    else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                        gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                    else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                        gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
 
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                    GearRewards.Instance.IncrementSpawnedGearCount();
 
-                                GearRewards.Instance.IncrementSpawnedGearCount();
+                    gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                    gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                    gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                    gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                    gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                    gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.ToggleEquipButton(false);
 
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-
-                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
+                    //Debug.Log("adding " + gear.GetSlotName());
                 }
-                else if (i == 2)
+            }
+        }
+
+        // gear 2nd hero
+        for (int x = 0; x < wornGearSecondAlly.Count; x++)
+        {
+            string gearName = wornGearSecondAlly[x].GetSlotName();
+
+            for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+            {
+                if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
                 {
-                    for (int x = 0; x < wornGearThirdAlly.Count; x++)
-                    {
-                        string gearName = wornGearThirdAlly[x].GetSlotName();
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
 
-                        for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedGear.Add(gear);
 
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
 
-                                gear.UpdateLootGearAlpha(false);
+                    gear.UpdateLootGearAlpha(false);
 
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                    gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                    if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                        gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                    else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                        gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                    else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                        gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
 
-                                GearRewards.Instance.IncrementSpawnedGearCount();
+                    GearRewards.Instance.IncrementSpawnedGearCount();
 
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
+                    gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                    gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                    gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                    gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                    gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                    gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.ToggleEquipButton(false);
 
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-
-                        for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
-                        {
-                            if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
-                            {
-                                GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
-                                // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
-                                go.transform.localPosition = new Vector2(1000, 1000);
-                                go.transform.localScale = Vector2.one;
-
-                                Slot gear = go.GetComponent<Slot>();
-                                ownedGear.Add(gear);
-
-                                gear.UpdateLootGearAlpha(false);
-
-                                gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
-                                if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
-                                else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
-
-                                GearRewards.Instance.IncrementSpawnedGearCount();
-
-                                gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
-                                gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
-                                gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
-                                gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
-                                gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
-                                gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
-                                gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
-                                gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
-                                gear.ToggleEquipButton(false);
-
-                                //Debug.Log("adding " + gear.GetSlotName());
-                            }
-                        }
-                    }
+                    //Debug.Log("adding " + gear.GetSlotName());
                 }
-                */
+            }
+
+            for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+            {
+                if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
+                {
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
+
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedGear.Add(gear);
+
+                    gear.UpdateLootGearAlpha(false);
+
+                    gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                    if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                        gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                    else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                        gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                    else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                        gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                    GearRewards.Instance.IncrementSpawnedGearCount();
+
+                    gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                    gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                    gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                    gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                    gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                    gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.ToggleEquipButton(false);
+
+                    //Debug.Log("adding " + gear.GetSlotName());
+                }
+            }
+        }
+
+        // gear 3rd hero
+        for (int x = 0; x < wornGearThirdAlly.Count; x++)
+        {
+            string gearName = wornGearThirdAlly[x].GetSlotName();
+
+            for (int a = 0; a < GearRewards.Instance.allGearPiecesCommon.Count; a++)
+            {
+                if (gearName == GearRewards.Instance.allGearPiecesCommon[a].gearName)
+                {
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
+
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedGear.Add(gear);
+
+
+                    gear.UpdateLootGearAlpha(false);
+
+                    gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
+                    if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
+                        gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                    else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
+                        gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                    else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
+                        gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                    GearRewards.Instance.IncrementSpawnedGearCount();
+
+                    gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allGearPiecesCommon[a].gearName);
+                    gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesCommon[a].bonusHealth);
+                    gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesCommon[a].bonusDamage);
+                    gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesCommon[a].bonusHealing);
+                    gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesCommon[a].bonusDefense);
+                    gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesCommon[a].bonusSpeed);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.ToggleEquipButton(false);
+
+                    //Debug.Log("adding " + gear.GetSlotName());
+                }
+            }
+
+            for (int b = 0; b < GearRewards.Instance.allGearPiecesRare.Count; b++)
+            {
+                if (gearName == GearRewards.Instance.allGearPiecesRare[b].gearName)
+                {
+                    GameObject go = Instantiate(GearRewards.Instance.gearGO, ownedLootUI.transform);
+                    // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
+                    go.transform.localPosition = new Vector2(1000, 1000);
+                    go.transform.localScale = Vector2.one;
+
+                    Slot gear = go.GetComponent<Slot>();
+                    ownedGear.Add(gear);
+
+                    gear.UpdateLootGearAlpha(false);
+
+                    gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
+                    if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
+                        gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                    else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
+                        gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                    else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
+                        gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+
+                    GearRewards.Instance.IncrementSpawnedGearCount();
+
+                    gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+                    gear.UpdateSlotName(GearRewards.Instance.allGearPiecesRare[b].gearName);
+                    gear.UpdateGearBonusHealth(GearRewards.Instance.allGearPiecesRare[b].bonusHealth);
+                    gear.UpdateGearBonusDamage(GearRewards.Instance.allGearPiecesRare[b].bonusDamage);
+                    gear.UpdateGearBonusHealing(GearRewards.Instance.allGearPiecesRare[b].bonusHealing);
+                    gear.UpdateGearBonusDefense(GearRewards.Instance.allGearPiecesRare[b].bonusDefense);
+                    gear.UpdateGearBonusSpeed(GearRewards.Instance.allGearPiecesRare[b].bonusSpeed);
+                    gear.UpdateGearStatis(Slot.SlotStatis.OWNED);
+                    gear.ToggleEquipButton(false);
+
+                    //Debug.Log("adding " + gear.GetSlotName());
+                }
             }
         }
     }

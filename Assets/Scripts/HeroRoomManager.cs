@@ -35,7 +35,7 @@ public class HeroRoomManager : MonoBehaviour
 
     public void SpawnHero()
     {
-        GameManager.Instance.SpawnAllies(true);
+        GameManager.Instance.SpawnHero(true);
 
 
 
