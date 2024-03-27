@@ -12,6 +12,8 @@ public class CharacterCarasel : MonoBehaviour
     [SerializeField] private List<MenuUnitDisplay> allAlliesMenu = new List<MenuUnitDisplay>();
 
     [SerializeField] private UIElement mainMenuUI;
+    //[SerializeField] private UIElement highestFloorReachedText;
+    public UIElement highestFloorReachedCountText;
     [SerializeField] private UIElement leftArrowUI;
     [SerializeField] private UIElement rightArrowUI;
     [SerializeField] private UIElement startButtonUI;
@@ -31,6 +33,11 @@ public class CharacterCarasel : MonoBehaviour
     public Color lockedUnitColour;
 
     [SerializeField] private bool resetSave = false;
+
+    public void UpdateHighestFloorReached(int count)
+    {
+        highestFloorReachedCountText.UpdateContentText(count.ToString());
+    }
 
     public UnitData GetAlly(int index)
     {
@@ -65,6 +72,9 @@ public class CharacterCarasel : MonoBehaviour
         SaveUnlockedAlly("Knight");
         LoadSave();
         LoadCarasel();
+
+
+
 
         UpdateLog.Instance.ToggleUpdateLogbutton(true);
     }

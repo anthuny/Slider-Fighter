@@ -1243,17 +1243,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         OwnedLootInven.Instance.MoveGearAndItemsToOwnedLoot();
 
-        for (int c = 0; c < activeRoomHeroes.Count; c++)
-        {
-            if (activeRoomHeroes[c].isDead)
-            {
-                OwnedLootInven.Instance.UpdateWornGearOwning();
+        OwnedLootInven.Instance.UpdateWornLootOwning();
 
-                TeamGearManager.Instance.ClearEmptyGearSlots();
-
-                TeamItemsManager.Instance.ResetHeroItemOwned(c);
-            }
-        }
+        TeamGearManager.Instance.ClearEmptyGearSlots();
+        TeamItemsManager.Instance.ClearEmptyItemSlots();
 
         // Remove dead allies from team when post battle starts, on a win
         for (int i = 0; i < fallenHeroes.Count; i++)
@@ -1502,7 +1495,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     if (!activeRoomHeroes[i].heroRoomUnit)
                     {
                         doneOnce = true;
-                        activeRoomHeroes[i].UpdateUnitExp(GetExperienceGained());
+                        float count = GetExperienceGained();
+                        activeRoomHeroes[i].UpdateUnitExp((int)count);
                     }
 
                     else
@@ -3594,13 +3588,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
     {
         // Skip unit turn if all skills are on cooldown
-        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 1 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
+        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 2 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
         {
-            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 1 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
+            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 2 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
             {
-                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 1 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
+                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 2 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
                 {
-                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
+                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 2 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
                     {
                         return true;
                     }

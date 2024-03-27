@@ -23,9 +23,9 @@ public class TeamItemsManager : MonoBehaviour
     [SerializeField] private MenuUnitDisplay ally2MenuUnitDisplay;
     [SerializeField] private MenuUnitDisplay ally3MenuUnitDisplay;
 
-    [SerializeField] private List<Slot> ally1ItemsSlots = new List<Slot>();
-    [SerializeField] private List<Slot> ally2ItemsSlots = new List<Slot>();
-    [SerializeField] private List<Slot> ally3ItemsSlots = new List<Slot>();
+    public List<Slot> ally1ItemsSlots = new List<Slot>();
+    public List<Slot> ally2ItemsSlots = new List<Slot>();
+    public List<Slot> ally3ItemsSlots = new List<Slot>();
 
     [SerializeField] private UIElement itemsStatsUI;
     [SerializeField] private GameObject itemsStatGO;
@@ -238,6 +238,230 @@ public class TeamItemsManager : MonoBehaviour
         selectedBaseItemSlot = gear;
 
         gear.ToggleSlotSelection(true);
+    }
+
+    public void UpdateItemSlotsBase(bool ally1 = false, bool ally2 = false, bool ally3 = false)
+    {
+        // Ensure each gear slot has correct bg gear sprite
+
+        if (ally1)
+        {
+            for (int i = 0; i < ally1ItemsSlots.Count; i++)
+            {
+                // Place 1st Item
+                if (i == 0)
+                {
+                    if (equippedItemsMain.Count >= 1)
+                    {
+                        if (equippedItemsMain[0] != null)
+                            ally1ItemsSlots[i].UpdateSlotImage(equippedItemsMain[0].itemSprite);
+                        else
+                        {
+                            ally1ItemsSlots[i].isEmpty = true;
+                            ally1ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally1ItemsSlots[i].isEmpty = true;
+                        ally1ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+                // Place 2nd Item
+                if (i == 1)
+                {
+                    if (equippedItemsMain.Count >= 2)
+                    {
+                        if (equippedItemsMain[1] != null)
+                            ally1ItemsSlots[i].UpdateSlotImage(equippedItemsMain[1].itemSprite);
+                        else
+                        {
+                            ally1ItemsSlots[i].isEmpty = true;
+                            ally1ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally1ItemsSlots[i].isEmpty = true;
+                        ally1ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+                // Place 3rd Item
+                if (i == 2)
+                {
+                    if (equippedItemsMain.Count >= 3)
+                    {
+                        if (equippedItemsMain[2] != null)
+                            ally1ItemsSlots[i].UpdateSlotImage(equippedItemsMain[2].itemSprite);
+                        else
+                        {
+                            ally1ItemsSlots[i].isEmpty = true;
+                            ally1ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally1ItemsSlots[i].isEmpty = true;
+                        ally1ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+
+                ally1ItemsSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
+                ally1ItemsSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
+            }
+        }
+
+        if (ally2)
+        {
+            for (int i = 0; i < ally2ItemsSlots.Count; i++)
+            {
+                // Place 1st Item
+                if (i == 0)
+                {
+                    if (equippedItemsSecond.Count >= 1)
+                    {
+                        if (equippedItemsSecond[0] != null)
+                            ally2ItemsSlots[i].UpdateSlotImage(equippedItemsSecond[0].itemSprite);
+                        else
+                        {
+                            ally2ItemsSlots[i].isEmpty = true;
+                            ally2ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally2ItemsSlots[i].isEmpty = true;
+                        ally2ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+                // Place 2nd Item
+                if (i == 1)
+                {
+                    if (equippedItemsSecond.Count >= 2)
+                    {
+                        if (equippedItemsSecond[1] != null)
+                            ally2ItemsSlots[i].UpdateSlotImage(equippedItemsSecond[1].itemSprite);
+                        else
+                        {
+                            ally2ItemsSlots[i].isEmpty = true;
+                            ally2ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally2ItemsSlots[i].isEmpty = true;
+                        ally2ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+                // Place 3rd Item
+                if (i == 2)
+                {
+                    if (equippedItemsSecond.Count >= 3)
+                    {
+                        if (equippedItemsSecond[2] != null)
+                            ally2ItemsSlots[i].UpdateSlotImage(equippedItemsSecond[2].itemSprite);
+                        else
+                        {
+                            ally2ItemsSlots[i].isEmpty = true;
+                            ally2ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally2ItemsSlots[i].isEmpty = true;
+                        ally2ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+
+                ally2ItemsSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
+                ally2ItemsSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
+            }
+        }
+
+        if (ally3)
+        {
+            for (int i = 0; i < ally3ItemsSlots.Count; i++)
+            {
+                // Place 1st Item
+                if (i == 0)
+                {
+                    if (equippedItemsThird.Count >= 1)
+                    {
+                        if (equippedItemsThird[0] != null)
+                            ally3ItemsSlots[i].UpdateSlotImage(equippedItemsThird[0].itemSprite);
+                        else
+                        {
+                            ally3ItemsSlots[i].isEmpty = true;
+                            ally3ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally3ItemsSlots[i].isEmpty = true;
+                        ally3ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+                // Place 2nd Item
+                if (i == 1)
+                {
+                    if (equippedItemsThird.Count >= 2)
+                    {
+                        if (equippedItemsThird[1] != null)
+                            ally3ItemsSlots[i].UpdateSlotImage(equippedItemsThird[1].itemSprite);
+                        else
+                        {
+                            ally3ItemsSlots[i].isEmpty = true;
+                            ally3ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally3ItemsSlots[i].isEmpty = true;
+                        ally3ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+                // Place 3rd Item
+                if (i == 2)
+                {
+                    if (equippedItemsThird.Count >= 3)
+                    {
+                        if (equippedItemsThird[2] != null)
+                            ally3ItemsSlots[i].UpdateSlotImage(equippedItemsThird[2].itemSprite);
+                        else
+                        {
+                            ally3ItemsSlots[i].isEmpty = true;
+                            ally3ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                        }
+                    }
+                    else
+                    {
+                        ally3ItemsSlots[i].isEmpty = true;
+                        ally3ItemsSlots[i].UpdateSlotImage(clearSlotSprite);
+                    }
+                }
+
+                ally3ItemsSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
+                ally3ItemsSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
+            }
+        }
+    }
+
+    public void ResetItemsTab()
+    {
+        if (GameManager.Instance.activeTeam.Count == 1)
+            ResetHeroItemOwned(1);
+        else if (GameManager.Instance.activeTeam.Count == 2)
+            ResetHeroItemOwned(2);
+    }
+
+    public void ClearEmptyItemSlots()
+    {
+        if (GameManager.Instance.activeTeam.Count == 1)
+            UpdateItemSlotsBase(true);
+        else if (GameManager.Instance.activeTeam.Count == 2)
+            UpdateItemSlotsBase(true, true);
+        else if (GameManager.Instance.activeTeam.Count == 3)
+            UpdateItemSlotsBase(true, true, true);
     }
 
     public void ClearItemSlots()

@@ -321,7 +321,7 @@ public class RoomMapIcon : MonoBehaviour
 
     public void ToggleHiddenMode(bool toggle)
     {
-        Debug.Log("Toggling room icon " + toggle);
+        //Debug.Log("Toggling room icon " + toggle);
         // If turning hidden ON
         if (toggle)
         {
@@ -413,7 +413,7 @@ public class RoomMapIcon : MonoBehaviour
 
         if (doMain)
         {
-            Debug.Log("Updating room colour inner");
+            //Debug.Log("Updating room colour inner");
 
             UpdateRoomIconColour(colour);
         }

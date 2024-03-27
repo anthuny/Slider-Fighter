@@ -325,10 +325,14 @@ public class MapManager : MonoBehaviour
         {
             //Debug.Log("toggling map on");
 
+            // Display exp visual
+
+
             for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
             {
                 // Hide level up text
                 GameManager.Instance.activeRoomHeroes[i].ToggleTextAlert(false);
+                GameManager.Instance.activeRoomHeroes[i].ToggleUnitExpVisual(false);
             }
 
             ShopManager.Instance.TogglePlayerInShopRoom(false);
@@ -917,6 +921,7 @@ public class MapManager : MonoBehaviour
 
                 if (failedCurAttempts <= maxFailedAttempts)
                 {
+                    /*
                     // If there is already a shop room, skip it and reset so it can do it again
                     if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.HERO || roomIcon.GetRoomType() == RoomMapIcon.RoomType.ITEM)
                     {
@@ -926,7 +931,7 @@ public class MapManager : MonoBehaviour
                         failedCurAttempts++;
                         continue;
                     }
-
+                    */
                     // If room is not a shop, make it a shop
                     roomIcon.UpdateRoomType(RoomMapIcon.RoomType.SHOP);
                     UpdateRoomIconType(spawnedAdditionalRooms[rand].GetComponent<RoomMapIcon>(), "shop");
@@ -949,7 +954,7 @@ public class MapManager : MonoBehaviour
             if (failedCurAttempts <= maxFailedAttempts)
             {
                 // If there is already a shop room, skip it and reset so it can do it again
-                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP || roomIcon.GetRoomType() == RoomMapIcon.RoomType.ITEM)
+                if (roomIcon.GetRoomType() == RoomMapIcon.RoomType.SHOP)
                 {
                     //i--;
                     //if (i < 0)
@@ -1098,7 +1103,7 @@ public class MapManager : MonoBehaviour
 
     public void UpdateRoomIconType(RoomMapIcon roomMapIcon, string roomTypeName)
     {
-        Debug.Log("Updating room icon " + roomTypeName);
+       //Debug.Log("Updating room icon " + roomTypeName);
         if (roomTypeName == "enemy")
         {
             roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.ENEMY);

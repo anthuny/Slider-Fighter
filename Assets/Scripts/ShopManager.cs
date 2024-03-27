@@ -368,8 +368,6 @@ public class ShopManager : MonoBehaviour
 
                     GameManager.Instance.fallenHeroes[i].purchased = true;
 
-
-
                     GameManager.Instance.fallenHeroes[i].GetAnimator().SetTrigger("Idle");
 
                     fallenHeroesNamesBase.Remove(GameManager.Instance.fallenHeroes[i].GetUnitName());
@@ -388,6 +386,7 @@ public class ShopManager : MonoBehaviour
         }
 
         TeamGearManager.Instance.ResetGearTab();
+        TeamItemsManager.Instance.ResetItemsTab();
     }
 
     public void ClearFallenHeroesVisuals()

@@ -62,6 +62,14 @@ public class RoomManager : MonoBehaviour
             activeFloor = totalFloors[totalFloors.Count - 1];
     }
 
+    private void Update()
+    {
+       if (Input.GetKey(KeyCode.I))
+       {
+           PlayerPrefs.SetInt("HighestFloor", 1);
+           CharacterCarasel.Instance.highestFloorReachedCountText.UpdateContentText(PlayerPrefs.GetInt("HighestFloor").ToString());
+        }
+    }
     public void FloorCompleted()
     {
         IncrementFloorCount();
@@ -72,6 +80,24 @@ public class RoomManager : MonoBehaviour
 
         StartCoroutine(FloorCompletedCo());
         //IncreaseMaxRoomCount();
+
+        if (PlayerPrefs.HasKey("HighestFloor"))
+        {
+            if (GetFloorCount() >= PlayerPrefs.GetInt("HighestFloor"))
+            {
+                PlayerPrefs.SetInt("HighestFloor", GetFloorCount());
+
+                CharacterCarasel.Instance.highestFloorReachedCountText.UpdateContentText(PlayerPrefs.GetInt("HighestFloor").ToString());
+            }
+            else
+                CharacterCarasel.Instance.highestFloorReachedCountText.UpdateContentText(PlayerPrefs.GetInt("HighestFloor").ToString());
+        }
+        else
+        {
+            PlayerPrefs.SetInt("HighestFloor", GetFloorCount());
+
+            CharacterCarasel.Instance.highestFloorReachedCountText.UpdateContentText(PlayerPrefs.GetInt("HighestFloor").ToString());
+        }     
     }
 
     IEnumerator FloorCompletedCo()

@@ -1368,7 +1368,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1379,7 +1379,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1390,7 +1390,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1440,7 +1440,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1451,7 +1451,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1499,7 +1499,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1510,7 +1510,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1521,7 +1521,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1569,7 +1569,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1580,7 +1580,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1591,7 +1591,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1640,7 +1640,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1651,7 +1651,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1662,7 +1662,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1725,7 +1725,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1736,7 +1736,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1747,7 +1747,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1786,7 +1786,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1797,7 +1797,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1808,7 +1808,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1856,7 +1856,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1867,7 +1867,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1878,7 +1878,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1926,7 +1926,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1937,7 +1937,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1948,7 +1948,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -1997,7 +1997,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2008,7 +2008,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2019,7 +2019,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2082,7 +2082,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2093,7 +2093,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2104,7 +2104,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2141,7 +2141,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2152,7 +2152,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2163,7 +2163,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2211,7 +2211,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2222,7 +2222,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2233,7 +2233,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2281,7 +2281,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2292,7 +2292,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2303,7 +2303,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2352,7 +2352,7 @@ public class UnitFunctionality : MonoBehaviour
                                             if (x == 0 && item1CurUses >= 0)
                                             {
                                                 DecreaseUsesItem1();
-                                                if (item1CurUses == 1)
+                                                if (item1CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2363,7 +2363,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 1 && item2CurUses >= 0)
                                             {
                                                 DecreaseUsesItem2();
-                                                if (item2CurUses == 1)
+                                                if (item2CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -2374,7 +2374,7 @@ public class UnitFunctionality : MonoBehaviour
                                             else if (x == 2 && item3CurUses >= 0)
                                             {
                                                 DecreaseUsesItem3();
-                                                if (item3CurUses == 1)
+                                                if (item3CurUses == 0)
                                                 {
                                                     yield return new WaitForSeconds(.2f);
                                                     AudioManager.Instance.Play("SFX_ItemDepleted");
@@ -3490,15 +3490,13 @@ public class UnitFunctionality : MonoBehaviour
             }
             else
             {
-                IncreaseCurExp(1);
+                IncreaseCurExp(1 * GetUnitLevel());
                 unitExpBarImage.fillAmount = GetCurExp() / GetMaxExp();
             }
         }
 
         yield return new WaitForSeconds(GameManager.Instance.timePostExp);
 
-        // Display exp visual
-        ToggleUnitExpVisual(false);
 
         // Enable post battle to map button for next post battle scene
         StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));

@@ -1610,7 +1610,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
 
                         unitIsSelected = true;
-                        GameManager.Instance.targetUnit(unitFunctionality);
+
+                        if (GameManager.Instance.playerInCombat && !PostBattle.Instance.isInPostBattle || HeroRoomManager.Instance.playerInHeroRoomView)
+                            GameManager.Instance.targetUnit(unitFunctionality);
                     }
                 }
             }
