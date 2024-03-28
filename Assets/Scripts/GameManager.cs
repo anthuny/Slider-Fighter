@@ -546,9 +546,11 @@ public class GameManager : MonoBehaviour
                             unitFunct.ResetSkill3Cooldown();
 
                             int spawnedUnitLevel = ((RoomManager.Instance.GetFloorCount() + 2 + (RoomManager.Instance.GetFloorCount() * 2)) * RoomManager.Instance.GetFloorCount()) + Random.Range(1, 3);
-                            Debug.Log("spawnedUnitLevel = " + spawnedUnitLevel);
+                            spawnedUnitLevel -= (Random.Range(2,4) * RoomManager.Instance.GetFloorCount()) + (2 * RoomManager.Instance.GetFloorCount());
+                            //Debug.Log("spawnedUnitLevel = " + spawnedUnitLevel);
                             //unitFunct.UpdateUnitLevel(spawnedUnitLevel, 0, true);
                             float newExpStarting = (maxExpStarting) * spawnedUnitLevel;
+
                             unitFunct.UpdateUnitExp((int)newExpStarting);
 
                             //Debug.Log("unit max xp " + maxExpStarting);
@@ -2157,7 +2159,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ShopManager.Instance.TogglePlayerInShopRoom();
 
             // Map open SFX
-            AudioManager.Instance.Play("Shop_Entered");
+            AudioManager.Instance.Play("SFX_ShopEnterLeave");
+
+            AudioManager.Instance.Play("M_ShopBG");
 
             // Stop Map music
             AudioManager.Instance.PauseMapMusic(true);

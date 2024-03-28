@@ -1246,7 +1246,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             {
                 cost = ShopManager.Instance.fallenHeroButtons[i].gameObject.GetComponentInParent<MenuUnitDisplay>().cost;
                 
-                Debug.Log("cost = " + cost);
+                //Debug.Log("cost = " + cost);
 
                 if (cost <= ShopManager.Instance.GetPlayerGold())
                 {
@@ -1257,6 +1257,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     ShopManager.Instance.ToggleAllFallenHeroSelection(false);
 
                     ShopManager.Instance.ReviveFallenHero(ShopManager.Instance.selectedFallenUnitName);
+                }
+                else
+                {
+                    AudioManager.Instance.Play("SFX_ShopBuyFail");
                 }
             }
         }
@@ -1541,6 +1545,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         ShopManager.Instance.ToggleAllFallenHeroSelection(false);
 
         ToggleSelection(true);
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
 
         ShopManager.Instance.ToggleFallenHeroPrompt(true);
 

@@ -85,7 +85,6 @@ public class ShopManager : MonoBehaviour
         for (int i = 0; i < fallenHeroButtons.Count; i++)
         {
             fallenHeroButtons[i].ToggleSelection(false);
-
         }
     }
 
@@ -115,6 +114,9 @@ public class ShopManager : MonoBehaviour
         ToggleRefreshItem(false);
 
         itemsParent.UpdateAlpha(0);
+
+        if (playerInShopRoom)
+            AudioManager.Instance.Play("SFX_ShopEnterLeave");
     }
 
     void ToggleRefreshItem(bool toggle)
@@ -333,7 +335,7 @@ public class ShopManager : MonoBehaviour
     
     public void ToggleExitShopButton(bool toggle)
     {
-        Debug.Log("enabling shop button to " + toggle);
+        //Debug.Log("enabling shop button to " + toggle);
         buttonExitShop.ToggleButton(toggle);
     }
 
@@ -360,11 +362,14 @@ public class ShopManager : MonoBehaviour
             {
                 if (selectedFallenUnitName == name)
                 {
+                    AudioManager.Instance.Play("SFX_ShopBuySuceed");
+
                     GameManager.Instance.AddActiveRoomAllUnitsFunctionality(GameManager.Instance.fallenHeroes[i]);
 
                     GameManager.Instance.AddUnitToTeam(GameManager.Instance.fallenHeroes[i].unitData);
 
                     GameManager.Instance.fallenHeroes[i].ReviveUnit(100, true);
+
 
                     GameManager.Instance.fallenHeroes[i].purchased = true;
 

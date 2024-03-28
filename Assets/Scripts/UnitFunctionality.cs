@@ -376,15 +376,36 @@ public class UnitFunctionality : MonoBehaviour
             // Set gear data
             if (index == 0)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
+                if (OwnedLootInven.Instance.GetWornGearMainAlly()[i].curGearType == Slot.SlotType.HELMET)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
+
+                if (OwnedLootInven.Instance.GetWornGearMainAlly()[i].curGearType == Slot.SlotType.CHESTPIECE)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
+
+                if (OwnedLootInven.Instance.GetWornGearMainAlly()[i].curGearType == Slot.SlotType.BOOTS)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
             }
             else if (index == 1)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
+                if (OwnedLootInven.Instance.GetWornGearSecondAlly()[i].curGearType == Slot.SlotType.HELMET)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
+
+                if (OwnedLootInven.Instance.GetWornGearSecondAlly()[i].curGearType == Slot.SlotType.CHESTPIECE)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
+
+                if (OwnedLootInven.Instance.GetWornGearSecondAlly()[i].curGearType == Slot.SlotType.BOOTS)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
             }
             else if (index == 2)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
+                if (OwnedLootInven.Instance.GetWornGearThirdAlly()[i].curGearType == Slot.SlotType.HELMET)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
+
+                if (OwnedLootInven.Instance.GetWornGearThirdAlly()[i].curGearType == Slot.SlotType.CHESTPIECE)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
+
+                if (OwnedLootInven.Instance.GetWornGearThirdAlly()[i].curGearType == Slot.SlotType.BOOTS)
+                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
             }
         }
     }
@@ -3387,7 +3408,7 @@ public class UnitFunctionality : MonoBehaviour
 
         ToggleUnitDisplay(true);
 
-
+        AudioManager.Instance.Play("SFX_HeroRevive");
 
         // Play revive SFX
         //AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);

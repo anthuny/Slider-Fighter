@@ -81,6 +81,9 @@ public class RoomManager : MonoBehaviour
         StartCoroutine(FloorCompletedCo());
         //IncreaseMaxRoomCount();
 
+        AudioManager.Instance.Play("SFX_FloorIncrease");
+
+
         if (PlayerPrefs.HasKey("HighestFloor"))
         {
             if (GetFloorCount() >= PlayerPrefs.GetInt("HighestFloor"))

@@ -14,6 +14,7 @@ public class AudioManager : MonoBehaviour
     public Sound combatMusic;
     public Sound mapMusic;
     public Sound attackBarMusic;
+    public Sound shopMusic;
 
     public bool sfxMuted = false;
     public bool musicMuted = false;
@@ -45,6 +46,8 @@ public class AudioManager : MonoBehaviour
     {
         AdjustSFXVolume(.75f, true);
         AdjustMusicTrackVolume(.75f, true);
+
+        //ToggleShopMusic(false);
     }
 
     public void Play(string name)
@@ -63,6 +66,8 @@ public class AudioManager : MonoBehaviour
             mapMusic = s;
         else if (name == "AttackBarLoop")
             attackBarMusic = s;
+        else if (name == "M_ShopBG")
+            shopMusic = s;
         else
             s.source.PlayOneShot(s.clip);
     }
@@ -96,6 +101,20 @@ public class AudioManager : MonoBehaviour
             attackBarMusic.source.Pause();
         else
             attackBarMusic.source.Play();
+    }
+
+    public void ToggleShopMusic(bool toggle)
+    {
+        if (shopMusic.name != "")
+        {
+            if (toggle)
+                shopMusic.source.Play();
+            else
+            {
+                if (shopMusic.source.isPlaying)
+                    shopMusic.source.Pause();
+            }
+        }
     }
 
     public void IncAttackBarMusicSpeed()

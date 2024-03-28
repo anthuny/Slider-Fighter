@@ -325,8 +325,9 @@ public class MapManager : MonoBehaviour
         {
             //Debug.Log("toggling map on");
 
-            // Display exp visual
 
+            // Display exp visual
+            AudioManager.Instance.ToggleShopMusic(false);
 
             for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
             {
@@ -339,7 +340,7 @@ public class MapManager : MonoBehaviour
             ShopManager.Instance.ToggleFallenHeroPrompt(false);
             ShopManager.Instance.ToggleAllFallenHeroSelection(false);
 
-            MapManager.Instance.UpdateMapGoldText();
+            UpdateMapGoldText();
 
             //GameManager.Instance.SetHeroFormation();
 
