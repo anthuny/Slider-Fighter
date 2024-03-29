@@ -32,7 +32,7 @@ MonoBehaviour:
   projectileSpeed: 10
   skillCooldown: 3
   curCooldown: 0
-  skillSelectionCount: 1
+  skillSelectionCount: 2
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -51,8 +51,8 @@ MonoBehaviour:
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
-  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

@@ -70,6 +70,11 @@ public class RoomManager : MonoBehaviour
            CharacterCarasel.Instance.highestFloorReachedCountText.UpdateContentText(PlayerPrefs.GetInt("HighestFloor").ToString());
         }
     }
+
+    public void HideFloorIncreaseAlert()
+    {
+        GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateAlpha(0);
+    }
     public void FloorCompleted()
     {
         IncrementFloorCount();

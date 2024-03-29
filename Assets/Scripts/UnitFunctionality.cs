@@ -188,6 +188,7 @@ public class UnitFunctionality : MonoBehaviour
     public bool purchased = false;
     //public bool unitDouble;
 
+    public SkillData usedSkill;
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);
@@ -365,7 +366,7 @@ public class UnitFunctionality : MonoBehaviour
             Destroy(tooltipGear.transform.GetChild(i).gameObject);
         }
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < 3; i++)
         {
             GameObject go = Instantiate(tooltipGearGO, tooltipGear.transform.position, Quaternion.identity);
             go.transform.SetParent(tooltipGear.transform);
@@ -373,39 +374,102 @@ public class UnitFunctionality : MonoBehaviour
             go.transform.localPosition = Vector3.zero;
             go.transform.localScale = Vector3.one;
 
-            // Set gear data
             if (index == 0)
             {
-                if (OwnedLootInven.Instance.GetWornGearMainAlly()[i].curGearType == Slot.SlotType.HELMET)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
-
-                if (OwnedLootInven.Instance.GetWornGearMainAlly()[i].curGearType == Slot.SlotType.CHESTPIECE)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
-
-                if (OwnedLootInven.Instance.GetWornGearMainAlly()[i].curGearType == Slot.SlotType.BOOTS)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[i].GetSlotImage());
+                // Set gear data
+                if (i == 0)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotType.HELMET)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 1)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 2)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotType.BOOTS)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
+                    }
+                }
             }
+            //                            go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
             else if (index == 1)
             {
-                if (OwnedLootInven.Instance.GetWornGearSecondAlly()[i].curGearType == Slot.SlotType.HELMET)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
-
-                if (OwnedLootInven.Instance.GetWornGearSecondAlly()[i].curGearType == Slot.SlotType.CHESTPIECE)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
-
-                if (OwnedLootInven.Instance.GetWornGearSecondAlly()[i].curGearType == Slot.SlotType.BOOTS)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[i].GetSlotImage());
+                // Set gear data
+                if (i == 0)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.HELMET)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
+                        //else
+                           // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                    }
+                }
+                if (i == 1)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
+                        //else
+                           // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                    }
+                }
+                if (i == 2)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.BOOTS)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
+                        //else
+                          //  go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                    }
+                }
             }
             else if (index == 2)
             {
-                if (OwnedLootInven.Instance.GetWornGearThirdAlly()[i].curGearType == Slot.SlotType.HELMET)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
-
-                if (OwnedLootInven.Instance.GetWornGearThirdAlly()[i].curGearType == Slot.SlotType.CHESTPIECE)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
-
-                if (OwnedLootInven.Instance.GetWornGearThirdAlly()[i].curGearType == Slot.SlotType.BOOTS)
-                    go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[i].GetSlotImage());
+                // Set gear data
+                if (i == 0)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.HELMET)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
+                        //else
+                            //go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                    }
+                }
+                if (i == 1)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
+                        //else
+                           // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                    }
+                }
+                if (i == 2)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.BOOTS)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
+                        //else
+                           //    go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                    }
+                }
             }
         }
     }
@@ -1233,13 +1297,14 @@ public class UnitFunctionality : MonoBehaviour
     {
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
+        /*
         // Do unit's turn automatically if its on idle battle
         if (isDead)
         {
-            //GameManager.Instance.UpdateTurnOrder();
-            //yield break;
+            GameManager.Instance.UpdateTurnOrder();
+            yield break;
         }
-
+        */
 
         if (GetIdleBattle() && GameManager.Instance.activeRoomHeroes.Count >= 1 && !isDead)
         {
@@ -2451,6 +2516,8 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
     {
+        yield return new WaitForSeconds(0.35f);
+
         // If no effects remain on the unit, stop
         if (activeEffects.Count >= 1)
         {
@@ -2824,6 +2891,8 @@ public class UnitFunctionality : MonoBehaviour
     {
         Debug.Log("effectHitAcc " + effectHitAcc);
 
+
+        //SkillData activeSkill = null;
         // If player miss, do not apply effect
         if (effectHitAcc == 0 || targetUnit.isParrying)
             return;
@@ -2848,28 +2917,38 @@ public class UnitFunctionality : MonoBehaviour
                         {
                             // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
                             //activeEffects[i].AddTurnCountText(1);
-                            activeEffects[i].EffectApply(this);
-                            activeEffects[i].UpdateEffectTierImages();
-                            if (activeEffects[i] != null)
-                                activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                            else
-                                return;
-                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                            if (usedSkill != GameManager.Instance.GetActiveSkill())
+                            {
+                                usedSkill = GameManager.Instance.GetActiveSkill();
+
+                                activeEffects[i].EffectApply(this);
+                                activeEffects[i].UpdateEffectTierImages();
+                                if (activeEffects[i] != null)
+                                    activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                else
+                                    return;
+                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                            }
                         }
                         else
                             continue;
                     }
                     else if (item || byPassAcc)
                     {
-                        //activeEffects[i].AddTurnCountText(1);
-                        activeEffects[i].EffectApply(this);
-                        activeEffects[i].UpdateEffectTierImages();
-                        if (activeEffects[i] != null)
-                            activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                        else
-                            return;
+                        if (usedSkill != GameManager.Instance.GetActiveSkill())
+                        {
+                            usedSkill = GameManager.Instance.GetActiveSkill();
 
-                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                            //activeEffects[i].AddTurnCountText(1);
+                            activeEffects[i].EffectApply(this);
+                            activeEffects[i].UpdateEffectTierImages();
+                            if (activeEffects[i] != null)
+                                activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                            else
+                                return;
+
+                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                        }
                     }
                 }
             }
@@ -2892,6 +2971,54 @@ public class UnitFunctionality : MonoBehaviour
                         int rand = Random.Range(1, 101);
                         if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                         {
+                            if (usedSkill != GameManager.Instance.GetActiveSkill())
+                            {
+                                usedSkill = GameManager.Instance.GetActiveSkill();
+
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
+
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
+                                //activeEffects[m].AddTurnCountText(1);
+                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                                effect.UpdateEffectTierImages();
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+                            }
+                        }
+                    }
+                }
+                else if (item || byPassAcc)
+                {
+                    if (m == 0)
+                    {
+                        if (!item)
+                        {
+                            if (usedSkill != GameManager.Instance.GetActiveSkill())
+                            {
+                                usedSkill = GameManager.Instance.GetActiveSkill();
+
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
+
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc);
+                                //activeEffects[m].AddTurnCountText(1);
+                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                                effect.UpdateEffectTierImages();
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+                            }
+                        }
+                        else
+                        {
                             // Spawn new effect on target unit
                             go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
                             go.transform.SetParent(effectsParent);
@@ -2900,42 +3027,16 @@ public class UnitFunctionality : MonoBehaviour
 
                             effect = go.GetComponent<Effect>();
                             activeEffects.Add(effect);
-                            effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
+                            effect.Setup(addedEffect, targetUnit, effectHitAcc);
                             //activeEffects[m].AddTurnCountText(1);
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                             effect.UpdateEffectTierImages();
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-
-                            //if (effectHitAcc != 1)
-                              //  AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
                         }
-                    }
-                }
-                else if (item || byPassAcc)
-                {
-                    if (m == 0)
-                    {
-                        // Spawn new effect on target unit
-                        go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-                        go.transform.SetParent(effectsParent);
-                        go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                        go.transform.localScale = new Vector3(1, 1, 1);
-
-                        effect = go.GetComponent<Effect>();
-                        activeEffects.Add(effect);
-                        effect.Setup(addedEffect, targetUnit, effectHitAcc);
-                        //activeEffects[m].AddTurnCountText(1);
-                        TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                        effect.UpdateEffectTierImages();
-                        effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-
-                        //if (effectHitAcc != 1)
-                         //   AddUnitEffect(addedEffect, targetUnit, 1, effectHitAcc - 1);
                     }
                 }
             }
         }
-
     }
 
     public void ResetEffects(float time = .2f)
@@ -3334,7 +3435,18 @@ public class UnitFunctionality : MonoBehaviour
         if (curHealth <= 0)
         {
             if (!GameManager.Instance.fallenHeroes.Contains(this) && curUnitType == UnitType.PLAYER)
+            {
                 GameManager.Instance.fallenHeroes.Add(this);
+
+
+                ResetEffects();
+                curPowerHits = powerHitsRoomStarting;
+
+                UpdateUnitMaxHealth(startingRoomMaxHealth, true, false);
+                curSpeed = startingRoomSpeed;
+                curDefense = startingRoomDefense;
+                ResetUnitHealingRecieved();
+            }
 
             return true;
         }
@@ -3402,7 +3514,8 @@ public class UnitFunctionality : MonoBehaviour
     {
         isDead = false;
 
-        GameManager.Instance.AddUnitFromTurnOrder(this);
+        GameManager.Instance.AddUnitToTurnOrder(this);
+        GameManager.Instance.AddActiveRoomAllUnitsFunctionality(this);
 
         GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
 
@@ -4165,6 +4278,11 @@ public class UnitFunctionality : MonoBehaviour
     public int GetUnitExpKillGained()
     {
         int expGained = (GetUnitLevel() * GameManager.Instance.expKillGainedPerLv) + GameManager.Instance.expKillGainedStarting;
+
+        expGained = Random.Range(expGained - 2, expGained + 6);
+
         return expGained;
+
+
     }
 }

@@ -364,7 +364,7 @@ public class ShopManager : MonoBehaviour
                 {
                     AudioManager.Instance.Play("SFX_ShopBuySuceed");
 
-                    GameManager.Instance.AddActiveRoomAllUnitsFunctionality(GameManager.Instance.fallenHeroes[i]);
+                    //GameManager.Instance.AddActiveRoomAllUnitsFunctionality(GameManager.Instance.fallenHeroes[i]);
 
                     GameManager.Instance.AddUnitToTeam(GameManager.Instance.fallenHeroes[i].unitData);
 

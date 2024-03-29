@@ -2374,7 +2374,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         }
                     }
 
-                    yield return new WaitForSeconds(timeBetweenProjectile - (0.005f * (GetActiveUnitFunctionality().GetUnitLevel()-1)));
+                    int maxHitWorth = 15;
+                    if (hitCount > maxHitWorth)
+                        yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)));
+                    else
+                        yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (hitCount - 1)));
                 }
             }
 
@@ -2681,13 +2685,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 }
 
                 // Time wait in between attacks, shared across all targeted units
-                yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.005f * (GetActiveUnitFunctionality().GetUnitLevel() - 1)));
+                int maxHitWorth = 15;
+                if (hitCount > maxHitWorth)
+                    yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.0025f * (maxHitWorth - 1)));
+                else
+                    yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.0025f * (hitCount - 1)));
             }
 
             // Reset each units power UI
             for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
             {
                 activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
+                activeRoomAllUnitFunctionalitys[i].usedSkill = null;
             }       
         }
 
@@ -3145,7 +3154,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         UpdateEnemiesKilled(unit);
     }
 
-    public void AddUnitFromTurnOrder(UnitFunctionality unit)
+    public void AddUnitToTurnOrder(UnitFunctionality unit)
     {
         activeRoomAllUnitFunctionalitys.Add(unit);
     }
@@ -3432,6 +3441,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false));
 
         DetermineTurnOrder();
+
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
+        {
+            UpdateTurnOrder();
+            return;
+        }
 
         // Only decrease skill CDs during combat
         GetActiveUnitFunctionality().DecreaseSkill0Cooldown();

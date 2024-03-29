@@ -19,12 +19,12 @@ MonoBehaviour:
   unitColour: {r: 0.504717, g: 0.83629143, b: 1, a: 1}
   unitName: Knight
   startingSpeed: 8
-  startingDefense: 10
+  startingDefense: 5
   startingPower: 35
   startingHealingPower: 0
   startingMaxHealth: 750
   speedIncPerLv: 1
-  powerIncPerLv: 0
+  powerIncPerLv: 1
   healingPowerIncPerLv: 6
   defenseIncPerLv: 2
   maxHealthIncPerLv: 140

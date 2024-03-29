@@ -374,7 +374,7 @@ public class TeamItemsManager : MonoBehaviour
                 }
 
                 ally2ItemsSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally2ItemsSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
+                ally2ItemsSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.SECOND);
             }
         }
 
@@ -441,7 +441,7 @@ public class TeamItemsManager : MonoBehaviour
                 }
 
                 ally3ItemsSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally3ItemsSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
+                ally3ItemsSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.THIRD);
             }
         }
     }

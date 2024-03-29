@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b1acb7c48ac8e4794d42cad5696501, type: 3}
+  m_Name: 300324 - Fixed Cleric Revive skill
+  m_EditorClassIdentifier: 
+  updateLogPreText: "30/03/24 - Fixed Cleric Revive Skill\t\t"
+  updateLogText: BUG FIX - Fixed Cleric's heal on her revive skill from being effected
+    by the target's poison stack, causing the revived target to be healed much less
+    then expected sometimes. Effects correctly now remove upon a unit reaching 0
+    health.

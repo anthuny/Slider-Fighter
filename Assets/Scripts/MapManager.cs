@@ -239,6 +239,9 @@ public class MapManager : MonoBehaviour
         // If player lost
         else
         {
+            // Hide foor increase alert
+            RoomManager.Instance.HideFloorIncreaseAlert();
+
             ResetEntireRun(tryShowAd);
         }
 
