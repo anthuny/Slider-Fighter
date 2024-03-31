@@ -225,6 +225,8 @@ public class Effect : MonoBehaviour
 
     public void EffectApply(UnitFunctionality targetUnit)
     {
+        effectPowerStacks++;
+
         if (curEffectName == EffectName.HEALTHUP)
         {
             tempAddedHealth = (powerPercent / 100f) * targetUnit.GetStartingMaxHealth();
@@ -302,7 +304,7 @@ public class Effect : MonoBehaviour
 
         }
 
-        effectPowerStacks++;
+
     }
 
     public void EffectRemove(UnitFunctionality unit, bool doEffects = true)

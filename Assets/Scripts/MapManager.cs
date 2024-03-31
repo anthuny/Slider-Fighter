@@ -224,12 +224,16 @@ public class MapManager : MonoBehaviour
         // If player won
         if (!GameManager.Instance.playerLost)
         {
-            if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
+            if (GameManager.Instance.playerWon)
             {
-                RoomManager.Instance.FloorCompleted();
-                GameManager.Instance.ToggleMap(true, true, true);
+                if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
+                {
+                    RoomManager.Instance.FloorCompleted();
+                    GameManager.Instance.ToggleMap(true, true, true);
+                }
             }
-            else
+
+            if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.BOSS)
             {
                 selectedRoom.UpdateIsCompleted(true);
                 GameManager.Instance.ToggleMap(true, false);
@@ -265,6 +269,7 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.ResetRoom(false);
         GameManager.Instance.activeTeam.Clear();
         GameManager.Instance.playerLost = false;
+        GameManager.Instance.fallenHeroes.Clear();
         //AudioManager.Instance.Play("Room_Lose");
     }
 

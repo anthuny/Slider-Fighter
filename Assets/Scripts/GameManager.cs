@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
     public float leachEffectGainWait = .20f;
     public int unitCombatSortingLevel = 99;
     public int unitTabSortingLevel = 250;
-
+    public int maxUnitEffectTier = 8;
     [Header("Player UI")]
     public UIElement playerUIElement;
     public UIElement playerWeapon;
@@ -177,6 +177,7 @@ public class GameManager : MonoBehaviour
     public float enemyEffectWaitTime = 1f;
     public float enemySkillThinkTime = 1f;
     public float unitPowerUIWaitTime = .5f;
+    public float allyHealthThreshholdHeal = .4f;
 
     public ButtonFunctionality attackButton;
     public ButtonFunctionality weaponBackButton;
@@ -2578,7 +2579,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     bool parrying = false;
 
-                    int originalPower = AdjustSkillPowerTargetEffectAmp(power);
+                    WeaponManager.Instance.CalculatePower();
+                    power = (int)WeaponManager.Instance.calculatedPower;
+
+                    if (miss)
+                    {
+                        power = 0;
+                        break;
+                    }
+
+                    int originalPower = power;
 
                     // Helps catch the null error
                     if (i < unitsSelected.Count)
@@ -3445,6 +3455,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
         {
             UpdateTurnOrder();
+            combatOver = true;
             return;
         }
 
@@ -3777,8 +3788,32 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     // only select ENEMY units
                     for (int i = 0; i < 25; i++)
                     {
-                        //Debug.Log("b.a selecting unit");
+                        if (usedSkill.curSkillType == SkillData.SkillType.SUPPORT && usedSkill.curSkillPower != 0)
+                        {
+                            int lowestHealthEnemy = 99999;
+                            UnitFunctionality target = null;
+                            // Choose lowest health target
+                            for (int x = 0; x < activeRoomEnemies.Count; x++)
+                            {
+                                if (!activeRoomEnemies[x].isDead)
+                                {
+                                    if (activeRoomEnemies[x].GetUnitCurHealth() < lowestHealthEnemy)
+                                    {
+                                        lowestHealthEnemy = (int)activeRoomEnemies[x].GetUnitCurHealth();
+                                        target = activeRoomEnemies[x];
+                                    }
+                                }
+                            }
 
+                            if (target != null)
+                            {
+                                targetUnit(target);
+                                break;
+                            }
+                        }
+
+
+                        // Choose random target
                         int rand = Random.Range(0, activeRoomAllUnitFunctionalitys.Count);
 
                         if (activeRoomAllUnitFunctionalitys[rand].curUnitType != UnitFunctionality.UnitType.ENEMY)

@@ -903,6 +903,8 @@ public class WeaponManager : MonoBehaviour
             // If user missed on first hit, send 1 hit count
             bool miss = false;
 
+            CalculatePower();
+
             if (hitAccuracy == 0)
             {
                 miss = true;
@@ -949,26 +951,13 @@ public class WeaponManager : MonoBehaviour
             hitAlertText.DisableAlertUI();
     }
 
-    public void CalculatePower(WeaponHitArea.HitAreaType curHitAreaType)
+    public void CalculatePower()
     {
         float currentPower = GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
-        /*
-        if (curHitAreaType == WeaponHitArea.HitAreaType.PERFECT)
-            calculatedPower = perfectMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
-        else if (curHitAreaType == WeaponHitArea.HitAreaType.GREAT)
-            calculatedPower = greatMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
-        else if(curHitAreaType == WeaponHitArea.HitAreaType.GOOD)
-            calculatedPower = goodMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
-        else if(curHitAreaType == WeaponHitArea.HitAreaType.BAD)
-            calculatedPower = badMultiplier * (GameManager.Instance.activeSkill.skillPower * (currentPower / 100f));
-        */
         calculatedPower = (GameManager.Instance.GetActiveSkill().GetCalculatedSkillPowerStat() + currentPower);
         //calculatedPower += GameManager.Instance.randomBaseOffset*2;
         calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
-
-        //if (curHitAreaType == WeaponHitArea.HitAreaType.MISS)
-        //    calculatedPower = 0;
     }
 
     public void TriggerHitAlertText(WeaponHitArea.HitAreaType curHitAreaType)

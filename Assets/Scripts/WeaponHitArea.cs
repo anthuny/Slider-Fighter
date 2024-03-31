@@ -35,7 +35,7 @@ public class WeaponHitArea : MonoBehaviour
         {
             WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.PERFECT);
 
-            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            //WeaponManager.Instance.CalculatePower(curHitAreaType);
             WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
@@ -52,7 +52,7 @@ public class WeaponHitArea : MonoBehaviour
         {
             WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.GREAT);
 
-            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            //WeaponManager.Instance.CalculatePower(curHitAreaType);
             WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
@@ -67,7 +67,7 @@ public class WeaponHitArea : MonoBehaviour
         {
             WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.GOOD);
 
-            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            //WeaponManager.Instance.CalculatePower(curHitAreaType);
             WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
@@ -80,7 +80,7 @@ public class WeaponHitArea : MonoBehaviour
         {
             WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.BAD);
 
-            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            //WeaponManager.Instance.CalculatePower(curHitAreaType);
             WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");
@@ -91,7 +91,7 @@ public class WeaponHitArea : MonoBehaviour
         {
             WeaponManager.Instance.UpdateHitAreaType(WeaponManager.HitAreaType.MISS);
 
-            WeaponManager.Instance.CalculatePower(curHitAreaType);
+            //WeaponManager.Instance.CalculatePower(curHitAreaType);
             WeaponManager.Instance.TriggerHitAlertText(curHitAreaType);
 
             AudioManager.Instance.Play("AttackBar_Hit");

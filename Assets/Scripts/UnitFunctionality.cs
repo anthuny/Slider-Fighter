@@ -991,8 +991,6 @@ public class UnitFunctionality : MonoBehaviour
     private void Update()
     {
         // If player is holding down on unit, display stats
-
-
     }
 
     public void ResetUnitSkillOrder()
@@ -2833,38 +2831,88 @@ public class UnitFunctionality : MonoBehaviour
     SkillData ChooseRandomSkill()
     {
         int unitEnemyIntelligence = 10;
+
         for (int i = 0; i < unitEnemyIntelligence; i++)
         {
-            int rand = Random.Range(1, 5);
-            //Debug.Log(rand);
+            bool allyLow = false;
+            for (int y = 0; y < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; y++)
+            {
+                if (GameManager.Instance.activeRoomAllUnitFunctionalitys[y].curUnitType == UnitType.ENEMY && !GameManager.Instance.activeRoomAllUnitFunctionalitys[y].isDead)
+                {
+                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[y].GetUnitCurHealth() / GameManager.Instance.activeRoomAllUnitFunctionalitys[y].GetUnitMaxHealth() <= GameManager.Instance.allyHealthThreshholdHeal)
+                    {
+                        allyLow = true;
+                    }
+                }
+            }
 
-            //Debug.Log(rand);
-            if (rand == 1)  // Skill 1
+            SkillData skill = null;
+
+            // Healing skill prio low health allies
+            for (int x = 0; x < 4; x++)
             {
-                if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1);
-                else
-                    continue;
+                int cd = 0;
+                if (x == 0)
+                    cd = GameManager.Instance.GetActiveUnitFunctionality().skill0CurCooldown;
+                else if (x == 1)
+                    cd = GameManager.Instance.GetActiveUnitFunctionality().skill1CurCooldown;
+                else if (x == 2)
+                    cd = GameManager.Instance.GetActiveUnitFunctionality().skill2CurCooldown;
+                else if (x == 3)
+                    cd = GameManager.Instance.GetActiveUnitFunctionality().skill3CurCooldown;
+
+                if (GameManager.Instance.GetActiveUnitFunctionality().GetSkill(x).curSkillType == SkillData.SkillType.SUPPORT
+                    && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(x).curSkillPower != 0 && cd == 0)
+                {
+                    if (allyLow)
+                    {
+                        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(x);
+                    }
+                    else
+                        skill = GameManager.Instance.GetActiveUnitFunctionality().GetSkill(x);
+                }
             }
-            else if (rand == 2)  // Skill 2
+
+            if (!allyLow)
             {
-                if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2);
-                else
-                    continue;
-            }
-            else if (rand == 3)  // Skill 3
-            {
-                if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3);
-                else
-                    continue;
-            }
-            // Base skill
-            else if (rand == 4)
-            {
-                if (skill0CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).isPassive)
-                    return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
+                // Dont choose healing
+
+                // Do random picking
+                int rand = Random.Range(1, 5);
+                //Debug.Log(rand);
+
+                //Debug.Log(rand);
+                if (rand == 1)  // Skill 1
+                {
+                    if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1) != skill)
+                        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1);
+                    else
+                        continue;
+                }
+                else if (rand == 2)  // Skill 2
+                {
+                    if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).isPassive
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2) != skill)
+                        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2);
+                    else
+                        continue;
+                }
+                else if (rand == 3)  // Skill 3
+                {
+                    if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).isPassive
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3) != skill)
+                        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3);
+                    else
+                        continue;
+                }
+                // Base skill
+                else if (rand == 4)
+                {
+                    if (skill0CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).isPassive
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0) != skill)
+                        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
+                }
             }
         }
 
@@ -2917,10 +2965,9 @@ public class UnitFunctionality : MonoBehaviour
                         {
                             // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
                             //activeEffects[i].AddTurnCountText(1);
-                            if (usedSkill != GameManager.Instance.GetActiveSkill())
-                            {
-                                usedSkill = GameManager.Instance.GetActiveSkill();
 
+                            if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                            {
                                 activeEffects[i].EffectApply(this);
                                 activeEffects[i].UpdateEffectTierImages();
                                 if (activeEffects[i] != null)
@@ -2935,10 +2982,8 @@ public class UnitFunctionality : MonoBehaviour
                     }
                     else if (item || byPassAcc)
                     {
-                        if (usedSkill != GameManager.Instance.GetActiveSkill())
+                        if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                         {
-                            usedSkill = GameManager.Instance.GetActiveSkill();
-
                             //activeEffects[i].AddTurnCountText(1);
                             activeEffects[i].EffectApply(this);
                             activeEffects[i].UpdateEffectTierImages();
@@ -2971,24 +3016,19 @@ public class UnitFunctionality : MonoBehaviour
                         int rand = Random.Range(1, 101);
                         if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                         {
-                            if (usedSkill != GameManager.Instance.GetActiveSkill())
-                            {
-                                usedSkill = GameManager.Instance.GetActiveSkill();
+                            // Spawn new effect on target unit
+                            go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                            go.transform.SetParent(effectsParent);
+                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                            go.transform.localScale = new Vector3(1, 1, 1);
 
-                                // Spawn new effect on target unit
-                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-                                go.transform.SetParent(effectsParent);
-                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                                go.transform.localScale = new Vector3(1, 1, 1);
-
-                                effect = go.GetComponent<Effect>();
-                                activeEffects.Add(effect);
-                                effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
-                                //activeEffects[m].AddTurnCountText(1);
-                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                                effect.UpdateEffectTierImages();
-                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-                            }
+                            effect = go.GetComponent<Effect>();
+                            activeEffects.Add(effect);
+                            effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
+                            //activeEffects[m].AddTurnCountText(1);
+                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                            effect.UpdateEffectTierImages();
+                            effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
                         }
                     }
                 }
@@ -2998,24 +3038,19 @@ public class UnitFunctionality : MonoBehaviour
                     {
                         if (!item)
                         {
-                            if (usedSkill != GameManager.Instance.GetActiveSkill())
-                            {
-                                usedSkill = GameManager.Instance.GetActiveSkill();
+                            // Spawn new effect on target unit
+                            go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                            go.transform.SetParent(effectsParent);
+                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                            go.transform.localScale = new Vector3(1, 1, 1);
 
-                                // Spawn new effect on target unit
-                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-                                go.transform.SetParent(effectsParent);
-                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                                go.transform.localScale = new Vector3(1, 1, 1);
-
-                                effect = go.GetComponent<Effect>();
-                                activeEffects.Add(effect);
-                                effect.Setup(addedEffect, targetUnit, effectHitAcc);
-                                //activeEffects[m].AddTurnCountText(1);
-                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                                effect.UpdateEffectTierImages();
-                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-                            }
+                            effect = go.GetComponent<Effect>();
+                            activeEffects.Add(effect);
+                            effect.Setup(addedEffect, targetUnit, effectHitAcc);
+                            //activeEffects[m].AddTurnCountText(1);
+                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                            effect.UpdateEffectTierImages();
+                            effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
                         }
                         else
                         {
@@ -3480,6 +3515,8 @@ public class UnitFunctionality : MonoBehaviour
 
             AudioManager.Instance.Play(deathClip.name);
 
+            GameManager.Instance.RemoveUnitFromTurnOrder(this);
+
             if (effect)
             {
                 int val = 0;
@@ -3501,8 +3538,6 @@ public class UnitFunctionality : MonoBehaviour
                     }
                 }
             }
-
-            GameManager.Instance.RemoveUnitFromTurnOrder(this);
 
             yield return new WaitForSeconds(1.2f);
 
