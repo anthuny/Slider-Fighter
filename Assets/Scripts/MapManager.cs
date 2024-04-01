@@ -224,13 +224,11 @@ public class MapManager : MonoBehaviour
         // If player won
         if (!GameManager.Instance.playerLost)
         {
-            if (GameManager.Instance.playerWon)
+
+            if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
             {
-                if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
-                {
-                    RoomManager.Instance.FloorCompleted();
-                    GameManager.Instance.ToggleMap(true, true, true);
-                }
+                RoomManager.Instance.FloorCompleted();
+                GameManager.Instance.ToggleMap(true, true, true);
             }
 
             if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.BOSS)
@@ -270,6 +268,8 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.activeTeam.Clear();
         GameManager.Instance.playerLost = false;
         GameManager.Instance.fallenHeroes.Clear();
+        ShopManager.Instance.ResetPlayerGold();
+        ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.playerStartingGold);
         //AudioManager.Instance.Play("Room_Lose");
     }
 
@@ -332,8 +332,6 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             //Debug.Log("toggling map on");
-
-
             // Display exp visual
             AudioManager.Instance.ToggleShopMusic(false);
 
@@ -534,8 +532,7 @@ public class MapManager : MonoBehaviour
         // Player lost 
         if (resetting)
         {
-            ShopManager.Instance.ResetPlayerGold();
-            ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.playerStartingGold);
+
         }
         // Beat the floor, resetting into floor increase
         //else

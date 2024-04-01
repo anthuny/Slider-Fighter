@@ -982,10 +982,12 @@ public class TeamItemsManager : MonoBehaviour
                 for (int i = 0; i < equippedItemsMain.Count; i++)
                 {
                     if (equippedItemsMain[i].itemName == newItemPiece.itemName)
+                    {
                         equippedItemsMain.Remove(equippedItemsMain[i]);
+                        break;
+                    }
                 }
             }
-
         }
         else if (gearPieceTypeName == "ItemSecond")
         {
@@ -996,7 +998,10 @@ public class TeamItemsManager : MonoBehaviour
                 for (int i = 0; i < equippedItemsSecond.Count; i++)
                 {
                     if (equippedItemsSecond[i].itemName == newItemPiece.itemName)
+                    {
                         equippedItemsSecond.Remove(equippedItemsSecond[i]);
+                        break;
+                    }
                 }
             }
         }
@@ -1009,7 +1014,10 @@ public class TeamItemsManager : MonoBehaviour
                 for (int i = 0; i < equippedItemsThird.Count; i++)
                 {
                     if (equippedItemsThird[i].itemName == newItemPiece.itemName)
+                    {
                         equippedItemsThird.Remove(equippedItemsThird[i]);
+                        break;
+                    }
                 }
             }
         }
@@ -1118,6 +1126,8 @@ public class TeamItemsManager : MonoBehaviour
                         // Remove saved equipped gear piece (data side)
                         UpdateEquippedItemPiece("ItemMain", OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece, false);
 
+                        Debug.Log("Linked item piece = " + OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.itemName);
+
                         // Update unit stats when unequiping
                         UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornItemMainAlly()[x]);
 
@@ -1143,7 +1153,9 @@ public class TeamItemsManager : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemSecondAlly()[x].GetSlotName() == GetSelectedBaseItemSlot().GetSlotName())
                     {
                         // Remove saved equipped gear piece (data side)
-                        UpdateEquippedItemPiece("ItemMain", OwnedLootInven.Instance.GetWornItemSecondAlly()[x].linkedItemPiece, false);
+                        UpdateEquippedItemPiece("ItemSecond", OwnedLootInven.Instance.GetWornItemSecondAlly()[x].linkedItemPiece, false);
+
+                        Debug.Log("Linked item piece = " + OwnedLootInven.Instance.GetWornItemSecondAlly()[x].linkedItemPiece.itemName);
 
                         // Update unit stats when unequiping
                         UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornItemSecondAlly()[x]);
@@ -1152,7 +1164,7 @@ public class TeamItemsManager : MonoBehaviour
                         OwnedLootInven.Instance.AddOwnedItems(OwnedLootInven.Instance.GetWornItemSecondAlly()[x]);
 
                         // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.GetWornItemSecondAlly()[x]);
+                        OwnedLootInven.Instance.RemoveWornItemAllySecond(OwnedLootInven.Instance.GetWornItemSecondAlly()[x]);
                         break;
                     }
                 }
@@ -1170,8 +1182,10 @@ public class TeamItemsManager : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetSlotName() == GetSelectedBaseItemSlot().GetSlotName())
                     {
                         // Remove saved equipped gear piece (data side)
-                        UpdateEquippedItemPiece("ItemMain", OwnedLootInven.Instance.GetWornItemThirdAlly()[x].linkedItemPiece, false);
+                        UpdateEquippedItemPiece("ItemThird", OwnedLootInven.Instance.GetWornItemThirdAlly()[x].linkedItemPiece, false);
 
+
+                        Debug.Log("Linked item piece = " + OwnedLootInven.Instance.GetWornItemThirdAlly()[x].linkedItemPiece.itemName);
                         // Update unit stats when unequiping
                         UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornItemThirdAlly()[x]);
 
@@ -1179,7 +1193,7 @@ public class TeamItemsManager : MonoBehaviour
                         OwnedLootInven.Instance.AddOwnedItems(OwnedLootInven.Instance.GetWornItemThirdAlly()[x]);
 
                         // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.GetWornItemThirdAlly()[x]);
+                        OwnedLootInven.Instance.RemoveWornItemAllyThird(OwnedLootInven.Instance.GetWornItemThirdAlly()[x]);
                         break;
                     }
                 }

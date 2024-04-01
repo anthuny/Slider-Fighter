@@ -33,7 +33,7 @@ MonoBehaviour:
   skillHitAttempts: 1
   projectileSpeed: 10
   skillCooldown: 0
-  curCooldown: 0
+  curCooldown: 1
   skillSelectionCount: 2
   isSelfCast: 0
   isDoublingEffect: 0
@@ -47,8 +47,8 @@ MonoBehaviour:
   special: 0
   effect: {fileID: 11400000, guid: a0a448b2d3383c44b82ac9431b0bd644, type: 2}
   effectTurnLength: 1
-  curEffectHitChance: 10
-  startingEffectHitChance: 10
+  curEffectHitChance: 15
+  startingEffectHitChance: 15
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0

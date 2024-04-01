@@ -3659,7 +3659,7 @@ public class UnitFunctionality : MonoBehaviour
             }
             else
             {
-                IncreaseCurExp(1 * GetUnitLevel());
+                IncreaseCurExp(1);
                 unitExpBarImage.fillAmount = GetCurExp() / GetMaxExp();
             }
         }
@@ -3890,7 +3890,7 @@ public class UnitFunctionality : MonoBehaviour
         if (curHealth > curMaxHealth)
             curHealth = curMaxHealth;
 
-        UpdateUnitHealthVisual();
+        UpdateUnitHealthVisual(true);
     }
 
     void UpdateUnitHealthVisual(bool effect = false)

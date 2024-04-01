@@ -1294,6 +1294,49 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
         }
 
+        // Re-order activeroomallunitfunctionality order to default team order after a combat win
+        if (playerWon)
+        {
+            if (activeRoomAllUnitFunctionalitys.Count == 3)
+            {
+                for (int x = 0; x < activeRoomHeroes.Count; x++)
+                {
+                    if (!activeRoomHeroes[x].isDead)
+                    {
+                        if (activeRoomHeroes[x].teamIndex == 0)
+                        {
+                            activeRoomAllUnitFunctionalitys[0] = activeRoomHeroes[0];
+                        }
+                        else if (activeRoomHeroes[x].teamIndex == 1)
+                        {
+                            activeRoomAllUnitFunctionalitys[1] = activeRoomHeroes[1];
+                        }
+                        else if (activeRoomHeroes[x].teamIndex == 2)
+                        {
+                            activeRoomAllUnitFunctionalitys[2] = activeRoomHeroes[2];
+                        }
+                    }
+                }
+            }
+            else if (activeRoomAllUnitFunctionalitys.Count == 2)
+            {
+                for (int x = 0; x < activeRoomHeroes.Count; x++)
+                {
+                    if (!activeRoomHeroes[x].isDead)
+                    {
+                        if (activeRoomHeroes[x].teamIndex == 0)
+                        {
+                            activeRoomAllUnitFunctionalitys[0] = activeRoomHeroes[0];
+                        }
+                        else if (activeRoomHeroes[x].teamIndex == 1)
+                        {
+                            activeRoomAllUnitFunctionalitys[1] = activeRoomHeroes[1];
+                        }
+                    }
+                }
+            }
+        }
+
         ItemRewardManager.Instance.ToggleItemRewards(false);
         ItemRewardManager.Instance.ToggleConfirmItemButton(false);
 
@@ -3455,7 +3498,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
         {
             UpdateTurnOrder();
-            combatOver = true;
+            //combatOver = true;
             return;
         }
 
@@ -3613,6 +3656,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             UpdateTurnOrder();
         }
         */
+
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
+        {
+            UpdateTurnOrder();
+            //combatOver = true;
+            return;
+        }
     }
 
     public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
