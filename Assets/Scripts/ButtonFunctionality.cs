@@ -1043,8 +1043,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GameManager.Instance.ResetRoom(true);
 
-
-        GameManager.Instance.map.ClearRoom(true, false);
+        //Debug.Log("playerWon = " + GameManager.Instance.playerWon);
+        GameManager.Instance.map.ClearRoom(true, false, GameManager.Instance.playerWon);
 
 
         // Update unit sorting
@@ -1577,7 +1577,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         if (unit != null)
         {
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.CheckSkipUnitTurn(GameManager.Instance.GetActiveUnitFunctionality()))
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.CheckSkipUnitTurn(GameManager.Instance.GetActiveUnitFunctionality()) || HeroRoomManager.Instance.playerInHeroRoomView)
             {
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");

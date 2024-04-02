@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 2
   curEffectType: 0
+  curEffectBenefitType: 1
   curEffectName: 5
   effectName: POWERDOWN
   effectDesc: Decrease Damage hits by 2

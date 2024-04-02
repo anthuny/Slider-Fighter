@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 1
   curEffectType: 0
+  curEffectBenefitType: 1
   curEffectName: 1
   effectName: POISON
   effectDesc: Healing recieved reduced by 5% x tier. Receive damage equal to 5% maximum

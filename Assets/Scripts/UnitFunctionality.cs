@@ -1384,7 +1384,7 @@ public class UnitFunctionality : MonoBehaviour
 
             for (int i = 0; i < activeEffects.Count; i++)
             {
-                if (activeEffects[i].curEffectType == Effect.EffectType.OFFENSE)
+                if (activeEffects[i].curEffectBenefitType == Effect.EffectBenefitType.DEBUFF)
                 {
                     offensiveEffectCount++;
                 }
@@ -1394,7 +1394,7 @@ public class UnitFunctionality : MonoBehaviour
 
             if (offensiveEffectCount > 0)
             {
-                if (activeEffects[rand].curEffectType == Effect.EffectType.OFFENSE)
+                if (activeEffects[rand].curEffectBenefitType == Effect.EffectBenefitType.DEBUFF)
                 {
                     TriggerTextAlert(activeEffects[rand].effectName, 1, true, "Trigger");
                     activeEffects[rand].ReduceTurnCountText(this);
@@ -4195,6 +4195,9 @@ public class UnitFunctionality : MonoBehaviour
         float block_chance = (a * Mathf.Log(GetCurDefense() + 1)) / (b * GetCurDefense() + 1);
 
         block_chance -= 10;
+
+        Debug.Log("Block Chance " + block_chance);
+
         if (block_chance < 0)
             block_chance = 0;
 

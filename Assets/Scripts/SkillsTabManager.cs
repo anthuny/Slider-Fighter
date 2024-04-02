@@ -90,7 +90,7 @@ public class SkillsTabManager : MonoBehaviour
         }
         else if (skillUpgradeType == 1)
         {
-            activeSkillBase.upgradeIncPowerCount += 3;
+            activeSkillBase.upgradeIncPowerCount += 1;
             activeSkillBase.curSkillLevel++;
         }
         else if (skillUpgradeType == 2)

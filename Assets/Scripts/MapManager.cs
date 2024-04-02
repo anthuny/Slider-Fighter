@@ -149,7 +149,7 @@ public class MapManager : MonoBehaviour
             ToggleMapVisibility(true, true);
         // Complete Room
         if (Input.GetKeyDown(KeyCode.N) && !CheckIfAnyHiddenMainRooms() && selectedRoom != startingRoom)
-            ClearRoom(false, false);
+            ClearRoom(false, false, true);
         if (Input.GetKeyDown(KeyCode.V))
             ResetMap();
     }
@@ -206,7 +206,7 @@ public class MapManager : MonoBehaviour
             return false;
     }
 
-    public void ClearRoom(bool tryShowAd = false, bool forceEnd = false)
+    public void ClearRoom(bool tryShowAd = false, bool forceEnd = false, bool playerWon = false)
     {
         // Do not allow room clear if selected room is the starting room
         if (selectedRoom == startingRoom)
@@ -222,9 +222,8 @@ public class MapManager : MonoBehaviour
         ShowConnectingRooms();
 
         // If player won
-        if (!GameManager.Instance.playerLost)
+        if (playerWon)
         {
-
             if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
             {
                 RoomManager.Instance.FloorCompleted();
@@ -236,7 +235,6 @@ public class MapManager : MonoBehaviour
                 selectedRoom.UpdateIsCompleted(true);
                 GameManager.Instance.ToggleMap(true, false);
             }
-
         }
         // If player lost
         else
@@ -429,9 +427,10 @@ public class MapManager : MonoBehaviour
 
             GameManager.Instance.SetHeroFormation();
 
-            
+
             //GameManager.Instance.transitionSequienceUI.UpdateAlpha(0);
 
+            mapOverlay.UpdateRoomDifficultyIcons();
         }
         else
         {

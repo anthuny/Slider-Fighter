@@ -1269,133 +1269,115 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     #region Setup Multiple UIs
     public IEnumerator SetupPostBattleUI(bool playerWon)
     {
-        if (!playerWon)
+        if (!roomDefeated)
         {
-            activeRoomAllUnitFunctionalitys.Clear();
-        }
-        else
-        {
-            EnsureHeroIsDead();
-            StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
-        }
+            roomDefeated = true;
 
-        for (int i = 0; i < activeRoomHeroes.Count; i++)
-        {
-            if (!activeRoomHeroes[i].heroRoomUnit)
+            if (!playerWon)
             {
-                activeRoomHeroes[i].ResetEffects();
-                activeRoomHeroes[i].curPowerHits = activeRoomHeroes[i].powerHitsRoomStarting;
-
-
-                activeRoomHeroes[i].UpdateUnitMaxHealth(activeRoomHeroes[i].startingRoomMaxHealth, true, false);
-                activeRoomHeroes[i].curSpeed = activeRoomHeroes[i].startingRoomSpeed;
-                activeRoomHeroes[i].curDefense = activeRoomHeroes[i].startingRoomDefense;
-                activeRoomHeroes[i].ResetUnitHealingRecieved();
-            }
-        }
-
-        // Re-order activeroomallunitfunctionality order to default team order after a combat win
-        if (playerWon)
-        {
-            if (activeRoomAllUnitFunctionalitys.Count == 3)
-            {
-                for (int x = 0; x < activeRoomHeroes.Count; x++)
-                {
-                    if (!activeRoomHeroes[x].isDead)
-                    {
-                        if (activeRoomHeroes[x].teamIndex == 0)
-                        {
-                            activeRoomAllUnitFunctionalitys[0] = activeRoomHeroes[0];
-                        }
-                        else if (activeRoomHeroes[x].teamIndex == 1)
-                        {
-                            activeRoomAllUnitFunctionalitys[1] = activeRoomHeroes[1];
-                        }
-                        else if (activeRoomHeroes[x].teamIndex == 2)
-                        {
-                            activeRoomAllUnitFunctionalitys[2] = activeRoomHeroes[2];
-                        }
-                    }
-                }
-            }
-            else if (activeRoomAllUnitFunctionalitys.Count == 2)
-            {
-                for (int x = 0; x < activeRoomHeroes.Count; x++)
-                {
-                    if (!activeRoomHeroes[x].isDead)
-                    {
-                        if (activeRoomHeroes[x].teamIndex == 0)
-                        {
-                            activeRoomAllUnitFunctionalitys[0] = activeRoomHeroes[0];
-                        }
-                        else if (activeRoomHeroes[x].teamIndex == 1)
-                        {
-                            activeRoomAllUnitFunctionalitys[1] = activeRoomHeroes[1];
-                        }
-                    }
-                }
-            }
-        }
-
-        ItemRewardManager.Instance.ToggleItemRewards(false);
-        ItemRewardManager.Instance.ToggleConfirmItemButton(false);
-
-        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
-        {
-
-        }
-
-        yield return new WaitForSeconds(ItemRewardManager.Instance.postItemTillPostCombat);
-
-        // SFX
-        if (playerWon)
-            AudioManager.Instance.Play("Room_Win");
-        else
-            AudioManager.Instance.Play("Room_Lose");
-
-        // Stop combat music
-        AudioManager.Instance.StopCombatMusic();
-
-        if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO && RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.BOSS)
-        {
-            RoomManager.Instance.IncrementDefaultRoomsCleared();
-        }
-
-        roomDefeated = true;
-
-        UpdateActiveSkill(null);
-
-        //if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO)
-        //    StartCoroutine(SetupRoomPostBattle(playerWon));
-
-        //Debug.Log("-a");
-        UpdateAllAlliesPosition(true);
-
-
-        // If completed room WAS NOT a hero room
-        if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO || !playerWon)
-        {
-            ToggleSkillVisibility(false);
-
-            RoomManager.Instance.ToggleInteractable(false);
-
-            // Enable unit level image for post combat
-            for (int i = 0; i < activeRoomHeroes.Count; i++)
-            {
-                activeRoomHeroes[i].ToggleUnitLevelImage(true);
-            }
-        }
-        // If completed room WAS a hero room
-        else
-        {
-            ToggleSkillVisibility(false);
-
-            // If player has 3 allies already, do not offer a 4th, go to post battle (TEMP SOLUTION) TODO: Make prompt to swap
-            if (activeTeam.Count < 3)
-            {
-                //StartCoroutine(HeroRetrievalScene());
+                activeRoomAllUnitFunctionalitys.Clear();
             }
             else
+            {
+                EnsureHeroIsDead();
+                StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
+            }
+
+            for (int i = 0; i < activeRoomHeroes.Count; i++)
+            {
+                if (!activeRoomHeroes[i].heroRoomUnit)
+                {
+                    activeRoomHeroes[i].ResetEffects();
+                    activeRoomHeroes[i].curPowerHits = activeRoomHeroes[i].powerHitsRoomStarting;
+
+
+                    activeRoomHeroes[i].UpdateUnitMaxHealth(activeRoomHeroes[i].startingRoomMaxHealth, true, false);
+                    activeRoomHeroes[i].curSpeed = activeRoomHeroes[i].startingRoomSpeed;
+                    activeRoomHeroes[i].curDefense = activeRoomHeroes[i].startingRoomDefense;
+                    activeRoomHeroes[i].ResetUnitHealingRecieved();
+                }
+            }
+
+            // Re-order activeroomallunitfunctionality order to default team order after a combat win
+            if (playerWon)
+            {
+                if (activeRoomAllUnitFunctionalitys.Count == 3)
+                {
+                    for (int x = 0; x < activeRoomHeroes.Count; x++)
+                    {
+                        if (!activeRoomHeroes[x].isDead)
+                        {
+                            if (activeRoomHeroes[x].teamIndex == 0)
+                            {
+                                activeRoomAllUnitFunctionalitys[0] = activeRoomHeroes[0];
+                            }
+                            else if (activeRoomHeroes[x].teamIndex == 1)
+                            {
+                                activeRoomAllUnitFunctionalitys[1] = activeRoomHeroes[1];
+                            }
+                            else if (activeRoomHeroes[x].teamIndex == 2)
+                            {
+                                activeRoomAllUnitFunctionalitys[2] = activeRoomHeroes[2];
+                            }
+                        }
+                    }
+                }
+                else if (activeRoomAllUnitFunctionalitys.Count == 2)
+                {
+                    for (int x = 0; x < activeRoomHeroes.Count; x++)
+                    {
+                        if (!activeRoomHeroes[x].isDead)
+                        {
+                            if (activeRoomHeroes[x].teamIndex == 0)
+                            {
+                                activeRoomAllUnitFunctionalitys[0] = activeRoomHeroes[0];
+                            }
+                            else if (activeRoomHeroes[x].teamIndex == 1)
+                            {
+                                activeRoomAllUnitFunctionalitys[1] = activeRoomHeroes[1];
+                            }
+                        }
+                    }
+                }
+            }
+
+            ItemRewardManager.Instance.ToggleItemRewards(false);
+            ItemRewardManager.Instance.ToggleConfirmItemButton(false);
+
+            if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
+            {
+
+            }
+
+            yield return new WaitForSeconds(ItemRewardManager.Instance.postItemTillPostCombat);
+
+            // SFX
+            if (playerWon)
+                AudioManager.Instance.Play("Room_Win");
+            else
+                AudioManager.Instance.Play("Room_Lose");
+
+            // Stop combat music
+            AudioManager.Instance.StopCombatMusic();
+
+            if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO && RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.BOSS)
+            {
+                RoomManager.Instance.IncrementDefaultRoomsCleared();
+            }
+
+            //roomDefeated = true;
+
+            UpdateActiveSkill(null);
+
+            //if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO)
+            //    StartCoroutine(SetupRoomPostBattle(playerWon));
+
+            //Debug.Log("-a");
+            UpdateAllAlliesPosition(true);
+
+
+            // If completed room WAS NOT a hero room
+            if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO || !playerWon)
             {
                 ToggleSkillVisibility(false);
 
@@ -1407,23 +1389,46 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     activeRoomHeroes[i].ToggleUnitLevelImage(true);
                 }
             }
-        }
+            // If completed room WAS a hero room
+            else
+            {
+                ToggleSkillVisibility(false);
 
-        PostBattle.Instance.TogglePostBattleConditionText(playerWon);
+                // If player has 3 allies already, do not offer a 4th, go to post battle (TEMP SOLUTION) TODO: Make prompt to swap
+                if (activeTeam.Count < 3)
+                {
+                    //StartCoroutine(HeroRetrievalScene());
+                }
+                else
+                {
+                    ToggleSkillVisibility(false);
 
-        // Ads
-        if (playerWon && RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
-        {
-            AdManager.Instance.ShowForcedAd();
-        }
+                    RoomManager.Instance.ToggleInteractable(false);
 
-        if (!playerWon)
-        {
-            // Enable post battle to map button for next post battle scene
-            StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
-        }
+                    // Enable unit level image for post combat
+                    for (int i = 0; i < activeRoomHeroes.Count; i++)
+                    {
+                        activeRoomHeroes[i].ToggleUnitLevelImage(true);
+                    }
+                }
+            }
 
-        StartCoroutine(SetupRoomPostBattle(playerWon));
+            PostBattle.Instance.TogglePostBattleConditionText(playerWon);
+
+            // Ads
+            if (playerWon && RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+            {
+                AdManager.Instance.ShowForcedAd();
+            }
+
+            if (!playerWon)
+            {
+                // Enable post battle to map button for next post battle scene
+                StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(true));
+            }
+
+            StartCoroutine(SetupRoomPostBattle(playerWon));
+        }      
     }
 
     public IEnumerator HeroRetrievalScene(bool togglePromp = true)
@@ -1784,7 +1789,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // If room is hero, spawn additional enemies
             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
             {
-                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount()));
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount())) - 1;
             }
             else if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
             {
@@ -1793,7 +1798,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             else if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
             {
                 if (RoomManager.Instance.GetFloorCount() == 1)
-                    enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount() + 1));
+                    enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount()));
                 else
                     enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount());
             }
@@ -1856,9 +1861,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
                                 val = rand - Random.Range(5, 7);
                             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(4, 6);
-                            if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
                                 val = rand - Random.Range(3, 5);
+                            if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
+                                val = rand - Random.Range(3, 4);
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
                             {
                                 // Ensure first room is half the difficulty of a normal enemy room
@@ -1876,18 +1881,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 2)
                     {
-                        if (rand >= GetAllyLevelAverage() + 2)
+                        if (rand >= GetAllyLevelAverage())
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(0, 3) * RoomManager.Instance.GetFloorCount();
 
                             rand -= val;
 
@@ -1897,18 +1902,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 3)
                     {
-                        if (rand >= GetAllyLevelAverage() + 9)
+                        if (rand >= GetAllyLevelAverage())
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(0, 3) * RoomManager.Instance.GetFloorCount();
 
                             rand -= val;
 
@@ -1918,18 +1923,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 4)
                     {
-                        if (rand >= GetAllyLevelAverage() + 10)
+                        if (rand >= GetAllyLevelAverage())
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(2, 5) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(0, 3) * RoomManager.Instance.GetFloorCount();
 
                             rand -= val;
 
@@ -1939,18 +1944,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (RoomManager.Instance.GetFloorCount() == 5)
                     {
-                        if (rand >= GetAllyLevelAverage() + 20)
+                        if (rand >= GetAllyLevelAverage())
                         {
                             //Debug.Log("rand = " + rand);
                             int val = 0;
                             if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(2, 5) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 4) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(0, 3) * RoomManager.Instance.GetFloorCount();
 
                             rand -= val;
 
@@ -1964,13 +1969,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         int val = 0;
                         if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                            val = rand - Random.Range(2, 5) * RoomManager.Instance.GetFloorCount();
+                            val = rand - Random.Range(4, 6) * RoomManager.Instance.GetFloorCount();
                         if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                            val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
+                            val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
                         if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                            val = rand - Random.Range(1, 4) * RoomManager.Instance.GetFloorCount();
+                            val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                         if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                            val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
+                            val = rand - Random.Range(0, 3) * RoomManager.Instance.GetFloorCount();
 
                         rand -= val;
 
@@ -2663,7 +2668,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (unitsSelected[i].activeEffects[y].curEffectName == Effect.EffectName.POISON)
                             {
-                                newHealingPower /= 2;
+                                float calc = ((5f * unitsSelected[i].activeEffects[y].effectPowerStacks) / 100) * newHealingPower;
+
+                                newHealingPower -= calc;
+                                Debug.Log("New  Healing Power " + (0.05f * unitsSelected[i].activeEffects[y].effectPowerStacks));
                                 //Debug.Log("Healing power halfed");
                                 break;
                             }
@@ -2751,6 +2759,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
                 activeRoomAllUnitFunctionalitys[i].usedSkill = null;
             }       
+        }
+
+        if (GetActiveUnitFunctionality() == null)
+        {
+            Debug.LogWarning("No unit found!");
+            yield break;
         }
 
         GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
@@ -3668,13 +3682,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
     {
         // Skip unit turn if all skills are on cooldown
-        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 2 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
+        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 1 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
         {
-            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 2 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
+            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 1 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
             {
-                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 2 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
+                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 1 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
                 {
-                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 2 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
+                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
                     {
                         return true;
                     }

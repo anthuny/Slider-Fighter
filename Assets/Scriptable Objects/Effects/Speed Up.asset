@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598ab766c50009b43b7f087a0dd359a1, type: 3}
   m_Name: Speed Up
   m_EditorClassIdentifier: 
-  curEffectTrigger: 2
+  curEffectTrigger: 1
   curEffectType: 1
+  curEffectBenefitType: 0
   curEffectName: 9
   effectName: SPEED UP
   effectDesc: Increase speed by 15% x tier

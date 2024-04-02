@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 2
   curEffectType: 1
+  curEffectBenefitType: 1
   curEffectName: 10
   effectName: SPEED DOWN
   effectDesc: Decrease speed by 15% x tier

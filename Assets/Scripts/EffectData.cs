@@ -12,6 +12,9 @@ public class EffectData : ScriptableObject
     public enum EffectType { OFFENSE, SUPPORT }
     public EffectType curEffectType;
 
+    public enum EffectBenefitType { BUFF, DEBUFF }
+    public EffectBenefitType curEffectBenefitType;
+
     public enum EffectName
     {
         BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, HEALINGUP, HEALINGDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP,

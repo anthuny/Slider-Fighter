@@ -137,6 +137,9 @@ public class RoomMapIcon : MonoBehaviour
         if (!isHidden)
         {
             GameManager.Instance.map.UpdateSelectedRoom(this);
+
+            MapManager.Instance.mapOverlay.UpdateRoomDifficultyIcons();
+
             GameManager.Instance.map.unitMapIcon.UpdateUnitPosition(transform.localPosition);
 
             GameManager.Instance.map.mapOverlay.UpdateOverlayRoomName(curRoomType);
@@ -158,6 +161,7 @@ public class RoomMapIcon : MonoBehaviour
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+                //MapManager.Instance.mapOverlay.UpdateRoomDifficultyIcons();
 
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
@@ -176,6 +180,7 @@ public class RoomMapIcon : MonoBehaviour
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+                //MapManager.Instance.mapOverlay.UpdateRoomDifficultyIcons();
 
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
@@ -188,6 +193,7 @@ public class RoomMapIcon : MonoBehaviour
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+                //MapManager.Instance.mapOverlay.UpdateRoomDifficultyIcons();
 
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
@@ -207,6 +213,7 @@ public class RoomMapIcon : MonoBehaviour
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+                //MapManager.Instance.mapOverlay.UpdateRoomDifficultyIcons();
 
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
@@ -228,6 +235,7 @@ public class RoomMapIcon : MonoBehaviour
                     
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
+                //MapManager.Instance.mapOverlay.UpdateRoomDifficultyIcons();
 
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");

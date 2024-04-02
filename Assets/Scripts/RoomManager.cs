@@ -88,7 +88,11 @@ public class RoomManager : MonoBehaviour
 
         AudioManager.Instance.Play("SFX_FloorIncrease");
 
+        SaveLoadHighestFloor();
+    }
 
+    public void SaveLoadHighestFloor()
+    {
         if (PlayerPrefs.HasKey("HighestFloor"))
         {
             if (GetFloorCount() >= PlayerPrefs.GetInt("HighestFloor"))
@@ -105,7 +109,7 @@ public class RoomManager : MonoBehaviour
             PlayerPrefs.SetInt("HighestFloor", GetFloorCount());
 
             CharacterCarasel.Instance.highestFloorReachedCountText.UpdateContentText(PlayerPrefs.GetInt("HighestFloor").ToString());
-        }     
+        }
     }
 
     IEnumerator FloorCompletedCo()

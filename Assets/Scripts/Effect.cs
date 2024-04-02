@@ -12,6 +12,9 @@ public class Effect : MonoBehaviour
     public enum EffectType { OFFENSE, SUPPORT }
     public EffectType curEffectType;
 
+    public enum EffectBenefitType { BUFF, DEBUFF }
+    public EffectBenefitType curEffectBenefitType;
+
     float power;
 
     public enum EffectName 
@@ -100,6 +103,11 @@ public class Effect : MonoBehaviour
             curEffectTrigger = EffectTrigger.DAMAGERECIEVED;
         else if (effect.curEffectTrigger == EffectData.EffectTrigger.ONGOING)
             curEffectTrigger = EffectTrigger.ONGOING;
+
+        if (effect.curEffectBenefitType == EffectData.EffectBenefitType.BUFF)
+            curEffectBenefitType = EffectBenefitType.BUFF;
+        else
+            curEffectBenefitType = EffectBenefitType.DEBUFF;
 
         if (effect.curEffectType == EffectData.EffectType.OFFENSE)
             curEffectType = EffectType.OFFENSE;

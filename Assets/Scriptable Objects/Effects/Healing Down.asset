@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 2
   curEffectType: 1
+  curEffectBenefitType: 1
   curEffectName: 7
   effectName: HEALINGDOWN
   effectDesc: Decrease healing hits by 2

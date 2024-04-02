@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curEffectTrigger: 2
   curEffectType: 1
+  curEffectBenefitType: 1
   curEffectName: 19
   effectName: DEFENSE DOWN
   effectDesc: Decrease Defense by 25% x tier

@@ -955,6 +955,9 @@ public class WeaponManager : MonoBehaviour
     {
         float currentPower = GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
+        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().curSkillPower != 0)
+            currentPower += GameManager.Instance.GetActiveUnitFunctionality().curHealingPower;
+
         calculatedPower = (GameManager.Instance.GetActiveSkill().GetCalculatedSkillPowerStat() + currentPower);
         //calculatedPower += GameManager.Instance.randomBaseOffset*2;
         calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);

@@ -166,11 +166,11 @@ public class CombatUnitFocus : MonoBehaviour
                     {
                         //MapManager.Instance.ToggleMapVisibility(true, true, false);
                         //GameManager.Instance.ToggleMap(true, true, true, true);
-                        GameManager.Instance.map.ClearRoom(true, false);
+                        GameManager.Instance.map.ClearRoom(true, false, GameManager.Instance.playerWon);
                     }
                     else if (goToMap)
                     {
-                        GameManager.Instance.map.ClearRoom(true, false);
+                        GameManager.Instance.map.ClearRoom(true, false, GameManager.Instance.playerWon);
                     }
                     else if (!allowFadeAway && resetMap)
                     {

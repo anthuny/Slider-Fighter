@@ -12,6 +12,8 @@ public class MapOverlay : MonoBehaviour
     [SerializeField] private UIElement playerGoldText;
     [SerializeField] private UIElement roomCountText;
     [SerializeField] private UIElement floorName;
+    [SerializeField] private UIElement roomDifficultyIcons;
+    [SerializeField] private GameObject roomDifficultyIconPrefab;
 
     [SerializeField] private UIElement playerGoldTextShopRoom;
     [SerializeField] private UIElement floorNameShopRoom;
@@ -27,6 +29,45 @@ public class MapOverlay : MonoBehaviour
     private void Start()
     {
         //ToggleMapOverlayButtons(false);
+    }
+
+    public void UpdateRoomDifficultyIcons()
+    {
+        // Reset icons
+        foreach (Transform child in roomDifficultyIcons.gameObject.transform)
+        {
+            Destroy(child.gameObject);
+        }  
+
+        int count = 0;
+        // Add icons
+        if (MapManager.Instance.selectedRoom.curRoomType == RoomMapIcon.RoomType.ENEMY)
+            count = 1;
+        else if (MapManager.Instance.selectedRoom.curRoomType == RoomMapIcon.RoomType.ITEM)
+            count = 2;
+        else if (MapManager.Instance.selectedRoom.curRoomType == RoomMapIcon.RoomType.HERO)
+            count = 3;
+        else if (MapManager.Instance.selectedRoom.curRoomType == RoomMapIcon.RoomType.BOSS)
+            count = 4;
+        else if (MapManager.Instance.selectedRoom.curRoomType == RoomMapIcon.RoomType.STARTING)
+            count = 0;
+        else if (MapManager.Instance.selectedRoom.curRoomType == RoomMapIcon.RoomType.SHOP)
+            count = 0;
+
+        if (MapManager.Instance.selectedRoom.curRoomType != RoomMapIcon.RoomType.SHOP && MapManager.Instance.selectedRoom.curRoomType != RoomMapIcon.RoomType.STARTING)
+            count += RoomManager.Instance.GetFloorCount() - 1;
+
+        //if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.STARTING)
+            //count = 0;
+        //Debug.Log("count = " + count);
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject go2 = Instantiate(roomDifficultyIconPrefab, roomDifficultyIcons.transform.position, Quaternion.identity);
+            go2.transform.SetParent(roomDifficultyIcons.transform);
+            go2.transform.localScale = new Vector3(2,2,1);
+            //go2.transform.localRotation = new Quaternion(0, 0, -180, 0);
+        }
     }
 
     public void ToggleBottomBG(bool toggle)
