@@ -30,7 +30,7 @@ MonoBehaviour:
   skillBaseHitOutput: 1
   skillHitAttempts: 1
   projectileSpeed: 13
-  skillCooldown: 1
+  skillCooldown: 2
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
