@@ -24,10 +24,12 @@ public class CharacterCarasel : MonoBehaviour
     [SerializeField] private bool unlockedKnight = false;
     [SerializeField] private bool unlockedRanger = false;
     [SerializeField] private bool unlockedCleric = false;
+    [SerializeField] private bool unlockedNecromancer = false;
 
     public RuntimeAnimatorController warriorAnimator;
     public RuntimeAnimatorController archerAnimator;
     public RuntimeAnimatorController clericAnimator;
+    public RuntimeAnimatorController necromancerAnimator;
 
     public Color unlockedUnitColour;
     public Color lockedUnitColour;
@@ -167,6 +169,18 @@ public class CharacterCarasel : MonoBehaviour
                     allAlliesMenu[i].ToggleUnitLocked(true, true);
             }
 
+            if (allAllies[i].unitName == "Necromancer")
+            {
+                allAlliesMenu[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+
+                if (IsKnightUnlocked())
+                {
+                    allAlliesMenu[i].ToggleUnitLocked(false, false);
+                }
+                else
+                    allAlliesMenu[i].ToggleUnitLocked(true, true);
+            }
+
             if (allAllies[i].unitName == "Ranger")
             {
                 allAlliesMenu[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 140);
@@ -230,9 +244,11 @@ public class CharacterCarasel : MonoBehaviour
         PlayerPrefs.SetInt("UnlockedKnight", 0);
         PlayerPrefs.SetInt("UnlockedRanger", 0);
         PlayerPrefs.SetInt("UnlockedCleric", 0);
+        PlayerPrefs.SetInt("UnlockedNecromancer", 0);
         unlockedKnight = false;
         unlockedRanger = false;
         unlockedCleric = false;
+        unlockedNecromancer = false;
     }
 
     public void LoadSave()
@@ -243,6 +259,8 @@ public class CharacterCarasel : MonoBehaviour
             unlockedRanger = true;
         if (PlayerPrefs.GetInt("UnlockedCleric") == 1)
             unlockedCleric = true;
+        if (PlayerPrefs.GetInt("UnlockedCleric") == 1)
+            unlockedNecromancer = true;
     }
 
     public void SaveUnlockedAlly(string allyName)
@@ -262,6 +280,16 @@ public class CharacterCarasel : MonoBehaviour
             PlayerPrefs.SetInt("UnlockedCleric", 1);
             unlockedCleric = true;
         }
+        else if (allyName == "Necromancer")
+        {
+            PlayerPrefs.SetInt("UnlockedNecromancer", 1);
+            unlockedNecromancer = true;
+        }
+    }
+
+    public bool IsNecromancerUnlocked()
+    {
+        return unlockedNecromancer;
     }
 
     public bool IsKnightUnlocked()
