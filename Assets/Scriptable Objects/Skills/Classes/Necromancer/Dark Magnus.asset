@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Dark Magnus
+  m_EditorClassIdentifier: 
+  curSkillType: 1
+  curSkillSelectionType: 0
+  curskillSelectionAliveType: 0
+  curRangedType: 1
+  curAnimType: 1
+  skillSprite: {fileID: 21300000, guid: 727f85ff365f3ad46a96b4e104930a08, type: 3}
+  skillName: DARK MAGNUS
+  skillDescr: 'Target up to 3 enemies, apply effect Reaping. Heal the lowest health
+    ally based on amount of targets selected. '
+  skillTabDescr: 'Target up to 3 enemies, apply effect Reaping. Heal the lowest health
+    ally based on amount of targets selected. '
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 0
+  curSkillPower: 0
+  skillAttackAccMult: 1
+  skillBaseHitOutput: 1
+  skillHitAttempts: 2
+  projectileSpeed: 10
+  skillCooldown: 1
+  curCooldown: 1
+  skillSelectionCount: 3
+  isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
+  isBonusFromTargetAmount: 1
+  healPerc: 20
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
+  special: 0
+  effect: {fileID: 11400000, guid: 7a81fa0ec2850504a810d1d23caf5e94, type: 2}
+  effectTurnLength: 1
+  curEffectHitChance: 0
+  startingEffectHitChance: 0
+  baseEffectApplyCount: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
+  upgradeIncPowerCount: 0
+  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
+  skillProjectile: {fileID: 21300000, guid: 65c174950ac6e40478dc43c39d695270, type: 3}
+  projectileAllowSpin: 0
+  projectileAllowIdle: 0
+  projectileAC: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  repeatLaunchSFX: 0
+  giveExtraDesc: 0
+  projectileLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 1

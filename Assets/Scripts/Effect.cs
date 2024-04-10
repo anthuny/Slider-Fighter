@@ -20,7 +20,7 @@ public class Effect : MonoBehaviour
     public enum EffectName 
     { 
         BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, HEALINGUP, HEALINGDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
-        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN 
+        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING 
     }
     public EffectName curEffectName;
 
@@ -152,6 +152,8 @@ public class Effect : MonoBehaviour
             curEffectName = EffectName.DEFENSEUP;
         else if (effect.curEffectName == EffectData.EffectName.DEFENSEDOWN)
             curEffectName = EffectName.DEFENSEDOWN;
+        else if (effect.curEffectName == EffectData.EffectName.REAPING)
+            curEffectName = EffectName.REAPING;
 
         effectName = effect.effectName;
         titleTextColour = effect.titleTextColour;
@@ -445,14 +447,14 @@ public class Effect : MonoBehaviour
         else if (curEffectName == EffectName.RECOVER)
             unitTarget.UpdateUnitCurHealth((int)newHealingPower);
 
-
+        /*
         if (curEffectName == EffectName.BLEED)
             unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this, false));
         else if (curEffectName == EffectName.POISON)
             unitTarget.StartCoroutine(unitTarget.SpawnPowerUI(power, false, true, this, false, true));
         else if (curEffectName == EffectName.RECOVER)
             unitTarget.StartCoroutine(unitTarget.SpawnPowerUI((int)newHealingPower, false, false, this));
-
+        */
     }
 }
 

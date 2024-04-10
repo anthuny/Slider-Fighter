@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Mindcontrol
+  m_EditorClassIdentifier: 
+  curSkillType: 1
+  curSkillSelectionType: 1
+  curskillSelectionAliveType: 0
+  curRangedType: 1
+  curAnimType: 1
+  skillSprite: {fileID: 21300000, guid: dc7f4ebb9a8d17c47b07e8d9b8190d87, type: 3}
+  skillName: MIND CONTROL
+  skillDescr: Target 1 base ally, Cleanse 5 negative effects, Cast Recovery effect
+  skillTabDescr: Target 1 base ally, Cleanse 5 negative effects, Cast Recovery effect
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 0
+  curSkillPower: 0
+  skillAttackAccMult: 1
+  skillBaseHitOutput: 1
+  skillHitAttempts: 1
+  projectileSpeed: 0
+  skillCooldown: 3
+  curCooldown: 0
+  skillSelectionCount: 1
+  isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
+  isReviving: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 1
+  cleanseCount: 5
+  special: 0
+  effect: {fileID: 11400000, guid: e854f94542f31b34ba8a3b2545ed0984, type: 2}
+  effectTurnLength: 1
+  curEffectHitChance: 0
+  startingEffectHitChance: 0
+  baseEffectApplyCount: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
+  upgradeIncPowerCount: 0
+  skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
+  skillProjectile: {fileID: 0}
+  projectileAllowSpin: 0
+  projectileAllowIdle: 0
+  projectileAC: {fileID: 0}
+  targetEffectVisualAC: {fileID: 9100000, guid: 2b088e935cf2110469841cdbbbcd1ddc, type: 2}
+  skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  repeatLaunchSFX: 0
+  giveExtraDesc: 1
+  projectileLaunch: {fileID: 0}
+  skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 2

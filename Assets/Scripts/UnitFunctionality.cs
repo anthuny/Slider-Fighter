@@ -189,6 +189,7 @@ public class UnitFunctionality : MonoBehaviour
     //public bool unitDouble;
 
     public SkillData usedSkill;
+    public int effectAddedCount;
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);
@@ -1499,7 +1500,7 @@ public class UnitFunctionality : MonoBehaviour
                                             ItemPiece item = TeamItemsManager.Instance.equippedItemsMain[x];
                                             float healAmount = ((float)item.itemPower / 100f) * startingRoomMaxHealth;
                                             UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
-                                            StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
+                                            //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -1856,7 +1857,7 @@ public class UnitFunctionality : MonoBehaviour
                                             ItemPiece item = TeamItemsManager.Instance.equippedItemsSecond[x];
                                             float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
                                             UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
-                                            StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
+                                            //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -2211,7 +2212,7 @@ public class UnitFunctionality : MonoBehaviour
                                             ItemPiece item = TeamItemsManager.Instance.equippedItemsThird[x];
                                             float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
                                             UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
-                                            StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
+                                            //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
                                             TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
@@ -2945,6 +2946,9 @@ public class UnitFunctionality : MonoBehaviour
         if (effectHitAcc == 0 || targetUnit.isParrying)
             return;
 
+
+
+
         //Debug.Log("Effect hit acc " + effectHitAcc);
         // If unit is already effected with this effect, add to the effect
         for (int i = 0; i < activeEffects.Count; i++)
@@ -2961,30 +2965,55 @@ public class UnitFunctionality : MonoBehaviour
                         //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
 
                         int rand = Random.Range(1, 101);
-                        if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
+                        if (effectAddedCount < 3)
                         {
-                            // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-                            //activeEffects[i].AddTurnCountText(1);
-
-                            if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                            if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                             {
-                                activeEffects[i].EffectApply(this);
-                                activeEffects[i].UpdateEffectTierImages();
-                                if (activeEffects[i] != null)
-                                    activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                                else
-                                    return;
-                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                                // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+                                effectAddedCount++;
+
+                                activeEffects[i].AddTurnCountText(1);
+
+                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                                {
+                                    activeEffects[i].EffectApply(this);
+                                    activeEffects[i].UpdateEffectTierImages();
+                                    if (activeEffects[i] != null)
+                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                    else
+                                        return;
+                                    TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                                }
                             }
+                            else
+                                continue;
                         }
                         else
-                            continue;
+                        {
+                            if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
+                            {
+                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                                {
+                                    activeEffects[i].EffectApply(this);
+                                    activeEffects[i].UpdateEffectTierImages();
+                                    if (activeEffects[i] != null)
+                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                    else
+                                        return;
+                                    TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                                }
+                            }
+                            else
+                                continue;
+                        }
                     }
                     else if (item || byPassAcc)
                     {
                         if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                         {
-                            //activeEffects[i].AddTurnCountText(1);
+                            //usedSkill = GameManager.Instance.GetActiveSkill();
+
+                            activeEffects[i].AddTurnCountText(1);
                             activeEffects[i].EffectApply(this);
                             activeEffects[i].UpdateEffectTierImages();
                             if (activeEffects[i] != null)
@@ -3574,12 +3603,12 @@ public class UnitFunctionality : MonoBehaviour
 
         if (fullhealth)
         {
-            StartCoroutine(SpawnPowerUI(GetUnitMaxHealth(), false, false, null, false));
+            //StartCoroutine(SpawnPowerUI(GetUnitMaxHealth(), false, false, null, false));
             UpdateUnitCurHealth((int)GetUnitMaxHealth(), false, false, false);
         }
         else
         {
-            StartCoroutine(SpawnPowerUI(val, false, false, null, false));
+            //StartCoroutine(SpawnPowerUI(val, false, false, null, false));
             UpdateUnitCurHealth((int)val, false, false, false);
         }
 
@@ -3646,7 +3675,7 @@ public class UnitFunctionality : MonoBehaviour
                 ResetPowerUI();
 
                 UpdateUnitCurHealth((int)levelUpHeal, false, false);
-                StartCoroutine(SpawnPowerUI(levelUpHeal, false, false, null, false));
+                //StartCoroutine(SpawnPowerUI(levelUpHeal, false, false, null, false));
 
                 // This isnt working
                 //SpawnPowerUI(levelUpHeal, false, false, null, false);
@@ -3776,14 +3805,40 @@ public class UnitFunctionality : MonoBehaviour
                 //tempPower = (curRecieveDamageAmp / 100f) * absPower;
                 //float newPower = absPower + tempPower;
 
-                if (curHealth > 0)
+                // if this unit has reaping, heal active unit
+                if (GetEffect("REAPING"))
                 {
-                    // Damage formula - Defense. Negate some of the damage
-                    //float temp = ((GetCurDefense() * GetCurDefenseInc()) / 100f) * absPower;
-                    //Debug.Log(temp);
-                    //float powerIncArmor = absPower - temp;
+                    float newPower = 0;
+                    for (int i = 0; i < activeEffects.Count; i++)
+                    {
+                        if (activeEffects[i].curEffectName == Effect.EffectName.REAPING)
+                        {
+                            if (power != 0 && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                            {
+                                newPower = ((activeEffects[i].effectPowerStacks * GetEffect("REAPING").powerPercent) / 100f) * power;
 
+                                if (curHealth > 0)
+                                {
+                                    // Damage formula - Defense. Negate some of the damage
+                                    //float temp = ((GetCurDefense() * GetCurDefenseInc()) / 100f) * absPower;
+                                    //Debug.Log(temp);
+                                    //float powerIncArmor = absPower - temp;
+
+                                    curHealth -= (int)newPower;
+                                }
+
+                                //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)newPower, false, false, true, true, true);
+                                StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)newPower, false, false, GetEffect("REAPING"), false));
+
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
                     curHealth -= (int)absPower;
+                    StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)absPower, false, false, null, false));
                 }
 
 
@@ -3823,13 +3878,45 @@ public class UnitFunctionality : MonoBehaviour
             // Healing
             else
             {
-                absPower *= curHealingRecieved;
+                // if this unit has reaping, heal active unit
+                if (GetEffect("POISON"))
+                {
+                    float newPower = 0;
+                    for (int i = 0; i < activeEffects.Count; i++)
+                    {
+                        if (activeEffects[i].curEffectName == Effect.EffectName.POISON)
+                        {
+                            if (power != 0 && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                            {
+                                newPower = ((activeEffects[i].effectPowerStacks * GetEffect("POISON").powerPercent) / 100f) * power;
+                                float finalHealingPower = power - newPower;
 
-                if (curHealth < curMaxHealth)
-                    curHealth += (int)absPower;
+                                //absPower *= curHealingRecieved;
 
-                if (curHealth > curMaxHealth)
-                    curHealth = curMaxHealth;
+                                if (curHealth < curMaxHealth)
+                                    curHealth += (int)finalHealingPower;
+
+                                if (curHealth > curMaxHealth)
+                                    curHealth = curMaxHealth;
+
+                                //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
+                                StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)finalHealingPower, false, false, GetEffect("REAPING"), false));
+
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (curHealth < curMaxHealth)
+                        curHealth += (int)absPower;
+
+                    if (curHealth > curMaxHealth)
+                        curHealth = curMaxHealth;
+
+                    StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)absPower, false, false, null, false));
+                }
             }
         }
         else

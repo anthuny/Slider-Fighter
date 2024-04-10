@@ -133,7 +133,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 256
+        y: 576
         width: 64
         height: 64
       alignment: 0
@@ -154,7 +154,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 256
+        y: 576
         width: 64
         height: 64
       alignment: 0
@@ -175,7 +175,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 256
+        y: 576
         width: 64
         height: 64
       alignment: 0
@@ -196,7 +196,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 256
+        y: 576
         width: 64
         height: 64
       alignment: 0
@@ -217,7 +217,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 256
-        y: 256
+        y: 576
         width: 64
         height: 64
       alignment: 0
@@ -238,7 +238,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -259,7 +259,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -280,7 +280,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -301,7 +301,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -322,7 +322,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 256
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -343,7 +343,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 320
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -364,7 +364,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 384
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -385,7 +385,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 448
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -406,7 +406,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 512
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -427,7 +427,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 576
-        y: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
@@ -448,7 +448,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -469,7 +469,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -490,7 +490,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -511,7 +511,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -532,7 +532,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 256
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -553,7 +553,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 320
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -574,7 +574,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 384
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -595,7 +595,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 448
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -616,7 +616,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 512
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -637,7 +637,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 576
-        y: 128
+        y: 448
         width: 64
         height: 64
       alignment: 0
@@ -658,7 +658,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -679,7 +679,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -700,7 +700,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -721,7 +721,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -742,7 +742,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 256
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -763,7 +763,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 320
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -784,7 +784,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 384
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -805,7 +805,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 448
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -826,7 +826,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 512
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -847,7 +847,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 576
-        y: 64
+        y: 384
         width: 64
         height: 64
       alignment: 0
@@ -868,7 +868,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -889,7 +889,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 0
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -910,7 +910,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 0
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -930,8 +930,8 @@ TextureImporter:
       name: T_Necromancer2_SS_38
       rect:
         serializedVersion: 2
-        x: 320
-        y: 0
+        x: 192
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -951,8 +951,8 @@ TextureImporter:
       name: T_Necromancer2_SS_39
       rect:
         serializedVersion: 2
-        x: 384
-        y: 0
+        x: 256
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -972,8 +972,8 @@ TextureImporter:
       name: T_Necromancer2_SS_40
       rect:
         serializedVersion: 2
-        x: 448
-        y: 0
+        x: 320
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -983,8 +983,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5ae38be128b533843a8cadc59080aade
-      internalID: 415402717
+      spriteID: 795774833749cce4fa8db14c3021648b
+      internalID: -437709208
       vertices: []
       indices: 
       edges: []
@@ -993,8 +993,8 @@ TextureImporter:
       name: T_Necromancer2_SS_41
       rect:
         serializedVersion: 2
-        x: 512
-        y: 0
+        x: 384
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -1004,8 +1004,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e8d39ad7df9439d438cb16ddd90eaa73
-      internalID: -1665743039
+      spriteID: 7f3ae3af20a1ea647958a0f2d66bfa79
+      internalID: 1082135959
       vertices: []
       indices: 
       edges: []
@@ -1014,8 +1014,8 @@ TextureImporter:
       name: T_Necromancer2_SS_42
       rect:
         serializedVersion: 2
-        x: 576
-        y: 0
+        x: 448
+        y: 320
         width: 64
         height: 64
       alignment: 0
@@ -1025,8 +1025,323 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6d9615a46022b2449b7c50c0b3d0130d
-      internalID: -1901606154
+      spriteID: f2a12daae774ad64db45f329a164c8b2
+      internalID: -74612242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_43
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 009dd0bf2511980428019eceabcbbdf5
+      internalID: -1018509518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_44
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16195e76d52a4dd4f889d471aa45feba
+      internalID: 641772249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_45
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4c370741beb944488c1b987d9c855d4
+      internalID: 1858962576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_46
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f063b00db644a034ca626fa5718bb067
+      internalID: -1640419517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_47
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d5e01c272617e248baa28e072aee9a3
+      internalID: -2030071953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_48
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f792f34340003534d86b368d0e968939
+      internalID: 1877880878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_49
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0426bdbdb77fa44a831cea2135c7ccd
+      internalID: 453034375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_50
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9f54c4460f69e547b901491b1aa63fa
+      internalID: -398148335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_51
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc455714c65806c4592c472acaaa323c
+      internalID: 1925030504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_52
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 064789fb3971ef94d8cdc4f2cbd27f7b
+      internalID: -1772721490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_53
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c1954e13eb05ef4698331211b48ca1e
+      internalID: 581882521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_54
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76d8df1613c0b5340b7bcb3cef716359
+      internalID: -961512716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_55
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 315f3cb8814126b49bf2982f4acc2712
+      internalID: 1386465142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_56
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac28ceda9cc7ce04ca6b25cb50598eb7
+      internalID: 693225282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T_Necromancer2_SS_57
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8846d29b5d8fa4499ec3ad12e083810
+      internalID: 1853111672
       vertices: []
       indices: 
       edges: []
@@ -1046,17 +1361,23 @@ TextureImporter:
       T_Necromancer2_SS_30: -2075214530
       T_Necromancer2_SS_12: 1560125391
       T_Necromancer2_SS_4: 1331248062
+      T_Necromancer2_SS_47: -2030071953
       T_Necromancer2_SS_24: -1071686263
       T_Necromancer2_SS_34: -1736927032
+      T_Necromancer2_SS_51: 1925030504
       T_Necromancer2_SS_3: 182179443
       T_Necromancer2_SS_10: -1355625851
       T_Necromancer2_SS_26: 1394693441
+      T_Necromancer2_SS_46: -1640419517
       T_Necromancer2_SS_13: 780989754
       T_Necromancer2_SS_17: -589900340
-      T_Necromancer2_SS_42: -1901606154
+      T_Necromancer2_SS_56: 693225282
+      T_Necromancer2_SS_42: -74612242
       T_Necromancer2_SS_28: -1052391073
+      T_Necromancer2_SS_49: 453034375
       T_Necromancer2_SS_2: -1655950967
-      T_Necromancer2_SS_40: 415402717
+      T_Necromancer2_SS_40: -437709208
+      T_Necromancer2_SS_43: -1018509518
       T_Necromancer2_SS_32: -658312626
       T_Necromancer2_SS_33: -752036309
       T_Necromancer2_SS_35: 1359420709
@@ -1066,6 +1387,7 @@ TextureImporter:
       T_Necromancer2_SS_23: 314740088
       T_Necromancer2_SS_5: 503179652
       T_Necromancer2_SS_31: 1486979396
+      T_Necromancer2_SS_55: 1386465142
       T_Necromancer2_SS_9: -1670512312
       T_Necromancer2_SS_36: -1176867264
       T_Necromancer2_SS_14: 14924665
@@ -1073,17 +1395,25 @@ TextureImporter:
       T_Necromancer2_SS_18: 2036792371
       T_Necromancer2_SS_20: 277168113
       T_Necromancer2_SS_22: -214668840
+      T_Necromancer2_SS_45: 1858962576
       T_Necromancer2_SS_0: 161361409
+      T_Necromancer2_SS_50: -398148335
       T_Necromancer2_SS_15: -1458302709
       T_Necromancer2_SS_25: -1105984995
       T_Necromancer2_SS_11: -1772113706
       T_Necromancer2_SS_19: -60027634
+      T_Necromancer2_SS_52: -1772721490
       T_Necromancer2_SS_16: 1034316067
+      T_Necromancer2_SS_54: -961512716
+      T_Necromancer2_SS_44: 641772249
       T_Necromancer2_SS_1: -1245203424
       T_Necromancer2_SS_8: 1559240259
+      T_Necromancer2_SS_53: 581882521
       T_Necromancer2_SS_27: 1325990402
-      T_Necromancer2_SS_41: -1665743039
+      T_Necromancer2_SS_48: 1877880878
+      T_Necromancer2_SS_41: 1082135959
       T_Necromancer2_SS_7: -545598515
+      T_Necromancer2_SS_57: 1853111672
       T_Necromancer2_SS_6: 754039596
   spritePackingTag: 
   pSDRemoveMatte: 0

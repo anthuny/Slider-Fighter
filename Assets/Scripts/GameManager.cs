@@ -1520,7 +1520,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     float combatWinHeal = ((float)combatCompleteHealPerc / 100f) * activeRoomHeroes[i].GetUnitMaxHealth();
                     activeRoomHeroes[i].ResetPowerUI();
                     activeRoomHeroes[i].UpdateUnitCurHealth((int)combatWinHeal, false, false);
-                    StartCoroutine(activeRoomHeroes[i].SpawnPowerUI(combatWinHeal, false, false, null, false));
+                    //StartCoroutine(activeRoomHeroes[i].SpawnPowerUI(combatWinHeal, false, false, null, false));
                 }
                 else
                 {
@@ -2390,7 +2390,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
         {
-            GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+            if (GetActiveSkill().originalIndex != 0)
+                GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+            else
+                GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
 
             // Display active unit hits remaining text, Update hits remaining text
             GetActiveUnitFunctionality().ToggleHitsRemainingText(true);
@@ -2462,7 +2465,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
-            GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
+            if (GetActiveSkill().originalIndex != 0)
+                GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+            else
+                GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
 
             // Display active unit hits remaining text, Update hits remaining text
             GetActiveUnitFunctionality().ToggleHitsRemainingText(true);
@@ -2661,6 +2667,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         newHealingPower = 0;
                     }
 
+                    /*
                     if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
                     {
                         // Check if target unit has poison, half the heal if it does
@@ -2677,6 +2684,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                         }
                     }
+                    */
 
                     int orderCount;
 
@@ -2705,7 +2713,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             newPower = 0;
                         }
                             unitsSelected[i].UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
-                            unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+                            //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
 
                         CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
                     }
@@ -2727,7 +2735,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         }
                         */
                         unitsSelected[i].UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
-                        unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI(finalHealingPower, false, false, null, false));
+                        //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI(finalHealingPower, false, false, null, false));
                     }
 
                     // If active skill has an effect AND it's not a self cast, apply it to selected targets
@@ -2758,6 +2766,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
                 activeRoomAllUnitFunctionalitys[i].usedSkill = null;
+                activeRoomAllUnitFunctionalitys[i].effectAddedCount = 0;
             }       
         }
 
@@ -3451,6 +3460,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
     }
 
+    IEnumerator PlayerLostWait()
+    {
+        yield return new WaitForSeconds(1.55f);
+
+        StartCoroutine(SetupPostBattleUI(playerWon));
+    }
     public void UpdateTurnOrder()
     {
         if (combatOver)
@@ -3472,7 +3487,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (allyCount == 0)
         {
             playerWon = false;
-            StartCoroutine(SetupPostBattleUI(playerWon));
+            StartCoroutine(PlayerLostWait());
             return;
         }
         else if (enemyCount == 0)

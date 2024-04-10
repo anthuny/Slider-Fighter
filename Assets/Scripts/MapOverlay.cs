@@ -54,8 +54,8 @@ public class MapOverlay : MonoBehaviour
         else if (MapManager.Instance.selectedRoom.curRoomType == RoomMapIcon.RoomType.SHOP)
             count = 0;
 
-        if (MapManager.Instance.selectedRoom.curRoomType != RoomMapIcon.RoomType.SHOP && MapManager.Instance.selectedRoom.curRoomType != RoomMapIcon.RoomType.STARTING)
-            count += RoomManager.Instance.GetFloorCount() - 1;
+        //if (MapManager.Instance.selectedRoom.curRoomType != RoomMapIcon.RoomType.SHOP && MapManager.Instance.selectedRoom.curRoomType != RoomMapIcon.RoomType.STARTING)
+            //count += RoomManager.Instance.GetFloorCount() - 1;
 
         //if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.STARTING)
             //count = 0;

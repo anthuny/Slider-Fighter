@@ -45,6 +45,8 @@ public class SkillData : ScriptableObject
     public bool isDoublingEffect;
     public bool isLeaching;
     public bool isPassive;
+    public bool isBonusFromTargetAmount;
+    public int healPerc;
     public bool isReviving;
     [Tooltip("Determines that this skill cleanses an effect")]
     public bool isCleansingEffect;
