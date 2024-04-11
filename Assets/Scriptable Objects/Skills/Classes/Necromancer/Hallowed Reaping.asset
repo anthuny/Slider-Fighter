@@ -24,7 +24,7 @@ MonoBehaviour:
   skillTabDescr: Target 1 enemy, dealing damage, each hit has a chance to apply Reaping
     effect
   startingSkillLevel: 0
-  curSkillLevel: 1
+  curSkillLevel: 0
   pointsAdded: 0
   startingSkillPower: 10
   curSkillPower: 10
@@ -49,13 +49,13 @@ MonoBehaviour:
   special: 0
   effect: {fileID: 11400000, guid: 7a81fa0ec2850504a810d1d23caf5e94, type: 2}
   effectTurnLength: 1
-  curEffectHitChance: 35
-  startingEffectHitChance: 35
+  curEffectHitChance: 50
+  startingEffectHitChance: 50
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
-  upgradeIncHitsCount: 1
+  upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
   skillProjectile: {fileID: 21300000, guid: 1d3c559640f069049a6b12bd6581ef56, type: 3}

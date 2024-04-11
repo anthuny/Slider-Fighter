@@ -2516,6 +2516,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
         }
 
+        if (GetActiveSkill().isLongerSkillAnim)
+            yield return new WaitForSeconds(0.5f);
+
         // For no power skills
         if (GetActiveSkill().curSkillPower == 0)
         {
@@ -2550,6 +2553,53 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     if (!miss)
                         unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val);
+
+                    yield return new WaitForSeconds(0.15f);
+
+                    if (GetActiveSkill().isHealingFromResult)
+                    {
+                        int health = 25555;
+                        UnitFunctionality lowestHealthHero = null;
+
+                        for (int v = 0; v < activeRoomHeroes.Count; v++)
+                        {
+                            if (((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100 < health)
+                            {
+                                health = ((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100;
+                                lowestHealthHero = activeRoomHeroes[v];
+                            }
+                        }
+
+                        if (lowestHealthHero != null)
+                        {
+                            for (int n = 0; n < hitCount; n++)
+                            {
+                                WeaponManager.Instance.CalculatePower();
+                                float healAmount = 0;
+
+                                healAmount = (int)WeaponManager.Instance.calculatedPower;
+                                lowestHealthHero.UpdateUnitCurHealth((int)healAmount, false, false, true, false, false);
+
+                                int health2 = 25555;
+
+                                for (int v = 0; v < activeRoomHeroes.Count; v++)
+                                {
+                                    if (((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100 < health2)
+                                    {
+                                        health2 = ((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100;
+                                        lowestHealthHero = activeRoomHeroes[v];
+                                    }
+                                }
+
+                                int maxHitWorth = 15;
+                                if (hitCount > maxHitWorth)
+                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)));
+                                else
+                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (hitCount - 1)));
+                            }
+
+                        }
+                    }
                 }
 
                 if (!miss)

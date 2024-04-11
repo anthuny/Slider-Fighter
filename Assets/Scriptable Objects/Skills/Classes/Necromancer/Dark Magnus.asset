@@ -33,14 +33,16 @@ MonoBehaviour:
   skillHitAttempts: 2
   projectileSpeed: 10
   skillCooldown: 1
-  curCooldown: 1
+  curCooldown: 2
   skillSelectionCount: 3
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
   isBonusFromTargetAmount: 1
-  healPerc: 20
+  isHealingFromResult: 1
+  isLongerSkillAnim: 1
+  healPowerAmount: 15
   isReviving: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
@@ -58,7 +60,7 @@ MonoBehaviour:
   upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
-  skillProjectile: {fileID: 21300000, guid: 65c174950ac6e40478dc43c39d695270, type: 3}
+  skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
   projectileAC: {fileID: 0}

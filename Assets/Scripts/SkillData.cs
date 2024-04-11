@@ -46,7 +46,9 @@ public class SkillData : ScriptableObject
     public bool isLeaching;
     public bool isPassive;
     public bool isBonusFromTargetAmount;
-    public int healPerc;
+    public bool isHealingFromResult;
+    public bool isLongerSkillAnim;
+    public int healPowerAmount;
     public bool isReviving;
     [Tooltip("Determines that this skill cleanses an effect")]
     public bool isCleansingEffect;
@@ -117,8 +119,15 @@ public class SkillData : ScriptableObject
         float val = curSkillPower + (upgradeIncPowerCount * 3);
         //Debug.Log("float in skilldata is " + val);
 
-        //curSkillPower = Mathf.RoundToInt(val);
-        return Mathf.RoundToInt(val);
+        float val2 = 0;
+
+        if (curSkillPower == 0)
+            val2 = healPowerAmount;
+
+        if (val2 != 0)
+            return Mathf.RoundToInt(val);
+        else
+            return Mathf.RoundToInt(val2);
     }
 
     public int GetCalculatedSkillHitAmount()

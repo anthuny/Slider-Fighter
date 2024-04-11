@@ -971,7 +971,8 @@ public class WeaponManager : MonoBehaviour
     {
         float currentPower = GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
-        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().curSkillPower != 0)
+        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().curSkillPower != 0 ||
+            GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().healPowerAmount != 0)
             currentPower += GameManager.Instance.GetActiveUnitFunctionality().curHealingPower;
 
         calculatedPower = (GameManager.Instance.GetActiveSkill().GetCalculatedSkillPowerStat() + currentPower);

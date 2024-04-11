@@ -17,8 +17,9 @@ MonoBehaviour:
   curEffectBenefitType: 1
   curEffectName: 20
   effectName: REAPING
-  effectDesc: Heal 12% x tier of damage dealt to this unit, to the caster
+  effectDesc: Heal 20% x tier of damage dealt to this unit, to the caster (max heal
+    80%)
   effectIcon: {fileID: 21300000, guid: d2368a896f3560949af2d83815614b97, type: 3}
-  powerPercent: 12
+  powerPercent: 20
   powerAmp: 0
   titleTextColour: {r: 0.7733534, g: 0.28773582, b: 1, a: 1}

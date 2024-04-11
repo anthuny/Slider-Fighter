@@ -168,8 +168,22 @@ public class Effect : MonoBehaviour
 
         UpdateEffectIcon(effect);
 
-        if (doFullSetup)
-            AddTurnCountText(turnDuration);
+
+        float powerStacks = turnDuration / 2;
+
+        effectPowerStacks += (int)powerStacks;
+
+        UpdateEffectTierImages((int)powerStacks);
+
+        if (turnDuration > 2)
+            turnDuration = 2;
+
+
+
+
+        
+        //if (doFullSetup)
+        AddTurnCountText(turnDuration);
 
         transform.GetComponentInParent<CanvasGroup>().alpha = 1;
 
