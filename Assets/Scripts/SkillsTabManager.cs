@@ -133,6 +133,7 @@ public class SkillsTabManager : MonoBehaviour
 
         for (int x = 0; x < skills.Count; x++)
         {
+            skills[x].SetSkillStarting();
             skills[x].ResetSkill();
         }
     }

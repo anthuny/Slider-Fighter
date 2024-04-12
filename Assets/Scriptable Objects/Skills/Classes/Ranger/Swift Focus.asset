@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
+  startingSelectionType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
@@ -32,18 +33,24 @@ MonoBehaviour:
   projectileSpeed: 10
   skillCooldown: 3
   curCooldown: 0
-  skillSelectionCount: 2
+  skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
   isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 1
   effect: {fileID: 11400000, guid: 0abfc7040d3eb7e4da2698486445dc5a, type: 2}
+  effect2: {fileID: 0}
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -66,3 +73,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 2
+  mindControlled: 0

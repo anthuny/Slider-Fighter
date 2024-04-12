@@ -11,6 +11,7 @@ public class SkillData : ScriptableObject
 
     public enum SkillSelectionType { ENEMIES, PLAYERS };
     public SkillSelectionType curSkillSelectionType;
+    public SkillSelectionType startingSelectionType;
 
     public enum SkillSelectionAliveType { ALIVE, DEAD };
     public SkillSelectionAliveType curskillSelectionAliveType;
@@ -50,6 +51,7 @@ public class SkillData : ScriptableObject
     public bool isLongerSkillAnim;
     public int healPowerAmount;
     public bool isReviving;
+    public bool isMindControlling;
     [Tooltip("Determines that this skill cleanses an effect")]
     public bool isCleansingEffect;
     [Tooltip("Determines which effect is cleansed")]
@@ -65,6 +67,7 @@ public class SkillData : ScriptableObject
 
     public bool special;
     public EffectData effect;
+    public EffectData effect2;
     public int effectTurnLength;
     [Tooltip("0 = 100% also, although 1 = 1 as normal upwards.")]
     public float curEffectHitChance;
@@ -94,6 +97,13 @@ public class SkillData : ScriptableObject
     public AudioClip skillHit;
     public AudioClip skillHitAdditional;
     public int originalIndex;
+
+    public bool mindControlled;
+
+    public void SetSkillStarting()
+    {
+        startingSelectionType = curSkillSelectionType;
+    }
 
     public int GetCalculatedSkillSelectionCount()
     {
@@ -164,6 +174,25 @@ public class SkillData : ScriptableObject
         upgradeIncTargetCount = 0;
         upgradeIncHitsCount = 0;
         upgradeIncPowerCount = 0;
+
+        curSkillSelectionType = startingSelectionType;
+        mindControlled = false;
     }
 
+    public void SwitchTargetingTeam(bool toggle = true)
+    {
+        /*
+        if (curSkillSelectionType == SkillSelectionType.PLAYERS)
+            curSkillSelectionType = SkillSelectionType.ENEMIES;
+        else
+            curSkillSelectionType = SkillSelectionType.PLAYERS;
+        */
+
+        mindControlled = toggle;
+
+        if (!toggle)
+        {
+            curSkillSelectionType = startingSelectionType;
+        }
+    }
 }

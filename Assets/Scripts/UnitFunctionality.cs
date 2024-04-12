@@ -190,6 +190,9 @@ public class UnitFunctionality : MonoBehaviour
 
     public SkillData usedSkill;
     public int effectAddedCount;
+
+    public bool mindControlled;
+    public bool beenAttacked = false;
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);
@@ -856,7 +859,11 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (effectSelectedName == activeEffects[i].effectName)
             {
-                tooltipEffect.UpdateContentText(activeEffects[i].effectName);
+                string newName = activeEffects[i].effectName;
+                if (activeEffects[i].effectName == "MIND_CONTROL")
+                    newName = "MIND CONTROL";
+
+                tooltipEffect.UpdateContentText(newName);
                 tooltipEffect.UpdateContentSubTextTMP(activeEffects[i].effectDesc);
                 tooltipEffect.UpdateContentTextColourTMP(activeEffects[i].titleTextColour);
             }
@@ -1334,7 +1341,7 @@ public class UnitFunctionality : MonoBehaviour
 
             // Adjust power based on skill effect amp on target then send it 
 
-            WeaponManager.Instance.SetEnemyWeapon(this);
+            WeaponManager.Instance.SetEnemyWeapon(this, true);
 
 
             /*
@@ -1397,7 +1404,12 @@ public class UnitFunctionality : MonoBehaviour
             {
                 if (activeEffects[rand].curEffectBenefitType == Effect.EffectBenefitType.DEBUFF)
                 {
-                    TriggerTextAlert(activeEffects[rand].effectName, 1, true, "Trigger");
+                    string name = activeEffects[rand].effectName;
+
+                    if (activeEffects[rand].effectName == "MIND_CONTROL")
+                        name = "MIND CONTROL";
+
+                    TriggerTextAlert(name, 1, true, "Trigger");
                     activeEffects[rand].ReduceTurnCountText(this);
                 }
                 else
@@ -2513,7 +2525,7 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false)
+    public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false, bool immune = false)
     {
         yield return new WaitForSeconds(0.35f);
 
@@ -2533,7 +2545,16 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (activeEffects[i] != null)
             {
-                if (parry)
+                if (immune)
+                {
+                    if (activeEffects[i].curEffectName == Effect.EffectName.IMMUNITY)
+                    {
+                        activeEffects[i].TriggerPowerEffect(this);
+                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                        activeEffects[i].ReduceTurnCountText(this);
+                    }
+                }
+                if (parry && !immune)
                 {
                     if (activeEffects[i].curEffectName == Effect.EffectName.PARRY)
                     {
@@ -2543,7 +2564,7 @@ public class UnitFunctionality : MonoBehaviour
                     }
                 }
 
-                if (turnStart)
+                if (turnStart && !immune)
                 {
                     if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
                     {
@@ -2554,7 +2575,7 @@ public class UnitFunctionality : MonoBehaviour
                         yield return new WaitForSeconds(.5f);
                     }
                 }
-                else
+                else if (!immune)
                 {
                     if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                     {
@@ -3291,6 +3312,13 @@ public class UnitFunctionality : MonoBehaviour
                 powerText.UpdatePowerTextFontSize(GameManager.Instance.powerMissFontSize);
                 powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillMiss);
                 powerText.UpdatePowerText(GameManager.Instance.missPowerText);
+
+                if (GetEffect("IMMUNITY"))
+                {
+                    powerText.UpdatePowerTextFontSize(GameManager.Instance.powerSkillParryFontSize);
+                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillParry);
+                    powerText.UpdatePowerText(GameManager.Instance.parryPowerText);
+                }
                 //powerText.UpdatePowerText(power.ToString());   // Update Power Text
                 yield break;
             }
@@ -3546,6 +3574,12 @@ public class UnitFunctionality : MonoBehaviour
 
             GameManager.Instance.RemoveUnitFromTurnOrder(this);
 
+            if (mindControlled)
+            {
+                if (GameManager.Instance.activeRoomHeroes.Contains(this))
+                    GameManager.Instance.activeRoomHeroes.Remove(this);
+            }
+
             if (effect)
             {
                 int val = 0;
@@ -3560,7 +3594,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     //Debug.Log("111");
 
-                    if (curUnitType == UnitType.PLAYER)
+                    if (curUnitType == UnitType.PLAYER && !mindControlled)
                     {
                         yield return new WaitForSeconds(.75f);
                         StartCoroutine(UnitEndTurn(true));  // end unit turn
@@ -3574,12 +3608,61 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void ReviveUnit(int acc, bool fullhealth = false)
+    public void CheckSwitchTeams()
+    {
+        // If unit has mindcontrolled skills from a previous enemy of the same type being mindcontrolled,
+        // Change the back to a non-mind controlled version for this unit
+        if (!mindControlled)
+        {
+            for (int i = 0; i < skills.Count; i++)
+            {
+                if (skills[i].mindControlled)
+                    skills[i].SwitchTargetingTeam(false);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < skills.Count; i++)
+            {
+                skills[i].SwitchTargetingTeam(true);
+            }
+        }
+    }
+
+    public void SwitchTeams()
+    {
+        if (curUnitType == UnitType.PLAYER)
+            curUnitType = UnitType.ENEMY;
+        else
+            curUnitType = UnitType.PLAYER;
+
+        mindControlled = true;
+
+        CheckSwitchTeams();
+
+        if (GameManager.Instance.activeRoomEnemies.Contains(this))
+        {
+            GameManager.Instance.activeRoomHeroes.Add(this);
+
+            GameManager.Instance.activeRoomEnemies.Remove(this);
+        }
+        else if (GameManager.Instance.activeRoomHeroes.Contains(this))
+        {
+            GameManager.Instance.activeRoomEnemies.Add(this);
+            GameManager.Instance.activeRoomHeroes.Remove(this);
+        }
+
+        GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
+    }
+
+    public void ReviveUnit(int acc, bool fullhealth = false, bool enemy = false)
     {
         isDead = false;
 
-        GameManager.Instance.AddUnitToTurnOrder(this);
-        GameManager.Instance.AddActiveRoomAllUnitsFunctionality(this);
+        if (enemy)    
+            GameManager.Instance.AddUnitToTurnOrder(this);
+
+        GameManager.Instance.AddActiveRoomAllUnitsFunctionality(this, enemy);
 
         GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
 
@@ -3787,7 +3870,7 @@ public class UnitFunctionality : MonoBehaviour
         return maxExp;
     }
 
-    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true, bool triggerHitSFX = true, bool effect = false)
+    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true, bool triggerHitSFX = true, bool effect = false, bool isEffect = false)
     {
         if (isDead)
             return;
@@ -3801,11 +3884,28 @@ public class UnitFunctionality : MonoBehaviour
             // Damaging
             if (damaging)
             {
+                if (!isEffect)
+                {
+                    beenAttacked = true;
+                }
+
                 //float tempPower;
                 //tempPower = (curRecieveDamageAmp / 100f) * absPower;
                 //float newPower = absPower + tempPower;
 
                 float newPower = 0;
+
+                if (GetEffect("IMMUNITY"))
+                {
+                    absPower = 0;
+
+                    //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
+                    SpawnPowerUI((int)absPower, false, false, null, false, true);
+
+                    //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
+
+                    GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitHealthVisual(effect);
+                }
 
                 // if this unit has Reaping, heal caster
                 if (GetEffect("REAPING"))

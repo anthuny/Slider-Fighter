@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 0
+  startingSelectionType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
@@ -33,7 +34,7 @@ MonoBehaviour:
   skillHitAttempts: 2
   projectileSpeed: 10
   skillCooldown: 1
-  curCooldown: 2
+  curCooldown: 0
   skillSelectionCount: 3
   isSelfCast: 0
   isDoublingEffect: 0
@@ -44,12 +45,14 @@ MonoBehaviour:
   isLongerSkillAnim: 1
   healPowerAmount: 15
   isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 0
   effect: {fileID: 11400000, guid: 7a81fa0ec2850504a810d1d23caf5e94, type: 2}
+  effect2: {fileID: 0}
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -65,10 +68,11 @@ MonoBehaviour:
   projectileAllowIdle: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  skillLaunch: {fileID: 8300000, guid: d9f8ffe9f8a12a7439b73ce5fb189242, type: 3}
   repeatLaunchSFX: 0
   giveExtraDesc: 0
-  projectileLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
-  skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
+  projectileLaunch: {fileID: 0}
+  skillHit: {fileID: 8300000, guid: 04ff6a314641b394a9e9b6ee13246425, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 1
+  mindControlled: 0

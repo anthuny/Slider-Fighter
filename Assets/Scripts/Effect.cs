@@ -20,7 +20,7 @@ public class Effect : MonoBehaviour
     public enum EffectName 
     { 
         BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, HEALINGUP, HEALINGDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
-        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING 
+        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING, MIND_CONTROL, IMMUNITY 
     }
     public EffectName curEffectName;
 
@@ -99,7 +99,7 @@ public class Effect : MonoBehaviour
             curEffectTrigger = EffectTrigger.TURNSTART;
         else if (effect.curEffectTrigger == EffectData.EffectTrigger.TURNEND)
             curEffectTrigger = EffectTrigger.TURNEND;
-        else if (effect.curEffectTrigger == EffectData.EffectTrigger.DAMAGERECIEVED)
+        else if (effect.curEffectTrigger == EffectData.EffectTrigger.ANYENDTURN)
             curEffectTrigger = EffectTrigger.DAMAGERECIEVED;
         else if (effect.curEffectTrigger == EffectData.EffectTrigger.ONGOING)
             curEffectTrigger = EffectTrigger.ONGOING;
@@ -154,6 +154,10 @@ public class Effect : MonoBehaviour
             curEffectName = EffectName.DEFENSEDOWN;
         else if (effect.curEffectName == EffectData.EffectName.REAPING)
             curEffectName = EffectName.REAPING;
+        else if (effect.curEffectName == EffectData.EffectName.MIND_CONTROL)
+            curEffectName = EffectName.MIND_CONTROL;
+        else if (effect.curEffectName == EffectData.EffectName.IMMUNITY)
+            curEffectName = EffectName.IMMUNITY;
 
         effectName = effect.effectName;
         titleTextColour = effect.titleTextColour;
@@ -168,21 +172,21 @@ public class Effect : MonoBehaviour
 
         UpdateEffectIcon(effect);
 
-
         float powerStacks = turnDuration / 2;
 
         effectPowerStacks += (int)powerStacks;
+
+        if (curEffectName == EffectName.MIND_CONTROL)
+        {
+            turnDuration = 1;
+            effectPowerStacks = 1;
+        }
 
         UpdateEffectTierImages((int)powerStacks);
 
         if (turnDuration > 2)
             turnDuration = 2;
 
-
-
-
-        
-        //if (doFullSetup)
         AddTurnCountText(turnDuration);
 
         transform.GetComponentInParent<CanvasGroup>().alpha = 1;
@@ -394,6 +398,12 @@ public class Effect : MonoBehaviour
             {
                 unit.UpdateUnitHealingHits((int)addedStat, true);
             }
+            else if (curEffectName == EffectName.MIND_CONTROL)
+            {
+                float damage = (powerPercent * effectPowerStacks);
+
+                unit.UpdateUnitCurHealth((int)damage, true, false, true, false, true);
+            }
         }
 
         DestroyEffectAfterTime(unit);
@@ -454,10 +464,10 @@ public class Effect : MonoBehaviour
         if (curEffectName == EffectName.BLEED)
         {
             power *= effectPowerStacks;
-            unitTarget.UpdateUnitCurHealth((int)-power, true, false, true, true, true);
+            unitTarget.UpdateUnitCurHealth((int)-power, true, false, true, true, true, true);
         }
         else if (curEffectName == EffectName.POISON)
-            unitTarget.UpdateUnitCurHealth((int)-power, true, false, true, true, true);
+            unitTarget.UpdateUnitCurHealth((int)-power, true, false, true, true, true, true);
         else if (curEffectName == EffectName.RECOVER)
             unitTarget.UpdateUnitCurHealth((int)newHealingPower);
 

@@ -19,7 +19,9 @@ MonoBehaviour:
   effectName: REAPING
   effectDesc: Heal 20% x tier of damage dealt to this unit, to the caster (max heal
     80%)
-  effectIcon: {fileID: 21300000, guid: d2368a896f3560949af2d83815614b97, type: 3}
+  effectIcon: {fileID: 21300000, guid: 198cb09ab987ac7499d7f2a17c10edfd, type: 3}
   powerPercent: 20
   powerAmp: 0
-  titleTextColour: {r: 0.7733534, g: 0.28773582, b: 1, a: 1}
+  titleTextColour: {r: 0.8679245, g: 0.18422928, b: 0.35832942, a: 1}
+  effectForce1TurnRemaining: 0
+  effectForce1Tier: 0

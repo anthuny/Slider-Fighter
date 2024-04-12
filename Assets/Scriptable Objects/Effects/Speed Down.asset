@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598ab766c50009b43b7f087a0dd359a1, type: 3}
   m_Name: Speed Down
   m_EditorClassIdentifier: 
-  curEffectTrigger: 2
+  curEffectTrigger: 1
   curEffectType: 1
   curEffectBenefitType: 1
   curEffectName: 10

@@ -43,11 +43,11 @@ public class HitAreaManager : MonoBehaviour
                 rt2.localPosition = new Vector3(rt2.localPosition.x, rt.localPosition.y, rt.position.z);
             }
 
-            Debug.Log("updated position " + rt.position.y);
+            //Debug.Log("updated position " + rt.position.y);
         }
         else
         {
-            Debug.LogError("No Weapon Ranges set");
+            //Debug.LogError("No Weapon Ranges set");
         }
     }
 }

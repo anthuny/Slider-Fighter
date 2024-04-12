@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
+  startingSelectionType: 0
   curskillSelectionAliveType: 0
   curRangedType: 0
   curAnimType: 0
-  skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
+  skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Poison Touch
-  skillDescr: Damage up to
+  skillDescr: 'Target 1 enemy, dealing damage, each hit has a 15% chance to apply
+    poison '
   skillTabDescr: 
   startingSkillLevel: 0
   curSkillLevel: 0
@@ -31,13 +33,18 @@ MonoBehaviour:
   skillHitAttempts: 1
   projectileSpeed: 12
   skillCooldown: 0
-  curCooldown: 0
+  curCooldown: 1
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
   isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
@@ -66,3 +73,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 3bd9d7e52bee410449b328cf51ba37a8, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 0
+  mindControlled: 1

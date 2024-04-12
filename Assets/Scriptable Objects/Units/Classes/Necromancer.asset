@@ -35,5 +35,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dc2b3570fcd499744809d38e9c39276f, type: 2}
   - {fileID: 11400000, guid: ddcf5989230c45841960b35d1f667e36, type: 2}
   - {fileID: 11400000, guid: abc27d524e2351e44bcb315c75f7f82b, type: 2}
-  deathClip: {fileID: 8300000, guid: b107332261fb28c4daa4fab07ac018e8, type: 3}
-  hitRecievedClip: {fileID: 8300000, guid: ba0baeda6ce10f747bc5518c1a80137a, type: 3}
+  deathClip: {fileID: 8300000, guid: ac378d336493de44eac288beb2b83032, type: 3}
+  hitRecievedClip: {fileID: 8300000, guid: 492b31fe474918a41a7f033cf40b0a6a, type: 3}

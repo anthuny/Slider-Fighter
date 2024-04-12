@@ -1117,14 +1117,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GameManager.Instance.PlayerAttack();
 
-        StartCoroutine(AttackButtonCont());
+        //StartCoroutine(AttackButtonCont());
     }
 
+    /*
     IEnumerator AttackButtonCont()
     {
         yield return new WaitForSeconds(GameManager.Instance.skillAlertAppearTime/2);
-        GameManager.Instance.SetupPlayerWeaponUI();
+
+        if (!GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+            GameManager.Instance.SetupPlayerWeaponUI();
+        else
+            WeaponManager.Instance.SetEnemyWeapon(GameManager.Instance.GetActiveUnitFunctionality(), true);
+
     }
+    */
 
     public void IncHero1HP()
     {

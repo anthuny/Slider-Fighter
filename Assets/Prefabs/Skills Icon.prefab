@@ -1426,6 +1426,7 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
 --- !u!114 &5259889019705451123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1800,7 +1801,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 0
+    m_Top: 77
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 39.36
@@ -2085,6 +2086,7 @@ MonoBehaviour:
   mainButton: {fileID: 5259889019705451120}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
 --- !u!114 &2349162183982141653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2441,6 +2443,7 @@ MonoBehaviour:
   mainButton: {fileID: 5259889019705451120}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
 --- !u!114 &8469674519051125405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3046,7 +3049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 244727063565343060, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 244727063565343060, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_AnchorMin.x
@@ -3054,7 +3057,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 244727063565343060, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 244727063565343060, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3094,11 +3097,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 244727063565343060, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 244727063565343060, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -189.36
       objectReference: {fileID: 0}
     - target: {fileID: 244727063565343060, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3147,6 +3150,10 @@ PrefabInstance:
     - target: {fileID: 6352433407127514740, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_Name
       value: Skill Upgrade - Increase Targets Multiple
+      objectReference: {fileID: 0}
+    - target: {fileID: 6352433407127514740, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6804436680270309953, guid: 624d6d8882e3d194194fcfb10d498c76, type: 3}
       propertyPath: m_AnchoredPosition.x

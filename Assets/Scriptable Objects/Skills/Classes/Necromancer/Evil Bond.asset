@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
-  curskillSelectionAliveType: 1
+  startingSelectionType: 1
+  curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   skillSprite: {fileID: 21300000, guid: 9fb807da16dce25429c5dd769f5b437d, type: 3}
   skillName: EVIL BOND
-  skillDescr: Revive 1 base defeated ally this combat with 75% health
-  skillTabDescr: Revive 1 base defeated ally this combat with 75% health
+  skillDescr: Target 1 ally, Cast Immunity effect and speed down
+  skillTabDescr: Target 1 ally, Cast Immunity effect and speed down
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -30,21 +31,27 @@ MonoBehaviour:
   skillBaseHitOutput: 1
   skillHitAttempts: 1
   projectileSpeed: 0
-  skillCooldown: 4
-  curCooldown: 4
+  skillCooldown: 2
+  curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
-  isReviving: 1
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
+  isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 0
-  effect: {fileID: 0}
-  effectTurnLength: 0
+  effect: {fileID: 11400000, guid: a0a448b2d3383c44b82ac9431b0bd644, type: 2}
+  effect2: {fileID: 11400000, guid: 3b5363b8d0a4511418b37fee984e6680, type: 2}
+  effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
   baseEffectApplyCount: 0
@@ -58,11 +65,12 @@ MonoBehaviour:
   projectileAllowSpin: 0
   projectileAllowIdle: 0
   projectileAC: {fileID: 0}
-  targetEffectVisualAC: {fileID: 9100000, guid: 2b088e935cf2110469841cdbbbcd1ddc, type: 2}
-  skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 631ffd232fe58fd43a134916e4a59a66, type: 3}
   repeatLaunchSFX: 0
   giveExtraDesc: 0
   projectileLaunch: {fileID: 0}
-  skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
-  skillHitAdditional: {fileID: 8300000, guid: 7e0a596c329f8e743b6384c520fbe0d6, type: 3}
+  skillHit: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
+  skillHitAdditional: {fileID: 0}
   originalIndex: 3
+  mindControlled: 0

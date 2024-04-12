@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
+  startingSelectionType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
-  skillSprite: {fileID: 21300000, guid: 08c71e4e0565fe4469d1e0a593047156, type: 3}
+  skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: GLOWING PAINS
   skillDescr: 'Heal a targeted ally for '
   skillTabDescr: 
@@ -30,20 +31,26 @@ MonoBehaviour:
   skillBaseHitOutput: 1
   skillHitAttempts: 1
   projectileSpeed: 13
-  skillCooldown: 2
+  skillCooldown: 3
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
   isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 0
   effect: {fileID: 0}
+  effect2: {fileID: 0}
   effectTurnLength: 0
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -66,3 +73,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 48d64bd581402b84dae4488709290b1a, type: 3}
   skillHitAdditional: {fileID: 8300000, guid: b46c1ba03426d0241ae2dabf224abc57, type: 3}
   originalIndex: 1
+  mindControlled: 0

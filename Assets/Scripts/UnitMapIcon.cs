@@ -41,6 +41,11 @@ public class UnitMapIcon : MonoBehaviour
             gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(125, 125);
             gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, -35);
         }
+        else if (unitName == "Necromancer")
+        {
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(125, 125);
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, -35);
+        }
     }
 
     public void UpdateUnitName(string newName)
