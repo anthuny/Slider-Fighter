@@ -20,10 +20,12 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
 
     public void AgePromptAboveAge()
     {
+        /*
         agePrompt.UpdateAlpha(0);
         agePrompt.ToggleButton(false);
         agePrompt.ToggleButton2(false, true);
         agePrompt.ToggleButton3(false, true);   // bg
+        */
 
         // If the user opts in to targeted advertising:
         MetaData gdprMetaData = new MetaData("gdpr");
@@ -40,10 +42,12 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
 
     public void AgePromptBelowAge()
     {
+        /*
         agePrompt.UpdateAlpha(0);
         agePrompt.ToggleButton(false);
         agePrompt.ToggleButton2(false, true);
         agePrompt.ToggleButton3(false, true);   // bg
+        */
 
         // If the user opts out of targeted advertising:
         MetaData gdprMetaData = new MetaData("gdpr");
@@ -68,21 +72,34 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         // If player hasnt been prompt for age before, do it
         if (PlayerPrefs.GetInt("OverAgeRequirement") == 0)
         {
+            
             // Prompt the player if they are over 18 or not
-            agePrompt.UpdateAlpha(1);
-            agePrompt.ToggleButton(true);
-            agePrompt.ToggleButton2(true, true);
-            agePrompt.ToggleButton3(true, true);   // bg
-
-
-            //CharacterCarasel.Instance.ToggleMenu(false);
-        }
-        else
-        {
             agePrompt.UpdateAlpha(0);
             agePrompt.ToggleButton(false);
             agePrompt.ToggleButton2(false, true);
             agePrompt.ToggleButton3(false, true);   // bg
+            
+
+
+            //CharacterCarasel.Instance.ToggleMenu(false);
+
+            // If the user opts in to targeted advertising:
+            MetaData gdprMetaData = new MetaData("gdpr");
+            gdprMetaData.Set("consent", "true");
+            Advertisement.SetMetaData(gdprMetaData);
+
+            PlayerPrefs.SetInt("OverAgeRequirement", 1);
+
+            CharacterCarasel.Instance.ResetMenu();
+        }
+        else
+        {
+            
+            agePrompt.UpdateAlpha(0);
+            agePrompt.ToggleButton(false);
+            agePrompt.ToggleButton2(false, true);
+            agePrompt.ToggleButton3(false, true);   // bg
+            
 
             // If the user opts in to targeted advertising:
             MetaData gdprMetaData = new MetaData("gdpr");

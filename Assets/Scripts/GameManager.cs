@@ -2520,7 +2520,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             yield return new WaitForSeconds(0.5f);
 
         // For no power skills
-        if (GetActiveSkill().curSkillPower == 0)
+        if (GetActiveSkill().curSkillPower == 0 || GetActiveSkill().healPowerAmount != 0)
         {
            // GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
 
@@ -2609,9 +2609,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                                 int maxHitWorth = 15;
                                 if (hitCount > maxHitWorth)
-                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)));
+                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)) / 2.35f);
                                 else
-                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (hitCount - 1)));
+                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (hitCount - 1)) / 2.35f);
                             }
 
                         }
@@ -2632,13 +2632,19 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                                 unitsSelected[x].SwitchTeams();
                             }
+                            else
+                            {
+                                unitsSelected[x].DecreaseEffectTurnsLeft(false, false, false);
+                            }
                         }
                     }
                 }
 
-                #if !UNITY_EDITOR
+#if !UNITY_EDITOR
                     Vibration.Vibrate(15);
-                #endif
+#endif
+
+                yield return new WaitForSeconds(0.15f);
             }
         }
         else
@@ -2845,6 +2851,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
                 activeRoomAllUnitFunctionalitys[i].usedSkill = null;
                 activeRoomAllUnitFunctionalitys[i].effectAddedCount = 0;
+                activeRoomAllUnitFunctionalitys[i].settingUpEffect = false;
             }       
         }
 
@@ -3801,7 +3808,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
                         {
-                            return true;
+                            if (!HeroRoomManager.Instance.playerInHeroRoomView)
+                                return true;
+                            else
+                                return false;
                         }
                         else
                         {
@@ -4367,7 +4377,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             if (ShopManager.Instance.GetUnassignedItem().healthItem)
             {
                 float healthToRegen = (ShopManager.Instance.GetUnassignedItem().power / 100f) * unit.GetUnitMaxHealth();
-                unit.StartCoroutine(unit.SpawnPowerUI(healthToRegen, false, false, null, false));
+               // unit.StartCoroutine(unit.SpawnPowerUI(healthToRegen, false, false, null, false));
                 unit.UpdateUnitCurHealth((int)healthToRegen, false, false);
             }
 

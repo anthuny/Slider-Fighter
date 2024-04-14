@@ -2575,7 +2575,7 @@ public class UnitFunctionality : MonoBehaviour
                         yield return new WaitForSeconds(.5f);
                     }
                 }
-                else if (!immune)
+                else if (!turnStart)
                 {
                     if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                     {
@@ -2957,6 +2957,8 @@ public class UnitFunctionality : MonoBehaviour
         return null;
     }
 
+    public bool settingUpEffect = false;
+
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
         Debug.Log("effectHitAcc " + effectHitAcc);
@@ -2974,7 +2976,7 @@ public class UnitFunctionality : MonoBehaviour
         // If unit is already effected with this effect, add to the effect
         for (int i = 0; i < activeEffects.Count; i++)
         {
-            if (addedEffect.effectName == activeEffects[i].effectName)
+            if (addedEffect.effectName == activeEffects[i].effectName && !settingUpEffect)
             {
                 // Determining whether the effect hits, If it fails, stop
                 // Add more stacks to the effect that the unit already has
@@ -2986,7 +2988,7 @@ public class UnitFunctionality : MonoBehaviour
                         //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
 
                         int rand = Random.Range(1, 101);
-                        if (effectAddedCount < 3)
+                        if (effectAddedCount < 2)
                         {
                             if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                             {
@@ -2994,6 +2996,8 @@ public class UnitFunctionality : MonoBehaviour
                                 effectAddedCount++;
 
                                 activeEffects[i].AddTurnCountText(1);
+
+                                settingUpEffect = true;
 
                                 if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                                 {
@@ -3015,6 +3019,8 @@ public class UnitFunctionality : MonoBehaviour
                             {
                                 if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                                 {
+                                    settingUpEffect = true;
+
                                     activeEffects[i].EffectApply(this);
                                     activeEffects[i].UpdateEffectTierImages();
                                     if (activeEffects[i] != null)
@@ -3079,6 +3085,8 @@ public class UnitFunctionality : MonoBehaviour
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                             //effect.UpdateEffectTierImages();
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                            settingUpEffect = true;
                         }
                     }
                 }
@@ -3101,6 +3109,8 @@ public class UnitFunctionality : MonoBehaviour
                             TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                             //effect.UpdateEffectTierImages();
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                            settingUpEffect = true;
                         }
                         else
                         {
@@ -3216,6 +3226,7 @@ public class UnitFunctionality : MonoBehaviour
         //if (GameManager.Instance.GetActiveSkill() == null)
         //    yield break;
 
+        Debug.Log("power = " + power);
 
         // Play Audio
         if (offense)
@@ -3309,9 +3320,9 @@ public class UnitFunctionality : MonoBehaviour
             if (power <= 0)
             {
                 //Debug.Log(power);
-                powerText.UpdatePowerTextFontSize(GameManager.Instance.powerMissFontSize);
-                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillMiss);
-                powerText.UpdatePowerText(GameManager.Instance.missPowerText);
+                powerText.UpdatePowerTextFontSize(GameManager.Instance.powerSkillParryFontSize);
+                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillParry);
+                powerText.UpdatePowerText(GameManager.Instance.parryPowerText);
 
                 if (GetEffect("IMMUNITY"))
                 {
@@ -3900,7 +3911,7 @@ public class UnitFunctionality : MonoBehaviour
                     absPower = 0;
 
                     //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
-                    SpawnPowerUI((int)absPower, false, false, null, false, true);
+                    StartCoroutine(SpawnPowerUI((int)absPower, false, false, null, false, true));
 
                     //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
 
@@ -3955,10 +3966,14 @@ public class UnitFunctionality : MonoBehaviour
                 }
                 
                 curHealth -= (int)absPower;
-                if (!GetEffect("POISON"))
+
+                // If no effect
+                if (!GetEffect("POISON") && !GetEffect("BLEED"))
                     StartCoroutine(SpawnPowerUI((int)absPower, false, true, null, false));
-                else
-                    StartCoroutine(SpawnPowerUI((int)absPower, false, true, null, false));
+                else if (GetEffect("POISON"))
+                    StartCoroutine(SpawnPowerUI((int)absPower, false, true, GetEffect("POISON"), false));
+                else if (GetEffect("BLEED"))
+                    StartCoroutine(SpawnPowerUI((int)absPower, false, true, GetEffect("BLEED"), false));
 
                 if (curHealth < 0)
                     curHealth = 0;

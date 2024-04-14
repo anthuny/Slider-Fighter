@@ -73,6 +73,6 @@ MonoBehaviour:
   giveExtraDesc: 0
   projectileLaunch: {fileID: 0}
   skillHit: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
-  skillHitAdditional: {fileID: 0}
+  skillHitAdditional: {fileID: 8300000, guid: 5f78fc15aff2d274cbe6a7d0a1330ee3, type: 3}
   originalIndex: 2
   mindControlled: 0

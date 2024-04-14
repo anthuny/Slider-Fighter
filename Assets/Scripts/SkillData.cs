@@ -131,10 +131,10 @@ public class SkillData : ScriptableObject
 
         float val2 = 0;
 
-        if (curSkillPower == 0)
-            val2 = healPowerAmount;
+        if (healPowerAmount != 0)
+            val2 = healPowerAmount + curSkillPower + (upgradeIncPowerCount * 3);
 
-        if (val2 != 0)
+        if (healPowerAmount == 0)
             return Mathf.RoundToInt(val);
         else
             return Mathf.RoundToInt(val2);

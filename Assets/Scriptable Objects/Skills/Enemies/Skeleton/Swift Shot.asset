@@ -50,6 +50,7 @@ MonoBehaviour:
   cleanseCount: 0
   special: 0
   effect: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
+  effect2: {fileID: 0}
   effectTurnLength: 1
   curEffectHitChance: 15
   startingEffectHitChance: 15

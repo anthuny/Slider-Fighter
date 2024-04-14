@@ -72,12 +72,16 @@ public class Effect : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            GameObject go = Instantiate(effectTierGO, parent.position, Quaternion.identity);
-            go.transform.SetParent(parent);
-            go.transform.localScale = Vector3.one;
-            go.transform.localRotation = Quaternion.Euler(0, 0, 90);
-            //go.transform.SetLocalPositionAndRotation(Vector3.zero, new Quaternion(0, 0, 180, 0));
-            go.name = "Effect Tier Image " + count;
+            if (gameObject.transform.GetChild(0).transform.childCount <= 8)
+            {
+                GameObject go = Instantiate(effectTierGO, parent.position, Quaternion.identity);
+                go.transform.SetParent(parent);
+                go.transform.localScale = Vector3.one;
+                go.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                //go.transform.SetLocalPositionAndRotation(Vector3.zero, new Quaternion(0, 0, 180, 0));
+                go.name = "Effect Tier Image " + count;
+
+            }
         }
     }
 
@@ -207,9 +211,11 @@ public class Effect : MonoBehaviour
         {
             turnCountRemaining = 0;
         }
-        else
+        else if (turns != 0 && turnCountRemaining == 0)
             turnCountRemaining += turns;
-        
+        else if (turnCountRemaining >= 1)
+            turnCountRemaining += 1;
+
         effectTurnCountText.text = turnCountRemaining.ToString();
 
         // Ensure there is a cap
@@ -262,7 +268,7 @@ public class Effect : MonoBehaviour
             float newCurHealth = (int)tempAddedHealth;
             targetUnit.UpdateUnitMaxHealth((int)newCurHealth);
             targetUnit.UpdateUnitCurHealth((int)newCurHealth, false, false, true, false);
-            targetUnit.StartCoroutine(targetUnit.SpawnPowerUI(newCurHealth, false, false, this));
+            //targetUnit.StartCoroutine(targetUnit.SpawnPowerUI(newCurHealth, false, false, this));
         }
         else if (curEffectName == EffectName.TAUNT)
             targetUnit.ToggleTaunt(true);
@@ -439,8 +445,9 @@ public class Effect : MonoBehaviour
         // Trigger effect alert
         // Do effect
         int unitMaxHealth = (int)unitTarget.GetUnitMaxHealth();
-        float tempPower = (powerPercent / 100f) * unitMaxHealth;
+        float tempPower = ((powerPercent * effectPowerStacks) / 100f) * unitMaxHealth;
         power = (int)tempPower;
+        power /= 2;
         float newHealingPower = power;
 
 
@@ -449,6 +456,8 @@ public class Effect : MonoBehaviour
         if (curEffectType == EffectType.SUPPORT)
         {
             newHealingPower *= unitTarget.curHealingRecieved;
+
+
         }
 
         if (effectPowerStacks == 2 && !doOnce)
@@ -457,19 +466,20 @@ public class Effect : MonoBehaviour
             effectPowerStacks--;
         }
 
-        newHealingPower *= effectPowerStacks;
-
         // Debug.Log("power = " + power);
 
         if (curEffectName == EffectName.BLEED)
         {
-            power *= effectPowerStacks;
-            unitTarget.UpdateUnitCurHealth((int)-power, true, false, true, true, true, true);
+            unitTarget.UpdateUnitCurHealth((int)power, true, false, true, true, true, true);
         }
         else if (curEffectName == EffectName.POISON)
-            unitTarget.UpdateUnitCurHealth((int)-power, true, false, true, true, true, true);
+            unitTarget.UpdateUnitCurHealth((int)power, true, false, true, true, true, true);
         else if (curEffectName == EffectName.RECOVER)
-            unitTarget.UpdateUnitCurHealth((int)newHealingPower);
+        {
+            //Debug.Log("healing power = " + (int)newHealingPower);
+            unitTarget.UpdateUnitCurHealth((int)newHealingPower, false, false, false, true, true);
+        }
+
 
         /*
         if (curEffectName == EffectName.BLEED)
