@@ -2976,7 +2976,7 @@ public class UnitFunctionality : MonoBehaviour
         // If unit is already effected with this effect, add to the effect
         for (int i = 0; i < activeEffects.Count; i++)
         {
-            if (addedEffect.effectName == activeEffects[i].effectName && !settingUpEffect)
+            if (addedEffect.effectName == activeEffects[i].effectName)
             {
                 // Determining whether the effect hits, If it fails, stop
                 // Add more stacks to the effect that the unit already has
@@ -2988,51 +2988,30 @@ public class UnitFunctionality : MonoBehaviour
                         //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
 
                         int rand = Random.Range(1, 101);
-                        if (effectAddedCount < 2)
+                        if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
                         {
-                            if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
-                            {
-                                // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-                                effectAddedCount++;
-
+                            if (effectAddedCount < 1)
                                 activeEffects[i].AddTurnCountText(1);
 
-                                settingUpEffect = true;
+                            // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+                            effectAddedCount++;
 
-                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
-                                {
-                                    activeEffects[i].EffectApply(this);
-                                    activeEffects[i].UpdateEffectTierImages();
-                                    if (activeEffects[i] != null)
-                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                                    else
-                                        return;
-                                    TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                                }
+                            settingUpEffect = true;
+
+                            if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                            {
+                                activeEffects[i].EffectApply(this);
+                                activeEffects[i].UpdateEffectTierImages();
+                                if (activeEffects[i] != null)
+                                    activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                else
+                                    return;
+                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
                             }
-                            else
-                                continue;
                         }
                         else
-                        {
-                            if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
-                            {
-                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
-                                {
-                                    settingUpEffect = true;
-
-                                    activeEffects[i].EffectApply(this);
-                                    activeEffects[i].UpdateEffectTierImages();
-                                    if (activeEffects[i] != null)
-                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                                    else
-                                        return;
-                                    TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                                }
-                            }
-                            else
-                                continue;
-                        }
+                            continue;
+                     
                     }
                     else if (item || byPassAcc)
                     {
@@ -3537,7 +3516,7 @@ public class UnitFunctionality : MonoBehaviour
         // If unit's health is 0 or lower
         if (curHealth <= 0)
         {
-            if (!GameManager.Instance.fallenHeroes.Contains(this) && curUnitType == UnitType.PLAYER)
+            if (!GameManager.Instance.fallenHeroes.Contains(this) && curUnitType == UnitType.PLAYER && !mindControlled)
             {
                 GameManager.Instance.fallenHeroes.Add(this);
 
@@ -3968,7 +3947,7 @@ public class UnitFunctionality : MonoBehaviour
                 curHealth -= (int)absPower;
 
                 // If no effect
-                if (!GetEffect("POISON") && !GetEffect("BLEED"))
+                if (!GetEffect("POISON") && !GetEffect("BLEED") && !GetEffect("IMMUNITY"))
                     StartCoroutine(SpawnPowerUI((int)absPower, false, true, null, false));
                 else if (GetEffect("POISON"))
                     StartCoroutine(SpawnPowerUI((int)absPower, false, true, GetEffect("POISON"), false));

@@ -1821,6 +1821,29 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 // Check if there are remaining enemy unit spawn locations left
                 if (spawnEnemyPosIndex <= enemySpawnPositions.Count -1)
                 {
+                    if (activeRoomHeroes.Count == 1)
+                    {
+                        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+                        {
+                            if (spawnEnemyPosIndex >= 3)
+                                break;
+                        }
+
+                        if (spawnEnemyPosIndex >= 2)
+                            break;                           
+                    }
+                    else if (activeRoomHeroes.Count == 2)
+                    {
+                        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+                        {
+                            if (spawnEnemyPosIndex >= 5)
+                                break;
+                        }
+
+                        if (spawnEnemyPosIndex >= 4)
+                            break;
+                    }
+
                     go = Instantiate(baseUnit, enemySpawnPositions[spawnEnemyPosIndex]);
                     go.transform.SetParent(enemySpawnPositions[spawnEnemyPosIndex]);
                     spawnEnemyPosIndex++;
@@ -1892,7 +1915,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
                                 val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
                             if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(0, 3) * RoomManager.Instance.GetFloorCount();
+                                val = rand - Random.Range(-1, 2) * RoomManager.Instance.GetFloorCount();
 
                             rand -= val;
 

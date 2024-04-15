@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
-  startingSelectionType: 0
+  startingSelectionType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: 8cdfd37f9e223d74c8c1b04387be2592, type: 3}
   skillName: SWIFT FOCUS
   skillDescr: Target 1 base ally, cast Speed Up Effect

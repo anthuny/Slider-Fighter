@@ -18,6 +18,7 @@ MonoBehaviour:
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: fe0215b0a8ac2bf4985549b5dd98104e, type: 3}
   skillName: HOLY ASSIST
   skillDescr: Target 1 base ally, Cleanse 5 negative effects, Cast Recovery effect
@@ -32,7 +33,7 @@ MonoBehaviour:
   skillHitAttempts: 1
   projectileSpeed: 0
   skillCooldown: 2
-  curCooldown: 2
+  curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0

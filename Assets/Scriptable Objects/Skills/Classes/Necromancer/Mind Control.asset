@@ -18,6 +18,7 @@ MonoBehaviour:
   curskillSelectionAliveType: 1
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: dc7f4ebb9a8d17c47b07e8d9b8190d87, type: 3}
   skillName: MIND CONTROL
   skillDescr: Target up to 5 defeated enemies, Reviving them, and casting Mindcontrol

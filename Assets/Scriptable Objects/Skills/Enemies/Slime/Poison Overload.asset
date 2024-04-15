@@ -18,6 +18,7 @@ MonoBehaviour:
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Poison Overload
   skillDescr: Target up to 3 enemies,
@@ -50,6 +51,7 @@ MonoBehaviour:
   cleanseCount: 0
   special: 0
   effect: {fileID: 11400000, guid: 84de7150b1f66f44c9f3aa5aff3670b9, type: 2}
+  effect2: {fileID: 0}
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -72,4 +74,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: ca488f462c9fd8f4280f584c4c57e0df, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 2
-  mindControlled: 1
+  mindControlled: 0

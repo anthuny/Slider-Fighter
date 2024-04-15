@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
+  startingSelectionType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP
   skillDescr: Target 1 base ally, cast Defense Up Effect
@@ -37,13 +39,19 @@ MonoBehaviour:
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
   isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 1
   effect: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
+  effect2: {fileID: 0}
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -51,8 +59,8 @@ MonoBehaviour:
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
-  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: 8b8c2b4a73736404383cce2b8444f116, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
@@ -66,3 +74,4 @@ MonoBehaviour:
   skillHit: {fileID: 0}
   skillHitAdditional: {fileID: 0}
   originalIndex: 2
+  mindControlled: 0

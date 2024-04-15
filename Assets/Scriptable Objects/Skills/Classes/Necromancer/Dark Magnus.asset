@@ -18,6 +18,7 @@ MonoBehaviour:
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: 727f85ff365f3ad46a96b4e104930a08, type: 3}
   skillName: DARK MAGNUS
   skillDescr: 'Target up to 3 enemies, apply effect Reaping. Heal the lowest health
@@ -25,7 +26,7 @@ MonoBehaviour:
   skillTabDescr: 'Target up to 3 enemies, apply effect Reaping. Heal the lowest health
     ally based on amount of targets selected. '
   startingSkillLevel: 0
-  curSkillLevel: 1
+  curSkillLevel: 0
   pointsAdded: 0
   startingSkillPower: 9
   curSkillPower: 9
@@ -34,7 +35,7 @@ MonoBehaviour:
   skillHitAttempts: 2
   projectileSpeed: 10
   skillCooldown: 1
-  curCooldown: 0
+  curCooldown: 1
   skillSelectionCount: 3
   isSelfCast: 0
   isDoublingEffect: 0
@@ -61,7 +62,7 @@ MonoBehaviour:
   percIncPower: 0
   upgradeIncTargetCount: 0
   upgradeIncHitsCount: 0
-  upgradeIncPowerCount: 1
+  upgradeIncPowerCount: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0

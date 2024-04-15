@@ -178,18 +178,32 @@ public class Effect : MonoBehaviour
 
         float powerStacks = turnDuration / 2;
 
-        effectPowerStacks += (int)powerStacks;
+
+        if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+            effectPowerStacks += (int)powerStacks - 1;
+        else
+        {
+            powerStacks = 1;
+            effectPowerStacks++;
+        }
 
         if (curEffectName == EffectName.MIND_CONTROL)
         {
             turnDuration = 1;
             effectPowerStacks = 1;
         }
+        else if (curEffectName != EffectName.MIND_CONTROL && curEffectName != EffectName.IMMUNITY)
+            UpdateEffectTierImages((int)powerStacks);
 
-        UpdateEffectTierImages((int)powerStacks);
-
-        if (turnDuration > 2)
-            turnDuration = 2;
+        if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+        {
+            if (turnDuration > 2)
+                turnDuration = 2;
+        }
+        else
+        {
+                turnDuration = 1;
+        }
 
         AddTurnCountText(turnDuration);
 
