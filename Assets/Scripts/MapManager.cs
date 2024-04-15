@@ -15,13 +15,16 @@ public class MapManager : MonoBehaviour
     [SerializeField] private UIElement mapRoomOverlay;
     [SerializeField] private Image mapSpawnBounds;
     [SerializeField] private Transform roomIconsParent;
+    public List<float> startingRoomX = new List<float>();
+    public List<float> endingRoomX = new List<float>();
     [SerializeField] private GameObject roomPrefab;
     [SerializeField] private GameObject pathPrefab;
     [SerializeField] private GameObject cameraFocusPoint;
+    [SerializeField] private Transform savedFloorParents;
     [SerializeField] private float cameraMoveDist;
     //[SerializeField] private Image scrollImage;
     public UIElement map;
-    [SerializeField] private RoomMapIcon startingRoom;
+    public RoomMapIcon startingRoom;
     public RoomMapIcon endingRoom;
     [SerializeField] private Transform leftBorder;
     [SerializeField] private Transform rightBorder;
@@ -65,7 +68,7 @@ public class MapManager : MonoBehaviour
     public Vector2 roomShopSize;
     public Vector2 roomHeroSize;
     public Vector2 roomBossSize;
-    public Vector2 rooomStartingSize;
+    public Vector2 roomStartingSize;
     public Vector2 roomSelectedSizeInc;
     public Color roomEnemyColour;
     public Color roomShopColour;
@@ -100,7 +103,8 @@ public class MapManager : MonoBehaviour
 
     bool resetOnce;
 
-    private float originalYPos;
+    public float endingYPos;
+    private float startingYPos;
     private RectTransform rt;
     private float roomDistance;
 
@@ -109,12 +113,17 @@ public class MapManager : MonoBehaviour
         Instance = this;
 
         rt = GetComponent<RectTransform>();
-        originalYPos = transform.position.y;
+        startingYPos = transform.position.y;
     }
 
     void ResetMapYPos()
     {
-        transform.position = new Vector3(transform.position.x, originalYPos, transform.position.z);     
+        transform.position = new Vector3(transform.position.x, startingYPos, transform.position.z);     
+    }
+
+    void EndMapYPos()
+    {
+        transform.position = new Vector3(transform.position.x, endingYPos, transform.position.z);
     }
 
     void Start()
@@ -178,6 +187,9 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.transitionSprite.AllowFadeOut();
 
         GameManager.Instance.transitionSprite.resetMap = false;
+
+        startingRoomX.Add(startingRoom.gameObject.transform.localPosition.y);
+        endingRoomX.Add(endingRoom.gameObject.transform.localPosition.y);
     }
 
     public bool CheckIfAnyHiddenMainRooms(int extra = 0)
@@ -228,9 +240,12 @@ public class MapManager : MonoBehaviour
             {
                 RoomManager.Instance.FloorCompleted();
                 GameManager.Instance.ToggleMap(true, true, true);
+
+                startingRoomX.Add(startingRoom.gameObject.transform.localPosition.y);
+                endingRoomX.Add(endingRoom.transform.localPosition.y);
             }
 
-            if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.BOSS)
+            if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.BOSS && RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.STARTING)
             {
                 selectedRoom.UpdateIsCompleted(true);
                 GameManager.Instance.ToggleMap(true, false);
@@ -305,19 +320,74 @@ public class MapManager : MonoBehaviour
         //RefocusCamera();
 
         if (selectedRoom.GetIsCompleted() && room.curRoomType != RoomMapIcon.RoomType.STARTING)
+        {
+            mapOverlay.UpdateEnterRoomButtonText("");
             selectedRoom.UpdateRoomColour(roomSelectedClearedColour, true);
-        else
-            selectedRoom.UpdateRoomColour(roomSelectedUnclearedColour);
+        }
+
+        if (!selectedRoom.GetIsCompleted() && room.curRoomType != RoomMapIcon.RoomType.STARTING)
+        {
+            mapOverlay.UpdateEnterRoomButtonText("ENTER ROOM");
+        }
+
+        if (room.curRoomType == RoomMapIcon.RoomType.STARTING && RoomManager.Instance.GetFloorCount() != 1)
+        {
+            mapOverlay.UpdateEnterRoomButtonText("PREVIOUS FLOOR");
+        }
+
+        if (selectedRoom.GetIsCompleted() && selectedRoom.curRoomType == RoomMapIcon.RoomType.BOSS)
+        {
+            selectedRoom.UpdateRoomColour(roomSelectedClearedColour, true);
+
+            mapOverlay.ToggleEnterRoomButton(true);
+            mapOverlay.UpdateEnterRoomButtonText("NEXT FLOOR");
+
+            GameManager.Instance.map.mapOverlay.UpdateOverlayRoomName(selectedRoom.curRoomType);
+        }
     }
 
-    public void ResetAllSelectedRooms()
+    public void ResetAllSelectedRooms(bool decFloor = false)
     {
-        for (int i = 0; i < rooms.Count; i++)
+        bool bossAllowed = true;
+
+        foreach (Transform child in savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1))
         {
-            rooms[i].ToggleRoomSelected(false);
+            if (child.gameObject.GetComponent<RoomMapIcon>())
+            {
+                child.gameObject.GetComponent<RoomMapIcon>().ToggleRoomSelected(false);
+
+                if (child.gameObject.GetComponent<RoomMapIcon>().curRoomSize == RoomMapIcon.RoomSize.MAIN)
+                {
+                    if (!child.gameObject.GetComponent<RoomMapIcon>().GetIsCompleted())
+                    {
+
+                        bossAllowed = false;
+                    }
+                }
+            }
         }
 
         startingRoom.ToggleRoomSelected(false);
+
+        endingRoom.ToggleRoomSelected(false);
+
+        //Debug.Log("boss allowed : " + bossAllowed);
+
+        if (bossAllowed)
+        {
+            endingRoom.ToggleHiddenMode(false);
+
+            if (decFloor)
+                endingRoom.UpdateIsCompleted(true);
+        }
+
+        /*
+        if (RoomManager.Instance.GetActiveRoom())
+        {
+            if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.STARTING)
+                startingRoom.ToggleRoomSelected(true);
+        }
+        */
     }
 
     public void ResetMapYPosition()
@@ -400,20 +470,25 @@ public class MapManager : MonoBehaviour
             }
 
             // Toggle Map bottom overlay buttons
-            if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING)
+            if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING && RoomManager.Instance.GetFloorCount() == 1)
             {
                 mapOverlay.ToggleEnterRoomButton(false);
                 mapOverlay.ToggleTeamPageButton(true);
             }
-            else
+            else if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING && RoomManager.Instance.GetFloorCount() != 1)
+            {
+                mapOverlay.ToggleEnterRoomButton(true);
                 mapOverlay.ToggleTeamPageButton(true);
-
+            }
+            
+            
             if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.ENEMY && !RoomManager.Instance.GetActiveRoom().GetIsCompleted())
                 mapOverlay.ToggleEnterRoomButton(true);
             else if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.ENEMY && RoomManager.Instance.GetActiveRoom().GetIsCompleted())
                 mapOverlay.ToggleEnterRoomButton(false);
             else if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.SHOP)
                 mapOverlay.ToggleEnterRoomButton(true);
+            
 
             int diffCount = RoomManager.Instance.GetFloorCount();
             mapOverlay.UpdateRoomCountText(diffCount.ToString());
@@ -443,17 +518,17 @@ public class MapManager : MonoBehaviour
 
     public void UpdateEnterRoomButton()
     {
-        if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING)
-        {
+        if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING && RoomManager.Instance.GetFloorCount() == 1)
             mapOverlay.ToggleEnterRoomButton(false);
-        }
+        else if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.STARTING && RoomManager.Instance.GetFloorCount() != 1)
+            mapOverlay.ToggleEnterRoomButton(true);
         else if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.STARTING
             && !RoomManager.Instance.GetActiveRoom().GetIsCompleted())
         {
             mapOverlay.ToggleEnterRoomButton(true);
         }
         else if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.STARTING
-    && RoomManager.Instance.GetActiveRoom().GetIsCompleted())
+    && RoomManager.Instance.GetActiveRoom().GetIsCompleted() && RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.BOSS)
         {
             mapOverlay.ToggleEnterRoomButton(false);
         }
@@ -551,12 +626,103 @@ public class MapManager : MonoBehaviour
         // Check if map is impossible
         CheckIfMapIsPossible(resetting);
 
+        SaveFloor();
+
         ToggleHiddenModeRoom(true);
 
         UpdateStartingRoomAndPath();
 
         // Updating unit map icon starting position
         unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
+    }
+
+    void SaveFloor()
+    {
+        foreach (Transform child in roomIconsParent)
+        {
+            child.SetParent(savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1));
+        }
+
+        foreach (Transform child in roomIconsParent)
+        {
+            child.SetParent(savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1));
+        }
+
+        for (int i = 0; i < roomIconsParent.childCount; i++)
+        {
+            roomIconsParent.GetChild(i).SetParent(savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1));
+        }
+
+        if (RoomManager.Instance.GetFloorCount() - 2 > -1)
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.SetActive(false);
+    }
+
+    public void LoadFutureSavedFloor()
+    {
+        if (RoomManager.Instance.GetFloorCount() - 2 > -1)
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.SetActive(false);
+
+        if (RoomManager.Instance.GetFloorCount() - 1 > -1)
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.SetActive(true);
+
+        RoomManager.Instance.IncrementFloorCount();
+
+        int diffCount = RoomManager.Instance.GetFloorCount();
+        mapOverlay.UpdateRoomCountText(diffCount.ToString());
+
+        mapOverlay.UpdateFloorNameText(activeFloor.floorName, activeFloor.floorColour);
+
+        ResetAllSelectedRooms(true);
+
+        startingRoom.transform.localPosition = new Vector3(startingRoom.transform.localPosition.x, startingRoomX[RoomManager.Instance.GetFloorCount()-1], 0);
+        endingRoom.transform.localPosition = new Vector3(endingRoom.transform.localPosition.x, endingRoomX[RoomManager.Instance.GetFloorCount()-1], 0);
+
+        // Updating unit map icon starting position
+        unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
+
+        ResetMapYPos();
+
+        // unelect ending 
+        endingRoom.ToggleRoomSelected(false);
+
+        // select starting room
+        startingRoom.ToggleRoomSelected(true);
+
+        UpdateSelectedRoom(startingRoom);
+    }
+
+    public void LoadPreviousFloor()
+    {
+        if (RoomManager.Instance.GetFloorCount() - 1 > -1)
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.SetActive(false);
+
+        if (RoomManager.Instance.GetFloorCount() - 2 > -1)
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.SetActive(true);
+
+        RoomManager.Instance.DecreaseFloorCount();
+
+        int diffCount = RoomManager.Instance.GetFloorCount();
+        mapOverlay.UpdateRoomCountText(diffCount.ToString());
+
+        mapOverlay.UpdateFloorNameText(activeFloor.floorName, activeFloor.floorColour);
+
+        ResetAllSelectedRooms(true);
+
+        startingRoom.transform.localPosition = new Vector3(startingRoom.transform.localPosition.x, startingRoomX[RoomManager.Instance.GetFloorCount() - 1], 0);
+        endingRoom.transform.localPosition = new Vector3(endingRoom.transform.localPosition.x, endingRoomX[RoomManager.Instance.GetFloorCount() - 1], 0);
+
+        // Updating unit map icon starting position
+        unitMapIcon.UpdateUnitPosition(endingRoom.transform.localPosition);
+
+        EndMapYPos();
+
+        // unelect ending 
+        endingRoom.ToggleRoomSelected(true);
+
+        // select starting room
+        startingRoom.ToggleRoomSelected(false);
+
+        UpdateSelectedRoom(endingRoom);
     }
 
     void CheckIfMapIsPossible(bool resetting = true)
@@ -633,7 +799,7 @@ public class MapManager : MonoBehaviour
     void UpdateStartingRoomAndPath()
     {
         ToggleFirstPath(true);
-        startingRoom.UpdateIsCompleted(true);
+        //startingRoom.UpdateIsCompleted(true);
         startingRoom.ToggleRoomSelected(true);
         startingRoom.UpdateRoomColour(roomSelectedClearedColour);
 
@@ -1122,9 +1288,9 @@ public class MapManager : MonoBehaviour
         {
             roomMapIcon.UpdateRoomType(RoomMapIcon.RoomType.STARTING);
             roomMapIcon.UpdateRoomDetail(roomStartingSprite);
-            roomMapIcon.UpdateRoomiconSize(rooomStartingSize);
+            roomMapIcon.UpdateRoomiconSize(roomStartingSize);
             roomMapIcon.UpdateRoomIconColour(roomStartingColour);
-            roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + rooomStartingSize.x, roomSelectedSizeInc.y + rooomStartingSize.y));
+            roomMapIcon.roomSelectionImage.UpdateRectPos(new Vector2(roomSelectedSizeInc.x + roomStartingSize.x, roomSelectedSizeInc.y + roomStartingSize.y));
         }
         else if (roomTypeName == "shop")
         {

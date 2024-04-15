@@ -171,8 +171,14 @@ public class RoomManager : MonoBehaviour
         return rand;
     }
 
-    void IncrementFloorCount()
+    public void IncrementFloorCount()
     {
         floorCount++;
+    }
+
+    public void DecreaseFloorCount()
+    {
+        if (floorCount > 1)
+            floorCount--;
     }
 }

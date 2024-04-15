@@ -158,6 +158,11 @@ public class MapOverlay : MonoBehaviour
             buttonEnterRoom.UpdateAlpha(0);
     }
 
+    public void UpdateEnterRoomButtonText(string text)
+    {
+        buttonEnterRoom.UpdateContentSubText(text);
+    }
+
     public void ToggleTeamPageButton(bool toggle)
     {
         if (toggle)
@@ -189,7 +194,7 @@ public class MapOverlay : MonoBehaviour
 
     public void UpdateRoomCountText(string text)
     {
-        Debug.Log("text = " + text);
+        //Debug.Log("text = " + text);
         roomCountText.UpdateContentText(text);
         //oomCountTextShopRoom.UpdateContentText(text);
     }

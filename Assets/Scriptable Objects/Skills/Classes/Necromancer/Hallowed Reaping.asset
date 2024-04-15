@@ -55,8 +55,8 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 7a81fa0ec2850504a810d1d23caf5e94, type: 2}
   effect2: {fileID: 0}
   effectTurnLength: 1
-  curEffectHitChance: 25
-  startingEffectHitChance: 25
+  curEffectHitChance: 40
+  startingEffectHitChance: 40
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0

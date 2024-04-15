@@ -224,7 +224,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             // Map Close SFX
             AudioManager.Instance.Play("Map_Close");
 
-            GameManager.Instance.TriggerTransitionSequence();
+            if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.STARTING && !RoomManager.Instance.GetActiveRoom().isCompleted)
+                GameManager.Instance.TriggerTransitionSequence();
 
             StartCoroutine(ButtonEnterRoomCo());
         }
@@ -233,6 +234,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     IEnumerator ButtonEnterRoomCo()
     {
+        if (RoomManager.Instance.GetFloorCount() != 0 && RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.STARTING)
+        {
+            MapManager.Instance.LoadPreviousFloor();
+            enterRoomButtonPressed = false;
+
+            yield break;
+        }
+        else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS && RoomManager.Instance.GetActiveRoom().isCompleted)
+        {
+            MapManager.Instance.LoadFutureSavedFloor();
+            enterRoomButtonPressed = false;
+
+            yield break;
+        }
+
         yield return new WaitForSeconds(1f);
 
         //GameManager.Instance.UpdateAllyVisibility(true);

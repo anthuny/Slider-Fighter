@@ -151,7 +151,7 @@ public class RoomMapIcon : MonoBehaviour
                 ToggleDiscovered(true);
                 GameManager.Instance.map.HideConnectingRooms();
 
-                if (GetIsCompleted())
+                if (GetIsCompleted() && curRoomType != RoomType.BOSS)
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
                 else
                 {
@@ -170,13 +170,15 @@ public class RoomMapIcon : MonoBehaviour
             }
             else if (curRoomType == RoomType.STARTING)
             {
-                if (GetIsCompleted())
-                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
-                else
-                {
+                //if (GetIsCompleted())
+                    //MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
+
+                if (RoomManager.Instance.GetFloorCount() != 1)
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
-                    MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
-                }
+                else
+                    MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
+
+                MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
 
                 // Update GameManager active room
                 RoomManager.Instance.UpdateActiveRoom(this);
@@ -225,9 +227,11 @@ public class RoomMapIcon : MonoBehaviour
                 ToggleDiscovered(true);
                 GameManager.Instance.map.UpdateSelectedRoom(this);
 
+                /*
                 if (GetIsCompleted())
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
-                else
+                */             
+                if (!GetIsCompleted())
                 {
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);
                     MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
