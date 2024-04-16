@@ -108,6 +108,10 @@ public class MapManager : MonoBehaviour
     private RectTransform rt;
     private float roomDistance;
 
+    public Sprite arrowUpSprite;
+    public Sprite arrowDownSprite;
+    public Sprite invisSprite;
+
     private void Awake()
     {
         Instance = this;
@@ -231,7 +235,8 @@ public class MapManager : MonoBehaviour
 
         //mapOverlay.ToggleEnterRoomButton(false);
 
-        ShowConnectingRooms();
+        if (RoomManager.Instance.GetFloorCount() >= RoomManager.Instance.highestFloorCountRun)
+            ShowConnectingRooms();
 
         // If player won
         if (playerWon)
@@ -258,6 +263,8 @@ public class MapManager : MonoBehaviour
             RoomManager.Instance.HideFloorIncreaseAlert();
 
             ResetEntireRun(tryShowAd);
+
+            return;
         }
 
         selectedRoom.ToggleRoomSelected(true);
@@ -267,6 +274,8 @@ public class MapManager : MonoBehaviour
 
         if (forceEnd)
             ResetEntireRun(tryShowAd);
+
+        mapOverlay.ToggleTeamPageButton(true);
     }
 
     public void ResetEntireRun(bool tryShowAd)
@@ -283,6 +292,11 @@ public class MapManager : MonoBehaviour
         GameManager.Instance.fallenHeroes.Clear();
         ShopManager.Instance.ResetPlayerGold();
         ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.playerStartingGold);
+        ResetSavedFloors();
+
+        startingRoomX.Clear();
+        endingRoomX.Clear();
+
         //AudioManager.Instance.Play("Room_Lose");
     }
 
@@ -328,11 +342,13 @@ public class MapManager : MonoBehaviour
         if (!selectedRoom.GetIsCompleted() && room.curRoomType != RoomMapIcon.RoomType.STARTING)
         {
             mapOverlay.UpdateEnterRoomButtonText("ENTER ROOM");
+            mapOverlay.UpdateEnterRoomButtonImage(false, true);
         }
 
         if (room.curRoomType == RoomMapIcon.RoomType.STARTING && RoomManager.Instance.GetFloorCount() != 1)
         {
-            mapOverlay.UpdateEnterRoomButtonText("PREVIOUS FLOOR");
+            mapOverlay.UpdateEnterRoomButtonText("");
+            mapOverlay.UpdateEnterRoomButtonImage(false);
         }
 
         if (selectedRoom.GetIsCompleted() && selectedRoom.curRoomType == RoomMapIcon.RoomType.BOSS)
@@ -340,7 +356,8 @@ public class MapManager : MonoBehaviour
             selectedRoom.UpdateRoomColour(roomSelectedClearedColour, true);
 
             mapOverlay.ToggleEnterRoomButton(true);
-            mapOverlay.UpdateEnterRoomButtonText("NEXT FLOOR");
+            mapOverlay.UpdateEnterRoomButtonText("");
+            mapOverlay.UpdateEnterRoomButtonImage(true);
 
             GameManager.Instance.map.mapOverlay.UpdateOverlayRoomName(selectedRoom.curRoomType);
         }
@@ -648,24 +665,83 @@ public class MapManager : MonoBehaviour
             child.SetParent(savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1));
         }
 
-        for (int i = 0; i < roomIconsParent.childCount; i++)
+        for (int i = 0; i < 50; i++)
         {
-            roomIconsParent.GetChild(i).SetParent(savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1));
+            if (roomIconsParent.childCount >= 1)
+            {
+                if (roomIconsParent.GetChild(0))
+                    roomIconsParent.GetChild(0).SetParent(savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1));
+            }
+            else
+                break;
         }
 
         if (RoomManager.Instance.GetFloorCount() - 2 > -1)
-            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.SetActive(false);
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.GetComponent<UIElement>().UpdateAlpha(0);
+
+        if (RoomManager.Instance.GetFloorCount() - 2 > -1)
+        {
+            for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).childCount; i++)
+            {
+                if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).GetChild(i).gameObject.GetComponent<MapPath>())
+                    savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).GetChild(i).gameObject.GetComponent<MapPath>().TogglePathVisibility(false);
+            }
+        }
+
+        if (RoomManager.Instance.GetFloorCount() - 2 > -1)
+        {
+            for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.childCount; i++)
+            {
+                if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>())
+                {
+                    savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().interactable = false;
+                    savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                }
+            }
+        }
+
+        savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()-1).gameObject.GetComponent<UIElement>().UpdateAlpha(1);
+    }
+
+    public void ResetSavedFloors()
+    {
+        for (int i = 0; i < savedFloorParents.childCount; i++)
+        {
+            for (int x = 0; x < savedFloorParents.GetChild(i).childCount; x++)
+            {
+                Destroy(savedFloorParents.GetChild(i).GetChild(x).gameObject);
+            }
+        }
+
+        savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).gameObject.GetComponent<UIElement>().UpdateAlpha(1);
     }
 
     public void LoadFutureSavedFloor()
     {
-        if (RoomManager.Instance.GetFloorCount() - 2 > -1)
-            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.SetActive(false);
-
-        if (RoomManager.Instance.GetFloorCount() - 1 > -1)
-            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.SetActive(true);
-
         RoomManager.Instance.IncrementFloorCount();
+
+        savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.GetComponent<UIElement>().UpdateAlpha(1);
+
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>())
+            {
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().interactable = true;
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            }
+        }
+
+
+        savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.GetComponent<UIElement>().UpdateAlpha(0);
+
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>())
+            {
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().interactable = false;
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            }
+        }
 
         int diffCount = RoomManager.Instance.GetFloorCount();
         mapOverlay.UpdateRoomCountText(diffCount.ToString());
@@ -689,17 +765,103 @@ public class MapManager : MonoBehaviour
         startingRoom.ToggleRoomSelected(true);
 
         UpdateSelectedRoom(startingRoom);
+
+
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).GetChild(i).gameObject.GetComponent<MapPath>())
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).GetChild(i).gameObject.GetComponent<MapPath>().TogglePathVisibility(false);
+        }
+
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).GetChild(i).gameObject.GetComponent<MapPath>())
+            {
+                if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).GetChild(i).gameObject.GetComponent<MapPath>().isRevealed)
+                    savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).GetChild(i).gameObject.GetComponent<MapPath>().TogglePathVisibility(true);
+            }
+        }
+
+        RoomManager.Instance.UpdateActiveRoom(startingRoom);
+
+        bool allowBossRoom = false;
+
+        // Determine if boss room should be unhidden, and uncompleted
+        for (int i = 0; i < savedFloorParents.childCount; i++)
+        {
+            if (savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>())
+            {
+                if (savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomSize == RoomMapIcon.RoomSize.MAIN
+                    && savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomType != RoomMapIcon.RoomType.STARTING
+                    && savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomType != RoomMapIcon.RoomType.BOSS)
+                {
+                    if (savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().GetIsCompleted())
+                    {
+                        allowBossRoom = true;
+                    }
+                    else
+                        allowBossRoom = false;
+                }
+            }
+        }
+
+        if (allowBossRoom)
+        {
+            endingRoom.ToggleHiddenMode(false);
+            endingRoom.ToggleDiscovered(true);
+
+        }
+        else
+        {
+            endingRoom.ToggleHiddenMode(true);
+            endingRoom.ToggleDiscovered(false);
+        }
+
+        if (RoomManager.Instance.highestFloorCountRun <= RoomManager.Instance.GetFloorCount())
+        {
+            endingRoom.UpdateIsCompleted(false);
+        }
+
+        for (int i = 0; i < endingRoom.linkedPaths.Count; i++)
+        {
+            if (!endingRoom.GetIsCompleted())
+                endingRoom.linkedPaths[i].TogglePathVisibility(false);
+        }
+
+        mapOverlay.UpdateRoomTypeText("");
+        mapOverlay.UpdateRoomSubText("");
+
+        mapOverlay.UpdateRoomDifficultyIcons();
     }
 
     public void LoadPreviousFloor()
     {
-        if (RoomManager.Instance.GetFloorCount() - 1 > -1)
-            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.SetActive(false);
-
-        if (RoomManager.Instance.GetFloorCount() - 2 > -1)
-            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).gameObject.SetActive(true);
-
         RoomManager.Instance.DecreaseFloorCount();
+
+        if (RoomManager.Instance.GetFloorCount() > -1)
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).gameObject.GetComponent<UIElement>().UpdateAlpha(0);
+
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).transform.childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>())
+            {
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().interactable = false;
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            }
+        }
+
+
+        if (RoomManager.Instance.GetFloorCount() > -1)
+            savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.GetComponent<UIElement>().UpdateAlpha(1);
+
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>())
+            {
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().interactable = true;
+                savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).transform.GetChild(i).gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            }
+        }
 
         int diffCount = RoomManager.Instance.GetFloorCount();
         mapOverlay.UpdateRoomCountText(diffCount.ToString());
@@ -723,6 +885,31 @@ public class MapManager : MonoBehaviour
         startingRoom.ToggleRoomSelected(false);
 
         UpdateSelectedRoom(endingRoom);
+
+        if (RoomManager.Instance.GetFloorCount() > -1)
+        {
+            for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).childCount; i++)
+            {
+                if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).GetChild(i).gameObject.GetComponent<MapPath>())
+                {
+                    //if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 2).GetChild(i).gameObject.GetComponent<MapPath>().isRevealed)
+                    savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()).GetChild(i).gameObject.GetComponent<MapPath>().TogglePathVisibility(false);
+                }
+            }
+        }
+
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()-1).childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount()-1).GetChild(i).gameObject.GetComponent<MapPath>())
+            {
+                if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).GetChild(i).gameObject.GetComponent<MapPath>().isRevealed)
+                    savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).GetChild(i).gameObject.GetComponent<MapPath>().TogglePathVisibility(true);
+            }
+        }
+
+        RoomManager.Instance.UpdateActiveRoom(endingRoom);
+
+        mapOverlay.UpdateRoomDifficultyIcons();
     }
 
     void CheckIfMapIsPossible(bool resetting = true)
@@ -834,7 +1021,8 @@ public class MapManager : MonoBehaviour
         List<MapPath> linkedPaths = selectedRoom.GetLinkedPaths();
         for (int x = 0; x < linkedPaths.Count; x++)
         {
-            linkedPaths[x].ToggleConnectingRoomsDiscovered(true);
+            if (linkedPaths[x].belongsToFloorCount == RoomManager.Instance.GetFloorCount())
+                linkedPaths[x].ToggleConnectingRoomsDiscovered(true);
         }
     }
 
@@ -1191,6 +1379,8 @@ public class MapManager : MonoBehaviour
            
             MapPath mapPath = go.GetComponent<MapPath>();
 
+            mapPath.belongsToFloorCount = RoomManager.Instance.GetFloorCount();
+
             // If this is the final path of the map (to the boss level)
             if (i == spawnedRoomsA.Count-1)
             {
@@ -1252,6 +1442,8 @@ public class MapManager : MonoBehaviour
 
             // Reference 
             MapPath mapPath = go.GetComponent<MapPath>();
+            mapPath.belongsToFloorCount = RoomManager.Instance.GetFloorCount();
+
             Transform closestRoomTrans = GetClosestRoomA(spawnedAdditionalRooms[i].transform.position);
 
             // Update map path using pos a: this room pos, pos b: nearest room pos

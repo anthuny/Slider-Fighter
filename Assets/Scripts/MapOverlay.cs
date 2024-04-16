@@ -163,6 +163,17 @@ public class MapOverlay : MonoBehaviour
         buttonEnterRoom.UpdateContentSubText(text);
     }
 
+    public void UpdateEnterRoomButtonImage(bool up = true, bool hide = false)
+    {
+        if (up)
+            buttonEnterRoom.UpdateContentImage(MapManager.Instance.arrowUpSprite);
+        else
+            buttonEnterRoom.UpdateContentImage(MapManager.Instance.arrowDownSprite);
+
+        if (hide)
+            buttonEnterRoom.UpdateContentImage(null);
+    }
+
     public void ToggleTeamPageButton(bool toggle)
     {
         if (toggle)

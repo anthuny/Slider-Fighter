@@ -860,7 +860,7 @@ public class UnitFunctionality : MonoBehaviour
             if (effectSelectedName == activeEffects[i].effectName)
             {
                 string newName = activeEffects[i].effectName;
-                if (activeEffects[i].effectName == "MIND_CONTROL")
+                if (activeEffects[i].effectName == "MIND_CONTROL" || activeEffects[i].effectName == "MIND CONTROL")
                     newName = "MIND CONTROL";
 
                 tooltipEffect.UpdateContentText(newName);
@@ -2961,7 +2961,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
-        Debug.Log("effectHitAcc " + effectHitAcc);
+        //Debug.Log("effectHitAcc " + effectHitAcc);
 
 
         //SkillData activeSkill = null;
@@ -3006,7 +3006,11 @@ public class UnitFunctionality : MonoBehaviour
                                     activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
                                 else
                                     return;
-                                TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "MIND_CONTROL")
+                                    name = "MIND CONTROL";
+                                TriggerTextAlert(name, 1, true, "Inflict");
                             }
                         }
                         else
@@ -3027,7 +3031,10 @@ public class UnitFunctionality : MonoBehaviour
                             else
                                 return;
 
-                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
+                            string name = addedEffect.effectName;
+                            if (addedEffect.effectName == "MIND_CONTROL")
+                                name = "MIND CONTROL";
+                            TriggerTextAlert(name, 1, true, "Inflict");
                         }
                     }
                 }
@@ -3060,9 +3067,12 @@ public class UnitFunctionality : MonoBehaviour
                             effect = go.GetComponent<Effect>();
                             activeEffects.Add(effect);
                             effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
-                            //activeEffects[m].AddTurnCountText(1);
-                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                            //effect.UpdateEffectTierImages();
+
+                            string name = addedEffect.effectName;
+                            if (addedEffect.effectName == "MIND_CONTROL")
+                                name = "MIND CONTROL";
+                            TriggerTextAlert(name, 1, true, "Inflict");
+
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
 
                             settingUpEffect = true;
@@ -3084,9 +3094,12 @@ public class UnitFunctionality : MonoBehaviour
                             effect = go.GetComponent<Effect>();
                             activeEffects.Add(effect);
                             effect.Setup(addedEffect, targetUnit, effectHitAcc);
-                            //activeEffects[m].AddTurnCountText(1);
-                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                            //effect.UpdateEffectTierImages();
+
+                            string name = addedEffect.effectName;
+                            if (addedEffect.effectName == "MIND_CONTROL")
+                                name = "MIND CONTROL";
+                            TriggerTextAlert(name, 1, true, "Inflict");
+
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
 
                             settingUpEffect = true;
@@ -3102,9 +3115,12 @@ public class UnitFunctionality : MonoBehaviour
                             effect = go.GetComponent<Effect>();
                             activeEffects.Add(effect);
                             effect.Setup(addedEffect, targetUnit, effectHitAcc);
-                            //activeEffects[m].AddTurnCountText(1);
-                            TriggerTextAlert(addedEffect.effectName, 1, true, "Inflict");
-                           // effect.UpdateEffectTierImages();
+
+                            string name = addedEffect.effectName;
+                            if (addedEffect.effectName == "MIND_CONTROL")
+                                name = "MIND CONTROL";
+                            TriggerTextAlert(name, 1, true, "Inflict");
+
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
                         }
                     }

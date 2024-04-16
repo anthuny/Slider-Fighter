@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 0
   curSkillSelectionType: 0
+  startingSelectionType: 0
   curskillSelectionAliveType: 0
   curRangedType: 0
-  curAnimType: 1
+  curAnimType: 0
+  curSkillEffectType: 0
   skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
   skillName: WHIRLWIND
   skillDescr: Target 3 base enemies, dealing damage
@@ -30,20 +32,26 @@ MonoBehaviour:
   skillBaseHitOutput: 3
   skillHitAttempts: 2
   projectileSpeed: 1
-  skillCooldown: 1
+  skillCooldown: 2
   curCooldown: 0
   skillSelectionCount: 3
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
   isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 0
   effect: {fileID: 0}
+  effect2: {fileID: 0}
   effectTurnLength: 0
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -51,8 +59,8 @@ MonoBehaviour:
   curSkillExtraPowerToEffect: 0
   percIncPower: 0
   upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
   upgradeIncPowerCount: 0
-  upgradeIncEffectCount: 0
   skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
@@ -66,3 +74,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: f6869df06c510324290acef8c918416f, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 1
+  mindControlled: 0

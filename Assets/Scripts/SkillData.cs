@@ -129,13 +129,13 @@ public class SkillData : ScriptableObject
     {
         //float val = startingSkillPower + (((25f / 100f) * startingSkillPower) * upgradeIncPowerCount);
         //float val = startingSkillPower;
-        float val = curSkillPower + (upgradeIncPowerCount * 3);
+        float val = curSkillPower + (upgradeIncPowerCount * 2);
         //Debug.Log("float in skilldata is " + val);
 
         float val2 = 0;
 
         if (healPowerAmount != 0)
-            val2 = healPowerAmount + curSkillPower + (upgradeIncPowerCount * 3);
+            val2 = healPowerAmount + curSkillPower + (upgradeIncPowerCount * 2);
 
         if (healPowerAmount == 0)
             return Mathf.RoundToInt(val);

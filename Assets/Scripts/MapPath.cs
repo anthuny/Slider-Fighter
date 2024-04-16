@@ -9,12 +9,18 @@ public class MapPath : MonoBehaviour
     public RoomMapIcon startingRoom;
     public List<RoomMapIcon> goalRooms = new List<RoomMapIcon>();
     public bool isRevealed;
+    public int belongsToFloorCount = 1;
 
     public GameObject display;
 
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
+    }
+
+    public void TogglePathVisibility(bool toggle = true)
+    {
+        lr.enabled = toggle;
     }
 
     public void UpdateMapPath(Vector2 posA, Vector2 posB)

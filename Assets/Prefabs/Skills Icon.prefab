@@ -2961,7 +2961,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7600474131149892358, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: statText
-      value: Increase skill base power by +3
+      value: Increase skill base power by +2
       objectReference: {fileID: 0}
     - target: {fileID: 7751331016326035524, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x

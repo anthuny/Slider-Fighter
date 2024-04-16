@@ -12,7 +12,7 @@ public class RoomMapIcon : MonoBehaviour
     public RoomSize curRoomSize;
 
     [SerializeField] private List<RoomMapIcon> linkedRooms = new List<RoomMapIcon>();
-    [SerializeField] private List<MapPath> linkedPaths = new List<MapPath>();
+    public List<MapPath> linkedPaths = new List<MapPath>();
     [SerializeField] private Image roomIconImage;
     [SerializeField] private Image roomDetail;
     public UIElement roomSelectionImage;
@@ -29,6 +29,7 @@ public class RoomMapIcon : MonoBehaviour
     public bool isStartingRoom;
     public bool isCompleted;
     public bool isVisited;
+    public bool bossRoomDefeated;
 
     public bool hasEntered;
 
@@ -148,8 +149,17 @@ public class RoomMapIcon : MonoBehaviour
 
             if (!GameManager.Instance.map.CheckIfAnyHiddenMainRooms(1) && !isStartingRoom && isMainRoom)
             {
+
                 ToggleDiscovered(true);
                 GameManager.Instance.map.HideConnectingRooms();
+                if (curRoomType == RoomType.BOSS)
+                {
+                    for (int i = 0; i < linkedPaths.Count; i++)
+                    {
+                        if (linkedPaths[i].belongsToFloorCount != RoomManager.Instance.GetFloorCount())
+                            linkedPaths[i].TogglePathVisibility(false);
+                    }
+                }
 
                 if (GetIsCompleted() && curRoomType != RoomType.BOSS)
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
@@ -227,10 +237,17 @@ public class RoomMapIcon : MonoBehaviour
                 ToggleDiscovered(true);
                 GameManager.Instance.map.UpdateSelectedRoom(this);
 
+
+                for (int i = 0; i < linkedPaths.Count; i++)
+                {
+                    if (linkedPaths[i].belongsToFloorCount != RoomManager.Instance.GetFloorCount())
+                        linkedPaths[i].TogglePathVisibility(false);
+                }
+
                 /*
                 if (GetIsCompleted())
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(false);
-                */             
+                */
                 if (!GetIsCompleted())
                 {
                     MapManager.Instance.mapOverlay.ToggleEnterRoomButton(true);

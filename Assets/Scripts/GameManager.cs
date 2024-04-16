@@ -2413,7 +2413,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
         {
-            if (GetActiveSkill().originalIndex != 0)
+            if (GetActiveSkill().curAnimType == SkillData.SkillAnimType.SKILL)
                 GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
             else
                 GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
@@ -2488,7 +2488,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
-            if (GetActiveSkill().originalIndex != 0)
+            if (GetActiveSkill().curAnimType == SkillData.SkillAnimType.SKILL)
                 GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
             else
                 GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
@@ -2597,46 +2597,32 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     if (GetActiveSkill().isHealingFromResult)
                     {
-                        int health = 25555;
-                        UnitFunctionality lowestHealthHero = null;
-
-                        for (int v = 0; v < activeRoomHeroes.Count; v++)
+                        for (int n = 0; n < hitCount; n++)
                         {
-                            if (((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100 < health)
+                            int health = 25555;
+
+                            UnitFunctionality lowestHealthHero = null;
+
+                            for (int v = 0; v < activeRoomHeroes.Count; v++)
                             {
-                                health = ((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100;
-                                lowestHealthHero = activeRoomHeroes[v];
-                            }
-                        }
-
-                        if (lowestHealthHero != null)
-                        {
-                            for (int n = 0; n < hitCount; n++)
-                            {
-                                WeaponManager.Instance.CalculatePower();
-                                float healAmount = 0;
-
-                                healAmount = (int)WeaponManager.Instance.calculatedPower;
-                                lowestHealthHero.UpdateUnitCurHealth((int)healAmount, false, false, true, false, false);
-
-                                int health2 = 25555;
-
-                                for (int v = 0; v < activeRoomHeroes.Count; v++)
+                                if ((int)activeRoomHeroes[v].GetUnitCurHealth() < health)
                                 {
-                                    if (((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100 < health2)
-                                    {
-                                        health2 = ((int)activeRoomHeroes[v].GetUnitCurHealth() / (int)activeRoomHeroes[v].GetUnitMaxHealth()) * 100;
-                                        lowestHealthHero = activeRoomHeroes[v];
-                                    }
+                                    health = (int)activeRoomHeroes[v].GetUnitCurHealth();
+                                    lowestHealthHero = activeRoomHeroes[v];
                                 }
-
-                                int maxHitWorth = 15;
-                                if (hitCount > maxHitWorth)
-                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)) / 2.35f);
-                                else
-                                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (hitCount - 1)) / 2.35f);
                             }
 
+                            WeaponManager.Instance.CalculatePower();
+                            float healAmount = 0;
+
+                            healAmount = (int)WeaponManager.Instance.calculatedPower;
+                            lowestHealthHero.UpdateUnitCurHealth((int)healAmount, false, false, true, false, false);
+
+                            int maxHitWorth = 15;
+                            if (hitCount > maxHitWorth)
+                                yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)) / 2.35f);
+                            else
+                                yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (hitCount - 1)) / 2.35f);
                         }
                     }
                 }

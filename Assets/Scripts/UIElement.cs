@@ -301,7 +301,10 @@ public class UIElement : MonoBehaviour
 
     public void UpdateContentImage(Sprite sprite)
     {
-        contentImage.sprite = sprite;
+        if (sprite == null)
+            contentImage.sprite = MapManager.Instance.invisSprite;
+        else
+            contentImage.sprite = sprite;
     }
 
     public void UpdateContentUI(Sprite sprite)

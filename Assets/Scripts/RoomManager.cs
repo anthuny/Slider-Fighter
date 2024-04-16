@@ -18,7 +18,8 @@ public class RoomManager : MonoBehaviour
     private CanvasGroup cg;
 
     private FloorData activeFloor;
-    private int floorCount = 1;   
+    private int floorCount = 1;
+    public int highestFloorCountRun = 1;
     private int minRoomCountBonus;
     private int maxRoomCountBonus;
 
@@ -48,6 +49,7 @@ public class RoomManager : MonoBehaviour
     public void ResetFloorCount()
     {
         floorCount = 1;
+        highestFloorCountRun = 1;
 
         ResetRoomsCleared();
     }
@@ -77,7 +79,7 @@ public class RoomManager : MonoBehaviour
     }
     public void FloorCompleted()
     {
-        IncrementFloorCount();
+        IncrementFloorCount(true);
         SelectFloor();
 
         GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateContentText((GetFloorCount()-1).ToString());
@@ -171,9 +173,12 @@ public class RoomManager : MonoBehaviour
         return rand;
     }
 
-    public void IncrementFloorCount()
+    public void IncrementFloorCount(bool defeatedBoss = false)
     {
         floorCount++;
+
+        if (defeatedBoss)
+            highestFloorCountRun++;
     }
 
     public void DecreaseFloorCount()
