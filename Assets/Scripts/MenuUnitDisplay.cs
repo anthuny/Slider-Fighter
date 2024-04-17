@@ -119,7 +119,7 @@ public class MenuUnitDisplay : MonoBehaviour
             else
             {
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 55);
             }
         }
         else if (unitName == "Ranger")
@@ -169,6 +169,31 @@ public class MenuUnitDisplay : MonoBehaviour
             {
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
+            }
+        }
+
+        else if (unitName == "Monk")
+        {
+            animator.runtimeAnimatorController = CharacterCarasel.Instance.monkAnimator;
+
+            // Adjust size of unit
+            if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab || ShopManager.Instance.playerInShopRoom)
+            {
+                if (ShopManager.Instance.playerInShopRoom)
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -21);
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.5f, 4.5f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -40);
+                }
+            }
+            else
+            {
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 5);
             }
         }
 
