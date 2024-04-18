@@ -532,12 +532,8 @@ public class GameManager : MonoBehaviour
                             unit = CharacterCarasel.Instance.GetAlly(randIndex);    // Reference a unit that is not on the current ally team
 
                             UnitFunctionality unitFunct = go.GetComponent<UnitFunctionality>();
-                            //unit = unitFunct.unitData;
-                            //unitData.ResetCurSkills();
-                            //unitFunct.SetStartingSkills(unitData.GetUnitSkills());
-                            //unitData.UpdateCurSkills(unitFunct.GetStartingSkills());
-                            //Debug.Log("3");
 
+                            unitFunct.UpdateUnitName(unit.unitName);
                             unitFunct.UpdateUnitSkills(unit.GetUnitSkills());
                             unitFunct.UpdateCurrentSkills(unit.GetUnitSkills());
 
@@ -557,6 +553,8 @@ public class GameManager : MonoBehaviour
                             //Debug.Log("unit max xp " + maxExpStarting);
                             
                             SkillsTabManager.Instance.ResetAllySkllls(unitFunct);
+
+                            unitFunct.UpdateFighterPosition();
                             break;
                         }
                     }
@@ -581,30 +579,9 @@ public class GameManager : MonoBehaviour
 
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
 
-
-
                 UIElement unitUI = go.GetComponent<UIElement>();
 
-                HeroRoomManager.Instance.UpdateHero(unitUI);
-
-                /*
-                // If there is already this ally in the team, make this double spawned ally = true
-                // If spawning hero ally from end of hero room
-                if (spawnHeroAlly)
-                {
-                    List<string> ownedUnitNames = new List<string>();
-
-                    // Loop through all allies
-                    for (int t = 0; t < activeRoomAllUnitFunctionalitys.Count; t++)
-                    {
-                        string unitName = activeRoomAllUnitFunctionalitys[t].GetUnitName();
-                        if (ownedUnitNames.Contains(unitName))
-                            activeRoomAllUnitFunctionalitys[t].unitDouble = true;
-
-                        ownedUnitNames.Add(unitName);
-                    }
-                }
-                */
+                HeroRoomManager.Instance.UpdateHero(unitUI);        
 
                 // Set ally correct position based on team size
                 if (!spawnHeroAlly)
@@ -624,7 +601,6 @@ public class GameManager : MonoBehaviour
                     spawnedUnit = unit;
                     spawnedUnitFunctionality = unitFunctionality;
                 }
-
 
                 unitFunctionality.UpdateUnitName(unit.unitName);
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
@@ -656,6 +632,8 @@ public class GameManager : MonoBehaviour
 
                 unitFunctionality.deathClip = unit.deathClip;
                 unitFunctionality.hitRecievedClip = unit.hitRecievedClip;
+
+                unitFunctionality.UpdateFighterPosition();
 
                 AddActiveRoomAllUnitsFunctionality(unitFunctionality, false);
 

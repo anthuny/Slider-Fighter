@@ -149,7 +149,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Allow button selection
         buttonLocked = false;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.25f);
 
         GameManager.Instance.transitionSprite.resetMap = true;
 

@@ -2959,6 +2959,18 @@ public class UnitFunctionality : MonoBehaviour
 
     public bool settingUpEffect = false;
 
+    public void UpdateFighterPosition()
+    {
+        //-17.4, -33.9
+
+        if (GetComponentInChildren<Animator>())
+        {
+            if (GetUnitName() == "Monk")
+                GetComponentInChildren<CharacterAnimation>().gameObject.GetComponent<RectTransform>().localPosition = new Vector3(-17.4f, -33.9f, 1);    
+        }
+
+    }
+
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
         //Debug.Log("effectHitAcc " + effectHitAcc);
