@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Righteous Slam
+  m_EditorClassIdentifier: 
+  curSkillType: 0
+  curSkillSelectionType: 0
+  startingSelectionType: 0
+  curskillSelectionAliveType: 0
+  curRangedType: 1
+  curAnimType: 0
+  curSkillEffectType: 0
+  skillSprite: {fileID: 21300000, guid: 3227576ce7bc408468136036d5ab4ce1, type: 3}
+  skillName: RIGHTEOUS SLAM
+  skillDescr: Target 1 enemy, damaging. Each hit has a 25% chance to cleanse 1 debuff
+    from Monk's Holy Link.
+  skillTabDescr: Target 1 enemy, damaging. Each hit has a 25% chance to cleanse 1
+    debuff from Monk's Holy Link.
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 14
+  curSkillPower: 14
+  skillAttackAccMult: 1
+  skillBaseHitOutput: 1
+  skillHitAttempts: 1
+  projectileSpeed: 0
+  skillCooldown: 0
+  curCooldown: 0
+  skillSelectionCount: 1
+  isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
+  isReviving: 0
+  isMindControlling: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
+  special: 0
+  effect: {fileID: 0}
+  effect2: {fileID: 0}
+  effectTurnLength: 1
+  curEffectHitChance: 25
+  startingEffectHitChance: 25
+  baseEffectApplyCount: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
+  upgradeIncPowerCount: 0
+  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
+  skillProjectile: {fileID: 0}
+  projectileAllowSpin: 0
+  projectileAllowIdle: 0
+  projectileAC: {fileID: 9100000, guid: ce736c592e64c404c9f108a123bf26c2, type: 2}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 4a0b3db7e90fb5847bdd6ac38fc8c585, type: 3}
+  repeatLaunchSFX: 0
+  giveExtraDesc: 0
+  projectileLaunch: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
+  skillHit: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 0
+  mindControlled: 0

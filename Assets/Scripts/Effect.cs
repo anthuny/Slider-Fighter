@@ -20,7 +20,7 @@ public class Effect : MonoBehaviour
     public enum EffectName 
     { 
         BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, HEALINGUP, HEALINGDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
-        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING, MIND_CONTROL, IMMUNITY 
+        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING, MIND_CONTROL, IMMUNITY, HOLY_LINK, STUN 
     }
     public EffectName curEffectName;
 
@@ -161,6 +161,10 @@ public class Effect : MonoBehaviour
         else if (effect.curEffectName == EffectData.EffectName.MIND_CONTROL)
             curEffectName = EffectName.MIND_CONTROL;
         else if (effect.curEffectName == EffectData.EffectName.IMMUNITY)
+            curEffectName = EffectName.IMMUNITY;
+        else if (effect.curEffectName == EffectData.EffectName.HOLY_LINK)
+            curEffectName = EffectName.MIND_CONTROL;
+        else if (effect.curEffectName == EffectData.EffectName.STUN)
             curEffectName = EffectName.IMMUNITY;
 
         effectName = effect.effectName;

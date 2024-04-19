@@ -46,6 +46,11 @@ public class UnitMapIcon : MonoBehaviour
             gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(125, 125);
             gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, -35);
         }
+        else if (unitName == "Monk")
+        {
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(125, 125);
+            gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, -55);
+        }
     }
 
     public void UpdateUnitName(string newName)
