@@ -18,7 +18,7 @@ MonoBehaviour:
   curEffectName: 24
   effectName: STUN
   effectDesc: Force the unit to end turn on turn start
-  effectIcon: {fileID: 21300000, guid: e874d1fb3805a564a902308c34b386d5, type: 3}
+  effectIcon: {fileID: 21300000, guid: c2e59aeb098ab4a4a8cfa99a5c4cd716, type: 3}
   powerPercent: 0
   powerAmp: 0
-  titleTextColour: {r: 0.754717, g: 0.33107865, b: 0.46458435, a: 1}
+  titleTextColour: {r: 1, g: 0.98025936, b: 0.4764151, a: 1}

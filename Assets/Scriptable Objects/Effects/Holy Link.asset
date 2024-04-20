@@ -17,9 +17,9 @@ MonoBehaviour:
   curEffectBenefitType: 0
   curEffectName: 23
   effectName: HOLY_LINK
-  effectDesc: 25% chance to have a hit of damage be recieved by this Fighter's holy
-    Link
-  effectIcon: {fileID: 21300000, guid: 198cb09ab987ac7499d7f2a17c10edfd, type: 3}
-  powerPercent: 25
+  effectDesc: '(15% x tier) chance for this fighter''s ''Other Link'' to intercept
+    a hit of damage. Buffs transfer to Other Link Fighter.(max: 60%)'
+  effectIcon: {fileID: 21300000, guid: d934badea2b62994895b719be20fdc16, type: 3}
+  powerPercent: 15
   powerAmp: 0
   titleTextColour: {r: 1, g: 0.9564915, b: 0.2971698, a: 1}

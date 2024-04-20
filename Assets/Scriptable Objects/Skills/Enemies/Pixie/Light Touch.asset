@@ -18,6 +18,7 @@ MonoBehaviour:
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 0
+  curSkillEffectType: 0
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: LIGHT TOUCH
   skillDescr: Damage up to
@@ -50,6 +51,7 @@ MonoBehaviour:
   cleanseCount: 0
   special: 0
   effect: {fileID: 0}
+  effect2: {fileID: 0}
   effectTurnLength: 0
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -63,6 +65,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 1
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: bd0048dda2873ca4b8061ab39773ee4b, type: 3}

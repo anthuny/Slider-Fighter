@@ -21,8 +21,8 @@ MonoBehaviour:
   curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: 99ac60998d47aaf4c920bf9665363a6f, type: 3}
   skillName: IRON WILL
-  skillDescr: Target 1 ally, give effect Taunt, and defense up
-  skillTabDescr: Target 1 ally, give effect Taunt, and defense up
+  skillDescr: Target 1 ally, give effect Health Up, and Defense Up
+  skillTabDescr: Target 1 ally, give effect Health Up, and Defense Up
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
   projectileSpeed: 0
   skillCooldown: 2
   curCooldown: 0
-  skillSelectionCount: 2
+  skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
   cleanseCount: 0
   special: 0
   effect: {fileID: 11400000, guid: af9e3f48b655ac84e8131a16fe12a3d7, type: 2}
-  effect2: {fileID: 11400000, guid: 8b7b1c1ca9a9cbc458b12df8cacf4af8, type: 2}
+  effect2: {fileID: 11400000, guid: fef5ba97b42f6a749ae6ad86060c3224, type: 2}
   effectTurnLength: 1
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -65,13 +65,15 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: 4a0b3db7e90fb5847bdd6ac38fc8c585, type: 3}
+  skillLaunch: {fileID: 8300000, guid: f3ec8386c5d9ff149a526e25f4292feb, type: 3}
   repeatLaunchSFX: 0
   giveExtraDesc: 0
   projectileLaunch: {fileID: 0}
-  skillHit: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
-  skillHitAdditional: {fileID: 8300000, guid: 5f78fc15aff2d274cbe6a7d0a1330ee3, type: 3}
+  skillHit: {fileID: 0}
+  skillHitAdditional: {fileID: 0}
   originalIndex: 2
   mindControlled: 0

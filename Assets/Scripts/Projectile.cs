@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private int spawnRotation;
-    [SerializeField] private bool allowRandomSpawnRotation;
-    [SerializeField] private bool allowRandomSpawnPosition;
+    public bool allowRandomSpawnRotation;
+    public bool allowRandomSpawnPosition;
     [SerializeField] private Image projectileImage;
     [SerializeField] private UIElement projectileSpinImageUI;
     private Color projectileInvisColor;
@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour
     public void UpdateProjectileSprite(Sprite sprite)
     {
         //Debug.Log(sprite.name);
-        this.projectileImage.sprite = sprite;
+        gameObject.transform.GetChild(0).GetComponent<Image>().sprite = sprite;
     }
 
     public void UpdateProjectileInvisColour(Color colour)
@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour
         if (ac == null)
             return;
 
-        Animator animator = GetComponent<Animator>();
+        Animator animator = GetComponentInChildren<Animator>();
         animator.runtimeAnimatorController = ac;
     }
 
@@ -53,16 +53,16 @@ public class Projectile : MonoBehaviour
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
 
         // Flip sprite 
         if (allowAnimate)
         {
             int rand = Random.Range(0, 2);
             if (rand == 1)
-                transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+                transform.GetChild(0).transform.localScale = new Vector2(-transform.GetChild(0).transform.localScale.x, transform.GetChild(0).transform.localScale.y);
             else
-                transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
+                transform.GetChild(0).transform.localScale = new Vector2(transform.GetChild(0).transform.localScale.x, transform.GetChild(0).transform.localScale.y);
         }
     }
 
@@ -71,11 +71,7 @@ public class Projectile : MonoBehaviour
         rotationAllowedTimer = 0;
         PickRandomisedVariables();
 
-        if (allowRandomSpawnRotation)
-            RandomizeRotation();
 
-        if (allowRandomSpawnPosition) 
-            RandomizeXY();
     }
 
     void IncrementRotationAllowedTimer()
@@ -94,7 +90,7 @@ public class Projectile : MonoBehaviour
     void RandomizeRotation()
     {
         float rand = Random.Range(-spawnRotation, spawnRotation);
-        transform.rotation = Quaternion.Euler(0.0f, 0.0f, rand);
+        transform.GetChild(0).rotation = Quaternion.Euler(0.0f, 0.0f, rand);
     }
 
     void RandomizeXY()
@@ -125,7 +121,7 @@ public class Projectile : MonoBehaviour
 
         if (allowAnimate)
         {
-            animator = GetComponent<Animator>();
+            animator = GetComponentInChildren<Animator>();
             animator.SetTrigger("spin");
         }
     }
@@ -136,7 +132,7 @@ public class Projectile : MonoBehaviour
 
         if (allowAnimate)
         {
-            animator = GetComponent<Animator>();
+            animator = GetComponentInChildren<Animator>();
             animator.SetTrigger("idle");
         }
     }
@@ -161,8 +157,22 @@ public class Projectile : MonoBehaviour
     {
         isEnemyProjectile = toggle;
     }
+
+    bool doOnce = false;
+
     public void MoveForward()
     {
+        if (!doOnce)
+        {
+            doOnce = true; 
+
+            if (allowRandomSpawnRotation)
+                RandomizeRotation();
+
+            if (allowRandomSpawnPosition)
+                RandomizeXY();
+        }
+
         // If there is no target for whatever reason, destroy the projectile
         if (target == null)
             HitTarget();

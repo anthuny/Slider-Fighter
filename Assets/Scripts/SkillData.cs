@@ -91,6 +91,8 @@ public class SkillData : ScriptableObject
     public Sprite skillProjectile;
     public bool projectileAllowSpin;
     public bool projectileAllowIdle;
+    public bool projectileAllowRandPosSpawn;
+    public bool projectileAllowRandRotSpawn;
     public RuntimeAnimatorController projectileAC;
     public RuntimeAnimatorController targetEffectVisualAC;
     public AudioClip skillLaunch;

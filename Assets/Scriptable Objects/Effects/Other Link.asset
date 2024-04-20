@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598ab766c50009b43b7f087a0dd359a1, type: 3}
+  m_Name: Other Link
+  m_EditorClassIdentifier: 
+  curEffectTrigger: 4
+  curEffectType: 1
+  curEffectBenefitType: 0
+  curEffectName: 25
+  effectName: OTHER_LINK
+  effectDesc: This unit is Holy Linked with another unit.
+  effectIcon: {fileID: 21300000, guid: a8dc135d7e75bb64da3b63091087f4a8, type: 3}
+  powerPercent: 0
+  powerAmp: 0
+  titleTextColour: {r: 1, g: 0.9564915, b: 0.2971698, a: 1}

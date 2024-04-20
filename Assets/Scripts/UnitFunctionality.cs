@@ -26,7 +26,7 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private UIElement tooltipEffect;
     [SerializeField] private UIElement statHealth;
     [SerializeField] private UIElement statPower;
-    [SerializeField] private UIElement statHealingPower; 
+    [SerializeField] private UIElement statHealingPower;
     [SerializeField] private UIElement statDefense;
     [SerializeField] private UIElement statSpeed;
     [SerializeField] private UIElement unitLevelImage;
@@ -193,6 +193,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public bool mindControlled;
     public bool beenAttacked = false;
+    public UnitFunctionality holyLinkPartner;
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);
@@ -269,7 +270,7 @@ public class UnitFunctionality : MonoBehaviour
                 newCurCharges = item1CurUses;
             else if (i == 1)
                 newCurCharges = item2CurUses;
-            else if(i == 2)
+            else if (i == 2)
                 newCurCharges = item3CurUses;
 
             // Set gear data
@@ -277,21 +278,21 @@ public class UnitFunctionality : MonoBehaviour
             {
                 go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSprite);
 
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat-1, newCurCharges);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1);
                 //Debug.Log(item1CurUses);
             }
             else if (index == 1)
             {
                 go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSprite);
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat-1, newCurCharges);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1);
                 //Debug.Log(item2CurUses);
             }
             else if (index == 2)
             {
                 go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSprite);
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat-1, newCurCharges);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1);
                 //Debug.Log(item3CurUses);
             }
@@ -417,7 +418,7 @@ public class UnitFunctionality : MonoBehaviour
                         if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.HELMET)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
-                           // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                        // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 1)
@@ -427,7 +428,7 @@ public class UnitFunctionality : MonoBehaviour
                         if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
-                           // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                        // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 2)
@@ -437,7 +438,7 @@ public class UnitFunctionality : MonoBehaviour
                         if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.BOOTS)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
-                          //  go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                        //  go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
             }
@@ -451,7 +452,7 @@ public class UnitFunctionality : MonoBehaviour
                         if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.HELMET)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
-                            //go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                        //go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 1)
@@ -461,7 +462,7 @@ public class UnitFunctionality : MonoBehaviour
                         if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
-                           // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                        // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 2)
@@ -471,7 +472,7 @@ public class UnitFunctionality : MonoBehaviour
                         if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.BOOTS)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
-                           //    go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
+                        //    go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
             }
@@ -511,7 +512,7 @@ public class UnitFunctionality : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 0)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                            item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat-1;
+                            item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat - 1;
                     }
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 1)
                     {
@@ -614,7 +615,7 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat-1, item1CurUses, 0);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat - 1, item1CurUses, 0);
         else if (index == 1)
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat - 1, item1CurUses, 0);
         else if (index == 2)
@@ -862,6 +863,10 @@ public class UnitFunctionality : MonoBehaviour
                 string newName = activeEffects[i].effectName;
                 if (activeEffects[i].effectName == "MIND_CONTROL" || activeEffects[i].effectName == "MIND CONTROL")
                     newName = "MIND CONTROL";
+                else if (activeEffects[i].effectName == "HOLY_LINK")
+                    newName = "HOLY LINK";
+                else if (activeEffects[i].effectName == "OTHER_LINK")
+                    newName = "OTHER LINK";
 
                 tooltipEffect.UpdateContentText(newName);
                 tooltipEffect.UpdateContentSubTextTMP(activeEffects[i].effectDesc);
@@ -1852,7 +1857,7 @@ public class UnitFunctionality : MonoBehaviour
                                                     //continue;
                                                 }
                                             }
-                                            if (x 
+                                            if (x
                                                 == 0 && item1CurUses <= -1)
                                             {
                                                 continue;
@@ -2525,7 +2530,7 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false, bool immune = false)
+    public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false, bool immune = false, bool otherLink = false)
     {
         yield return new WaitForSeconds(0.35f);
 
@@ -2535,7 +2540,7 @@ public class UnitFunctionality : MonoBehaviour
             if (activeEffects[0] == null)
             {
                 //if (turnStart)
-                    //GameManager.Instance.ContinueTurnOrder();
+                //GameManager.Instance.ContinueTurnOrder();
 
                 //yield break;
             }
@@ -2545,6 +2550,18 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (activeEffects[i] != null)
             {
+                if (otherLink)
+                {
+                    if (activeEffects[i].curEffectName == Effect.EffectName.OTHER_LINK)
+                    {
+                        //activeEffects[i].TriggerPowerEffect(this);
+                        string name = "OTHER LINK";
+                        TriggerTextAlert(name, 1, true, "Trigger");
+                        activeEffects[i].ReduceTurnCountText(this, true);
+                        break;
+                    }
+                }
+
                 if (immune)
                 {
                     if (activeEffects[i].curEffectName == Effect.EffectName.IMMUNITY)
@@ -2580,8 +2597,17 @@ public class UnitFunctionality : MonoBehaviour
                     if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                     {
                         activeEffects[i].TriggerPowerEffect(this);
+
+                        string name = activeEffects[i].effectName;
+
+                        if (activeEffects[i].effectName == "HOLY_LINK")
+                            name = "HOLY LINK";
+                        TriggerTextAlert(name, 1, true, "Trigger");
+
                         TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                         activeEffects[i].ReduceTurnCountText(this);
+
+
 
                         yield return new WaitForSeconds(.5f);
                     }
@@ -2593,7 +2619,14 @@ public class UnitFunctionality : MonoBehaviour
         for (int x = 0; x < activeEffects.Count; x++)
         {
             if (activeEffects[x] == null)
+            {
+                if (holyLinkPartner != null && activeEffects[x].curEffectName == Effect.EffectName.HOLY_LINK)
+                {
+                    holyLinkPartner.StartCoroutine(holyLinkPartner.DecreaseEffectTurnsLeft(false, false, false, true));
+                }
+
                 GetEffects().RemoveAt(x);
+            }
         }
 
         yield return new WaitForSeconds(.5f);
@@ -2602,7 +2635,7 @@ public class UnitFunctionality : MonoBehaviour
         if (turnStart && !isDead)
             GameManager.Instance.ContinueTurnOrder();
         //else if (turnStart && isDead)
-            
+
     }
 
 
@@ -2966,14 +2999,14 @@ public class UnitFunctionality : MonoBehaviour
         if (GetComponentInChildren<Animator>())
         {
             if (GetUnitName() == "Monk")
-                GetComponentInChildren<CharacterAnimation>().gameObject.GetComponent<RectTransform>().localPosition = new Vector3(-17.4f, -33.9f, 1);    
+                GetComponentInChildren<CharacterAnimation>().gameObject.GetComponent<RectTransform>().localPosition = new Vector3(-17.4f, -33.9f, 1);
         }
 
     }
 
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
-        //Debug.Log("effectHitAcc " + effectHitAcc);
+        Debug.Log("addedEffect 1 " + addedEffect.curEffectName);
 
 
         //SkillData activeSkill = null;
@@ -2981,9 +3014,7 @@ public class UnitFunctionality : MonoBehaviour
         if (effectHitAcc == 0 || targetUnit.isParrying)
             return;
 
-
-
-
+        Debug.Log("addedEffect 2 " + addedEffect.curEffectName);
         //Debug.Log("Effect hit acc " + effectHitAcc);
         // If unit is already effected with this effect, add to the effect
         for (int i = 0; i < activeEffects.Count; i++)
@@ -3017,17 +3048,46 @@ public class UnitFunctionality : MonoBehaviour
                                 if (activeEffects[i] != null)
                                     activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
                                 else
-                                    return;
+                                {
+
+                                }
 
                                 string name = addedEffect.effectName;
                                 if (addedEffect.effectName == "MIND_CONTROL")
                                     name = "MIND CONTROL";
+                                else if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
                                 TriggerTextAlert(name, 1, true, "Inflict");
+
+                                Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                                {
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                    {
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.curEffectName != EffectData.EffectName.HOLY_LINK)
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                        }
+                                    }
+                                }
+
                             }
                         }
                         else
                             continue;
-                     
+
                     }
                     else if (item || byPassAcc)
                     {
@@ -3041,12 +3101,42 @@ public class UnitFunctionality : MonoBehaviour
                             if (activeEffects[i] != null)
                                 activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
                             else
-                                return;
+                            {
+
+                            }
+                            //return;
 
                             string name = addedEffect.effectName;
                             if (addedEffect.effectName == "MIND_CONTROL")
                                 name = "MIND CONTROL";
+                            else if (addedEffect.effectName == "HOLY_LINK")
+                                name = "HOLY LINK";
+                            else if (addedEffect.effectName == "OTHER_LINK")
+                                name = "OTHER LINK";
                             TriggerTextAlert(name, 1, true, "Inflict");
+
+                            Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
+
+                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            {
+                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+
+                            }
+
+                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                            // being added to this unit, to the other linked fighter also
+                            if (GetEffect("HOLY_LINK"))
+                            {
+                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                {
+                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                    {
+                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -3083,7 +3173,34 @@ public class UnitFunctionality : MonoBehaviour
                             string name = addedEffect.effectName;
                             if (addedEffect.effectName == "MIND_CONTROL")
                                 name = "MIND CONTROL";
+                            else if (addedEffect.effectName == "HOLY_LINK")
+                                name = "HOLY LINK";
+                            else if (addedEffect.effectName == "OTHER_LINK")
+                                name = "OTHER LINK";
                             TriggerTextAlert(name, 1, true, "Inflict");
+
+
+                            Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
+
+                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            {
+                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                            }
+
+                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                            // being added to this unit, to the other linked fighter also
+                            if (GetEffect("HOLY_LINK"))
+                            {
+                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                {
+                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                    {
+                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                    }
+                                }
+                            }
 
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
 
@@ -3110,7 +3227,34 @@ public class UnitFunctionality : MonoBehaviour
                             string name = addedEffect.effectName;
                             if (addedEffect.effectName == "MIND_CONTROL")
                                 name = "MIND CONTROL";
+                            else if (addedEffect.effectName == "HOLY_LINK")
+                                name = "HOLY LINK";
+                            else if (addedEffect.effectName == "OTHER_LINK")
+                                name = "OTHER LINK";
                             TriggerTextAlert(name, 1, true, "Inflict");
+
+                            Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
+
+
+                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            {
+                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                            }
+
+                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                            // being added to this unit, to the other linked fighter also
+                            if (GetEffect("HOLY_LINK"))
+                            {
+                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                {
+                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.effectName != "HOLY_LINK")
+                                    {
+                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                    }
+                                }
+                            }
 
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
 
@@ -3131,9 +3275,36 @@ public class UnitFunctionality : MonoBehaviour
                             string name = addedEffect.effectName;
                             if (addedEffect.effectName == "MIND_CONTROL")
                                 name = "MIND CONTROL";
+                            else if (addedEffect.effectName == "HOLY_LINK")
+                                name = "HOLY LINK";
+                            else if (addedEffect.effectName == "OTHER_LINK")
+                                name = "OTHER LINK";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
+                            Debug.Log("addedEffect 7 " + addedEffect.curEffectName);
+
+                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            {
+                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                            }
+
+                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                            // being added to this unit, to the other linked fighter also
+                            if (GetEffect("HOLY_LINK"))
+                            {
+                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                {
+                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                    {
+                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                    }
+                                }
+                            }
+
                             effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
                         }
                     }
                 }
@@ -3151,7 +3322,7 @@ public class UnitFunctionality : MonoBehaviour
             activeEffects[i].EffectRemove(this, false);
         }
 
-        StartCoroutine(DeleteEffects(time));       
+        StartCoroutine(DeleteEffects(time));
     }
 
     IEnumerator DeleteEffects(float time = .2f)
@@ -3455,6 +3626,11 @@ public class UnitFunctionality : MonoBehaviour
         //go.transform.localScale = new Vector3(.75f, .75f);
 
         Projectile projectile = go.GetComponent<Projectile>();
+        if (GameManager.Instance.GetActiveSkill().projectileAllowRandPosSpawn)
+            projectile.allowRandomSpawnPosition = true;
+        if (GameManager.Instance.GetActiveSkill().projectileAllowRandRotSpawn)
+            projectile.allowRandomSpawnRotation = true;
+
         projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveSkill().skillProjectile);
         projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
         projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowSpin);
@@ -3677,7 +3853,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         isDead = false;
 
-        if (enemy)    
+        if (enemy)
             GameManager.Instance.AddUnitToTurnOrder(this);
 
         GameManager.Instance.AddActiveRoomAllUnitsFunctionality(this, enemy);
@@ -3831,7 +4007,7 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         //if (set)
-            //UpdateUnitExp((int)GetMaxExp() * level);
+        //UpdateUnitExp((int)GetMaxExp() * level);
     }
 
     void UpdateUnitLevelVisual(int level)
@@ -3888,6 +4064,47 @@ public class UnitFunctionality : MonoBehaviour
         return maxExp;
     }
 
+    public void CleanseEffect(int count = 1)
+    {
+        List<Effect> effects = new List<Effect>();
+        UnitFunctionality cleansingUnit = null;
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomHeroes[i].GetEffect("HOLY_LINK"))
+            {
+                cleansingUnit = GameManager.Instance.activeRoomHeroes[i];
+            }
+        }
+        if (cleansingUnit != null)
+        {
+            for (int x = 0; x < cleansingUnit.activeEffects.Count; x++)
+            {
+                if (cleansingUnit.activeEffects[x].curEffectBenefitType == Effect.EffectBenefitType.DEBUFF)
+                    effects.Add(cleansingUnit.activeEffects[x]);
+            }
+        }
+
+        if (effects.Count >= 1 && cleansingUnit != null)
+        {
+            for (int i = 0; i < effects.Count; i++)
+            {
+                if (i >= count)
+                    break;
+
+                int rand = Random.Range(0, cleansingUnit.activeEffects.Count);
+
+
+                if (cleansingUnit.activeEffects[rand].curEffectBenefitType == Effect.EffectBenefitType.DEBUFF)
+                {
+                    cleansingUnit.activeEffects[rand].ReduceTurnCountText(GameManager.Instance.GetActiveUnitFunctionality());
+                    cleansingUnit.TriggerTextAlert("CLEANSE", 1, true, "Trigger");
+                }
+
+            }
+        }
+    }
+
     public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true, bool triggerHitSFX = true, bool effect = false, bool isEffect = false)
     {
         if (isDead)
@@ -3913,6 +4130,74 @@ public class UnitFunctionality : MonoBehaviour
 
                 float newPower = 0;
 
+                if (GameManager.Instance.GetActiveSkill().isCleansingEffectRandom && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                {
+                    int rand = Random.Range(1, 101);
+                    if (rand >= 25)
+                        GameManager.Instance.GetActiveUnitFunctionality().CleanseEffect();
+                }
+
+                if (GetEffect("HOLY_LINK") && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                {
+                    //roll
+                    int rand = Random.Range(1, 101);
+
+                    int numb = GetEffect("HOLY_LINK").effectPowerStacks;
+
+                    if (numb > 2)
+                        numb = 2;
+
+                    rand += numb * (int)GetEffect("HOLY_LINK").powerPercent;
+
+                    if (rand >= 60)
+                        rand = 60;
+
+                    if (rand >= GetEffect("HOLY_LINK").powerPercent)
+                    {
+                        if (holyLinkPartner != null)
+                        {
+                            if (!holyLinkPartner.isDead)
+                            {
+                                holyLinkPartner.curHealth -= (int)absPower;
+                                holyLinkPartner.StartCoroutine(holyLinkPartner.SpawnPowerUI((int)absPower, false, true, null, false, true));
+
+                                holyLinkPartner.UpdateUnitHealthVisual(effect);
+
+                                holyLinkPartner.animator.SetBool("DamageFlg", true);
+
+                                if (holyLinkPartner.GetHitFlash() == null)
+                                {
+
+                                }
+                                else
+                                    holyLinkPartner.GetHitFlash().Flash();
+
+                                holyLinkPartner.uiElement.AnimateUI(false);
+
+                                if (doExtras)
+                                {
+                                    CameraShake.instance.EnableCanShake();
+
+                                    if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
+                                    {
+                                        if (triggerHitSFX && GameManager.Instance.GetActiveSkill().skillHit != null)
+                                            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                                    }
+
+                                    holyLinkPartner.StartCoroutine(holyLinkPartner.PlaySoundDelay(.1f));
+
+                                    holyLinkPartner.TriggerTextAlert("HOLY LINK", 1, true, "Trigger");
+                                }
+
+                                holyLinkPartner.StartCoroutine(holyLinkPartner.PlayIdleAnimation());
+
+                                return;
+                            }
+                        }
+                    }
+
+                }
+
                 if (GetEffect("IMMUNITY"))
                 {
                     absPower = 0;
@@ -3922,7 +4207,7 @@ public class UnitFunctionality : MonoBehaviour
 
                     //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
 
-                    GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitHealthVisual(effect);
+                    UpdateUnitHealthVisual(effect);
                 }
 
                 // if this unit has Reaping, heal caster

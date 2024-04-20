@@ -74,6 +74,11 @@ public class CharacterCarasel : MonoBehaviour
         ToggleMenu(true);
 
         SaveUnlockedAlly("Knight");
+        SaveUnlockedAlly("Ranger");
+        SaveUnlockedAlly("Necromancer");
+        SaveUnlockedAlly("Monk");
+        SaveUnlockedAlly("Cleric");
+
         LoadSave();
         LoadCarasel();
 
@@ -279,7 +284,7 @@ public class CharacterCarasel : MonoBehaviour
         if (PlayerPrefs.GetInt("UnlockedNecromancer") == 1)
             unlockedNecromancer = true;
         if (PlayerPrefs.GetInt("UnlockedMonk") == 1)
-            unlockedNecromancer = true;
+            unlockedMonk = true;
     }
 
     public void SaveUnlockedAlly(string allyName)
@@ -307,7 +312,7 @@ public class CharacterCarasel : MonoBehaviour
         else if (allyName == "Monk")
         {
             PlayerPrefs.SetInt("UnlockedMonk", 1);
-            unlockedNecromancer = true;
+            unlockedMonk = true;
         }
     }
 

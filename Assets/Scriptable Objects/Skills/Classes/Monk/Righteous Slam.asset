@@ -49,8 +49,8 @@ MonoBehaviour:
   isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
-  isCleansingEffectRandom: 0
-  cleanseCount: 0
+  isCleansingEffectRandom: 1
+  cleanseCount: 1
   special: 0
   effect: {fileID: 0}
   effect2: {fileID: 0}
@@ -67,13 +67,15 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 9100000, guid: ce736c592e64c404c9f108a123bf26c2, type: 2}
   targetEffectVisualAC: {fileID: 0}
-  skillLaunch: {fileID: 8300000, guid: 4a0b3db7e90fb5847bdd6ac38fc8c585, type: 3}
+  skillLaunch: {fileID: 8300000, guid: 4074d9775b2ca564490ef255c6954caa, type: 3}
   repeatLaunchSFX: 0
   giveExtraDesc: 0
-  projectileLaunch: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
-  skillHit: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
+  projectileLaunch: {fileID: 0}
+  skillHit: {fileID: 8300000, guid: 8fbbd6244f824e643bd19c303b357175, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 0
   mindControlled: 0

@@ -67,6 +67,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 21300000, guid: 1d3c559640f069049a6b12bd6581ef56, type: 3}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 1
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 4a0b3db7e90fb5847bdd6ac38fc8c585, type: 3}

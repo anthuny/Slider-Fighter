@@ -18,6 +18,7 @@ MonoBehaviour:
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 0
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Poison Bomb
   skillDescr: 'Target up to 3 enemies, dealing damage, each hit has a 15% chance
@@ -51,6 +52,7 @@ MonoBehaviour:
   cleanseCount: 0
   special: 0
   effect: {fileID: 11400000, guid: 84de7150b1f66f44c9f3aa5aff3670b9, type: 2}
+  effect2: {fileID: 0}
   effectTurnLength: 1
   curEffectHitChance: 15
   startingEffectHitChance: 15
@@ -64,6 +66,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 21300000, guid: ec8867ae37f5da94ebd387fc87bc9e2c, type: 3}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 1
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: a16b5578f0b4c02419c3e4e47e8d533e, type: 3}
@@ -73,4 +77,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 51c3c5e45f7b2374995d048fbd413f1a, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 1
-  mindControlled: 1
+  mindControlled: 0

@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
+  startingSelectionType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
+  curSkillEffectType: 0
   skillSprite: {fileID: 21300000, guid: 7ac91a992e8dc9f4c90aac343e15e174, type: 3}
   skillName: DIVINE HEAL
   skillDescr: Target 1 base ally, healing them
@@ -37,13 +39,19 @@ MonoBehaviour:
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
   isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
   cleanseCount: 0
   special: 0
   effect: {fileID: 0}
+  effect2: {fileID: 0}
   effectTurnLength: 0
   curEffectHitChance: 0
   startingEffectHitChance: 0
@@ -57,6 +65,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 21300000, guid: 8ded4b17937727c4abd00a99a7be2cc4, type: 3}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 1
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 98364bbbde80b1042b08767b6cc775aa, type: 3}
@@ -66,3 +76,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: b46c1ba03426d0241ae2dabf224abc57, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 3
+  mindControlled: 0

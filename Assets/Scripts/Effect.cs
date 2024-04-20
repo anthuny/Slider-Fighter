@@ -6,7 +6,7 @@ using TMPro;
 
 public class Effect : MonoBehaviour
 {
-    public enum EffectTrigger { ONGOING, TURNSTART, TURNEND, DAMAGERECIEVED }
+    public enum EffectTrigger { ONGOING, TURNSTART, TURNEND, DAMAGERECIEVED, ON_OTHER }
     public EffectTrigger curEffectTrigger;
 
     public enum EffectType { OFFENSE, SUPPORT }
@@ -20,7 +20,7 @@ public class Effect : MonoBehaviour
     public enum EffectName 
     { 
         BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, HEALINGUP, HEALINGDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
-        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING, MIND_CONTROL, IMMUNITY, HOLY_LINK, STUN 
+        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING, MIND_CONTROL, IMMUNITY, HOLY_LINK, STUN, OTHER_LINK
     }
     public EffectName curEffectName;
 
@@ -55,6 +55,9 @@ public class Effect : MonoBehaviour
     public void UpdateEffectTierImages(int count = 1)
     {
         if (this == null)
+            return;
+
+        if (curEffectName == EffectName.OTHER_LINK)
             return;
 
         if (gameObject == null)
@@ -97,6 +100,7 @@ public class Effect : MonoBehaviour
     }
     public void Setup(EffectData effect, UnitFunctionality targetUnit, int turnDuration = 1, bool doFullSetup = true)
     {
+        effectPowerStacks = 0;
         ClearEffectTierImages();
 
         if (effect.curEffectTrigger == EffectData.EffectTrigger.TURNSTART)
@@ -107,6 +111,8 @@ public class Effect : MonoBehaviour
             curEffectTrigger = EffectTrigger.DAMAGERECIEVED;
         else if (effect.curEffectTrigger == EffectData.EffectTrigger.ONGOING)
             curEffectTrigger = EffectTrigger.ONGOING;
+        else if (effect.curEffectTrigger == EffectData.EffectTrigger.ON_OTHER)
+            curEffectTrigger = EffectTrigger.ON_OTHER;
 
         if (effect.curEffectBenefitType == EffectData.EffectBenefitType.BUFF)
             curEffectBenefitType = EffectBenefitType.BUFF;
@@ -163,9 +169,11 @@ public class Effect : MonoBehaviour
         else if (effect.curEffectName == EffectData.EffectName.IMMUNITY)
             curEffectName = EffectName.IMMUNITY;
         else if (effect.curEffectName == EffectData.EffectName.HOLY_LINK)
-            curEffectName = EffectName.MIND_CONTROL;
+            curEffectName = EffectName.HOLY_LINK;
         else if (effect.curEffectName == EffectData.EffectName.STUN)
             curEffectName = EffectName.IMMUNITY;
+        else if (effect.curEffectName == EffectData.EffectName.OTHER_LINK)
+            curEffectName = EffectName.OTHER_LINK;
 
         effectName = effect.effectName;
         titleTextColour = effect.titleTextColour;
@@ -180,23 +188,28 @@ public class Effect : MonoBehaviour
 
         UpdateEffectIcon(effect);
 
-        float powerStacks = turnDuration / 2;
+        int powerStacks = 0;
 
 
         if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+        {
+            powerStacks += turnDuration / 2;
             effectPowerStacks += (int)powerStacks - 1;
+        }
         else
         {
             powerStacks = 1;
             effectPowerStacks++;
         }
 
+        CapEffect();
+
         if (curEffectName == EffectName.MIND_CONTROL)
         {
             turnDuration = 1;
             effectPowerStacks = 1;
         }
-        else if (curEffectName != EffectName.MIND_CONTROL && curEffectName != EffectName.IMMUNITY)
+        else if (curEffectName != EffectName.MIND_CONTROL && curEffectName != EffectName.IMMUNITY && curEffectName != EffectName.OTHER_LINK)
             UpdateEffectTierImages((int)powerStacks);
 
         if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
@@ -208,6 +221,9 @@ public class Effect : MonoBehaviour
         {
                 turnDuration = 1;
         }
+
+        if (curEffectName == EffectName.OTHER_LINK)
+            turnDuration = 9;
 
         AddTurnCountText(turnDuration);
 
@@ -234,6 +250,9 @@ public class Effect : MonoBehaviour
         else if (turnCountRemaining >= 1)
             turnCountRemaining += 1;
 
+        if (turnCountRemaining > 9)
+            turnCountRemaining = 9;
+
         effectTurnCountText.text = turnCountRemaining.ToString();
 
         // Ensure there is a cap
@@ -254,12 +273,17 @@ public class Effect : MonoBehaviour
         EffectRemove(unit);
     }
 
-    public void ReduceTurnCountText(UnitFunctionality unit)
+    public void ReduceTurnCountText(UnitFunctionality unit, bool instaRemove = false)
     {
         //EffectApply(unit);
 
         if (turnCountRemaining <= 1)
             RemoveEffect(unit);
+        else
+        {
+            if (instaRemove)
+                RemoveEffect(unit);
+        }
 
         turnCountRemaining--;
         effectTurnCountText.text = turnCountRemaining.ToString();
@@ -275,9 +299,19 @@ public class Effect : MonoBehaviour
         yield return new WaitForSeconds(time);
     }
 
+    void CapEffect()
+    {
+        if (curEffectName == EffectName.OTHER_LINK)
+        {
+            if (effectPowerStacks >= 3)
+                effectPowerStacks = 3;
+        }
+    }
     public void EffectApply(UnitFunctionality targetUnit)
     {
         effectPowerStacks++;
+
+        CapEffect();
 
         if (curEffectName == EffectName.HEALTHUP)
         {

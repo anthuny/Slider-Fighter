@@ -2553,7 +2553,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                                 if (GetActiveSkill().effect2 != null)
                                 {
-                                    unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val2);
+                                    if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                        unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val2);
                                 }
                             }
 
@@ -2566,7 +2567,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         if (GetActiveSkill().effect2 != null)
                         {
-                            unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val);
+                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val);
                         }
                     }
 
@@ -2808,7 +2810,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         if (GetActiveSkill().effect2 != null)
                         {
-                            unitsSelected[i].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[i], effectHitAcc, effectHitAcc);
+                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[i], effectHitAcc, effectHitAcc);
                         }
                     }
 
@@ -3633,6 +3636,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         DetermineTurnOrder();
 
+
+
+
         GetActiveUnitFunctionality().CheckSwitchTeams();
 
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
@@ -3695,7 +3701,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Update allies into position for battle/shop
         UpdateAllAlliesPosition(false, GetActiveUnitType());
 
-        // Turn Start
+        if (GetActiveUnitFunctionality().GetEffect("STUN"))
+        {
+            GetActiveUnitFunctionality().TriggerTextAlert("STUN", 1, true, "Trigger");
+            GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());
+            return;
+        }
 
         //Trigger Start turn effects
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false));

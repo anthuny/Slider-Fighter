@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curUnitType: 0
   unitValue: 2
-  unitSprite: {fileID: 21300000, guid: d14fb1bc785c7ac429da615cb4cca8d2, type: 3}
-  unitIcon: {fileID: 21300000, guid: 639a819925c62544f8cd51453ef6711d, type: 3}
+  unitSprite: {fileID: 21300000, guid: 0eea7ace4b25dd249912b4a4f77450a3, type: 3}
+  unitIcon: {fileID: 21300000, guid: 0eea7ace4b25dd249912b4a4f77450a3, type: 3}
   unitColour: {r: 1, g: 0.7498334, b: 0.32549024, a: 1}
   unitName: Monk
   startingSpeed: 9
   startingDefense: 3
   startingPower: 25
   startingHealingPower: 1
-  startingMaxHealth: 750
+  startingMaxHealth: 800
   speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 2
@@ -35,5 +35,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a9a2ac2173ce53e41b34392ad23f6f59, type: 2}
   - {fileID: 11400000, guid: 77174f49403a53844b4e8a503b5e276b, type: 2}
   - {fileID: 11400000, guid: fd0fee01d33c9554898856f5f3cac161, type: 2}
-  deathClip: {fileID: 8300000, guid: ac378d336493de44eac288beb2b83032, type: 3}
-  hitRecievedClip: {fileID: 8300000, guid: 492b31fe474918a41a7f033cf40b0a6a, type: 3}
+  deathClip: {fileID: 8300000, guid: 4cdeeffb3199bdb48a83ec8d89745346, type: 3}
+  hitRecievedClip: {fileID: 8300000, guid: c4b4c41654ac0c14ab233c550191ad2d, type: 3}

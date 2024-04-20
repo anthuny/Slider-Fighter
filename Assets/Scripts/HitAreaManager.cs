@@ -6,8 +6,6 @@ public class HitAreaManager : MonoBehaviour
 {
     [SerializeField] private Transform hitAreasTrans;
     [SerializeField] private Transform bgHitAreaTrans;
-    [SerializeField] private float minYPos;
-    [SerializeField] private float maxYPos;
 
     [SerializeField] private List<WeaponRanges> weaponRanges = new List<WeaponRanges>();
 
