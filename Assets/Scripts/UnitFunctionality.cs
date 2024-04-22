@@ -35,7 +35,7 @@ public class UnitFunctionality : MonoBehaviour
     private Sprite unitIcon;
     [SerializeField] private Transform unitVisualsParent;
     [SerializeField] private Transform powerUIParent;
-    [SerializeField] private UIElement statUI;
+    [SerializeField] private UIElement unitAlertTextParent;
     [SerializeField] private UIElement hitsRemainingText;
     [SerializeField] private Image unitHealthBar;
     [SerializeField] private Image unitAttackBar;
@@ -194,6 +194,8 @@ public class UnitFunctionality : MonoBehaviour
     public bool mindControlled;
     public bool beenAttacked = false;
     public UnitFunctionality holyLinkPartner;
+    [SerializeField] private GameObject unitAlertParent;
+    [SerializeField] private GameObject unitAlertText;
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);
@@ -1233,26 +1235,27 @@ public class UnitFunctionality : MonoBehaviour
         isPoisonLeaching = toggle;
     }
 
-    public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null, bool levelUp = false)
+    public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null, bool levelUp = false, bool skill = false)
     {
-        statUI.UpdateContentText(name);
-        statUI.UpdateAlpha(alpha, false, 0, true);
+        unitAlertTextParent.UpdateContentText(name);
+        unitAlertTextParent.UpdateAlpha(alpha, false, 0, true);
 
-        if (alpha != 0)
+        ToggleTextAlert(true);
+
+        if (alpha != 0 && !skill)
         {
-            // Set correct text colour gradient
-            if (effect)
-            {
-                if (gradient == "Inflict")
-                    statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectAlert);
-                else if (gradient == "Trigger")
-                    statUI.UpdateContentTextColour(EffectManager.instance.gradientEffectTrigger);
-            }
-            else
-                statUI.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
-
             if (levelUp)
-                statUI.UpdateContentTextColour(GameManager.Instance.gradientLevelUpAlert);
+                unitAlertTextParent.UpdateContentTextColour(GameManager.Instance.gradientLevelUpAlert);
+            else if (!levelUp && !skill)
+            {
+                GameObject go = Instantiate(unitAlertText, unitAlertParent.transform.position, Quaternion.identity);
+                go.transform.SetParent(unitAlertParent.transform);
+                go.transform.localPosition = new Vector3(0, 0, 0);
+                go.transform.localScale = new Vector3(0.78f, 0.78f, 1);
+
+                UnitAlertText unitAlertTextScript = go.GetComponent<UnitAlertText>();
+                unitAlertTextScript.AllowMovingUp(name, alpha, effect, gradient);
+            }
         }
     }
 
@@ -2604,7 +2607,6 @@ public class UnitFunctionality : MonoBehaviour
                             name = "HOLY LINK";
                         TriggerTextAlert(name, 1, true, "Trigger");
 
-                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
                         activeEffects[i].ReduceTurnCountText(this);
 
 
@@ -2999,7 +3001,11 @@ public class UnitFunctionality : MonoBehaviour
         if (GetComponentInChildren<Animator>())
         {
             if (GetUnitName() == "Monk")
-                GetComponentInChildren<CharacterAnimation>().gameObject.GetComponent<RectTransform>().localPosition = new Vector3(-17.4f, -33.9f, 1);
+            {
+                if (GetComponentInChildren<CharacterAnimation>())
+                    GetComponentInChildren<CharacterAnimation>().gameObject.GetComponent<RectTransform>().localPosition = new Vector3(-17.4f, -33.9f, 1);
+            }
+
         }
 
     }
@@ -3406,6 +3412,10 @@ public class UnitFunctionality : MonoBehaviour
 
         Debug.Log("power = " + power);
 
+        // If player in gear tab, stop power ui from appearing from armor equipping
+        if (TeamGearManager.Instance.playerInGearTab)
+            yield break;
+
         // Play Audio
         if (offense)
         {
@@ -3652,11 +3662,11 @@ public class UnitFunctionality : MonoBehaviour
     {
         if (toggle)
         {
-            statUI.UpdateAlpha(1, false, 0, true);
+            unitAlertTextParent.UpdateAlpha(1, false, 0, true);
         }
         else
         {
-            statUI.UpdateAlpha(0, false, 0, true);
+            unitAlertTextParent.UpdateAlpha(0, false, 0, true);
         }
 
     }
@@ -3796,7 +3806,7 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(1.2f);
+            yield return new WaitForSeconds(2.15f);
 
             ToggleUnitDisplay(false);
         }
@@ -4130,142 +4140,150 @@ public class UnitFunctionality : MonoBehaviour
 
                 float newPower = 0;
 
-                if (GameManager.Instance.GetActiveSkill().isCleansingEffectRandom && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                if (!TeamGearManager.Instance.playerInGearTab)
                 {
-                    int rand = Random.Range(1, 101);
-                    if (rand >= 25)
-                        GameManager.Instance.GetActiveUnitFunctionality().CleanseEffect();
-                }
-
-                if (GetEffect("HOLY_LINK") && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                {
-                    //roll
-                    int rand = Random.Range(1, 101);
-
-                    int numb = GetEffect("HOLY_LINK").effectPowerStacks;
-
-                    if (numb > 2)
-                        numb = 2;
-
-                    rand += numb * (int)GetEffect("HOLY_LINK").powerPercent;
-
-                    if (rand >= 60)
-                        rand = 60;
-
-                    if (rand >= GetEffect("HOLY_LINK").powerPercent)
+                    if (GameManager.Instance.GetActiveSkill().isCleansingEffectRandom && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
                     {
-                        if (holyLinkPartner != null)
+                        int rand = Random.Range(1, 101);
+                        if (rand >= 25)
+                            GameManager.Instance.GetActiveUnitFunctionality().CleanseEffect();
+                    }
+
+                    if (GetEffect("HOLY_LINK") && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                    {
+                        //roll
+                        int rand = Random.Range(1, 101);
+
+                        int numb = GetEffect("HOLY_LINK").effectPowerStacks;
+
+                        if (numb > 2)
+                            numb = 2;
+
+                        rand += numb * (int)GetEffect("HOLY_LINK").powerPercent;
+
+                        if (rand >= 60)
+                            rand = 60;
+
+                        if (rand >= GetEffect("HOLY_LINK").powerPercent)
                         {
-                            if (!holyLinkPartner.isDead)
+                            if (holyLinkPartner != null)
                             {
-                                holyLinkPartner.curHealth -= (int)absPower;
-                                holyLinkPartner.StartCoroutine(holyLinkPartner.SpawnPowerUI((int)absPower, false, true, null, false, true));
-
-                                holyLinkPartner.UpdateUnitHealthVisual(effect);
-
-                                holyLinkPartner.animator.SetBool("DamageFlg", true);
-
-                                if (holyLinkPartner.GetHitFlash() == null)
+                                if (!holyLinkPartner.isDead)
                                 {
+                                    holyLinkPartner.curHealth -= (int)absPower;
+                                    holyLinkPartner.StartCoroutine(holyLinkPartner.SpawnPowerUI((int)absPower, false, true, null, false, true));
 
-                                }
-                                else
-                                    holyLinkPartner.GetHitFlash().Flash();
+                                    holyLinkPartner.UpdateUnitHealthVisual(effect);
 
-                                holyLinkPartner.uiElement.AnimateUI(false);
+                                    holyLinkPartner.animator.SetBool("DamageFlg", true);
 
-                                if (doExtras)
-                                {
-                                    CameraShake.instance.EnableCanShake();
-
-                                    if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
+                                    if (holyLinkPartner.GetHitFlash() == null)
                                     {
-                                        if (triggerHitSFX && GameManager.Instance.GetActiveSkill().skillHit != null)
-                                            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+
+                                    }
+                                    else
+                                        holyLinkPartner.GetHitFlash().Flash();
+
+                                    holyLinkPartner.uiElement.AnimateUI(false);
+
+                                    if (doExtras)
+                                    {
+                                        CameraShake.instance.EnableCanShake();
+
+                                        if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
+                                        {
+                                            if (triggerHitSFX && GameManager.Instance.GetActiveSkill().skillHit != null)
+                                                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                                        }
+
+                                        holyLinkPartner.StartCoroutine(holyLinkPartner.PlaySoundDelay(.1f));
+
+                                        holyLinkPartner.TriggerTextAlert("HOLY LINK", 1, true, "Trigger");
                                     }
 
-                                    holyLinkPartner.StartCoroutine(holyLinkPartner.PlaySoundDelay(.1f));
+                                    holyLinkPartner.StartCoroutine(holyLinkPartner.PlayIdleAnimation());
 
-                                    holyLinkPartner.TriggerTextAlert("HOLY LINK", 1, true, "Trigger");
+                                    return;
                                 }
-
-                                holyLinkPartner.StartCoroutine(holyLinkPartner.PlayIdleAnimation());
-
-                                return;
                             }
                         }
+
                     }
 
-                }
-
-                if (GetEffect("IMMUNITY"))
-                {
-                    absPower = 0;
-
-                    //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
-                    StartCoroutine(SpawnPowerUI((int)absPower, false, false, null, false, true));
-
-                    //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
-
-                    UpdateUnitHealthVisual(effect);
-                }
-
-                // if this unit has Reaping, heal caster
-                if (GetEffect("REAPING"))
-                {
-                    for (int i = 0; i < activeEffects.Count; i++)
+                    if (GetEffect("IMMUNITY"))
                     {
-                        if (activeEffects[i].curEffectName == Effect.EffectName.REAPING)
+                        absPower = 0;
+
+                        //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
+                        StartCoroutine(SpawnPowerUI((int)absPower, false, false, null, false, true));
+
+                        //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
+
+                        UpdateUnitHealthVisual(effect);
+                    }
+
+                    // if this unit has Reaping, heal caster
+                    if (GetEffect("REAPING"))
+                    {
+                        for (int i = 0; i < activeEffects.Count; i++)
                         {
-                            if (power != 0)
+                            if (activeEffects[i].curEffectName == Effect.EffectName.REAPING)
                             {
-                                float number = activeEffects[i].effectPowerStacks * GetEffect("REAPING").powerPercent;
-
-                                if (number >= 80)
-                                    number = 80;
-
-                                newPower = (number / 100f) * power;
-                                float finalHealingPower = newPower;
-
-                                float finalHealingPower1 = 0;
-
-                                if (GameManager.Instance.GetActiveUnitFunctionality().GetEffect("POISON"))
+                                if (power != 0)
                                 {
-                                    newPower = ((GameManager.Instance.GetActiveUnitFunctionality().GetEffect("POISON").effectPowerStacks * GameManager.Instance.GetActiveUnitFunctionality().GetEffect("POISON").powerPercent) / 100f) * power;
-                                    finalHealingPower1 = power - newPower;
+                                    float number = activeEffects[i].effectPowerStacks * GetEffect("REAPING").powerPercent;
+
+                                    if (number >= 80)
+                                        number = 80;
+
+                                    newPower = (number / 100f) * power;
+                                    float finalHealingPower = newPower;
+
+                                    float finalHealingPower1 = 0;
+
+                                    if (GameManager.Instance.GetActiveUnitFunctionality().GetEffect("POISON"))
+                                    {
+                                        newPower = ((GameManager.Instance.GetActiveUnitFunctionality().GetEffect("POISON").effectPowerStacks * GameManager.Instance.GetActiveUnitFunctionality().GetEffect("POISON").powerPercent) / 100f) * power;
+                                        finalHealingPower1 = power - newPower;
+                                    }
+                                    else
+                                        finalHealingPower1 = newPower;
+
+
+                                    if (GameManager.Instance.GetActiveUnitFunctionality().curHealth < GameManager.Instance.GetActiveUnitFunctionality().curMaxHealth)
+                                        GameManager.Instance.GetActiveUnitFunctionality().curHealth += (int)finalHealingPower;
+
+                                    if (GameManager.Instance.GetActiveUnitFunctionality().curHealth > GameManager.Instance.GetActiveUnitFunctionality().curMaxHealth)
+                                        GameManager.Instance.GetActiveUnitFunctionality().curHealth = GameManager.Instance.GetActiveUnitFunctionality().curMaxHealth;
+
+
+                                    //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
+                                    StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)finalHealingPower1, false, false, null, false, true));
+
+                                    //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
+
+                                    GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitHealthVisual(effect);
+                                    break;
                                 }
-                                else
-                                    finalHealingPower1 = newPower;
-
-
-                                if (GameManager.Instance.GetActiveUnitFunctionality().curHealth < GameManager.Instance.GetActiveUnitFunctionality().curMaxHealth)
-                                    GameManager.Instance.GetActiveUnitFunctionality().curHealth += (int)finalHealingPower;
-
-                                if (GameManager.Instance.GetActiveUnitFunctionality().curHealth > GameManager.Instance.GetActiveUnitFunctionality().curMaxHealth)
-                                    GameManager.Instance.GetActiveUnitFunctionality().curHealth = GameManager.Instance.GetActiveUnitFunctionality().curMaxHealth;
-                                
-
-                                //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
-                                StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)finalHealingPower1, false, false, null, false, true));
-
-                                //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
-
-                                GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitHealthVisual(effect);
-                                break;
                             }
                         }
                     }
                 }
-                
+
+               
                 curHealth -= (int)absPower;
 
-                // If no effect
-                if (!GetEffect("POISON") && !GetEffect("BLEED") && !GetEffect("IMMUNITY"))
-                    StartCoroutine(SpawnPowerUI((int)absPower, false, true, null, false));
-                else if (GetEffect("POISON"))
-                    StartCoroutine(SpawnPowerUI((int)absPower, false, true, GetEffect("POISON"), false));
-                else if (GetEffect("BLEED"))
-                    StartCoroutine(SpawnPowerUI((int)absPower, false, true, GetEffect("BLEED"), false));
+                if (!TeamGearManager.Instance.playerInGearTab)
+                {
+                    // If no effect
+                    if (!GetEffect("POISON") && !GetEffect("BLEED") && !GetEffect("IMMUNITY"))
+                        StartCoroutine(SpawnPowerUI((int)absPower, false, true, null, false));
+                    else if (GetEffect("POISON"))
+                        StartCoroutine(SpawnPowerUI((int)absPower, false, true, GetEffect("POISON"), false));
+                    else if (GetEffect("BLEED"))
+                        StartCoroutine(SpawnPowerUI((int)absPower, false, true, GetEffect("BLEED"), false));
+                }
+
 
                 if (curHealth < 0)
                     curHealth = 0;
@@ -4273,7 +4291,7 @@ public class UnitFunctionality : MonoBehaviour
                 //if (curHealth > 0)
 
                 // If the hit wasnt a miss, or 0 dmg, cause hit recieved animation
-                if (power != 0)
+                if (power != 0 && !TeamGearManager.Instance.playerInGearTab)
                 {
                     animator.SetBool("DamageFlg", true);
 
@@ -4300,13 +4318,15 @@ public class UnitFunctionality : MonoBehaviour
 
                 StartCoroutine(PlayIdleAnimation());
             }
+
             // Healing
             else
             {
                 // if this unit has poison, heal less
-                if (GetEffect("POISON"))
+                if (GetEffect("POISON") && !TeamGearManager.Instance.playerInGearTab)
                 {
                     float newPower = 0;
+
                     for (int i = 0; i < activeEffects.Count; i++)
                     {
                         if (activeEffects[i].curEffectName == Effect.EffectName.POISON)
@@ -4340,7 +4360,8 @@ public class UnitFunctionality : MonoBehaviour
                     if (curHealth > curMaxHealth)
                         curHealth = curMaxHealth;
 
-                    StartCoroutine(SpawnPowerUI((int)absPower, false, false, null, false));
+                    if (!TeamGearManager.Instance.playerInGearTab)
+                        StartCoroutine(SpawnPowerUI((int)absPower, false, false, null, false));
                 }
             }
         }

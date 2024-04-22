@@ -294,6 +294,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (OwnedLootInven.Instance.GetOwnedLootOpened())
             return;
 
+        TeamGearManager.Instance.playerInGearTab = false;
+
         //GameManager.Instance.activeRoomHeroesBase.Reverse();
         /*
         if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab || SkillsTabManager.Instance.playerInSkillTab)

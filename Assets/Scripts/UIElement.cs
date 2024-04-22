@@ -59,6 +59,7 @@ public class UIElement : MonoBehaviour
     private float originalYPos;
     public bool isEnabled = false;
 
+
     public void ToggleTooltipStats(bool toggle)
     {
         //Debug.Log("toggling " + toggle);
@@ -114,7 +115,7 @@ public class UIElement : MonoBehaviour
         if (selectable)
             UpdateIsLocked(true);
         */
-        
+
         if (gameObject.GetComponent<RectTransform>() != null)
         {
             originalScaleText = transform.GetComponent<RectTransform>().localScale.x;
@@ -133,14 +134,14 @@ public class UIElement : MonoBehaviour
     }
 
     public void UpdateIsLocked(bool toggle)
-    {      
+    {
         isLocked = toggle;
         //ToggleLockedImage(toggle);     
     }
 
     void Start()
     {
-        //CheckIfThreshholdPassed();
+
     }
 
     public void SetYPosition()
@@ -357,7 +358,7 @@ public class UIElement : MonoBehaviour
         // Shit fix for rewards finding their content text
         if (contentText == null)
             contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
-        
+
         contentText.text = text;
         //AnimateUI();
     }
@@ -424,18 +425,18 @@ public class UIElement : MonoBehaviour
 
             if (doScalePunch)
                 contentImage.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
-            
+
             ResetAnimateScaleImage();
         }
 
         if (dieAfterDisplay)
         {
             if (!text)
-                StartCoroutine(HideUIOvertime(GameManager.Instance.skillAlertAppearTime/1.25f, true));
+                StartCoroutine(HideUIOvertime(GameManager.Instance.skillAlertAppearTime / 1.25f, true));
             else if (depleteEffect)
                 StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillEffectDepleteAppearTime));
             else
-                StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime)); 
+                StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime));
         }
     }
 
@@ -525,7 +526,7 @@ public class UIElement : MonoBehaviour
     }
 
     public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true)
-    {   
+    {
         cg = GetComponent<CanvasGroup>();
 
         cg.alpha = alpha;   // Update UI Alpha
@@ -584,7 +585,7 @@ public class UIElement : MonoBehaviour
     {
         if (buttonCG == null)
         {
-            Debug.Log(gameObject.name  + " error");
+            Debug.Log(gameObject.name + " error");
         }
 
         if (toggle)
@@ -611,7 +612,13 @@ public class UIElement : MonoBehaviour
         button2CG.interactable = toggle;
         button2CG.blocksRaycasts = toggle;
 
-        button2CG.GetComponent<Button>().interactable = toggle; 
+        button2CG.GetComponent<Button>().interactable = toggle;
+    }
+
+
+    public void AllowMovingUp()
+    {
+
     }
 
     public void ToggleButton3(bool toggle, bool bypass = false)

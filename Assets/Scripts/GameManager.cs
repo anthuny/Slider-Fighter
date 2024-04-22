@@ -2523,7 +2523,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // For no power skills
         if (GetActiveSkill().curSkillPower == 0 || GetActiveSkill().healPowerAmount != 0)
         {
-           // GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+            // GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
+
+            float lowestHealth = 9999999999;
+            float health = 1;
+            UnitFunctionality lowestHealthHero = null;
 
             // Loop through all selected units
             for (int x = 0; x < unitsSelected.Count; x++)
@@ -2577,18 +2581,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     if (GetActiveSkill().isHealingFromResult)
                     {
+                        //lowestHealth = 9999999999;
+
                         for (int n = 0; n < hitCount; n++)
                         {
-                            int health = 25555;
-
-                            UnitFunctionality lowestHealthHero = null;
-
                             for (int v = 0; v < activeRoomHeroes.Count; v++)
                             {
-                                if ((int)activeRoomHeroes[v].GetUnitCurHealth() < health)
+                                health = (float)activeRoomHeroes[v].GetUnitCurHealth() / (float)activeRoomHeroes[v].GetUnitMaxHealth();
+
+                                if (lowestHealth > health)
                                 {
-                                    health = (int)activeRoomHeroes[v].GetUnitCurHealth();
                                     lowestHealthHero = activeRoomHeroes[v];
+                                    lowestHealth = health;
                                 }
                             }
 
@@ -2596,7 +2600,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             float healAmount = 0;
 
                             healAmount = (int)WeaponManager.Instance.calculatedPower;
-                            lowestHealthHero.UpdateUnitCurHealth((int)healAmount, false, false, true, false, false);
+
+                            if (lowestHealthHero != null)
+                                lowestHealthHero.UpdateUnitCurHealth((int)healAmount, false, false, true, false, false);
+                            else
+                                GetActiveUnitFunctionality().UpdateUnitCurHealth((int)healAmount, false, false, true, false, false);
 
                             int maxHitWorth = 15;
                             if (hitCount > maxHitWorth)
@@ -4588,7 +4596,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         ToggleSkillVisibility(false);
 
-        GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false);
+        GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "Trigger", false, true);
 
         ToggleUnitEffectTooltipsOff();
 
