@@ -33,9 +33,10 @@ public class UnitAlertText : MonoBehaviour
                 else if (gradient == "Trigger")
                     uiElement.UpdateContentTextColour(EffectManager.instance.gradientEffectTrigger);
             }
+            /*
             else
                 uiElement.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
-
+            */
             movingUp = true;
 
             StartCoroutine(WaitToStopMovingUp());
@@ -47,7 +48,7 @@ public class UnitAlertText : MonoBehaviour
     bool startHiding = false;
     IEnumerator WaitToStopMovingUp()
     {
-        yield return new WaitForSeconds(.8f);
+        yield return new WaitForSeconds(.55f);
 
         time = 0;
 
@@ -64,6 +65,9 @@ public class UnitAlertText : MonoBehaviour
             if (cg.alpha <= 0)
             {
                 startHiding = false;
+                cg.alpha = 0;
+                time = 0;
+
                 movingUp = false;
 
                 Destroy(this.gameObject);

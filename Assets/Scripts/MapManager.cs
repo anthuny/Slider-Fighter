@@ -416,6 +416,7 @@ public class MapManager : MonoBehaviour
     {
         if (toggle)
         {
+            StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
             //Debug.Log("toggling map on");
             // Display exp visual
             AudioManager.Instance.ToggleShopMusic(false);

@@ -35,7 +35,7 @@ public class UnitFunctionality : MonoBehaviour
     private Sprite unitIcon;
     [SerializeField] private Transform unitVisualsParent;
     [SerializeField] private Transform powerUIParent;
-    [SerializeField] private UIElement unitAlertTextParent;
+
     [SerializeField] private UIElement hitsRemainingText;
     [SerializeField] private Image unitHealthBar;
     [SerializeField] private Image unitAttackBar;
@@ -194,7 +194,8 @@ public class UnitFunctionality : MonoBehaviour
     public bool mindControlled;
     public bool beenAttacked = false;
     public UnitFunctionality holyLinkPartner;
-    [SerializeField] private GameObject unitAlertParent;
+    [SerializeField] private UIElement unitAlertTextParent;
+    [SerializeField] private UIElement unitAlertStay;
     [SerializeField] private GameObject unitAlertText;
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
@@ -1237,8 +1238,13 @@ public class UnitFunctionality : MonoBehaviour
 
     public void TriggerTextAlert(string name, float alpha, bool effect, string gradient = null, bool levelUp = false, bool skill = false)
     {
-        unitAlertTextParent.UpdateContentText(name);
-        unitAlertTextParent.UpdateAlpha(alpha, false, 0, true);
+        if (skill)
+        {
+            unitAlertStay.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
+
+            unitAlertStay.UpdateContentText(name);
+            unitAlertStay.UpdateAlpha(alpha, false, 0, true);
+        }
 
         ToggleTextAlert(true);
 
@@ -1248,8 +1254,8 @@ public class UnitFunctionality : MonoBehaviour
                 unitAlertTextParent.UpdateContentTextColour(GameManager.Instance.gradientLevelUpAlert);
             else if (!levelUp && !skill)
             {
-                GameObject go = Instantiate(unitAlertText, unitAlertParent.transform.position, Quaternion.identity);
-                go.transform.SetParent(unitAlertParent.transform);
+                GameObject go = Instantiate(unitAlertText, unitAlertTextParent.transform.position, Quaternion.identity);
+                go.transform.SetParent(unitAlertTextParent.transform);
                 go.transform.localPosition = new Vector3(0, 0, 0);
                 go.transform.localScale = new Vector3(0.78f, 0.78f, 1);
 
@@ -1334,7 +1340,7 @@ public class UnitFunctionality : MonoBehaviour
             // Select units
             GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
 
-            TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false);
+            TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false, null, false, true);
 
             /*
             if (GameManager.Instance.GetActiveSkill().curAnimType == SkillData.SkillAnimType.DEFAULT)
@@ -2589,7 +2595,12 @@ public class UnitFunctionality : MonoBehaviour
                     if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNSTART)
                     {
                         activeEffects[i].TriggerPowerEffect(this);
-                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                        string name = activeEffects[i].effectName;
+
+                        if (activeEffects[i].effectName == "HOLY_LINK")
+                            name = "HOLY LINK";
+
+                        TriggerTextAlert(name, 1, true, "Trigger");
                         activeEffects[i].ReduceTurnCountText(this);
 
                         yield return new WaitForSeconds(.5f);
@@ -2601,11 +2612,7 @@ public class UnitFunctionality : MonoBehaviour
                     {
                         activeEffects[i].TriggerPowerEffect(this);
 
-                        string name = activeEffects[i].effectName;
-
-                        if (activeEffects[i].effectName == "HOLY_LINK")
-                            name = "HOLY LINK";
-                        TriggerTextAlert(name, 1, true, "Trigger");
+                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
 
                         activeEffects[i].ReduceTurnCountText(this);
 
@@ -2622,10 +2629,12 @@ public class UnitFunctionality : MonoBehaviour
         {
             if (activeEffects[x] == null)
             {
+                /*
                 if (holyLinkPartner != null && activeEffects[x].curEffectName == Effect.EffectName.HOLY_LINK)
                 {
                     holyLinkPartner.StartCoroutine(holyLinkPartner.DecreaseEffectTurnsLeft(false, false, false, true));
                 }
+                */
 
                 GetEffects().RemoveAt(x);
             }
@@ -3010,6 +3019,11 @@ public class UnitFunctionality : MonoBehaviour
 
     }
 
+    public void ResetHolyLinkPartner()
+    {
+        holyLinkPartner = null;
+    }
+
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
         Debug.Log("addedEffect 1 " + addedEffect.curEffectName);
@@ -3069,7 +3083,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                 Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
 
-                                if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                                if (addedEffect.effectName == "HOLY_LINK")
                                 {
                                     holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
                                     GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
@@ -3123,7 +3137,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
 
-                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
                                 holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
                                 GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
@@ -3188,7 +3202,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
 
-                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
                                 holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
                                 GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
@@ -3241,8 +3255,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
 
-
-                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
                                 holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
                                 GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
@@ -3289,7 +3302,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             Debug.Log("addedEffect 7 " + addedEffect.curEffectName);
 
-                            if (addedEffect.effectName == "HOLY_LINK" || addedEffect.effectName == "HOLY LINK")
+                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
                                 holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
                                 GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
@@ -4216,7 +4229,7 @@ public class UnitFunctionality : MonoBehaviour
 
                         //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
                         StartCoroutine(SpawnPowerUI((int)absPower, false, false, null, false, true));
-
+                        GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert("IMMUNITY", 1, true, "Trigger", false, false);
                         //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
 
                         UpdateUnitHealthVisual(effect);
@@ -4260,6 +4273,7 @@ public class UnitFunctionality : MonoBehaviour
                                     //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
                                     StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().SpawnPowerUI((int)finalHealingPower1, false, false, null, false, true));
 
+                                    GameManager.Instance.GetActiveUnitFunctionality().TriggerTextAlert("REAPING", 1, true, "Trigger", false, false);
                                     //Debug.Log("unit name " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitName());
 
                                     GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitHealthVisual(effect);

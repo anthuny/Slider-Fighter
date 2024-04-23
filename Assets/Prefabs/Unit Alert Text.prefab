@@ -57,7 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canMoveUp: 0
   hideSpeed: 0.5
-  travelSpeed: 75
+  travelSpeed: 120
   cg: {fileID: 1840824566977169811}
   uiElement: {fileID: 3004629507114915766}
 --- !u!222 &7916948566820728416
@@ -202,7 +202,6 @@ MonoBehaviour:
   skillUpgradesUI: {fileID: 0}
   tooltipStats: {fileID: 0}
   statText: 
-  unitAlertText: {fileID: 0}
   originalScaleText: 0
   isEnabled: 0
 --- !u!225 &1840824566977169811

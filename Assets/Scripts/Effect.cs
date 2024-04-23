@@ -270,6 +270,14 @@ public class Effect : MonoBehaviour
 
     public void RemoveEffect(UnitFunctionality unit)
     {
+        if (curEffectName == EffectName.HOLY_LINK)
+        {
+            unit.StartCoroutine(unit.holyLinkPartner.DecreaseEffectTurnsLeft(false, false, false, true));
+            unit.ResetHolyLinkPartner();
+        }
+        else if (curEffectName == EffectName.OTHER_LINK)
+            unit.ResetHolyLinkPartner();
+
         EffectRemove(unit);
     }
 

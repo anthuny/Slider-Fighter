@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598ab766c50009b43b7f087a0dd359a1, type: 3}
   m_Name: Holy Link
   m_EditorClassIdentifier: 
-  curEffectTrigger: 2
+  curEffectTrigger: 1
   curEffectType: 1
   curEffectBenefitType: 0
   curEffectName: 23
   effectName: HOLY_LINK
-  effectDesc: '(15% x tier) chance for this fighter''s ''Other Link'' to intercept
-    a hit of damage. Buffs transfer to Other Link Fighter.(max: 60%)'
+  effectDesc: '15% x tier chance for this fighter''s ''Other Link'' to intercept
+    a hit of damage. Buffs transfer to Other Link Fighter. (max: 60%)'
   effectIcon: {fileID: 21300000, guid: d934badea2b62994895b719be20fdc16, type: 3}
   powerPercent: 15
   powerAmp: 0

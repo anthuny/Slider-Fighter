@@ -43,8 +43,8 @@ MonoBehaviour:
   isHealingFromResult: 0
   isLongerSkillAnim: 0
   healPowerAmount: 0
-  isReviving: 1
-  isMindControlling: 1
+  isReviving: 0
+  isMindControlling: 0
   isCleansingEffect: 0
   curSkillToCleanse: 0
   isCleansingEffectRandom: 0
