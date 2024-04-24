@@ -2611,12 +2611,14 @@ public class UnitFunctionality : MonoBehaviour
                     if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                     {
                         activeEffects[i].TriggerPowerEffect(this);
+                        string name = activeEffects[i].effectName;
 
-                        TriggerTextAlert(activeEffects[i].effectName, 1, true, "Trigger");
+                        if (activeEffects[i].effectName == "MIND_CONTROL")
+                            name = "MIND CONTROL";
+
+                        TriggerTextAlert(name, 1, true, "Trigger");
 
                         activeEffects[i].ReduceTurnCountText(this);
-
-
 
                         yield return new WaitForSeconds(.5f);
                     }
@@ -3757,6 +3759,8 @@ public class UnitFunctionality : MonoBehaviour
                 ResetUnitHealingRecieved();
             }
 
+
+
             return true;
         }
         else
@@ -3768,6 +3772,13 @@ public class UnitFunctionality : MonoBehaviour
     public void ResetIsDead()
     {
         isDead = false;
+
+        selectUnitButton.ToggleButton(true);
+    }
+
+    public void DisableDeadUnitButtons()
+    {
+        selectUnitButton.ToggleButton(false);
     }
 
     IEnumerator EnsureUnitIsDead(bool effect = false)
@@ -3788,6 +3799,11 @@ public class UnitFunctionality : MonoBehaviour
             animator.SetTrigger("DeathFlg");
 
             AudioManager.Instance.Play(deathClip.name);
+
+            if (curUnitType == UnitType.ENEMY)
+            {
+                GameManager.Instance.fallenEnemies.Add(this);
+            }
 
             GameManager.Instance.RemoveUnitFromTurnOrder(this);
 
@@ -3876,10 +3892,15 @@ public class UnitFunctionality : MonoBehaviour
     {
         isDead = false;
 
+        selectUnitButton.ToggleButton(true);
+
         if (enemy)
             GameManager.Instance.AddUnitToTurnOrder(this);
 
         GameManager.Instance.AddActiveRoomAllUnitsFunctionality(this, enemy);
+
+        if (GameManager.Instance.fallenEnemies.Contains(this))
+            GameManager.Instance.fallenEnemies.Remove(this);
 
         GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
 

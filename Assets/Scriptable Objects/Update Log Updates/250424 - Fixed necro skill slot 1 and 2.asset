@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b1acb7c48ac8e4794d42cad5696501, type: 3}
+  m_Name: 250424 - Fixed necro skill slot 1 and 2
+  m_EditorClassIdentifier: 
+  updateLogPreText: 25/04/24 - Necro skill slot 1 and 2
+  updateLogText: BUG - Fixed necormancer's skill 1 and 2 being swapped by default.
+    Now correctly switched back.

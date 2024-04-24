@@ -21,9 +21,9 @@ MonoBehaviour:
   curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: dc7f4ebb9a8d17c47b07e8d9b8190d87, type: 3}
   skillName: MIND CONTROL
-  skillDescr: Target up to 5 defeated enemies, Reviving them, and casting Mindcontrol
-    effect on them
-  skillTabDescr: Target up to 5 defeated enemies, Reviving them, and casting Mindcontrol
+  skillDescr: Target 1 defeated enemies, Reviving them, and casting Mindcontrol effect
+    on them
+  skillTabDescr: Target 1 defeated enemies, Reviving them, and casting Mindcontrol
     effect on them
   startingSkillLevel: 0
   curSkillLevel: 0
@@ -36,7 +36,7 @@ MonoBehaviour:
   projectileSpeed: 0
   skillCooldown: 0
   curCooldown: 0
-  skillSelectionCount: 2
+  skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0
   isLeaching: 0
@@ -67,6 +67,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 4a0b3db7e90fb5847bdd6ac38fc8c585, type: 3}

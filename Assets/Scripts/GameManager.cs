@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public List<UnitFunctionality> activeRoomEnemies = new List<UnitFunctionality>();
     private List<UnitFunctionality> oldActiveRoomEnemies = new List<UnitFunctionality>();
     public List<UnitFunctionality> fallenHeroes = new List<UnitFunctionality>();
+    public List<UnitFunctionality> fallenEnemies = new List<UnitFunctionality>();
 
     [SerializeField] private GameObject unitIcon;
 
@@ -2562,22 +2563,28 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                         yield return new WaitForSeconds(0.4f);
                                         unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val2);
                                     }
-
                                 }
                             }
-
                         }
                     }
 
                     if (!miss)
                     {
-                        unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val);
+                        if (GetActiveSkill().effect != null)
+                        {
+                            if (GetActiveSkill().effect.curEffectName == EffectData.EffectName.MIND_CONTROL && activeRoomHeroes.Count <= 2
+                                || GetActiveSkill().effect.curEffectName == EffectData.EffectName.MIND_CONTROL && fallenHeroes.Count > 0)
+                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val);
+                            else if (GetActiveSkill().effect.curEffectName != EffectData.EffectName.MIND_CONTROL)
+                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val);
+                        }
 
                         if (GetActiveSkill().effect2 != null)
                         {
-                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK && GetActiveSkill().effect2.curEffectName != EffectData.EffectName.MIND_CONTROL)
                             {
-                                yield return new WaitForSeconds(0.4f);
+
+                                yield return new WaitForSeconds(0.25f);
                                 unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val);
                             }
                         }
@@ -2593,12 +2600,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             for (int v = 0; v < activeRoomHeroes.Count; v++)
                             {
-                                health = (float)activeRoomHeroes[v].GetUnitCurHealth() / (float)activeRoomHeroes[v].GetUnitMaxHealth();
-
-                                if (lowestHealth > health)
+                                if (!activeRoomHeroes[v].isDead)
                                 {
-                                    lowestHealthHero = activeRoomHeroes[v];
-                                    lowestHealth = health;
+                                    health = (float)activeRoomHeroes[v].GetUnitCurHealth() / (float)activeRoomHeroes[v].GetUnitMaxHealth();
+
+                                    if (lowestHealth > health)
+                                    {
+                                        lowestHealthHero = activeRoomHeroes[v];
+                                        lowestHealth = health;
+                                    }
                                 }
                             }
 
@@ -2629,7 +2639,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         // If player scored higher then only a miss, and target is dead
                         if (unitsSelected[x].isDead && effectHitAcc != 0)
                         {
-                            if (activeRoomHeroes.Count <= 2)
+                            if (activeRoomHeroes.Count <= 2 || fallenHeroes.Count > 0)
                             {
                                 unitsSelected[x].ReviveUnit(effectHitAcc, false, false);
 
@@ -3601,18 +3611,31 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     activeRoomHeroes[i].UpdateUnitCurHealth(9999, true, false, true, false, true);
                 }
+
+            }
+
+            // Disable unit buttons if their dead so 3rd slot hero can be selectable
+            for (int i = 0; i < fallenEnemies.Count; i++)
+            {
+                fallenEnemies[i].DisableDeadUnitButtons();
             }
 
             if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ITEM || RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+            {
+                ResetFallenEnemies();
                 SetupItemRewards();
+            }
             else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
             {
+                ResetFallenEnemies();
                 HeroRoomManager.Instance.SpawnHeroGameManager();
             }
             else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ENEMY)
             {
+                ResetFallenEnemies();
                 StartCoroutine(SetupPostBattleUI(true));
             }
+
             return;
         }
 
@@ -3655,12 +3678,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         GetActiveUnitFunctionality().CheckSwitchTeams();
 
+        /*
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
         {
             UpdateTurnOrder();
             //combatOver = true;
             return;
         }
+        */
 
         // Only decrease skill CDs during combat
         GetActiveUnitFunctionality().DecreaseSkill0Cooldown();
@@ -3786,7 +3811,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // If skill 0 with only 1 skill slot available, if the skill targets dead allies, and there are none, force skip turn.
             if (!deadTargetsRemain && byPass)
             {
-                StartCoroutine(SkipTurnAfterWait());
+                //StartCoroutine(SkipTurnAfterWait());
             }
         }
 
@@ -3807,18 +3832,27 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
     }
 
+    void ResetFallenEnemies()
+    {
+        fallenEnemies.Clear();
+    }
+
     public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
     {
         if (unitTarget.curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
             // Skip unit turn if all skills are on cooldown
-            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 1 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0)
+            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 1 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES)
             {
-                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 1 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 3)
+                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 1 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                    || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(1).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 3)
                 {
-                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 1 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 6)
+                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 1 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                        || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(2).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 6)
                     {
-                        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 || unitTarget.GetUnitLevel() < 9)
+                        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                            || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(3).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 9)
                         {
                             if (!HeroRoomManager.Instance.playerInHeroRoomView)
                                 return true;
