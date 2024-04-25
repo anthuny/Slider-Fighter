@@ -30,10 +30,10 @@ MonoBehaviour:
   curSkillPower: 10
   skillAttackAccMult: 1
   skillBaseHitOutput: 3
-  skillHitAttempts: 2
+  skillHitAttempts: 5
   projectileSpeed: 1
   skillCooldown: 2
-  curCooldown: 0
+  curCooldown: 3
   skillSelectionCount: 3
   isSelfCast: 0
   isDoublingEffect: 0
@@ -65,6 +65,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: de68bf11f3ddf4d4482781d4ef21afdc, type: 3}

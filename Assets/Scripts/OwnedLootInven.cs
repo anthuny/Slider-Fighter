@@ -2545,6 +2545,8 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(true);
                         ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
                         ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
+
+                        ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(false);
                         ownedItemSlotIndex++;
                         //Debug.Log("asdasdasd");
                     }
@@ -2568,6 +2570,7 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
                         ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
 
+                        ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(false);
                         ownedItemSlotIndex++;
                         //Debug.Log("123123123");
                     }
@@ -2590,6 +2593,8 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(true);
                         ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
                         ownedLootSlots[ownedItemSlotIndex].ToggleOwnedGearButton(true);
+
+                        ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(false);
                         ownedItemSlotIndex++;
                         //Debug.Log("456456456");
                     }

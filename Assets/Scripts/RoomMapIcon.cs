@@ -361,6 +361,10 @@ public class RoomMapIcon : MonoBehaviour
         // if turning hidden OFF
         else
         {
+            if (curRoomType == RoomType.BOSS)
+            {
+                UpdateRoomIconColour(GameManager.Instance.map.roomBossColour);
+            }
             ToggleDiscovered(true);
         }
 

@@ -58,6 +58,7 @@ public class UIElement : MonoBehaviour
     private float originalScaleImage;
     private float originalYPos;
     public bool isEnabled = false;
+    public bool displayingAlert = false;
 
 
     public void ToggleTooltipStats(bool toggle)
@@ -640,11 +641,14 @@ public class UIElement : MonoBehaviour
 
     public void DisableAlertUI()
     {
+        displayingAlert = false;
+
         mainText.color = new Color(mainText.color.r, mainText.color.g, mainText.color.b, 0);
     }
 
     public IEnumerator TriggerUIAlert(float duration, string alertText, TMP_ColorGradient gradient)
     {
+        displayingAlert = true;
         mainText.text = alertText;
         //mainText.color = mainText.color = color;
         mainText.colorGradientPreset = gradient;

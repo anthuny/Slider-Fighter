@@ -14,6 +14,14 @@ public class MapOverlay : MonoBehaviour
     [SerializeField] private UIElement floorName;
     [SerializeField] private UIElement roomDifficultyIcons;
     [SerializeField] private GameObject roomDifficultyIconPrefab;
+    [SerializeField] private UIElement fallenFighterPrompt;
+    [SerializeField] private ButtonFunctionality fallenFighterPromptYesButton;
+    [SerializeField] private ButtonFunctionality fallenFighterPromptNoButton;
+    [SerializeField] private ButtonFunctionality fallenFighterPromptExitButton;
+    [SerializeField] private UIElement hardRoomPrompt;
+    [SerializeField] private ButtonFunctionality hardRoomPromptYesButton;
+    [SerializeField] private ButtonFunctionality hardRoomPromptNoButton;
+    [SerializeField] private ButtonFunctionality hardRoomPromptExitButton;
 
     [SerializeField] private UIElement playerGoldTextShopRoom;
     [SerializeField] private UIElement floorNameShopRoom;
@@ -22,13 +30,50 @@ public class MapOverlay : MonoBehaviour
     [HideInInspector]
     public UIElement uiElement;
 
+    public void ToggleFallenFighterPrompt(bool toggle = true)
+    {
+        if (toggle)
+        {
+            fallenFighterPrompt.UpdateAlpha(1);
+            fallenFighterPromptYesButton.ToggleButton(true);
+            fallenFighterPromptNoButton.ToggleButton(true);
+            fallenFighterPromptExitButton.ToggleButton(true);
+        }
+        else
+        {
+            fallenFighterPrompt.UpdateAlpha(0);
+            fallenFighterPromptYesButton.ToggleButton(false);
+            fallenFighterPromptNoButton.ToggleButton(false);
+            fallenFighterPromptExitButton.ToggleButton(false);
+        }
+    }
+
+    public void ToggleHardRoomPrompt(bool toggle = true)
+    {
+        if (toggle)
+        {
+            hardRoomPrompt.UpdateAlpha(1);
+            hardRoomPromptYesButton.ToggleButton(true);
+            hardRoomPromptNoButton.ToggleButton(true);
+            hardRoomPromptExitButton.ToggleButton(true);
+        }
+        else
+        {
+            hardRoomPrompt.UpdateAlpha(0);
+            hardRoomPromptYesButton.ToggleButton(false);
+            hardRoomPromptNoButton.ToggleButton(false);
+            hardRoomPromptExitButton.ToggleButton(false);
+        }
+    }
+
     private void Awake()
     {
         uiElement = gameObject.GetComponent<UIElement>();
     }
     private void Start()
     {
-        //ToggleMapOverlayButtons(false);
+        ToggleHardRoomPrompt(false);
+        ToggleFallenFighterPrompt(false);
     }
 
     public void UpdateRoomDifficultyIcons()

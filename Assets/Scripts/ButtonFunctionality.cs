@@ -103,6 +103,42 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     }
     #endregion
 
+    public void ButtonFallenFighterPromptYes()
+    {
+        MapManager.Instance.mapOverlay.ToggleFallenFighterPrompt(false);
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        ButtonEnterRoom(true);
+    }
+
+    public void ButtonFallenFighterPromptNo()
+    {
+        MapManager.Instance.mapOverlay.ToggleFallenFighterPrompt(false);
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+    }
+
+    public void ButtonHardRoomPromptYes()
+    {
+        MapManager.Instance.mapOverlay.ToggleHardRoomPrompt(false);
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        ButtonEnterRoom(true);
+    }
+
+    public void ButtonHardRoomPromptNo()
+    {
+        MapManager.Instance.mapOverlay.ToggleHardRoomPrompt(false);
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+    }
+
     bool menuPlayButtonPressed;
 
     public void MenuSelectHero()
@@ -112,6 +148,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (!buttonLocked)
             {
                 menuPlayButtonPressed = true;
+
+                GameManager.Instance.startingFighterChosen = true;
 
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
@@ -158,6 +196,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void MenuLeftArrowCarasel()
     {
+        if (GameManager.Instance.startingFighterChosen)
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -166,6 +207,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void MenuRightArrowCarasel()
     {
+        if (GameManager.Instance.startingFighterChosen)
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -212,14 +256,37 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     bool enterRoomButtonPressed = false;
 
-    public void ButtonEnterRoom()
+    public void ButtonEnterRoom(bool byPass = false)
     {
         if (!enterRoomButtonPressed)
         {
             enterRoomButtonPressed = true;
 
-            // Button Click SFX
-            AudioManager.Instance.Play("Button_Click");
+            if (!byPass)
+            {
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
+                if (GameManager.Instance.fallenHeroes.Count > 0)
+                {
+                    MapManager.Instance.mapOverlay.ToggleFallenFighterPrompt(true);
+
+                    enterRoomButtonPressed = false;
+                    return;
+                }
+
+                if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.ITEM || RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.HERO
+                    || RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
+                {
+                    if (MapManager.Instance.CheckToEnableHardRoomPrompt())
+                    {
+                        MapManager.Instance.mapOverlay.ToggleHardRoomPrompt(true);
+
+                        enterRoomButtonPressed = false;
+                        return;
+                    }
+                }
+            }
 
             // Map Close SFX
             AudioManager.Instance.Play("Map_Close");

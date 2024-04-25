@@ -161,6 +161,7 @@ public class CharacterCarasel : MonoBehaviour
             else
             {
                 allAlliesMenu[i].UpdateUnitDisplay("Locked");
+                FighterStatManager.Instance.UpdateFighterStats(null);
                 continue;
             }
 
@@ -248,6 +249,8 @@ public class CharacterCarasel : MonoBehaviour
                 UpdateAllyDisplayName(allAllies[0], true);
             }
         }
+
+        FighterStatManager.Instance.UpdateFighterStats(allAllies[0]);
     }
 
     public void UpdateAllyDisplayName(UnitData unit, bool locked = false)

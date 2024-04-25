@@ -68,7 +68,7 @@ public class MapPath : MonoBehaviour
             {
                 // Enable each goal room connected to this path
                 goalRooms[i].ToggleHiddenMode(false);
-
+                Debug.Log("2");
                 // Make the main room of the goal rooms the next revealed room
                 if (goalRooms[i].isMainRoom)
                 {
@@ -82,7 +82,9 @@ public class MapPath : MonoBehaviour
 
     public void ToggleConnectingRoomsDiscovered(bool toggle)
     {
-        lr.enabled = true;
+        if (lr != null)
+            lr.enabled = true;
+
         isRevealed = true;
 
         for (int i = 0; i < goalRooms.Count; i++)

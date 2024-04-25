@@ -28,6 +28,10 @@ MonoBehaviour:
   healingPowerIncPerLv: 2
   defenseIncPerLv: 1
   maxHealthIncPerLv: 115
+  statDefense: 0
+  statAttack: 1
+  statHealing: 3
+  statUtility: 3
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 28f4be4170fbe3c4c88abafe3c47021d, type: 3}
   curSkills:

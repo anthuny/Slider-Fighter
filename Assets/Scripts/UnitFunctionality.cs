@@ -4786,7 +4786,7 @@ public class UnitFunctionality : MonoBehaviour
             curPowerHits -= newDmgHits;
 
         if (!HeroRoomManager.Instance.playerInHeroRoomView && GameManager.Instance.playerInCombat)
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveSkill());
+            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveSkill(), true);
     }
 
     public int GetUnitPowerHits()

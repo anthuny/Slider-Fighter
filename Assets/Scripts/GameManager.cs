@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     //public bool devMode;
 
+    public bool startingFighterChosen = false;
     public UIElement transitionSequienceUI;
     public CombatUnitFocus transitionSprite;
     [SerializeField] private UIElement nothingnessUI;
@@ -3285,12 +3286,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     }
     #endregion
 
-    public void UpdateSkillDetails(SkillData skill)
+    public void UpdateSkillDetails(SkillData skill, bool displaySkillDesc = false)
     {
         if (skill == null)
             return;
 
-        ToggleUIElement(playerAbilityDesc, true);
+        if (!displaySkillDesc)
+            ToggleUIElement(playerAbilityDesc, true);
 
         bool tempAttack = false;
 

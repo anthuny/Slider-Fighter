@@ -26,6 +26,11 @@ public class UnitData : ScriptableObject
     public float defenseIncPerLv;
     public float maxHealthIncPerLv;
 
+    public int statDefense = 0;
+    public int statAttack = 0;
+    public int statHealing = 0;
+    public int statUtility = 0;
+
     // The amount of units this unit can target at once with it's basic attack
     public int basicSelectionCount;
     public GameObject characterPrefab;

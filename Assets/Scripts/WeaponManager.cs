@@ -998,6 +998,9 @@ public class WeaponManager : MonoBehaviour
 
     public void TriggerHitAlertText(WeaponHitArea.HitAreaType curHitAreaType)
     {
+        if (hitAlertText.displayingAlert)
+            hitAlertText.DisableAlertUI();
+
         if (curHitAreaType == WeaponHitArea.HitAreaType.PERFECT)
             StartCoroutine(hitAlertText.TriggerUIAlert(hitAlertTriggerDuration, perfectHitAlertText, perfectHitAlertTextGradient));
         else if (curHitAreaType == WeaponHitArea.HitAreaType.GREAT)

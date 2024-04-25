@@ -111,6 +111,7 @@ public class MapManager : MonoBehaviour
     public Sprite arrowUpSprite;
     public Sprite arrowDownSprite;
     public Sprite invisSprite;
+    int allowBossRoom = 0;
 
     private void Awake()
     {
@@ -392,7 +393,7 @@ public class MapManager : MonoBehaviour
 
         if (bossAllowed)
         {
-            endingRoom.ToggleHiddenMode(false);
+            //endingRoom.ToggleHiddenMode(false);
 
             if (decFloor)
                 endingRoom.UpdateIsCompleted(true);
@@ -417,6 +418,9 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
+
+            GameManager.Instance.startingFighterChosen = false;
+
             //Debug.Log("toggling map on");
             // Display exp visual
             AudioManager.Instance.ToggleShopMusic(false);
@@ -785,37 +789,43 @@ public class MapManager : MonoBehaviour
 
         RoomManager.Instance.UpdateActiveRoom(startingRoom);
 
-        bool allowBossRoom = false;
+        allowBossRoom = 0;
 
         // Determine if boss room should be unhidden, and uncompleted
-        for (int i = 0; i < savedFloorParents.childCount; i++)
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).childCount; i++)
         {
-            if (savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>())
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>())
             {
-                if (savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomSize == RoomMapIcon.RoomSize.MAIN
-                    && savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomType != RoomMapIcon.RoomType.STARTING
-                    && savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomType != RoomMapIcon.RoomType.BOSS)
+                if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomSize == RoomMapIcon.RoomSize.MAIN
+                    && savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomType != RoomMapIcon.RoomType.STARTING
+                    && savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomType != RoomMapIcon.RoomType.BOSS)
                 {
-                    if (savedFloorParents.GetChild(i).gameObject.GetComponent<RoomMapIcon>().GetIsCompleted())
+                    if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>().GetIsCompleted())
                     {
-                        allowBossRoom = true;
+
                     }
                     else
-                        allowBossRoom = false;
+                    {
+                        allowBossRoom++;
+                        Debug.Log("room name that 'isnt' completed " + savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.name + " Floor: " + savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.transform.parent.name);
+                    }
                 }
             }
         }
 
-        if (allowBossRoom)
+        if (allowBossRoom == 0)
         {
-            endingRoom.ToggleHiddenMode(false);
             endingRoom.ToggleDiscovered(true);
-
+            endingRoom.ToggleHiddenMode(false);
+            endingRoom.UpdateRoomVisuals(RoomMapIcon.RoomType.BOSS);
+            //Debug.Log("3");
         }
         else
         {
-            endingRoom.ToggleHiddenMode(true);
             endingRoom.ToggleDiscovered(false);
+            endingRoom.ToggleHiddenMode(true);
+            //Debug.Log("toggling hidden mode off for ending room");
+            endingRoom.UpdateIsCompleted(false);
         }
 
         if (RoomManager.Instance.highestFloorCountRun <= RoomManager.Instance.GetFloorCount())
@@ -823,11 +833,13 @@ public class MapManager : MonoBehaviour
             endingRoom.UpdateIsCompleted(false);
         }
 
+        /*
         for (int i = 0; i < endingRoom.linkedPaths.Count; i++)
         {
             if (!endingRoom.GetIsCompleted())
                 endingRoom.linkedPaths[i].TogglePathVisibility(false);
         }
+        */
 
         mapOverlay.UpdateRoomTypeText("");
         mapOverlay.UpdateRoomSubText("");
@@ -835,6 +847,32 @@ public class MapManager : MonoBehaviour
         mapOverlay.UpdateRoomDifficultyIcons();
     }
 
+    public bool CheckToEnableHardRoomPrompt()
+    {
+        allowBossRoom = 0;
+
+        // Determine if boss room should be unhidden, and uncompleted
+        for (int i = 0; i < savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).childCount; i++)
+        {
+            if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>())
+            {
+                if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>().curRoomType == RoomMapIcon.RoomType.ENEMY
+                    && savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>().GetDiscovered())
+                {
+                    if (savedFloorParents.GetChild(RoomManager.Instance.GetFloorCount() - 1).gameObject.transform.GetChild(i).gameObject.GetComponent<RoomMapIcon>().GetIsCompleted())
+                    {
+
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
     public void LoadPreviousFloor()
     {
         RoomManager.Instance.DecreaseFloorCount();
@@ -911,6 +949,8 @@ public class MapManager : MonoBehaviour
         RoomManager.Instance.UpdateActiveRoom(endingRoom);
 
         mapOverlay.UpdateRoomDifficultyIcons();
+
+        endingRoom.ToggleHiddenMode(false);
     }
 
     void CheckIfMapIsPossible(bool resetting = true)
@@ -1049,6 +1089,7 @@ public class MapManager : MonoBehaviour
             spawnedPaths[i].GetComponent<MapPath>().ToggleHiddenMode(toggle);   // Hide all paths
         }
 
+        Debug.Log("1");
         endingRoom.ToggleHiddenMode(true);
     }
 
