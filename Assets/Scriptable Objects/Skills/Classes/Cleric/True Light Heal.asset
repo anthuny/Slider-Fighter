@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curSkillType: 1
   curSkillSelectionType: 1
-  startingSelectionType: 0
+  startingSelectionType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 0
   skillSprite: {fileID: 21300000, guid: 516c075e061f4a146ba131b99377228c, type: 3}
   skillName: TRUE LIGHT HEAL
-  skillDescr: Target 1 base ally, Cleanse 5 negative effects, then
-  skillTabDescr: Target 1 base ally, Cleanse 5 negative effects, then
+  skillDescr: Target 1 Ally, Cleanse 5 negative effects, then
+  skillTabDescr: Target 1 Ally, Cleanse 5 negative effects, then
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -33,7 +33,7 @@ MonoBehaviour:
   skillHitAttempts: 2
   projectileSpeed: 10
   skillCooldown: 1
-  curCooldown: 2
+  curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   isDoublingEffect: 0

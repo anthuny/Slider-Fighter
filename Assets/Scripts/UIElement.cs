@@ -518,7 +518,8 @@ public class UIElement : MonoBehaviour
     }
     public void UpdateRectPos(Vector2 pos)
     {
-        rt.sizeDelta = pos;
+        if (rt != null)
+            rt.sizeDelta = pos;
     }
 
     public void UpdateColour(Color colour)
@@ -588,16 +589,21 @@ public class UIElement : MonoBehaviour
         {
             Debug.Log(gameObject.name + " error");
         }
-
-        if (toggle)
-            buttonCG.alpha = 1;
         else
-            buttonCG.alpha = 0;
+        {
+            if (toggle)
+                buttonCG.alpha = 1;
+            else
+                buttonCG.alpha = 0;
 
-        buttonCG.interactable = toggle;
-        buttonCG.blocksRaycasts = toggle;
+            buttonCG.interactable = toggle;
+            buttonCG.blocksRaycasts = toggle;
 
-        buttonCG.GetComponent<Button>().interactable = toggle;
+            buttonCG.GetComponent<Button>().interactable = toggle;
+        }
+
+
+
     }
 
     public void ToggleButton2(bool toggle, bool bypass = false)

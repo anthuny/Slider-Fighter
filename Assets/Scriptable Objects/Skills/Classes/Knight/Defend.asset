@@ -21,8 +21,8 @@ MonoBehaviour:
   curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP
-  skillDescr: Target 1 base ally, cast Defense Up Effect
-  skillTabDescr: Target 1 base ally, cast Defense Up Effect
+  skillDescr: Target 1 ally, cast Defense Up Effect
+  skillTabDescr: Target 1 ally, cast Defense Up Effect
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -65,6 +65,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 02589b44135c9394e978d1ae980de22e, type: 3}

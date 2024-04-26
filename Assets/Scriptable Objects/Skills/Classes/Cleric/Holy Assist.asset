@@ -21,8 +21,8 @@ MonoBehaviour:
   curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: fe0215b0a8ac2bf4985549b5dd98104e, type: 3}
   skillName: HOLY ASSIST
-  skillDescr: Target 1 base ally, Cleanse 5 negative effects, Cast Recovery effect
-  skillTabDescr: Target 1 base ally, Cleanse 5 negative effects, Cast Recovery effect
+  skillDescr: Target 1 Fighter, Cleanse 5 negative effects, Cast Recovery effect
+  skillTabDescr: Target 1 Fighter, Cleanse 5 negative effects, Cast Recovery effect
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -65,6 +65,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 9100000, guid: 2b088e935cf2110469841cdbbbcd1ddc, type: 2}
   skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}

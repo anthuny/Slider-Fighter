@@ -335,7 +335,9 @@ public class RoomMapIcon : MonoBehaviour
     public void UpdateRoomiconSize(Vector2 size)
     {
         //rt = GetComponent<RectTransform>();
-        rt.sizeDelta = size;
+
+        if (rt != null)
+            rt.sizeDelta = size;
     }
 
     public void UpdateRoomIconColour(Color colour)

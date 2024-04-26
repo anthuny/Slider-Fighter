@@ -21,10 +21,10 @@ MonoBehaviour:
   curSkillEffectType: 0
   skillSprite: {fileID: 21300000, guid: d76a0575c369f78499f33078fe767d90, type: 3}
   skillName: MAGICAL LIGHT
-  skillDescr: Target 2 base enemies, dealing damage, each hit has a chance to apply
+  skillDescr: Target 2 enemies, dealing damage, each hit has a chance to apply speed
+    down effect
+  skillTabDescr: Target 2 enemies, dealing damage, each hit has a chance to apply
     speed down effect
-  skillTabDescr: Target 2 base enemies, dealing damage, each hit has a chance to
-    apply speed down effect
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -67,6 +67,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 9100000, guid: 17d0f9b647492ae4da46bf9ca8ced099, type: 2}
   targetEffectVisualAC: {fileID: 9100000, guid: 2b088e935cf2110469841cdbbbcd1ddc, type: 2}
   skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}

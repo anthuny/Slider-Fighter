@@ -46,6 +46,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public UIElement mainUIelement;
     public bool isStatButton;
     public UIElement selectBorder;
+    public bool postBattleButtonPressed = false;
 
     private void Awake()
     {
@@ -1087,8 +1088,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
     }
-
-    bool postBattleButtonPressed = false;
 
     public void PostBattleToMapButton()
     {

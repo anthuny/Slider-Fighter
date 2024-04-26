@@ -333,6 +333,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!114 &5155438670687292347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -526,6 +527,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &3263367111173051638
 GameObject:
   m_ObjectHideFlags: 0
@@ -804,6 +806,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2210911529129204462
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -863,6 +866,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &3666851542265818222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1048,6 +1052,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &3665519638951356069
 Canvas:
   m_ObjectHideFlags: 0
@@ -1325,6 +1330,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3936564060558501167
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1610,6 +1616,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &5259889021125643383
 GameObject:
   m_ObjectHideFlags: 0
@@ -2190,6 +2197,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7194447718113786691
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2317,6 +2325,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &6409937216398383732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2610,6 +2619,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!114 &2861010337278432425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2828,6 +2838,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3499861115761903278
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2863,6 +2874,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: b9d3659108f11b94d9fc10b1c8afab91, type: 3}
+    - target: {fileID: 3319832272525238322, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3663812750556576042, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 80.7
@@ -2971,6 +2986,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skill Upgrade - Increase Base Power
       objectReference: {fileID: 0}
+    - target: {fileID: 7913974500228217969, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8151838329458864031, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ButtonAddSkillPointIncreasePower
@@ -2994,6 +3013,10 @@ PrefabInstance:
     - target: {fileID: 8494982871291820950, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_fontColorGradient.bottomRight.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861046561154029541, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_Alpha
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
@@ -3353,6 +3376,10 @@ PrefabInstance:
     - target: {fileID: 8494982871291820950, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_fontColorGradient.bottomRight.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861046561154029541, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_Alpha
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}

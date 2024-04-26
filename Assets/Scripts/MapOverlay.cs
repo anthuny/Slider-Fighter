@@ -22,6 +22,9 @@ public class MapOverlay : MonoBehaviour
     [SerializeField] private ButtonFunctionality hardRoomPromptYesButton;
     [SerializeField] private ButtonFunctionality hardRoomPromptNoButton;
     [SerializeField] private ButtonFunctionality hardRoomPromptExitButton;
+    public UIElement alertSkillPoint;
+    public UIElement alertItemUnequipt;
+    public UIElement alertGearUnequipt;
 
     [SerializeField] private UIElement playerGoldTextShopRoom;
     [SerializeField] private UIElement floorNameShopRoom;

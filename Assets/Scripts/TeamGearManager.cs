@@ -62,6 +62,35 @@ public class TeamGearManager : MonoBehaviour
     [Space(2)]
     public bool playerInGearTab;
 
+    public void UpdateUnequiptGearAlert()
+    {
+        bool toggle = false;
+
+        if (OwnedLootInven.Instance.ownedGear.Count > 0)
+            toggle = true;
+
+        if (toggle)
+        {
+            if (OwnedLootInven.Instance.GetWornGearThirdAlly().Count < 3 && GameManager.Instance.activeRoomHeroes.Count == 3
+                || OwnedLootInven.Instance.GetWornGearSecondAlly().Count < 3 && GameManager.Instance.activeRoomHeroes.Count >= 2
+                || OwnedLootInven.Instance.GetWornGearMainAlly().Count < 3 && GameManager.Instance.activeRoomHeroes.Count >= 1)
+            {
+                MapManager.Instance.mapOverlay.alertGearUnequipt.gameObject.SetActive(true);
+                MapManager.Instance.mapOverlay.alertGearUnequipt.UpdateAlpha(1);
+            }
+            else
+            {
+                MapManager.Instance.mapOverlay.alertGearUnequipt.gameObject.SetActive(false);
+                MapManager.Instance.mapOverlay.alertGearUnequipt.UpdateAlpha(0);
+            }
+        }
+        else
+        {
+            MapManager.Instance.mapOverlay.alertGearUnequipt.gameObject.SetActive(false);
+            MapManager.Instance.mapOverlay.alertGearUnequipt.UpdateAlpha(0);
+        }
+    }
+
     public void ToggleToMapButton(bool toggle)
     {
         toMapButton.ToggleButton(toggle);

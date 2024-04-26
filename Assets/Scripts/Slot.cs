@@ -42,7 +42,7 @@ public class Slot : MonoBehaviour
     public bool isGold;
     public bool isEmpty = true;
     public int code = 0;
-    private int pointsAdded = 0;
+    public int pointsAdded = 0;
     //public bool isLocked;
     public GearPiece linkedGearPiece;
     public ItemPiece linkedItemPiece;
@@ -55,6 +55,9 @@ public class Slot : MonoBehaviour
 
     public void ToggleSkillUpgradeButtons(bool toggle)
     {
+        if (SkillsTabManager.Instance.GetActiveSkillBase().curSkillLevel >= 5)
+            toggle = false;
+
         buttonSkillUpgrade1.ToggleButton(toggle);
 
         if (toggle)
@@ -62,14 +65,14 @@ public class Slot : MonoBehaviour
         else
             buttonSkillUpgrade1.UpdateAlpha(0);
 
-
+        /*
         buttonSkillUpgrade2.ToggleButton(toggle);
 
         if (toggle)
             buttonSkillUpgrade2.UpdateAlpha(1);
         else
             buttonSkillUpgrade2.UpdateAlpha(0);
-
+        */
 
         buttonSkillUpgrade3.ToggleButton(toggle);
 
@@ -77,6 +80,29 @@ public class Slot : MonoBehaviour
             buttonSkillUpgrade3.UpdateAlpha(1);
         else
             buttonSkillUpgrade3.UpdateAlpha(0);
+
+        // Skill upgrade power inc
+        if (SkillsTabManager.Instance.GetActiveSkillBase().startingSkillPower == 0)
+        {
+            buttonSkillUpgrade3.ToggleButton(false);
+
+            buttonSkillUpgrade3.gameObject.transform.parent.GetComponent<UIElement>().UpdateAlpha(0);
+            buttonSkillUpgrade3.gameObject.transform.parent.GetComponent<UIElement>().ToggleButton(false);
+
+            buttonSkillUpgrade3.UpdateAlpha(0);
+        }
+        else
+        {
+            buttonSkillUpgrade3.ToggleButton(true);
+
+            buttonSkillUpgrade3.gameObject.transform.parent.GetComponent<UIElement>().UpdateAlpha(1);
+            buttonSkillUpgrade3.gameObject.transform.parent.GetComponent<UIElement>().ToggleButton(true);
+
+            buttonSkillUpgrade3.UpdateAlpha(1);
+        }
+
+        if (!toggle)
+            buttonSkillUpgrade3.ToggleButton(false);
     }
 
     public void UpdateProgressSlider(SkillData skillData, bool addPoints = true)
@@ -341,6 +367,9 @@ public class Slot : MonoBehaviour
             slotSelectionUI.UpdateAlpha(1);
         else
             slotSelectionUI.UpdateAlpha(0);
+
+        if (curGearType == SlotType.SKILL)
+            SkillsTabManager.Instance.UpdateUnspentPointsText(1);
     }
 
     /*

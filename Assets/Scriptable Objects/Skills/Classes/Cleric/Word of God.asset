@@ -21,8 +21,8 @@ MonoBehaviour:
   curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: 98c903bdadf091d4ea3ea32a71eac2bb, type: 3}
   skillName: WORD OF GOD
-  skillDescr: Revive 1 base defeated ally this combat with 75% health
-  skillTabDescr: Revive 1 base defeated ally this combat with 75% health
+  skillDescr: Revive 1 Defeated ally this combat with base 10% health
+  skillTabDescr: Revive 1 Defeated ally this combat with base 10% health
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
   isBonusFromTargetAmount: 0
   isHealingFromResult: 0
   isLongerSkillAnim: 0
-  healPowerAmount: 0
+  healPowerAmount: 10
   isReviving: 1
   isMindControlling: 0
   isCleansingEffect: 0
@@ -65,6 +65,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 9100000, guid: 2b088e935cf2110469841cdbbbcd1ddc, type: 2}
   skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}

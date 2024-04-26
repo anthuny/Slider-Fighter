@@ -3428,7 +3428,7 @@ public class UnitFunctionality : MonoBehaviour
         Debug.Log("power = " + power);
 
         // If player in gear tab, stop power ui from appearing from armor equipping
-        if (TeamGearManager.Instance.playerInGearTab)
+        if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
             yield break;
 
         // Play Audio
@@ -3919,7 +3919,7 @@ public class UnitFunctionality : MonoBehaviour
         animator.SetTrigger("Idle");
 
         // Heal ally
-        float valAcc = 10 + (acc * 15);
+        float valAcc = GameManager.Instance.GetActiveSkill().healPowerAmount + (acc * 15);
         float val = (valAcc / 100f) * GetUnitMaxHealth();
 
         if (fullhealth)
@@ -4174,7 +4174,7 @@ public class UnitFunctionality : MonoBehaviour
 
                 float newPower = 0;
 
-                if (!TeamGearManager.Instance.playerInGearTab)
+                if (!TeamGearManager.Instance.playerInGearTab && !TeamItemsManager.Instance.playerInItemTab)
                 {
                     if (GameManager.Instance.GetActiveSkill().isCleansingEffectRandom && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
                     {

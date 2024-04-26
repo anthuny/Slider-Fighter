@@ -15,7 +15,7 @@ public class PostBattle : MonoBehaviour
 
     [SerializeField] private UIElement expGainedUI;
     [SerializeField] private UIElement rewardsUI;
-    [SerializeField] private ButtonFunctionality toMapButton;
+    public ButtonFunctionality toMapButton;
 
     private UIElement postBattleUI;
     [HideInInspector] public bool isInPostBattle;

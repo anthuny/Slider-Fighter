@@ -419,6 +419,11 @@ public class MapManager : MonoBehaviour
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
+            TeamItemsManager.Instance.UpdateUnequiptItemAlert();
+            TeamGearManager.Instance.UpdateUnequiptGearAlert();
+
+            TeamItemsManager.Instance.playerInItemTab = false;
+
             GameManager.Instance.startingFighterChosen = false;
 
             //Debug.Log("toggling map on");

@@ -251,6 +251,8 @@ public class CharacterCarasel : MonoBehaviour
         }
 
         FighterStatManager.Instance.UpdateFighterStats(allAllies[0]);
+
+        PostBattle.Instance.toMapButton.postBattleButtonPressed = false;
     }
 
     public void UpdateAllyDisplayName(UnitData unit, bool locked = false)

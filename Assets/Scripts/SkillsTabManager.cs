@@ -30,7 +30,7 @@ public class SkillsTabManager : MonoBehaviour
     [SerializeField] private GameObject gearStatGO;
     [SerializeField] private UIElement unitLevelText;
     [SerializeField] private UIElement unspentPointsText;
-    [SerializeField] private UIElement teamPageAlert;
+
 
     [SerializeField] private UnitFunctionality activeUnit;
     public UIElement selectedSkillBase;
@@ -70,7 +70,7 @@ public class SkillsTabManager : MonoBehaviour
     public void SkillPointAdd(int skillUpgradeType = 0, bool doProgressSlider = true)
     {
         // Check to disable buttons if no points remain for the ally  
-
+        //GetSelectedSlot().pointsAdded++;
         // Increase skill point
         if (skillUpgradeType == 0)
         {
@@ -754,11 +754,15 @@ public class SkillsTabManager : MonoBehaviour
         // Display alert if points remain
         if (unitsCombinedLevel > spentPoints)
         {
-            teamPageAlert.UpdateAlpha(1);
+            MapManager.Instance.mapOverlay.alertSkillPoint.gameObject.SetActive(true);
+            MapManager.Instance.mapOverlay.alertSkillPoint.UpdateAlpha(1);
         }
         // Hide alerrt if no points remain
         else
-            teamPageAlert.UpdateAlpha(0);
+        {
+            MapManager.Instance.mapOverlay.alertSkillPoint.gameObject.SetActive(false);
+            MapManager.Instance.mapOverlay.alertSkillPoint.UpdateAlpha(0);
+        }
 
         return points;
     }
