@@ -37,44 +37,46 @@ public class OverlayUI : MonoBehaviour
 
     private int oldHits;
 
-    public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int baseHitCount, bool attack,
+    public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int baseHitCount,
         int skillTargetCount, int skillPower, int skillCooldown, int hitAttemptCount, float accuracyCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
     {
-        UpdateSkillDetailsSkillName(skillName);
-        UpdateSkillDetailsDesc(skillDesc, skillDescPower, baseHitCount, skillTargetCount, attack, special);
+        UpdateMainSlotDetailsName(skillName);
+        UpdateMainSlotDetailsDesc(skillDesc);
 
-        UpdateActiveSkillIcon(skillIcon);
+        UpdateActiveBaseSlotIcon(skillIcon);
         //UpdateSkillDetailsPowerImage(skillPowerImage);
 
-        UpdateSkillPowerText(skillPower, attack);
+        UpdateSelectedObjectPowerText(skillPower);
         UpdateSkillDetailsHitsRemainingText(hitAttemptCount);
         UpdateSkillDetailsBaseHits(baseHitCount);
         UpdateSkillDetailsCooldownText(skillCooldown);
 
         UpdateSkillDetailsAccuracyText((int)accuracyCount);
-        UpdateSkillDetailsMaxTargetsText(skillTargetCount);
+        UpdateSelectedObjectMaxTargetsText(skillTargetCount);
     }
-
-    /*
-    public void UpdateUnitOverlayHealthUI(UnitFunctionality unit, float curHealth, float maxHealth)
+    
+    public void UpdateItemUI(string itemName, string itemDesc, int itemPower, int targetCount, Sprite itemIcon)
     {
-        // Update overlay health current text
-        unitOverlayCurHealthText.text = unit.GetUnitCurHealth().ToString();
+        UpdateMainSlotDetailsName(itemName);
+        UpdateMainSlotDetailsDesc(itemDesc);
 
-        // Update Unit Health Fill Progress
-        float fillAmount = unit.GetUnitCurHealth() / unit.GetUnitMaxHealth();
-        unitOverlayCurHealthImage.fillAmount = fillAmount;
+        UpdateActiveBaseSlotIcon(itemIcon);
+
+        UpdateSelectedObjectPowerText(itemPower);
+        UpdateSelectedObjectMaxTargetsText(targetCount);
     }
-    */
 
 
-    private void UpdateSkillDetailsSkillName(string text)
+    private void UpdateMainSlotDetailsName(string text)
     {
         skillDetailsName.text = text;
     }
 
-    private void UpdateSkillDetailsDesc(string mainText, int power, int skillAttackCount, int skillTargetCount, bool attack, bool special = false)
+    private void UpdateMainSlotDetailsDesc(string mainText, int power = 0, int skillTargetCount = 0, bool attack = false, bool special = false)
     {
+        skillDetailsDesc.text = mainText;
+
+        /*
         string targetType = "";
         string targetType2 = "";
         if (attack)
@@ -114,49 +116,79 @@ public class OverlayUI : MonoBehaviour
             else
                 skillDetailsDesc.text = mainText;
         }
-
+        */
     }
 
-    public void ToggleAllStats(bool toggle = true)
+    public void ToggleAllStats(bool toggle = true, bool skill = true)
     {
-        if (toggle)
-            skillDetailsPower.UpdateAlpha(1);
-        else
-            skillDetailsPower.UpdateAlpha(0);
-        skillDetailsPower.ToggleButton(toggle);
+        if (skill)
+        {
+            if (toggle)
+                skillDetailsPower.UpdateAlpha(1);
+            else
+                skillDetailsPower.UpdateAlpha(0);
+            skillDetailsPower.ToggleButton(toggle);
 
-        if (toggle)
-            skillDetailsMaxCdUi.UpdateAlpha(1);
+            if (toggle)
+                skillDetailsMaxCdUi.UpdateAlpha(1);
+            else
+                skillDetailsMaxCdUi.UpdateAlpha(0);
+            skillDetailsMaxCdUi.ToggleButton(toggle);
+
+            if (toggle)
+                skillDetailsHitsRemaininguI.UpdateAlpha(1);
+            else
+                skillDetailsHitsRemaininguI.UpdateAlpha(0);
+            skillDetailsHitsRemaininguI.ToggleButton(toggle);
+
+            if (toggle)
+                skillDetailsBaseHitsUI.UpdateAlpha(1);
+            else
+                skillDetailsBaseHitsUI.UpdateAlpha(0);
+            skillDetailsBaseHitsUI.ToggleButton(toggle);
+
+            if (toggle)
+                skillDetailsAccuracyuI.UpdateAlpha(1);
+            else
+                skillDetailsAccuracyuI.UpdateAlpha(0);
+            skillDetailsAccuracyuI.ToggleButton(toggle);
+
+            if (toggle)
+                skillDetailsMaxTargetsuI.UpdateAlpha(1);
+            else
+                skillDetailsMaxTargetsuI.UpdateAlpha(0);
+            skillDetailsMaxTargetsuI.ToggleButton(toggle);
+        }
+        // Item
         else
+        {
+            if (toggle)
+                skillDetailsPower.UpdateAlpha(1);
+            else
+                skillDetailsPower.UpdateAlpha(0);
+            skillDetailsPower.ToggleButton(toggle);
+
+            if (toggle)
+                skillDetailsMaxTargetsuI.UpdateAlpha(1);
+            else
+                skillDetailsMaxTargetsuI.UpdateAlpha(0);
+            skillDetailsMaxTargetsuI.ToggleButton(toggle);
+
             skillDetailsMaxCdUi.UpdateAlpha(0);
-        skillDetailsMaxCdUi.ToggleButton(toggle);
+            skillDetailsMaxCdUi.ToggleButton(false);
 
-        if (toggle)
-            skillDetailsHitsRemaininguI.UpdateAlpha(1);
-        else
             skillDetailsHitsRemaininguI.UpdateAlpha(0);
-        skillDetailsHitsRemaininguI.ToggleButton(toggle);
+            skillDetailsHitsRemaininguI.ToggleButton(false);
 
-        if (toggle)
-            skillDetailsBaseHitsUI.UpdateAlpha(1);
-        else
             skillDetailsBaseHitsUI.UpdateAlpha(0);
-        skillDetailsBaseHitsUI.ToggleButton(toggle);
+            skillDetailsBaseHitsUI.ToggleButton(false);
 
-        if (toggle)
-            skillDetailsAccuracyuI.UpdateAlpha(1);
-        else
             skillDetailsAccuracyuI.UpdateAlpha(0);
-        skillDetailsAccuracyuI.ToggleButton(toggle);
-
-        if (toggle)
-            skillDetailsMaxTargetsuI.UpdateAlpha(1);
-        else
-            skillDetailsMaxTargetsuI.UpdateAlpha(0);
-        skillDetailsMaxTargetsuI.ToggleButton(toggle);
+            skillDetailsAccuracyuI.ToggleButton(false);
+        }
     }
 
-    private void UpdateSkillPowerText(int power, bool damaging = true)
+    private void UpdateSelectedObjectPowerText(int power)
     {    
         skillDetailsPower.UpdateContentText(power.ToString());
     }
@@ -185,7 +217,7 @@ public class OverlayUI : MonoBehaviour
         skillDetailsAccuracyuI.UpdateContentText(count.ToString());
     }
 
-    private void UpdateSkillDetailsMaxTargetsText(int count)
+    private void UpdateSelectedObjectMaxTargetsText(int count)
     {
         skillDetailsMaxTargetsuI.UpdateContentText(count.ToString());
     }
@@ -195,7 +227,7 @@ public class OverlayUI : MonoBehaviour
         skillDetailsPowerIcon.sprite = sprite;
     }
 
-    private void UpdateActiveSkillIcon(Sprite sprite)
+    private void UpdateActiveBaseSlotIcon(Sprite sprite)
     {
         activeSkill.sprite = sprite;
     }

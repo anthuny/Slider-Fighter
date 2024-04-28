@@ -20,7 +20,7 @@ public class Effect : MonoBehaviour
     public enum EffectName 
     { 
         BLEED, POISON, HEALTHUP, HEALTHDOWN, POWERUP, POWERDOWN, HEALINGUP, HEALINGDOWN, RECOVER, SPEEDUP, SPEEDDOWN, EXHAUST, HASTE, SLEEP, 
-        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING, MIND_CONTROL, IMMUNITY, HOLY_LINK, STUN, OTHER_LINK
+        PARRY, TAUNT, MARK, SHADOWPARTNER, DEFENSEUP, DEFENSEDOWN, REAPING, REANIMATE, IMMUNITY, HOLY_LINK, STUN, OTHER_LINK
     }
     public EffectName curEffectName;
 
@@ -164,8 +164,8 @@ public class Effect : MonoBehaviour
             curEffectName = EffectName.DEFENSEDOWN;
         else if (effect.curEffectName == EffectData.EffectName.REAPING)
             curEffectName = EffectName.REAPING;
-        else if (effect.curEffectName == EffectData.EffectName.MIND_CONTROL)
-            curEffectName = EffectName.MIND_CONTROL;
+        else if (effect.curEffectName == EffectData.EffectName.REANIMATE)
+            curEffectName = EffectName.REANIMATE;
         else if (effect.curEffectName == EffectData.EffectName.IMMUNITY)
             curEffectName = EffectName.IMMUNITY;
         else if (effect.curEffectName == EffectData.EffectName.HOLY_LINK)
@@ -204,12 +204,12 @@ public class Effect : MonoBehaviour
 
         CapEffect();
 
-        if (curEffectName == EffectName.MIND_CONTROL)
+        if (curEffectName == EffectName.REANIMATE)
         {
             turnDuration = 1;
             effectPowerStacks = 1;
         }
-        else if (curEffectName != EffectName.MIND_CONTROL && curEffectName != EffectName.IMMUNITY && curEffectName != EffectName.OTHER_LINK)
+        else if (curEffectName != EffectName.REANIMATE && curEffectName != EffectName.IMMUNITY && curEffectName != EffectName.OTHER_LINK)
             UpdateEffectTierImages((int)powerStacks);
 
         if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
@@ -464,7 +464,7 @@ public class Effect : MonoBehaviour
             {
                 unit.UpdateUnitHealingHits((int)addedStat, true);
             }
-            else if (curEffectName == EffectName.MIND_CONTROL)
+            else if (curEffectName == EffectName.REANIMATE)
             {
                 float damage = (powerPercent * effectPowerStacks);
 

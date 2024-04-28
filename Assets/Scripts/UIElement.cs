@@ -237,7 +237,7 @@ public class UIElement : MonoBehaviour
         if (GameManager.Instance.playerInCombat)
         {
             //Debug.Log(GetSkillPointThreshhold());
-            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() < GetSkillPointThreshhold())
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() < GetSkillPointThreshhold() && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
             {
                 //Debug.Log("Unit Level = " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() + " " + GetSkillPointThreshhold());
                 //Debug.Log(toggle);

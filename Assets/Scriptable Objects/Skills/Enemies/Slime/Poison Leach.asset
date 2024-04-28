@@ -21,7 +21,7 @@ MonoBehaviour:
   curSkillEffectType: 1
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Poison Leach
-  skillDescr: 'PASSIVE: Gain Health up when enemies trigger effect Poison'
+  skillDescr: 'PASSIVE: Self-Apply Health Up when enemies trigger Poison'
   skillTabDescr: 
   startingSkillLevel: 0
   curSkillLevel: 0
@@ -65,6 +65,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: a16b5578f0b4c02419c3e4e47e8d533e, type: 3}

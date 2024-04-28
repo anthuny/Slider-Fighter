@@ -18,6 +18,7 @@ MonoBehaviour:
   curskillSelectionAliveType: 0
   curRangedType: 0
   curAnimType: 0
+  curSkillEffectType: 0
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Poison Touch
   skillDescr: 'Target 1 enemy, dealing damage, each hit has a 15% chance to apply
@@ -51,6 +52,7 @@ MonoBehaviour:
   cleanseCount: 0
   special: 0
   effect: {fileID: 11400000, guid: 84de7150b1f66f44c9f3aa5aff3670b9, type: 2}
+  effect2: {fileID: 0}
   effectTurnLength: 1
   curEffectHitChance: 15
   startingEffectHitChance: 15
@@ -64,11 +66,13 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: fa410f2d6f979014ebcbadf9d9a91da0, type: 3}
   repeatLaunchSFX: 1
-  giveExtraDesc: 1
+  giveExtraDesc: 0
   projectileLaunch: {fileID: 0}
   skillHit: {fileID: 8300000, guid: 3bd9d7e52bee410449b328cf51ba37a8, type: 3}
   skillHitAdditional: {fileID: 0}

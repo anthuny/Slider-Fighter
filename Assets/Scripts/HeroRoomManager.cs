@@ -56,7 +56,7 @@ public class HeroRoomManager : MonoBehaviour
 
         // Toggle player overlay and skill ui off
         GameManager.Instance.ToggleUIElement(GameManager.Instance.playerAbilities, false);
-        GameManager.Instance.ToggleUIElement(GameManager.Instance.playerAbilityDesc, false);
+        GameManager.Instance.ToggleUIElement(GameManager.Instance.fighterSelectedMainSlotDesc, false);
         GameManager.Instance.ToggleUIElement(GameManager.Instance.endTurnButtonUI, false);
         //GameManager.Instance.ToggleUIElement(GameManager.Instance.turnOrder, false);
         GameManager.Instance.ResetActiveUnitTurnArrow();

@@ -103,7 +103,7 @@ public class SkillData : ScriptableObject
     public AudioClip skillHitAdditional;
     public int originalIndex;
 
-    public bool mindControlled;
+    public bool reanimated;
 
     public void SetSkillStarting()
     {
@@ -181,7 +181,7 @@ public class SkillData : ScriptableObject
         upgradeIncPowerCount = 0;
 
         curSkillSelectionType = startingSelectionType;
-        mindControlled = false;
+        reanimated = false;
     }
 
     public void SwitchTargetingTeam(bool toggle = true)
@@ -193,7 +193,7 @@ public class SkillData : ScriptableObject
             curSkillSelectionType = SkillSelectionType.PLAYERS;
         */
 
-        mindControlled = toggle;
+        reanimated = toggle;
 
         if (!toggle)
         {

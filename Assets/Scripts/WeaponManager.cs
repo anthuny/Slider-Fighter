@@ -102,7 +102,7 @@ public class WeaponManager : MonoBehaviour
 
     public void SetEnemyWeapon(UnitFunctionality unit, bool resetWeapon = true)
     {
-        if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY || unit.mindControlled)
+        if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY || unit.reanimated)
         {
             hitLine = unit.heroWeapon.hitLine;
             topBarBorder = unit.heroWeapon.topBarBorder;
@@ -142,9 +142,15 @@ public class WeaponManager : MonoBehaviour
         if (rand < 1)
             rand = 1;
 
+        // Force Re-animated units to hit good if they were going to miss
+        if (GameManager.Instance.GetActiveUnitFunctionality().reanimated && rand >= 95)
+            rand = 40;
+
         // Perfect
-        if (rand >= 1 && rand <= 4) // old high = 4
+        if (rand >= 1 && rand <= 4 && !GameManager.Instance.GetActiveUnitFunctionality().hitPerfect) // old high = 4
         {
+            GameManager.Instance.GetActiveUnitFunctionality().hitPerfect = true;
+
             curHitAreaType = HitAreaType.PERFECT;
             autoHitPerfect = true;
         }
@@ -183,7 +189,7 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
                     {
-                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().reanimated)
                             isStopped = true;
 
 
@@ -575,7 +581,7 @@ public class WeaponManager : MonoBehaviour
         
         if (resetAcc)
         {
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().reanimated)
                 StartCoroutine(UpdateWeaponAccumulatedHits(hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel()-1, true));
             else
                 StartCoroutine(UpdateWeaponAccumulatedHits(hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput - 2, true));
@@ -585,7 +591,7 @@ public class WeaponManager : MonoBehaviour
             //StartCoroutine(UpdateWeaponAccumulatedHits(hitAccuracy, true));
         }
 
-        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().reanimated)
         {
             ToggleHitAreasDisplay(true);
         }
@@ -638,7 +644,7 @@ public class WeaponManager : MonoBehaviour
     {
         //sDebug.Log("stopping hit line");
 
-        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().mindControlled)         
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)         
             stopHitLine = false;
         else
         {
@@ -650,7 +656,7 @@ public class WeaponManager : MonoBehaviour
             //yield return new WaitForSeconds(flashDuration / 2f);
         }
 
-        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
         {
             for (int i = 0; i < weaponHitAreas.Count; i++)
             {
@@ -903,25 +909,25 @@ public class WeaponManager : MonoBehaviour
 
             ToggleEnabled(false);
 
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
             {
                 AudioManager.Instance.StopAttackBarMusic();
             }
 
 
             //GameManager.Instance.EnableFreeSkillSelection();
-            GameManager.Instance.DisableAllSkillSelections(true);
+            GameManager.Instance.DisableAllMainSlotSelections(true);
 
             ToggleAttackButtonInteractable(false);
 
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
                 yield return new WaitForSeconds(timePostHit);
 
             GameManager.Instance.SetupPlayerPostHitUI();
 
             GameManager.Instance.ResetButton(GameManager.Instance.weaponBackButton);    // Enable weapon back button only when damage has gone through
 
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
                 isStopped = true;  // Resume attack bar 
             else
                 isStopped = true;  // Resume attack bar 
@@ -958,7 +964,7 @@ public class WeaponManager : MonoBehaviour
             else
                 effectCount = GameManager.Instance.GetActiveSkill().baseEffectApplyCount + GameManager.Instance.GetActiveUnitFunctionality().GetUnitHealingHits() + effectHitAccuracy-1;
 
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().mindControlled)
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
             {
                 finalHitCount++;
                 effectCount += 2;

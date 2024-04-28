@@ -28,14 +28,14 @@ MonoBehaviour:
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0
-  startingSkillPower: 9
-  curSkillPower: 9
+  startingSkillPower: 3
+  curSkillPower: 3
   skillAttackAccMult: 1
   skillBaseHitOutput: 1
   skillHitAttempts: 2
   projectileSpeed: 10
   skillCooldown: 1
-  curCooldown: 1
+  curCooldown: 0
   skillSelectionCount: 3
   isSelfCast: 0
   isDoublingEffect: 0
@@ -67,6 +67,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 9100000, guid: 44d587d2ac71a5e419cfc76f6f4e30df, type: 2}
   skillLaunch: {fileID: 8300000, guid: d9f8ffe9f8a12a7439b73ce5fb189242, type: 3}
@@ -76,4 +78,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 8548a49031cc2914ea4696d097c14644, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 1
-  mindControlled: 0
+  reanimated: 0

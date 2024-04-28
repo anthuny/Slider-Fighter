@@ -8,6 +8,9 @@ public class ItemPiece : ScriptableObject
     public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
     public Rarity curRarity;
 
+    public enum ItemType { OFFENSE, SUPPORT }
+    public ItemType curItemType;
+
     public string itemName;
     public string itemDesc;
     public Sprite itemSprite;
@@ -45,6 +48,7 @@ public class ItemPiece : ScriptableObject
     public int procChance;
     public RuntimeAnimatorController ac;
     public int maxUsesPerCombat = 5;
+    public int targetCount;
 
     public void UpdateItemPiece(string newName, string itemRarity, Sprite itemIcon)
     {

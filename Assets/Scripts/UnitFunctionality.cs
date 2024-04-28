@@ -191,12 +191,13 @@ public class UnitFunctionality : MonoBehaviour
     public SkillData usedSkill;
     public int effectAddedCount;
 
-    public bool mindControlled;
+    public bool reanimated;
     public bool beenAttacked = false;
     public UnitFunctionality holyLinkPartner;
     [SerializeField] private UIElement unitAlertTextParent;
     [SerializeField] private UIElement unitAlertStay;
     [SerializeField] private GameObject unitAlertText;
+    public bool hitPerfect = false;
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);
@@ -737,6 +738,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void ToggleSelectUnitButton(bool toggle)
     {
+        Debug.Log("disabling123");
         selectUnitButton.ToggleButton(toggle);
     }
 
@@ -864,9 +866,7 @@ public class UnitFunctionality : MonoBehaviour
             if (effectSelectedName == activeEffects[i].effectName)
             {
                 string newName = activeEffects[i].effectName;
-                if (activeEffects[i].effectName == "MIND_CONTROL" || activeEffects[i].effectName == "MIND CONTROL")
-                    newName = "MIND CONTROL";
-                else if (activeEffects[i].effectName == "HOLY_LINK")
+                if (activeEffects[i].effectName == "HOLY_LINK")
                     newName = "HOLY LINK";
                 else if (activeEffects[i].effectName == "OTHER_LINK")
                     newName = "OTHER LINK";
@@ -1179,6 +1179,14 @@ public class UnitFunctionality : MonoBehaviour
         this.skills = skills;
     }
 
+    public ItemPiece GetBaseSelectedItem()
+    {
+        if (GetEquipItems().Count > 0)
+            return GetEquipItems()[0];
+        else
+            return null;
+    }
+
     public SkillData GetBaseSelectSkill()
     {
         for (int i = 0; i < skills.Count; i++)
@@ -1203,6 +1211,19 @@ public class UnitFunctionality : MonoBehaviour
     public List<SkillData> GetAllSkills()
     {
         return skills;
+    }
+
+    public ItemPiece GetItem(int count)
+    {
+        if (GetEquipItems().Count == 0)
+            return null;
+        else
+            return GetEquipItems()[count];
+    }
+
+    public List<ItemPiece> GetAllItems()
+    {
+        return GetEquipItems();
     }
 
     public void ClearSkillBaseSlots()
@@ -1419,9 +1440,6 @@ public class UnitFunctionality : MonoBehaviour
                 if (activeEffects[rand].curEffectBenefitType == Effect.EffectBenefitType.DEBUFF)
                 {
                     string name = activeEffects[rand].effectName;
-
-                    if (activeEffects[rand].effectName == "MIND_CONTROL")
-                        name = "MIND CONTROL";
 
                     TriggerTextAlert(name, 1, true, "Trigger");
                     activeEffects[rand].ReduceTurnCountText(this);
@@ -2613,9 +2631,6 @@ public class UnitFunctionality : MonoBehaviour
                         activeEffects[i].TriggerPowerEffect(this);
                         string name = activeEffects[i].effectName;
 
-                        if (activeEffects[i].effectName == "MIND_CONTROL")
-                            name = "MIND CONTROL";
-
                         TriggerTextAlert(name, 1, true, "Trigger");
 
                         activeEffects[i].ReduceTurnCountText(this);
@@ -3075,9 +3090,7 @@ public class UnitFunctionality : MonoBehaviour
                                 }
 
                                 string name = addedEffect.effectName;
-                                if (addedEffect.effectName == "MIND_CONTROL")
-                                    name = "MIND CONTROL";
-                                else if (addedEffect.effectName == "HOLY_LINK")
+                                if (addedEffect.effectName == "HOLY_LINK")
                                     name = "HOLY LINK";
                                 else if (addedEffect.effectName == "OTHER_LINK")
                                     name = "OTHER LINK";
@@ -3129,9 +3142,7 @@ public class UnitFunctionality : MonoBehaviour
                             //return;
 
                             string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "MIND_CONTROL")
-                                name = "MIND CONTROL";
-                            else if (addedEffect.effectName == "HOLY_LINK")
+                            if (addedEffect.effectName == "HOLY_LINK")
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
@@ -3193,9 +3204,7 @@ public class UnitFunctionality : MonoBehaviour
                             effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
 
                             string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "MIND_CONTROL")
-                                name = "MIND CONTROL";
-                            else if (addedEffect.effectName == "HOLY_LINK")
+                            if (addedEffect.effectName == "HOLY_LINK")
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
@@ -3247,9 +3256,7 @@ public class UnitFunctionality : MonoBehaviour
                             effect.Setup(addedEffect, targetUnit, effectHitAcc);
 
                             string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "MIND_CONTROL")
-                                name = "MIND CONTROL";
-                            else if (addedEffect.effectName == "HOLY_LINK")
+                            if (addedEffect.effectName == "HOLY_LINK")
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
@@ -3294,9 +3301,7 @@ public class UnitFunctionality : MonoBehaviour
                             effect.Setup(addedEffect, targetUnit, effectHitAcc);
 
                             string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "MIND_CONTROL")
-                                name = "MIND CONTROL";
-                            else if (addedEffect.effectName == "HOLY_LINK")
+                            if (addedEffect.effectName == "HOLY_LINK")
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
@@ -3745,10 +3750,9 @@ public class UnitFunctionality : MonoBehaviour
         // If unit's health is 0 or lower
         if (curHealth <= 0)
         {
-            if (!GameManager.Instance.fallenHeroes.Contains(this) && curUnitType == UnitType.PLAYER && !mindControlled)
+            if (!GameManager.Instance.fallenHeroes.Contains(this) && curUnitType == UnitType.PLAYER && !reanimated)
             {
                 GameManager.Instance.fallenHeroes.Add(this);
-
 
                 ResetEffects();
                 curPowerHits = powerHitsRoomStarting;
@@ -3757,9 +3761,24 @@ public class UnitFunctionality : MonoBehaviour
                 curSpeed = startingRoomSpeed;
                 curDefense = startingRoomDefense;
                 ResetUnitHealingRecieved();
+
+                return true;
             }
+            else if (!GameManager.Instance.fallenEnemies.Contains(this) && curUnitType == UnitType.PLAYER
+                || !GameManager.Instance.fallenEnemies.Contains(this) && reanimated)
+            {
+                GameManager.Instance.fallenEnemies.Add(this);
 
+                ResetEffects();
+                curPowerHits = powerHitsRoomStarting;
 
+                UpdateUnitMaxHealth(startingRoomMaxHealth, true, false);
+                curSpeed = startingRoomSpeed;
+                curDefense = startingRoomDefense;
+                ResetUnitHealingRecieved();
+
+                return true;
+            }
 
             return true;
         }
@@ -3773,11 +3792,13 @@ public class UnitFunctionality : MonoBehaviour
     {
         isDead = false;
 
+        //Debug.Log("true1");
         selectUnitButton.ToggleButton(true);
     }
 
     public void DisableDeadUnitButtons()
     {
+        //Debug.Log("disabling " + GetUnitName());
         selectUnitButton.ToggleButton(false);
     }
 
@@ -3807,7 +3828,7 @@ public class UnitFunctionality : MonoBehaviour
 
             GameManager.Instance.RemoveUnitFromTurnOrder(this);
 
-            if (mindControlled)
+            if (reanimated)
             {
                 if (GameManager.Instance.activeRoomHeroes.Contains(this))
                     GameManager.Instance.activeRoomHeroes.Remove(this);
@@ -3827,7 +3848,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     //Debug.Log("111");
 
-                    if (curUnitType == UnitType.PLAYER && !mindControlled)
+                    if (curUnitType == UnitType.PLAYER && !reanimated)
                     {
                         yield return new WaitForSeconds(.75f);
                         StartCoroutine(UnitEndTurn(true));  // end unit turn
@@ -3845,11 +3866,11 @@ public class UnitFunctionality : MonoBehaviour
     {
         // If unit has mindcontrolled skills from a previous enemy of the same type being mindcontrolled,
         // Change the back to a non-mind controlled version for this unit
-        if (!mindControlled)
+        if (!reanimated)
         {
             for (int i = 0; i < skills.Count; i++)
             {
-                if (skills[i].mindControlled)
+                if (skills[i].reanimated)
                     skills[i].SwitchTargetingTeam(false);
             }
         }
@@ -3869,7 +3890,7 @@ public class UnitFunctionality : MonoBehaviour
         else
             curUnitType = UnitType.PLAYER;
 
-        mindControlled = true;
+        reanimated = true;
 
         CheckSwitchTeams();
 
@@ -3891,6 +3912,8 @@ public class UnitFunctionality : MonoBehaviour
     public void ReviveUnit(int acc, bool fullhealth = false, bool enemy = false)
     {
         isDead = false;
+
+        Debug.Log("true2");
 
         selectUnitButton.ToggleButton(true);
 
@@ -4467,7 +4490,7 @@ public class UnitFunctionality : MonoBehaviour
 
         unitHealthBar.fillAmount = (float)curHealth / (float)curMaxHealth;
 
-        if (CheckIfUnitIsDead())
+        if (CheckIfUnitIsDead() && !isDead)
             StartCoroutine(EnsureUnitIsDead(effect));
     }
 
@@ -4786,7 +4809,7 @@ public class UnitFunctionality : MonoBehaviour
             curPowerHits -= newDmgHits;
 
         if (!HeroRoomManager.Instance.playerInHeroRoomView && GameManager.Instance.playerInCombat)
-            GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveSkill(), true);
+            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveSkill(), null, true);
     }
 
     public int GetUnitPowerHits()

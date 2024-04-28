@@ -282,6 +282,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &851462881264377282
 Canvas:
   m_ObjectHideFlags: 0
@@ -553,6 +554,7 @@ MonoBehaviour:
   statText: Power - The damage or heal amount of each hit dealt
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &445175760044587515
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -771,6 +773,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 6847944262900760543}
   isStatButton: 1
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!225 &8192878504878596440
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -828,6 +832,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1415705176831191353}
     m_Modifications:
+    - target: {fileID: 4050831211350253290, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4449508883190791754, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

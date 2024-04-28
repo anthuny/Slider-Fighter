@@ -970,7 +970,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(false);
 
-        GameManager.Instance.ToggleSkillVisibility(false);
+        GameManager.Instance.ToggleMainSlotVisibility(false);
 
         SettingsManager.Instance.ToggleSettingsButton(false);
 
@@ -1016,7 +1016,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         TeamItemsManager.Instance.ToggleUnequipButton(false);
         TeamGearManager.Instance.ToggleUnequipButton(false);
 
-        GameManager.Instance.ToggleSkillVisibility(false);
+        GameManager.Instance.ToggleMainSlotVisibility(false);
 
         //TeamSetup.Instance.ToggleToMapButton(true);
 
@@ -1314,6 +1314,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         else
             UIbutton.UpdateAlpha(0);
 
+        //if (unitFunctionality)
+            //Debug.Log("disabling 2 " + toggle + " " + unitFunctionality.GetUnitName());
+
         UIbutton.gameObject.GetComponent<CanvasGroup>().interactable = toggle;
         UIbutton.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
         gameObject.GetComponent<Button>().interactable = toggle;
@@ -1384,7 +1387,20 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         HeroRoomManager.Instance.TogglePrompt(false, true, false);
     }
 
-    public void SelectSkill0()
+    public void ButtonCombatItemsTab()
+    {
+        GameManager.Instance.isSkillsMode = !GameManager.Instance.isSkillsMode;
+        GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
+
+        if (GameManager.Instance.isSkillsMode)
+            GetComponentInChildren<Text>().text = "ITEMS";
+        else
+            GetComponentInChildren<Text>().text = "SKILLS";
+
+        GetComponent<UIElement>().AnimateUI(false);
+    }
+
+    public void SelectMainIcon1()
     {
         //GameManager.Instance.UpdateAllSkillIconAvailability();
 
@@ -1405,7 +1421,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.ResetSelectedUnits();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0));
-        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0));
+        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0));
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
@@ -1422,7 +1438,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // If skill not already selected, select it and proceed
         else
         {
-            GameManager.Instance.DisableAllSkillSelections();
+            GameManager.Instance.DisableAllMainSlotSelections();
             ToggleSelected(true);
         }
 
@@ -1430,7 +1446,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.UpdateUnitsSelectedText();
     }
 
-    public void SelectSkill1()
+    public void SelectMainIcon2()
     {
         //GameManager.Instance.UpdateAllSkillIconAvailability();
 
@@ -1451,7 +1467,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.ResetSelectedUnits();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
-        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
+        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
@@ -1468,7 +1484,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // If skill not already selected, select it and proceed
         else
         {
-            GameManager.Instance.DisableAllSkillSelections(false);
+            GameManager.Instance.DisableAllMainSlotSelections(false);
             ToggleSelected(true);
         }
 
@@ -1476,7 +1492,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.UpdateUnitsSelectedText();
     }
 
-    public void SelectSkill2()
+    public void SelectMainIcon3()
     {
         if (disabled)
             return;
@@ -1496,7 +1512,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         //GameManager.Instance.UpdateAllSkillIconAvailability();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2));
-        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2));
+        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2));
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
@@ -1513,7 +1529,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // If skill not already selected, select it and proceed
         else
         {
-            GameManager.Instance.DisableAllSkillSelections(false);
+            GameManager.Instance.DisableAllMainSlotSelections(false);
             ToggleSelected(true);
         }
 
@@ -1521,7 +1537,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.UpdateUnitsSelectedText();
     }
 
-    public void SelectSkill3()
+    public void SelectMainIcon4()
     {
         if (disabled)
             return;
@@ -1541,7 +1557,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         //GameManager.Instance.UpdateAllSkillIconAvailability();
 
         GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
-        GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
+        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
 
         // If selected, unselect it, dont do skill more stuff
         if (GetIfSelected())
@@ -1558,7 +1574,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // If skill not already selected, select it and proceed
         else
         {
-            GameManager.Instance.DisableAllSkillSelections(false);
+            GameManager.Instance.DisableAllMainSlotSelections(false);
             ToggleSelected(true);
         }
 

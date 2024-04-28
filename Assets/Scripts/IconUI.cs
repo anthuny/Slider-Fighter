@@ -24,8 +24,14 @@ public class IconUI : MonoBehaviour
         image.color = colour;
     }
 
-    public void UpdateSkillLevelText(int level)
+    public void UpdateSkillLevelText(int level, bool item = false)
     {
+        if (item)
+        {
+            skillLevelText.text = "";
+            return;
+        }
+
         skillLevelText.text = level.ToString();
     }
     public void ToggleSelectImage(bool toggle)
