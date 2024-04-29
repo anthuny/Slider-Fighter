@@ -538,7 +538,7 @@ public class ShopManager : MonoBehaviour
             // If item hasn't been purchased from this shop before
             shopItem.UpdateShopItemName(itemCombat.itemName);
             shopItem.UpdatePriceText(itemCombat.basePrice.ToString());
-            shopItem.UpdateShopItemSprite(itemCombat.itemSprite);
+            shopItem.UpdateShopItemSprite(itemCombat.itemSpriteItemTab);
             shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
             shopItem.itemButton.enabled = true;
 
@@ -581,7 +581,7 @@ public class ShopManager : MonoBehaviour
             // If item hasn't been purchased from this shop before
             shopItem.UpdateShopItemName(itemHealth.itemName);
             shopItem.UpdatePriceText(itemHealth.basePrice.ToString());
-            shopItem.UpdateShopItemSprite(itemHealth.itemSprite);
+            shopItem.UpdateShopItemSprite(itemHealth.itemSpriteItemTab);
             shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
             shopItem.itemButton.enabled = true;
 

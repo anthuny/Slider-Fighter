@@ -231,20 +231,31 @@ public class UIElement : MonoBehaviour
         */
     }
 
-    public void ToggleLockedSkill()
+    public void ToggleLockedMainSlot()
     {
         // In Combat
         if (GameManager.Instance.playerInCombat)
         {
-            //Debug.Log(GetSkillPointThreshhold());
-            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() < GetSkillPointThreshhold() && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
+            if (GameManager.Instance.isSkillsMode)
             {
-                //Debug.Log("Unit Level = " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() + " " + GetSkillPointThreshhold());
-                //Debug.Log(toggle);
-                ToggleLockedImage(true);
-                UpdateIsLocked(true);
-                //ToggleLockedImage(toggle);
-                buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = true;
+                //Debug.Log(GetSkillPointThreshhold());
+                if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() < GetSkillPointThreshhold() && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
+                {
+                    //Debug.Log("Unit Level = " + GameManager.Instance.GetActiveUnitFunctionality().GetUnitLevel() + " " + GetSkillPointThreshhold());
+                    //Debug.Log(toggle);
+                    ToggleLockedImage(true);
+                    UpdateIsLocked(true);
+                    //ToggleLockedImage(toggle);
+                    buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = true;
+                }
+                else
+                {
+                    //Debug.Log(toggle);
+                    ToggleLockedImage(false);
+                    UpdateIsLocked(false);
+                    //ToggleLockedImage(toggle);
+                    buttonCG.gameObject.GetComponent<ButtonFunctionality>().isLocked = false;
+                }
             }
             else
             {

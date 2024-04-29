@@ -280,7 +280,7 @@ public class UnitFunctionality : MonoBehaviour
             // Set gear data
             if (index == 0)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSprite);
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSpriteItemTab);
 
                 go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1);
@@ -288,14 +288,14 @@ public class UnitFunctionality : MonoBehaviour
             }
             else if (index == 1)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSprite);
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSpriteItemTab);
                 go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1);
                 //Debug.Log(item2CurUses);
             }
             else if (index == 2)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSprite);
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSpriteItemTab);
                 go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1);
                 //Debug.Log(item3CurUses);
@@ -307,17 +307,17 @@ public class UnitFunctionality : MonoBehaviour
                 doneOnce = true;
                 if (index == 0)
                 {
-                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSprite);
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSpriteItemTab);
                     go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
                 }
                 else if (index == 1)
                 {
-                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSprite);
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSpriteItemTab);
                     go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
                 }
                 else if (index == 2)
                 {
-                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSprite);
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSpriteItemTab);
                     go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
                 }
 
@@ -1181,10 +1181,36 @@ public class UnitFunctionality : MonoBehaviour
 
     public ItemPiece GetBaseSelectedItem()
     {
-        if (GetEquipItems().Count > 0)
-            return GetEquipItems()[0];
-        else
-            return null;
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomHeroes[i] == this)
+            {
+                if (i == 0)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsMain.Count > 0)
+                    {
+                        return TeamItemsManager.Instance.equippedItemsMain[0];
+                    }
+                }
+                else if (i == 1)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsSecond.Count > 0)
+                    {
+                        return TeamItemsManager.Instance.equippedItemsSecond[0];
+                    }
+                }
+                else if (i == 2)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsThird.Count > 0)
+                    {
+                        return TeamItemsManager.Instance.equippedItemsThird[0];
+                    }
+                }
+            }
+        }
+
+        Debug.Log("returning null! - unitfunctionality");
+        return null;
     }
 
     public SkillData GetBaseSelectSkill()
@@ -1545,7 +1571,7 @@ public class UnitFunctionality : MonoBehaviour
                                             float healAmount = ((float)item.itemPower / 100f) * startingRoomMaxHealth;
                                             UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
                                             //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -1604,7 +1630,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("POWERUP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -1674,7 +1700,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -1744,7 +1770,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
 
 
                                             yield return new WaitForSeconds(.35f);
@@ -1815,7 +1841,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -1902,7 +1928,7 @@ public class UnitFunctionality : MonoBehaviour
                                             float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
                                             UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
                                             //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -1961,7 +1987,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("POWERUP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -2031,7 +2057,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -2101,7 +2127,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
 
 
                                             yield return new WaitForSeconds(.35f);
@@ -2172,7 +2198,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -2257,7 +2283,7 @@ public class UnitFunctionality : MonoBehaviour
                                             float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
                                             UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
                                             //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -2316,7 +2342,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("POWERUP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -2386,7 +2412,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -2456,7 +2482,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
 
 
                                             yield return new WaitForSeconds(.35f);
@@ -2527,7 +2553,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                             EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
                                             AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSprite);
+                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
                                             //AudioManager.Instance.Play("SFX_ItemTrigger");
                                             yield return new WaitForSeconds(.35f);
                                             continue;
@@ -3644,7 +3670,7 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void SpawnProjectile(Transform target)
+    public void SpawnProjectile(Transform target, bool skill = true)
     {
         GameObject go = Instantiate(GameManager.Instance.unitProjectile, projectileParent);
         go.transform.SetParent(projectileParent);
@@ -3656,26 +3682,50 @@ public class UnitFunctionality : MonoBehaviour
         //go.transform.localScale = new Vector3(.75f, .75f);
 
         Projectile projectile = go.GetComponent<Projectile>();
-        if (GameManager.Instance.GetActiveSkill().projectileAllowRandPosSpawn)
-            projectile.allowRandomSpawnPosition = true;
-        if (GameManager.Instance.GetActiveSkill().projectileAllowRandRotSpawn)
-            projectile.allowRandomSpawnRotation = true;
 
-        projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveSkill().skillProjectile);
-        projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
-        projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowSpin);
-        projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowIdle);
+        if (skill)
+        {
+            if (GameManager.Instance.GetActiveSkill().projectileAllowRandPosSpawn)
+                projectile.allowRandomSpawnPosition = true;
+            if (GameManager.Instance.GetActiveSkill().projectileAllowRandRotSpawn)
+                projectile.allowRandomSpawnRotation = true;
+
+            projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveSkill().skillProjectile);
+            projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
+            projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowSpin);
+            projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowIdle);
+
+            projectile.LookAtTarget(target);
+            projectile.UpdateSpeed(GameManager.Instance.GetActiveSkill().projectileSpeed);
+
+            if (GameManager.Instance.GetActiveSkill().projectileLaunch != null)
+                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().projectileLaunch.name);
+        }
+
+        // Item
+        else
+        {
+            if (GameManager.Instance.GetActiveItem().allowRandomSpawnPosition)
+                projectile.allowRandomSpawnPosition = true;
+            if (GameManager.Instance.GetActiveItem().allowRandomSpawnRotation)
+                projectile.allowRandomSpawnRotation = true;
+
+            projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveItem().itemSpriteCombatProjectile);
+            //projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
+            projectile.ToggleAllowSpin(GameManager.Instance.GetActiveItem().projectileAllowSpin);
+
+            projectile.LookAtTarget(target);
+            projectile.UpdateSpeed(GameManager.Instance.GetActiveItem().projectileSpeed);
+
+            if (GameManager.Instance.GetActiveItem().projectileLaunch != null)
+                AudioManager.Instance.Play(GameManager.Instance.GetActiveItem().projectileLaunch.name);
+        }
+
 
         if (curUnitType == UnitType.PLAYER)
             projectile.UpdateTeam(true);
         else
             projectile.UpdateTeam(false);
-
-        projectile.LookAtTarget(target);
-        projectile.UpdateSpeed(GameManager.Instance.GetActiveSkill().projectileSpeed);
-
-        if (GameManager.Instance.GetActiveSkill().projectileLaunch != null)
-            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().projectileLaunch.name);
     }
 
     public void ToggleTextAlert(bool toggle)

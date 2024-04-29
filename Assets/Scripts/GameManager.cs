@@ -135,6 +135,8 @@ public class GameManager : MonoBehaviour
     public UIText skill1IconCooldownUIText;
     public UIText skill2IconCooldownUIText;
     public UIText skill3IconCooldownUIText;
+    public Color activeSkillColour;
+    public Color passiveSkillColour;
 
     public List<UnitFunctionality> unitsSelected = new List<UnitFunctionality>();
 
@@ -3194,73 +3196,168 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     }
 
 
-    public void EnableFirstMainSlotSelection()
+    public void EnableFirstMainSlotSelection(bool skills = true)
     {
-        SkillsTabManager.Instance.UpdateLockedSkills();
+        if (skills)
+        {
+            SkillsTabManager.Instance.UpdateLockedSkills();
 
-        if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
-            fighterMainSlot1.ToggleHiddenImage(true);
+            if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
+                fighterMainSlot1.ToggleHiddenImage(true);
+            else
+                fighterMainSlot1.ToggleHiddenImage(false);
+
+            if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
+                fighterMainSlot2.ToggleHiddenImage(true);
+            else
+                fighterMainSlot2.ToggleHiddenImage(false);
+
+            if (SkillsTabManager.Instance.skillBase3.GetIsLocked())
+                fighterMainSlot3.ToggleHiddenImage(true);
+            else
+                fighterMainSlot3.ToggleHiddenImage(false);
+
+            if (SkillsTabManager.Instance.skillBase4.GetIsLocked())
+                fighterMainSlot4.ToggleHiddenImage(true);
+            else
+                fighterMainSlot4.ToggleHiddenImage(false);
+
+
+            // todo work with new locked skills
+            for (int i = 0; i < GetActiveUnitFunctionality().GetAllSkills().Count; i++)
+            {
+                // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
+                if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(0)) == 0 && !SkillsTabManager.Instance.skillBase1.GetIsLocked())
+                {
+                    mainSlot1.ToggleSelected(true);
+
+                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[0]);
+                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[0]);
+
+                    break;
+                }
+                else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(1)) == 0 && !SkillsTabManager.Instance.skillBase2.GetIsLocked())
+                {
+                    mainSlot2.ToggleSelected(true);
+
+                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[1]);
+                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[1]);
+
+                    break;
+                }
+                else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(2)) == 0 && !SkillsTabManager.Instance.skillBase3.GetIsLocked())
+                {
+                    mainSlot3.ToggleSelected(true);
+
+                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[2]);
+                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[2]);
+
+                    break;
+                }
+                else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(3)) == 0 && !SkillsTabManager.Instance.skillBase4.GetIsLocked())
+                {
+                    mainSlot4.ToggleSelected(true);
+
+                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[3]);
+                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[3]);
+
+                    break;
+                }
+
+                //if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
+            }
+        }
+        // Items
         else
+        {
+            TeamItemsManager.Instance.UpdateLockedItems();
+
             fighterMainSlot1.ToggleHiddenImage(false);
-
-        if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
-            fighterMainSlot2.ToggleHiddenImage(true);
-        else
             fighterMainSlot2.ToggleHiddenImage(false);
-
-        if (SkillsTabManager.Instance.skillBase3.GetIsLocked())
-            fighterMainSlot3.ToggleHiddenImage(true);
-        else
             fighterMainSlot3.ToggleHiddenImage(false);
-
-        if (SkillsTabManager.Instance.skillBase4.GetIsLocked())
-            fighterMainSlot4.ToggleHiddenImage(true);
-        else
             fighterMainSlot4.ToggleHiddenImage(false);
 
-
-        // todo work with new locked skills
-        for (int i = 0; i < GetActiveUnitFunctionality().GetAllSkills().Count; i++)
-        {
-            // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
-            if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(0)) == 0 && !SkillsTabManager.Instance.skillBase1.GetIsLocked())
+            // todo work with new locked skills
+            for (int i = 0; i < activeRoomHeroes.Count; i++)
             {
-                mainSlot1.ToggleSelected(true);
+                // Main
+                if (i == 0)
+                {
+                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsMain.Count; x++)
+                    {
+                        // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
+                        if (TeamItemsManager.Instance.equippedItemsMain[x] != null)
+                        {
+                            if (x == 0) 
+                                mainSlot1.ToggleSelected(true);
+                            else if (x == 1)
+                                mainSlot2.ToggleSelected(true);
+                            else if (x == 2)
+                                mainSlot3.ToggleSelected(true);
+                            else if (x == 3)
+                                mainSlot4.ToggleSelected(true);
 
-                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[0]);
-                UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[0]);
+                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[x]);
+                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[x]);
+                            UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[x]);
+                            UpdateUnitsSelectedText();
+                            break;
+                        }
+                    }
+                }
 
-                break;
+                // Second
+                else if (i == 1)
+                {
+                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsSecond.Count; x++)
+                    {
+                        // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
+                        if (TeamItemsManager.Instance.equippedItemsSecond[x] != null)
+                        {
+                            if (x == 0)
+                                mainSlot1.ToggleSelected(true);
+                            else if (x == 1)
+                                mainSlot2.ToggleSelected(true);
+                            else if (x == 2)
+                                mainSlot3.ToggleSelected(true);
+                            else if (x == 3)
+                                mainSlot4.ToggleSelected(true);
+
+                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
+                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
+                            UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
+                            UpdateUnitsSelectedText();
+                            break;
+                        }
+                    }
+                }
+
+                // Third
+                else if (i == 2)
+                {
+                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsThird.Count; x++)
+                    {
+                        // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
+                        if (TeamItemsManager.Instance.equippedItemsThird[x] != null)
+                        {
+                            if (x == 0)
+                                mainSlot1.ToggleSelected(true);
+                            else if (x == 1)
+                                mainSlot2.ToggleSelected(true);
+                            else if (x == 2)
+                                mainSlot3.ToggleSelected(true);
+                            else if (x == 3)
+                                mainSlot4.ToggleSelected(true);
+
+                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[x]);
+                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[x]);
+                            UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[x]);
+                            UpdateUnitsSelectedText();
+                            break;
+                        }
+                    }
+                }
             }
-            else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(1)) == 0 && !SkillsTabManager.Instance.skillBase2.GetIsLocked())
-            {
-                mainSlot2.ToggleSelected(true);
-
-                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[1]);
-                UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[1]);
-
-                break;
-            }
-            else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(2)) == 0 && !SkillsTabManager.Instance.skillBase3.GetIsLocked())
-            {
-                mainSlot3.ToggleSelected(true);
-
-                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[2]);
-                UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[2]);
-
-                break;
-            }
-            else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(3)) == 0 && !SkillsTabManager.Instance.skillBase4.GetIsLocked())
-            {
-                mainSlot4.ToggleSelected(true);
-
-                UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[3]);
-                UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[3]);
-
-                break;
-            }
-
-            //if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
         }
     }
 
@@ -3312,7 +3409,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             abilityDetailsUI.ToggleAllStats(true);
         }
         else if (item != null)
-            abilityDetailsUI.ToggleAllStats(true);
+            abilityDetailsUI.ToggleAllStats(true, false);
 
         if (skill != null)
         {
@@ -3329,15 +3426,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     skill.GetCalculatedSkillPowerStat(), skill.skillCooldown, skill.skillHitAttempts, skill.GetCalculatedSkillEffectStat(), skill.skillPowerIcon, skill.skillSprite, skill.special);
             }
         }
-        else if (item != null)
+        else if (skill == null)
         {
-            if (item.curItemType == ItemPiece.ItemType.OFFENSE)
+            if (item == null)
             {
-                abilityDetailsUI.UpdateItemUI(item.itemName, item.itemDesc, item.itemPower, item.targetCount, item.itemSprite);
+                abilityDetailsUI.UpdateItemUI("", "", 0, 0, TeamItemsManager.Instance.clearSlotSprite);
             }
             else
             {
-                abilityDetailsUI.UpdateItemUI(item.itemName, item.itemDesc, item.itemPower, item.targetCount, item.itemSprite);
+                abilityDetailsUI.UpdateItemUI(item.itemName, item.itemDesc, item.itemPower, item.targetCount, item.itemSpriteCombat);
             }
         }
     }
@@ -3941,7 +4038,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
     }
 
-    public void UpdateUnitSelection(SkillData usedSkill)
+    public void UpdateUnitSelection(SkillData usedSkill = null, ItemPiece item = null)
     {
         //Debug.Log("aa selecting unit " + usedSkill.skillName);
         int selectedAmount = 0;
@@ -3949,214 +4046,438 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Clear all current selections
         ResetSelectedUnits();
 
-        if (usedSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.ALIVE)
+        if (usedSkill != null)
         {
-            // If skill selection type is only on ENEMIES
-            if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES)
+            if (usedSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.ALIVE)
             {
-                // if the skill user is a PLAYER
-                if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
+                // If skill selection type is only on ENEMIES
+                if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES)
                 {
-                    // If any enemies are taunting, select them
-                    if (IsEnemyTaunting().Count >= 1)
+                    // if the skill user is a PLAYER
+                    if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
                     {
-                        for (int i = IsEnemyTaunting().Count - 1; i >= 0; i--)
+                        // If any enemies are taunting, select them
+                        if (IsEnemyTaunting().Count >= 1)
                         {
-                            selectedAmount++;
-                            targetUnit(IsEnemyTaunting()[i]);
+                            for (int i = IsEnemyTaunting().Count - 1; i >= 0; i--)
+                            {
+                                selectedAmount++;
+                                targetUnit(IsEnemyTaunting()[i]);
 
-                            // If enough units have been selected FOR ability max targets, or max amount of enemy units tanking
-                            if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount() || selectedAmount == IsEnemyTaunting().Count)
-                                return;
+                                // If enough units have been selected FOR ability max targets, or max amount of enemy units tanking
+                                if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount() || selectedAmount == IsEnemyTaunting().Count)
+                                    return;
+                            }
+                        }
+
+                        // only select the closest ENEMY units
+                        for (int x = activeRoomAllUnitFunctionalitys.Count - 1; x >= 0; x--)
+                        {
+                            if (activeRoomAllUnitFunctionalitys[x].curUnitType == UnitFunctionality.UnitType.ENEMY && !activeRoomAllUnitFunctionalitys[x].isDead)
+                            {
+                                // if no enemies are taunting, start selecting
+                                selectedAmount++;
+                                targetUnit(activeRoomAllUnitFunctionalitys[x]);
+
+                                // If enough units have been selected (in order of closest)
+                                if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
+                                    return;
+                            }
+
                         }
                     }
-
-                    // only select the closest ENEMY units
-                    for (int x = activeRoomAllUnitFunctionalitys.Count - 1; x >= 0; x--)
+                    // If the skill user is an ENEMY
+                    else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY)
                     {
-                        if (activeRoomAllUnitFunctionalitys[x].curUnitType == UnitFunctionality.UnitType.ENEMY && !activeRoomAllUnitFunctionalitys[x].isDead)
+                        // only select PLAYER units, in random fashion
+                        for (int x = 0; x < 20; x++)
                         {
-                            // if no enemies are taunting, start selecting
-                            selectedAmount++;
-                            targetUnit(activeRoomAllUnitFunctionalitys[x]);
+                            int rand = Random.Range(0, activeRoomAllUnitFunctionalitys.Count);
 
-                            // If enough units have been selected (in order of closest)
-                            if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
-                                return;
+                            if (activeRoomAllUnitFunctionalitys[rand].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                if (activeRoomAllUnitFunctionalitys[rand].IsSelected())
+                                    continue;
+                                else
+                                    targetUnit(activeRoomAllUnitFunctionalitys[rand]);
+
+                                selectedAmount++;
+
+                                // If enough units have been selected, toggle the display
+                                if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
+                                    return;
+                            }
                         }
-
                     }
                 }
-                // If the skill user is an ENEMY
-                else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY)
+
+                // If skill selection type is only on ALLIES
+                if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS)
                 {
-                    // only select PLAYER units, in random fashion
-                    for (int x = 0; x < 20; x++)
+                    // if the skill user is a PLAYER
+                    if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
                     {
-                        int rand = Random.Range(0, activeRoomAllUnitFunctionalitys.Count);
-
-                        if (activeRoomAllUnitFunctionalitys[rand].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        // only select PLAYER units
+                        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
                         {
-                            if (activeRoomAllUnitFunctionalitys[rand].IsSelected())
+                            if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                selectedAmount++;
+
+                                // If self cast, cast on self, otherwise, continue for whomever
+                                if (usedSkill.isSelfCast)
+                                    targetUnit(GetActiveUnitFunctionality());
+                                else
+                                    targetUnit(activeRoomAllUnitFunctionalitys[i]);
+
+                                // If enough units have been selected (in order of closest)
+                                if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
+                                    return;
+                            }
+                        }
+                    }
+                    // If the skill user is an ENEMY
+                    else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY)
+                    {
+                        //Debug.Log("b selecting unit");
+                        //Debug.Log("selecting targets");
+                        // only select ENEMY units
+                        for (int i = 0; i < 25; i++)
+                        {
+                            if (usedSkill.curSkillType == SkillData.SkillType.SUPPORT && usedSkill.curSkillPower != 0)
+                            {
+                                int lowestHealthEnemy = 99999;
+                                UnitFunctionality target = null;
+                                // Choose lowest health target
+                                for (int x = 0; x < activeRoomEnemies.Count; x++)
+                                {
+                                    if (!activeRoomEnemies[x].isDead)
+                                    {
+                                        if (activeRoomEnemies[x].GetUnitCurHealth() < lowestHealthEnemy)
+                                        {
+                                            lowestHealthEnemy = (int)activeRoomEnemies[x].GetUnitCurHealth();
+                                            target = activeRoomEnemies[x];
+                                        }
+                                    }
+                                }
+
+                                if (target != null)
+                                {
+                                    targetUnit(target);
+                                    break;
+                                }
+                            }
+
+
+                            // Choose random target
+                            int rand = Random.Range(0, activeRoomAllUnitFunctionalitys.Count);
+
+                            if (activeRoomAllUnitFunctionalitys[rand].curUnitType != UnitFunctionality.UnitType.ENEMY)
+                            {
+                                if (i > 0)
+                                    i--;
+
                                 continue;
+                            }
                             else
-                                targetUnit(activeRoomAllUnitFunctionalitys[rand]);
+                            {
+                                selectedAmount++;
 
-                            selectedAmount++;
+                                //Debug.Log("b.c selecting unit");
 
-                            // If enough units have been selected, toggle the display
-                            if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
-                                return;
+                                // If self cast, cast on self, otherwise, continue for whomever
+                                if (usedSkill.isSelfCast)
+                                {
+                                    targetUnit(GetActiveUnitFunctionality());
+                                }
+                                else
+                                {
+                                    //Debug.Log("b.d selecting unit");
+                                    if (!activeRoomAllUnitFunctionalitys[rand].IsSelected())
+                                    {
+                                        //Debug.Log("c selecting unit");
+                                        targetUnit(activeRoomAllUnitFunctionalitys[rand]);
+                                    }
+                                }
+
+                                // If enough units have been selected, toggle the display
+                                if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
+                                    break;
+
+                                // If skill requires only 1 unit selection - (full team target wont work without this)
+                                if (usedSkill.GetCalculatedSkillSelectionCount() == 1)
+                                {
+                                    /*
+                                    // If enemy chooses itself for ally attack, reselect to target any other ally 
+                                    for (int a = 0; a < activeRoomAllUnitFunctionalitys.Count; a++)
+                                    {
+                                        if (activeRoomAllUnitFunctionalitys[a].curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                        {
+                                            if (activeRoomAllUnitFunctionalitys[rand] == GetActiveUnitFunctionality())
+                                            {
+                                                if (i != 0)
+                                                {
+                                                    i--;
+                                                    continue;
+                                                }
+                                                else
+                                                    continue;
+                                            }
+                                        }
+                                    }
+                                    */
+                                }
+                            }
                         }
                     }
                 }
             }
 
-            // If skill selection type is only on ALLIES
-            if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS)
+            // If skill is for dead targets
+            else
             {
-                // if the skill user is a PLAYER
-                if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
+                for (int x = 0; x < usedSkill.skillSelectionCount; x++)
                 {
-                    // only select PLAYER units
-                    for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+                    // Select dead allies
+                    if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS)
                     {
-                        if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        for (int i = 0; i < activeRoomHeroes.Count; i++)
                         {
-                            selectedAmount++;
-
-                            // If self cast, cast on self, otherwise, continue for whomever
-                            if (usedSkill.isSelfCast)
-                                targetUnit(GetActiveUnitFunctionality());
-                            else
-                                targetUnit(activeRoomAllUnitFunctionalitys[i]);
-
-                            // If enough units have been selected (in order of closest)
-                            if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
-                                return;
+                            if (activeRoomHeroes[i].curUnitType == UnitFunctionality.UnitType.PLAYER && activeRoomHeroes[i].isDead && !activeRoomEnemies[i].isSelected)
+                            {
+                                targetUnit(activeRoomHeroes[i]);
+                            }
                         }
                     }
-                }
-                // If the skill user is an ENEMY
-                else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY)
-                {
-                    //Debug.Log("b selecting unit");
-                    //Debug.Log("selecting targets");
-                    // only select ENEMY units
-                    for (int i = 0; i < 25; i++)
+                    else
                     {
-                        if (usedSkill.curSkillType == SkillData.SkillType.SUPPORT && usedSkill.curSkillPower != 0)
+                        for (int i = 0; i < activeRoomEnemies.Count; i++)
                         {
-                            int lowestHealthEnemy = 99999;
-                            UnitFunctionality target = null;
-                            // Choose lowest health target
-                            for (int x = 0; x < activeRoomEnemies.Count; x++)
+                            if (activeRoomEnemies[i].curUnitType == UnitFunctionality.UnitType.ENEMY && activeRoomEnemies[i].isDead && !activeRoomEnemies[i].isSelected)
                             {
-                                if (!activeRoomEnemies[x].isDead)
-                                {
-                                    if (activeRoomEnemies[x].GetUnitCurHealth() < lowestHealthEnemy)
-                                    {
-                                        lowestHealthEnemy = (int)activeRoomEnemies[x].GetUnitCurHealth();
-                                        target = activeRoomEnemies[x];
-                                    }
-                                }
-                            }
-
-                            if (target != null)
-                            {
-                                targetUnit(target);
-                                break;
-                            }
-                        }
-
-
-                        // Choose random target
-                        int rand = Random.Range(0, activeRoomAllUnitFunctionalitys.Count);
-
-                        if (activeRoomAllUnitFunctionalitys[rand].curUnitType != UnitFunctionality.UnitType.ENEMY)
-                        {
-                            if (i > 0)
-                                i--;
-
-                            continue;
-                        }
-                        else 
-                        {
-                            selectedAmount++;
-
-                            //Debug.Log("b.c selecting unit");
-
-                            // If self cast, cast on self, otherwise, continue for whomever
-                            if (usedSkill.isSelfCast)
-                            {
-                                targetUnit(GetActiveUnitFunctionality());
-                            }
-                            else
-                            {
-                                //Debug.Log("b.d selecting unit");
-                                if (!activeRoomAllUnitFunctionalitys[rand].IsSelected())
-                                {
-                                    //Debug.Log("c selecting unit");
-                                    targetUnit(activeRoomAllUnitFunctionalitys[rand]);
-                                }
-                            }
-
-                            // If enough units have been selected, toggle the display
-                            if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
-                                break;
-
-                            // If skill requires only 1 unit selection - (full team target wont work without this)
-                            if (usedSkill.GetCalculatedSkillSelectionCount() == 1)
-                            {
-                                /*
-                                // If enemy chooses itself for ally attack, reselect to target any other ally 
-                                for (int a = 0; a < activeRoomAllUnitFunctionalitys.Count; a++)
-                                {
-                                    if (activeRoomAllUnitFunctionalitys[a].curUnitType == UnitFunctionality.UnitType.ENEMY)
-                                    {
-                                        if (activeRoomAllUnitFunctionalitys[rand] == GetActiveUnitFunctionality())
-                                        {
-                                            if (i != 0)
-                                            {
-                                                i--;
-                                                continue;
-                                            }
-                                            else
-                                                continue;
-                                        }
-                                    }
-                                }
-                                */
+                                targetUnit(activeRoomEnemies[i]);
                             }
                         }
                     }
                 }
             }
         }
-        
-        // If skill is for dead targets
-        else
+
+        // Items
+        else if (item != null)
         {
-            for (int x = 0; x < usedSkill.skillSelectionCount; x++)
+            if (item.curActiveType == ItemPiece.ActiveType.PASSIVE)
+                return;
+
+            if (item.curTargetType == ItemPiece.TargetType.ALIVE)
             {
-                // Select dead allies
-                if (usedSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS)
+                // If skill selection type is only on ENEMIES
+                if (item.curSelectionType == ItemPiece.SelectionType.ENEMIES)
                 {
-                    for (int i = 0; i < activeRoomHeroes.Count; i++)
+                    // if the skill user is a PLAYER
+                    if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
                     {
-                        if (activeRoomHeroes[i].curUnitType == UnitFunctionality.UnitType.PLAYER && activeRoomHeroes[i].isDead && !activeRoomEnemies[i].isSelected)
+                        // If any enemies are taunting, select them
+                        if (IsEnemyTaunting().Count >= 1)
                         {
-                            targetUnit(activeRoomHeroes[i]);
+                            for (int i = IsEnemyTaunting().Count - 1; i >= 0; i--)
+                            {
+                                selectedAmount++;
+                                targetUnit(IsEnemyTaunting()[i]);
+
+                                // If enough units have been selected FOR ability max targets, or max amount of enemy units tanking
+                                if (selectedAmount == item.targetCount || selectedAmount == IsEnemyTaunting().Count)
+                                    return;
+                            }
+                        }
+
+                        // only select the closest ENEMY units
+                        for (int x = activeRoomAllUnitFunctionalitys.Count - 1; x >= 0; x--)
+                        {
+                            if (activeRoomAllUnitFunctionalitys[x].curUnitType == UnitFunctionality.UnitType.ENEMY && !activeRoomAllUnitFunctionalitys[x].isDead)
+                            {
+                                // if no enemies are taunting, start selecting
+                                selectedAmount++;
+                                targetUnit(activeRoomAllUnitFunctionalitys[x]);
+
+                                // If enough units have been selected (in order of closest)
+                                if (selectedAmount == item.targetCount)
+                                    return;
+                            }
+
+                        }
+                    }
+                    // If the skill user is an ENEMY
+                    else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY)
+                    {
+                        // only select PLAYER units, in random fashion
+                        for (int x = 0; x < 20; x++)
+                        {
+                            int rand = Random.Range(0, activeRoomAllUnitFunctionalitys.Count);
+
+                            if (activeRoomAllUnitFunctionalitys[rand].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                if (activeRoomAllUnitFunctionalitys[rand].IsSelected())
+                                    continue;
+                                else
+                                    targetUnit(activeRoomAllUnitFunctionalitys[rand]);
+
+                                selectedAmount++;
+
+                                // If enough units have been selected, toggle the display
+                                if (selectedAmount == item.targetCount)
+                                    return;
+                            }
                         }
                     }
                 }
-                else
+
+                // If skill selection type is only on ALLIES
+                if (item.curSelectionType == ItemPiece.SelectionType.ALLIES)
                 {
-                    for (int i = 0; i < activeRoomEnemies.Count; i++)
+                    // if the skill user is a PLAYER
+                    if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
                     {
-                        if (activeRoomEnemies[i].curUnitType == UnitFunctionality.UnitType.ENEMY && activeRoomEnemies[i].isDead && !activeRoomEnemies[i].isSelected)
+                        // only select PLAYER units
+                        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
                         {
-                            targetUnit(activeRoomEnemies[i]);
+                            if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                selectedAmount++;
+
+                                // If self cast, cast on self, otherwise, continue for whomever
+                                if (item.isSelfCast)
+                                    targetUnit(GetActiveUnitFunctionality());
+                                else
+                                    targetUnit(activeRoomAllUnitFunctionalitys[i]);
+
+                                // If enough units have been selected (in order of closest)
+                                if (selectedAmount == item.targetCount)
+                                    return;
+                            }
+                        }
+                    }
+                    // If the skill user is an ENEMY
+                    else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY)
+                    {
+                        //Debug.Log("b selecting unit");
+                        //Debug.Log("selecting targets");
+                        // only select ENEMY units
+                        for (int i = 0; i < 25; i++)
+                        {
+                            if (item.curItemType == ItemPiece.ItemType.SUPPORT && item.itemPower != 0)
+                            {
+                                int lowestHealthEnemy = 99999;
+                                UnitFunctionality target = null;
+                                // Choose lowest health target
+                                for (int x = 0; x < activeRoomEnemies.Count; x++)
+                                {
+                                    if (!activeRoomEnemies[x].isDead)
+                                    {
+                                        if (activeRoomEnemies[x].GetUnitCurHealth() < lowestHealthEnemy)
+                                        {
+                                            lowestHealthEnemy = (int)activeRoomEnemies[x].GetUnitCurHealth();
+                                            target = activeRoomEnemies[x];
+                                        }
+                                    }
+                                }
+
+                                if (target != null)
+                                {
+                                    targetUnit(target);
+                                    break;
+                                }
+                            }
+
+
+                            // Choose random target
+                            int rand = Random.Range(0, activeRoomAllUnitFunctionalitys.Count);
+
+                            if (activeRoomAllUnitFunctionalitys[rand].curUnitType != UnitFunctionality.UnitType.ENEMY)
+                            {
+                                if (i > 0)
+                                    i--;
+
+                                continue;
+                            }
+                            else
+                            {
+                                selectedAmount++;
+
+                                //Debug.Log("b.c selecting unit");
+
+                                // If self cast, cast on self, otherwise, continue for whomever
+                                if (item.isSelfCast)
+                                {
+                                    targetUnit(GetActiveUnitFunctionality());
+                                }
+                                else
+                                {
+                                    //Debug.Log("b.d selecting unit");
+                                    if (!activeRoomAllUnitFunctionalitys[rand].IsSelected())
+                                    {
+                                        //Debug.Log("c selecting unit");
+                                        targetUnit(activeRoomAllUnitFunctionalitys[rand]);
+                                    }
+                                }
+
+                                // If enough units have been selected, toggle the display
+                                if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
+                                    break;
+
+                                // If skill requires only 1 unit selection - (full team target wont work without this)
+                                if (item.targetCount == 1)
+                                {
+                                    /*
+                                    // If enemy chooses itself for ally attack, reselect to target any other ally 
+                                    for (int a = 0; a < activeRoomAllUnitFunctionalitys.Count; a++)
+                                    {
+                                        if (activeRoomAllUnitFunctionalitys[a].curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                        {
+                                            if (activeRoomAllUnitFunctionalitys[rand] == GetActiveUnitFunctionality())
+                                            {
+                                                if (i != 0)
+                                                {
+                                                    i--;
+                                                    continue;
+                                                }
+                                                else
+                                                    continue;
+                                            }
+                                        }
+                                    }
+                                    */
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // If skill is for dead targets
+            else
+            {
+                for (int x = 0; x < item.targetCount; x++)
+                {
+                    // Select dead allies
+                    if (item.curSelectionType == ItemPiece.SelectionType.ALLIES)
+                    {
+                        for (int i = 0; i < activeRoomHeroes.Count; i++)
+                        {
+                            if (activeRoomHeroes[i].curUnitType == UnitFunctionality.UnitType.PLAYER && activeRoomHeroes[i].isDead && !activeRoomEnemies[i].isSelected)
+                            {
+                                targetUnit(activeRoomHeroes[i]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < activeRoomEnemies.Count; i++)
+                        {
+                            if (activeRoomEnemies[i].curUnitType == UnitFunctionality.UnitType.ENEMY && activeRoomEnemies[i].isDead && !activeRoomEnemies[i].isSelected)
+                            {
+                                targetUnit(activeRoomEnemies[i]);
+                            }
                         }
                     }
                 }
@@ -4211,6 +4532,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         */
 
         return activeSkill;
+    }
+
+    public ItemPiece GetActiveItem()
+    {
+        return activeItem;
     }
 
     public UnitFunctionality GetActiveUnitFunctionality()
@@ -4323,12 +4649,36 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             fighterMainSlot2.UpdateSkillLevelText(GetActiveUnitFunctionality().GetSkill(1).curSkillLevel);
             fighterMainSlot3.UpdateSkillLevelText(GetActiveUnitFunctionality().GetSkill(2).curSkillLevel);
             fighterMainSlot4.UpdateSkillLevelText(GetActiveUnitFunctionality().GetSkill(3).curSkillLevel);
+
+            if (GetActiveUnitFunctionality().GetSkill(0).curSkillActiveType == SkillData.SkillActiveType.ACTIVE)
+                fighterMainSlot1.UpdatePassiveActiveType(true);
+            else
+                fighterMainSlot1.UpdatePassiveActiveType(false);
+
+            if (GetActiveUnitFunctionality().GetSkill(1).curSkillActiveType == SkillData.SkillActiveType.ACTIVE)
+                fighterMainSlot2.UpdatePassiveActiveType(true);
+            else
+                fighterMainSlot2.UpdatePassiveActiveType(false);
+
+            if (GetActiveUnitFunctionality().GetSkill(2).curSkillActiveType == SkillData.SkillActiveType.ACTIVE)
+                fighterMainSlot3.UpdatePassiveActiveType(true);
+            else
+                fighterMainSlot3.UpdatePassiveActiveType(false);
+
+            if (GetActiveUnitFunctionality().GetSkill(3).curSkillActiveType == SkillData.SkillActiveType.ACTIVE)
+                fighterMainSlot4.UpdatePassiveActiveType(true);
+            else
+                fighterMainSlot4.UpdatePassiveActiveType(false);
+
+            UpdateUnitSelection(activeSkill);
+            UpdateUnitsSelectedText();
+
+            EnableFirstMainSlotSelection(true);
         }
         // Display Items
         else
         {
             UpdateActiveItem(GetActiveUnitFunctionality().GetBaseSelectedItem());
-            UpdateMainIconDetails(GetActiveUnitFunctionality().GetBaseSelectSkill());
 
             // Update player skill portraits
             for (int i = 0; i < 4; i++)
@@ -4343,25 +4693,59 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (x == 0)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsMain.Count >= 1)
-                                    fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[0].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[0]);
+                                    fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[0].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsMain[0].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot1.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot1.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot1.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                             else if (x == 1)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 1)
-                                    fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[0].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
+                                    fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[0].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsSecond[0].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot1.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot1.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot1.UpdatePassiveActiveType(false, true);
+                                }
+
                                 break;
                             }
                             else if (x == 2)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsThird.Count >= 1)
-                                    fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[0].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[0]);
+                                    fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[0].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsThird[0].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot1.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot1.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot1.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                         }
@@ -4377,25 +4761,59 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (x == 0)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsMain.Count >= 2)
-                                    fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[1].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[1]);
+                                    fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[1].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsMain[1].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot2.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot2.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot2.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                             else if (x == 1)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 2)
-                                    fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[1].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
+                                    fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[1].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsSecond[1].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot2.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot2.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot2.UpdatePassiveActiveType(false, true);
+                                }
+
                                 break;
                             }
                             else if (x == 2)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsThird.Count >= 2)
-                                    fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[1].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[1]);
+                                    fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[1].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsThird[1].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot2.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot2.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot2.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                         }
@@ -4411,25 +4829,59 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (x == 0)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsMain.Count >= 3)
-                                    fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[2].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[2]);
+                                    fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[2].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsMain[2].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot3.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot3.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot3.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                             else if (x == 1)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 3)
-                                    fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[2].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
+                                    fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[2].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsSecond[2].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot3.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot3.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot3.UpdatePassiveActiveType(false, true);
+                                }
+
                                 break;
                             }
                             else if (x == 2)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsThird.Count >= 3)
-                                    fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[2].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[2]);
+                                    fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[2].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsThird[2].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot3.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot3.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot3.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                         }
@@ -4445,25 +4897,59 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (x == 0)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsMain.Count >= 4)
-                                    fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[3].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[3]);
+                                    fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[3].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsMain[3].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot4.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot4.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot4.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                             else if (x == 1)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 4)
-                                    fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[3].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
+                                    fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[3].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsSecond[3].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot4.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot4.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot4.UpdatePassiveActiveType(false, true);
+                                }
+
                                 break;
                             }
                             else if (x == 2)
                             {
                                 if (TeamItemsManager.Instance.equippedItemsThird.Count >= 4)
-                                    fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[3].itemSprite);
+                                {
+                                    UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[3]);
+                                    fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[3].itemSpriteCombat);
+
+                                    if (TeamItemsManager.Instance.equippedItemsThird[3].curActiveType == ItemPiece.ActiveType.ACTIVE)
+                                        fighterMainSlot4.UpdatePassiveActiveType(true);
+                                    else
+                                        fighterMainSlot4.UpdatePassiveActiveType(false);
+                                }
                                 else
+                                {
                                     fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+                                    fighterMainSlot4.UpdatePassiveActiveType(false, true);
+                                }
                                 break;
                             }
                         }
@@ -4480,11 +4966,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             fighterMainSlot2.UpdateSkillLevelText(0, true);
             fighterMainSlot3.UpdateSkillLevelText(0, true);
             fighterMainSlot4.UpdateSkillLevelText(0, true);
+
+            UpdateUnitSelection(null, activeItem);
+            UpdateUnitsSelectedText();
+
+            EnableFirstMainSlotSelection(false);
         }
 
         ToggleMainSlotVisibility(true);
-
-        EnableFirstMainSlotSelection();
     }
 
     public void UpdateTurnOrderVisual()
@@ -4543,6 +5032,62 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         UnSelectUnit(unit, true);
     }
+
+    public IEnumerator DoItemAction()
+    {
+        // Spawn Projectiles
+        if (activeItem.curHitType == ItemPiece.HitType.HITS)
+        {
+            for (int i = 0; i < activeItem.hitCount; i++)
+            {
+                // Loop through all selected units, spawn projectiles, if target is dead stop.
+                for (int z = unitsSelected.Count - 1; z >= 0; z--)
+                {
+                    if (unitsSelected[z] == null)
+                        continue;
+                    else
+                    {
+                        GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform, false);
+                    }
+                }
+
+                int maxHitWorth = 15;
+                if (activeItem.hitCount > maxHitWorth)
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)));
+                else
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (activeItem.hitCount - 1)));
+            }
+        }
+
+        if (activeItem.curHitType == ItemPiece.HitType.HITS)
+            yield return new WaitForSeconds(.75f);
+        else
+            yield return new WaitForSeconds(0);
+
+        if (activeItem.curHitType == ItemPiece.HitType.HITS)
+        {
+            // Cause the item's functionality to go
+            if (activeItem.curItemType == ItemPiece.ItemType.OFFENSE && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
+                && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
+            {
+                // Damage enemy
+                for (int i = 0; i < unitsSelected.Count; i++)
+                {
+                    unitsSelected[i].UpdateUnitCurHealth(GetActiveUnitFunctionality().curPower, true, false, true, true, false);
+                }
+            }
+            else if (activeItem.curItemType == ItemPiece.ItemType.SUPPORT && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
+                && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                // Heal ally
+                for (int i = 0; i < unitsSelected.Count; i++)
+                {
+                    unitsSelected[i].UpdateUnitCurHealth(GetActiveUnitFunctionality().curPower, false, false, true, true, false);
+                }
+            }
+        }
+    }
+
     public void targetUnit(UnitFunctionality unit)
     {
         //Debug.Log("earlier - selecting unit " + unit.GetUnitName());
@@ -4570,7 +5115,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             OwnedLootInven.Instance.AddOwnedItems(slot);
 
             // Set item
-            uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
+            uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSpriteItemTab);
             uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
 
             if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.LEGENDARY)
@@ -4589,7 +5134,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
             }
-            slot.UpdateSlotImage(newItem.itemSprite);
+            slot.UpdateSlotImage(newItem.itemSpriteItemTab);
 
             slot.UpdateSlotName(newItem.itemName);
             slot.UpdateLinkedItemPiece(newItem);
@@ -4627,80 +5172,103 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             return;
         }
 
-        if (activeSkill)
+        if (isSkillsMode)
         {
-            // Ensure skills that target alive cant select dead targets
-            if (unit.isDead && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.ALIVE)
+            if (activeSkill)
+            {
+                // Ensure skills that target alive cant select dead targets
+                if (unit.isDead && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.ALIVE)
+                    return;
+                // Ensure skills that target dead cant select alive targets
+                else if (!unit.isDead && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                    return;
+            }
+
+            if (activeSkill && !combatOver)
+            {
+                // Dont select other units if its a self cast
+                if (activeSkill.isSelfCast && unit != GetActiveUnitFunctionality())
+                    return;
+
+                // If active skill can only select allies, do not allow enemies to be selected
+                //if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                //  return;
+
+                if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                {
+                    if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    {
+                        //Debug.Log("ending 2");
+                        return;
+                    }
+                    if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    {
+                        //Debug.Log("ending 3");
+                        return;
+                    }
+                }
+            }
+
+            // If user selects a unit that is already selected, unselect it, and go a different path
+            if (unit.IsSelected() && GetSelectingUnitsAllowed())
+            {
+                //UnSelectUnit(unit);
+                //UpdateUnitsSelectedText();
+                // If its not a hero room, dont attack on unselecting
+                if (!combatOver)
+                {
+                    ToggleSelectingUnits(false);
+                    ToggleAllowSelection(false);
+                    PlayerAttack();
+                    return;
+                }
+
+                // Select targeted unit
+                UnSelectUnit(unit);
+                //unit.ToggleSelected(true);
+
                 return;
-            // Ensure skills that target dead cant select alive targets
-            else if (!unit.isDead && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
-                return;
+            }
         }
-
-
-
-        if (activeSkill && !combatOver)
+        else
         {
-            // Dont select other units if its a self cast
-            if (activeSkill.isSelfCast && unit != GetActiveUnitFunctionality())
+            if (activeItem.curActiveType == ItemPiece.ActiveType.PASSIVE)
                 return;
-
-            // If active skill can only select allies, do not allow enemies to be selected
-            //if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY)
-            //  return;
 
             if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             {
-                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                if (activeItem.curSelectionType == ItemPiece.SelectionType.ALLIES && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
                 {
                     //Debug.Log("ending 2");
                     return;
                 }
-                if (activeSkill.curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                if (activeItem.curSelectionType == ItemPiece.SelectionType.ENEMIES && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
                 {
                     //Debug.Log("ending 3");
                     return;
                 }
             }
-        }
 
-        /*
-        // If the selection is maxed, replaced a unit selected with the new one.
-        if (unitsSelected.Count != 0)
-        {
-            if (activeSkill)
+            // If user selects a unit that is already selected, unselect it, and go a different path
+            if (unit.IsSelected() && GetSelectingUnitsAllowed())
             {
-                if (unitsSelected.Count == activeSkill.skillSelectionCount)
-                    UnSelectUnit(unitsSelected[0]);
-            }
-            else
-            {
-                if (unitsSelected.Count == GetActiveUnitFunctionality().unitData.basicSelectionCount)
-                    UnSelectUnit(unitsSelected[0]);
-            }
-        }
-        */
+                //UnSelectUnit(unit);
+                //UpdateUnitsSelectedText();
+                // If its not a hero room, dont attack on unselecting
+                if (!combatOver)
+                {
+                    StartCoroutine(DoItemAction());
+                    return;
+                }
 
-        // If user selects a unit that is already selected, unselect it, and go a different path
-        if (unit.IsSelected() && GetSelectingUnitsAllowed())
-        {
-            //UnSelectUnit(unit);
-            //UpdateUnitsSelectedText();
-            // If its not a hero room, dont attack on unselecting
-            if (!combatOver)
-            {
-                ToggleSelectingUnits(false);
-                ToggleAllowSelection(false);
-                PlayerAttack();
+                // Select targeted unit
+                UnSelectUnit(unit);
+                //unit.ToggleSelected(true);
+
                 return;
             }
-
-            // Select targeted unit
-            UnSelectUnit(unit);
-            //unit.ToggleSelected(true);
-
-            return;
         }
+
 
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
@@ -4845,10 +5413,28 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void UpdateUnitsSelectedText()
     {
-        // If a skill is selected
-        if (activeSkill != null)
+        if (isSkillsMode)
         {
-            UpdateUnitsSelectedText(unitsSelected.Count, activeSkill.GetCalculatedSkillSelectionCount());
+            // If a skill is selected
+            if (activeSkill != null)
+            {
+                UpdateUnitsSelectedText(unitsSelected.Count, activeSkill.GetCalculatedSkillSelectionCount());
+            }
+            else
+            {
+                UpdateUnitsSelectedText(0, 0);
+            }
+        }
+        else
+        {
+            if (activeItem != null)
+            {
+                UpdateUnitsSelectedText(unitsSelected.Count, activeItem.targetCount);
+            }
+            else
+            {
+                UpdateUnitsSelectedText(0, 0);
+            }
         }
     }
 
@@ -4856,6 +5442,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         curUnitsTargetedText.text = curUnitsSelected.ToString();
         maxUnitsTargetedText.text = maxUnitsSelected.ToString();
+
+        if (curUnitsSelected == 0 && maxUnitsSelected == 0)
+        {
+            curUnitsTargetedText.text = "";
+            maxUnitsTargetedText.text = "";
+        }
     }
 
     public void ReduceAllEnemyHealth()

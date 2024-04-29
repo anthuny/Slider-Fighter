@@ -179,7 +179,7 @@ public class GearRewards : MonoBehaviour
                     OwnedLootInven.Instance.AddOwnedItems(slot);
 
                     // Set item
-                    uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSprite);
+                    uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSpriteItemTab);
                     uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
 
                     if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.LEGENDARY)
@@ -198,7 +198,7 @@ public class GearRewards : MonoBehaviour
                     {
                         uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
                     }
-                    slot.UpdateSlotImage(newItem.itemSprite);
+                    slot.UpdateSlotImage(newItem.itemSpriteItemTab);
 
                     slot.UpdateSlotName(newItem.itemName);
                     slot.UpdateLinkedItemPiece(newItem);

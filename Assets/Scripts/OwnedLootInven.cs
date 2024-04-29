@@ -1641,7 +1641,7 @@ public class OwnedLootInven : MonoBehaviour
 
 
                         gear.UpdateLootGearAlpha(false);
-                        gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
+                        gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSpriteItemTab);
                         gear.UpdateCurSlotType(Slot.SlotType.ITEM);
                         GearRewards.Instance.IncrementSpawnedGearCount();
                         //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
@@ -1667,7 +1667,7 @@ public class OwnedLootInven : MonoBehaviour
                         ownedItems.Add(gear);
 
                         gear.UpdateLootGearAlpha(false);
-                        gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
+                        gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSpriteItemTab);
                         gear.UpdateCurSlotType(Slot.SlotType.ITEM);
                         //GearRewards.Instance.IncrementSpawnedGearCount();
                         gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
@@ -1789,7 +1789,7 @@ public class OwnedLootInven : MonoBehaviour
 
 
                             gear.UpdateLootGearAlpha(false);
-                            gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
+                            gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSpriteItemTab);
                             gear.UpdateCurSlotType(Slot.SlotType.ITEM);
                             GearRewards.Instance.IncrementSpawnedGearCount();
                             //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
@@ -1815,7 +1815,7 @@ public class OwnedLootInven : MonoBehaviour
                             ownedItems.Add(gear);
 
                             gear.UpdateLootGearAlpha(false);
-                            gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
+                            gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSpriteItemTab);
                             gear.UpdateCurSlotType(Slot.SlotType.ITEM);
                             //GearRewards.Instance.IncrementSpawnedGearCount();
                             gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
@@ -1936,7 +1936,7 @@ public class OwnedLootInven : MonoBehaviour
 
 
                                 gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSprite);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSpriteItemTab);
                                 gear.UpdateCurSlotType(Slot.SlotType.ITEM);
                                 GearRewards.Instance.IncrementSpawnedGearCount();
                                 //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
@@ -1962,7 +1962,7 @@ public class OwnedLootInven : MonoBehaviour
                                 ownedItems.Add(gear);
 
                                 gear.UpdateLootGearAlpha(false);
-                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSprite);
+                                gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSpriteItemTab);
                                 gear.UpdateCurSlotType(Slot.SlotType.ITEM);
                                 //GearRewards.Instance.IncrementSpawnedGearCount();
                                 gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
@@ -2110,7 +2110,7 @@ public class OwnedLootInven : MonoBehaviour
 
             //item.UpdateGearAlpha(false);
 
-            ownedItems[x].UpdateSlotImage(startingItemPieces[x].itemSprite);
+            ownedItems[x].UpdateSlotImage(startingItemPieces[x].itemSpriteItemTab);
 
             ownedItems[x].UpdateSlotName(startingItemPieces[x].itemName);
             ownedItems[x].linkedItemPiece = startingItemPieces[x];
@@ -2298,7 +2298,7 @@ public class OwnedLootInven : MonoBehaviour
 
                         //wornSkillsAlly.Add(SkillsTabManager.Instance.selectedOwnedSlot);
                         // Update gear icon
-                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedItemPieces[i].itemSprite);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedItemPieces[i].itemSpriteItemTab);
                         //ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.ITEM);
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedItemPieces[i].itemName);
 

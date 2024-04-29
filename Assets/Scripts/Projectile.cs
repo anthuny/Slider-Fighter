@@ -143,7 +143,9 @@ public class Projectile : MonoBehaviour
 
         Vector3 difference = newTarget.position - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, rotationZ+90);
+
 
         //transform.LookAt(target);
     }

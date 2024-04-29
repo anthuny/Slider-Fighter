@@ -25,6 +25,9 @@ public class SkillData : ScriptableObject
     public enum SkillEffectType { HITS, INSTANT }
     public SkillEffectType curSkillEffectType;
 
+    public enum SkillActiveType { ACTIVE, PASSIVE }
+    public SkillActiveType curSkillActiveType;
+
     public Sprite skillSprite;
     public string skillName;
     public string skillDescr;

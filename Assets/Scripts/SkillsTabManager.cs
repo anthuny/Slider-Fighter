@@ -476,10 +476,10 @@ public class SkillsTabManager : MonoBehaviour
 
     public void UpdateLockedSkills()
     {
-        skillBase1.ToggleLockedSkill();
-        skillBase2.ToggleLockedSkill();
-        skillBase3.ToggleLockedSkill();
-        skillBase4.ToggleLockedSkill();
+        skillBase1.ToggleLockedMainSlot();
+        skillBase2.ToggleLockedMainSlot();
+        skillBase3.ToggleLockedMainSlot();
+        skillBase4.ToggleLockedMainSlot();
     }
 
     public SkillData GetActiveSkillBase()

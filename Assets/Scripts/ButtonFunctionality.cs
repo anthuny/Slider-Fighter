@@ -1402,184 +1402,466 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void SelectMainIcon1()
     {
-        //GameManager.Instance.UpdateAllSkillIconAvailability();
-
-        if (disabled)
-            return;
-
-        // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0)) > 0)
-            return;
-
-        // If skill is locked, stop
-        if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
-            return;
-
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.ResetSelectedUnits();
 
-        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0));
-        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0));
-
-        // If selected, unselect it, dont do skill more stuff
-        if (GetIfSelected())
+        if (GameManager.Instance.isSkillsMode)
         {
-            // Check if all other skills are on cooldown AND check if this skill is 0 cooldown, if not allow this deselect
+            if (disabled)
+                return;
 
+            // If skill is on cooldown, stop
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0)) > 0)
+                return;
 
-            //GameManager.Instance.DisableAllSkillSelections();
-            //ToggleSelected(false);
-            //GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            //GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            //GameManager.Instance.EnableFreeSkillSelection();
+            // If skill is locked, stop
+            if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
+                return;
+
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0));
+            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0));
+
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+
+            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            GameManager.Instance.UpdateUnitsSelectedText();
         }
-        // If skill not already selected, select it and proceed
+        // Item
         else
         {
-            GameManager.Instance.DisableAllMainSlotSelections();
-            ToggleSelected(true);
-        }
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality() == GameManager.Instance.activeRoomHeroes[i])
+                {
+                    if (i == 0)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 0)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[0]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[0]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[0]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 1)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 0)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[0]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 0)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[0]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[0]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[0]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                }
+            }
 
-        GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-        GameManager.Instance.UpdateUnitsSelectedText();
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+        }
     }
 
     public void SelectMainIcon2()
     {
-        //GameManager.Instance.UpdateAllSkillIconAvailability();
-
-        if (disabled)
-            return;
-
-        // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1)) > 0)
-            return;
-
-        // If skill is locked, stop
-        if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
-            return;
-
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.ResetSelectedUnits();
 
-        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
-        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
-
-        // If selected, unselect it, dont do skill more stuff
-        if (GetIfSelected())
+        if (GameManager.Instance.isSkillsMode)
         {
-            /*
-            GameManager.Instance.DisableAllSkillSelections(true);
-            //GameManager.Instance.EnableFreeSkillSelection();
-            ToggleSelected(false);
-            //GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            //GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            GameManager.Instance.EnableFreeSkillSelection();
-            */
+            if (disabled)
+                return;
+
+            // If skill is on cooldown, stop
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1)) > 0)
+                return;
+
+            // If skill is locked, stop
+            if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
+                return;
+
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
+            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
+
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+
+            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            GameManager.Instance.UpdateUnitsSelectedText();
         }
-        // If skill not already selected, select it and proceed
+        // Item
         else
         {
-            GameManager.Instance.DisableAllMainSlotSelections(false);
-            ToggleSelected(true);
-        }
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality() == GameManager.Instance.activeRoomHeroes[i])
+                {
+                    if (i == 0)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 1)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[1]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[1]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[1]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 1)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 1)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[1]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 1)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[1]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[1]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[1]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                }
+            }
 
-        GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-        GameManager.Instance.UpdateUnitsSelectedText();
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+        }
     }
 
     public void SelectMainIcon3()
     {
-        if (disabled)
-            return;
-
-        // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2)) > 0)
-            return;
-
-        // If skill is locked, stop
-        if (SkillsTabManager.Instance.skillBase3.GetIsLocked())
-            return;
-
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.ResetSelectedUnits();
-        //GameManager.Instance.UpdateAllSkillIconAvailability();
 
-        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2));
-        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2));
-
-        // If selected, unselect it, dont do skill more stuff
-        if (GetIfSelected())
+        if (GameManager.Instance.isSkillsMode)
         {
-            /*
-            GameManager.Instance.DisableAllSkillSelections(true);
-            //GameManager.Instance.EnableFreeSkillSelection();
-            ToggleSelected(false);
-            //GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            //GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            GameManager.Instance.EnableFreeSkillSelection();
-            */
+            if (disabled)
+                return;
+
+            // If skill is on cooldown, stop
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2)) > 0)
+                return;
+
+            // If skill is locked, stop
+            if (SkillsTabManager.Instance.skillBase3.GetIsLocked())
+                return;
+
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2));
+            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2));
+
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+
+            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            GameManager.Instance.UpdateUnitsSelectedText();
         }
-        // If skill not already selected, select it and proceed
+        // Item
         else
         {
-            GameManager.Instance.DisableAllMainSlotSelections(false);
-            ToggleSelected(true);
-        }
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality() == GameManager.Instance.activeRoomHeroes[i])
+                {
+                    if (i == 0)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 2)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[2]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[2]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[2]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 1)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 2)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[2]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 2)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[2]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[2]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[2]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                }
+            }
 
-        GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-        GameManager.Instance.UpdateUnitsSelectedText();
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+        }
     }
 
     public void SelectMainIcon4()
     {
-        if (disabled)
-            return;
-
-        // If skill is on cooldown, stop
-        if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3)) > 0)
-            return;
-
-        // If skill is locked, stop
-        if (SkillsTabManager.Instance.skillBase4.GetIsLocked())
-            return;
-
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.ResetSelectedUnits();
-        //GameManager.Instance.UpdateAllSkillIconAvailability();
 
-        GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
-        GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
-
-        // If selected, unselect it, dont do skill more stuff
-        if (GetIfSelected())
+        if (GameManager.Instance.isSkillsMode)
         {
-            /*
-            GameManager.Instance.DisableAllSkillSelections(true);
-            //GameManager.Instance.EnableFreeSkillSelection();
-            ToggleSelected(false);
-            //GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            //GameManager.Instance.UpdateSkillDetails(GameManager.Instance.GetActiveUnitFunctionality().GetNoCDSkill());
-            GameManager.Instance.EnableFreeSkillSelection();
-            */
+            if (disabled)
+                return;
+
+            // If skill is on cooldown, stop
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3)) > 0)
+                return;
+
+            // If skill is locked, stop
+            if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
+                return;
+
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
+            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
+
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+
+            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            GameManager.Instance.UpdateUnitsSelectedText();
         }
-        // If skill not already selected, select it and proceed
+        // Item
         else
         {
-            GameManager.Instance.DisableAllMainSlotSelections(false);
-            ToggleSelected(true);
-        }
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality() == GameManager.Instance.activeRoomHeroes[i])
+                {
+                    if (i == 0)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 3)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[3]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[3]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[3]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 1)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 3)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[3]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 3)
+                        {
+                            GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[3]);
+                            GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[3]);
+                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[3]);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                            break;
+                        }
+                        else
+                        {
+                            GameManager.Instance.UpdateActiveItem(null);
+                            GameManager.Instance.UpdateMainIconDetails(null, null);
+                            GameManager.Instance.UpdateUnitSelection(null, null);
+                            GameManager.Instance.UpdateUnitsSelectedText();
+                        }
+                    }
+                }
+            }
 
-        GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-        GameManager.Instance.UpdateUnitsSelectedText();
+            // If selected, unselect it, dont do skill more stuff
+            if (GetIfSelected())
+            {
+
+            }
+            // If skill not already selected, select it and proceed
+            else
+            {
+                GameManager.Instance.DisableAllMainSlotSelections();
+                ToggleSelected(true);
+            }
+        }
     }
 
     public void MapUpArrow()

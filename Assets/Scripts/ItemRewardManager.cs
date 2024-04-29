@@ -233,7 +233,7 @@ public class ItemRewardManager : MonoBehaviour
                         continue;
                     }
 
-                    uIElement.UpdateContentImage(allItemLegendary[rand].itemSprite);
+                    uIElement.UpdateContentImage(allItemLegendary[rand].itemSpriteItemTab);
                     uIElement.UpdateItemName(allItemLegendary[rand].itemName);
                     uIElement.UpdateRarityBorderColour(legendaryColour);
                     uIElement.curRarity = UIElement.Rarity.LEGENDARY;
@@ -273,7 +273,7 @@ public class ItemRewardManager : MonoBehaviour
                     }
 
                     // Set item
-                    uIElement.UpdateContentImage(allItemEpic[rand].itemSprite);
+                    uIElement.UpdateContentImage(allItemEpic[rand].itemSpriteItemTab);
                     uIElement.UpdateItemName(allItemEpic[rand].itemName);
                     uIElement.UpdateRarityBorderColour(epicColour);
                     uIElement.curRarity = UIElement.Rarity.EPIC;
@@ -311,7 +311,7 @@ public class ItemRewardManager : MonoBehaviour
                     }
 
                     // Set item
-                    uIElement.UpdateContentImage(allItemRare[rand].itemSprite);
+                    uIElement.UpdateContentImage(allItemRare[rand].itemSpriteItemTab);
                     uIElement.UpdateItemName(allItemRare[rand].itemName);
                     uIElement.UpdateRarityBorderColour(rareColour);
                     uIElement.curRarity = UIElement.Rarity.RARE;
@@ -347,7 +347,7 @@ public class ItemRewardManager : MonoBehaviour
                     }
 
                     // Set item
-                    uIElement.UpdateContentImage(allItemCommon[rand].itemSprite);
+                    uIElement.UpdateContentImage(allItemCommon[rand].itemSpriteItemTab);
                     uIElement.UpdateItemName(allItemCommon[rand].itemName);
                     uIElement.UpdateRarityBorderColour(commonColour);
                     uIElement.curRarity = UIElement.Rarity.COMMON;

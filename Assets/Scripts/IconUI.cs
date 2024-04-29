@@ -9,6 +9,7 @@ public class IconUI : MonoBehaviour
     [SerializeField] private UIElement selectImage;
     [SerializeField] private UIElement hiddenImage;
     [SerializeField] private TextMeshProUGUI skillLevelText;
+    [SerializeField] private TextMeshProUGUI mainIconPassiveActiveIcon;
 
     private void Awake()
     {
@@ -34,6 +35,26 @@ public class IconUI : MonoBehaviour
 
         skillLevelText.text = level.ToString();
     }
+
+    public void UpdatePassiveActiveType(bool active = true, bool clear = false)
+    {
+        if (active)
+        {
+            mainIconPassiveActiveIcon.text = "A";
+            mainIconPassiveActiveIcon.color = GameManager.Instance.activeSkillColour;
+        }
+        else
+        {
+            mainIconPassiveActiveIcon.text = "P";
+            mainIconPassiveActiveIcon.color = GameManager.Instance.passiveSkillColour;
+        }
+
+        if (clear)
+        {
+            mainIconPassiveActiveIcon.text = "";
+        }
+    }
+
     public void ToggleSelectImage(bool toggle)
     {
         if (toggle)
