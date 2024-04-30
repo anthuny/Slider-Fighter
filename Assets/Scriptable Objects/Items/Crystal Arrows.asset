@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Crystal Arrows
   m_EditorClassIdentifier: 
   curRarity: 0
+  curItemCombatType: 1
   curItemType: 0
   curSelectionType: 0
   curTargetType: 0

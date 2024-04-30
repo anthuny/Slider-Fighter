@@ -198,6 +198,7 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private UIElement unitAlertStay;
     [SerializeField] private GameObject unitAlertText;
     public bool hitPerfect = false;
+
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);

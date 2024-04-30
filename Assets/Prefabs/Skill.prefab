@@ -1031,7 +1031,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectImage: {fileID: 1557187600867752639}
   hiddenImage: {fileID: 2757180128999133718}
-  skillLevelText: {fileID: 7396508098951713060}
+  subText: {fileID: 7396508098951713060}
   mainIconPassiveActiveIcon: {fileID: 8429253212757358878}
 --- !u!114 &7270212666006155307
 MonoBehaviour:

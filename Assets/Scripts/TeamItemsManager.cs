@@ -53,6 +53,21 @@ public class TeamItemsManager : MonoBehaviour
     [Space(2)]
     public bool playerInItemTab;
 
+    public void RemoveMainItem(ItemPiece item)
+    {
+        equippedItemsMain.Remove(item);
+    }
+    public void RemoveSecondItem(ItemPiece item)
+    {
+        equippedItemsSecond.Remove(item);
+    }
+
+    public void RemoveThirdItem(ItemPiece item)
+    {
+        equippedItemsThird.Remove(item);
+    }
+
+
     public void UpdateLockedItems()
     {
         skillBase1.ToggleLockedMainSlot();
@@ -906,7 +921,22 @@ public class TeamItemsManager : MonoBehaviour
             }
         }
 
+        /*
+        int count = 0;
+        if (item.GetRarity() == Slot.Rarity.COMMON)
+            count = 3;
+        else if (item.GetRarity() == Slot.Rarity.RARE)
+            count = 2;
+        else if (item.GetRarity() == Slot.Rarity.EPIC)
+            count = 1;
+        else if (item.GetRarity() == Slot.Rarity.LEGENDARY)
+            count = 1;
+
+        GetSelectedBaseItemSlot().SetItemsRemaining(count);
+        */
+
         GetSelectedBaseItemSlot().UpdateSlotImage(item.GetSlotImage());
+
         GetSelectedBaseItemSlot().UpdateSlotName(item.GetSlotName());
         GetSelectedBaseItemSlot().linkedItemPiece = item.linkedItemPiece;
         /*

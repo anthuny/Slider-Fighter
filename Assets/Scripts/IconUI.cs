@@ -8,8 +8,9 @@ public class IconUI : MonoBehaviour
     Image image;
     [SerializeField] private UIElement selectImage;
     [SerializeField] private UIElement hiddenImage;
-    [SerializeField] private TextMeshProUGUI skillLevelText;
+    [SerializeField] private TextMeshProUGUI subText;
     [SerializeField] private TextMeshProUGUI mainIconPassiveActiveIcon;
+
 
     private void Awake()
     {
@@ -25,15 +26,29 @@ public class IconUI : MonoBehaviour
         image.color = colour;
     }
 
-    public void UpdateSkillLevelText(int level, bool item = false)
+    public void RemoveItemFromSlot()
+    {
+        Debug.Log("Removing Item from Slot");
+
+        UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
+        UpdatePassiveActiveType(false, true);
+    }
+
+    public void UpdateSubText(int level, bool item = false)
     {
         if (item)
         {
-            skillLevelText.text = "";
+            subText.text = level.ToString();
+
+            if (level == 0)
+            {
+                subText.text = "";
+            }
+
             return;
         }
 
-        skillLevelText.text = level.ToString();
+        subText.text = level.ToString();
     }
 
     public void UpdatePassiveActiveType(bool active = true, bool clear = false)

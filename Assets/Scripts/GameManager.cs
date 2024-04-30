@@ -3687,12 +3687,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         StartCoroutine(SetupPostBattleUI(playerWon));
     }
-    public void UpdateTurnOrder()
-    {
-        if (combatOver)
-            return;
 
-        //Debug.Log("updated turn order");
+    void CheckToEndCombat()
+    {
         #region Check if Player Team Won or Lost, Then end Battle
 
         int allyCount = 0;
@@ -3758,6 +3755,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
 
         #endregion
+    }
+    public void UpdateTurnOrder()
+    {
+        if (combatOver)
+            return;
+
+        //Debug.Log("updated turn order");
+        CheckToEndCombat();
 
         ToggleUnitEffectTooltipsOff(true);
         //ToggleSkillVisibility(false);
@@ -4422,7 +4427,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 }
 
                                 // If enough units have been selected, toggle the display
-                                if (selectedAmount == usedSkill.GetCalculatedSkillSelectionCount())
+                                if (selectedAmount == activeItem.targetCount)
                                     break;
 
                                 // If skill requires only 1 unit selection - (full team target wont work without this)
@@ -4645,10 +4650,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             fighterMainSlot3.ToggleSelectImage(false);
             fighterMainSlot4.ToggleSelectImage(false);
 
-            fighterMainSlot1.UpdateSkillLevelText(GetActiveUnitFunctionality().GetSkill(0).curSkillLevel);
-            fighterMainSlot2.UpdateSkillLevelText(GetActiveUnitFunctionality().GetSkill(1).curSkillLevel);
-            fighterMainSlot3.UpdateSkillLevelText(GetActiveUnitFunctionality().GetSkill(2).curSkillLevel);
-            fighterMainSlot4.UpdateSkillLevelText(GetActiveUnitFunctionality().GetSkill(3).curSkillLevel);
+            fighterMainSlot1.UpdateSubText(GetActiveUnitFunctionality().GetSkill(0).curSkillLevel);
+            fighterMainSlot2.UpdateSubText(GetActiveUnitFunctionality().GetSkill(1).curSkillLevel);
+            fighterMainSlot3.UpdateSubText(GetActiveUnitFunctionality().GetSkill(2).curSkillLevel);
+            fighterMainSlot4.UpdateSubText(GetActiveUnitFunctionality().GetSkill(3).curSkillLevel);
 
             if (GetActiveUnitFunctionality().GetSkill(0).curSkillActiveType == SkillData.SkillActiveType.ACTIVE)
                 fighterMainSlot1.UpdatePassiveActiveType(true);
@@ -4957,20 +4962,179 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 }
             }
 
+
             fighterMainSlot1.ToggleSelectImage(false);
             fighterMainSlot2.ToggleSelectImage(false);
             fighterMainSlot3.ToggleSelectImage(false);
             fighterMainSlot4.ToggleSelectImage(false);
 
-            fighterMainSlot1.UpdateSkillLevelText(0, true);
-            fighterMainSlot2.UpdateSkillLevelText(0, true);
-            fighterMainSlot3.UpdateSkillLevelText(0, true);
-            fighterMainSlot4.UpdateSkillLevelText(0, true);
+
+            // Update items turns remaining text
+            for (int i = 0; i < activeRoomHeroes.Count; i++)
+            {
+                if (GetActiveUnitFunctionality() == activeRoomHeroes[i])
+                {
+                    if (i == 0)
+                    {
+                        for (int x = 0; x < TeamItemsManager.Instance.equippedItemsMain.Count; x++)
+                        {
+                            int subtext = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
+
+                            if (TeamItemsManager.Instance.equippedItemsMain[x].curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                subtext = 0;
+
+                            if (x == 0)
+                            {
+                                fighterMainSlot1.UpdateSubText(subtext, true);
+                            }
+                            else if (x == 1)
+                            {
+                                fighterMainSlot2.UpdateSubText(subtext, true);
+                            }
+                            else if (x == 2)
+                            {
+                                fighterMainSlot3.UpdateSubText(subtext, true);
+                            }
+                        }
+                    }
+                    else if (i == 1)
+                    {
+                        for (int x = 0; x < TeamItemsManager.Instance.equippedItemsSecond.Count; x++)
+                        {
+                            int subtext = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
+
+                            if (TeamItemsManager.Instance.equippedItemsMain[x].curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                subtext = 0;
+
+                            if (x == 0)
+                            {
+                                fighterMainSlot1.UpdateSubText(subtext, true);
+                            }
+                            else if (x == 1)
+                            {
+                                fighterMainSlot2.UpdateSubText(subtext, true);
+                            }
+                            else if (x == 2)
+                            {
+                                fighterMainSlot3.UpdateSubText(subtext, true);
+                            }
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        for (int x = 0; x < TeamItemsManager.Instance.equippedItemsThird.Count; x++)
+                        {
+                            int subtext = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
+
+                            if (TeamItemsManager.Instance.equippedItemsMain[x].curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                subtext = 0;
+
+                            if (x == 0)
+                            {
+                                fighterMainSlot1.UpdateSubText(subtext, true);
+                            }
+                            else if (x == 1)
+                            {
+                                fighterMainSlot2.UpdateSubText(subtext, true);
+                            }
+                            else if (x == 2)
+                            {
+                                fighterMainSlot3.UpdateSubText(subtext, true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Hide Items that have no uses remaining
+            for (int i = 0; i < activeRoomHeroes.Count; i++)
+            {
+                if (activeRoomHeroes[i] == GetActiveUnitFunctionality())
+                {
+                    if (i == 0)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count == 0)
+                        {
+                            fighterMainSlot1.UpdateSubText(0, true);
+                            fighterMainSlot2.UpdateSubText(0, true);
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsMain.Count == 1)
+                        {
+                            fighterMainSlot2.UpdateSubText(0, true);
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsMain.Count == 2)
+                        {
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsMain.Count == 3)
+                        {
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                    }
+                    else if (i == 1)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count == 0)
+                        {
+                            fighterMainSlot1.UpdateSubText(0, true);
+                            fighterMainSlot2.UpdateSubText(0, true);
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsSecond.Count == 1)
+                        {
+                            fighterMainSlot2.UpdateSubText(0, true);
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsSecond.Count == 2)
+                        {
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsSecond.Count == 3)
+                        {
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count == 0)
+                        {
+                            fighterMainSlot1.UpdateSubText(0, true);
+                            fighterMainSlot2.UpdateSubText(0, true);
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsThird.Count == 1)
+                        {
+                            fighterMainSlot2.UpdateSubText(0, true);
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsThird.Count == 2)
+                        {
+                            fighterMainSlot3.UpdateSubText(0, true);
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                        else if (TeamItemsManager.Instance.equippedItemsThird.Count == 3)
+                        {
+                            fighterMainSlot4.UpdateSubText(0, true);
+                        }
+                    }
+                }
+            }
 
             UpdateUnitSelection(null, activeItem);
             UpdateUnitsSelectedText();
 
             EnableFirstMainSlotSelection(false);
+
+            fighterMainSlot4.UpdateSubText(0, true);
         }
 
         ToggleMainSlotVisibility(true);
@@ -5035,6 +5199,174 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public IEnumerator DoItemAction()
     {
+        ToggleAllowSelection(false); 
+
+        for (int i = 0; i < unitsSelected.Count; i++)
+        {
+            unitsSelected[i].ResetPowerUI();
+        }
+
+        // Decrease Item Cooldown
+        for (int i = 0; i < activeRoomHeroes.Count; i++)
+        {
+            if (activeRoomHeroes[i] == GetActiveUnitFunctionality())
+            {
+                if (i == 0)
+                {
+                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsMain.Count; x++)
+                    {
+                        if (activeItem == TeamItemsManager.Instance.equippedItemsMain[x])
+                        {
+                            if (x == 0)
+                            {                               
+                                OwnedLootInven.Instance.wornItemsMainAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
+                                fighterMainSlot1.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot1.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsMainAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsMain[x]);
+                                }
+                                break;
+                            }
+                            else if (x == 1)
+                            {
+                                OwnedLootInven.Instance.wornItemsMainAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
+                                fighterMainSlot2.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot2.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsMainAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsMain[x]);
+                                }
+                                break;
+                            }
+                            else if (x == 2)
+                            {
+                                OwnedLootInven.Instance.wornItemsMainAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
+                                fighterMainSlot3.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot3.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsMainAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsMain[x]);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (i == 1)
+                {
+                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsSecond.Count; x++)
+                    {
+                        if (activeItem == TeamItemsManager.Instance.equippedItemsSecond[x])
+                        {
+                            if (x == 0)
+                            {
+                                OwnedLootInven.Instance.wornItemsSecondAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
+                                fighterMainSlot1.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot1.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsSecondAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
+                                }
+                                break;
+                            }
+                            else if (x == 1)
+                            {
+                                OwnedLootInven.Instance.wornItemsSecondAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
+                                fighterMainSlot2.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot2.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsSecondAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
+                                }
+                                break;
+                            }
+                            else if (x == 2)
+                            {
+                                OwnedLootInven.Instance.wornItemsSecondAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
+                                fighterMainSlot3.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot3.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsSecondAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (i == 2)
+                {
+                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsThird.Count; x++)
+                    {
+                        if (activeItem == TeamItemsManager.Instance.equippedItemsThird[x])
+                        {
+                            if (x == 0)
+                            {
+                                OwnedLootInven.Instance.wornItemsThirdAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
+                                fighterMainSlot1.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot1.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsThirdAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsThird[x]);
+                                }
+                                break;
+                            }
+                            else if (x == 1)
+                            {
+                                OwnedLootInven.Instance.wornItemsThirdAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
+                                fighterMainSlot2.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot2.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsThirdAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsThird[x]);
+                                }
+                                break;
+                            }
+                            else if (x == 2)
+                            {
+                                OwnedLootInven.Instance.wornItemsThirdAlly[x].IncItemUseCount();
+                                int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
+                                fighterMainSlot3.UpdateSubText(minus, true);
+
+                                if (minus == 0)
+                                {
+                                    fighterMainSlot3.RemoveItemFromSlot();
+                                    OwnedLootInven.Instance.RemoveWornItemAllyMain(OwnedLootInven.Instance.wornItemsThirdAlly[x]);
+                                    TeamItemsManager.Instance.RemoveMainItem(TeamItemsManager.Instance.equippedItemsThird[x]);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // Spawn Projectiles
         if (activeItem.curHitType == ItemPiece.HitType.HITS)
         {
@@ -5066,26 +5398,47 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (activeItem.curHitType == ItemPiece.HitType.HITS)
         {
-            // Cause the item's functionality to go
-            if (activeItem.curItemType == ItemPiece.ItemType.OFFENSE && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
+            for (int i = 0; i < activeItem.hitCount; i++)
+            {
+                // Cause the item's functionality to go
+                if (activeItem.curItemType == ItemPiece.ItemType.OFFENSE && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
                 && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
-            {
-                // Damage enemy
-                for (int i = 0; i < unitsSelected.Count; i++)
                 {
-                    unitsSelected[i].UpdateUnitCurHealth(GetActiveUnitFunctionality().curPower, true, false, true, true, false);
+                    // Damage enemy
+                    for (int x = 0; x < unitsSelected.Count; x++)
+                    {
+                        int randomPower = RandomisePower(GetActiveUnitFunctionality().curPower);
+                        unitsSelected[x].UpdateUnitCurHealth(randomPower, true, false, true, true, false);
+                    }
                 }
-            }
-            else if (activeItem.curItemType == ItemPiece.ItemType.SUPPORT && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
-                && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
-            {
-                // Heal ally
-                for (int i = 0; i < unitsSelected.Count; i++)
+                else if (activeItem.curItemType == ItemPiece.ItemType.SUPPORT && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
+                    && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
                 {
-                    unitsSelected[i].UpdateUnitCurHealth(GetActiveUnitFunctionality().curPower, false, false, true, true, false);
+                    // Heal ally
+                    for (int t = 0; t < unitsSelected.Count; t++)
+                    {
+                        int randomPower = RandomisePower(GetActiveUnitFunctionality().curPower);
+                        unitsSelected[t].UpdateUnitCurHealth(randomPower, false, false, true, true, false);
+                    }
                 }
+
+                int maxHitWorth = 15;
+                if (activeItem.hitCount > maxHitWorth)
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth - 1)));
+                else
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (activeItem.hitCount - 1)));
             }
+
+            yield return new WaitForSeconds(0.15f);
+
+            UpdatePlayerAbilityUI(false);
+
+            ResetSelectedUnits();
         }
+
+        ToggleAllowSelection(true);
+
+        CheckToEndCombat();
     }
 
     public void targetUnit(UnitFunctionality unit)

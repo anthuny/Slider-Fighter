@@ -48,9 +48,28 @@ public class Slot : MonoBehaviour
     public ItemPiece linkedItemPiece;
     public bool baseSlot = false;
     public bool isSelected;
+
+    public enum ItemRarity { COMMON, RARE, EPIC }
+    public ItemRarity curItemRarity;
+    public int itemUseCount = 0;
     private void Start()
     {
         ToggleSlotSelection(false);
+    }
+
+    public int GetItemUseCount()
+    {
+        return itemUseCount;
+    }
+
+    public void IncItemUseCount()
+    {
+        itemUseCount++;
+    }
+
+    public void ResetItemUseCount()
+    {
+        itemUseCount = 0;
     }
 
     public void ToggleSkillUpgradeButtons(bool toggle)
