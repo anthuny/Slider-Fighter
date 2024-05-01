@@ -10,6 +10,9 @@ public class ItemPiece : ScriptableObject
 
     public enum ItemCombatType { REFILLABLE, CONSUMABLE }
     public ItemCombatType curItemCombatType;
+
+    public enum ItemTargetType { NORMAL, RANDOM }
+    public ItemTargetType curItemTargetType;
     public enum ItemType { OFFENSE, SUPPORT }
     public ItemType curItemType;
 

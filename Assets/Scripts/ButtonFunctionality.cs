@@ -1389,6 +1389,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void ButtonCombatItemsTab()
     {
+        if (!GameManager.Instance.GetAllowSelection())
+            return;
+
         GameManager.Instance.isSkillsMode = !GameManager.Instance.isSkillsMode;
         GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
 
@@ -1402,6 +1405,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void SelectMainIcon1()
     {
+        if (!GameManager.Instance.GetAllowSelection())
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -1518,6 +1524,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void SelectMainIcon2()
     {
+        if (!GameManager.Instance.GetAllowSelection())
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -1634,6 +1643,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void SelectMainIcon3()
     {
+        if (!GameManager.Instance.GetAllowSelection())
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -1750,6 +1762,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void SelectMainIcon4()
     {
+        if (!GameManager.Instance.GetAllowSelection())
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 

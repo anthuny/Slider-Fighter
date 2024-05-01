@@ -21,8 +21,7 @@ public class OverlayUI : MonoBehaviour
     public UIElement skillDetailsMaxCdUi;
     public UIElement skillDetailsAccuracyuI;
     public UIElement skillDetailsMaxTargetsuI;
-
-
+    public UIElement skillsItemsSwitchButton;
 
     public Image skillDetailsPowerIcon;
     public Image activeSkill;
@@ -36,6 +35,34 @@ public class OverlayUI : MonoBehaviour
     [SerializeField] private Color powerHealColour;
 
     private int oldHits;
+
+    public void ToggleSkillItemSwitchButton(bool toggle = true)
+    {
+        if (toggle)
+        {
+            skillsItemsSwitchButton.UpdateAlpha(1);
+            skillsItemsSwitchButton.ToggleButton(true);
+        }
+        else
+        {
+            skillsItemsSwitchButton.UpdateAlpha(0);
+            skillsItemsSwitchButton.ToggleButton(false);
+        }
+    }
+
+    public void ToggleFighterDetailsTab(bool toggle = false)
+    {
+        if (!toggle)
+        {
+            GetComponent<CanvasGroup>().alpha = 0;
+            ToggleSkillItemSwitchButton(false);
+        }
+        else
+        {
+            GetComponent<CanvasGroup>().alpha = 1;
+            ToggleSkillItemSwitchButton(true);
+        }
+    }
 
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int baseHitCount,
         int skillTargetCount, int skillPower, int skillCooldown, int hitAttemptCount, float accuracyCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)

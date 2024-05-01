@@ -212,14 +212,21 @@ public class Effect : MonoBehaviour
         else if (curEffectName != EffectName.REANIMATE && curEffectName != EffectName.IMMUNITY && curEffectName != EffectName.OTHER_LINK)
             UpdateEffectTierImages((int)powerStacks);
 
-        if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+        if (GameManager.Instance.isSkillsMode)
         {
-            if (turnDuration > 2)
-                turnDuration = 2;
+            if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+            {
+                if (turnDuration > 2)
+                    turnDuration = 2;
+            }
+            else
+            {
+                turnDuration = 1;
+            }
         }
         else
         {
-                turnDuration = 1;
+            turnDuration = 2;
         }
 
         if (curEffectName == EffectName.OTHER_LINK)

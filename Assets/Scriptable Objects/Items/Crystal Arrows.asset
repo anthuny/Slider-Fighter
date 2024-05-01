@@ -14,20 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curRarity: 0
   curItemCombatType: 1
+  curItemTargetType: 0
   curItemType: 0
   curSelectionType: 0
   curTargetType: 0
   curActiveType: 0
   curHitType: 0
   itemName: Crystal Arrows
-  itemDesc: Target 1 enemy, Release 4 Damaging Crystal Arrows
+  itemDesc: Target 1 enemy, Release 4 Damaging Crystal Arrows. Apply Effect Defense
+    Down (2)
   itemSpriteItemTab: {fileID: 21300000, guid: 250b6b8891d557e49bbe94279a38c4f8, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 75b2ee7b043b9da48bd8256595ac4150, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 75b2ee7b043b9da48bd8256595ac4150, type: 3}
   itemSpriteCombatProjectile: {fileID: 21300000, guid: d28d8551d2898fb42a8b81d3246dc08d, type: 3}
   itemSpriteFail: {fileID: 0}
-  effectAdded: {fileID: 0}
-  effectAddedTurnLength: 0
+  effectAdded: {fileID: 11400000, guid: ea9021db3e395ad4ca62a5d553dfacfd, type: 2}
+  effectAddedTurnLength: 2
   itemPower: 20
   threshHoldAmount: 0
   isSelfCast: 0

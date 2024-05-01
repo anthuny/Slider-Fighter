@@ -871,7 +871,8 @@ public class UnitFunctionality : MonoBehaviour
                     newName = "HOLY LINK";
                 else if (activeEffects[i].effectName == "OTHER_LINK")
                     newName = "OTHER LINK";
-
+                else if (activeEffects[i].effectName == "POWERDOWN")
+                    newName = "POWER DOWN";
                 tooltipEffect.UpdateContentText(newName);
                 tooltipEffect.UpdateContentSubTextTMP(activeEffects[i].effectDesc);
                 tooltipEffect.UpdateContentTextColourTMP(activeEffects[i].titleTextColour);
@@ -1190,6 +1191,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     if (TeamItemsManager.Instance.equippedItemsMain.Count > 0)
                     {
+                        i = 10;
                         return TeamItemsManager.Instance.equippedItemsMain[0];
                     }
                 }
@@ -1197,6 +1199,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     if (TeamItemsManager.Instance.equippedItemsSecond.Count > 0)
                     {
+                        i = 10;
                         return TeamItemsManager.Instance.equippedItemsSecond[0];
                     }
                 }
@@ -1204,6 +1207,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     if (TeamItemsManager.Instance.equippedItemsThird.Count > 0)
                     {
+                        i = 10;
                         return TeamItemsManager.Instance.equippedItemsThird[0];
                     }
                 }
@@ -2644,6 +2648,8 @@ public class UnitFunctionality : MonoBehaviour
 
                         if (activeEffects[i].effectName == "HOLY_LINK")
                             name = "HOLY LINK";
+                        else if (activeEffects[i].effectName == "POWERDOWN")
+                            name = "POWER DOWN";
 
                         TriggerTextAlert(name, 1, true, "Trigger");
                         activeEffects[i].ReduceTurnCountText(this);
@@ -2656,8 +2662,10 @@ public class UnitFunctionality : MonoBehaviour
                     if (activeEffects[i].curEffectTrigger == Effect.EffectTrigger.TURNEND)
                     {
                         activeEffects[i].TriggerPowerEffect(this);
-                        string name = activeEffects[i].effectName;
 
+                        string name = activeEffects[i].effectName;
+                        if (activeEffects[i].effectName == "POWERDOWN")
+                            name = "POWER DOWN";
                         TriggerTextAlert(name, 1, true, "Trigger");
 
                         activeEffects[i].ReduceTurnCountText(this);
@@ -3075,7 +3083,7 @@ public class UnitFunctionality : MonoBehaviour
 
         //SkillData activeSkill = null;
         // If player miss, do not apply effect
-        if (effectHitAcc == 0 || targetUnit.isParrying)
+        if (effectHitAcc == 0 || targetUnit.isParrying || !GameManager.Instance.playerInCombat)
             return;
 
         Debug.Log("addedEffect 2 " + addedEffect.curEffectName);
@@ -3090,7 +3098,7 @@ public class UnitFunctionality : MonoBehaviour
                 for (int x = 0; x < 1; x++)
                 {
                     // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc)
+                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc && GameManager.Instance.isSkillsMode)
                     {
                         //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
 
@@ -3121,6 +3129,8 @@ public class UnitFunctionality : MonoBehaviour
                                     name = "HOLY LINK";
                                 else if (addedEffect.effectName == "OTHER_LINK")
                                     name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
                                 TriggerTextAlert(name, 1, true, "Inflict");
 
                                 Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
@@ -3173,6 +3183,8 @@ public class UnitFunctionality : MonoBehaviour
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
+                            else if (addedEffect.effectName == "POWERDOWN")
+                                name = "POWER DOWN";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
                             Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
@@ -3213,7 +3225,7 @@ public class UnitFunctionality : MonoBehaviour
                 GameObject go = null;
 
                 // Determining whether the effect hits, If it fails, stop
-                if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc)
+                if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc && GameManager.Instance.isSkillsMode)
                 {
                     if (m == 0)
                     {
@@ -3235,6 +3247,8 @@ public class UnitFunctionality : MonoBehaviour
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
+                            else if (addedEffect.effectName == "POWERDOWN")
+                                name = "POWER DOWN";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
 
@@ -3287,6 +3301,8 @@ public class UnitFunctionality : MonoBehaviour
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
+                            else if (addedEffect.effectName == "POWERDOWN")
+                                name = "POWER DOWN";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
                             Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
@@ -3332,6 +3348,8 @@ public class UnitFunctionality : MonoBehaviour
                                 name = "HOLY LINK";
                             else if (addedEffect.effectName == "OTHER_LINK")
                                 name = "OTHER LINK";
+                            else if (addedEffect.effectName == "POWERDOWN")
+                                name = "POWER DOWN";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
                             Debug.Log("addedEffect 7 " + addedEffect.curEffectName);

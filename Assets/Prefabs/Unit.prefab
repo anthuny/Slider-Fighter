@@ -179,6 +179,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4444033931527604417
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -359,6 +360,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &6748727952303699888
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -633,6 +635,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4008564147376620509
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -886,6 +889,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &637846143638077344
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,6 +1093,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3233128578820027124
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1382,6 +1387,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &5718266998472210313
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1597,6 +1603,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1987431713079897434
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1719,6 +1726,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &619721373086330152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1857,6 +1865,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &687194272583951725
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2015,6 +2024,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1421809638189035496
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2190,6 +2200,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8096061992818073504
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2500,6 +2511,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2110785146228893261
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2807,6 +2819,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &8954422418508801433
 Canvas:
   m_ObjectHideFlags: 0
@@ -2984,6 +2997,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8156271047608237152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3094,6 +3108,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2430314267277946098
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3227,6 +3242,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &7010547274959219478
 Canvas:
   m_ObjectHideFlags: 0
@@ -3499,6 +3515,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &3098507455484101054
 GameObject:
   m_ObjectHideFlags: 0
@@ -3949,12 +3966,13 @@ MonoBehaviour:
   purchased: 0
   usedSkill: {fileID: 0}
   effectAddedCount: 0
-  mindControlled: 0
+  reanimated: 0
   beenAttacked: 0
   holyLinkPartner: {fileID: 0}
   unitAlertTextParent: {fileID: 1261939585687696087}
   unitAlertStay: {fileID: 5316200452230736906}
   unitAlertText: {fileID: 1155690097663657297, guid: 20fcf962a367a9c498318ad48fb0992f, type: 3}
+  hitPerfect: 0
   settingUpEffect: 0
 --- !u!114 &7414491478435158705
 MonoBehaviour:
@@ -4003,6 +4021,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7922562286248162540
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4170,7 +4189,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.18750381, y: 78}
-  m_SizeDelta: {x: 346.3138, y: 46.7205}
+  m_SizeDelta: {x: 409.63, y: 46.7205}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7281413110945356184
 CanvasRenderer:
@@ -4200,7 +4219,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: poison
+  m_text: DEFENSE DOWN
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7f6bb757a987eae48b1096d90b6aa2cc, type: 2}
   m_sharedMaterial: {fileID: -6006359576746837634, guid: 7f6bb757a987eae48b1096d90b6aa2cc, type: 2}
@@ -4353,6 +4372,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &4637169202069679131
 GameObject:
   m_ObjectHideFlags: 0
@@ -4525,6 +4545,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1794062198011368397
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4882,6 +4903,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &5169263982486211714
 GameObject:
   m_ObjectHideFlags: 0
@@ -5473,6 +5495,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &886465306071636644
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5585,6 +5608,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &3035761927224515315
 Canvas:
   m_ObjectHideFlags: 0
@@ -5826,6 +5850,7 @@ MonoBehaviour:
   mainUIelement: {fileID: 0}
   isStatButton: 0
   selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!225 &1727944501489654778
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5923,6 +5948,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &6163112757378342205
 GameObject:
   m_ObjectHideFlags: 0
@@ -6128,6 +6154,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &6205838917223312124
 GameObject:
   m_ObjectHideFlags: 0
@@ -6659,6 +6686,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &6745684401537078587
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6757,6 +6785,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &7844869437341996036
 GameObject:
   m_ObjectHideFlags: 0
@@ -7055,6 +7084,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8790897330623263279
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7437,6 +7467,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8309120448440522383
 CanvasGroup:
   m_ObjectHideFlags: 0
