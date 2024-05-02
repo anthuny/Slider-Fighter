@@ -312,8 +312,8 @@ public class ShopManager : MonoBehaviour
                 Destroy(shopItem4Parent.GetChild(0).gameObject);
                 Destroy(shopItem5Parent.GetChild(0).gameObject);
                 Destroy(shopItem6Parent.GetChild(0).gameObject);
-                Destroy(shopItem7Parent.GetChild(0).gameObject);
-                Destroy(shopItem8Parent.GetChild(0).gameObject);
+                //Destroy(shopItem7Parent.GetChild(0).gameObject);
+                //Destroy(shopItem8Parent.GetChild(0).gameObject);
             }
 
             if (hideShop)
@@ -538,7 +538,7 @@ public class ShopManager : MonoBehaviour
             // If item hasn't been purchased from this shop before
             shopItem.UpdateShopItemName(itemCombat.itemName);
             shopItem.UpdatePriceText(itemCombat.basePrice.ToString());
-            shopItem.UpdateShopItemSprite(itemCombat.itemSpriteItemTab);
+            shopItem.UpdateShopItemSprite(itemCombat.itemSpriteCombat);
             shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
             shopItem.itemButton.enabled = true;
 
@@ -550,48 +550,53 @@ public class ShopManager : MonoBehaviour
                 activeRoom.AddShopRoomCombatItems(itemCombat);
         }
 
-        ItemPiece itemHealth = null;
+
 
         // Spawn Health Items
-        for (int y = 0; y < shopMaxHealthItems; y++)
+        if (shopHealthItems.Count != 0)
         {
-            // Spawn items
-            GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
+            ItemPiece itemHealth = null;
 
-            if (y == 0)
-                go.transform.SetParent(shopItem7Parent);
-            else if (y == 1)
-                go.transform.SetParent(shopItem8Parent);
+            for (int y = 0; y < shopMaxHealthItems; y++)
+            {
+                // Spawn items
+                GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
 
-            go.transform.localScale = new Vector2(1, 1);
-            go.transform.localPosition = Vector2.zero;
+                if (y == 0)
+                    go.transform.SetParent(shopItem7Parent);
+                else if (y == 1)
+                    go.transform.SetParent(shopItem8Parent);
 
-            // Update price and sprite
-            shopItem = go.GetComponent<ShopItem>();
-            AddShopItems(shopItem);
+                go.transform.localScale = new Vector2(1, 1);
+                go.transform.localPosition = Vector2.zero;
 
- 
-            int rand = Random.Range(0, shopHealthItems.Count);
-            // If shop room has not been opened before, spawn new ones
-            if (!activeRoom.hasEntered)
-                itemHealth = shopHealthItems[rand];
-            else if (activeRoom.hasEntered)
-                itemHealth = activeRoom.GetShopRoomHealthItems()[y];
+                // Update price and sprite
+                shopItem = go.GetComponent<ShopItem>();
+                AddShopItems(shopItem);
 
-            // If item hasn't been purchased from this shop before
-            shopItem.UpdateShopItemName(itemHealth.itemName);
-            shopItem.UpdatePriceText(itemHealth.basePrice.ToString());
-            shopItem.UpdateShopItemSprite(itemHealth.itemSpriteItemTab);
-            shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
-            shopItem.itemButton.enabled = true;
 
-            if (itemHealth.ac)
-                shopItem.UpdateAnimatorController(itemHealth.ac);
+                int rand = Random.Range(0, shopHealthItems.Count);
+                // If shop room has not been opened before, spawn new ones
+                if (!activeRoom.hasEntered)
+                    itemHealth = shopHealthItems[rand];
+                else if (activeRoom.hasEntered)
+                    itemHealth = activeRoom.GetShopRoomHealthItems()[y];
 
-            // If active room has not been visited yet, store shop items to room
-            if (!GetActiveRoom().hasEntered)
-                activeRoom.AddShopRoomHealthItems(itemHealth);
-        }
+                // If item hasn't been purchased from this shop before
+                shopItem.UpdateShopItemName(itemHealth.itemName);
+                shopItem.UpdatePriceText(itemHealth.basePrice.ToString());
+                shopItem.UpdateShopItemSprite(itemHealth.itemSpriteItemTab);
+                shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
+                shopItem.itemButton.enabled = true;
+
+                if (itemHealth.ac)
+                    shopItem.UpdateAnimatorController(itemHealth.ac);
+
+                // If active room has not been visited yet, store shop items to room
+                if (!GetActiveRoom().hasEntered)
+                    activeRoom.AddShopRoomHealthItems(itemHealth);
+            }
+        }    
 
         // Hiding Purchased Items
         if (refreshItems)

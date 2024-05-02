@@ -13,15 +13,20 @@ MonoBehaviour:
   m_Name: Blood Tip Dagger
   m_EditorClassIdentifier: 
   curRarity: 0
+  curItemCombatType: 0
+  curItemTargetType: 0
   curItemType: 1
   curSelectionType: 1
   curTargetType: 0
   curActiveType: 1
+  curHitType: 0
   itemName: Blood Tip Dagger
   itemDesc: 50% chance to Add Atk Up (1) - On Turn Start. using 1 charge. (Gain 3
     charge per combat start)
   itemSpriteItemTab: {fileID: 21300000, guid: 5f9a91667962fba4eb057977e6bad720, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 61ec7530001bbc5488a58e643d1f67f6, type: 3}
+  itemSpriteCombatSmaller: {fileID: 21300000, guid: 61ec7530001bbc5488a58e643d1f67f6, type: 3}
+  itemSpriteCombatProjectile: {fileID: 0}
   itemSpriteFail: {fileID: 21300000, guid: 31a1e5de6d87bc9419e95ae37c142e85, type: 3}
   effectAdded: {fileID: 11400000, guid: 4d56bebc670b2184f90cda6ba558d462, type: 2}
   effectAddedTurnLength: 1
@@ -51,3 +56,10 @@ MonoBehaviour:
   ac: {fileID: 0}
   maxUsesPerCombat: 4
   targetCount: 0
+  hitCount: 0
+  projectileSpeed: 9
+  allowRandomSpawnPosition: 0
+  allowRandomSpawnRotation: 0
+  projectileAllowSpin: 0
+  projectileLaunch: {fileID: 0}
+  projectileHit: {fileID: 0}

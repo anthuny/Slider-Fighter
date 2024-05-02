@@ -13,15 +13,20 @@ MonoBehaviour:
   m_Name: Iron Bread
   m_EditorClassIdentifier: 
   curRarity: 1
+  curItemCombatType: 0
+  curItemTargetType: 0
   curItemType: 1
   curSelectionType: 1
   curTargetType: 0
   curActiveType: 1
+  curHitType: 0
   itemName: Iron Bread
   itemDesc: 50% chance to Add Health Up (1) - On Turn Start. using 1 charge. (Gain
     3 charge per combat start)
   itemSpriteItemTab: {fileID: 21300000, guid: 30b29a0cafe8ad74aa1811cb3298c465, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 33eef20516abb2f4aa4ed75417cebc7b, type: 3}
+  itemSpriteCombatSmaller: {fileID: 21300000, guid: 33eef20516abb2f4aa4ed75417cebc7b, type: 3}
+  itemSpriteCombatProjectile: {fileID: 0}
   itemSpriteFail: {fileID: 21300000, guid: c351328e3ecec86479aff5d26e3689e8, type: 3}
   effectAdded: {fileID: 11400000, guid: fef5ba97b42f6a749ae6ad86060c3224, type: 2}
   effectAddedTurnLength: 1
@@ -51,3 +56,10 @@ MonoBehaviour:
   ac: {fileID: 0}
   maxUsesPerCombat: 4
   targetCount: 0
+  hitCount: 0
+  projectileSpeed: 9
+  allowRandomSpawnPosition: 0
+  allowRandomSpawnRotation: 0
+  projectileAllowSpin: 0
+  projectileLaunch: {fileID: 0}
+  projectileHit: {fileID: 0}

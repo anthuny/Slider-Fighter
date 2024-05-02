@@ -74,7 +74,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 490c19b0051526d4bb8a3dd99bc375a2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d43849b5e22e40e4ab5a8dd7191e4910, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -113,7 +113,7 @@ Animator:
   m_GameObject: {fileID: 637818662133636789}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c61013b36527fc44dae1cc2aafa31db9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -170,6 +170,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8733777640031525376
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -256,7 +257,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 17.9, y: -153.1}
+  m_AnchoredPosition: {x: -35.4, y: -71.7}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7059071883796537259
@@ -307,7 +308,7 @@ RectTransform:
   m_GameObject: {fileID: 6101332456361827673}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3436485206499119433}
@@ -315,7 +316,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 130.7, y: -4.4}
+  m_AnchoredPosition: {x: 111.9, y: 1.6}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9141086023715232537
@@ -346,7 +347,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9ea4ba8294334184fad47afcdeac6c17, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ec92c4dbd5e512b46be8713911ac2c20, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -440,7 +441,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3
+  m_text: 4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b1262895f9a0c2741837260617873ff4, type: 2}
   m_sharedMaterial: {fileID: -6006359576746837634, guid: b1262895f9a0c2741837260617873ff4, type: 2}
@@ -556,6 +557,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2592876863712991764
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -679,6 +681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 5899579099612982651}
+  shopItem: {fileID: 28573645913858300}
   disabled: 0
   UIbutton: {fileID: 0}
   itemParent: {fileID: 4246308695572226124}
@@ -700,6 +703,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!225 &5899579099612982651
 CanvasGroup:
   m_ObjectHideFlags: 0

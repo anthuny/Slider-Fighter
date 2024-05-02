@@ -712,12 +712,18 @@ public class UnitFunctionality : MonoBehaviour
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat - 1, item3CurUses, 2);
     }
 
-    public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true)
+    public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true, bool activeItem = false)
     {
         itemVisualAlert.UpdateContentImage(sprite);
 
         if (triggered)
+        {
+            if (activeItem)
+                itemVisualAlert.UpdateContentText("");
+
             AudioManager.Instance.Play("SFX_ItemTrigger");
+        }
+
         else
             itemVisualAlert.UpdateContentText("");
 
@@ -3500,6 +3506,13 @@ public class UnitFunctionality : MonoBehaviour
             AudioManager.Instance.Play("Heal");
         }
 
+        if (GameManager.Instance.GetActiveItem() != null && !PostBattle.Instance.isInPostBattle && !GameManager.Instance.isSkillsMode
+            && GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.PLAYER)
+        {
+            if (GameManager.Instance.GetActiveItem().projectileHit != null)
+                AudioManager.Instance.Play(GameManager.Instance.GetActiveItem().projectileHit.name);
+        }
+
 
         // LAST power UI hit
         if (damageCount >= GameManager.Instance.maxPowerUICount || healCount >= GameManager.Instance.maxPowerUICount)
@@ -4458,23 +4471,47 @@ public class UnitFunctionality : MonoBehaviour
                     {
                         if (activeEffects[i].curEffectName == Effect.EffectName.POISON)
                         {
-                            if (power != 0 && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                            if (GameManager.Instance.isSkillsMode)
                             {
-                                newPower = ((activeEffects[i].effectPowerStacks * GetEffect("POISON").powerPercent) / 100f) * power;
-                                float finalHealingPower2 = power - newPower;
+                                if (power != 0 && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                                {
+                                    newPower = ((activeEffects[i].effectPowerStacks * GetEffect("POISON").powerPercent) / 100f) * power;
+                                    float finalHealingPower2 = power - newPower;
 
-                                //absPower *= curHealingRecieved;
+                                    //absPower *= curHealingRecieved;
 
-                                if (curHealth < curMaxHealth)
-                                    curHealth += (int)finalHealingPower2;
+                                    if (curHealth < curMaxHealth)
+                                        curHealth += (int)finalHealingPower2;
 
-                                if (curHealth > curMaxHealth)
-                                    curHealth = curMaxHealth;
+                                    if (curHealth > curMaxHealth)
+                                        curHealth = curMaxHealth;
 
-                                //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
-                                StartCoroutine(SpawnPowerUI((int)finalHealingPower2, false, false, null, false));
+                                    //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
+                                    StartCoroutine(SpawnPowerUI((int)finalHealingPower2, false, false, null, false));
 
-                                break;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                if (power != 0 && GameManager.Instance.GetActiveItem().curItemType == ItemPiece.ItemType.SUPPORT)
+                                {
+                                    newPower = ((activeEffects[i].effectPowerStacks * GetEffect("POISON").powerPercent) / 100f) * power;
+                                    float finalHealingPower2 = power - newPower;
+
+                                    //absPower *= curHealingRecieved;
+
+                                    if (curHealth < curMaxHealth)
+                                        curHealth += (int)finalHealingPower2;
+
+                                    if (curHealth > curMaxHealth)
+                                        curHealth = curMaxHealth;
+
+                                    //GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, true);
+                                    StartCoroutine(SpawnPowerUI((int)finalHealingPower2, false, false, null, false));
+
+                                    break;
+                                }
                             }
                         }
                     }
@@ -4877,8 +4914,11 @@ public class UnitFunctionality : MonoBehaviour
         else
             curPowerHits -= newDmgHits;
 
-        if (!HeroRoomManager.Instance.playerInHeroRoomView && GameManager.Instance.playerInCombat)
-            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveSkill(), null, true);
+        if (GameManager.Instance.isSkillsMode)
+        {
+            if (!HeroRoomManager.Instance.playerInHeroRoomView && GameManager.Instance.playerInCombat)
+                GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveSkill(), null, true);
+        }
     }
 
     public int GetUnitPowerHits()

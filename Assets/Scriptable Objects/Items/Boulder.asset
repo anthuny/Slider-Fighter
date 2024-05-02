@@ -61,5 +61,6 @@ MonoBehaviour:
   allowRandomSpawnPosition: 1
   allowRandomSpawnRotation: 0
   projectileAllowSpin: 0
-  projectileLaunch: {fileID: 0}
-  projectileHit: {fileID: 0}
+  itemAnnounce: {fileID: 8300000, guid: b9f6b41b8eecd6441909223c77af6c5b, type: 3}
+  projectileLaunch: {fileID: 8300000, guid: d458c77a61418ba44989cddff5415daa, type: 3}
+  projectileHit: {fileID: 8300000, guid: 1e81a1c010028bc4194720130d715b41, type: 3}

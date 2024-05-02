@@ -53,6 +53,7 @@ public class ItemPiece : ScriptableObject
     public bool isCleansingAll;
     public bool isCleansingRandom;
     public EffectData effectCleansed;
+    public int cleanseCount = 0;
 
     public bool activeOnTurnStart = true;
     public bool activeOnSkillAttack;
@@ -75,6 +76,7 @@ public class ItemPiece : ScriptableObject
     public bool allowRandomSpawnPosition;
     public bool allowRandomSpawnRotation;
     public bool projectileAllowSpin;
+    public AudioClip itemAnnounce;
     public AudioClip projectileLaunch;
     public AudioClip projectileHit;
 

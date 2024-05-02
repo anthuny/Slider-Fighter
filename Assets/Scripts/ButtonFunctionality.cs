@@ -15,7 +15,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     private MasteryType masteryType;
 
-    private ShopItem shopItem;
+    public ShopItem shopItem;
     [SerializeField] private bool disabled;
     [SerializeField] private UIElement UIbutton;
     public UIElement itemParent;
@@ -490,13 +490,15 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         // Put selection on seleted item
-        if (itemParent != null)
+        if (shopItem != null)
         {
-            ItemRewardManager.Instance.selectedItemName = itemParent.GetItemName();
+            ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
+            ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedItemName);
+
             //itemParent.ToggleSelected(true, true);
         }
 
-        ItemRewardManager.Instance.UpdateItemDescription(true);
+        //ItemRewardManager.Instance.UpdateItemDescription(true);
 
         ItemRewardManager.Instance.ToggleConfirmItemButton(true);
     }

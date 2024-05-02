@@ -2249,7 +2249,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
             ToggleAllowSelection(false);
             ToggleAllyUnitSelection(false);
-            //ShopManager.Instance.FillShopItems(false, true);
+            ShopManager.Instance.FillShopItems(false, true);
 
             // Update allies into position for shop
             UpdateAllAlliesPosition(false, GetActiveUnitType(), false, true);
@@ -5364,6 +5364,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         GetActiveUnitFunctionality().TriggerTextAlert(activeItem.itemName, 1, false, "Skill", false, true);
 
+        if (GetActiveItem().itemAnnounce != null)
+            AudioManager.Instance.Play(GetActiveItem().itemAnnounce.name);
+
+        yield return new WaitForSeconds(0.35f);
+
         for (int i = 0; i < unitsSelected.Count; i++)
         {
             unitsSelected[i].ResetPowerUI();
@@ -5548,9 +5553,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 int maxHitWorth = 15;
                 if (activeItem.hitCount > maxHitWorth)
-                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth + 1)));
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth + 2)));
                 else
-                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (activeItem.hitCount + 1)));
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (activeItem.hitCount + 2)));
             }
         }
 
@@ -5561,6 +5566,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (activeItem.curHitType == ItemPiece.HitType.HITS)
         {
+            AudioManager.Instance.Play("SFX_ItemTrigger");
+
             for (int i = 0; i < activeItem.hitCount; i++)
             {
                 /*
@@ -5612,9 +5619,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 int maxHitWorth = 15;
                 if (activeItem.hitCount > maxHitWorth)
-                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth + 1)));
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (maxHitWorth + 4)));
                 else
-                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (activeItem.hitCount + 1)));
+                    yield return new WaitForSeconds(timeBetweenProjectile - (0.0025f * (activeItem.hitCount + 4)));
             }
 
             yield return new WaitForSeconds(0.15f);
@@ -5624,8 +5631,37 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ToggleAllowSelection(true);
 
             UpdatePlayerAbilityUI(false);
+        }
+        else
+        {
+            GetActiveUnitFunctionality().TriggerItemVisualAlert(GetActiveItem().itemSpriteItemTab, true, true);
 
+            if (GetActiveItem().effectCleansed != null)
+            {
+                for (int i = 0; i < GetActiveItem().cleanseCount; i++)
+                {
+                    // Cleanse effect from unit
+                    for (int x = 0; x < unitsSelected.Count; x++)
+                    {
+                        if (unitsSelected[x].GetEffect("POISON"))
+                        {
+                            string name = unitsSelected[x].GetEffect("POISON").effectName;
 
+                            unitsSelected[x].TriggerTextAlert(name, 1, true, "Trigger");
+                            unitsSelected[x].GetEffect("POISON").ReduceTurnCountText(unitsSelected[x]);
+                        }
+                        else if (unitsSelected[x].GetEffect("BLEED"))
+                        {
+                            string name = unitsSelected[x].GetEffect("BLEED").effectName;
+
+                            unitsSelected[x].TriggerTextAlert(name, 1, true, "Trigger");
+                            unitsSelected[x].GetEffect("BLEED").ReduceTurnCountText(unitsSelected[x]);
+                        }
+                    }
+                }
+            }
+
+            ResetSelectedUnits();
         }
 
         ToggleAllowSelection(true);
@@ -5689,14 +5725,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // Show full visibility of Gear
             slot.UpdateLootGearAlpha(true);
 
-
-
+            /*
             if (ShopManager.Instance.GetUnassignedItem().healthItem)
             {
                 float healthToRegen = (ShopManager.Instance.GetUnassignedItem().power / 100f) * unit.GetUnitMaxHealth();
                // unit.StartCoroutine(unit.SpawnPowerUI(healthToRegen, false, false, null, false));
                 unit.UpdateUnitCurHealth((int)healthToRegen, false, false);
             }
+            */
 
             ShopManager.Instance.UpdateUnAssignedItem(null);
 
@@ -5783,6 +5819,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (activeItem.curActiveType == ItemPiece.ActiveType.PASSIVE)
                 return;
+
+            if (activeItem)
+            {
+                // Ensure skills that target alive cant select dead targets
+                if (unit.isDead && activeItem.curTargetType == ItemPiece.TargetType.ALIVE)
+                    return;
+                // Ensure skills that target dead cant select alive targets
+                else if (!unit.isDead && activeItem.curTargetType == ItemPiece.TargetType.DEAD)
+                    return;
+            }
 
             if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             {

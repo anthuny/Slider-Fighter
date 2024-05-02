@@ -148,7 +148,7 @@ public class ItemRewardManager : MonoBehaviour
         }
     }
 
-    ItemPiece GetItem(string name)
+    public ItemPiece GetItem(string name)
     {
         for (int i = 0; i < allItems.Count; i++)
         {

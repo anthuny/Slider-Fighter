@@ -13,15 +13,25 @@ MonoBehaviour:
   m_Name: Bandage
   m_EditorClassIdentifier: 
   curRarity: 1
+  curItemCombatType: 1
+  curItemTargetType: 0
+  curItemType: 1
+  curSelectionType: 1
+  curTargetType: 0
+  curActiveType: 0
+  curHitType: 1
   itemName: Bandage
-  itemDesc: Cleanse Bleed (On Turn Start - if unit has bleed stacks, cleanse all
-    stacks). using 1 charge.
-  itemSprite: {fileID: 21300000, guid: 7027f0ebc818fcb49b6ba525b415e61c, type: 3}
+  itemDesc: Target 1 Ally. Deplete Bleed effect (4)
+  itemSpriteItemTab: {fileID: 21300000, guid: 7027f0ebc818fcb49b6ba525b415e61c, type: 3}
+  itemSpriteCombat: {fileID: 21300000, guid: 629d856d245489c498c556085e383f47, type: 3}
+  itemSpriteCombatSmaller: {fileID: 21300000, guid: 629d856d245489c498c556085e383f47, type: 3}
+  itemSpriteCombatProjectile: {fileID: 21300000, guid: 9b63e5ce57914714c96fdc7997f184ba, type: 3}
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 0
   threshHoldAmount: 0
+  isSelfCast: 0
   isBaseHealing: 0
   isLifestealing: 0
   isDamageNegating: 0
@@ -29,10 +39,11 @@ MonoBehaviour:
   isVampHealing: 0
   isReflectingEffect: 0
   isEffectStrippingTarget: 0
-  isCleansingAll: 1
+  isCleansingAll: 0
   isCleansingRandom: 0
   effectCleansed: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
-  activeOnTurnStart: 1
+  cleanseCount: 4
+  activeOnTurnStart: 0
   activeOnSkillAttack: 0
   activeOnAlliesAttacked: 0
   activeOnEnemiesHealing: 0
@@ -43,4 +54,13 @@ MonoBehaviour:
   power: 0
   procChance: 0
   ac: {fileID: 0}
-  maxUsesPerCombat: 4
+  maxUsesPerCombat: 2
+  targetCount: 1
+  hitCount: 0
+  projectileSpeed: 0
+  allowRandomSpawnPosition: 0
+  allowRandomSpawnRotation: 0
+  projectileAllowSpin: 0
+  itemAnnounce: {fileID: 8300000, guid: b39a17dace2681d4fb7b94ca4eb18147, type: 3}
+  projectileLaunch: {fileID: 0}
+  projectileHit: {fileID: 0}

@@ -611,6 +611,8 @@ public class TeamItemsManager : MonoBehaviour
         {
             teamItemsTabUI.UpdateAlpha(1);
 
+            UpdateItemSlotsBase(true, true, true);
+
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
             // Active unit level image for team page
