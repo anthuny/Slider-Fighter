@@ -8,6 +8,11 @@ public class ShopManager : MonoBehaviour
     public static ShopManager Instance;
 
     //[HideInInspector]
+
+    public Animator commonItemAnimator;
+    public Animator rareItemAnimator;
+    public Animator EpicItemAnimator;
+    //public Animator LegendaryItemAnimator;
     public int playerGold;
     public int playerStartingGold;
     [SerializeField] private int startingReviveCost = 50;
@@ -544,6 +549,15 @@ public class ShopManager : MonoBehaviour
 
             if (itemCombat.ac)
                 shopItem.UpdateAnimatorController(itemCombat.ac);
+
+            if (itemCombat.curRarity == ItemPiece.Rarity.COMMON)
+                shopItem.UpdateItemRarity(ShopItem.RarityType.COMMON);
+            else if (itemCombat.curRarity == ItemPiece.Rarity.RARE)
+                shopItem.UpdateItemRarity(ShopItem.RarityType.RARE);
+            else if (itemCombat.curRarity == ItemPiece.Rarity.EPIC)
+                shopItem.UpdateItemRarity(ShopItem.RarityType.EPIC);
+            else if (itemCombat.curRarity == ItemPiece.Rarity.LEGENDARY)
+                shopItem.UpdateItemRarity(ShopItem.RarityType.LEGENDARY);
 
             // If active room has not been visited yet, store shop items to room
             if (!GetActiveRoom().hasEntered)

@@ -2243,7 +2243,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 activeRoomHeroes[i].ToggleActionNextBar(false);
             }
 
-            playerUIElement.UpdateAlpha(0);     // Disable player UI
+            playerUIElement.UpdateAlpha(1);     // Disable player UI
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
             //ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
@@ -5680,6 +5680,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ToggleAllowSelection(false);
             ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
 
+            OverlayUI.Instance.ToggleFighterDetailsTab(false);
             //unit.AddOwnedItems(ShopManager.Instance.GetUnassignedItem());
 
             GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, nothingnessUI.gameObject.transform.position, Quaternion.identity);

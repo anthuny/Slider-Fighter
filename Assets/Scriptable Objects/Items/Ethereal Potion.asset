@@ -21,7 +21,7 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 0
   itemName: Ethereal Potion
-  itemDesc: Auto Select 2 Random Targets, Healing 4 times.
+  itemDesc: Select 2 Random Allies, Healing 4 times.
   itemSpriteItemTab: {fileID: 21300000, guid: 45c47a12e12f00747a1e3947c98f3cfa, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 94ee200706b06174b9380f4134d576fc, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 94ee200706b06174b9380f4134d576fc, type: 3}
@@ -42,6 +42,7 @@ MonoBehaviour:
   isCleansingAll: 0
   isCleansingRandom: 0
   effectCleansed: {fileID: 0}
+  cleanseCount: 0
   activeOnTurnStart: 0
   activeOnSkillAttack: 0
   activeOnAlliesAttacked: 0

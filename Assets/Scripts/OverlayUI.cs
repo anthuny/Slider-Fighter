@@ -5,6 +5,14 @@ using TMPro;
 using UnityEngine.UI;
 public class OverlayUI : MonoBehaviour
 {
+
+    public static OverlayUI Instance;
+
+    [SerializeField] private UIElement activeItemTriggerStatus;
+    [SerializeField] private UIElement activeItemUseCountText;
+
+    [SerializeField] private Color activeItemTextColour;
+    [SerializeField] private Color passiveItemTextColour;
     [SerializeField] private string targetCountTextColour;
     [SerializeField] private string damagingTextColour;
     [SerializeField] private string healingTextColour;
@@ -31,10 +39,49 @@ public class OverlayUI : MonoBehaviour
     public Image unitOverlayCurEnergyImage;
     public Image unitOverlayCurHealthImage;
 
+    public UIElement itemRarityTextUI;
+    public TextMeshProUGUI itemRarityText;
+    public Color rarityTextColourCommon;
+    public Color rarityTextColourRare;
+    public Color rarityTextColourEpic;
+    public Color rarityTextColourLegendary;
+
     [SerializeField] private Color powerDamageColour;
     [SerializeField] private Color powerHealColour;
 
     private int oldHits;
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    public void ToggleItemRarityTextUI(bool toggle = true)
+    {
+        if (toggle)
+        {
+            itemRarityTextUI.UpdateAlpha(1);
+        }
+        else
+        {
+            itemRarityTextUI.UpdateAlpha(0);
+        }
+    }
+
+    public void UpdateItemRarityText(string text)
+    {
+        itemRarityText.text = text;
+
+        if (text == "COMMON")
+            itemRarityText.color = OverlayUI.Instance.rarityTextColourCommon;
+        else if (text == "RARE")
+            itemRarityText.color = OverlayUI.Instance.rarityTextColourRare;
+        else if (text == "EPIC")
+            itemRarityText.color = OverlayUI.Instance.rarityTextColourEpic;
+        else if (text == "LEGENDARY")
+            itemRarityText.color = OverlayUI.Instance.rarityTextColourLegendary;
+        
+    }
 
     public void ToggleSkillItemSwitchButton(bool toggle = true)
     {
@@ -84,6 +131,8 @@ public class OverlayUI : MonoBehaviour
     
     public void UpdateItemUI(string itemName, string itemDesc, int itemPower, int targetCount, Sprite itemIcon)
     {
+        ToggleAllStats(true, false);
+
         UpdateMainSlotDetailsName(itemName);
         UpdateMainSlotDetailsDesc(itemDesc);
 
@@ -94,6 +143,38 @@ public class OverlayUI : MonoBehaviour
     }
 
 
+    public void ToggleActiveItemTriggerStatus(bool toggle = true)
+    {
+        if (toggle)
+        {
+            activeItemTriggerStatus.UpdateAlpha(1);
+        }
+        else
+        {
+            activeItemTriggerStatus.UpdateAlpha(0);
+        }
+    }
+    public void UpdateActiveItemTriggerStatus(bool toggle = true)
+    {
+        if (toggle)
+        {
+            activeItemTriggerStatus.UpdateContentText("A");
+            activeItemTriggerStatus.UpdateContentTextColourTMP(activeItemTextColour);
+        }
+        else
+        {
+            activeItemTriggerStatus.UpdateContentText("P");
+            activeItemTriggerStatus.UpdateContentTextColourTMP(passiveItemTextColour);
+        }
+    }
+
+    public void UpdateActiveItemUseCountText(int count)
+    {
+        if (count == 0)
+            activeItemUseCountText.UpdateContentText("");
+        else
+            activeItemUseCountText.UpdateContentText(count.ToString());
+    }
     private void UpdateMainSlotDetailsName(string text)
     {
         skillDetailsName.text = text;

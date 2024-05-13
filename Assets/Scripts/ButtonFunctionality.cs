@@ -916,7 +916,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (shopItem.GetShopItemName() == shopCombatItems[i].itemName)
             {
                 // unit purchased the item
-                shopItem.PurchaseShopItem(true);
+                shopItem.SelectShopItem(true);
                 return;
             }
         }
@@ -932,7 +932,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (shopItem.GetShopItemName() == shopHealthItems[x].itemName)
             {
                 // unit purchased the item
-                shopItem.PurchaseShopItem(false);
+                shopItem.SelectShopItem(false);
                 return;
             }
         }
