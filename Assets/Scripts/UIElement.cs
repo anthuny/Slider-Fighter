@@ -17,7 +17,7 @@ public class UIElement : MonoBehaviour
     public Rarity curRarity;
 
     public Image contentImage;
-    [SerializeField] private UIElement contentImageUI;
+    public UIElement contentImageUI;
     [SerializeField] private UIElement contentImage2UI;
     public TextMeshProUGUI contentText;
     public TextMeshProUGUI contentText2;
@@ -49,7 +49,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private UIElement rarityBorderUI;
     public Slot slot;
     public UIElement skillUpgradesUI;
-    [SerializeField] private UIElement tooltipStats;
+    public UIElement tooltipStats;
     [SerializeField] private string statText;
 
 
@@ -59,6 +59,14 @@ public class UIElement : MonoBehaviour
     private float originalYPos;
     public bool isEnabled = false;
     public bool displayingAlert = false;
+
+
+    public void UpdateTooltipStatsText(string text)
+    {
+        statText = text;
+
+        UpdateTooltipText();
+    }
 
 
     public void ToggleTooltipStats(bool toggle)

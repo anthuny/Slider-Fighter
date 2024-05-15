@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bandage
   m_EditorClassIdentifier: 
   curRarity: 1
+  curRace: 0
   curItemCombatType: 1
   curItemTargetType: 0
   curItemType: 1
@@ -48,7 +49,7 @@ MonoBehaviour:
   activeOnAlliesAttacked: 0
   activeOnEnemiesHealing: 0
   activeOnSelfAttacked: 0
-  basePrice: 0
+  basePrice: 12
   purchased: 0
   healthItem: 0
   power: 0

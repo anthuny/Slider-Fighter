@@ -11,6 +11,8 @@ public class OverlayUI : MonoBehaviour
     [SerializeField] private UIElement activeItemTriggerStatus;
     [SerializeField] private UIElement activeItemUseCountText;
 
+    [SerializeField] private UIElement activeItemRaceSpecificIcon;
+
     [SerializeField] private Color activeItemTextColour;
     [SerializeField] private Color passiveItemTextColour;
     [SerializeField] private string targetCountTextColour;
@@ -54,6 +56,43 @@ public class OverlayUI : MonoBehaviour
     void Awake()
     {
         Instance = this;
+    }
+
+    public void UpdateActiveItemRaceSpecificIcon(string raceSpecific = "")
+    {
+        if (raceSpecific == "" || raceSpecific == "ALL")
+        {
+            activeItemRaceSpecificIcon.UpdateAlpha(0);
+            activeItemRaceSpecificIcon.ToggleButton(false);
+        }
+        else
+        {
+            activeItemRaceSpecificIcon.UpdateAlpha(1);
+            activeItemRaceSpecificIcon.ToggleButton(true);
+
+            string text = "";
+
+            if (raceSpecific == "HUMAN")
+            {
+                activeItemRaceSpecificIcon.UpdateContentImage(GameManager.Instance.humanRaceIcon);
+                activeItemRaceSpecificIcon.contentImageUI.UpdateColour(GameManager.Instance.humanRaceColour);
+                text = "Item can only be equipped by humans";
+            }        
+            else if (raceSpecific == "BEAST")
+            {
+                activeItemRaceSpecificIcon.UpdateContentImage(GameManager.Instance.beastRaceIcon);
+                activeItemRaceSpecificIcon.contentImageUI.UpdateColour(GameManager.Instance.beastRaceColour);
+                text = "Item can only be equipped by beasts";
+            }            
+            else if (raceSpecific == "ETHEREAL")
+            {
+                activeItemRaceSpecificIcon.UpdateContentImage(GameManager.Instance.etherealRaceIcon);
+                activeItemRaceSpecificIcon.contentImageUI.UpdateColour(GameManager.Instance.etherealRaceColour);
+                text = "Item can only be equipped by ethereal";
+            }
+                
+            activeItemRaceSpecificIcon.tooltipStats.UpdateTooltipStatsText(text);
+        }
     }
 
     public void ToggleItemRarityTextUI(bool toggle = true)

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hunting Chainmail
   m_EditorClassIdentifier: 
   curRarity: 0
+  curRace: 0
   curItemCombatType: 0
   curItemTargetType: 0
   curItemType: 0
@@ -43,12 +44,13 @@ MonoBehaviour:
   isCleansingAll: 0
   isCleansingRandom: 0
   effectCleansed: {fileID: 0}
+  cleanseCount: 0
   activeOnTurnStart: 1
   activeOnSkillAttack: 0
   activeOnAlliesAttacked: 0
   activeOnEnemiesHealing: 0
   activeOnSelfAttacked: 0
-  basePrice: 0
+  basePrice: 7
   purchased: 0
   healthItem: 0
   power: 0
@@ -61,5 +63,6 @@ MonoBehaviour:
   allowRandomSpawnPosition: 0
   allowRandomSpawnRotation: 0
   projectileAllowSpin: 0
+  itemAnnounce: {fileID: 0}
   projectileLaunch: {fileID: 0}
   projectileHit: {fileID: 0}

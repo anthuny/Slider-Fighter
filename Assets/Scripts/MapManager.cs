@@ -419,6 +419,15 @@ public class MapManager : MonoBehaviour
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
+            OverlayUI.Instance.ToggleItemRarityTextUI(false);
+            OverlayUI.Instance.UpdateItemRarityText("");
+            OverlayUI.Instance.ToggleActiveItemTriggerStatus(false);
+            OverlayUI.Instance.UpdateActiveItemUseCountText(0);
+            OverlayUI.Instance.UpdateActiveItemTriggerStatus(false);
+
+            OverlayUI.Instance.UpdateActiveItemRaceSpecificIcon("");
+
+            OverlayUI.Instance.ToggleFighterDetailsTab(false);
             TeamItemsManager.Instance.UpdateUnequiptItemAlert();
             TeamGearManager.Instance.UpdateUnequiptGearAlert();
 

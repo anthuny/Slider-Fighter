@@ -900,7 +900,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         // refresh item price
     }
-    public void PurchaseShopItem()
+
+    // Select Shop Item
+    public void SelectShopItem()
     {
         // Get access to root parent of gameobject
         shopItem = transform.parent.parent.GetComponent<ShopItem>();
@@ -936,6 +938,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 return;
             }
         }
+    }
+
+    public void PurchaseTryShopItem()
+    {
+        ShopManager.Instance.GetSelectedShopItem().PurchaseShopItem();
     }
 
     // Gear tab from map

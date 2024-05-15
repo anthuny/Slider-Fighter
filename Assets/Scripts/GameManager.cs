@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public Sprite humanRaceIcon;
+    public Sprite beastRaceIcon;
+    public Sprite etherealRaceIcon;
+    public Color humanRaceColour;
+    public Color beastRaceColour;
+    public Color etherealRaceColour;
     public UnitData startingUnit;
 
     //public bool devMode;

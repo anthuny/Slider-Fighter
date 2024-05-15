@@ -8,6 +8,9 @@ public class ItemPiece : ScriptableObject
     public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
     public Rarity curRarity;
 
+    public enum RaceSpecific { ALL, HUMAN, BEAST, ETHEREAL }
+    public RaceSpecific curRace;
+
     public enum ItemCombatType { REFILLABLE, CONSUMABLE }
     public ItemCombatType curItemCombatType;
 

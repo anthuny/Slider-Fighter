@@ -9,6 +9,9 @@ public class ShopItem : MonoBehaviour
         public enum RarityType { COMMON, RARE, EPIC, LEGENDARY }
     public RarityType curRarityType;
 
+    [SerializeField] private UIElement buttonPurchase;
+    [SerializeField] private UIElement buttonPurchaseCover;
+ 
     [SerializeField] private GameObject rarityCommonGO;
     [SerializeField] private GameObject rarityRareGO;
     [SerializeField] private GameObject rarityEpicGO;
@@ -16,6 +19,8 @@ public class ShopItem : MonoBehaviour
 
     [SerializeField] private string shopItemName;
     [SerializeField] private TextMeshProUGUI priceText;
+
+    public int priceCount;
     [SerializeField] private Image image;
     [SerializeField] private UIElement imageUI;
     [SerializeField] private UIElement textUI;
@@ -27,6 +32,35 @@ public class ShopItem : MonoBehaviour
 
     private int price;
     private bool purchased;
+
+
+    public void ToggleButtonPurchase(bool toggle = true)
+    {
+        if (toggle)
+        {
+            buttonPurchase.UpdateAlpha(1);
+            buttonPurchase.ToggleButton(true);
+        }
+        else
+        {
+            buttonPurchase.UpdateAlpha(0);
+            buttonPurchase.ToggleButton(false);
+        }
+    }
+
+    public void ToggleButtonPurchaseCover(bool toggle = true)
+    {
+        if (toggle)
+        {
+            buttonPurchaseCover.UpdateAlpha(1);
+            //buttonPurchase.ToggleButton(false);
+        }
+        else
+        {
+            buttonPurchaseCover.UpdateAlpha(0);
+            //buttonPurchase.ToggleButton(true);
+        }
+    }
 
     public void UpdateAnimatorController(RuntimeAnimatorController ac)
     {
@@ -68,12 +102,32 @@ public class ShopItem : MonoBehaviour
         return purchased;
     }
 
+    public void UpdatePrice(int price)
+    {
+        priceCount = price;
+
+        UpdatePriceText(priceCount.ToString());
+    }
     public void UpdatePriceText(string priceText)
     {
         this.priceText.text = priceText;
 
         if (priceText != "")
+        {
             price = int.Parse(priceText);
+            priceCount = price;
+        }
+
+        UpdatePriceTextColour();
+    }
+
+
+    public void UpdatePriceTextColour()
+    {
+        if (ShopManager.Instance.GetPlayerGold() < price)
+            this.priceText.color = ShopManager.Instance.shopItemCostDeny;
+        else
+            this.priceText.color = ShopManager.Instance.shopItemCostAllow;
     }
 
     public void UpdateShopItemSprite(Sprite sprite)
@@ -96,7 +150,7 @@ public class ShopItem : MonoBehaviour
     public void PurchaseShopItem()
     {
         int playerGold = ShopManager.Instance.GetPlayerGold();
-
+  
         // Try Purchase Action
         if (playerGold < price)     // If player cannot afford the item, cancel.
             return;
@@ -112,6 +166,8 @@ public class ShopItem : MonoBehaviour
 
         MapManager.Instance.UpdateMapGoldText();
         ShopManager.Instance.ToggleShopGoldText(true);
+
+        ShopManager.Instance.UpdateAllShopItemPriceTextColour();
 
         int combatCount = ShopManager.Instance.GetShopCombatItems().Count;
         for (int i = 0; i < combatCount; i++)
@@ -155,6 +211,20 @@ public class ShopItem : MonoBehaviour
         //    return;
 
         // Button Click SFX
+
+        ShopManager.Instance.UpdateSelectedShopItem(this);
+
+        for (int x = 0; x < ShopManager.Instance.GetShopItems().Count; x++)
+        {
+            ShopManager.Instance.GetShopItems()[x].ToggleButtonPurchase(false);
+        }
+
+        ToggleButtonPurchase(true);
+        if (price > ShopManager.Instance.GetPlayerGold())
+            ToggleButtonPurchaseCover(true);
+        else
+            ToggleButtonPurchaseCover(false);
+            
         AudioManager.Instance.Play("Button_Click");
 
         gameObject.GetComponentInChildren<ButtonFunctionality>().ButtonSelectItemCo();
@@ -189,6 +259,9 @@ public class ShopItem : MonoBehaviour
                     OverlayUI.Instance.UpdateActiveItemTriggerStatus(false);
                 }
                 
+                string race = "";
+                race = ShopManager.Instance.GetShopCombatItems()[i].curRace.ToString();
+                OverlayUI.Instance.UpdateActiveItemRaceSpecificIcon(race);
                 return;
             }
         }
