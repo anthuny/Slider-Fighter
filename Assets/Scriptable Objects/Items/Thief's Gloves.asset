@@ -22,8 +22,8 @@ MonoBehaviour:
   curActiveType: 1
   curHitType: 0
   itemName: Thief's Gloves
-  itemDesc: 50% chance to Add Speed Up (1) - On Turn Start. using 1 charge. (Gain
-    3 charge per combat start)
+  itemDesc: Add Speed Up (1) - On Turn Start. using 1 charge. (Gain 3 charge per
+    combat start)
   itemSpriteItemTab: {fileID: 21300000, guid: 00a92fb0b8329694e94306f058e2a374, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 6fe6448dc3af05b4898eea2280ab2271, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 6fe6448dc3af05b4898eea2280ab2271, type: 3}

@@ -18,9 +18,11 @@ public class RoomMapIcon : MonoBehaviour
     public UIElement roomSelectionImage;
     [SerializeField] private Button roomButton;
     [SerializeField] private ButtonRoom buttonRoom;
+    [SerializeField] private List<ShopItem> shopRoomShopItems = new List<ShopItem>();
     [SerializeField] private List<ItemPiece> shopRoomCombatItems = new List<ItemPiece>();
     [SerializeField] private List<ItemPiece> shopRoomHealthItems = new List<ItemPiece>();
     [SerializeField] private List<ItemPiece> purchasedItems = new List<ItemPiece>();
+    [SerializeField] private List<ShopItem> purchasedShopItems = new List<ShopItem>();
 
     public bool isHidden;
     public bool isSelected;
@@ -56,6 +58,14 @@ public class RoomMapIcon : MonoBehaviour
         purchasedItems.Add(item);
     }
 
+    public void AddPurchasedShopItems(ShopItem shopItem)
+    {
+        purchasedShopItems.Add(shopItem);
+    }
+    public List<ShopItem> GetPurchasedShopItems()
+    {
+        return purchasedShopItems;
+    }
     public List<ItemPiece> GetPurchasedItems()
     {
         return purchasedItems;
@@ -72,6 +82,15 @@ public class RoomMapIcon : MonoBehaviour
         shopRoomCombatItems.Add(item);
     }
 
+    public void AddShopRoomShopItems(ShopItem shopItem)
+    {
+        shopRoomShopItems.Add(shopItem);
+    }
+
+    public List<ShopItem> GetShopRoomShopItems()
+    {
+        return shopRoomShopItems;
+    }
     public void ClearShopRoomCombatItems()
     {
         shopRoomCombatItems.Clear();

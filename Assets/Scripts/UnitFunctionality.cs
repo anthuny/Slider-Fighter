@@ -9,6 +9,9 @@ public class UnitFunctionality : MonoBehaviour
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
 
+    public enum UnitRace { HUMAN, BEAST, ETHEREAL };
+    public UnitRace curUnitRace;
+
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
@@ -1490,15 +1493,18 @@ public class UnitFunctionality : MonoBehaviour
     {
         int rand = Random.Range(0, 2);
 
+        /*
         if (rand == 0)
             Debug.Log("Item fails");
         else
             Debug.Log("Item Succeeds");
 
+
         if (rand == 0)
             return false;
         else
-            return true;
+        */
+        return true;
     }
 
     public IEnumerator TriggerItems(bool turnStart = false, bool turnEnd = false, bool skillAtack = false, bool alliesAttacked = false, bool enemiesHealed = false, bool selfAttacked = false)

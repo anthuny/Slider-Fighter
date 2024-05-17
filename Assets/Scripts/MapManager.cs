@@ -8,6 +8,8 @@ public class MapManager : MonoBehaviour
 {
     public static MapManager Instance;
 
+    [SerializeField] UIElement buttonSkillsTabCombat;
+    [SerializeField] UIElement buttonItemsTabCombat;
     [SerializeField] private List<FloorData> allFloors = new List<FloorData>();
 
     public UnitMapIcon unitMapIcon;
@@ -119,6 +121,34 @@ public class MapManager : MonoBehaviour
 
         rt = GetComponent<RectTransform>();
         startingYPos = transform.position.y;
+    }
+
+    public void ToggleButtonSkillsTabCombat(bool toggle = true)
+    {
+        if (toggle)
+        {
+            buttonSkillsTabCombat.UpdateAlpha(1);
+            buttonSkillsTabCombat.ToggleButton(true);
+        }
+        else
+        {
+            buttonSkillsTabCombat.UpdateAlpha(0);
+            buttonSkillsTabCombat.ToggleButton(false);
+        }
+    }
+
+    public void ToggleButtonItemsTabCombat(bool toggle = true)
+    {
+        if (toggle)
+        {
+            buttonItemsTabCombat.UpdateAlpha(1);
+            buttonItemsTabCombat.ToggleButton(true);
+        }
+        else
+        {
+            buttonItemsTabCombat.UpdateAlpha(0);
+            buttonItemsTabCombat.ToggleButton(false);
+        }
     }
 
     void ResetMapYPos()
@@ -418,6 +448,11 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
+
+            ToggleButtonSkillsTabCombat(false);
+            ToggleButtonItemsTabCombat(false);
+
+            ShopManager.Instance.DisableShopUI();
 
             OverlayUI.Instance.ToggleItemRarityTextUI(false);
             OverlayUI.Instance.UpdateItemRarityText("");

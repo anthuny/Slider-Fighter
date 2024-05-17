@@ -6,8 +6,11 @@ using TMPro;
 
 public class ShopItem : MonoBehaviour
 {
-        public enum RarityType { COMMON, RARE, EPIC, LEGENDARY }
+    public enum RarityType { COMMON, RARE, EPIC, LEGENDARY }
     public RarityType curRarityType;
+
+    public enum RaceSpecific { ALL, HUMAN, BEAST, ETHEREAL }
+    public RaceSpecific curRaceSpecific;
 
     [SerializeField] private UIElement buttonPurchase;
     [SerializeField] private UIElement buttonPurchaseCover;
@@ -27,13 +30,24 @@ public class ShopItem : MonoBehaviour
     [SerializeField] private Animator itemAnimator;
     [SerializeField] private Animator rarityAnimator;
 
+    public int itemIndex;
+
 
     public Button itemButton;
 
-    private int price;
+    public int price;
     private bool purchased;
 
 
+    public void UpdateItemIndex(int newIndex)
+    {
+        itemIndex = newIndex;
+    }
+
+    public int GetItemIndex()
+    {
+        return itemIndex;
+    }
     public void ToggleButtonPurchase(bool toggle = true)
     {
         if (toggle)
@@ -149,6 +163,12 @@ public class ShopItem : MonoBehaviour
 
     public void PurchaseShopItem()
     {
+        if (!ShopManager.Instance.CheckIfItemCanBeEquip())
+        {
+            AudioManager.Instance.Play("SFX_ShopBuyFail");
+            return;
+        }
+
         int playerGold = ShopManager.Instance.GetPlayerGold();
   
         // Try Purchase Action
@@ -156,6 +176,11 @@ public class ShopItem : MonoBehaviour
             return;
         else
             ShopManager.Instance.UpdatePlayerGold(-price);
+
+
+        ShopManager.Instance.playerIsYetToSelectAFighter = true;
+
+        ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
 
         // Purchase the item
         imageUI.UpdateAlpha(0);
@@ -169,6 +194,8 @@ public class ShopItem : MonoBehaviour
 
         ShopManager.Instance.UpdateAllShopItemPriceTextColour();
 
+        GameManager.Instance.SetAllFightersSelected(true);
+
         int combatCount = ShopManager.Instance.GetShopCombatItems().Count;
         for (int i = 0; i < combatCount; i++)
         {
@@ -181,6 +208,12 @@ public class ShopItem : MonoBehaviour
 
                 ItemPiece item = ShopManager.Instance.GetShopCombatItems()[i];
                 ShopManager.Instance.GetActiveRoom().AddPurchasedItems(item);
+
+                GameObject go = Instantiate(ShopManager.Instance.shopItemPrefab, GameManager.Instance.nothingnessUI.transform.position, Quaternion.identity);
+                go.transform.SetParent(GameManager.Instance.nothingnessUI.gameObject.transform);
+                go.GetComponent<ShopItem>().UpdateShopItemName(ShopManager.Instance.GetSelectedShopItem().GetShopItemName());
+                go.GetComponent<ShopItem>().UpdateItemIndex(ShopManager.Instance.GetSelectedShopItem().GetItemIndex());
+                ShopManager.Instance.GetActiveRoom().AddPurchasedShopItems(go.GetComponent<ShopItem>());
                 ShopManager.Instance.UpdateUnAssignedItem(item);
                 // Prompt player on who to give item
                 GameManager.Instance.ToggleAllowSelection(true);
@@ -204,16 +237,26 @@ public class ShopItem : MonoBehaviour
         }
     }
 
+
     public void SelectShopItem(bool shopCombatItem)
     {
         // If the player must first select an ally to give an item, do not allow purchase of another item.
-        //if (ShopManager.Instance.selectAlly)
-        //    return;
-
-        // Button Click SFX
+        if (ShopManager.Instance.playerIsYetToSelectAFighter)
+            return;
 
         ShopManager.Instance.UpdateSelectedShopItem(this);
 
+        ShopManager.Instance.TogglePartyNoRacePrompt(true);
+
+        if (!ShopManager.Instance.CheckIfItemCanBeEquip())
+        {
+            ShopManager.Instance.TogglePartyNoRacePrompt(true);
+        }
+        else
+        {
+            ShopManager.Instance.TogglePartyNoRacePrompt(false);
+        }
+        
         for (int x = 0; x < ShopManager.Instance.GetShopItems().Count; x++)
         {
             ShopManager.Instance.GetShopItems()[x].ToggleButtonPurchase(false);

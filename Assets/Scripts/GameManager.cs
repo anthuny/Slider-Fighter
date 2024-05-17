@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public bool startingFighterChosen = false;
     public UIElement transitionSequienceUI;
     public CombatUnitFocus transitionSprite;
-    [SerializeField] private UIElement nothingnessUI;
+    public UIElement nothingnessUI;
     [SerializeField] private float postBattleTime;
     public List<UnitData> activeTeam = new List<UnitData>();
     //public List<UnitData> allPlayerClasses = new List<UnitData>();
@@ -548,6 +548,14 @@ public class GameManager : MonoBehaviour
                             UnitFunctionality unitFunct = go.GetComponent<UnitFunctionality>();
 
                             unitFunct.UpdateUnitName(unit.unitName);
+
+                            if (unit.curRaceType == UnitData.RaceType.HUMAN)
+                                unitFunct.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
+                            else if (unit.curRaceType == UnitData.RaceType.BEAST)
+                                unitFunct.curUnitRace = UnitFunctionality.UnitRace.BEAST;
+                            else if (unit.curRaceType == UnitData.RaceType.ETHEREAL)
+                                unitFunct.curUnitRace = UnitFunctionality.UnitRace.ETHEREAL;
+
                             unitFunct.UpdateUnitSkills(unit.GetUnitSkills());
                             unitFunct.UpdateCurrentSkills(unit.GetUnitSkills());
 
@@ -624,6 +632,13 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
                 unitFunctionality.UpdateUnitDefense(unit.startingDefense);
+
+                if (unit.curRaceType == UnitData.RaceType.HUMAN)
+                    unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
+                else if (unit.curRaceType == UnitData.RaceType.BEAST)
+                    unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.BEAST;
+                else if (unit.curRaceType == UnitData.RaceType.ETHEREAL)
+                    unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.ETHEREAL;
 
                 unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
                 unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
@@ -2047,6 +2062,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 unitFunctionality.UpdateUnitName(unit.unitName);
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
 
+                if (unit.curRaceType == UnitData.RaceType.HUMAN)
+                    unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
+                else if (unit.curRaceType == UnitData.RaceType.BEAST)
+                    unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.BEAST;
+                else if (unit.curRaceType == UnitData.RaceType.ETHEREAL)
+                    unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.ETHEREAL;
+
+
                 unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
                 unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
                 unitFunctionality.UpdateHealingPowerIncPerLv((int)unit.healingPowerIncPerLv);
@@ -2221,6 +2244,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             transitionSprite.AllowFadeOut();
 
+            //MapManager.Instance.ToggleButtonSkillsTabCombat(true);
+            //MapManager.Instance.ToggleButtonItemsTabCombat(true);
+
             Invoke("UpdateTurnOrder", 0);
         }
 
@@ -2274,10 +2300,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             transitionSprite.AllowFadeOut();
             return;
         }
-
-
     }
 
+    public void SetAllFightersSelected(bool toggle = true)
+    {
+        for (int i = 0; i < activeRoomHeroes.Count; i++)
+        {
+            activeRoomHeroes[i].ToggleSelected(toggle);
+        }
+    }
     public bool GetActiveUnitType()
     {
         bool toggle = false;
@@ -5684,9 +5715,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP && !unit.purchased)
         {
             ToggleAllowSelection(false);
+
+            SetAllFightersSelected(false);
+
+
             ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
 
-            OverlayUI.Instance.ToggleFighterDetailsTab(false);
+            if (ShopManager.Instance.playerIsYetToSelectAFighter)
+                OverlayUI.Instance.ToggleFighterDetailsTab(false);
+
+            ShopManager.Instance.playerIsYetToSelectAFighter = false;
             //unit.AddOwnedItems(ShopManager.Instance.GetUnassignedItem());
 
             GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, nothingnessUI.gameObject.transform.position, Quaternion.identity);

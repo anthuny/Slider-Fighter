@@ -9,6 +9,9 @@ public class UnitData : ScriptableObject
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
 
+    public enum RaceType { HUMAN, BEAST, ETHEREAL };
+    public RaceType curRaceType;
+
     [SerializeField] private int unitValue;
     public Sprite unitSprite;
     public Sprite unitIcon;

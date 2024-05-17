@@ -9,7 +9,8 @@ public class ShopManager : MonoBehaviour
 
     //[HideInInspector]
 
-    private ShopItem selectedShopItem;
+    [SerializeField] private UIElement partyNoRaceItemPrompt;
+    public ShopItem selectedShopItem;
     public Animator commonItemAnimator;
     public Animator rareItemAnimator;
     public Animator EpicItemAnimator;
@@ -43,7 +44,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private Transform shopItem8Parent;
     [SerializeField] private Transform refreshItemParent;
 
-    [SerializeField] private GameObject shopItemPrefab;
+    public GameObject shopItemPrefab;
     public UIElement shop;
     public UIElement shopSelectAllyPrompt;
     public bool selectAlly;
@@ -61,11 +62,27 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private List<ShopItem> shopItems = new List<ShopItem>();
     [SerializeField] private List<string> fallenHeroesNamesBase = new List<string>();
 
-    RoomMapIcon activeRoom;
+    public RoomMapIcon activeRoom;
     [SerializeField] private List<string> savedHeroNames = new List<string>();
     [SerializeField] private List<int> savedHeroCosts = new List<int>();
 
     public bool playerInShopRoom = false;
+
+    public bool playerIsYetToSelectAFighter = false;
+
+    public int spawnedItems;
+
+    public void TogglePartyNoRacePrompt(bool toggle = true)
+    {
+        if (toggle)
+        {
+            partyNoRaceItemPrompt.UpdateAlpha(1);
+        }
+        else
+        {
+            partyNoRaceItemPrompt.UpdateAlpha(0);
+        }
+    }
 
     public void ToggleFallenHeroPrompt(bool toggle = true)
     {
@@ -182,6 +199,10 @@ public class ShopManager : MonoBehaviour
         return selectedShopItem;
     }
 
+    public void DisableShopUI()
+    {
+        TogglePartyNoRacePrompt(false);
+    }
     public void UpdateSelectedShopItem(ShopItem item)
     {
         selectedShopItem = item;
@@ -499,6 +520,46 @@ public class ShopManager : MonoBehaviour
             shopItems[i].UpdatePriceTextColour();
         }
     }
+
+    public bool CheckIfItemCanBeEquip()
+    {
+        bool partySuitable = false;
+
+        for (int t = 0; t < GameManager.Instance.activeRoomHeroes.Count; t++)
+        {
+            if (GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.HUMAN)
+            {
+                if (GameManager.Instance.activeRoomHeroes[t].curUnitRace == UnitFunctionality.UnitRace.HUMAN)
+                {
+                    partySuitable = true;
+                    break;
+                }
+            }
+            else if (GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.BEAST)
+            {
+                if (GameManager.Instance.activeRoomHeroes[t].curUnitRace == UnitFunctionality.UnitRace.BEAST)
+                {
+                    partySuitable = true;
+                    break;
+                }
+            }
+            else if (GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.ETHEREAL)
+            {
+                if (GameManager.Instance.activeRoomHeroes[t].curUnitRace == UnitFunctionality.UnitRace.ETHEREAL)
+                {
+                    partySuitable = true;
+                    break;
+                }
+            }
+            else if (GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.ALL)
+            {
+                partySuitable = true;
+                break;
+            }               
+        }
+
+        return partySuitable;
+    }
     public void FillShopItems(bool clearItems, bool refreshItems)
     {
         SetActiveRoom(RoomManager.Instance.GetActiveRoom());
@@ -569,6 +630,8 @@ public class ShopManager : MonoBehaviour
                 else if (rand < 70)
                     getCommon = true;        
 
+                int itemPrice = 0;
+
                 if (getLegendary)
                 {   
                     List<ItemPiece> legItems = new List<ItemPiece>();
@@ -583,7 +646,10 @@ public class ShopManager : MonoBehaviour
 
                     randInt = Random.Range(0, legItems.Count);
                     if (legItems.Count > 0)
+                    {
                         itemCombat = legItems[randInt];
+                        itemPrice = itemCombat.basePrice;
+                    }                   
                 }
                 else if (getEpic)
                 {   
@@ -599,7 +665,10 @@ public class ShopManager : MonoBehaviour
 
                     randInt = Random.Range(0, epicItems.Count);
                     if (epicItems.Count > 0)
-                        itemCombat = epicItems[randInt];
+                    {
+                        itemCombat = epicItems[randInt]; 
+                        itemPrice = itemCombat.basePrice; 
+                    } 
                 }
                 else if (getRare)
                 {   
@@ -615,9 +684,12 @@ public class ShopManager : MonoBehaviour
 
                     randInt = Random.Range(0, rareItems.Count);
                     if (rareItems.Count > 0)
-                        itemCombat = rareItems[randInt];
+                    {
+                        itemCombat = rareItems[randInt];   
+                        itemPrice = itemCombat.basePrice; 
+                    }                                     
                 }
-                else if (getCommon)
+                else
                 {   
                     List<ItemPiece> commonItems = new List<ItemPiece>();
                     
@@ -631,28 +703,46 @@ public class ShopManager : MonoBehaviour
 
                     randInt = Random.Range(0, commonItems.Count);
                     if (commonItems.Count > 0)
+                    {
                         itemCombat = commonItems[randInt];
+                        itemPrice = itemCombat.basePrice;
+                    }                  
                 }
+
+                if (itemCombat == null || itemPrice < 4)
+                {
+                    if (i > 0)
+                        i--;
+
+                    continue;
+                }
+
+                int rand2 = Random.Range(0,4);
+                if (rand2 == 0)
+                    itemPrice++;
+                else if (rand2 == 1)
+                    itemPrice--;
+                else if (rand2 == 2)
+                    itemPrice -= 2;
+
+                shopItem.UpdatePrice(itemPrice);
             }
 
-            if (activeRoom.hasEntered)
+            // If active room has not been visited yet, store shop items to room
+            if (!GetActiveRoom().hasEntered)
             {
-                itemCombat = activeRoom.GetShopRoomCombatItems()[i];
+                activeRoom.AddShopRoomCombatItems(itemCombat);
+                activeRoom.AddShopRoomShopItems(shopItem);
+            }
+            else
+            {
+                itemCombat = activeRoom.GetShopRoomCombatItems()[i];             
+                shopItem.UpdatePrice(activeRoom.GetShopRoomShopItems()[i].price);
             }
 
             shopItem.UpdateShopItemName(itemCombat.itemName);
+            shopItem.UpdateItemIndex(i);
 
-            int itemPrice = itemCombat.basePrice;
-
-            int rand2 = Random.Range(0,4);
-            if (rand2 == 0)
-                itemPrice++;
-            else if (rand2 == 1)
-                itemPrice--;
-            else if (rand2 == 2)
-                itemPrice -= 2;
-
-            shopItem.UpdatePrice(itemPrice);
             shopItem.UpdateShopItemSprite(itemCombat.itemSpriteCombat);
             shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
             shopItem.itemButton.enabled = true;
@@ -669,10 +759,15 @@ public class ShopManager : MonoBehaviour
             else if (itemCombat.curRarity == ItemPiece.Rarity.LEGENDARY)
                 shopItem.UpdateItemRarity(ShopItem.RarityType.LEGENDARY);
 
-            // If active room has not been visited yet, store shop items to room
-            if (!GetActiveRoom().hasEntered)
-                activeRoom.AddShopRoomCombatItems(itemCombat);
-                
+            if (itemCombat.curRace == ItemPiece.RaceSpecific.ALL)
+                shopItem.curRaceSpecific = ShopItem.RaceSpecific.ALL;
+            else if (itemCombat.curRace == ItemPiece.RaceSpecific.HUMAN)
+                shopItem.curRaceSpecific = ShopItem.RaceSpecific.HUMAN;
+            else if (itemCombat.curRace == ItemPiece.RaceSpecific.BEAST)
+                shopItem.curRaceSpecific = ShopItem.RaceSpecific.BEAST;
+            else if (itemCombat.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                shopItem.curRaceSpecific = ShopItem.RaceSpecific.ETHEREAL;
+
             shopItem.UpdatePriceTextColour();
             /*
             // Spawn Health Items
@@ -725,13 +820,13 @@ public class ShopManager : MonoBehaviour
             if (refreshItems)
             {
                 // Loop each item that has been purchased
-                for (int b = 0; b < GetActiveRoom().GetPurchasedItems().Count; b++)
+                for (int b = 0; b < GetActiveRoom().GetPurchasedShopItems().Count; b++)
                 {
                     // Loop through all actual items in shop
                     for (int x = 0; x < GetShopItems().Count; x++)
                     {
                         // If a shop item name matches with the purchased item on first loop, make it invis
-                        if (GetShopItems()[x].GetShopItemName() == GetActiveRoom().GetPurchasedItems()[b].itemName)
+                        if (GetShopItems()[x].GetItemIndex() == GetActiveRoom().GetPurchasedShopItems()[b].GetItemIndex())
                         {
                             // Make all items that are purchased invisible             
                             ShopItem shopItemHidden = GetShopItems()[x];
@@ -743,11 +838,13 @@ public class ShopManager : MonoBehaviour
                             shopItemHidden.itemButton.enabled = false;
                             shopItemHidden.UpdatePurchased(true);
 
+                            /*
                             // loop through how many have been purchased of that item 
-                            if (GetActiveRoom().GetShopRoomPurchasedItemsAmount(GetActiveRoom().GetPurchasedItems()[b].itemName) > 1)
+                            if (GetActiveRoom().GetShopRoomPurchasedItemsAmount(GetActiveRoom().GetPurchasedItems()[b].itemName) > 0)
                                 continue;
                             else
                                 break;
+                            */
                         }
                     }
                 }

@@ -2091,7 +2091,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d43849b5e22e40e4ab5a8dd7191e4910, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6615f742c768f9b459960f4eb1ddb6dd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2114,6 +2114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curRarityType: 0
+  curRaceSpecific: 0
   buttonPurchase: {fileID: 2563547606002404611}
   buttonPurchaseCover: {fileID: 2448918724684255827}
   rarityCommonGO: {fileID: 2587351905677358505}
@@ -2128,7 +2129,9 @@ MonoBehaviour:
   textUI: {fileID: 8852160575606996709}
   itemAnimator: {fileID: 0}
   rarityAnimator: {fileID: 0}
+  itemIndex: 0
   itemButton: {fileID: 4652905634625004853}
+  price: 0
 --- !u!95 &6398551722443585373
 Animator:
   serializedVersion: 4
@@ -23493,7 +23496,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 4
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b1262895f9a0c2741837260617873ff4, type: 2}
   m_sharedMaterial: {fileID: -6006359576746837634, guid: b1262895f9a0c2741837260617873ff4, type: 2}

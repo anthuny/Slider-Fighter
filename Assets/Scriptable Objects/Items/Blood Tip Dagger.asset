@@ -22,8 +22,8 @@ MonoBehaviour:
   curActiveType: 1
   curHitType: 0
   itemName: Blood Tip Dagger
-  itemDesc: 50% chance to Add Atk Up (1) - On Turn Start. using 1 charge. (Gain 3
-    charge per combat start)
+  itemDesc: Add Attack Up (1) - On Turn Start. using 1 charge. (Gain 3 charge per
+    combat start)
   itemSpriteItemTab: {fileID: 21300000, guid: 5f9a91667962fba4eb057977e6bad720, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 61ec7530001bbc5488a58e643d1f67f6, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 61ec7530001bbc5488a58e643d1f67f6, type: 3}

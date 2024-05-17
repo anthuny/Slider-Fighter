@@ -22,8 +22,8 @@ MonoBehaviour:
   curActiveType: 1
   curHitType: 0
   itemName: Iron Bread
-  itemDesc: 50% chance to Add Health Up (1) - On Turn Start. using 1 charge. (Gain
-    3 charge per combat start)
+  itemDesc: Add Health Up (1) - On Turn Start. using 1 charge. (Gain 3 charge per
+    combat start)
   itemSpriteItemTab: {fileID: 21300000, guid: 30b29a0cafe8ad74aa1811cb3298c465, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 33eef20516abb2f4aa4ed75417cebc7b, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 33eef20516abb2f4aa4ed75417cebc7b, type: 3}
