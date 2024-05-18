@@ -2276,6 +2276,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
 
             playerUIElement.UpdateAlpha(1);     // Disable player UI
+
+            ShopManager.Instance.SetActiveRoom(RoomManager.Instance.GetActiveRoom());
+            ShopManager.Instance.GetActiveRoom().UpdateIsVisited(true);
+
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
             //ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
@@ -2297,7 +2301,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             ShopManager.Instance.DisplayFallenHeroes();
 
+
             transitionSprite.AllowFadeOut();
+
+            
             return;
         }
     }
@@ -3744,7 +3751,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         StartCoroutine(SetupPostBattleUI(playerWon));
     }
 
-    void CheckToEndCombat()
+    bool CheckToEndCombat()
     {
         #region Check if Player Team Won or Lost, Then end Battle
 
@@ -3764,7 +3771,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             playerWon = false;
             StartCoroutine(PlayerLostWait());
-            return;
+            return true;
         }
         else if (enemyCount == 0)
         {
@@ -3792,6 +3799,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ITEM || RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
             {
+                HideMainSlotDetails();
                 ResetFallenEnemies();
                 SetupItemRewards();
             }
@@ -3808,7 +3816,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             HideMainSlotDetails();
 
-            return;
+            return true;
+        }
+        else
+        {
+            return false;
         }
 
         #endregion
@@ -3821,7 +3833,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         isSkillsMode = true;
 
         //Debug.Log("updated turn order");
-        CheckToEndCombat();
+        if (CheckToEndCombat())
+            return;
 
         HideMainSlotDetails();
 

@@ -87,13 +87,19 @@ public class RoomMapIcon : MonoBehaviour
         shopRoomShopItems.Add(shopItem);
     }
 
-    public List<ShopItem> GetShopRoomShopItems()
-    {
-        return shopRoomShopItems;
-    }
     public void ClearShopRoomCombatItems()
     {
         shopRoomCombatItems.Clear();
+    }
+
+    public void ClearShopRoomShopItems()
+    {
+        shopRoomShopItems.Clear();
+    }
+
+    public List<ShopItem> GetShopRoomShopItems()
+    {
+        return shopRoomShopItems;
     }
 
     public List<ItemPiece> GetShopRoomCombatItems()

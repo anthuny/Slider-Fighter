@@ -489,18 +489,38 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        // Put selection on seleted item
-        if (shopItem != null)
+        if (!ShopManager.Instance.playerInShopRoom)
         {
-            ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
-            ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedItemName);
+            // Put selection on seleted item
+            if (itemParent != null)
+            {
+                //ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
+                ItemRewardManager.Instance.selectedItemName = itemParent.GetItemName();
+                ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedItemName);
 
-            //itemParent.ToggleSelected(true, true);
+                itemParent.ToggleSelected(true, true);
+            }
+
+            ItemRewardManager.Instance.UpdateItemDescription(true);
+
+            ItemRewardManager.Instance.ToggleConfirmItemButton(true);
         }
+        else
+        {
+            // Put selection on seleted item
+            if (shopItem != null)
+            {
+                //ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
+                ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
+                ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedItemName);
 
-        //ItemRewardManager.Instance.UpdateItemDescription(true);
+                //itemParent.ToggleSelected(true, true);
+            }
 
-        ItemRewardManager.Instance.ToggleConfirmItemButton(true);
+            //ItemRewardManager.Instance.UpdateItemDescription(true);
+
+            //ItemRewardManager.Instance.ToggleConfirmItemButton(true);
+        }
     }
 
     public void ConfirmItem()

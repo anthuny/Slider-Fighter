@@ -452,6 +452,8 @@ public class MapManager : MonoBehaviour
             ToggleButtonSkillsTabCombat(false);
             ToggleButtonItemsTabCombat(false);
 
+            ShopManager.Instance.ToggleShopItemButtons(false);
+
             ShopManager.Instance.DisableShopUI();
 
             OverlayUI.Instance.ToggleItemRarityTextUI(false);

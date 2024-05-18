@@ -333,10 +333,12 @@ public class ShopManager : MonoBehaviour
     public void ClearShopItems(bool hideShop = false)
     {
         if (GetActiveRoom())
-        {
-            //if (GetActiveRoom().GetIsVisited())
-             //   return;
-
+        {            
+            ResetShopItems();
+            
+            if (GetActiveRoom().GetIsVisited())
+                return;
+            
             //GetActiveRoom().ClearShopRoomCombatItems();
             //GetActiveRoom().ClearShopRoomHealthItems();
 
@@ -353,6 +355,7 @@ public class ShopManager : MonoBehaviour
                 //Destroy(shopItem8Parent.GetChild(0).gameObject);
             }
 
+            
             if (hideShop)
             {
                 ToggleShopVisibility(false);
@@ -365,8 +368,9 @@ public class ShopManager : MonoBehaviour
                 ToggleShopVisibility(true);
 
             }
+            
 
-            ResetShopItems();
+            
         }
     }
     
@@ -560,10 +564,17 @@ public class ShopManager : MonoBehaviour
 
         return partySuitable;
     }
+
+    public void ToggleShopItemButtons(bool toggle = true)
+    {
+        for (int i = 0; i < shopItems.Count; i++)
+        {
+            shopItems[i].ToggleShopItemButton(toggle);
+        }
+    }
+
     public void FillShopItems(bool clearItems, bool refreshItems)
     {
-        SetActiveRoom(RoomManager.Instance.GetActiveRoom());
-
         ToggleRandomiser(true);
         ToggleExitShopButton(true);
 
@@ -586,29 +597,7 @@ public class ShopManager : MonoBehaviour
         // Spawn Combat Items
         for (int i = 0; i < shopMaxCombatItems; i++)
         {
-            // Spawn items
-            GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
-
-            if (i == 0)
-                go.transform.SetParent(shopItem1Parent);
-            else if (i == 1)
-                go.transform.SetParent(shopItem2Parent);
-            else if (i == 2)
-                go.transform.SetParent(shopItem3Parent);
-            else if (i == 3)
-                go.transform.SetParent(shopItem4Parent);
-            else if (i == 4)
-                go.transform.SetParent(shopItem5Parent);
-            else if (i == 5)
-                go.transform.SetParent(shopItem6Parent);
-
-            go.transform.localScale = new Vector2(1, 1);
-            go.transform.localPosition = Vector2.zero;
-
-            // Update price and sprite
-            shopItem = go.GetComponent<ShopItem>();
-
-            AddShopItems(shopItem);
+            int itemPrice = 0;
 
             if (!GetActiveRoom().hasEntered)
             {
@@ -621,16 +610,10 @@ public class ShopManager : MonoBehaviour
 
                 // Item Rarity Roll
                 int rand = Random.Range(1, 101);
-                if (rand >= 97)
-                    getLegendary = true;
-                else if (rand < 97 && rand >= 90)
-                    getEpic = true;
-                else if (rand < 90 && rand >= 70)
+                 if (rand >= 90)
                     getRare = true;
-                else if (rand < 70)
+                else if (rand < 90)
                     getCommon = true;        
-
-                int itemPrice = 0;
 
                 if (getLegendary)
                 {   
@@ -711,11 +694,60 @@ public class ShopManager : MonoBehaviour
 
                 if (itemCombat == null || itemPrice < 4)
                 {
-                    if (i > 0)
-                        i--;
+                    Debug.Log("Item Combat = " + itemCombat);
+                    i--;
 
+                    if (i < 0)
+                        i = 0;
+                    
                     continue;
                 }
+
+
+            }
+        
+            if (!GetActiveRoom().hasEntered)
+            {
+                // Spawn items
+                GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
+
+                if (i == 0)
+                    go.transform.SetParent(shopItem1Parent);
+                else if (i == 1)
+                    go.transform.SetParent(shopItem2Parent);
+                else if (i == 2)
+                    go.transform.SetParent(shopItem3Parent);
+                else if (i == 3)
+                    go.transform.SetParent(shopItem4Parent);
+                else if (i == 4)
+                    go.transform.SetParent(shopItem5Parent);
+                else if (i == 5)
+                    go.transform.SetParent(shopItem6Parent);
+
+                go.transform.localScale = new Vector2(1, 1);
+                go.transform.localPosition = Vector2.zero;
+
+                
+                // Update price and sprite
+                shopItem = go.GetComponent<ShopItem>();
+            }
+
+            if (GetActiveRoom().hasEntered)
+            {
+                itemCombat = GetActiveRoom().GetShopRoomCombatItems()[i];
+
+                shopItem = GetActiveRoom().GetShopRoomShopItems()[i];         
+                shopItem.UpdatePrice(GetActiveRoom().GetShopRoomShopItems()[i].price);
+            }    
+
+            AddShopItems(shopItem);
+
+            // If active room has not been visited yet, store shop items to room
+            if (!GetActiveRoom().hasEntered)
+            {
+
+                activeRoom.AddShopRoomCombatItems(itemCombat);
+                activeRoom.AddShopRoomShopItems(shopItem);
 
                 int rand2 = Random.Range(0,4);
                 if (rand2 == 0)
@@ -725,21 +757,9 @@ public class ShopManager : MonoBehaviour
                 else if (rand2 == 2)
                     itemPrice -= 2;
 
-                shopItem.UpdatePrice(itemPrice);
+                shopItem.UpdatePrice(itemPrice);                
             }
-
-            // If active room has not been visited yet, store shop items to room
-            if (!GetActiveRoom().hasEntered)
-            {
-                activeRoom.AddShopRoomCombatItems(itemCombat);
-                activeRoom.AddShopRoomShopItems(shopItem);
-            }
-            else
-            {
-                itemCombat = activeRoom.GetShopRoomCombatItems()[i];             
-                shopItem.UpdatePrice(activeRoom.GetShopRoomShopItems()[i].price);
-            }
-
+            
             shopItem.UpdateShopItemName(itemCombat.itemName);
             shopItem.UpdateItemIndex(i);
 
@@ -769,53 +789,7 @@ public class ShopManager : MonoBehaviour
                 shopItem.curRaceSpecific = ShopItem.RaceSpecific.ETHEREAL;
 
             shopItem.UpdatePriceTextColour();
-            /*
-            // Spawn Health Items
-            if (shopHealthItems.Count != 0)
-            {
-                ItemPiece itemHealth = null;
 
-                for (int y = 0; y < shopMaxHealthItems; y++)
-                {
-                    // Spawn items
-                    GameObject go3 = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
-
-                    if (y == 0)
-                        go3.transform.SetParent(shopItem7Parent);
-                    else if (y == 1)
-                        go3.transform.SetParent(shopItem8Parent);
-
-                    go3.transform.localScale = new Vector2(1, 1);
-                    go3.transform.localPosition = Vector2.zero;
-
-                    // Update price and sprite
-                    shopItem = go3.GetComponent<ShopItem>();
-                    AddShopItems(shopItem);
-
-
-                    int rand = Random.Range(0, shopHealthItems.Count);
-                    // If shop room has not been opened before, spawn new ones
-                    if (!activeRoom.hasEntered)
-                        itemHealth = shopHealthItems[rand];
-                    else if (activeRoom.hasEntered)
-                        itemHealth = activeRoom.GetShopRoomHealthItems()[y];
-
-                    // If item hasn't been purchased from this shop before
-                    shopItem.UpdateShopItemName(itemHealth.itemName);
-                    shopItem.UpdatePriceText(itemHealth.basePrice.ToString());
-                    shopItem.UpdateShopItemSprite(itemHealth.itemSpriteItemTab);
-                    shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
-                    shopItem.itemButton.enabled = true;
-
-                    if (itemHealth.ac)
-                        shopItem.UpdateAnimatorController(itemHealth.ac);
-
-                    // If active room has not been visited yet, store shop items to room
-                    if (!GetActiveRoom().hasEntered)
-                        activeRoom.AddShopRoomHealthItems(itemHealth);
-                }
-            }    
-            */
             // Hiding Purchased Items
             if (refreshItems)
             {
@@ -857,6 +831,8 @@ public class ShopManager : MonoBehaviour
         UpdateAllShopItemPriceTextColour();
 
         ToggleActiveRoomEntered(true);
+
+        ToggleShopItemButtons(true);
     }
 
     void DisableShopItem()
