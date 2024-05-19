@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class MenuUnitDisplay : MonoBehaviour
 {
+
+    [SerializeField] private UIElement raceIcon;
     [SerializeField] private UIElement fallenHeroCostText;
     public Animator animator;
     [SerializeField] private Image unitImage;
@@ -22,8 +24,36 @@ public class MenuUnitDisplay : MonoBehaviour
 
     public int cost;
 
-    // todo am here
+    public void UpdateFighterRaceIcon(string fighterRace)
+    {
+        if (fighterRace == "HUMAN")
+        {
+            raceIcon.UpdateContentImage(GameManager.Instance.humanRaceIcon);
+            raceIcon.tooltipStats.UpdateTooltipStatsText("HUMAN");
+        }           
+        else if (fighterRace == "BEAST")
+        {
+            raceIcon.UpdateContentImage(GameManager.Instance.beastRaceIcon);
+            raceIcon.tooltipStats.UpdateTooltipStatsText("BEAST");
+        }          
+        else if (fighterRace == "ETHEREAL")
+        {
+            raceIcon.UpdateContentImage(GameManager.Instance.etherealRaceIcon);
+            raceIcon.tooltipStats.UpdateTooltipStatsText("ETHEREAL");
+        }       
+    }
 
+    public void ToggleFighterRaceIcon(bool toggle = true)
+    {
+        if (toggle)
+        {
+            raceIcon.UpdateAlpha(1);
+        }
+        else
+        {
+            raceIcon.UpdateAlpha(0);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -96,6 +126,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, 0);
             }
+
+            UpdateFighterRaceIcon("HUMAN");
         }
 
         else if (unitName == "Necromancer")
@@ -121,6 +153,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 55);
             }
+
+            UpdateFighterRaceIcon("ETHEREAL");
         }
         else if (unitName == "Ranger")
         {
@@ -145,6 +179,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 55);
             }
+
+            UpdateFighterRaceIcon("HUMAN");
         }
 
         else if (unitName == "Cleric")
@@ -170,6 +206,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
             }
+
+            UpdateFighterRaceIcon("HUMAN");
         }
 
         else if (unitName == "Monk")
@@ -195,6 +233,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 5);
             }
+
+            UpdateFighterRaceIcon("ETHEREAL");
         }
 
         else if (unitName == "Locked")
@@ -205,6 +245,8 @@ public class MenuUnitDisplay : MonoBehaviour
             animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
 
             ToggleUnitLocked(true, true);
+
+            ToggleFighterRaceIcon(false);
         }
 
         StartIdleAnim();

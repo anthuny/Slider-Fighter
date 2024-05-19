@@ -31,7 +31,7 @@ MonoBehaviour:
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 11400000, guid: ea9021db3e395ad4ca62a5d553dfacfd, type: 2}
   effectAddedTurnLength: 2
-  itemPower: 20
+  itemPower: 25
   threshHoldAmount: 0
   isSelfCast: 0
   isBaseHealing: 0

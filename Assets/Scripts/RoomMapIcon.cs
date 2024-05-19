@@ -5,9 +5,17 @@ using UnityEngine.UI;
 
 public class RoomMapIcon : MonoBehaviour
 {
+    public int item1Cost;
+    public int item2Cost;
+    public int item3Cost;
+    public int item4Cost;
+    public int item5Cost;
+    public int item6Cost;
+
     public enum RoomType { ENEMY, SHOP, HERO, ITEM, BOSS, STARTING }
     public RoomType curRoomType;
 
+    public bool newShopFlag;
     public enum RoomSize { MAIN, SIDE }
     public RoomSize curRoomSize;
 
@@ -18,7 +26,9 @@ public class RoomMapIcon : MonoBehaviour
     public UIElement roomSelectionImage;
     [SerializeField] private Button roomButton;
     [SerializeField] private ButtonRoom buttonRoom;
+    /*
     [SerializeField] private List<ShopItem> shopRoomShopItems = new List<ShopItem>();
+    */
     [SerializeField] private List<ItemPiece> shopRoomCombatItems = new List<ItemPiece>();
     [SerializeField] private List<ItemPiece> shopRoomHealthItems = new List<ItemPiece>();
     [SerializeField] private List<ItemPiece> purchasedItems = new List<ItemPiece>();
@@ -82,24 +92,9 @@ public class RoomMapIcon : MonoBehaviour
         shopRoomCombatItems.Add(item);
     }
 
-    public void AddShopRoomShopItems(ShopItem shopItem)
-    {
-        shopRoomShopItems.Add(shopItem);
-    }
-
     public void ClearShopRoomCombatItems()
     {
         shopRoomCombatItems.Clear();
-    }
-
-    public void ClearShopRoomShopItems()
-    {
-        shopRoomShopItems.Clear();
-    }
-
-    public List<ShopItem> GetShopRoomShopItems()
-    {
-        return shopRoomShopItems;
     }
 
     public List<ItemPiece> GetShopRoomCombatItems()
@@ -294,6 +289,15 @@ public class RoomMapIcon : MonoBehaviour
         isCompleted = toggle;
     }
 
+    public void ToggleNewShopFlag(bool toggle = true)
+    {
+        newShopFlag = toggle;
+    }
+
+    public bool GetNewShopFlag()
+    {
+        return newShopFlag;
+    }
     public bool GetIsCompleted()
     {
         return isCompleted;

@@ -37,6 +37,8 @@ public class Slot : MonoBehaviour
 
     public UIElement ownedSlotButton;
     [SerializeField] private UIElement equipSlotButton;
+    [SerializeField] private UIElement equipSlotButtonCover;
+    public bool coverOn;
     public UIElement goldtextUI;
 
     public bool isGold;
@@ -353,6 +355,23 @@ public class Slot : MonoBehaviour
             ownedSlotButton.UpdateAlpha(1);
         else
             ownedSlotButton.UpdateAlpha(0);
+    }
+
+    public void ToggleEquipButtonCover(bool toggle = true)
+    {
+        if (toggle)
+        {
+            equipSlotButtonCover.UpdateAlpha(1);
+            //equipSlotButton.ToggleButton(false);
+            coverOn = true;
+        }
+        else
+        {
+            equipSlotButtonCover.UpdateAlpha(0);
+            //equipSlotButton.ToggleButton(true);
+
+            coverOn = false;
+        }
     }
 
     public void ToggleEquipButton(bool toggle)

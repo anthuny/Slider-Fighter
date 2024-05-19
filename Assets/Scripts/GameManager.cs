@@ -634,11 +634,22 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitDefense(unit.startingDefense);
 
                 if (unit.curRaceType == UnitData.RaceType.HUMAN)
+                {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
+                    unitFunctionality.UpdateFighterRaceIcon("HUMAN");
+                }                
                 else if (unit.curRaceType == UnitData.RaceType.BEAST)
+                {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.BEAST;
+                    unitFunctionality.UpdateFighterRaceIcon("BEAST");
+                }                   
                 else if (unit.curRaceType == UnitData.RaceType.ETHEREAL)
+                {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.ETHEREAL;
+                    unitFunctionality.UpdateFighterRaceIcon("ETHEREAL");
+                }
+
+                unitFunctionality.ToggleFighterRaceIcon(true);
 
                 unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
                 unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
@@ -2048,9 +2059,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         i--;
                 }
 
-
-
-
                 unitFunctionality.UpdateUnitLevel(unitLevel, 0, true);
                 //Debug.Log("i = " + i);
 
@@ -2063,12 +2071,22 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
 
                 if (unit.curRaceType == UnitData.RaceType.HUMAN)
+                {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
+                    unitFunctionality.UpdateFighterRaceIcon("HUMAN");
+                }                   
                 else if (unit.curRaceType == UnitData.RaceType.BEAST)
+                {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.BEAST;
+                    unitFunctionality.UpdateFighterRaceIcon("BEAST");
+                }                    
                 else if (unit.curRaceType == UnitData.RaceType.ETHEREAL)
+                {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.ETHEREAL;
-
+                    unitFunctionality.UpdateFighterRaceIcon("ETHEREAL");
+                }
+                    
+                unitFunctionality.ToggleFighterRaceIcon(true);
 
                 unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
                 unitFunctionality.UpdatePowerIncPerLv((int)unit.powerIncPerLv);
@@ -2255,6 +2273,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             ShopManager.Instance.TogglePlayerInShopRoom();
 
+            
             // Map open SFX
             AudioManager.Instance.Play("SFX_ShopEnterLeave");
 
@@ -2278,7 +2297,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             playerUIElement.UpdateAlpha(1);     // Disable player UI
 
             ShopManager.Instance.SetActiveRoom(RoomManager.Instance.GetActiveRoom());
-            ShopManager.Instance.GetActiveRoom().UpdateIsVisited(true);
+
 
             ToggleUIElement(turnOrder, false);  // Disable turn order
             ResetSelectedUnits();   // Disable all unit selections
@@ -2287,6 +2306,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ToggleAllyUnitSelection(false);
             ShopManager.Instance.FillShopItems(false, true);
 
+            ShopManager.Instance.lastVisitedShopRoom = RoomManager.Instance.GetActiveRoom();
             // Update allies into position for shop
             UpdateAllAlliesPosition(false, GetActiveUnitType(), false, true);
 
@@ -2300,7 +2320,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ShopManager.Instance.ToggleExitShopButton(true);
 
             ShopManager.Instance.DisplayFallenHeroes();
-
+            ShopManager.Instance.GetActiveRoom().UpdateIsVisited(true);
 
             transitionSprite.AllowFadeOut();
 
@@ -4040,25 +4060,32 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public bool CheckSkipUnitTurn(UnitFunctionality unitTarget)
     {
-        if (unitTarget.curUnitType == UnitFunctionality.UnitType.PLAYER)
+        if (!ShopManager.Instance.playerInShopRoom)
         {
-            // Skip unit turn if all skills are on cooldown
-            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 1 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
-                || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES)
+            if (unitTarget.curUnitType == UnitFunctionality.UnitType.PLAYER)
             {
-                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 1 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
-                    || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(1).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 3)
+                // Skip unit turn if all skills are on cooldown
+                if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(0)) >= 1 || unitTarget.GetSkill(0).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                    || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES)
                 {
-                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 1 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
-                        || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(2).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 6)
+                    if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(1)) >= 1 || unitTarget.GetSkill(1).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                        || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(1).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 3)
                     {
-                        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
-                            || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(3).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 9)
+                        if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(2)) > 1 || unitTarget.GetSkill(2).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                            || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(2).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 6)
                         {
-                            if (!HeroRoomManager.Instance.playerInHeroRoomView)
-                                return true;
+                            if (unitTarget.GetSkillCurCooldown(unitTarget.GetSkill(3)) >= 1 || unitTarget.GetSkill(3).isReviving && fallenHeroes.Count == 0 && unitTarget.GetSkill(0).curSkillSelectionType == SkillData.SkillSelectionType.PLAYERS
+                                || unitTarget.GetSkill(0).isReviving && fallenEnemies.Count == 0 && unitTarget.GetSkill(3).curSkillSelectionType == SkillData.SkillSelectionType.ENEMIES || unitTarget.GetUnitLevel() < 9)
+                            {
+                                if (!HeroRoomManager.Instance.playerInHeroRoomView)
+                                    return true;
+                                else
+                                    return false;
+                            }
                             else
+                            {
                                 return false;
+                            }
                         }
                         else
                         {

@@ -15,6 +15,7 @@ public class UnitFunctionality : MonoBehaviour
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
+    [SerializeField] private UIElement fighterRaceIcon;
     [SerializeField] private UIElement heroHitsAccTextPos;
     [SerializeField] private UIElement enemyHitsAccTextPos;
     public HeroWeapon heroWeapon;
@@ -202,6 +203,36 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private GameObject unitAlertText;
     public bool hitPerfect = false;
 
+    public void UpdateFighterRaceIcon(string fighterRace)
+    {
+        if (fighterRace == "HUMAN")
+        {
+            fighterRaceIcon.UpdateContentImage(GameManager.Instance.humanRaceIcon);
+            fighterRaceIcon.tooltipStats.UpdateTooltipStatsText("HUMAN");
+        }           
+        else if (fighterRace == "BEAST")
+        {
+            fighterRaceIcon.UpdateContentImage(GameManager.Instance.beastRaceIcon);
+            fighterRaceIcon.tooltipStats.UpdateTooltipStatsText("BEAST");
+        }          
+        else if (fighterRace == "ETHEREAL")
+        {
+            fighterRaceIcon.UpdateContentImage(GameManager.Instance.etherealRaceIcon);
+            fighterRaceIcon.tooltipStats.UpdateTooltipStatsText("ETHEREAL");
+        }       
+    }
+
+    public void ToggleFighterRaceIcon(bool toggle = true)
+    {
+        if (toggle)
+        {
+            fighterRaceIcon.UpdateAlpha(1);
+        }
+        else
+        {
+            fighterRaceIcon.UpdateAlpha(0);
+        }
+    }
     public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
     {
         //Debug.Log("max charges = " + maxCharges);
@@ -3907,6 +3938,8 @@ public class UnitFunctionality : MonoBehaviour
 
             animator.SetTrigger("DeathFlg");
 
+            ToggleFighterRaceIcon(false);
+
             AudioManager.Instance.Play(deathClip.name);
 
             if (curUnitType == UnitType.ENEMY)
@@ -4005,6 +4038,8 @@ public class UnitFunctionality : MonoBehaviour
 
         selectUnitButton.ToggleButton(true);
 
+        ToggleFighterRaceIcon(true);
+        
         if (enemy)
             GameManager.Instance.AddUnitToTurnOrder(this);
 

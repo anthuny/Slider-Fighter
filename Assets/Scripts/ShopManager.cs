@@ -10,6 +10,8 @@ public class ShopManager : MonoBehaviour
     //[HideInInspector]
 
     [SerializeField] private UIElement partyNoRaceItemPrompt;
+
+    public RoomMapIcon lastVisitedShopRoom;
     public ShopItem selectedShopItem;
     public Animator commonItemAnimator;
     public Animator rareItemAnimator;
@@ -336,9 +338,13 @@ public class ShopManager : MonoBehaviour
         {            
             ResetShopItems();
             
+            // Or last visited shop room does not equal to this one
+            /*
             if (GetActiveRoom().GetIsVisited())
                 return;
-            
+            }
+            */
+
             //GetActiveRoom().ClearShopRoomCombatItems();
             //GetActiveRoom().ClearShopRoomHealthItems();
 
@@ -351,6 +357,8 @@ public class ShopManager : MonoBehaviour
                 Destroy(shopItem4Parent.GetChild(0).gameObject);
                 Destroy(shopItem5Parent.GetChild(0).gameObject);
                 Destroy(shopItem6Parent.GetChild(0).gameObject);
+
+                //GetActiveRoom().ClearShopRoomShopItems();
                 //Destroy(shopItem7Parent.GetChild(0).gameObject);
                 //Destroy(shopItem8Parent.GetChild(0).gameObject);
             }
@@ -373,6 +381,7 @@ public class ShopManager : MonoBehaviour
             
         }
     }
+    
     
     public void ToggleExitShopButton(bool toggle)
     {
@@ -599,7 +608,7 @@ public class ShopManager : MonoBehaviour
         {
             int itemPrice = 0;
 
-            if (!GetActiveRoom().hasEntered)
+            if (!GetActiveRoom().isVisited)
             {
                 bool getCommon = false;
                 bool getRare = false;
@@ -706,48 +715,70 @@ public class ShopManager : MonoBehaviour
 
             }
         
-            if (!GetActiveRoom().hasEntered)
+
+            // Spawn items
+            GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
+
+            if (i == 0)
+                go.transform.SetParent(shopItem1Parent);
+            else if (i == 1)
+                go.transform.SetParent(shopItem2Parent);
+            else if (i == 2)
+                go.transform.SetParent(shopItem3Parent);
+            else if (i == 3)
+                go.transform.SetParent(shopItem4Parent);
+            else if (i == 4)
+                go.transform.SetParent(shopItem5Parent);
+            else if (i == 5)
+                go.transform.SetParent(shopItem6Parent);
+
+            go.transform.localScale = new Vector2(1, 1);
+            go.transform.localPosition = Vector2.zero;
+
+            
+            // Update price and sprite
+            shopItem = go.GetComponent<ShopItem>();
+
+            /*
+            if (GetActiveRoom().GetShopRoomShopItems().Count > 0)
             {
-                // Spawn items
-                GameObject go = Instantiate(shopItemPrefab, itemsParent.gameObject.transform);
-
-                if (i == 0)
-                    go.transform.SetParent(shopItem1Parent);
-                else if (i == 1)
-                    go.transform.SetParent(shopItem2Parent);
-                else if (i == 2)
-                    go.transform.SetParent(shopItem3Parent);
-                else if (i == 3)
-                    go.transform.SetParent(shopItem4Parent);
-                else if (i == 4)
-                    go.transform.SetParent(shopItem5Parent);
-                else if (i == 5)
-                    go.transform.SetParent(shopItem6Parent);
-
-                go.transform.localScale = new Vector2(1, 1);
-                go.transform.localPosition = Vector2.zero;
-
-                
-                // Update price and sprite
-                shopItem = go.GetComponent<ShopItem>();
+                if (GetActiveRoom().GetShopRoomShopItems()[0] == null)
+                {
+                    GetActiveRoom().ClearShopRoomShopItems();
+                    for (int v = 0; v < GetActiveRoom().GetShopRoomShopItems().Count; v++)
+                    {
+                        GetActiveRoom().GetShopRoomShopItems()[v] = shopItem;
+                    }
+                }
             }
+            */
 
-            if (GetActiveRoom().hasEntered)
+            if (GetActiveRoom().isVisited)
             {
                 itemCombat = GetActiveRoom().GetShopRoomCombatItems()[i];
 
-                shopItem = GetActiveRoom().GetShopRoomShopItems()[i];         
-                shopItem.UpdatePrice(GetActiveRoom().GetShopRoomShopItems()[i].price);
+                //shopItem = GetActiveRoom().GetShopRoomShopItems()[i];         
+                if (i == 0)
+                    shopItem.UpdatePrice(GetActiveRoom().item1Cost);
+                else if (i == 1)
+                    shopItem.UpdatePrice(GetActiveRoom().item2Cost);
+                else if (i == 2)
+                    shopItem.UpdatePrice(GetActiveRoom().item3Cost);
+                else if (i == 3)
+                    shopItem.UpdatePrice(GetActiveRoom().item4Cost);
+                else if (i == 4)
+                    shopItem.UpdatePrice(GetActiveRoom().item5Cost);
+                else if (i == 5)
+                    shopItem.UpdatePrice(GetActiveRoom().item6Cost);        
             }    
 
             AddShopItems(shopItem);
 
             // If active room has not been visited yet, store shop items to room
-            if (!GetActiveRoom().hasEntered)
+            if (!GetActiveRoom().isVisited)
             {
-
                 activeRoom.AddShopRoomCombatItems(itemCombat);
-                activeRoom.AddShopRoomShopItems(shopItem);
+                //activeRoom.AddShopRoomShopItems(shopItem);
 
                 int rand2 = Random.Range(0,4);
                 if (rand2 == 0)
@@ -757,7 +788,19 @@ public class ShopManager : MonoBehaviour
                 else if (rand2 == 2)
                     itemPrice -= 2;
 
-                shopItem.UpdatePrice(itemPrice);                
+                shopItem.UpdatePrice(itemPrice);             
+                if (i == 0)
+                    GetActiveRoom().item1Cost = itemPrice;
+                else if (i == 1)
+                    GetActiveRoom().item2Cost = itemPrice;
+                else if (i == 2)
+                    GetActiveRoom().item3Cost = itemPrice;
+                else if (i == 3)
+                    GetActiveRoom().item4Cost = itemPrice;
+                else if (i == 4)
+                    GetActiveRoom().item5Cost = itemPrice;
+                else if (i == 5)
+                    GetActiveRoom().item6Cost = itemPrice;
             }
             
             shopItem.UpdateShopItemName(itemCombat.itemName);
@@ -831,6 +874,7 @@ public class ShopManager : MonoBehaviour
         UpdateAllShopItemPriceTextColour();
 
         ToggleActiveRoomEntered(true);
+        GetActiveRoom().UpdateIsVisited(true);
 
         ToggleShopItemButtons(true);
     }

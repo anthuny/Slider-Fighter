@@ -281,10 +281,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 {
                     if (MapManager.Instance.CheckToEnableHardRoomPrompt())
                     {
-                        MapManager.Instance.mapOverlay.ToggleHardRoomPrompt(true);
+                        if (RoomManager.Instance.GetFloorCount() >= RoomManager.Instance.highestFloorCountRun)
+                        {
+                            MapManager.Instance.mapOverlay.ToggleHardRoomPrompt(true);
 
-                        enterRoomButtonPressed = false;
-                        return;
+                            enterRoomButtonPressed = false;
+                            return;
+                        }
                     }
                 }
             }
@@ -745,6 +748,12 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             }
             else if (TeamItemsManager.Instance.playerInItemTab)
             {
+                if (slot.coverOn)
+                {
+                    AudioManager.Instance.Play("SFX_ShopBuyFail");
+                    return;
+                }
+
                 AudioManager.Instance.Play("Button_Click");
 
                 TeamItemsManager.Instance.UnequipItem();
@@ -971,6 +980,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
+        OwnedLootInven.Instance.DisableCoverForOwnedSlots();
+
         TeamItemsManager.Instance.playerInItemTab = false;
         SkillsTabManager.Instance.playerInSkillTab = false;
         TeamGearManager.Instance.playerInGearTab = true;
@@ -1059,6 +1070,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
+
+        TeamItemsManager.Instance.ToggleFighterRaceIcon(false);
 
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
@@ -1938,7 +1951,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // If unit
         if (heldTimer > GameManager.Instance.maxHeldTimeTooltip)
         {
-            if (GetComponentInParent<UnitFunctionality>() != null)
+            if (mainUIelement != null && isStatButton)
+            {
+                locked = true;
+                SkillsTabManager.Instance.holdingButton = mainUIelement;
+                SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(true);
+            }
+            else if (GetComponentInParent<UnitFunctionality>() != null)
             {
                 UnitFunctionality unit = GetComponentInParent<UnitFunctionality>();
 
@@ -1948,12 +1967,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             // If stats
             else
             {
-                if (mainUIelement != null && isStatButton)
-                {
-                    locked = true;
-                    SkillsTabManager.Instance.holdingButton = mainUIelement;
-                    SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(true);
-                }
+
             }
         }
     }
@@ -2067,21 +2081,18 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (GameManager.Instance.playerInCombat)
             {
-                if (GetComponentInParent<UnitFunctionality>() && !GetComponentInParent<UnitFunctionality>().isDead)
+                if (isStatButton)
+                {
+                    isHeldDownStat = true;
+                    //Debug.Log("c");
+                }
+                else if (GetComponentInParent<UnitFunctionality>() && !GetComponentInParent<UnitFunctionality>().isDead)
                 {
                     isHeldDownUnit = true;
                     //Debug.Log("Pointer Down");
 
                 }
-                else
-                {
-                    //Debug.Log("b");
-                    if (isStatButton)
-                    {
-                        isHeldDownStat = true;
-                        //Debug.Log("c");
-                    }
-                }
+
             }
             else
             {
@@ -2104,7 +2115,16 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         if (!isEffectButton)
         {
-            if (GetComponentInParent<UnitFunctionality>())
+            if (isStatButton)
+            {
+                isHeldDownStat = false;
+                heldTimer = 0;
+                StartCoroutine(HeldDownCooldown());
+
+                if (SkillsTabManager.Instance.holdingButton != null)
+                    SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(false);
+            }
+            else if (GetComponentInParent<UnitFunctionality>())
             {
                 //Debug.Log("Pointer Up");
                 isHeldDownUnit = false;
@@ -2115,15 +2135,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             // If skill page stat
             else
             {
-                if (isStatButton)
-                {
-                    isHeldDownStat = false;
-                    heldTimer = 0;
-                    StartCoroutine(HeldDownCooldown());
 
-                    if (SkillsTabManager.Instance.holdingButton != null)
-                        SkillsTabManager.Instance.holdingButton.ToggleTooltipStats(false);
-                }
             }
         }
         else

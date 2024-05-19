@@ -40,6 +40,19 @@ public class OwnedLootInven : MonoBehaviour
         Instance = this;
     }
 
+    public void DisableCoverForOwnedSlots()
+    {
+        
+        if (TeamGearManager.Instance.playerInGearTab)
+        {
+            for (int i = 0; i < ownedLootSlots.Count; i++)
+            {
+                ownedLootSlots[i].ToggleEquipButtonCover(false);
+            }
+        }
+        
+    }
+
     public void UpdateWornLootOwning()
     {
         bool doOnce = false;

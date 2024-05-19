@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b1acb7c48ac8e4794d42cad5696501, type: 3}
   m_Name: 180524 - Fixed enemy skill desc
   m_EditorClassIdentifier: 
-  updateLogPreText: 180524 - Fixed enemy skill desc
+  updateLogPreText: 18/05/24 - Fixed enemy skill desc
   updateLogText: FIX - Fixed enemy skill descriptions for necromancer's reanimate
     skill to properly display what the skill does.

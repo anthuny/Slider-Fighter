@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b1acb7c48ac8e4794d42cad5696501, type: 3}
   m_Name: 180524 - Improved weapon clarity
   m_EditorClassIdentifier: 
-  updateLogPreText: 180524 - Improved weapon clarity
+  updateLogPreText: 18/05/24 - Improved weapon clarity
   updateLogText: FIX - Slightly increase opacity of background hit areas for fighter
     mini-game weapons.

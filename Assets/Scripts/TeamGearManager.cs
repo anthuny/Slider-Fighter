@@ -1249,6 +1249,14 @@ public class TeamGearManager : MonoBehaviour
 
     public void GearSelection(Slot gear, bool select = false)
     {
+        if (playerInGearTab)
+        {
+            if (gear.curSlotStatis == Slot.SlotStatis.OWNED)
+            {
+                gear.ToggleEquipButtonCover(false);
+            }
+        }
+
         // Disable all gear selection border
         ResetAllBaseGearSelections();
 

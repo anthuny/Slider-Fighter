@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   curUnitType: 1
+  curRaceType: 2
   unitValue: 2
   unitSprite: {fileID: -1239719131, guid: fbe5805802964d7489180c0dedd510b7, type: 3}
   unitIcon: {fileID: 21300000, guid: 79e49d6df08cbb647a21eaea4d88d7b5, type: 3}
@@ -28,6 +29,10 @@ MonoBehaviour:
   healingPowerIncPerLv: 0.25
   defenseIncPerLv: 1
   maxHealthIncPerLv: 85
+  statDefense: 0
+  statAttack: 0
+  statHealing: 0
+  statUtility: 0
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 331353af287293145ab1b5e34a76a747, type: 3}
   curSkills:

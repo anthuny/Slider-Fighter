@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Slime
   m_EditorClassIdentifier: 
   curUnitType: 1
+  curRaceType: 1
   unitValue: 1
   unitSprite: {fileID: -307370437, guid: f5a578533257a894aa0d0a1affff6c6e, type: 3}
   unitIcon: {fileID: 21300000, guid: d4872ca97d36c34459e1927d43a1e97a, type: 3}
@@ -28,6 +29,10 @@ MonoBehaviour:
   healingPowerIncPerLv: 0.25
   defenseIncPerLv: 1
   maxHealthIncPerLv: 85
+  statDefense: 0
+  statAttack: 0
+  statHealing: 0
+  statUtility: 0
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 1bf1a9c9f88998b48906be4d2431acc9, type: 3}
   curSkills:

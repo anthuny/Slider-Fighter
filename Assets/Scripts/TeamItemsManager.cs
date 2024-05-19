@@ -6,6 +6,7 @@ public class TeamItemsManager : MonoBehaviour
 {
     public static TeamItemsManager Instance;
 
+    [SerializeField] private UIElement fighterRaceIcon;
     [SerializeField] private UIElement teamItemsTabUI;
     [SerializeField] private ButtonFunctionality toMapButton;
     [SerializeField] private ButtonFunctionality unEquipButton;
@@ -1098,8 +1099,188 @@ public class TeamItemsManager : MonoBehaviour
         }
     }
 
+    public void UpdateFighterRaceIcon(string fighterRace)
+    {
+        if (fighterRace == "HUMAN")
+        {
+            fighterRaceIcon.UpdateContentImage(GameManager.Instance.humanRaceIcon);
+            fighterRaceIcon.tooltipStats.UpdateTooltipStatsText("HUMAN");
+        }           
+        else if (fighterRace == "BEAST")
+        {
+            fighterRaceIcon.UpdateContentImage(GameManager.Instance.beastRaceIcon);
+            fighterRaceIcon.tooltipStats.UpdateTooltipStatsText("BEAST");
+        }          
+        else if (fighterRace == "ETHEREAL")
+        {
+            fighterRaceIcon.UpdateContentImage(GameManager.Instance.etherealRaceIcon);
+            fighterRaceIcon.tooltipStats.UpdateTooltipStatsText("ETHEREAL");
+        }       
+    }
+
+    public void ToggleFighterRaceIcon(bool toggle = true)
+    {
+        if (toggle)
+        {
+            fighterRaceIcon.UpdateAlpha(1);
+        }
+        else
+        {
+            fighterRaceIcon.UpdateAlpha(0);
+        }
+    }
+
     public void ItemSelection(Slot item, bool select = false)
     {
+        if (item.linkedItemPiece != null)
+        {
+            ToggleFighterRaceIcon(true);
+
+            if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+                UpdateFighterRaceIcon("HUMAN");
+            else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+                UpdateFighterRaceIcon("BEAST");
+            else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                UpdateFighterRaceIcon("ETHEREAL");   
+            else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+                ToggleFighterRaceIcon(false);
+
+            if (playerInItemTab)
+            {
+                if (item.curSlotStatis == Slot.SlotStatis.OWNED)
+                {
+                    if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.MAIN)
+                    {
+                        if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[0].curUnitRace != UnitFunctionality.UnitRace.HUMAN)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[0].curUnitRace != UnitFunctionality.UnitRace.BEAST)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[0].curUnitRace != UnitFunctionality.UnitRace.ETHEREAL)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+                        {
+                            item.ToggleEquipButtonCover(false);
+                        }
+                    }
+                    else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.SECOND)
+                    {
+                        if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[1].curUnitRace != UnitFunctionality.UnitRace.HUMAN)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[1].curUnitRace != UnitFunctionality.UnitRace.BEAST)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[1].curUnitRace != UnitFunctionality.UnitRace.ETHEREAL)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+                        {
+                            item.ToggleEquipButtonCover(false);
+                        }
+                    }
+                    else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.THIRD)
+                    {
+                        if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[2].curUnitRace != UnitFunctionality.UnitRace.HUMAN)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[2].curUnitRace != UnitFunctionality.UnitRace.BEAST)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            if (GameManager.Instance.activeRoomHeroes[2].curUnitRace != UnitFunctionality.UnitRace.ETHEREAL)
+                            {
+                                item.ToggleEquipButtonCover(true);
+                            }
+                            else
+                            {
+                                item.ToggleEquipButtonCover(false);
+                            }
+                        }
+                        else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+                        {
+                            item.ToggleEquipButtonCover(false);
+                        }
+                    }
+                }
+            }
+            else if (TeamGearManager.Instance.playerInGearTab)
+            {
+                item.ToggleEquipButtonCover(false);
+            }
+        }
+        else
+        {
+            ToggleFighterRaceIcon(false);
+        }
+
         // Disable all gear selection border
         ResetAllItemSelections();
 
