@@ -182,7 +182,6 @@ public class ShopItem : MonoBehaviour
         else
             ShopManager.Instance.UpdatePlayerGold(-price);
 
-
         ShopManager.Instance.playerIsYetToSelectAFighter = true;
 
         ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(1);
@@ -199,7 +198,7 @@ public class ShopItem : MonoBehaviour
 
         ShopManager.Instance.UpdateAllShopItemPriceTextColour();
 
-        GameManager.Instance.SetAllFightersSelected(true);
+        //GameManager.Instance.SetAllFightersSelected(true);
 
         int combatCount = ShopManager.Instance.GetShopCombatItems().Count;
         for (int i = 0; i < combatCount; i++)
@@ -234,6 +233,7 @@ public class ShopItem : MonoBehaviour
                 ShopManager.Instance.GetShopCombatItems()[i].itemPower, 
                 ShopManager.Instance.GetShopCombatItems()[i].targetCount, 
                 ShopManager.Instance.GetShopCombatItems()[i].itemSpriteCombatSmaller);
+                ShopManager.Instance.ToggleInventoryUI(true);
 
                 UpdatePurchased(true);
 
@@ -267,12 +267,28 @@ public class ShopItem : MonoBehaviour
             ShopManager.Instance.GetShopItems()[x].ToggleButtonPurchase(false);
         }
 
+        bool allowItemPurchase = false;
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            if (curRaceSpecific == RaceSpecific.HUMAN &&
+                GameManager.Instance.activeRoomHeroes[i].curUnitRace == UnitFunctionality.UnitRace.HUMAN)
+                allowItemPurchase = true;
+            else if (curRaceSpecific == RaceSpecific.BEAST &&
+                GameManager.Instance.activeRoomHeroes[i].curUnitRace == UnitFunctionality.UnitRace.BEAST)
+                allowItemPurchase = true;
+            else if (curRaceSpecific == RaceSpecific.ETHEREAL &&
+                GameManager.Instance.activeRoomHeroes[i].curUnitRace == UnitFunctionality.UnitRace.ETHEREAL)
+                allowItemPurchase = true;
+            else if (curRaceSpecific == RaceSpecific.ALL)
+                allowItemPurchase = true;
+        }
+
         ToggleButtonPurchase(true);
-        if (price > ShopManager.Instance.GetPlayerGold())
+        if (price > ShopManager.Instance.GetPlayerGold() || !allowItemPurchase)
             ToggleButtonPurchaseCover(true);
-        else
+        else if (price <= ShopManager.Instance.GetPlayerGold())
             ToggleButtonPurchaseCover(false);
-            
+          
         AudioManager.Instance.Play("Button_Click");
 
         gameObject.GetComponentInChildren<ButtonFunctionality>().ButtonSelectItemCo();

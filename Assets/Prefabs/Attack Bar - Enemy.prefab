@@ -315,6 +315,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8167784654974463217
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -527,6 +528,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &615743156763214172
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +718,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &9022752758530575662
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -775,6 +778,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &744085569811860837
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,6 +980,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &5107247580601038019
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1007,7 +1012,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 265
+  m_SortingOrder: 305
   m_TargetDisplay: 0
 --- !u!1 &950565654544893955
 GameObject:
@@ -1209,6 +1214,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &977369265317389295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,6 +1415,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &1534700823039519082
 GameObject:
   m_ObjectHideFlags: 0
@@ -1546,6 +1553,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &1678295983124046337
 GameObject:
   m_ObjectHideFlags: 0
@@ -1746,6 +1754,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &2226599884029990786
 GameObject:
   m_ObjectHideFlags: 0
@@ -1999,8 +2008,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 4613734004499390940}
   bgHitAreaTrans: {fileID: 0}
-  minYPos: 70
-  maxYPos: 295
   weaponRanges: []
 --- !u!1 &3751102198993735587
 GameObject:
@@ -2135,8 +2142,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 3530161662993777330}
   bgHitAreaTrans: {fileID: 0}
-  minYPos: -98
-  maxYPos: 153
   weaponRanges:
   - {fileID: 11400000, guid: 6afd42a00aeca9c40981f2d585cc08e0, type: 2}
 --- !u!1 &4796847325964034318
@@ -2424,6 +2429,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3303006408512601264
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2928,6 +2934,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7210523430030266540
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3369,6 +3376,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3776692778450819205
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3581,6 +3589,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2160431835662954168
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3795,6 +3804,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4436162471556723773
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4289,6 +4299,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7370562950472218976
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4779,3 +4790,4 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0

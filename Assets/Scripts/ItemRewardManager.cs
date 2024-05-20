@@ -11,6 +11,7 @@ public class ItemRewardManager : MonoBehaviour
 
     [Space(5)]
 
+    [SerializeField] private UIElement itemSelectedRaceIcon;
     public float postCombatTillItemTime2 = 3f;
     public float postCombatTillItemTime = 1.5f;
     public float postItemTillPostCombat = 1;
@@ -65,6 +66,37 @@ public class ItemRewardManager : MonoBehaviour
     public ItemPiece selectedItem;
     public List<UIElement> offeredItemsUI = new List<UIElement>();
 
+    public void UpdateItemSelectedRaceIcon(string fighterRace)
+    {
+        if (fighterRace == "HUMAN")
+        {
+            itemSelectedRaceIcon.UpdateContentImage(GameManager.Instance.humanRaceIcon);
+            itemSelectedRaceIcon.tooltipStats.UpdateTooltipStatsText("HUMAN");
+        }           
+        else if (fighterRace == "BEAST")
+        {
+            itemSelectedRaceIcon.UpdateContentImage(GameManager.Instance.beastRaceIcon);
+            itemSelectedRaceIcon.tooltipStats.UpdateTooltipStatsText("BEAST");
+        }          
+        else if (fighterRace == "ETHEREAL")
+        {
+            itemSelectedRaceIcon.UpdateContentImage(GameManager.Instance.etherealRaceIcon);
+            itemSelectedRaceIcon.tooltipStats.UpdateTooltipStatsText("ETHEREAL");
+        }       
+    }
+
+    public void ToggleItemSelectedRaceIcon(bool toggle = true)
+    {
+        if (toggle)
+        {
+            itemSelectedRaceIcon.UpdateAlpha(1);
+        }
+        else
+        {
+            itemSelectedRaceIcon.UpdateAlpha(0);
+        }
+    }
+
     private void Awake()
     {
         Instance = this;
@@ -116,6 +148,8 @@ public class ItemRewardManager : MonoBehaviour
         offeredItemsUI.Clear();
 
         UpdateItemDescription(false);
+
+        ToggleItemSelectedRaceIcon(false);   
         //itemSelected = false;
     }
 

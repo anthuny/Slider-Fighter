@@ -23,7 +23,7 @@ MonoBehaviour:
   curHitType: 0
   itemName: Boulder
   itemDesc: Target 1 enemy, Release 5 Damaging Boulders. Apply Effect Speed Down
-    (2)
+    (2) (3 Total Uses)
   itemSpriteItemTab: {fileID: 21300000, guid: 4ca7e6c6e18d34746bfb97e0f0eabee9, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: be470029d1d519548a41d21ce5b27308, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: be470029d1d519548a41d21ce5b27308, type: 3}

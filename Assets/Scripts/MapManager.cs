@@ -448,7 +448,7 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
-
+                  
             ToggleButtonSkillsTabCombat(false);
             ToggleButtonItemsTabCombat(false);
 
@@ -465,6 +465,7 @@ public class MapManager : MonoBehaviour
             OverlayUI.Instance.UpdateActiveItemRaceSpecificIcon("");
 
             OverlayUI.Instance.ToggleFighterDetailsTab(false);
+            TeamItemsManager.Instance.ToggleFighterRaceIcon(false); 
             TeamItemsManager.Instance.UpdateUnequiptItemAlert();
             TeamGearManager.Instance.UpdateUnequiptGearAlert();
 

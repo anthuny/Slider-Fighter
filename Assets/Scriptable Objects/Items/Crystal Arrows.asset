@@ -23,7 +23,7 @@ MonoBehaviour:
   curHitType: 0
   itemName: Crystal Arrows
   itemDesc: Target 1 enemy, Release 4 Damaging Crystal Arrows. Apply Effect Defense
-    Down (2)
+    Down (2) (3 Total Uses)
   itemSpriteItemTab: {fileID: 21300000, guid: 250b6b8891d557e49bbe94279a38c4f8, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 75b2ee7b043b9da48bd8256595ac4150, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 75b2ee7b043b9da48bd8256595ac4150, type: 3}

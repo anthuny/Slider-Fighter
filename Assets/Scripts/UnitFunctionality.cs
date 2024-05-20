@@ -4064,9 +4064,25 @@ public class UnitFunctionality : MonoBehaviour
 
         animator.SetTrigger("Idle");
 
-        // Heal ally
-        float valAcc = GameManager.Instance.GetActiveSkill().healPowerAmount + (acc * 15);
-        float val = (valAcc / 100f) * GetUnitMaxHealth();
+        float valAcc = 0;
+        float val = 0;
+        if (GameManager.Instance.GetActiveSkill() != null)
+        {
+            // Heal ally
+            valAcc = GameManager.Instance.GetActiveSkill().healPowerAmount + (acc * 15);
+            val = (valAcc / 100f) * GetUnitMaxHealth();
+
+            if (fullhealth)
+            {
+                //StartCoroutine(SpawnPowerUI(GetUnitMaxHealth(), false, false, null, false));
+                UpdateUnitCurHealth((int)GetUnitMaxHealth(), false, false, false);
+            }
+            else
+            {
+                //StartCoroutine(SpawnPowerUI(val, false, false, null, false));
+                UpdateUnitCurHealth((int)val, false, false, false);
+            }
+        }
 
         if (fullhealth)
         {
@@ -4078,7 +4094,6 @@ public class UnitFunctionality : MonoBehaviour
             //StartCoroutine(SpawnPowerUI(val, false, false, null, false));
             UpdateUnitCurHealth((int)val, false, false, false);
         }
-
     }
 
     public void UpdateUnitExp(int gainedExp)

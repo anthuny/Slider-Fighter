@@ -268,14 +268,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
 
-                if (GameManager.Instance.fallenHeroes.Count > 0)
+                if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.SHOP 
+                && RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.STARTING)
                 {
-                    MapManager.Instance.mapOverlay.ToggleFallenFighterPrompt(true);
+                    if (GameManager.Instance.fallenHeroes.Count > 0)
+                    {
+                        MapManager.Instance.mapOverlay.ToggleFallenFighterPrompt(true);
 
-                    enterRoomButtonPressed = false;
-                    return;
-                }
-
+                        enterRoomButtonPressed = false;
+                        return;
+                    }
+                } 
                 if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.ITEM || RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.HERO
                     || RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
                 {
@@ -502,9 +505,27 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedItemName);
 
                 itemParent.ToggleSelected(true, true);
+
+                ItemRewardManager.Instance.ToggleItemSelectedRaceIcon(true);  
+
+                if (ItemRewardManager.Instance.selectedItem.curRace == ItemPiece.RaceSpecific.HUMAN)
+                {
+                    ItemRewardManager.Instance.UpdateItemSelectedRaceIcon("HUMAN");
+                }
+                else if (ItemRewardManager.Instance.selectedItem.curRace == ItemPiece.RaceSpecific.BEAST)
+                {
+                    ItemRewardManager.Instance.UpdateItemSelectedRaceIcon("BEAST");
+                }
+                else if (ItemRewardManager.Instance.selectedItem.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                {
+                    ItemRewardManager.Instance.UpdateItemSelectedRaceIcon("ETHEREAL");
+                }      
+                else if (ItemRewardManager.Instance.selectedItem.curRace == ItemPiece.RaceSpecific.ALL)
+                    ItemRewardManager.Instance.ToggleItemSelectedRaceIcon(false);                       
             }
 
             ItemRewardManager.Instance.UpdateItemDescription(true);
+            
 
             ItemRewardManager.Instance.ToggleConfirmItemButton(true);
         }
@@ -825,6 +846,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             TeamItemsManager.Instance.UpdateItemNameText("");
             TeamItemsManager.Instance.UpdateItemDesc("");
+            TeamItemsManager.Instance.ToggleFighterRaceIcon(false);
         }
     }
 
@@ -1359,6 +1381,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         //if (unitFunctionality)
             //Debug.Log("disabling 2 " + toggle + " " + unitFunctionality.GetUnitName());
 
+        if (UIbutton == null)
+            return;
+
         UIbutton.gameObject.GetComponent<CanvasGroup>().interactable = toggle;
         UIbutton.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
         gameObject.GetComponent<Button>().interactable = toggle;
@@ -1402,6 +1427,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
+    public void ButtonInventoryAdd()
+    {
+        GameManager.Instance.SpawnItem();
+    }
     public void FallenHeroPromptNo()
     {
         // Button Click SFX

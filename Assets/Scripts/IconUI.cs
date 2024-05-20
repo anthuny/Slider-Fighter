@@ -11,6 +11,20 @@ public class IconUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI subText;
     [SerializeField] private TextMeshProUGUI mainIconPassiveActiveIcon;
 
+    [SerializeField] private UIElement skillCooldownUI;
+
+
+    public void ToggleSkillCooldownUI(bool toggle = true)
+    {
+        if (toggle)
+        {
+            skillCooldownUI.UpdateAlpha(1);
+        }
+        else
+        {
+            skillCooldownUI.UpdateAlpha(0);
+        }
+    }
 
     private void Awake()
     {

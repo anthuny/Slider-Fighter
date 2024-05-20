@@ -22,7 +22,7 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 1
   itemName: Poison Antitode
-  itemDesc: Target 1 Ally. Deplete Poison effect (4)
+  itemDesc: Target 1 Ally. Deplete Poison effect (4) (2 Total Uses)
   itemSpriteItemTab: {fileID: 21300000, guid: 2f921d2eed8a03c42a40e8627b4481d5, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: d43849b5e22e40e4ab5a8dd7191e4910, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: d43849b5e22e40e4ab5a8dd7191e4910, type: 3}

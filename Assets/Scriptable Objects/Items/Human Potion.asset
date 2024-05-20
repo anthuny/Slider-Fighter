@@ -22,7 +22,7 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 0
   itemName: Human Potion
-  itemDesc: Target 1 ally, Healing 4 times.
+  itemDesc: Target 1 ally, Healing 4 times. (3 Total Uses)
   itemSpriteItemTab: {fileID: 21300000, guid: 3de463bd543dc6344a22c032cf9dfee7, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 5bfd5c7d9baaf0445a4728f8efa38043, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 5bfd5c7d9baaf0445a4728f8efa38043, type: 3}

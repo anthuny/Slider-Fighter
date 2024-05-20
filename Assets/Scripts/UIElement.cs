@@ -548,6 +548,9 @@ public class UIElement : MonoBehaviour
 
     public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true)
     {
+        if (this == null)
+            return;
+
         cg = GetComponent<CanvasGroup>();
 
         cg.alpha = alpha;   // Update UI Alpha

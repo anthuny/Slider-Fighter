@@ -10,6 +10,7 @@ public class ShopManager : MonoBehaviour
     //[HideInInspector]
 
     [SerializeField] private UIElement partyNoRaceItemPrompt;
+    [SerializeField] private UIElement inventoryUI;
 
     public RoomMapIcon lastVisitedShopRoom;
     public ShopItem selectedShopItem;
@@ -74,6 +75,20 @@ public class ShopManager : MonoBehaviour
 
     public int spawnedItems;
 
+    public void ToggleInventoryUI(bool toggle = true)
+    {
+        if (toggle)
+        {
+            inventoryUI.UpdateAlpha(1);      
+        }
+        else
+        {
+            inventoryUI.UpdateAlpha(0);
+        }
+
+        inventoryUI.ToggleButton(toggle);
+    }
+
     public void TogglePartyNoRacePrompt(bool toggle = true)
     {
         if (toggle)
@@ -131,6 +146,8 @@ public class ShopManager : MonoBehaviour
         // Disable randomiser button
         ToggleRandomiserButton(false);
         ClearFallenHeroesVisuals();
+
+        ToggleInventoryUI(false);
     }
 
     public void CloseShop()
@@ -142,6 +159,8 @@ public class ShopManager : MonoBehaviour
 
         if (playerInShopRoom)
             AudioManager.Instance.Play("SFX_ShopEnterLeave");
+
+        ToggleInventoryUI(false);
     }
 
     void ToggleRefreshItem(bool toggle)
@@ -479,7 +498,7 @@ public class ShopManager : MonoBehaviour
 
 
             MenuUnitDisplay unitDisplay = go.GetComponent<MenuUnitDisplay>();
-            unitDisplay.UpdateUnitDisplay(GameManager.Instance.fallenHeroes[i].GetUnitName());
+            unitDisplay.UpdateUnitDisplay(GameManager.Instance.fallenHeroes[i].GetUnitName(), true);
 
             int cost = startingReviveCost * RoomManager.Instance.GetFloorCount();
             int rand2 = Random.Range(1, 3);

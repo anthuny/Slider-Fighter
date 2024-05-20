@@ -202,6 +202,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3876804950927496819
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -340,6 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba159ca81dbce8349924f6ad1220a0bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raceIcon: {fileID: 0}
   fallenHeroCostText: {fileID: 3946764557463475750}
   animator: {fileID: 3823831161945257986}
   unitImage: {fileID: 3823831162216588260}
@@ -372,7 +374,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 12
+  m_SortingOrder: 18
   m_TargetDisplay: 0
 --- !u!1 &3823831162216588186
 GameObject:
@@ -650,6 +652,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2963157813770972240
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -728,6 +731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 6232828723987880001}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 2881310273050885908}
   itemParent: {fileID: 0}
@@ -750,6 +754,7 @@ MonoBehaviour:
   mainUIelement: {fileID: 0}
   isStatButton: 0
   selectBorder: {fileID: 4320028000136612023}
+  postBattleButtonPressed: 0
 --- !u!114 &8685148924009550147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -903,6 +908,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &6743726301826607284
 GameObject:
   m_ObjectHideFlags: 0

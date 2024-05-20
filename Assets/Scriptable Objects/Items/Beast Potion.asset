@@ -22,7 +22,7 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 0
   itemName: Beast Potion
-  itemDesc: Self cast, Healing 5 times.
+  itemDesc: Self cast, Healing 5 times. (3 Total Uses)
   itemSpriteItemTab: {fileID: 21300000, guid: 801542929892ac1429c476eb6bc14bae, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 626c29fa3b600594cad58deff2f72cce, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 626c29fa3b600594cad58deff2f72cce, type: 3}

@@ -100,7 +100,7 @@ public class MenuUnitDisplay : MonoBehaviour
         unitLevel.UpdateContentSubTextTMP(newLevel.ToString());
     }
 
-    public void UpdateUnitDisplay(string unitName)
+    public void UpdateUnitDisplay(string unitName, bool fallenFighter = false)
     {
         this.unitName = unitName;
 
@@ -127,7 +127,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, 0);
             }
 
-            UpdateFighterRaceIcon("HUMAN");
+            if (!fallenFighter)
+                UpdateFighterRaceIcon("HUMAN");
         }
 
         else if (unitName == "Necromancer")
@@ -154,7 +155,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 55);
             }
 
-            UpdateFighterRaceIcon("ETHEREAL");
+            if (!fallenFighter)
+                UpdateFighterRaceIcon("ETHEREAL");
         }
         else if (unitName == "Ranger")
         {
@@ -180,7 +182,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 55);
             }
 
-            UpdateFighterRaceIcon("HUMAN");
+            if (!fallenFighter)
+                UpdateFighterRaceIcon("HUMAN");
         }
 
         else if (unitName == "Cleric")
@@ -207,7 +210,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
             }
 
-            UpdateFighterRaceIcon("HUMAN");
+            if (!fallenFighter)
+                UpdateFighterRaceIcon("HUMAN");
         }
 
         else if (unitName == "Monk")
@@ -234,7 +238,8 @@ public class MenuUnitDisplay : MonoBehaviour
                 animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 5);
             }
 
-            UpdateFighterRaceIcon("ETHEREAL");
+            if (!fallenFighter)
+                UpdateFighterRaceIcon("ETHEREAL");
         }
 
         else if (unitName == "Locked")

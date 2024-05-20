@@ -1234,7 +1234,69 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         for (int i = 0; i < activeRoomHeroes.Count; i++)
         {
-            activeRoomHeroes[i].ToggleSelectUnitButton(toggle);
+            if (toggle)
+            {
+                if (ShopManager.Instance.playerInShopRoom)
+                {
+                    if (ShopManager.Instance.GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.HUMAN
+                    && activeRoomHeroes[i].curUnitRace == UnitFunctionality.UnitRace.HUMAN)
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(toggle);
+                        activeRoomHeroes[i].ToggleSelected(true);
+                    }
+                    else if (ShopManager.Instance.GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.BEAST
+                    && activeRoomHeroes[i].curUnitRace == UnitFunctionality.UnitRace.BEAST)
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(toggle);
+                        activeRoomHeroes[i].ToggleSelected(true);
+                    }
+                    else if (ShopManager.Instance.GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.ETHEREAL
+                    && activeRoomHeroes[i].curUnitRace == UnitFunctionality.UnitRace.ETHEREAL)
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(toggle);
+                        activeRoomHeroes[i].ToggleSelected(true);
+                    }
+                    else if (ShopManager.Instance.GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.ALL)
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(toggle);
+                        activeRoomHeroes[i].ToggleSelected(true);
+                    }
+                    else if (ShopManager.Instance.GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.HUMAN
+                    && activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.HUMAN)
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(false);
+                        activeRoomHeroes[i].ToggleSelected(false);
+                    }
+                    else if (ShopManager.Instance.GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.BEAST
+                    && activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.BEAST)
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(false);
+                        activeRoomHeroes[i].ToggleSelected(false);
+                    }
+                    else if (ShopManager.Instance.GetSelectedShopItem().curRaceSpecific == ShopItem.RaceSpecific.ETHEREAL
+                    && activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.ETHEREAL)
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(false);
+                        activeRoomHeroes[i].ToggleSelected(false);
+                    }
+                    else
+                    {
+                        activeRoomHeroes[i].ToggleSelectUnitButton(false);
+                        activeRoomHeroes[i].ToggleSelected(false);
+                    }
+                }
+                else
+                {
+                    activeRoomHeroes[i].ToggleSelectUnitButton(true);
+                    activeRoomHeroes[i].ToggleSelected(true);
+                }
+
+            }
+            else
+            {
+                activeRoomHeroes[i].ToggleSelectUnitButton(false);
+                activeRoomHeroes[i].ToggleSelected(false);
+            }
         }
     }
     public void ToggleEnemyUnitSelection(bool toggle)
@@ -3273,6 +3335,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         if (skills)
         {
+            GameManager.Instance.UpdateAllSkillIconAvailability();
             SkillsTabManager.Instance.UpdateLockedSkills();
 
             if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
@@ -3344,6 +3407,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else
         {
             TeamItemsManager.Instance.UpdateLockedItems();
+
+            fighterMainSlot1.ToggleSkillCooldownUI(false);
+            fighterMainSlot2.ToggleSkillCooldownUI(false);
+            fighterMainSlot3.ToggleSkillCooldownUI(false);
+            fighterMainSlot4.ToggleSkillCooldownUI(false);
 
             fighterMainSlot1.ToggleHiddenImage(false);
             fighterMainSlot2.ToggleHiddenImage(false);
@@ -5720,20 +5788,28 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     // Cleanse effect from unit
                     for (int x = 0; x < unitsSelected.Count; x++)
                     {
-                        if (unitsSelected[x].GetEffect("POISON"))
+                        if (GetActiveItem().effectCleansed.effectName == "POISON")
                         {
-                            string name = unitsSelected[x].GetEffect("POISON").effectName;
+                            if (unitsSelected[x].GetEffect("POISON"))
+                            {
+                                string name = unitsSelected[x].GetEffect("POISON").effectName;
 
-                            unitsSelected[x].TriggerTextAlert(name, 1, true, "Trigger");
-                            unitsSelected[x].GetEffect("POISON").ReduceTurnCountText(unitsSelected[x]);
+                                unitsSelected[x].TriggerTextAlert(name, 1, true, "Trigger");
+                                unitsSelected[x].GetEffect("POISON").ReduceTurnCountText(unitsSelected[x]);
+                            }
                         }
-                        else if (unitsSelected[x].GetEffect("BLEED"))
+
+                        if (GetActiveItem().effectCleansed.effectName == "BLEED")
                         {
-                            string name = unitsSelected[x].GetEffect("BLEED").effectName;
+                            if (unitsSelected[x].GetEffect("BLEED"))
+                            {
+                                string name = unitsSelected[x].GetEffect("BLEED").effectName;
 
-                            unitsSelected[x].TriggerTextAlert(name, 1, true, "Trigger");
-                            unitsSelected[x].GetEffect("BLEED").ReduceTurnCountText(unitsSelected[x]);
+                                unitsSelected[x].TriggerTextAlert(name, 1, true, "Trigger");
+                                unitsSelected[x].GetEffect("BLEED").ReduceTurnCountText(unitsSelected[x]);
+                            }
                         }
+                       
                     }
                 }
             }
@@ -5746,19 +5822,89 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         CheckToEndCombat();
     }
 
+    public void SpawnItem()
+    {
+        GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, nothingnessUI.gameObject.transform.position, Quaternion.identity);
+        go.transform.SetParent(nothingnessUI.gameObject.transform);
+        go.transform.localScale = new Vector2(1, 1);
+
+        UIElement uIElement = go.GetComponent<UIElement>();
+        Slot slot = go.GetComponent<Slot>();
+
+        uIElement.ToggleButton(false);
+
+        ItemPiece newItem = ItemRewardManager.Instance.selectedItem;
+
+        OwnedLootInven.Instance.AddOwnedItems(slot);
+
+        ItemPiece itemPiece = new ItemPiece();
+        itemPiece = newItem;
+
+        slot.UpdateLinkedItemPiece(itemPiece);
+        slot.UpdateSlotName(slot.linkedItemPiece.itemName);
+        slot.ToggleEquipButton(false);
+        slot.isEmpty = false;
+        slot.UpdateSlotImage(newItem.itemSpriteItemTab);
+        slot.UpdateSlotName(newItem.itemName);
+        slot.UpdateLinkedItemPiece(newItem);
+        slot.UpdateLootGearAlpha(true);
+
+        ShopManager.Instance.UpdateUnAssignedItem(null);
+
+        ToggleAllowSelection(false);
+
+        SetAllFightersSelected(false);
+
+        ShopManager.Instance.ToggleInventoryUI(false);
+        ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
+
+        if (ShopManager.Instance.playerIsYetToSelectAFighter)
+            OverlayUI.Instance.ToggleFighterDetailsTab(false);
+
+        ShopManager.Instance.playerIsYetToSelectAFighter = false;
+
+        ShopManager.Instance.ToggleExitShopButton(true);
+
+    }
     public void targetUnit(UnitFunctionality unit)
     {
         //Debug.Log("earlier - selecting unit " + unit.GetUnitName());
         //Debug.Log("Targeting unit " + unit.GetUnitName());
 
         // If current room is a shop
-        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP && !unit.purchased)
+        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.SHOP && !unit.purchased && GetAllowSelection())
         {
+            // Check if target unit has maximum equipt items, if so, do not allow this unit selection for item equipping
+            if (unit.teamIndex == 0)
+            {
+                if (TeamItemsManager.Instance.equippedItemsMain.Count == 3)
+                {
+                    AudioManager.Instance.Play("SFX_ShopBuyFail");
+                    return;
+                }
+            }
+            else if (unit.teamIndex == 1)
+            {
+                if (TeamItemsManager.Instance.equippedItemsSecond.Count == 3)
+                {
+                    AudioManager.Instance.Play("SFX_ShopBuyFail");
+                    return;
+                }
+            }
+            else if (unit.teamIndex == 2)
+            {
+                if (TeamItemsManager.Instance.equippedItemsThird.Count == 3)
+                {
+                    AudioManager.Instance.Play("SFX_ShopBuyFail");
+                    return;
+                }
+            }
+
             ToggleAllowSelection(false);
 
             SetAllFightersSelected(false);
 
-
+            ShopManager.Instance.ToggleInventoryUI(false);
             ShopManager.Instance.shopSelectAllyPrompt.UpdateAlpha(0);
 
             if (ShopManager.Instance.playerIsYetToSelectAFighter)
@@ -5778,7 +5924,82 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             ItemPiece newItem = ItemRewardManager.Instance.selectedItem;
 
-            OwnedLootInven.Instance.AddOwnedItems(slot);
+            //OwnedLootInven.Instance.AddOwnedItems(slot);
+
+            ItemPiece itemPiece = new ItemPiece();
+            itemPiece = newItem;
+
+            slot.UpdateLinkedItemPiece(itemPiece);
+            slot.UpdateSlotName(slot.linkedItemPiece.itemName);
+            slot.ToggleEquipButton(false);
+            slot.isEmpty = false;
+
+            //Debug.Log("111");
+            if (unit.teamIndex == 0)
+            {
+                //Debug.Log("aaa");
+                itemPiece.UpdateItemPiece(newItem.itemName, newItem.curRarity.ToString(), newItem.itemSpriteItemTab);
+      
+                OwnedLootInven.Instance.AddWornItemAllyMain(slot);
+
+                for (int i = 0; i < TeamItemsManager.Instance.ally1ItemsSlots.Count; i++)
+                {   
+                    if (TeamItemsManager.Instance.equippedItemsMain.Count == 0)
+                        TeamItemsManager.Instance.ally1ItemsSlots[0].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsMain.Count == 1)
+                        TeamItemsManager.Instance.ally1ItemsSlots[1].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsMain.Count == 2)
+                        TeamItemsManager.Instance.ally1ItemsSlots[2].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsMain.Count == 3)
+                        TeamItemsManager.Instance.ally1ItemsSlots[3].UpdateSlotName(newItem.itemName);
+                }
+
+                TeamItemsManager.Instance.UpdateEquippedItemPiece("ItemMain", itemPiece);
+            }
+            if (unit.teamIndex == 1)
+            {
+                //Debug.Log("aaa");
+                itemPiece.UpdateItemPiece(newItem.itemName, newItem.curRarity.ToString(), newItem.itemSpriteItemTab);
+
+                OwnedLootInven.Instance.AddWornItemAllySecond(slot);
+
+                for (int i = 0; i < TeamItemsManager.Instance.ally2ItemsSlots.Count; i++)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsSecond.Count == 0)
+                        TeamItemsManager.Instance.ally2ItemsSlots[0].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsSecond.Count == 1)
+                        TeamItemsManager.Instance.ally2ItemsSlots[1].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsSecond.Count == 2)
+                        TeamItemsManager.Instance.ally2ItemsSlots[2].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsSecond.Count == 3)
+                        TeamItemsManager.Instance.ally2ItemsSlots[3].UpdateSlotName(newItem.itemName);
+                }
+
+                TeamItemsManager.Instance.UpdateEquippedItemPiece("ItemSecond", itemPiece);
+            }
+            if (unit.teamIndex == 2)
+            {
+                //Debug.Log("aaa");
+                itemPiece.UpdateItemPiece(newItem.itemName, newItem.curRarity.ToString(), newItem.itemSpriteItemTab);
+
+                OwnedLootInven.Instance.AddWornItemAllyThird(slot);
+
+                for (int i = 0; i < TeamItemsManager.Instance.ally3ItemsSlots.Count; i++)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsThird.Count == 0)
+                        TeamItemsManager.Instance.ally3ItemsSlots[0].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsThird.Count == 1)
+                        TeamItemsManager.Instance.ally3ItemsSlots[1].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsThird.Count == 2)
+                        TeamItemsManager.Instance.ally3ItemsSlots[2].UpdateSlotName(newItem.itemName);
+                    else if (TeamItemsManager.Instance.equippedItemsThird.Count == 3)
+                        TeamItemsManager.Instance.ally3ItemsSlots[3].UpdateSlotName(newItem.itemName);
+                }
+
+                TeamItemsManager.Instance.UpdateEquippedItemPiece("ItemThird", itemPiece);                
+            }
+
+            // Need to make Worn item ally actually be real
 
             // Set item
             uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSpriteItemTab);
