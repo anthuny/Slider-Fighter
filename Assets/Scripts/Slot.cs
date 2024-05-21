@@ -54,6 +54,8 @@ public class Slot : MonoBehaviour
     public enum ItemRarity { COMMON, RARE, EPIC }
     public ItemRarity curItemRarity;
     public int itemUseCount = 0;
+
+    public bool maxSet = false;
     private void Start()
     {
         ToggleSlotSelection(false);

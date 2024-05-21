@@ -9,6 +9,7 @@ public class ShopManager : MonoBehaviour
 
     //[HideInInspector]
 
+    [SerializeField] private GameObject shopItemsGO;
     [SerializeField] private UIElement partyNoRaceItemPrompt;
     [SerializeField] private UIElement inventoryUI;
 
@@ -74,6 +75,11 @@ public class ShopManager : MonoBehaviour
     public bool playerIsYetToSelectAFighter = false;
 
     public int spawnedItems;
+
+    public void ToggleShopItemsGameObject(bool toggle = true)
+    {
+        shopItemsGO.SetActive(toggle);
+    }
 
     public void ToggleInventoryUI(bool toggle = true)
     {
@@ -603,6 +609,8 @@ public class ShopManager : MonoBehaviour
 
     public void FillShopItems(bool clearItems, bool refreshItems)
     {
+        ToggleShopItemsGameObject(true);
+
         ToggleRandomiser(true);
         ToggleExitShopButton(true);
 

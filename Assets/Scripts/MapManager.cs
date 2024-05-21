@@ -448,7 +448,9 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
-                  
+
+            ShopManager.Instance.ToggleShopItemsGameObject(false);
+
             ToggleButtonSkillsTabCombat(false);
             ToggleButtonItemsTabCombat(false);
 

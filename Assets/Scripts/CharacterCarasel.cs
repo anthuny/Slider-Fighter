@@ -271,6 +271,7 @@ public class CharacterCarasel : MonoBehaviour
         PlayerPrefs.SetInt("UnlockedRanger", 0);
         PlayerPrefs.SetInt("UnlockedCleric", 0);
         PlayerPrefs.SetInt("UnlockedNecromancer", 0);
+        PlayerPrefs.SetInt("UnlockedMonk", 0);
         unlockedKnight = false;
         unlockedRanger = false;
         unlockedCleric = false;

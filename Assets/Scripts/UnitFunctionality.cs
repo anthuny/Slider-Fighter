@@ -316,22 +316,21 @@ public class UnitFunctionality : MonoBehaviour
             if (index == 0)
             {
                 go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSpriteItemTab);
-
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1, newCurCharges);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1);
                 //Debug.Log(item1CurUses);
             }
             else if (index == 1)
             {
                 go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSpriteItemTab);
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1, newCurCharges);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1);
                 //Debug.Log(item2CurUses);
             }
             else if (index == 2)
             {
                 go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSpriteItemTab);
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1, newCurCharges);
+                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat, newCurCharges);
                 //Debug.Log(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1);
                 //Debug.Log(item3CurUses);
             }
@@ -535,6 +534,101 @@ public class UnitFunctionality : MonoBehaviour
     {
         return startingMaxHealth;
     }
+
+    public void ReloadItemUses()
+    {
+        // Find all items that trigger on turn start that ally has
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            //Debug.Log("2");
+            if (this == GameManager.Instance.activeRoomHeroes[i])
+            {
+                int index = i;
+
+                if (index == 0)
+                {
+                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 0)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item1CurUses = TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUseCount();
+                        }
+                    }
+                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 1)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item2CurUses = TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUseCount();
+                        }
+                    }
+                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 2)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item3CurUses = TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUseCount();
+                        }
+                    }
+                }
+                else if (index == 1)
+                {
+                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 0)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item1CurUses = TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUseCount();
+                        }
+                    }
+                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 1)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item2CurUses = TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUseCount();
+                        }
+                    }
+                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 2)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item3CurUses = TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUseCount();
+                        }
+                    }
+                }
+                else if (index == 2)
+                {
+                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 0)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item1CurUses = TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemThirdAlly()[0].GetItemUseCount();
+                        }
+                    }
+                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 1)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item2CurUses = TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemThirdAlly()[1].GetItemUseCount();
+                        }
+                    }
+                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 2)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2])
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                item3CurUses = TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemThirdAlly()[2].GetItemUseCount();
+                        }
+                    }
+                }
+            }
+        }
+    }
     public void SetItemUsesMax()
     {
         // Find all items that trigger on turn start that ally has
@@ -551,17 +645,46 @@ public class UnitFunctionality : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 0)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                            item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                && !OwnedLootInven.Instance.GetWornItemMainAlly()[0].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemMainAlly()[0].maxSet = true;
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            }
+                                
+                        }
+                            
                     }
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 1)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                            item2CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item2CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                && !OwnedLootInven.Instance.GetWornItemMainAlly()[1].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemMainAlly()[1].maxSet = true;
+                                item2CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                     if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 2)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                            item3CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item3CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                && !OwnedLootInven.Instance.GetWornItemMainAlly()[2].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemMainAlly()[2].maxSet = true;
+                                item3CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                 }
                 else if (index == 1)
@@ -570,17 +693,44 @@ public class UnitFunctionality : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 0)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0])
-                            item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                && !OwnedLootInven.Instance.GetWornItemSecondAlly()[0].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemSecondAlly()[0].maxSet = true;
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                     if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 1)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1])
-                            item2CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item2CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                && !OwnedLootInven.Instance.GetWornItemSecondAlly()[1].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemSecondAlly()[1].maxSet = true;
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                     if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 2)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2])
-                            item3CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item3CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                && !OwnedLootInven.Instance.GetWornItemSecondAlly()[2].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemSecondAlly()[2].maxSet = true;
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                 }
                 else if (index == 2)
@@ -589,17 +739,44 @@ public class UnitFunctionality : MonoBehaviour
                     if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 0)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0])
-                            item1CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                && !OwnedLootInven.Instance.GetWornItemThirdAlly()[0].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemThirdAlly()[0].maxSet = true;
+                                item1CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                     if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 1)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1])
-                            item2CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item2CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                 && !OwnedLootInven.Instance.GetWornItemThirdAlly()[1].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemThirdAlly()[1].maxSet = true;
+                                item2CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                     if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 2)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2])
-                            item3CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.maxUsesPerCombat - 1;
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                item3CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            else if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
+                                 && !OwnedLootInven.Instance.GetWornItemThirdAlly()[2].maxSet)
+                            {
+                                OwnedLootInven.Instance.GetWornItemThirdAlly()[2].maxSet = true;
+                                item3CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.maxUsesPerCombat;
+                            }
+                        }
                     }
                 }
             }
@@ -654,11 +831,11 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat - 1, item1CurUses, 0);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat, item1CurUses, 0);
         else if (index == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat - 1, item1CurUses, 0);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat, item1CurUses, 0);
         else if (index == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat - 1, item1CurUses, 0);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat, item1CurUses, 0);
     }
     public void DecreaseUsesItem2()
     {
@@ -698,11 +875,11 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat - 1, item2CurUses, 1);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat, item2CurUses, 1);
         else if (index == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat - 1, item2CurUses, 1);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat, item2CurUses, 1);
         else if (index == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat - 1, item2CurUses, 1);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat, item2CurUses, 1);
     }
 
     public void DecreaseUsesItem3()
@@ -739,11 +916,11 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat - 1, item3CurUses, 2);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat, item3CurUses, 2);
         else if (index == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat - 1, item3CurUses, 2);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat, item3CurUses, 2);
         else if (index == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat - 1, item3CurUses, 2);
+            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat, item3CurUses, 2);
     }
 
     public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true, bool activeItem = false)
@@ -779,7 +956,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void ToggleSelectUnitButton(bool toggle)
     {
-        Debug.Log("disabling123");
+        //Debug.Log("disabling123");
         selectUnitButton.ToggleButton(toggle);
     }
 
@@ -835,29 +1012,29 @@ public class UnitFunctionality : MonoBehaviour
                     if (x == 0)
                     {
                         if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - 1, item1CurUses, 0);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat, item1CurUses, 0);
                         else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - 1, item1CurUses, 0);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat, item1CurUses, 0);
                         else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - 1, item1CurUses, 0);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat, item1CurUses, 0);
                     }
                     else if (x == 1)
                     {
                         if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - 1, item2CurUses, 1);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat, item2CurUses, 1);
                         else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - 1, item2CurUses, 1);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat, item2CurUses, 1);
                         else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - 1, item2CurUses, 1);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat, item2CurUses, 1);
                     }
                     else if (x == 2)
                     {
                         if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - 1, item3CurUses, 2);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat, item3CurUses, 2);
                         else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - 1, item3CurUses, 2);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat, item3CurUses, 2);
                         else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - 1, item3CurUses, 2);
+                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat, item3CurUses, 2);
                     }
                 }
 
@@ -1254,7 +1431,7 @@ public class UnitFunctionality : MonoBehaviour
             }
         }
 
-        Debug.Log("returning null! - unitfunctionality");
+        //Debug.Log("returning null! - unitfunctionality");
         return null;
     }
 
@@ -3121,7 +3298,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
     {
-        Debug.Log("addedEffect 1 " + addedEffect.curEffectName);
+        //Debug.Log("addedEffect 1 " + addedEffect.curEffectName);
 
 
         //SkillData activeSkill = null;
@@ -3129,7 +3306,7 @@ public class UnitFunctionality : MonoBehaviour
         if (effectHitAcc == 0 || targetUnit.isParrying || !GameManager.Instance.playerInCombat)
             return;
 
-        Debug.Log("addedEffect 2 " + addedEffect.curEffectName);
+        //Debug.Log("addedEffect 2 " + addedEffect.curEffectName);
         //Debug.Log("Effect hit acc " + effectHitAcc);
         // If unit is already effected with this effect, add to the effect
         for (int i = 0; i < activeEffects.Count; i++)
@@ -3176,7 +3353,7 @@ public class UnitFunctionality : MonoBehaviour
                                     name = "POWER DOWN";
                                 TriggerTextAlert(name, 1, true, "Inflict");
 
-                                Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
+                                //Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
 
                                 if (addedEffect.effectName == "HOLY_LINK")
                                 {
@@ -3230,7 +3407,7 @@ public class UnitFunctionality : MonoBehaviour
                                 name = "POWER DOWN";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
-                            Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
+                            //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
 
                             if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
@@ -3295,7 +3472,7 @@ public class UnitFunctionality : MonoBehaviour
                             TriggerTextAlert(name, 1, true, "Inflict");
 
 
-                            Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
+                            //Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
 
                             if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
@@ -3348,7 +3525,7 @@ public class UnitFunctionality : MonoBehaviour
                                 name = "POWER DOWN";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
-                            Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
+                            //Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
 
                             if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
@@ -3395,7 +3572,7 @@ public class UnitFunctionality : MonoBehaviour
                                 name = "POWER DOWN";
                             TriggerTextAlert(name, 1, true, "Inflict");
 
-                            Debug.Log("addedEffect 7 " + addedEffect.curEffectName);
+                            //Debug.Log("addedEffect 7 " + addedEffect.curEffectName);
 
                             if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                             {
@@ -3518,7 +3695,7 @@ public class UnitFunctionality : MonoBehaviour
         //if (GameManager.Instance.GetActiveSkill() == null)
         //    yield break;
 
-        Debug.Log("power = " + power);
+        //Debug.Log("power = " + power);
 
         // If player in gear tab, stop power ui from appearing from armor equipping
         if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
@@ -4034,7 +4211,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         isDead = false;
 
-        Debug.Log("true2");
+        //Debug.Log("true2");
 
         selectUnitButton.ToggleButton(true);
 
@@ -4949,7 +5126,7 @@ public class UnitFunctionality : MonoBehaviour
 
         block_chance -= 10;
 
-        Debug.Log("Block Chance " + block_chance);
+        //Debug.Log("Block Chance " + block_chance);
 
         if (block_chance < 0)
             block_chance = 0;

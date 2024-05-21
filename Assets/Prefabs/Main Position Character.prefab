@@ -1240,6 +1240,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8648429512234178124}
     m_Modifications:
+    - target: {fileID: 324979770104620807, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 324979770104620807, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 654029670850936691, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1324,9 +1332,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2398665777478464042, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2943451862255794340, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2943451862255794340, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3923255803318697854, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_Name
       value: Race Icon
+      objectReference: {fileID: 0}
+    - target: {fileID: 4187995113553758494, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186067891349420606, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186067891349420606, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8000941976677831378, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1343,6 +1375,10 @@ PrefabInstance:
     - target: {fileID: 8000941976677831378, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -1.9985
+      objectReference: {fileID: 0}
+    - target: {fileID: 8867154266377643030, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}

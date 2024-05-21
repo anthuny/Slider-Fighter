@@ -1471,6 +1471,18 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         else
             GetComponentInChildren<Text>().text = "SKILLS";
 
+        if (!GameManager.Instance.isSkillsMode)
+        {
+            GameManager.Instance.UpdateMainIconDetails(null, null);
+
+            GameManager.Instance.fighterMainSlot1.ToggleSelectImage(false);
+            GameManager.Instance.fighterMainSlot2.ToggleSelectImage(false);
+            GameManager.Instance.fighterMainSlot3.ToggleSelectImage(false);
+            GameManager.Instance.fighterMainSlot4.ToggleSelectImage(false);
+        }
+        else
+            GameManager.Instance.ToggleSelectingUnits(true);
+
         GetComponent<UIElement>().AnimateUI(false);
     }
 
@@ -1524,12 +1536,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 {
                     if (i == 0)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 0)
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 0
+                            && OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[0]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[0]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[0]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1542,12 +1559,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                     else if (i == 1)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 0)
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 0
+                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[0]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1560,12 +1582,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                     else if (i == 2)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 0)
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 0
+                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[0].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[0]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[0]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[0]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1578,19 +1605,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                 }
             }
-
-            // If selected, unselect it, dont do skill more stuff
-            if (GetIfSelected())
-            {
-
-            }
-            // If skill not already selected, select it and proceed
-            else
-            {
-                GameManager.Instance.DisableAllMainSlotSelections();
-                ToggleSelected(true);
-            }
         }
+
+        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+        GameManager.Instance.UpdateUnitsSelectedText();
     }
 
     public void SelectMainIcon2()
@@ -1643,12 +1661,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 {
                     if (i == 0)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 1)
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 1
+                            && OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[1]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[1]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[1]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1661,12 +1684,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                     else if (i == 1)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 1)
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 1
+                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[1]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1679,12 +1707,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                     else if (i == 2)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 1)
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 1
+                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[1].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[1]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[1]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[1]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1710,6 +1743,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
         }
+
+        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+        GameManager.Instance.UpdateUnitsSelectedText();
     }
 
     public void SelectMainIcon3()
@@ -1762,12 +1798,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 {
                     if (i == 0)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 2)
+                        if (TeamItemsManager.Instance.equippedItemsMain.Count > 2
+                            && OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[2]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[2]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[2]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1780,12 +1821,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                     else if (i == 1)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 2)
+                        if (TeamItemsManager.Instance.equippedItemsSecond.Count > 2
+                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[2]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1798,12 +1844,17 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                     else if (i == 2)
                     {
-                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 2)
+                        if (TeamItemsManager.Instance.equippedItemsThird.Count > 2
+                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[2].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[2]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[2]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[2]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1829,6 +1880,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
         }
+
+        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+        GameManager.Instance.UpdateUnitsSelectedText();
     }
 
     public void SelectMainIcon4()
@@ -1887,6 +1941,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[3]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[3]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1905,6 +1963,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1923,6 +1985,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[3]);
                             GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[3]);
                             GameManager.Instance.UpdateUnitsSelectedText();
+
+                            GameManager.Instance.DisableAllMainSlotSelections();
+                            ToggleSelected(true);
+                            GameManager.Instance.ToggleSelectingUnits(true);
                             break;
                         }
                         else
@@ -1948,6 +2014,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
         }
+
+        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+        GameManager.Instance.UpdateUnitsSelectedText();
     }
 
     public void MapUpArrow()

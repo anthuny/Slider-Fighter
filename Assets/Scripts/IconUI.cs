@@ -42,25 +42,29 @@ public class IconUI : MonoBehaviour
 
     public void RemoveItemFromSlot()
     {
-        Debug.Log("Removing Item from Slot");
+        //Debug.Log("Removing Item from Slot");
 
         UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
         UpdatePassiveActiveType(false, true);
     }
 
-    public void UpdateSubText(int level, bool item = false)
+    public void UpdateSubText(int level, bool item = false, bool passive = true)
     {
         if (item)
         {
             subText.text = level.ToString();
 
-            if (level == 0)
+            if (level <= 0)
             {
                 subText.text = "";
+
+                if (!passive)
+                    RemoveItemFromSlot();
             }
 
             return;
         }
+
 
         subText.text = level.ToString();
     }

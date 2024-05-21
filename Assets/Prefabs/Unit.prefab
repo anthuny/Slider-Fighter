@@ -5385,6 +5385,7 @@ GameObject:
   - component: {fileID: 5785411407592473182}
   - component: {fileID: 4103685792572873414}
   - component: {fileID: 886465306071636644}
+  - component: {fileID: 7966719696471736639}
   m_Layer: 5
   m_Name: Sprite - Item Alert
   m_TagString: Untagged
@@ -5511,6 +5512,27 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!223 &7966719696471736639
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5895135524120136714}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 370
+  m_TargetDisplay: 0
 --- !u!1 &5950479464168525965
 GameObject:
   m_ObjectHideFlags: 0
@@ -6942,7 +6964,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 342.4, y: 211.6356}
+  m_SizeDelta: {x: 538.6753, y: 211.6356}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &984811114164721116
 CanvasRenderer:
@@ -6972,7 +6994,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: dededededd
+  m_text: speed down
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 396b3104369db434c851044ae03a497d, type: 2}
   m_sharedMaterial: {fileID: -6006359576746837634, guid: 396b3104369db434c851044ae03a497d, type: 2}
@@ -9432,19 +9454,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8000941976677831378, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 112.3927
+      value: 105.7639
       objectReference: {fileID: 0}
     - target: {fileID: 8000941976677831378, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 85.394
+      value: 70.931
       objectReference: {fileID: 0}
     - target: {fileID: 8000941976677831378, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -19.584906
+      value: -16.270483
       objectReference: {fileID: 0}
     - target: {fileID: 8000941976677831378, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -95.2
+      value: -89.17378
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c1207717cd8e084b9a342431ce44a35, type: 3}

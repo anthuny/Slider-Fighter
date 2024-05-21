@@ -38,6 +38,7 @@ public class ShopItem : MonoBehaviour
     public int price;
     private bool purchased;
 
+
     public void ToggleShopItemButton(bool toggle)
     {
         GetComponent<CanvasGroup>().blocksRaycasts = toggle;
