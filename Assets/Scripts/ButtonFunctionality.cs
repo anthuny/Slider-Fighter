@@ -1481,7 +1481,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             GameManager.Instance.fighterMainSlot4.ToggleSelectImage(false);
         }
         else
+        {
             GameManager.Instance.ToggleSelectingUnits(true);
+            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+        }
 
         GetComponent<UIElement>().AnimateUI(false);
     }
@@ -1605,10 +1608,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     }
                 }
             }
-        }
 
-        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-        GameManager.Instance.UpdateUnitsSelectedText();
+            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            GameManager.Instance.UpdateUnitsSelectedText();
+        }
     }
 
     public void SelectMainIcon2()
@@ -1742,10 +1745,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 GameManager.Instance.DisableAllMainSlotSelections();
                 ToggleSelected(true);
             }
-        }
 
-        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-        GameManager.Instance.UpdateUnitsSelectedText();
+            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            GameManager.Instance.UpdateUnitsSelectedText();
+        }
     }
 
     public void SelectMainIcon3()
@@ -1879,10 +1882,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 GameManager.Instance.DisableAllMainSlotSelections();
                 ToggleSelected(true);
             }
-        }
 
-        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-        GameManager.Instance.UpdateUnitsSelectedText();
+            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            GameManager.Instance.UpdateUnitsSelectedText();
+        }
     }
 
     public void SelectMainIcon4()
@@ -2013,10 +2016,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 GameManager.Instance.DisableAllMainSlotSelections();
                 ToggleSelected(true);
             }
-        }
 
-        GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-        GameManager.Instance.UpdateUnitsSelectedText();
+            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            GameManager.Instance.UpdateUnitsSelectedText();
+        }
     }
 
     public void MapUpArrow()

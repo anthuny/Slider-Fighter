@@ -19,6 +19,7 @@ MonoBehaviour:
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
+  curSkillActiveType: 0
   skillSprite: {fileID: 21300000, guid: 8cdfd37f9e223d74c8c1b04387be2592, type: 3}
   skillName: SWIFT FOCUS
   skillDescr: Target 1 ally, cast Speed Up Effect
@@ -31,7 +32,7 @@ MonoBehaviour:
   skillAttackAccMult: 1
   skillBaseHitOutput: 1
   skillHitAttempts: 1
-  projectileSpeed: 10
+  projectileSpeed: 12
   skillCooldown: 3
   curCooldown: 0
   skillSelectionCount: 1
@@ -76,4 +77,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 2
-  mindControlled: 0
+  reanimated: 0

@@ -184,6 +184,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &4087095140128948512
 Canvas:
   m_ObjectHideFlags: 0
@@ -524,6 +525,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &6120844413893535315
 Canvas:
   m_ObjectHideFlags: 0
@@ -613,6 +615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 5940142461124927005}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 7074475729247142344}
   itemParent: {fileID: 0}
@@ -634,6 +637,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &7248282811625716108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -800,6 +805,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!114 &2460688383783882083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -993,6 +999,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 1
+  displayingAlert: 0
 --- !u!1 &6016855909754213977
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,6 +1260,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &3677673758292184825
 Canvas:
   m_ObjectHideFlags: 0
@@ -1405,6 +1413,7 @@ MonoBehaviour:
   statText: Increase skill Accuracy +15%
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3319832272525238322
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1623,6 +1632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 0}
   itemParent: {fileID: 0}
@@ -1644,6 +1654,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 7600474131149892358}
   isStatButton: 1
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!225 &7082798902300504961
 CanvasGroup:
   m_ObjectHideFlags: 0

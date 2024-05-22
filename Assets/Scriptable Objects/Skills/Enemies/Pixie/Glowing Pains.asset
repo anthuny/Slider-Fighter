@@ -19,6 +19,7 @@ MonoBehaviour:
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 0
+  curSkillActiveType: 0
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: GLOWING PAINS
   skillDescr: Target 1 Ally, healing them
@@ -31,7 +32,7 @@ MonoBehaviour:
   skillAttackAccMult: 1
   skillBaseHitOutput: 1
   skillHitAttempts: 1
-  projectileSpeed: 13
+  projectileSpeed: 12
   skillCooldown: 3
   curCooldown: 0
   skillSelectionCount: 1
@@ -76,4 +77,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 48d64bd581402b84dae4488709290b1a, type: 3}
   skillHitAdditional: {fileID: 8300000, guid: b46c1ba03426d0241ae2dabf224abc57, type: 3}
   originalIndex: 1
-  mindControlled: 0
+  reanimated: 0

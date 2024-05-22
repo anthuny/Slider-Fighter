@@ -152,6 +152,7 @@ MonoBehaviour:
   statText: Power - The total damage / healing output dealt
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &5375310672693237458
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -349,6 +350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 0}
   itemParent: {fileID: 0}
@@ -370,6 +372,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 1422483734219903222}
   isStatButton: 1
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!225 &4397650663968181873
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -702,6 +706,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &5144347277055029995
 Canvas:
   m_ObjectHideFlags: 0

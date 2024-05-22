@@ -319,6 +319,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &6993508540383769686
 Canvas:
   m_ObjectHideFlags: 0
@@ -408,6 +409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 7463543748151086104}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 6328088917477479373}
   itemParent: {fileID: 0}
@@ -429,6 +431,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &5866896971603110793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,6 +599,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!114 &1718803213289561958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -911,6 +916,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 0}
   itemParent: {fileID: 0}
@@ -932,6 +938,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 1745714568771992814}
   isStatButton: 1
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!225 &2066864826607443922
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1166,6 +1174,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &955944024042001189
 Canvas:
   m_ObjectHideFlags: 0
@@ -1352,6 +1361,7 @@ MonoBehaviour:
   statText: Increase Skill Max Targets by +1
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &7384882992456320092
 GameObject:
   m_ObjectHideFlags: 0
@@ -1576,6 +1586,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3805483958093126246
 CanvasGroup:
   m_ObjectHideFlags: 0

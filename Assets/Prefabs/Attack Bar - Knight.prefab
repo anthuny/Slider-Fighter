@@ -156,6 +156,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4287172393833491152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -187,7 +188,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 301
+  m_SortingOrder: 450
   m_TargetDisplay: 0
 --- !u!1 &48920313781038448
 GameObject:
@@ -1408,6 +1409,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8266733822064772812
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3409,6 +3411,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7133594105830248001
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3621,6 +3624,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4797618960108950724
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3973,6 +3977,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7711981544587633401
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5546,6 +5551,7 @@ GameObject:
   - component: {fileID: 7718192174622618025}
   - component: {fileID: 7959805732654488409}
   - component: {fileID: 1754623590213967744}
+  - component: {fileID: 2923996826580540527}
   m_Layer: 5
   m_Name: Hit Line
   m_TagString: Untagged
@@ -5663,6 +5669,27 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!223 &2923996826580540527
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5406507165863504059}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 451
+  m_TargetDisplay: 0
 --- !u!1 &5468260623508353820
 GameObject:
   m_ObjectHideFlags: 0
@@ -6395,6 +6422,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1841799443333582527
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6746,6 +6774,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3329911194931173005
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7298,8 +7327,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 8039579666961004750}
   bgHitAreaTrans: {fileID: 5458247351980314039}
-  minYPos: 173.5
-  maxYPos: 281.7
   weaponRanges:
   - {fileID: 11400000, guid: f2c8bfe7cdfd5f047b5f635bc00850eb, type: 2}
 --- !u!1 &7737575430368982495
@@ -7433,8 +7460,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 2263255527767677856}
   bgHitAreaTrans: {fileID: 0}
-  minYPos: 70
-  maxYPos: 295
   weaponRanges: []
 --- !u!1 &7841510967517156973
 GameObject:

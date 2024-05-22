@@ -173,7 +173,7 @@ public class CombatUnitFocus : MonoBehaviour
                         GameManager.Instance.map.ClearRoom(true, false, GameManager.Instance.playerWon);
                     }
                     else if (!allowFadeAway && resetMap)
-                    {
+                    {                       
                         StartCoroutine("StartMenu");
                     }
                     else if (!resetMap)
@@ -228,6 +228,8 @@ public class CombatUnitFocus : MonoBehaviour
     IEnumerator StartMenu()
     {
         yield return new WaitForSeconds(0);
+
+        GameManager.Instance.ToggleFighterCarasel(false);
 
         CharacterCarasel.Instance.ToggleMenu(false);
     }

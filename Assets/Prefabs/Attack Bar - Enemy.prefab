@@ -4189,7 +4189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce057cb7a92f504abcb83f7987acbaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineSpeed: 4
+  lineSpeed: 5
   ownedUnitName: Enemy
   hitLine: {fileID: 8513666462679337936}
   topBarBorder: {fileID: 8513666462394268946}

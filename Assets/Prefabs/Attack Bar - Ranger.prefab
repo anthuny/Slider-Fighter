@@ -339,6 +339,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &5617403381232171966
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -921,6 +922,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8812520687571493772
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3756,8 +3758,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 5409622087214755489}
   bgHitAreaTrans: {fileID: 0}
-  minYPos: 70
-  maxYPos: 295
   weaponRanges: []
 --- !u!1 &4130924707474349079
 GameObject:
@@ -4413,6 +4413,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2793132086488347597
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5537,6 +5538,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7999937592534278097
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6477,8 +6479,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 2012759835949866706}
   bgHitAreaTrans: {fileID: 312889138673660739}
-  minYPos: -429.2
-  maxYPos: -347.4
   weaponRanges:
   - {fileID: 11400000, guid: 32dfb9a37764ad84e8bfcc2f18ab17da, type: 2}
 --- !u!223 &9207877076246751588
@@ -6849,6 +6849,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1652527834184016325
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7062,6 +7063,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4574551198249605112
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7506,6 +7508,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3928821411540892480
 CanvasGroup:
   m_ObjectHideFlags: 0

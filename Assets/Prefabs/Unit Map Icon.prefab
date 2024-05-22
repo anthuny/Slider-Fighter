@@ -128,6 +128,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d92f8fc70dd60743be8783ac9b62a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iconAnimator: {fileID: 0}
+  timeTillWalkStops: 1
+  unitName: 
 --- !u!1001 &7424436497217794602
 PrefabInstance:
   m_ObjectHideFlags: 0

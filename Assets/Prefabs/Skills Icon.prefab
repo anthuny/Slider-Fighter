@@ -359,6 +359,8 @@ MonoBehaviour:
   progressSlider: {fileID: 6317448400657384493}
   ownedSlotButton: {fileID: 5259889019705451126}
   equipSlotButton: {fileID: 3525426263203022565}
+  equipSlotButtonCover: {fileID: 0}
+  coverOn: 0
   goldtextUI: {fileID: 0}
   isGold: 0
   isEmpty: 0
@@ -368,6 +370,9 @@ MonoBehaviour:
   linkedItemPiece: {fileID: 0}
   baseSlot: 0
   isSelected: 0
+  curItemRarity: 0
+  itemUseCount: 0
+  maxSet: 0
 --- !u!1 &2826383016593343593
 GameObject:
   m_ObjectHideFlags: 0
@@ -1412,6 +1417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 5259889019705451127}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 0}
   itemParent: {fileID: 0}
@@ -2074,6 +2080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 6929865735138570887}
   itemParent: {fileID: 0}
@@ -2434,6 +2441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 8843719596811668812}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 3525426263203022565}
   itemParent: {fileID: 0}

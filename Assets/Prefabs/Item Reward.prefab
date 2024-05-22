@@ -540,6 +540,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &3833263564001360182
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,6 +674,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7027447631017853650
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -710,13 +712,20 @@ MonoBehaviour:
   progressSlider: {fileID: 0}
   ownedSlotButton: {fileID: 0}
   equipSlotButton: {fileID: 0}
+  equipSlotButtonCover: {fileID: 0}
+  coverOn: 0
   goldtextUI: {fileID: 0}
   isGold: 0
   isEmpty: 1
   code: 0
+  pointsAdded: 0
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
   baseSlot: 0
+  isSelected: 0
+  curItemRarity: 0
+  itemUseCount: 0
+  maxSet: 0
 --- !u!1 &4145098729051744988
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,6 +885,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &4195663505970645709
 GameObject:
   m_ObjectHideFlags: 0
@@ -944,6 +954,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curMasteryType: 0
   buttonSelectionCG: {fileID: 3236676755376650625}
+  shopItem: {fileID: 0}
   disabled: 0
   UIbutton: {fileID: 5454458562502402899}
   itemParent: {fileID: 173447061637838546}
@@ -965,6 +976,8 @@ MonoBehaviour:
   mainButton: {fileID: 0}
   mainUIelement: {fileID: 0}
   isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &5887562973846144241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1148,6 +1161,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &4209607152789250126
 GameObject:
   m_ObjectHideFlags: 0
@@ -1295,6 +1309,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7071416901563016472
 CanvasGroup:
   m_ObjectHideFlags: 0

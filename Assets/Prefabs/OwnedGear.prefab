@@ -1807,6 +1807,7 @@ MonoBehaviour:
   isSelected: 0
   curItemRarity: 0
   itemUseCount: 0
+  maxSet: 0
 --- !u!1 &7608528657237354258
 GameObject:
   m_ObjectHideFlags: 0

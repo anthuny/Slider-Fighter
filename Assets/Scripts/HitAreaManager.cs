@@ -22,7 +22,8 @@ public class HitAreaManager : MonoBehaviour
 
             float rand = Random.Range(selectedRange.minFloat, selectedRange.maxFloat);
             RectTransform rt = hitAreasTrans.GetComponent<RectTransform>();
-            
+            //rt.localPosition = new Vector3(rt.position.x, rand, 0);
+            rt.localPosition = new Vector3(0, rt.localPosition.y, rt.position.z);
             //rt2 = bgHitAreaTrans.GetComponent<RectTransform>();
 
             if (bgHitAreaTrans != null)
@@ -31,14 +32,16 @@ public class HitAreaManager : MonoBehaviour
                     rt2 = bgHitAreaTrans.GetComponent<RectTransform>();
             }
 
-            rt.localPosition = new Vector3(rt.position.x, rand, 0);
+
 
             if (rt2 != null)
             {
                 //rt2.position = new Vector3(rt2.position.x, rt.position.y, 0);
 
-                rt2.localPosition = new Vector3(rt2.localPosition.x, rt.localPosition.y, 0);
-                rt2.localPosition = new Vector3(rt2.localPosition.x, rt.localPosition.y, rt.position.z);
+                //rt.localPosition = new Vector3(0, rt.localPosition.y, 0);
+                //rt.localPosition = new Vector3(0, rt.localPosition.y, rt.position.z);
+                //rt.position = new Vector3(0, rt.position.y, rt.position.z);
+                //rt.
             }
 
             //Debug.Log("updated position " + rt.position.y);

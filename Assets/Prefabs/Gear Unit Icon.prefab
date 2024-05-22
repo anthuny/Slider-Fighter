@@ -125,6 +125,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1020368927439610104
 CanvasGroup:
   m_ObjectHideFlags: 0

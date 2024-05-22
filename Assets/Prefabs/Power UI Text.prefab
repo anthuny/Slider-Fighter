@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee02fd979da8f2049b5f09b998bd476c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floatSpeed: 0.45
+  floatSpeed: 0.6
   timeTillFadeStarts: 1
   fadeDuration: 1
   fadeSpeed: 0.75
@@ -224,6 +224,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1515476202474137150
 CanvasGroup:
   m_ObjectHideFlags: 0

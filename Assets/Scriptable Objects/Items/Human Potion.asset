@@ -57,7 +57,7 @@ MonoBehaviour:
   ac: {fileID: 0}
   maxUsesPerCombat: 3
   targetCount: 1
-  hitCount: 5
+  hitCount: 4
   projectileSpeed: 9
   allowRandomSpawnPosition: 1
   allowRandomSpawnRotation: 0

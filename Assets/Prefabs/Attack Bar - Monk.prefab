@@ -520,6 +520,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8541155251771568828
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2257,6 +2258,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7869587631634844730
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2608,6 +2610,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &6525502566018978824
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4053,6 +4056,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &2287671168218275964
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4405,6 +4409,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1605138127865449668
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5360,6 +5365,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7188140245009305313
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6104,6 +6110,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &432433563744257097
 CanvasGroup:
   m_ObjectHideFlags: 0

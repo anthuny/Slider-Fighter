@@ -315,7 +315,10 @@ public class MapManager : MonoBehaviour
             AdManager.Instance.ShowSkippableAd();
 
         RoomManager.Instance.ResetFloorCount();
+
+        GameManager.Instance.ToggleFighterCarasel(true);
         CharacterCarasel.Instance.ResetMenu();
+
         GameManager.Instance.ResetRoom();
         GameManager.Instance.ResetRoom(false);
         GameManager.Instance.activeTeam.Clear();
@@ -710,6 +713,8 @@ public class MapManager : MonoBehaviour
 
         // Updating unit map icon starting position
         unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
+
+        SetPathsZvalue();
     }
 
     void SaveFloor()
@@ -1056,6 +1061,8 @@ public class MapManager : MonoBehaviour
                 return;
             }
         }
+
+        SetPathsZvalue();
     }
 
     void StoreRooms()
@@ -1143,7 +1150,7 @@ public class MapManager : MonoBehaviour
             spawnedPaths[i].GetComponent<MapPath>().ToggleHiddenMode(toggle);   // Hide all paths
         }
 
-        Debug.Log("1");
+        //Debug.Log("1");
         endingRoom.ToggleHiddenMode(true);
     }
 
@@ -1459,6 +1466,19 @@ public class MapManager : MonoBehaviour
         #endregion
     }
 
+    private void FixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.O))
+            SetPathsZvalue();
+    }
+    public void SetPathsZvalue()
+    {
+        for (int i = 0; i < mapPaths.Count; i++)
+        {
+            mapPaths[i].gameObject.GetComponent<RectTransform>().localPosition = new Vector3(mapPaths[i].gameObject.GetComponent<RectTransform>().localPosition.x, mapPaths[i].gameObject.GetComponent<RectTransform>().position.y, 0);
+        }
+    }
+
     void GenerationPathsA()
     {
         for (int i = 0; i < spawnedRoomsA.Count; i++)
@@ -1518,6 +1538,8 @@ public class MapManager : MonoBehaviour
 
             spawnedPaths.Sort(ComparedMiddleOfPathY);
             UpdateSpawnedPaths();
+
+            go.GetComponent<RectTransform>().localPosition = new Vector3(go.GetComponent<RectTransform>().localPosition.x, go.GetComponent<RectTransform>().localPosition.y, 0);
         }
     }
 
@@ -1554,10 +1576,15 @@ public class MapManager : MonoBehaviour
             closestRoom.UpdateRoomPathLinks(mapPath);
             curRoom.UpdateRoomMapLinks(closestRoom);
             curRoom.UpdateRoomPathLinks(mapPath);
+
+
+            go.GetComponent<RectTransform>().localPosition = new Vector3(go.GetComponent<RectTransform>().localPosition.x, go.GetComponent<RectTransform>().localPosition.y, 0);
         }
 
         UpdateSpawnedPaths();
         spawnedPaths.Sort(ComparedMiddleOfPathY);
+
+
     }
 
     public void UpdateRoomIconType(RoomMapIcon roomMapIcon, string roomTypeName)

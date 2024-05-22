@@ -156,6 +156,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4287172393833491152
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -813,8 +814,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 5734390886934375379}
   bgHitAreaTrans: {fileID: 1344077939273571413}
-  minYPos: 5.5
-  maxYPos: 710.3
   weaponRanges:
   - {fileID: 11400000, guid: 5c4726471a53a834781f9d66ff51cb13, type: 2}
   - {fileID: 11400000, guid: 7cacf9f0dc63602449dce589d0bedc6e, type: 2}
@@ -1397,6 +1396,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8266733822064772812
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2864,6 +2864,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7133594105830248001
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3354,6 +3355,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &4797618960108950724
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3567,6 +3569,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &7711981544587633401
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4849,6 +4852,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1841799443333582527
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5478,6 +5482,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &3329911194931173005
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6384,8 +6389,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitAreasTrans: {fileID: 2263255527767677856}
   bgHitAreaTrans: {fileID: 0}
-  minYPos: 70
-  maxYPos: 295
   weaponRanges: []
 --- !u!1 &7826043714257666009
 GameObject:

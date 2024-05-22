@@ -34,7 +34,7 @@ MonoBehaviour:
   skillAttackAccMult: 1
   skillBaseHitOutput: 2
   skillHitAttempts: 1
-  projectileSpeed: 10
+  projectileSpeed: 11
   skillCooldown: 0
   curCooldown: 1
   skillSelectionCount: 1

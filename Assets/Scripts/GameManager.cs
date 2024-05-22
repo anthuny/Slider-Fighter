@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public GameObject fighterCarasel;
+    public Canvas mainCamCanvas; 
     public Sprite humanRaceIcon;
     public Sprite beastRaceIcon;
     public Sprite etherealRaceIcon;
@@ -225,11 +227,22 @@ public class GameManager : MonoBehaviour
     public bool playerInCombat;
     public bool isSkillsMode = true;
 
+    public void ToggleFighterCarasel(bool toggle = true)
+    {
+        fighterCarasel.SetActive(toggle);
+    }
+
+    public void UpdateMainCamOrder()
+    {
+        mainCamCanvas.sortingOrder++;
+    }
     private void Awake()
     {
         Instance = this;
 
         HideMainSlotDetails();
+
+        UpdateMainCamOrder();
 
         //SpawnAllies(true);
     }
@@ -474,7 +487,6 @@ public class GameManager : MonoBehaviour
 
     public void Setup()
     {
-
         // Destroy previous room
         ResetRoom();
 
@@ -1894,11 +1906,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 else
                     enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount());
             }
-            // If room is just a regular enemy room, increment enemyspawnvalue by rooms cleared
-            else
-            {
-                enemySpawnValue += RoomManager.Instance.GetRoomsCleared() * ((RoomManager.Instance.GetFloorCount() * 2) - 1);
-            }
+
+            enemySpawnValue += RoomManager.Instance.GetRoomsCleared() * ((RoomManager.Instance.GetFloorCount() * 3) - 1);
 
             //Debug.Log("Room value " + enemySpawnValue);
             // Spawn enemy type
@@ -5914,6 +5923,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
 
         ToggleSelectingUnits(false);
+        GameManager.Instance.UpdateMainIconDetails(null, null);
+
+        GameManager.Instance.fighterMainSlot1.ToggleSelectImage(false);
+        GameManager.Instance.fighterMainSlot2.ToggleSelectImage(false);
+        GameManager.Instance.fighterMainSlot3.ToggleSelectImage(false);
+        GameManager.Instance.fighterMainSlot4.ToggleSelectImage(false);
 
         CheckToEndCombat();
     }

@@ -128,17 +128,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2975026413661297333, guid: 1b21d960d7320484fa35204d5bcce8f8, type: 3}
   m_PrefabInstance: {fileID: 2975026413643738841}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &17577072 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2975026413661297321, guid: 1b21d960d7320484fa35204d5bcce8f8, type: 3}
-  m_PrefabInstance: {fileID: 2975026413643738841}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &24604641
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,6 +838,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  unlockedPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &259829484
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -873,13 +898,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8552b0db6ae029c4a8519c3bf8bdfbc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: {fileID: 1406665886}
-  skillDesc: {fileID: 919029306}
-  skillCurCD: {fileID: 971869660}
-  skillMaxCD: {fileID: 2063197981}
-  skillPower: {fileID: 1299030890}
-  skillPowerIcon: {fileID: 165487184}
-  skillIcon: {fileID: 275367858}
+  activeItemTriggerStatus: {fileID: 0}
+  activeItemUseCountText: {fileID: 0}
+  activeItemRaceSpecificIcon: {fileID: 0}
+  activeItemTextColour: {r: 0, g: 0, b: 0, a: 0}
+  passiveItemTextColour: {r: 0, g: 0, b: 0, a: 0}
+  targetCountTextColour: 
+  damagingTextColour: 
+  healingTextColour: 
+  damageWordTextColour: 
+  healWordTextColour: 
+  skillMultihitColour: 
+  skillDetailsName: {fileID: 0}
+  skillDetailsDesc: {fileID: 0}
+  skillDetailsPower: {fileID: 0}
+  skillDetailsHitsRemaininguI: {fileID: 0}
+  skillDetailsBaseHitsUI: {fileID: 0}
+  skillDetailsMaxCdUi: {fileID: 0}
+  skillDetailsAccuracyuI: {fileID: 0}
+  skillDetailsMaxTargetsuI: {fileID: 0}
+  skillsItemsSwitchButton: {fileID: 0}
+  skillDetailsPowerIcon: {fileID: 0}
+  activeSkill: {fileID: 0}
+  unitOverlayCurEnergyText: {fileID: 0}
+  unitOverlayCurHealthText: {fileID: 0}
+  unitOverlayCurEnergyImage: {fileID: 0}
+  unitOverlayCurHealthImage: {fileID: 0}
+  itemRarityTextUI: {fileID: 0}
+  itemRarityText: {fileID: 0}
+  rarityTextColourCommon: {r: 0, g: 0, b: 0, a: 0}
+  rarityTextColourRare: {r: 0, g: 0, b: 0, a: 0}
+  rarityTextColourEpic: {r: 0, g: 0, b: 0, a: 0}
+  rarityTextColourLegendary: {r: 0, g: 0, b: 0, a: 0}
+  powerDamageColour: {r: 0, g: 0, b: 0, a: 0}
+  powerHealColour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &274025235
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,6 +1098,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe8347092dbf34e91f681ebb2cf089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectImage: {fileID: 0}
+  hiddenImage: {fileID: 0}
+  subText: {fileID: 0}
+  mainIconPassiveActiveIcon: {fileID: 0}
+  skillCooldownUI: {fileID: 0}
 --- !u!1 &308331957
 GameObject:
   m_ObjectHideFlags: 0
@@ -1252,6 +1309,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46f1c888366cfe4495487314158c65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
+  buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
+  disabled: 0
+  UIbutton: {fileID: 0}
+  itemParent: {fileID: 0}
+  startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDownUnit: 0
+  isHeldDownStat: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
+  isLocked: 0
+  mainButton: {fileID: 0}
+  mainUIelement: {fileID: 0}
+  isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &331525067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1264,6 +1347,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe8347092dbf34e91f681ebb2cf089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectImage: {fileID: 0}
+  hiddenImage: {fileID: 0}
+  subText: {fileID: 0}
+  mainIconPassiveActiveIcon: {fileID: 0}
+  skillCooldownUI: {fileID: 0}
 --- !u!114 &331525068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1418,6 +1506,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  unlockedPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &345246038
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1571,6 +1695,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46f1c888366cfe4495487314158c65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
+  buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
+  disabled: 0
+  UIbutton: {fileID: 0}
+  itemParent: {fileID: 0}
+  startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDownUnit: 0
+  isHeldDownStat: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
+  isLocked: 0
+  mainButton: {fileID: 0}
+  mainUIelement: {fileID: 0}
+  isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &353482954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1583,6 +1733,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe8347092dbf34e91f681ebb2cf089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectImage: {fileID: 0}
+  hiddenImage: {fileID: 0}
+  subText: {fileID: 0}
+  mainIconPassiveActiveIcon: {fileID: 0}
+  skillCooldownUI: {fileID: 0}
 --- !u!114 &353482955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1707,6 +1862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -2000,6 +2156,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46f1c888366cfe4495487314158c65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
+  buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
+  disabled: 0
+  UIbutton: {fileID: 0}
+  itemParent: {fileID: 0}
+  startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDownUnit: 0
+  isHeldDownStat: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
+  isLocked: 0
+  mainButton: {fileID: 0}
+  mainUIelement: {fileID: 0}
+  isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!222 &555260339
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2032,6 +2214,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  unlockedPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
+  displayingAlert: 0
 --- !u!1 &591094110
 GameObject:
   m_ObjectHideFlags: 0
@@ -2418,6 +2636,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe8347092dbf34e91f681ebb2cf089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectImage: {fileID: 0}
+  hiddenImage: {fileID: 0}
+  subText: {fileID: 0}
+  mainIconPassiveActiveIcon: {fileID: 0}
+  skillCooldownUI: {fileID: 0}
 --- !u!114 &772068466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2626,6 +2849,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe8347092dbf34e91f681ebb2cf089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectImage: {fileID: 0}
+  hiddenImage: {fileID: 0}
+  subText: {fileID: 0}
+  mainIconPassiveActiveIcon: {fileID: 0}
+  skillCooldownUI: {fileID: 0}
 --- !u!114 &814345314 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2219667066913044245, guid: 1b21d960d7320484fa35204d5bcce8f8, type: 3}
@@ -2745,6 +2973,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46f1c888366cfe4495487314158c65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
+  buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
+  disabled: 0
+  UIbutton: {fileID: 0}
+  itemParent: {fileID: 0}
+  startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDownUnit: 0
+  isHeldDownStat: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
+  isLocked: 0
+  mainButton: {fileID: 0}
+  mainUIelement: {fileID: 0}
+  isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &853282193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3198,6 +3452,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46f1c888366cfe4495487314158c65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
+  buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
+  disabled: 0
+  UIbutton: {fileID: 0}
+  itemParent: {fileID: 0}
+  startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDownUnit: 0
+  isHeldDownStat: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
+  isLocked: 0
+  mainButton: {fileID: 0}
+  mainUIelement: {fileID: 0}
+  isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &968801509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3210,6 +3490,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe8347092dbf34e91f681ebb2cf089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectImage: {fileID: 0}
+  hiddenImage: {fileID: 0}
+  subText: {fileID: 0}
+  mainIconPassiveActiveIcon: {fileID: 0}
+  skillCooldownUI: {fileID: 0}
 --- !u!114 &968801510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4313,6 +4598,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  unlockedPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1577981125
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4369,12 +4690,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d327674bb8db4074d8d5bc3cad6de206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  humanRaceIcon: {fileID: 0}
+  beastRaceIcon: {fileID: 0}
+  etherealRaceIcon: {fileID: 0}
+  humanRaceColour: {r: 0, g: 0, b: 0, a: 0}
+  beastRaceColour: {r: 0, g: 0, b: 0, a: 0}
+  etherealRaceColour: {r: 0, g: 0, b: 0, a: 0}
+  startingUnit: {fileID: 0}
+  startingFighterChosen: 0
+  transitionSequienceUI: {fileID: 0}
+  transitionSprite: {fileID: 0}
+  nothingnessUI: {fileID: 0}
+  postBattleTime: 0
   activeTeam:
   - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
   - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
   - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
-  allPlayerClasses:
-  - {fileID: 11400000, guid: 4c827672e5c53b74fb1c3ad1df84ac57, type: 2}
+  currentRoom: {fileID: 0}
   baseUnit: {fileID: 3449260601481309960, guid: 4b5602813dffd4e40b5653f843285950, type: 3}
   enemySpawnPositions:
   - {fileID: 24604642}
@@ -4383,16 +4715,40 @@ MonoBehaviour:
   - {fileID: 1630180140}
   - {fileID: 136832705}
   - {fileID: 779765221}
-  playerSpawnPositions:
-  - {fileID: 991025124}
-  - {fileID: 27502674}
-  - {fileID: 1001978078}
-  activeRoomAllUnits: []
+  allySpawnPositions: []
+  allyPostBattlePositionTransform: {fileID: 0}
+  allyTurnPositionTransform: {fileID: 0}
+  enemyTurnPositionTransform: {fileID: 0}
+  allyPositions: {fileID: 0}
   activeRoomAllUnitFunctionalitys: []
-  activeRoomAllies: []
+  oldActiveRoomAllUnitFunctionalitys: []
+  activeRoomHeroes: []
+  activeRoomHeroesBase: []
   activeRoomEnemies: []
+  fallenHeroes: []
+  fallenEnemies: []
   unitIcon: {fileID: 7935770381065321669, guid: b34e37c72dc3a3647b4331308475b123, type: 3}
+  levelupHealPerc: 20
+  combatCompleteHealPerc: 25
+  easyDiffEnemyLvColour: {r: 0, g: 0, b: 0, a: 0}
+  mediumDiffEnemyLvColour: {r: 0, g: 0, b: 0, a: 0}
+  hardDiffEnemyLvColour: {r: 0, g: 0, b: 0, a: 0}
+  chaosDiffEnemyLvColour: {r: 0, g: 0, b: 0, a: 0}
+  easydiffEnemyLvDifference: 0
+  mediumdiffEnemyLvDifference: 0
+  harddiffEnemyLvDifference: 0
+  chaosdiffEnemyLvDifference: 0
+  heroRoomMinEnemiesIncCount: 1
+  heroRoomMaxEnemiesIncCount: 2
+  hitFlashDuration: 0.05
+  postFightTimeWait: 1.5
+  skillsTab: {fileID: 0}
+  toMapButton: {fileID: 0}
+  teamSetupAllyPosition: {fileID: 0}
+  map: {fileID: 0}
+  shopRemoveSelectTime: 1.5
   turnOrderParent: {fileID: 88401040}
+  turnOrder: {fileID: 0}
   turnOrderIconAlphas:
   - 1
   - 1
@@ -4403,31 +4759,116 @@ MonoBehaviour:
   - 0.4
   - 0.2
   - 0
+  expIncPerLv: 0
+  maxExpStarting: 0
+  timePostExp: 0
+  fillAmountIntervalTimeGap: 0
+  expKillGainedPerLv: 0
+  expKillGainedStarting: 0
+  goldGainedPerUnitMin: 0
+  goldGainedPerUnitMax: 0
+  unitProjectile: {fileID: 0}
+  minProjectileKillDist: 0
+  randomXDist: 0
+  timeTillNextTargetEffetVisual: 0.02
+  allyMeleeSkillWaitTime: 0.5
+  allyRangedSkillWaitTime: 0
+  enemyMeleeSkillWaitTime: 0.5
+  enemyRangedSkillWaitTime: 0
+  maxHeldTimeTooltip: 0
+  leachEffectGainWait: 0.2
+  unitCombatSortingLevel: 99
+  unitTabSortingLevel: 250
+  maxUnitEffectTier: 8
   playerUIElement: {fileID: 1577981124}
-  playerWeapon: {fileID: 17577072}
+  playerWeapon: {fileID: 0}
+  playerWeaponChild: {fileID: 0}
   playerWeaponBackButton: {fileID: 555260341}
   playerWeaponBG: {fileID: 1709675873}
   playerAbilities: {fileID: 345246037}
-  playerAbilityDesc: {fileID: 259829483}
+  fighterSelectedMainSlotDesc: {fileID: 0}
+  postBattleUI: {fileID: 0}
   abilityDetailsUI: {fileID: 259829485}
   curUnitsTargetedText: {fileID: 1071206443}
   maxUnitsTargetedText: {fileID: 946736475}
+  endTurnButtonUI: {fileID: 0}
+  activeUnitNameText: {fileID: 0}
   playerIcon: {fileID: 803742796}
-  playerSkill1: {fileID: 331525067}
-  playerSkill2: {fileID: 968801509}
-  playerSkill3: {fileID: 353482954}
+  fighterMainSlot1: {fileID: 0}
+  fighterMainSlot2: {fileID: 0}
+  fighterMainSlot3: {fileID: 0}
+  fighterMainSlot4: {fileID: 0}
+  mainSlot1: {fileID: 0}
+  mainSlot2: {fileID: 0}
+  mainSlot3: {fileID: 0}
+  mainSlot4: {fileID: 0}
+  skill0IconUnavailableImage: {fileID: 0}
+  skill1IconUnavailableImage: {fileID: 0}
+  skill2IconUnavailableImage: {fileID: 0}
+  skill3IconUnavailableImage: {fileID: 0}
+  skill0IconCooldownUIText: {fileID: 0}
+  skill1IconCooldownUIText: {fileID: 0}
+  skill2IconCooldownUIText: {fileID: 0}
+  skill3IconCooldownUIText: {fileID: 0}
+  activeSkillColour: {r: 0, g: 0, b: 0, a: 0}
+  passiveSkillColour: {r: 0, g: 0, b: 0, a: 0}
   unitsSelected: []
+  randomPerc: 0
+  randomBaseOffset: 15
   powerUITextPrefab: {fileID: 5226432504194166279, guid: 7604dca13a83c384ea40805e72d8c4ca, type: 3}
   timeBetweenPowerUIStack: 0.1
+  timeBetweenProjectile: 0
   powerUIHeightLvInc: 35
   postHitWaitTime: 1
   missPowerText: MISS
-  missPowerTextColour: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
-  damagePowerTextColour: {r: 0.8396226, g: 0, b: 0, a: 1}
-  healPowerTextColour: {r: 0.324572, g: 1, b: 0.23113209, a: 1}
+  parryPowerText: 
+  gradientSkillMiss: {fileID: 0}
+  gradientSkillParry: {fileID: 0}
+  gradientSkillAttack: {fileID: 0}
+  gradientSkillSupport: {fileID: 0}
   powerHitFontSize: 216
   powerMissFontSize: 160
+  powerSkillParryFontSize: 0
+  maxPowerUICount: 5
+  powerHorizontalRandomness: 0
+  skillAlertAppearTime: 0
+  skillEffectDepleteAppearTime: 0.5
   activeSkill: {fileID: 0}
+  activeItem: {fileID: 0}
+  gradientSkillAlert: {fileID: 0}
+  gradientLevelUpAlert: {fileID: 0}
+  skill0CG: {fileID: 0}
+  skill1CG: {fileID: 0}
+  skill2CG: {fileID: 0}
+  skill3CG: {fileID: 0}
+  gearRewards: {fileID: 0}
+  defeatedEnemies: {fileID: 0}
+  enemyAttackWaitTime: 1
+  enemyEffectWaitTime: 1
+  enemySkillThinkTime: 1
+  unitPowerUIWaitTime: 0.5
+  allyHealthThreshholdHeal: 0.4
+  attackButton: {fileID: 0}
+  weaponBackButton: {fileID: 0}
+  skill0Button: {fileID: 0}
+  skill1Button: {fileID: 0}
+  skill2Button: {fileID: 0}
+  skill3Button: {fileID: 0}
+  enemyPositionMainCombatTrans: {fileID: 0}
+  enemyPositionPlayerTurnTrans: {fileID: 0}
+  enemyPositionsCurrent: {fileID: 0}
+  playerLost: 0
+  allowSelection: 0
+  selectingUnitsAllowed: 0
+  activeWeapon: {fileID: 0}
+  powerUISpawnCount: 0
+  spawnedUnit: {fileID: 0}
+  spawnedUnitFunctionality: {fileID: 0}
+  playerWon: 0
+  combatOver: 0
+  unitID: 0
+  playerInCombat: 0
+  isSkillsMode: 1
 --- !u!1 &1609198652
 GameObject:
   m_ObjectHideFlags: 0
@@ -4708,6 +5149,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 0}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  unlockedPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &1709675874
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4944,6 +5421,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46f1c888366cfe4495487314158c65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curMasteryType: 0
+  buttonSelectionCG: {fileID: 0}
+  shopItem: {fileID: 0}
+  disabled: 0
+  UIbutton: {fileID: 0}
+  itemParent: {fileID: 0}
+  startDisabled: 0
+  playMapMusic: 0
+  buttonLocked: 0
+  slot: {fileID: 0}
+  heldTimer: 0
+  isHeldDownUnit: 0
+  isHeldDownStat: 0
+  unitIsSelected: 0
+  unit: {fileID: 0}
+  locked: 0
+  effectHeldTimer: 0
+  isHeldDownEffect: 0
+  isEffectButton: 0
+  isEnabled: 0
+  isLocked: 0
+  mainButton: {fileID: 0}
+  mainUIelement: {fileID: 0}
+  isStatButton: 0
+  selectBorder: {fileID: 0}
+  postBattleButtonPressed: 0
 --- !u!114 &1776710158 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5438279432160592253, guid: 1b21d960d7320484fa35204d5bcce8f8, type: 3}
@@ -5450,8 +5953,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36994fd69bde5c748bf87b5748591592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalRooms:
-  - {fileID: 11400000, guid: 91d052f0a7069a04c8e39f137a69fdfc, type: 2}
+  totalFloors: []
+  startingFloorDifficulty: 0
+  floorMaxRoomCount: 0
+  floorMaxMainRoomTotalCount: 0
+  floorMaxSideRoomTotalCount: 0
+  floorMaxShopRoomCount: 0
+  floorDifficultyRandomAmount: 0
+  activeRoom: {fileID: 0}
+  highestFloorCountRun: 1
 --- !u!1 &2076687477
 GameObject:
   m_ObjectHideFlags: 0

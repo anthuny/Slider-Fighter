@@ -19,6 +19,7 @@ MonoBehaviour:
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 0
+  curSkillActiveType: 0
   skillSprite: {fileID: 21300000, guid: 673d7226fbd9c3e4aad26083ab8400c1, type: 3}
   skillName: EARTH BARRAGE
   skillDescr: Target 1 enemy, damaging. Each hit has a 25% chance to apply Stun effect
@@ -32,7 +33,7 @@ MonoBehaviour:
   skillAttackAccMult: 1
   skillBaseHitOutput: 1
   skillHitAttempts: 1
-  projectileSpeed: 12
+  projectileSpeed: 11
   skillCooldown: 2
   curCooldown: 0
   skillSelectionCount: 1
@@ -77,4 +78,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 52a33254fb716ad43b460d21257811b7, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 3
-  mindControlled: 0
+  reanimated: 0

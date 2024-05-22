@@ -184,6 +184,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!223 &2665520572243684141
 Canvas:
   m_ObjectHideFlags: 0
@@ -381,3 +382,4 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0

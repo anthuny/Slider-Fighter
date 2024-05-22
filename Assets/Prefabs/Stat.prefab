@@ -177,6 +177,7 @@ MonoBehaviour:
   statText: 
   originalScaleText: 0
   isEnabled: 0
+  displayingAlert: 0
 --- !u!114 &4951853902055784925
 MonoBehaviour:
   m_ObjectHideFlags: 0

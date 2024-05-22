@@ -107,13 +107,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStatType: 0
-  activeStatType: 0
   curRarity: 0
   contentImage: {fileID: 7522912745729939779}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
   contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
   dieAfterDisplay: 0
@@ -125,11 +131,17 @@ MonoBehaviour:
   selectBorder: {fileID: 0}
   statPointsAdded: 0
   lockedImage: {fileID: 0}
-  statPointsThreshhold: 0
+  unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
   rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
   originalScaleText: 0
+  isEnabled: 0
+  displayingAlert: 0
 --- !u!225 &8876155709448444676
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -206,7 +218,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373f128ec0f58434989a516b9f0c054f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  item1Cost: 0
+  item2Cost: 0
+  item3Cost: 0
+  item4Cost: 0
+  item5Cost: 0
+  item6Cost: 0
   curRoomType: 0
+  newShopFlag: 0
   curRoomSize: 0
   linkedRooms: []
   linkedPaths: []
@@ -218,6 +237,7 @@ MonoBehaviour:
   shopRoomCombatItems: []
   shopRoomHealthItems: []
   purchasedItems: []
+  purchasedShopItems: []
   isHidden: 0
   isSelected: 0
   isDiscovered: 0
@@ -225,6 +245,7 @@ MonoBehaviour:
   isStartingRoom: 0
   isCompleted: 0
   isVisited: 0
+  bossRoomDefeated: 0
   hasEntered: 0
 --- !u!223 &8230447574900321245
 Canvas:
@@ -408,7 +429,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 334.9269, y: 334.9269}
+  m_SizeDelta: {x: 199.3159, y: 199.3195}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4223680696546942015
 CanvasRenderer:
