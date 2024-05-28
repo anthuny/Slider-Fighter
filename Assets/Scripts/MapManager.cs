@@ -452,6 +452,7 @@ public class MapManager : MonoBehaviour
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
+
             ShopManager.Instance.ToggleShopItemsGameObject(false);
 
             ToggleButtonSkillsTabCombat(false);
@@ -487,6 +488,12 @@ public class MapManager : MonoBehaviour
                 // Hide level up text
                 GameManager.Instance.activeRoomHeroes[i].ToggleTextAlert(false);
                 GameManager.Instance.activeRoomHeroes[i].ToggleUnitExpVisual(false);
+
+                GameManager.Instance.activeRoomHeroes[i].ToggleTooltipItems(false);
+                GameManager.Instance.activeRoomHeroes[i].ToggleTooltipGear(false);
+                GameManager.Instance.activeRoomHeroes[i].ToggleTooltipStats(false);
+
+                GameManager.Instance.activeRoomHeroes[i].ReloadItemUses();
             }
 
             ShopManager.Instance.TogglePlayerInShopRoom(false);

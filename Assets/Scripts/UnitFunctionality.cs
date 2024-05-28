@@ -233,7 +233,26 @@ public class UnitFunctionality : MonoBehaviour
             fighterRaceIcon.UpdateAlpha(0);
         }
     }
-    public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0)
+
+    public void ToggleTooltipItems(bool toggle = true)
+    {
+        if (toggle)
+        {
+            tooltipItems.UpdateAlpha(1);
+        }
+        else
+            tooltipItems.UpdateAlpha(0);
+    }
+
+    public void ToggleTooltipGear(bool toggle = true)
+    {
+        if (toggle)
+            tooltipGear.UpdateAlpha(1);
+        else
+            tooltipGear.UpdateAlpha(0);
+    }
+
+    public void UpdateTooltipItems(float maxCharges = 0f, float curCharges = 0f, int itemIndex = 0, bool forceDisplay = false)
     {
         //Debug.Log("max charges = " + maxCharges);
         //Debug.Log("cur charges = " + curCharges);
@@ -267,15 +286,15 @@ public class UnitFunctionality : MonoBehaviour
             }
         }
 
-        if (count > 0)
+        if (count > 0 || forceDisplay)
         {
             enabled = true;
-            tooltipItems.UpdateAlpha(1);
+            ToggleTooltipItems(true);
         }
-        else
+        else if (count <= 0 || forceDisplay)
         {
             enabled = false;
-            tooltipItems.UpdateAlpha(0);
+            ToggleTooltipItems(false);
         }
 
         // Destroy all existing items
@@ -336,6 +355,7 @@ public class UnitFunctionality : MonoBehaviour
             }
 
 
+            /*
             if (itemIndex == i && !doneOnce)
             {
                 doneOnce = true;
@@ -357,6 +377,7 @@ public class UnitFunctionality : MonoBehaviour
 
                 //               continue;
             }
+            */
         }
     }
 
@@ -793,6 +814,13 @@ public class UnitFunctionality : MonoBehaviour
         hitsRemainingText.gameObject.transform.localPosition = Vector2.zero;
     }
 
+    public IEnumerator DisableItemTooltipWait()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        ToggleTooltipItems(false);
+    }
+
     public void DecreaseUsesItem1()
     {
         item1CurUses--;
@@ -836,6 +864,8 @@ public class UnitFunctionality : MonoBehaviour
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat, item1CurUses, 0);
         else if (index == 2)
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat, item1CurUses, 0);
+
+        StartCoroutine(DisableItemTooltipWait());
     }
     public void DecreaseUsesItem2()
     {
@@ -880,6 +910,8 @@ public class UnitFunctionality : MonoBehaviour
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat, item2CurUses, 1);
         else if (index == 2)
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat, item2CurUses, 1);
+
+        StartCoroutine(DisableItemTooltipWait());
     }
 
     public void DecreaseUsesItem3()
@@ -921,6 +953,8 @@ public class UnitFunctionality : MonoBehaviour
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat, item3CurUses, 2);
         else if (index == 2)
             UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat, item3CurUses, 2);
+
+        StartCoroutine(DisableItemTooltipWait());
     }
 
     public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true, bool activeItem = false)
@@ -961,7 +995,21 @@ public class UnitFunctionality : MonoBehaviour
     }
 
 
-    public void ToggleTooltipStats(bool toggle)
+    void ToggleTooltipStatsInner(bool toggle = true)
+    {
+        for (int i = 0; i < tooltipStats.transform.childCount; i++)
+        {
+            if (tooltipStats.transform.GetChild(i).gameObject.name == "Unit Stat")
+            {
+                if (toggle)
+                    tooltipStats.transform.GetChild(i).GetComponent<UIElement>().UpdateAlpha(1);
+                else
+                    tooltipStats.transform.GetChild(i).GetComponent<UIElement>().UpdateAlpha(0);
+            }
+        }
+    }
+
+    public void ToggleTooltipStats(bool toggle, bool ignoreStats = false)
     {
         //Debug.Log("toggling " + toggle);
 
@@ -972,14 +1020,17 @@ public class UnitFunctionality : MonoBehaviour
             if (!tooltipStats.isEnabled)
             {
                 UpdateTooltipStats();
-                tooltipStats.UpdateAlpha(1);
 
-                //if (curUnitType == UnitType.PLAYER)
-                //{
+                if (!ignoreStats)
+                {
+                    tooltipStats.UpdateAlpha(1);
+                    ToggleTooltipStatsInner(true);
+                }
+                else
+                    ToggleTooltipStatsInner(false);
+
                 int count = 0;
-
                 int index = 0;
-
 
                 for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
                 {
@@ -1041,11 +1092,15 @@ public class UnitFunctionality : MonoBehaviour
                 UpdateToolTipGear();
 
                 if (count == 0)
-                    tooltipItems.UpdateAlpha(0);
+                    ToggleTooltipItems(false);
             }
         }
         else
+        {
             tooltipStats.UpdateAlpha(0);
+            ToggleTooltipItems(false);
+        }
+
     }
 
     public void ToggleTooltipEffect(bool toggle, string effectSelectedName = null)
@@ -1255,6 +1310,10 @@ public class UnitFunctionality : MonoBehaviour
         //ToggleIsPoisonLeaching(false);
 
         SetupFlashHit();
+
+        ToggleTooltipItems(false);
+        ToggleTooltipGear(false);
+        ToggleTooltipStats(false);
     }
 
     void SetupFlashHit()

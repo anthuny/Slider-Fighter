@@ -56,7 +56,7 @@ MonoBehaviour:
   power: 0
   procChance: 0
   ac: {fileID: 0}
-  maxUsesPerCombat: 3
+  maxUsesPerCombat: 4
   targetCount: 1
   hitCount: 4
   projectileSpeed: 9

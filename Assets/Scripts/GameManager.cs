@@ -2244,6 +2244,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // Loop through all units in room
             for (int x = 0; x < activeRoomAllUnitFunctionalitys.Count; x++)
             {
+                activeRoomAllUnitFunctionalitys[x].ToggleTooltipItems(false);
+                activeRoomAllUnitFunctionalitys[x].ToggleTooltipGear(false);
+                activeRoomAllUnitFunctionalitys[x].ToggleTooltipStats(false);
+
                 activeRoomAllUnitFunctionalitys[x].ToggleUnitBottomStats(true);
 
                 // Update unit sorting
@@ -2341,6 +2345,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //MapManager.Instance.ToggleButtonSkillsTabCombat(true);
             //MapManager.Instance.ToggleButtonItemsTabCombat(true);
 
+
             Invoke("UpdateTurnOrder", 0);
         }
 
@@ -2391,6 +2396,36 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             for (int i = 0; i < activeRoomHeroes.Count; i++)
             {
                 activeRoomHeroes[i].ToggleUnitDisplay(true);
+
+                #region Display Fighter Item Tooltip in shop if they have at least 1 item equipt
+                if (i == 0)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsMain.Count > 0)
+                    {
+                        activeRoomHeroes[i].ToggleTooltipStats(true, true);
+                        activeRoomHeroes[i].UpdateTooltipItems(0, 0, 0);
+                        activeRoomHeroes[i].ToggleTooltipItems(true);
+                    }
+                }
+                else if (i == 1)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsSecond.Count > 0)
+                    {
+                        activeRoomHeroes[i].ToggleTooltipStats(true, true);
+                        activeRoomHeroes[i].UpdateTooltipItems(0, 0, 0);
+                        activeRoomHeroes[i].ToggleTooltipItems(true);
+                    }
+                }
+                else if (i == 2)
+                {
+                    if (TeamItemsManager.Instance.equippedItemsThird.Count > 0)
+                    {
+                        activeRoomHeroes[i].ToggleTooltipStats(true, true);
+                        activeRoomHeroes[i].UpdateTooltipItems(0, 0, 0);
+                        activeRoomHeroes[i].ToggleTooltipItems(true);
+                    }
+                }
+                #endregion
             }
 
             ShopManager.Instance.ToggleExitShopButton(true);
@@ -6352,7 +6387,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     return;
             }
 
-            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !HeroRoomManager.Instance.GetPlayerOffered())
             {
                 if (activeItem.curSelectionType == ItemPiece.SelectionType.ALLIES && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
                 {

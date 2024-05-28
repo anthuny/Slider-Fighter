@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c98df06682a0b046bbcbdca0e2e04c7, type: 3}
+  m_Name: Unholy Staff
+  m_EditorClassIdentifier: 
+  curRarity: 1
+  curRace: 3
+  curItemCombatType: 1
+  curItemTargetType: 1
+  curItemType: 0
+  curSelectionType: 0
+  curTargetType: 0
+  curActiveType: 0
+  curHitType: 0
+  itemName: Unholy Staff
+  itemDesc: Target 4 random enemies, Damaging 4 times. Apply Effect Power Down (2)
+    (3 Total Uses)
+  itemSpriteItemTab: {fileID: 21300000, guid: 0a417d5447741df41ace6d5e3286057b, type: 3}
+  itemSpriteCombat: {fileID: 21300000, guid: 543d1b1aa554a8549803ad7bb62a7604, type: 3}
+  itemSpriteCombatSmaller: {fileID: 21300000, guid: 543d1b1aa554a8549803ad7bb62a7604, type: 3}
+  itemSpriteCombatProjectile: {fileID: 21300000, guid: d28d8551d2898fb42a8b81d3246dc08d, type: 3}
+  itemSpriteFail: {fileID: 0}
+  effectAdded: {fileID: 11400000, guid: d1845b3c26f8d714fbc43b124854d459, type: 2}
+  effectAddedTurnLength: 2
+  itemPower: 35
+  threshHoldAmount: 0
+  isSelfCast: 0
+  isBaseHealing: 0
+  isLifestealing: 0
+  isDamageNegating: 0
+  isIncWeaponHitSpace: 0
+  isVampHealing: 0
+  isReflectingEffect: 0
+  isEffectStrippingTarget: 0
+  isCleansingAll: 0
+  isCleansingRandom: 0
+  effectCleansed: {fileID: 0}
+  cleanseCount: 0
+  activeOnTurnStart: 0
+  activeOnSkillAttack: 0
+  activeOnAlliesAttacked: 0
+  activeOnEnemiesHealing: 0
+  activeOnSelfAttacked: 0
+  basePrice: 12
+  purchased: 0
+  healthItem: 0
+  power: 0
+  procChance: 0
+  ac: {fileID: 0}
+  maxUsesPerCombat: 3
+  targetCount: 4
+  hitCount: 4
+  projectileSpeed: 9
+  allowRandomSpawnPosition: 1
+  allowRandomSpawnRotation: 0
+  projectileAllowSpin: 0
+  itemAnnounce: {fileID: 8300000, guid: d47bb0415fc586a4cbb1c8b24b78237d, type: 3}
+  projectileLaunch: {fileID: 8300000, guid: 52568363d9550054899313847ea0cd7e, type: 3}
+  projectileHit: {fileID: 8300000, guid: d22b9519c42d8ee4783e7beb762d9a00, type: 3}

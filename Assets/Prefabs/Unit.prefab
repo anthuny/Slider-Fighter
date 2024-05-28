@@ -722,12 +722,12 @@ RectTransform:
   - {fileID: 2478192308139336479}
   - {fileID: 4057296830933710453}
   - {fileID: 7539625478228776766}
-  m_Father: {fileID: 6813203515583236126}
-  m_RootOrder: 6
+  m_Father: {fileID: 1488821953842061943}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 346.9, y: -2}
+  m_AnchoredPosition: {x: 197.19998, y: 11}
   m_SizeDelta: {x: 64.2071, y: 245.5563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5142960048438220844
@@ -3174,6 +3174,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6298629995703832341}
+  - {fileID: 5177429531033536038}
   - {fileID: 6813203515583236126}
   - {fileID: 4217875337262893958}
   m_Father: {fileID: 3449260601481309961}
@@ -4738,10 +4740,8 @@ RectTransform:
   - {fileID: 9213057820642967712}
   - {fileID: 4193221580639641844}
   - {fileID: 4030655052522574414}
-  - {fileID: 6298629995703832341}
-  - {fileID: 5177429531033536038}
   m_Father: {fileID: 1488821953842061943}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6014,12 +6014,12 @@ RectTransform:
   - {fileID: 3377360175032027384}
   - {fileID: 3618181586242688500}
   - {fileID: 834163946747172730}
-  m_Father: {fileID: 6813203515583236126}
-  m_RootOrder: 5
+  m_Father: {fileID: 1488821953842061943}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 262.8, y: -2}
+  m_AnchoredPosition: {x: 113.100006, y: 11}
   m_SizeDelta: {x: 64.2071, y: 245.5563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7085090978554227446
@@ -7366,7 +7366,7 @@ RectTransform:
   - {fileID: 1091117075350694112}
   - {fileID: 8278545985135539586}
   m_Father: {fileID: 1488821953842061943}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -8111,7 +8111,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769226870376902184, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_Name
-      value: Image
+      value: Unit Stat
       objectReference: {fileID: 0}
     - target: {fileID: 7564964678512984152, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_fontColor.b
@@ -8877,7 +8877,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769226870376902184, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_Name
-      value: Unit Stat (3)
+      value: Unit Stat
       objectReference: {fileID: 0}
     - target: {fileID: 7810073376109905539, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_Sprite
@@ -9096,7 +9096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769226870376902184, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_Name
-      value: Unit Stat (2)
+      value: Unit Stat
       objectReference: {fileID: 0}
     - target: {fileID: 7810073376109905539, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_Sprite
@@ -9803,7 +9803,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769226870376902184, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_Name
-      value: Unit Stat (1)
+      value: Unit Stat
       objectReference: {fileID: 0}
     - target: {fileID: 7810073376109905539, guid: 9610478fbe2cee64099a7cd1ebb2cef0, type: 3}
       propertyPath: m_Sprite

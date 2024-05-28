@@ -167,6 +167,11 @@ public class ShopManager : MonoBehaviour
             AudioManager.Instance.Play("SFX_ShopEnterLeave");
 
         ToggleInventoryUI(false);
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            GameManager.Instance.activeRoomHeroes[i].ToggleTooltipStats(false);
+        }
     }
 
     void ToggleRefreshItem(bool toggle)
@@ -637,7 +642,6 @@ public class ShopManager : MonoBehaviour
 
             if (!GetActiveRoom().isVisited)
             {
-                bool getCommon = false;
                 bool getRare = false;
                 bool getEpic = false;
                 bool getLegendary = false;
@@ -646,10 +650,20 @@ public class ShopManager : MonoBehaviour
 
                 // Item Rarity Roll
                 int rand = Random.Range(1, 101);
-                 if (rand >= 90)
-                    getRare = true;
-                else if (rand < 90)
-                    getCommon = true;        
+
+                rand += (RoomManager.Instance.GetFloorCount() - 1) * 2;
+
+                if (rand > 100)
+                    rand = 100;
+
+                /*
+                if (rand >= 95)
+                    getLegendary = true;
+                */
+                if (rand >= 90)
+                    getEpic = true;
+                else if (rand >= 70)
+                    getRare = true; 
 
                 if (getLegendary)
                 {   

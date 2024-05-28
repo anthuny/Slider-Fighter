@@ -2063,6 +2063,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 UnitFunctionality unit = GetComponentInParent<UnitFunctionality>();
 
                 unit.ToggleTooltipStats(true);
+
                 locked = true;
             }
             // If stats
