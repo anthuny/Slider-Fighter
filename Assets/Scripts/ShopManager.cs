@@ -638,6 +638,9 @@ public class ShopManager : MonoBehaviour
         // Spawn Combat Items
         for (int i = 0; i < shopMaxCombatItems; i++)
         {
+            if (i < 0)
+                i = 0;
+
             int itemPrice = 0;
 
             if (!GetActiveRoom().isVisited)
@@ -699,14 +702,32 @@ public class ShopManager : MonoBehaviour
                     randInt = Random.Range(0, epicItems.Count);
                     if (epicItems.Count > 0)
                     {
-                        itemCombat = epicItems[randInt]; 
-                        itemPrice = itemCombat.basePrice; 
+                        bool flag = false; 
+
+                        // If item already exists in shop, dont spawn it, spawn another item
+                        for (int t = 0; t < GetShopItems().Count; t++)
+                        {
+                            if (GetShopItems()[t].GetShopItemName() == epicItems[randInt].itemName)
+                            {
+                                flag = true;
+                                continue;
+                            }
+                        }
+
+                        if (flag)
+                        {
+                            i--;
+                            continue;
+                        }
+
+                        itemCombat = epicItems[randInt];
+                        itemPrice = itemCombat.basePrice;
                     } 
                 }
                 else if (getRare)
                 {   
                     List<ItemPiece> rareItems = new List<ItemPiece>();
-                    
+
                     for (int x = 0; x < shopCombatItems.Count; x++)
                     {
                         if (shopCombatItems[x].curRarity == ItemPiece.Rarity.RARE)
@@ -718,9 +739,27 @@ public class ShopManager : MonoBehaviour
                     randInt = Random.Range(0, rareItems.Count);
                     if (rareItems.Count > 0)
                     {
-                        itemCombat = rareItems[randInt];   
-                        itemPrice = itemCombat.basePrice; 
-                    }                                     
+                        bool flag = false;
+
+                        // If item already exists in shop, dont spawn it, spawn another item
+                        for (int t = 0; t < GetShopItems().Count; t++)
+                        {
+                            if (GetShopItems()[t].GetShopItemName() == rareItems[randInt].itemName)
+                            {
+                                flag = true;
+                                continue;
+                            }
+                        }
+
+                        if (flag)
+                        {
+                            i--;
+                            continue;
+                        }
+
+                        itemCombat = rareItems[randInt];
+                        itemPrice = itemCombat.basePrice;
+                    }
                 }
                 else
                 {   

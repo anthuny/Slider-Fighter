@@ -217,7 +217,7 @@ public class Slot : MonoBehaviour
         }
         else
         {
-            rt.sizeDelta = new Vector2(200, 200);
+            rt.sizeDelta = new Vector2(175, 175);
             rt.localPosition = new Vector3(0, 9.5f);
         }
     }

@@ -1463,6 +1463,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (!GameManager.Instance.GetAllowSelection())
             return;
 
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         GameManager.Instance.isSkillsMode = !GameManager.Instance.isSkillsMode;
         GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
 
@@ -1619,6 +1622,42 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (!GameManager.Instance.GetAllowSelection())
             return;
 
+        // If unit has two of the same item in this slot, and SLOT 1
+        // Auto select slot 1 instead
+        if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
+        {
+            if (TeamItemsManager.Instance.equippedItemsMain.Count >= 2)
+            {
+                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsMain[0])
+                {
+                    GameManager.Instance.skill0Button.SelectMainIcon1();
+                    return;
+                }
+            }
+        }
+        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
+        {
+            if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 2)
+            {
+                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsSecond[0])
+                {
+                    GameManager.Instance.skill0Button.SelectMainIcon1();
+                    return;
+                }
+            }
+        }
+        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
+        {
+            if (TeamItemsManager.Instance.equippedItemsThird.Count >= 2)
+            {
+                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsThird[0])
+                {
+                    GameManager.Instance.skill0Button.SelectMainIcon1();
+                    return;
+                }
+            }
+        }
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
@@ -1755,6 +1794,57 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         if (!GameManager.Instance.GetAllowSelection())
             return;
+
+        // If unit has two of the same item in this slot, and SLOT 1
+        // Auto select slot 1 instead
+        if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
+        {
+            if (TeamItemsManager.Instance.equippedItemsMain.Count >= 3)
+            {
+                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsMain[0])
+                {
+                    GameManager.Instance.skill0Button.SelectMainIcon1();
+                    return;
+                }
+                else if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsMain[1])
+                {
+                    GameManager.Instance.skill1Button.SelectMainIcon2();
+                    return;
+                }
+            }
+        }
+        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
+        {
+            if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 3)
+            {
+                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsSecond[0])
+                {
+                    GameManager.Instance.skill0Button.SelectMainIcon1();
+                    return;
+                }
+                else if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsSecond[1])
+                {
+                    GameManager.Instance.skill1Button.SelectMainIcon2();
+                    return;
+                }
+            }
+        }
+        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
+        {
+            if (TeamItemsManager.Instance.equippedItemsThird.Count >= 3)
+            {
+                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsThird[0])
+                {
+                    GameManager.Instance.skill0Button.SelectMainIcon1();
+                    return;
+                }
+                else if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsThird[1])
+                {
+                    GameManager.Instance.skill1Button.SelectMainIcon2();
+                    return;
+                }
+            }
+        }
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
