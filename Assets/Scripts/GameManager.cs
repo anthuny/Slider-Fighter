@@ -3487,13 +3487,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             else if (x == 3)
                                 mainSlot4.ToggleSelected(true);
 
-                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat)
-                                UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[x]);
-                            else
-                            {
+                            //if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat)
+                                //UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[x]);
+                           // else
+                            //{
                                 GameManager.Instance.UpdateUnitSelection(null, null);
                                 UpdateActiveItem(null);
-                            }
+                           // }
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[x]);
                             UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[x]);
                             UpdateUnitsSelectedText();
@@ -3521,13 +3521,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             else if (x == 3)
                                 mainSlot4.ToggleSelected(true);
 
-                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat)
-                                UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
-                            else
-                            {
+                            //if (OwnedLootInven.Instance.GetWornItemSecondAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat)
+                            //    UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
+                            //else
+                           // {
                                 GameManager.Instance.UpdateUnitSelection(null, null);
                                 UpdateActiveItem(null);
-                            }
+                           // }
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
                             UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
                             UpdateUnitsSelectedText();
@@ -3555,13 +3555,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             else if (x == 3)
                                 mainSlot4.ToggleSelected(true);
 
-                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat)
-                                UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[x]);
-                            else
-                            {
+                           // if (OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat)
+                            //    UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[x]);
+                            //else
+                           // {
                                 GameManager.Instance.UpdateUnitSelection(null, null);
                                 UpdateActiveItem(null);
-                            }
+                           // }
 
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[x]);
                             UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[x]);
@@ -5056,6 +5056,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[0]);
                                     fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[0].itemSpriteCombat);
+                                    fighterMainSlot1.UpdateItemName(TeamItemsManager.Instance.equippedItemsMain[0].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsMain[0].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot1.UpdatePassiveActiveType(true);
@@ -5076,6 +5077,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
                                     fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[0].itemSpriteCombat);
+                                    fighterMainSlot1.UpdateItemName(TeamItemsManager.Instance.equippedItemsSecond[0].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsSecond[0].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot1.UpdatePassiveActiveType(true);
@@ -5096,6 +5098,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[0]);
                                     fighterMainSlot1.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[0].itemSpriteCombat);
+                                    fighterMainSlot1.UpdateItemName(TeamItemsManager.Instance.equippedItemsThird[0].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsThird[0].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot1.UpdatePassiveActiveType(true);
@@ -5128,6 +5131,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[1]);
                                     fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[1].itemSpriteCombat);
+                                    fighterMainSlot2.UpdateItemName(TeamItemsManager.Instance.equippedItemsMain[1].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsMain[1].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot2.UpdatePassiveActiveType(true);
@@ -5148,6 +5152,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
                                     fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[1].itemSpriteCombat);
+                                    fighterMainSlot2.UpdateItemName(TeamItemsManager.Instance.equippedItemsSecond[1].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsSecond[1].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot2.UpdatePassiveActiveType(true);
@@ -5168,6 +5173,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[1]);
                                     fighterMainSlot2.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[1].itemSpriteCombat);
+                                    fighterMainSlot2.UpdateItemName(TeamItemsManager.Instance.equippedItemsThird[1].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsThird[1].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot2.UpdatePassiveActiveType(true);
@@ -5200,6 +5206,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[2]);
                                     fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[2].itemSpriteCombat);
+                                    fighterMainSlot3.UpdateItemName(TeamItemsManager.Instance.equippedItemsMain[2].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsMain[2].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot3.UpdatePassiveActiveType(true);
@@ -5220,6 +5227,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
                                     fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[2].itemSpriteCombat);
+                                    fighterMainSlot3.UpdateItemName(TeamItemsManager.Instance.equippedItemsSecond[2].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsSecond[2].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot3.UpdatePassiveActiveType(true);
@@ -5240,6 +5248,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[2]);
                                     fighterMainSlot3.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[2].itemSpriteCombat);
+                                    fighterMainSlot3.UpdateItemName(TeamItemsManager.Instance.equippedItemsThird[2].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsThird[2].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot3.UpdatePassiveActiveType(true);
@@ -5272,6 +5281,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[3]);
                                     fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsMain[3].itemSpriteCombat);
+                                    fighterMainSlot4.UpdateItemName(TeamItemsManager.Instance.equippedItemsThird[3].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsMain[3].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot4.UpdatePassiveActiveType(true);
@@ -5292,6 +5302,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
                                     fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsSecond[3].itemSpriteCombat);
+                                    fighterMainSlot4.UpdateItemName(TeamItemsManager.Instance.equippedItemsSecond[3].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsSecond[3].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot4.UpdatePassiveActiveType(true);
@@ -5312,6 +5323,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[3]);
                                     fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.equippedItemsThird[3].itemSpriteCombat);
+                                    fighterMainSlot4.UpdateItemName(TeamItemsManager.Instance.equippedItemsThird[3].itemName);
 
                                     if (TeamItemsManager.Instance.equippedItemsThird[3].curActiveType == ItemPiece.ActiveType.ACTIVE)
                                         fighterMainSlot4.UpdatePassiveActiveType(true);
@@ -5770,6 +5782,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (x == 0)
                             {
+                                if (fighterMainSlot1.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsMainAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
                                 fighterMainSlot1.UpdateSubText(minus, true);
@@ -5786,6 +5801,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                             else if (x == 1)
                             {
+                                if (fighterMainSlot2.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsMainAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
                                 fighterMainSlot2.UpdateSubText(minus, true);
@@ -5802,6 +5820,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                             else if (x == 2)
                             {
+                                if (fighterMainSlot3.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsMainAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
                                 fighterMainSlot3.UpdateSubText(minus, true);
@@ -5827,6 +5848,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (x == 0)
                             {
+                                if (fighterMainSlot1.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsSecondAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
                                 fighterMainSlot1.UpdateSubText(minus, true);
@@ -5843,6 +5867,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                             else if (x == 1)
                             {
+                                if (fighterMainSlot2.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsSecondAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
                                 fighterMainSlot2.UpdateSubText(minus, true);
@@ -5859,6 +5886,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                             else if (x == 2)
                             {
+                                if (fighterMainSlot3.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsSecondAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
                                 fighterMainSlot3.UpdateSubText(minus, true);
@@ -5884,6 +5914,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (x == 0)
                             {
+                                if (fighterMainSlot1.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsThirdAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
                                 fighterMainSlot1.UpdateSubText(minus, true);
@@ -5900,6 +5933,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                             else if (x == 1)
                             {
+                                if (fighterMainSlot2.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsThirdAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
                                 fighterMainSlot2.UpdateSubText(minus, true);
@@ -5916,6 +5952,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                             else if (x == 2)
                             {
+                                if (fighterMainSlot3.GetItemName() == "")
+                                    continue;
+
                                 OwnedLootInven.Instance.wornItemsThirdAlly[x].IncItemUseCount();
                                 int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
                                 fighterMainSlot3.UpdateSubText(minus, true);

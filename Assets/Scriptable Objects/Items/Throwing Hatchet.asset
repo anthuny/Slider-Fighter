@@ -26,7 +26,7 @@ MonoBehaviour:
   itemSpriteItemTab: {fileID: 21300000, guid: a181ede4da91aaf478f6c20522e5fab6, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 3e45dd79657c927488623d2aeb9ec24a, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 3e45dd79657c927488623d2aeb9ec24a, type: 3}
-  itemSpriteCombatProjectile: {fileID: 21300000, guid: d28d8551d2898fb42a8b81d3246dc08d, type: 3}
+  itemSpriteCombatProjectile: {fileID: 21300000, guid: f51065a0d406f444f88a60618e96229f, type: 3}
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
   effectAddedTurnLength: 2
@@ -60,8 +60,8 @@ MonoBehaviour:
   hitCount: 4
   projectileSpeed: 10
   allowRandomSpawnPosition: 1
-  allowRandomSpawnRotation: 0
-  projectileAllowSpin: 0
+  allowRandomSpawnRotation: 1
+  projectileAllowSpin: 1
   itemAnnounce: {fileID: 8300000, guid: d47bb0415fc586a4cbb1c8b24b78237d, type: 3}
   projectileLaunch: {fileID: 8300000, guid: 52568363d9550054899313847ea0cd7e, type: 3}
   projectileHit: {fileID: 8300000, guid: d22b9519c42d8ee4783e7beb762d9a00, type: 3}

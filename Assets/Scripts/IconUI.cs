@@ -13,6 +13,8 @@ public class IconUI : MonoBehaviour
 
     [SerializeField] private UIElement skillCooldownUI;
 
+    public string itemName;
+
 
     public void ToggleSkillCooldownUI(bool toggle = true)
     {
@@ -30,6 +32,17 @@ public class IconUI : MonoBehaviour
     {
         image = GetComponent<Image>();
     }
+
+    public void UpdateItemName(string name)
+    {
+        itemName = name;
+    }
+
+    public string GetItemName()
+    {
+        return itemName;
+    }
+
     public void UpdatePortrait(Sprite sprite)
     {
         image.sprite = sprite;
@@ -46,6 +59,7 @@ public class IconUI : MonoBehaviour
 
         UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
         UpdatePassiveActiveType(false, true);
+        UpdateItemName("");
     }
 
     public void UpdateSubText(int level, bool item = false, bool passive = true)

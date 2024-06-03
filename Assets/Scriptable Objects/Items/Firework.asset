@@ -27,7 +27,7 @@ MonoBehaviour:
   itemSpriteItemTab: {fileID: 21300000, guid: 6aaff0ea738e2fa44b42ec4a4bf6a5d4, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: c5259e6f424e0e24dbb55493fc13bacf, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: c5259e6f424e0e24dbb55493fc13bacf, type: 3}
-  itemSpriteCombatProjectile: {fileID: 21300000, guid: d28d8551d2898fb42a8b81d3246dc08d, type: 3}
+  itemSpriteCombatProjectile: {fileID: 21300000, guid: bf020baa1a9948f43bf962568196c19e, type: 3}
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 11400000, guid: ea9021db3e395ad4ca62a5d553dfacfd, type: 2}
   effectAddedTurnLength: 2

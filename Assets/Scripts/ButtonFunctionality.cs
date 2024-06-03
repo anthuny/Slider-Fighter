@@ -1482,6 +1482,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             GameManager.Instance.fighterMainSlot2.ToggleSelectImage(false);
             GameManager.Instance.fighterMainSlot3.ToggleSelectImage(false);
             GameManager.Instance.fighterMainSlot4.ToggleSelectImage(false);
+
+            GameManager.Instance.ResetActiveItem();
         }
         else
         {
@@ -1628,7 +1630,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (TeamItemsManager.Instance.equippedItemsMain.Count >= 2)
             {
-                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsMain[0])
+                if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
                 {
                     GameManager.Instance.skill0Button.SelectMainIcon1();
                     return;
@@ -1639,7 +1641,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 2)
             {
-                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsSecond[0])
+                if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
                 {
                     GameManager.Instance.skill0Button.SelectMainIcon1();
                     return;
@@ -1650,7 +1652,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (TeamItemsManager.Instance.equippedItemsThird.Count >= 2)
             {
-                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsThird[0])
+                if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
                 {
                     GameManager.Instance.skill0Button.SelectMainIcon1();
                     return;
@@ -1801,12 +1803,12 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (TeamItemsManager.Instance.equippedItemsMain.Count >= 3)
             {
-                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsMain[0])
+                if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
                 {
                     GameManager.Instance.skill0Button.SelectMainIcon1();
                     return;
                 }
-                else if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsMain[1])
+                else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
                 {
                     GameManager.Instance.skill1Button.SelectMainIcon2();
                     return;
@@ -1817,12 +1819,12 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 3)
             {
-                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsSecond[0])
+                if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
                 {
                     GameManager.Instance.skill0Button.SelectMainIcon1();
                     return;
                 }
-                else if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsSecond[1])
+                else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
                 {
                     GameManager.Instance.skill1Button.SelectMainIcon2();
                     return;
@@ -1833,12 +1835,12 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (TeamItemsManager.Instance.equippedItemsThird.Count >= 3)
             {
-                if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsThird[0])
+                if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
                 {
                     GameManager.Instance.skill0Button.SelectMainIcon1();
                     return;
                 }
-                else if (GameManager.Instance.GetActiveItem() == TeamItemsManager.Instance.equippedItemsThird[1])
+                else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
                 {
                     GameManager.Instance.skill1Button.SelectMainIcon2();
                     return;

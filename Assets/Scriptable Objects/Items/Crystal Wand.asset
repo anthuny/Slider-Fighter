@@ -15,19 +15,19 @@ MonoBehaviour:
   curRarity: 2
   curRace: 1
   curItemCombatType: 1
-  curItemTargetType: 1
+  curItemTargetType: 0
   curItemType: 0
   curSelectionType: 0
   curTargetType: 0
   curActiveType: 0
   curHitType: 0
   itemName: Crystal Wand
-  itemDesc: Target 3 random enemies, damaging  5 times. Apply Effect Speed Down (3)
-    (2 Total Uses)
+  itemDesc: Target 3 enemies, damaging  5 times. Apply Effect Speed Down (3) (2 Total
+    Uses)
   itemSpriteItemTab: {fileID: 21300000, guid: 02d59214cf3bf024a8828cdd542b93aa, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 13811e2e79bb553479aa7b0092f47b79, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 13811e2e79bb553479aa7b0092f47b79, type: 3}
-  itemSpriteCombatProjectile: {fileID: 21300000, guid: d28d8551d2898fb42a8b81d3246dc08d, type: 3}
+  itemSpriteCombatProjectile: {fileID: 21300000, guid: 8f9ea932603f8f149b543bfed909e49f, type: 3}
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 11400000, guid: a0a448b2d3383c44b82ac9431b0bd644, type: 2}
   effectAddedTurnLength: 3
@@ -58,7 +58,7 @@ MonoBehaviour:
   ac: {fileID: 0}
   maxUsesPerCombat: 2
   targetCount: 3
-  hitCount: 5
+  hitCount: 10
   projectileSpeed: 8
   allowRandomSpawnPosition: 1
   allowRandomSpawnRotation: 0
