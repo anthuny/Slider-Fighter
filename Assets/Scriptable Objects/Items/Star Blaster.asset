@@ -53,9 +53,11 @@ MonoBehaviour:
   basePrice: 18
   purchased: 0
   healthItem: 0
+  isSpecial: 0
   power: 0
   procChance: 0
   ac: {fileID: 0}
+  itemVisualAC: {fileID: 0}
   maxUsesPerCombat: 2
   targetCount: 3
   hitCount: 10
@@ -63,6 +65,6 @@ MonoBehaviour:
   allowRandomSpawnPosition: 1
   allowRandomSpawnRotation: 1
   projectileAllowSpin: 1
-  itemAnnounce: {fileID: 8300000, guid: d47bb0415fc586a4cbb1c8b24b78237d, type: 3}
-  projectileLaunch: {fileID: 8300000, guid: 52568363d9550054899313847ea0cd7e, type: 3}
-  projectileHit: {fileID: 8300000, guid: d22b9519c42d8ee4783e7beb762d9a00, type: 3}
+  itemAnnounce: {fileID: 8300000, guid: 40489b54d8e6c5940929481624e8b784, type: 3}
+  projectileLaunch: {fileID: 8300000, guid: 6da47ad21555879478fcf0b4d84a7a3b, type: 3}
+  projectileHit: {fileID: 8300000, guid: 0e0ec8400b2e7ab4ab254517aa939823, type: 3}

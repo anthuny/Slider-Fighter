@@ -941,7 +941,7 @@ public class WeaponManager : MonoBehaviour
             // If user missed on first hit, send 1 hit count
             bool miss = false;
 
-            CalculatePower();
+            CalculatePower(GameManager.Instance.isSkillsMode);
 
             if (hitAccuracy == 0)
             {
@@ -989,17 +989,26 @@ public class WeaponManager : MonoBehaviour
             hitAlertText.DisableAlertUI();
     }
 
-    public void CalculatePower()
+    public void CalculatePower(bool skill = true)
     {
         float currentPower = GameManager.Instance.GetActiveUnitFunctionality().curPower;
 
-        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().curSkillPower != 0 ||
-            GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().healPowerAmount != 0)
-            currentPower += GameManager.Instance.GetActiveUnitFunctionality().curHealingPower;
+        if (skill)
+        {
+            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().curSkillPower != 0 ||
+                GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().healPowerAmount != 0)
+                currentPower += GameManager.Instance.GetActiveUnitFunctionality().curHealingPower;
 
-        calculatedPower = (GameManager.Instance.GetActiveSkill().GetCalculatedSkillPowerStat() + currentPower);
-        //calculatedPower += GameManager.Instance.randomBaseOffset*2;
-        calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
+            calculatedPower = (GameManager.Instance.GetActiveSkill().GetCalculatedSkillPowerStat() + currentPower);
+            //calculatedPower += GameManager.Instance.randomBaseOffset*2;
+            calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
+        }
+        else
+        {
+            calculatedPower = currentPower + GameManager.Instance.GetActiveItem().itemPower;
+            //calculatedPower += GameManager.Instance.randomBaseOffset*2;
+            calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);
+        }
     }
 
     public void TriggerHitAlertText(WeaponHitArea.HitAreaType curHitAreaType)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c98df06682a0b046bbcbdca0e2e04c7, type: 3}
   m_Name: Thunder Essence
   m_EditorClassIdentifier: 
-  curRarity: 1
+  curRarity: 0
   curRace: 3
   curItemCombatType: 1
   curItemTargetType: 1
@@ -20,9 +20,9 @@ MonoBehaviour:
   curSelectionType: 0
   curTargetType: 0
   curActiveType: 0
-  curHitType: 0
+  curHitType: 1
   itemName: Thunder Essence
-  itemDesc: Target 5 random enemies, Summoning damaging Thunder 4 times. Apply Effect
+  itemDesc: Target 5 random enemies, dealing damaging Thunder 4 times. Apply Effect
     Power Down (2) (3 Total Uses)
   itemSpriteItemTab: {fileID: 21300000, guid: e10d8184d5ded854e8bc8ed0af4d2cb5, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: c8001304be0e1fe4595164aac3a3b8aa, type: 3}
@@ -53,9 +53,11 @@ MonoBehaviour:
   basePrice: 12
   purchased: 0
   healthItem: 0
+  isSpecial: 0
   power: 0
-  procChance: 0
+  procChance: 25
   ac: {fileID: 0}
+  itemVisualAC: {fileID: 9100000, guid: 04069fedaf60421489abbe5c0e0b3d63, type: 2}
   maxUsesPerCombat: 3
   targetCount: 5
   hitCount: 4
@@ -63,6 +65,6 @@ MonoBehaviour:
   allowRandomSpawnPosition: 1
   allowRandomSpawnRotation: 0
   projectileAllowSpin: 0
-  itemAnnounce: {fileID: 8300000, guid: d47bb0415fc586a4cbb1c8b24b78237d, type: 3}
-  projectileLaunch: {fileID: 8300000, guid: 52568363d9550054899313847ea0cd7e, type: 3}
-  projectileHit: {fileID: 8300000, guid: d22b9519c42d8ee4783e7beb762d9a00, type: 3}
+  itemAnnounce: {fileID: 8300000, guid: f5f69ca876547ab4cbc7cc0c53e7f7f1, type: 3}
+  projectileLaunch: {fileID: 0}
+  projectileHit: {fileID: 8300000, guid: bf1aec39ceb22c340aaae14726c59d10, type: 3}

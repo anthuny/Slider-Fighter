@@ -3355,7 +3355,7 @@ public class UnitFunctionality : MonoBehaviour
         holyLinkPartner = null;
     }
 
-    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool item = false)
+    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool passiveItem = false)
     {
         //Debug.Log("addedEffect 1 " + addedEffect.curEffectName);
 
@@ -3364,6 +3364,31 @@ public class UnitFunctionality : MonoBehaviour
         // If player miss, do not apply effect
         if (effectHitAcc == 0 || targetUnit.isParrying || !GameManager.Instance.playerInCombat)
             return;
+
+        // DOING THIS VVVVVVVVVVVVV
+
+        EffectData activeEffect = null;
+        float procChance = 0;
+
+        if (GameManager.Instance.isSkillsMode)
+        {
+            if (GameManager.Instance.GetActiveSkill())
+            {
+                activeEffect = GameManager.Instance.GetActiveSkill().effect;
+                procChance = GameManager.Instance.GetActiveSkill().curEffectHitChance;
+            }
+
+        }
+        else
+        {
+            if (GameManager.Instance.GetActiveItem())
+            {
+                activeEffect = GameManager.Instance.GetActiveItem().effectAdded;
+                procChance = GameManager.Instance.GetActiveItem().procChance;
+            }
+        }
+
+        // ^^^^^^^^^^^^^^^^^^^^
 
         //Debug.Log("addedEffect 2 " + addedEffect.curEffectName);
         //Debug.Log("Effect hit acc " + effectHitAcc);
@@ -3376,120 +3401,240 @@ public class UnitFunctionality : MonoBehaviour
                 // Add more stacks to the effect that the unit already has
                 for (int x = 0; x < 1; x++)
                 {
-                    // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc && GameManager.Instance.isSkillsMode)
+                    if (activeEffect != null)
                     {
-                        //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
-
-                        int rand = Random.Range(1, 101);
-                        if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
+                        if (GameManager.Instance.GetActiveSkill() != null && GameManager.Instance.isSkillsMode)
                         {
-                            if (effectAddedCount < 1)
-                                activeEffects[i].AddTurnCountText(1);
-
-                            // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-                            effectAddedCount++;
-
-                            settingUpEffect = true;
-
-                            if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                            // Determining whether the effect hits, If it fails, stop
+                            if (procChance != 0)
                             {
-                                activeEffects[i].EffectApply(this);
-                                activeEffects[i].UpdateEffectTierImages();
-                                if (activeEffects[i] != null)
-                                    activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                                else
+                                //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
+
+                                int rand = Random.Range(1, 101);
+
+                                if (rand >= procChance && GameManager.Instance.isSkillsMode)
                                 {
+                                    if (effectAddedCount < 1)
+                                        activeEffects[i].AddTurnCountText(1);
 
-                                }
+                                    // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+                                    effectAddedCount++;
 
-                                string name = addedEffect.effectName;
-                                if (addedEffect.effectName == "HOLY_LINK")
-                                    name = "HOLY LINK";
-                                else if (addedEffect.effectName == "OTHER_LINK")
-                                    name = "OTHER LINK";
-                                else if (addedEffect.effectName == "POWERDOWN")
-                                    name = "POWER DOWN";
-                                TriggerTextAlert(name, 1, true, "Inflict");
+                                    settingUpEffect = true;
 
-                                //Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
-
-                                if (addedEffect.effectName == "HOLY_LINK")
-                                {
-                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-                                }
-
-                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                                // being added to this unit, to the other linked fighter also
-                                if (GetEffect("HOLY_LINK"))
-                                {
-                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                    if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                                     {
-                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.curEffectName != EffectData.EffectName.HOLY_LINK)
+                                        activeEffects[i].EffectApply(this);
+                                        activeEffects[i].UpdateEffectTierImages();
+                                        if (activeEffects[i] != null)
+                                            activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                        else
                                         {
-                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+
+                                        }
+
+                                        string name = addedEffect.effectName;
+                                        if (addedEffect.effectName == "HOLY_LINK")
+                                            name = "HOLY LINK";
+                                        else if (addedEffect.effectName == "OTHER_LINK")
+                                            name = "OTHER LINK";
+                                        else if (addedEffect.effectName == "POWERDOWN")
+                                            name = "POWER DOWN";
+                                        TriggerTextAlert(name, 1, true, "Inflict");
+
+                                        //Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
+
+                                        if (addedEffect.effectName == "HOLY_LINK")
+                                        {
+                                            holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                            GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                            GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                        }
+
+                                        // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                        // being added to this unit, to the other linked fighter also
+                                        if (GetEffect("HOLY_LINK"))
+                                        {
+                                            for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                            {
+                                                if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.curEffectName != EffectData.EffectName.HOLY_LINK)
+                                                {
+                                                    GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                                else
+                                    continue;
+
+                            }
+                            else if (passiveItem || byPassAcc)
+                            {
+                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                                {
+                                    //usedSkill = GameManager.Instance.GetActiveSkill();
+
+                                    activeEffects[i].AddTurnCountText(1);
+                                    activeEffects[i].EffectApply(this);
+                                    activeEffects[i].UpdateEffectTierImages();
+                                    if (activeEffects[i] != null)
+                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                    else
+                                    {
+
+                                    }
+                                    //return;
+
+                                    string name = addedEffect.effectName;
+                                    if (addedEffect.effectName == "HOLY_LINK")
+                                        name = "HOLY LINK";
+                                    else if (addedEffect.effectName == "OTHER_LINK")
+                                        name = "OTHER LINK";
+                                    else if (addedEffect.effectName == "POWERDOWN")
+                                        name = "POWER DOWN";
+                                    TriggerTextAlert(name, 1, true, "Inflict");
+
+                                    //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
+
+                                    if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                    {
+                                        holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                        GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                        GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+
+                                    }
+
+                                    // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                    // being added to this unit, to the other linked fighter also
+                                    if (GetEffect("HOLY_LINK"))
+                                    {
+                                        for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                        {
+                                            if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                            {
+                                                GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                            }
                                         }
                                     }
                                 }
-
                             }
-                        }
-                        else
-                            continue;
 
-                    }
-                    else if (item || byPassAcc)
-                    {
-                        if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                        // Item
+                        else if (GameManager.Instance.GetActiveItem() != null && !GameManager.Instance.isSkillsMode)
                         {
-                            //usedSkill = GameManager.Instance.GetActiveSkill();
+                            int rand = Random.Range(1, 101);
 
-                            activeEffects[i].AddTurnCountText(1);
-                            activeEffects[i].EffectApply(this);
-                            activeEffects[i].UpdateEffectTierImages();
-                            if (activeEffects[i] != null)
-                                activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                            else
+                            if (rand >= procChance && !GameManager.Instance.isSkillsMode)
                             {
+                                if (effectAddedCount < 1)
+                                    activeEffects[i].AddTurnCountText(1);
 
-                            }
-                            //return;
+                                // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+                                effectAddedCount++;
 
-                            string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "HOLY_LINK")
-                                name = "HOLY LINK";
-                            else if (addedEffect.effectName == "OTHER_LINK")
-                                name = "OTHER LINK";
-                            else if (addedEffect.effectName == "POWERDOWN")
-                                name = "POWER DOWN";
-                            TriggerTextAlert(name, 1, true, "Inflict");
+                                settingUpEffect = true;
 
-                            //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
-
-                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
-                            {
-                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-
-                            }
-
-                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                            // being added to this unit, to the other linked fighter also
-                            if (GetEffect("HOLY_LINK"))
-                            {
-                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                                 {
-                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                    activeEffects[i].EffectApply(this);
+                                    activeEffects[i].UpdateEffectTierImages();
+                                    if (activeEffects[i] != null)
+                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                    else
                                     {
-                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+
+                                    }
+
+                                    string name = activeEffect.effectName;
+                                    if (activeEffect.effectName == "HOLY_LINK")
+                                        name = "HOLY LINK";
+                                    else if (activeEffect.effectName == "OTHER_LINK")
+                                        name = "OTHER LINK";
+                                    else if (activeEffect.effectName == "POWERDOWN")
+                                        name = "POWER DOWN";
+                                    TriggerTextAlert(name, 1, true, "Inflict");
+
+                                    //Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
+
+                                    if (activeEffect.effectName == "HOLY_LINK")
+                                    {
+                                        holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                        GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                        GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(activeEffect, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                    }
+
+                                    // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                    // being added to this unit, to the other linked fighter also
+                                    if (GetEffect("HOLY_LINK"))
+                                    {
+                                        for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                        {
+                                            if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.curEffectName != EffectData.EffectName.HOLY_LINK)
+                                            {
+                                                GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(activeEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                                continue;
+
+                        }
+                            else if (passiveItem || byPassAcc)
+                            {
+                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                                {
+                                    //usedSkill = GameManager.Instance.GetActiveSkill();
+
+                                    activeEffects[i].AddTurnCountText(1);
+                                    activeEffects[i].EffectApply(this);
+                                    activeEffects[i].UpdateEffectTierImages();
+                                    if (activeEffects[i] != null)
+                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                    else
+                                    {
+
+                                    }
+                                    //return;
+
+                                    string name = addedEffect.effectName;
+                                    if (addedEffect.effectName == "HOLY_LINK")
+                                        name = "HOLY LINK";
+                                    else if (addedEffect.effectName == "OTHER_LINK")
+                                        name = "OTHER LINK";
+                                    else if (addedEffect.effectName == "POWERDOWN")
+                                        name = "POWER DOWN";
+                                    TriggerTextAlert(name, 1, true, "Inflict");
+
+                                    //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
+
+                                    if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                    {
+                                        holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                        GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                        GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+
+                                    }
+
+                                    // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                    // being added to this unit, to the other linked fighter also
+                                    if (GetEffect("HOLY_LINK"))
+                                    {
+                                        for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                        {
+                                            if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                            {
+                                                GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
+                    }                 
                 }
             }
         }
@@ -3503,158 +3648,319 @@ public class UnitFunctionality : MonoBehaviour
             {
                 GameObject go = null;
 
-                // Determining whether the effect hits, If it fails, stop
-                if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc && GameManager.Instance.isSkillsMode)
+                if (GameManager.Instance.GetActiveSkill() != null && GameManager.Instance.isSkillsMode)
                 {
-                    if (m == 0)
+                    // Determining whether the effect hits, If it fails, stop
+                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc && GameManager.Instance.isSkillsMode)
                     {
-                        int rand = Random.Range(1, 101);
-                        if (rand <= GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat())
+                        if (m == 0)
                         {
-                            // Spawn new effect on target unit
-                            go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-                            go.transform.SetParent(effectsParent);
-                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                            go.transform.localScale = new Vector3(1, 1, 1);
-
-                            effect = go.GetComponent<Effect>();
-                            activeEffects.Add(effect);
-                            effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
-
-                            string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "HOLY_LINK")
-                                name = "HOLY LINK";
-                            else if (addedEffect.effectName == "OTHER_LINK")
-                                name = "OTHER LINK";
-                            else if (addedEffect.effectName == "POWERDOWN")
-                                name = "POWER DOWN";
-                            TriggerTextAlert(name, 1, true, "Inflict");
-
-
-                            //Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
-
-                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                            int rand = Random.Range(1, 101);
+                            if (rand >= procChance)
                             {
-                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-                            }
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
 
-                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                            // being added to this unit, to the other linked fighter also
-                            if (GetEffect("HOLY_LINK"))
-                            {
-                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+
+                                //Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                                 {
-                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
                                     {
-                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
                                     }
                                 }
+
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                                settingUpEffect = true;
                             }
+                        }
+                    }
+                    else if (passiveItem || byPassAcc)
+                    {
+                        if (m == 0)
+                        {
+                            if (!passiveItem)
+                            {
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
 
-                            effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc);
 
-                            settingUpEffect = true;
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+                                //Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                {
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                    {
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.effectName != "HOLY_LINK")
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
+                                    }
+                                }
+
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                                settingUpEffect = true;
+                            }
+                            else
+                            {
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
+
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc);
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+                                //Debug.Log("addedEffect 7 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                {
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                    {
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
+                                    }
+                                }
+
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                            }
                         }
                     }
                 }
-                else if (item || byPassAcc)
+                else if (GameManager.Instance.GetActiveItem() != null && !GameManager.Instance.isSkillsMode)
                 {
-                    if (m == 0)
+                    // Determining whether the effect hits, If it fails, stop
+                    if (procChance != 0 && byPassAcc && !GameManager.Instance.isSkillsMode)
                     {
-                        if (!item)
+                        if (m == 0)
                         {
-                            // Spawn new effect on target unit
-                            go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-                            go.transform.SetParent(effectsParent);
-                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                            go.transform.localScale = new Vector3(1, 1, 1);
-
-                            effect = go.GetComponent<Effect>();
-                            activeEffects.Add(effect);
-                            effect.Setup(addedEffect, targetUnit, effectHitAcc);
-
-                            string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "HOLY_LINK")
-                                name = "HOLY LINK";
-                            else if (addedEffect.effectName == "OTHER_LINK")
-                                name = "OTHER LINK";
-                            else if (addedEffect.effectName == "POWERDOWN")
-                                name = "POWER DOWN";
-                            TriggerTextAlert(name, 1, true, "Inflict");
-
-                            //Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
-
-                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                            int rand = Random.Range(1, 101);
+                            if (rand >= procChance)
                             {
-                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-                            }
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
 
-                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                            // being added to this unit, to the other linked fighter also
-                            if (GetEffect("HOLY_LINK"))
-                            {
-                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+
+                                //Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                                 {
-                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.effectName != "HOLY_LINK")
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(activeEffect, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
                                     {
-                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
                                     }
                                 }
+
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                                settingUpEffect = true;
                             }
-
-                            effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-
-                            settingUpEffect = true;
                         }
-                        else
+                    }
+                    else if (passiveItem || byPassAcc)
+                    {
+                        if (m == 0)
                         {
-                            // Spawn new effect on target unit
-                            go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-                            go.transform.SetParent(effectsParent);
-                            go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                            go.transform.localScale = new Vector3(1, 1, 1);
-
-                            effect = go.GetComponent<Effect>();
-                            activeEffects.Add(effect);
-                            effect.Setup(addedEffect, targetUnit, effectHitAcc);
-
-                            string name = addedEffect.effectName;
-                            if (addedEffect.effectName == "HOLY_LINK")
-                                name = "HOLY LINK";
-                            else if (addedEffect.effectName == "OTHER_LINK")
-                                name = "OTHER LINK";
-                            else if (addedEffect.effectName == "POWERDOWN")
-                                name = "POWER DOWN";
-                            TriggerTextAlert(name, 1, true, "Inflict");
-
-                            //Debug.Log("addedEffect 7 " + addedEffect.curEffectName);
-
-                            if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                            if (!passiveItem)
                             {
-                                holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-                            }
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
 
-                            // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                            // being added to this unit, to the other linked fighter also
-                            if (GetEffect("HOLY_LINK"))
-                            {
-                                for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc);
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+                                //Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                                 {
-                                    if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(activeEffect, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
                                     {
-                                        GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, item);
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.effectName != "HOLY_LINK")
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
                                     }
                                 }
+
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                                settingUpEffect = true;
                             }
+                            else
+                            {
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
 
-                            effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc);
 
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+                                //Debug.Log("addedEffect 7 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                {
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(activeEffect, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                    {
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
+                                    }
+                                }
+
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                            }
                         }
                     }
                 }

@@ -69,9 +69,11 @@ public class ItemPiece : ScriptableObject
     public int basePrice;
     public bool purchased;
     public bool healthItem = false;
+    public bool isSpecial;
     public int power;
     public int procChance;
     public RuntimeAnimatorController ac;
+    public RuntimeAnimatorController itemVisualAC;
     public int maxUsesPerCombat = 5;
     public int targetCount;
     public int hitCount;

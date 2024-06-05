@@ -2535,34 +2535,66 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         return units;
     }
         
-    IEnumerator UpdateSelectedUnitsEffectVisual()
+    IEnumerator UpdateSelectedUnitsEffectVisual(bool skill = true)
     {
-        //Debug.Log("is using thing");
-        // Display effect visual to each selected unit before the power is shown
-        if (GetActiveSkill().skillLaunch != null)
+        if (skill)
         {
-            if (GetActiveSkill().skillProjectile == null)
+            // Display effect visual to each selected unit before the power is shown
+            if (GetActiveSkill().skillLaunch != null)
             {
-                yield return new WaitForSeconds(allyRangedSkillWaitTime / 1.5f);
+                if (GetActiveSkill().skillProjectile == null)
+                {
+                    yield return new WaitForSeconds(allyRangedSkillWaitTime / 1.5f);
 
-                // Projectile Launch SFX
-                AudioManager.Instance.Play(GetActiveSkill().skillLaunch.name);
+                    // Projectile Launch SFX
+                    AudioManager.Instance.Play(GetActiveSkill().skillLaunch.name);
+                }
+            }
+
+            yield return new WaitForSeconds(allyRangedSkillWaitTime / 3);
+
+            // Display effect visual to each selected unit before the power is shown
+            for (int i = 0; i < unitsSelected.Count; i++)
+            {
+                if (GetActiveSkill().targetEffectVisualAC != null)
+                {
+                    unitsSelected[i].UpdateEffectVisualAnimator(GetActiveSkill().targetEffectVisualAC);
+
+                    if (GetActiveSkill().skillHit != null && GetActiveSkill().skillProjectile == null)
+                        AudioManager.Instance.Play(GetActiveSkill().skillHit.name);
+
+                    yield return new WaitForSeconds(timeTillNextTargetEffetVisual);
+                }
             }
         }
-
-        yield return new WaitForSeconds(allyRangedSkillWaitTime/3);
-
-        // Display effect visual to each selected unit before the power is shown
-        for (int i = 0; i < unitsSelected.Count; i++)
+        else
         {
-            if (GetActiveSkill().targetEffectVisualAC != null)
+            // Display effect visual to each selected unit before the power is shown
+            if (GetActiveItem().itemAnnounce != null)
             {
-                unitsSelected[i].UpdateEffectVisualAnimator(GetActiveSkill().targetEffectVisualAC);
+                if (GetActiveItem().itemAnnounce == null)
+                {
+                    yield return new WaitForSeconds(allyRangedSkillWaitTime / 1.5f);
 
-                if (GetActiveSkill().skillHit != null && GetActiveSkill().skillProjectile == null)
-                    AudioManager.Instance.Play(GetActiveSkill().skillHit.name);
+                    // Projectile Launch SFX
+                    AudioManager.Instance.Play(GetActiveItem().itemAnnounce.name);
+                }
+            }
 
-                yield return new WaitForSeconds(timeTillNextTargetEffetVisual);
+            //yield return new WaitForSeconds(allyRangedSkillWaitTime / 3);
+
+            // Display effect visual to each selected unit before the power is shown
+            for (int i = 0; i < unitsSelected.Count; i++)
+            {
+                if (GetActiveItem().itemVisualAC != null)
+                {
+                    unitsSelected[i].UpdateEffectVisualAnimator(GetActiveItem().itemVisualAC);
+
+                    if (GetActiveItem().projectileHit != null)
+                        AudioManager.Instance.Play(GetActiveItem().projectileHit.name);
+
+                    yield return new WaitForSeconds(timeTillNextTargetEffetVisual);
+                }
             }
         }
     }
@@ -2602,7 +2634,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 GetActiveUnitFunctionality().UpdateHitsRemainingText(1);
 
             // Display effect visual to each selected unit before the power is shown
-            StartCoroutine(UpdateSelectedUnitsEffectVisual());
+            StartCoroutine(UpdateSelectedUnitsEffectVisual(true));
 
             yield return new WaitForSeconds(allyRangedSkillWaitTime);
 
@@ -2677,7 +2709,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 GetActiveUnitFunctionality().UpdateHitsRemainingText(1);
 
             // Display effect visual to each selected unit before the power is shown
-            StartCoroutine(UpdateSelectedUnitsEffectVisual());
+            StartCoroutine(UpdateSelectedUnitsEffectVisual(true));
 
             yield return new WaitForSeconds(allyMeleeSkillWaitTime);
 
@@ -2805,7 +2837,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 }
                             }
 
-                            WeaponManager.Instance.CalculatePower();
+                            WeaponManager.Instance.CalculatePower(isSkillsMode);
                             float healAmount = 0;
 
                             healAmount = (int)WeaponManager.Instance.calculatedPower;
@@ -2877,189 +2909,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                 }
             }
-
-            // Loop as many times as power text will appear
-            for (int x = 0; x < hitCount; x++)
-            {
-                // If we've cycled through all units selected, Disable hits remaining text
-                // if (x == hitCount-1)
-                //GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
-
-                /*
-                for (int d = 0; d < unitsSelected.Count; d++)
-                {
-
-                }
-                */
-
-                // If 1 enemy is trying to target an ally, dont?
-                if (unitsSelected.Count == 0)
-                {
-                    GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
-                    break;
-                }
-
-                if (unitsSelected[0] == null)
-                {
-                    GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
-                    continue;
-                }
-
-                if (!miss)
-                    GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount - x);
-                else
-                    GetActiveUnitFunctionality().UpdateHitsRemainingText(0);
-
-                // Loop through all selected units
-                for (int i = unitsSelected.Count - 1; i >= 0; i--)
-                {
-                    bool parrying = false;
-
-                    WeaponManager.Instance.CalculatePower();
-                    power = (int)WeaponManager.Instance.calculatedPower;
-
-                    if (miss)
-                    {
-                        power = 0;
-                        break;
-                    }
-
-                    int originalPower = power;
-
-                    // Helps catch the null error
-                    if (i < unitsSelected.Count)
-                    {
-                        if (unitsSelected[i] == null)
-                            continue;
-
-                        if (unitsSelected[i].isDead)
-                            continue;
-                    }
-
-                    float absPower = Mathf.Abs(originalPower);
-                    //float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
-                    float newPower = absPower;
-
-                    float newHealingPower = originalPower;
-
-                    // If unit missed, give them 0 power output
-                    if (effectHitAcc == 0)
-                    {
-                        newPower = 0;
-                        newHealingPower = 0;
-                    }
-
-                    /*
-                    if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
-                    {
-                        // Check if target unit has poison, half the heal if it does
-                        for (int y = 0; y < unitsSelected[i].GetEffects().Count; y++)
-                        {
-                            if (unitsSelected[i].activeEffects[y].curEffectName == Effect.EffectName.POISON)
-                            {
-                                float calc = ((5f * unitsSelected[i].activeEffects[y].effectPowerStacks) / 100) * newHealingPower;
-
-                                newHealingPower -= calc;
-                                Debug.Log("New  Healing Power " + (0.05f * unitsSelected[i].activeEffects[y].effectPowerStacks));
-                                //Debug.Log("Healing power halfed");
-                                break;
-                            }
-                        }
-                    }
-                    */
-
-                    int orderCount;
-
-                    bool blocked;
-
-                    float targetBlockChance = Random.Range(0, 101);
-                    if (unitsSelected[i].GetBlockChance() >= targetBlockChance)
-                        blocked = true;
-                    else
-                        blocked = false;
-
-                    //Debug.Log(unitsSelected[i].GetUnitName() + " " + unitsSelected[i].GetBlockChance());
-
-                    // Cause power
-                    if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                    {
-                        orderCount = 2;
-                        if (hasBeenLuckyHit)
-                        {
-                            hasBeenLuckyHit = false;
-                            orderCount--;
-                        }
-
-                        if (blocked)
-                        {
-                            newPower = 0;
-                        }
-                            unitsSelected[i].UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
-                            //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
-
-                        CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
-                    }
-                    else if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                    {
-                        orderCount = 2;
-                        if (hasBeenLuckyHit)
-                        {
-                            hasBeenLuckyHit = false;
-                            orderCount--;
-                        }
-
-                        float finalHealingPower = newHealingPower * unitsSelected[i].curHealingRecieved;
-
-                        /*
-                        if (blocked)
-                        {
-                            finalHealingPower = 0;
-                        }
-                        */
-                        unitsSelected[i].UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
-                        //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI(finalHealingPower, false, false, null, false));
-                    }
-
-                    // If active skill has an effect AND it's not a self cast, apply it to selected targets
-                    if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
-                    {
-                        unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], effectHitAcc, effectHitAcc);
-
-                        if (GetActiveSkill().effect2 != null)
-                        {
-                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
-                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[i], effectHitAcc, effectHitAcc);
-                        }
-                    }
-
-
-                    /*
-                    // Reset unit's prev power text for future power texts
-                    if (x == activeSkill.skillAttackAccMult - 1)
-                        unitsSelected[i].ResetPreviousPowerUI();
-                    */
-
-#if !UNITY_EDITOR
-                        Vibration.Vibrate(15);
-#endif
-                }
-
-                // Time wait in between attacks, shared across all targeted units
-                int maxHitWorth = 15;
-                if (hitCount > maxHitWorth)
-                    yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.0025f * (maxHitWorth - 1)));
-                else
-                    yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.0025f * (hitCount - 1)));
-            }
-
-            // Reset each units power UI
-            for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
-            {
-                activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
-                activeRoomAllUnitFunctionalitys[i].usedSkill = null;
-                activeRoomAllUnitFunctionalitys[i].effectAddedCount = 0;
-                activeRoomAllUnitFunctionalitys[i].settingUpEffect = false;
-            }       
         }
 
         if (GetActiveUnitFunctionality() == null)
@@ -3068,6 +2917,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             yield break;
         }
 
+        // Perform Damage / Heal
+        StartCoroutine(TriggerPowerUI(power, hitCount, miss, effectHitAcc));     
+    }
+
+
+    // Called from end of TriggerPowerUI()
+    IEnumerator WeaponAttackCommand2(bool miss = true, int effectHitAcc = 0)
+    {
         GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
 
         // If skill is self cast, do it here
@@ -3085,12 +2942,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                 }
 
-                
-                #if !UNITY_EDITOR
+
+#if !UNITY_EDITOR
                     Vibration.Vibrate(15);
-                #endif
+#endif
             }
         }
+
+        //yield return new WaitForSeconds(1);
 
         // Disable unit selection just before attack
         for (int y = 0; y < unitsSelected.Count; y++)
@@ -3170,6 +3029,219 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 //Debug.Log("333");
                 StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
             }
+        }
+    }
+    public IEnumerator TriggerPowerUI(int power = 0, int hitCount = 0, bool miss = false, int effectHitAcc = 0)
+    {
+        // Loop as many times as power text will appear
+        for (int x = 0; x < hitCount; x++)
+        {
+            // If 1 enemy is trying to target an ally, dont?
+            if (unitsSelected.Count == 0)
+            {
+                GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
+                break;
+            }
+
+            if (unitsSelected[0] == null)
+            {
+                GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
+                continue;
+            }
+
+            if (!miss)
+                GetActiveUnitFunctionality().UpdateHitsRemainingText(hitCount - x);
+            else
+                GetActiveUnitFunctionality().UpdateHitsRemainingText(0);
+
+            bool flag = false;
+
+            if (GetActiveSkill() && isSkillsMode)
+            {
+                if (GetActiveSkill().startingSkillPower == 0 || GetActiveSkill().isSpecial)
+                {
+                    flag = true;
+                }
+            }
+            else if (GetActiveItem() && !isSkillsMode)
+            {
+                if (GetActiveItem().itemPower == 0 || GetActiveItem().isSpecial)
+                {
+                    flag = true;
+                }
+            }
+
+            if (!flag)
+            {
+                // Loop through all selected units
+                for (int i = unitsSelected.Count - 1; i >= 0; i--)
+                {
+                    bool parrying = false;
+
+                    WeaponManager.Instance.CalculatePower(isSkillsMode);
+                    power = (int)WeaponManager.Instance.calculatedPower;
+
+                    if (miss)
+                    {
+                        power = 0;
+                        break;
+                    }
+
+                    int originalPower = power;
+
+                    // Helps catch the null error
+                    if (i < unitsSelected.Count)
+                    {
+                        if (unitsSelected[i] == null)
+                            continue;
+
+                        if (unitsSelected[i].isDead)
+                            continue;
+                    }
+
+                    float absPower = Mathf.Abs(originalPower);
+                    //float tempPower = ((float)unitsSelected[i].curRecieveDamageAmp / 100f) * absPower;
+                    float newPower = absPower;
+
+                    float newHealingPower = originalPower;
+
+                    // If unit missed, give them 0 power output
+                    if (effectHitAcc == 0)
+                    {
+                        newPower = 0;
+                        newHealingPower = 0;
+                    }
+
+                    int orderCount;
+
+                    bool blocked;
+
+                    float targetBlockChance = Random.Range(0, 101);
+                    if (unitsSelected[i].GetBlockChance() >= targetBlockChance)
+                        blocked = true;
+                    else
+                        blocked = false;
+
+                    //Debug.Log(unitsSelected[i].GetUnitName() + " " + unitsSelected[i].GetBlockChance());
+
+                    // Cause power
+                    // Skill 
+                    if (isSkillsMode)
+                    {
+                        if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                        {
+                            orderCount = 2;
+                            if (hasBeenLuckyHit)
+                            {
+                                hasBeenLuckyHit = false;
+                                orderCount--;
+                            }
+
+                            if (blocked)
+                            {
+                                newPower = 0;
+                            }
+                            unitsSelected[i].UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
+                            //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+
+                            CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                        }
+                        else if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                        {
+                            orderCount = 2;
+                            if (hasBeenLuckyHit)
+                            {
+                                hasBeenLuckyHit = false;
+                                orderCount--;
+                            }
+
+                            float finalHealingPower = newHealingPower * unitsSelected[i].curHealingRecieved;
+                            unitsSelected[i].UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
+                        }
+                    }
+                    // Items
+                    else
+                    {
+                        if (GetActiveItem().curItemType == ItemPiece.ItemType.OFFENSE)
+                        {
+                            orderCount = 2;
+                            if (hasBeenLuckyHit)
+                            {
+                                hasBeenLuckyHit = false;
+                                orderCount--;
+                            }
+
+                            if (blocked)
+                            {
+                                newPower = 0;
+                            }
+                            unitsSelected[i].UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
+                            //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+
+                            CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                        }
+                        else if (GetActiveItem().curItemType == ItemPiece.ItemType.SUPPORT)
+                        {
+                            orderCount = 2;
+                            if (hasBeenLuckyHit)
+                            {
+                                hasBeenLuckyHit = false;
+                                orderCount--;
+                            }
+
+                            float finalHealingPower = newHealingPower * unitsSelected[i].curHealingRecieved;
+                            unitsSelected[i].UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
+                        }
+                    }
+
+                    if (isSkillsMode)
+                    {
+                        // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                        if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
+                        {
+                            if (isSkillsMode)
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], effectHitAcc, effectHitAcc);
+                            else
+
+
+                            if (isSkillsMode && GetActiveSkill().effect2 != null)
+                            {
+                                if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[i], effectHitAcc, effectHitAcc);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        unitsSelected[i].AddUnitEffect(GetActiveItem().effectAdded, unitsSelected[i], effectHitAcc, effectHitAcc);
+                    }
+
+#if !UNITY_EDITOR
+                    Vibration.Vibrate(15);
+#endif
+                }
+            }
+
+            // Time wait in between attacks, shared across all targeted units
+            int maxHitWorth = 15;
+            if (hitCount > maxHitWorth)
+                yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.0025f * (maxHitWorth - 1)));
+            else
+                yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.0025f * (hitCount - 1)));
+        }
+
+        if (isSkillsMode || GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        {
+            // Reset each units power UI
+            for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                activeRoomAllUnitFunctionalitys[i].ResetPowerUI();
+                activeRoomAllUnitFunctionalitys[i].usedSkill = null;
+                activeRoomAllUnitFunctionalitys[i].effectAddedCount = 0;
+                activeRoomAllUnitFunctionalitys[i].settingUpEffect = false;
+            }
+
+            StartCoroutine(WeaponAttackCommand2(miss, effectHitAcc));
         }
     }
 
@@ -5653,7 +5725,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
 
         if (activeItem.curHitType == ItemPiece.HitType.HITS)
-            yield return new WaitForSeconds(.75f);
+            yield return new WaitForSeconds(.35f);
         else
             yield return new WaitForSeconds(0);
 
@@ -5727,13 +5799,19 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
+            // Trigger Item Pop up
             GetActiveUnitFunctionality().TriggerItemVisualAlert(GetActiveItem().itemSpriteItemTab, true, true);
 
+            // Do Visual Effect on selected units
+            StartCoroutine(UpdateSelectedUnitsEffectVisual(false));
+
+            yield return new WaitForSeconds(1);
+
+            // Cleanse effect from unit
             if (GetActiveItem().effectCleansed != null)
             {
                 for (int i = 0; i < GetActiveItem().cleanseCount; i++)
                 {
-                    // Cleanse effect from unit
                     for (int x = 0; x < unitsSelected.Count; x++)
                     {
                         if (GetActiveItem().effectCleansed.effectName == "POISON")
@@ -5756,11 +5834,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 unitsSelected[x].TriggerTextAlert(name, 1, true, "Trigger");
                                 unitsSelected[x].GetEffect("BLEED").ReduceTurnCountText(unitsSelected[x]);
                             }
-                        }
-                       
+                        }                       
                     }
                 }
             }
+
+            // Perform Damage / Heal
+            StartCoroutine(TriggerPowerUI(GetActiveItem().itemPower, GetActiveItem().hitCount, false, 1));
+
+            yield return new WaitForSeconds(1);
 
             ResetSelectedUnits();
         }

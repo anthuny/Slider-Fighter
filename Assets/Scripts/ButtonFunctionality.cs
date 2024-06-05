@@ -1626,36 +1626,39 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         // If unit has two of the same item in this slot, and SLOT 1
         // Auto select slot 1 instead
-        if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
+        if (!GameManager.Instance.isSkillsMode)
         {
-            if (TeamItemsManager.Instance.equippedItemsMain.Count >= 2)
+            if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
             {
-                if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                if (TeamItemsManager.Instance.equippedItemsMain.Count >= 2)
                 {
-                    GameManager.Instance.skill0Button.SelectMainIcon1();
-                    return;
+                    if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                    {
+                        GameManager.Instance.skill0Button.SelectMainIcon1();
+                        return;
+                    }
                 }
             }
-        }
-        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
-        {
-            if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 2)
+            else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
             {
-                if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 2)
                 {
-                    GameManager.Instance.skill0Button.SelectMainIcon1();
-                    return;
+                    if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                    {
+                        GameManager.Instance.skill0Button.SelectMainIcon1();
+                        return;
+                    }
                 }
             }
-        }
-        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
-        {
-            if (TeamItemsManager.Instance.equippedItemsThird.Count >= 2)
+            else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
             {
-                if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                if (TeamItemsManager.Instance.equippedItemsThird.Count >= 2)
                 {
-                    GameManager.Instance.skill0Button.SelectMainIcon1();
-                    return;
+                    if (GameManager.Instance.fighterMainSlot2.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                    {
+                        GameManager.Instance.skill0Button.SelectMainIcon1();
+                        return;
+                    }
                 }
             }
         }
@@ -1799,51 +1802,54 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         // If unit has two of the same item in this slot, and SLOT 1
         // Auto select slot 1 instead
-        if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
+        if (!GameManager.Instance.isSkillsMode)
         {
-            if (TeamItemsManager.Instance.equippedItemsMain.Count >= 3)
+            if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
             {
-                if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                if (TeamItemsManager.Instance.equippedItemsMain.Count >= 3)
                 {
-                    GameManager.Instance.skill0Button.SelectMainIcon1();
-                    return;
-                }
-                else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
-                {
-                    GameManager.Instance.skill1Button.SelectMainIcon2();
-                    return;
+                    if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                    {
+                        GameManager.Instance.skill0Button.SelectMainIcon1();
+                        return;
+                    }
+                    else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
+                    {
+                        GameManager.Instance.skill1Button.SelectMainIcon2();
+                        return;
+                    }
                 }
             }
-        }
-        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
-        {
-            if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 3)
+            else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
             {
-                if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                if (TeamItemsManager.Instance.equippedItemsSecond.Count >= 3)
                 {
-                    GameManager.Instance.skill0Button.SelectMainIcon1();
-                    return;
-                }
-                else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
-                {
-                    GameManager.Instance.skill1Button.SelectMainIcon2();
-                    return;
+                    if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                    {
+                        GameManager.Instance.skill0Button.SelectMainIcon1();
+                        return;
+                    }
+                    else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
+                    {
+                        GameManager.Instance.skill1Button.SelectMainIcon2();
+                        return;
+                    }
                 }
             }
-        }
-        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
-        {
-            if (TeamItemsManager.Instance.equippedItemsThird.Count >= 3)
+            else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
             {
-                if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                if (TeamItemsManager.Instance.equippedItemsThird.Count >= 3)
                 {
-                    GameManager.Instance.skill0Button.SelectMainIcon1();
-                    return;
-                }
-                else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
-                {
-                    GameManager.Instance.skill1Button.SelectMainIcon2();
-                    return;
+                    if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot1.GetItemName())
+                    {
+                        GameManager.Instance.skill0Button.SelectMainIcon1();
+                        return;
+                    }
+                    else if (GameManager.Instance.fighterMainSlot3.GetItemName() == GameManager.Instance.fighterMainSlot2.GetItemName())
+                    {
+                        GameManager.Instance.skill1Button.SelectMainIcon2();
+                        return;
+                    }
                 }
             }
         }

@@ -48,6 +48,7 @@ public class SkillData : ScriptableObject
     public int skillSelectionCount;
     //public int maxSkillLevel = 5;
     public bool isSelfCast;
+    public bool isSpecial;
     [Tooltip("Determines whether this skill doubles the turns remaining on each target for its effect that it applies. (before applying its own)")]
     public bool isDoublingEffect;
     public bool isLeaching;
