@@ -26,12 +26,14 @@ public class CharacterCarasel : MonoBehaviour
     [SerializeField] private bool unlockedCleric = false;
     [SerializeField] private bool unlockedNecromancer = false;
     [SerializeField] private bool unlockedMonk = false;
+    [SerializeField] private bool unlockedDragonborn = false;
 
     public RuntimeAnimatorController warriorAnimator;
     public RuntimeAnimatorController archerAnimator;
     public RuntimeAnimatorController clericAnimator;
     public RuntimeAnimatorController necromancerAnimator;
     public RuntimeAnimatorController monkAnimator;
+    public RuntimeAnimatorController dragonbornAnimator;
 
     public Color unlockedUnitColour;
     public Color lockedUnitColour;
@@ -77,6 +79,7 @@ public class CharacterCarasel : MonoBehaviour
         SaveUnlockedAlly("Ranger");
         SaveUnlockedAlly("Necromancer");
         SaveUnlockedAlly("Monk");
+        SaveUnlockedAlly("Dragonborn");
         SaveUnlockedAlly("Cleric");
 
         LoadSave();
@@ -231,6 +234,20 @@ public class CharacterCarasel : MonoBehaviour
                 }
             }
 
+            if (allAllies[i].unitName == "Dragonborn")
+            {
+                allAlliesMenu[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+
+                if (IsMonkUnlocked())
+                {
+                    allAlliesMenu[i].ToggleUnitLocked(false, false);
+                }
+                else
+                {
+                    allAlliesMenu[i].ToggleUnitLocked(true, true);
+                }
+            }
+
             // Do walk/idle animation
             if (i == 0 && !allAlliesMenu[i].GetLocked())
             {
@@ -272,11 +289,13 @@ public class CharacterCarasel : MonoBehaviour
         PlayerPrefs.SetInt("UnlockedCleric", 0);
         PlayerPrefs.SetInt("UnlockedNecromancer", 0);
         PlayerPrefs.SetInt("UnlockedMonk", 0);
+        PlayerPrefs.SetInt("UnlockedDragonborn", 0);
         unlockedKnight = false;
         unlockedRanger = false;
         unlockedCleric = false;
         unlockedNecromancer = false;
         unlockedMonk = false;
+        unlockedDragonborn = false;
     }
 
     public void LoadSave()
@@ -291,6 +310,8 @@ public class CharacterCarasel : MonoBehaviour
             unlockedNecromancer = true;
         if (PlayerPrefs.GetInt("UnlockedMonk") == 1)
             unlockedMonk = true;
+        if (PlayerPrefs.GetInt("UnlockedDragonborn") == 1)
+            unlockedDragonborn = true;
     }
 
     public void SaveUnlockedAlly(string allyName)
@@ -320,6 +341,11 @@ public class CharacterCarasel : MonoBehaviour
             PlayerPrefs.SetInt("UnlockedMonk", 1);
             unlockedMonk = true;
         }
+        else if (allyName == "Dragonborn")
+        {
+            PlayerPrefs.SetInt("UnlockedDragonborn", 1);
+            unlockedDragonborn = true;
+        }
     }
 
     public bool IsNecromancerUnlocked()
@@ -329,6 +355,11 @@ public class CharacterCarasel : MonoBehaviour
     public bool IsMonkUnlocked()
     {
         return unlockedMonk;
+    }
+
+    public bool IsDragonbornUnlocked()
+    {
+        return unlockedDragonborn;
     }
 
     public bool IsKnightUnlocked()

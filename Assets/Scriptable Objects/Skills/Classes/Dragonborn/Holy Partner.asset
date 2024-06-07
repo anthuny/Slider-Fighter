@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Holy Partner
+  m_EditorClassIdentifier: 
+  curSkillType: 1
+  curSkillSelectionType: 1
+  startingSelectionType: 1
+  curskillSelectionAliveType: 0
+  curRangedType: 1
+  curAnimType: 1
+  curSkillEffectType: 0
+  skillSprite: {fileID: 21300000, guid: a8b157947fece4a47a6534dad1323f92, type: 3}
+  skillName: HOLY PARTNER
+  skillDescr: Target 1 ally, healing, each hit has a 50% chance to apply Holy Link
+    Effect.
+  skillTabDescr: Target 1 ally, healing, each hit has a 50% chance to apply Holy
+    Link Effect.
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 25
+  curSkillPower: 25
+  skillAttackAccMult: 1
+  skillBaseHitOutput: 2
+  skillHitAttempts: 1
+  projectileSpeed: 9
+  skillCooldown: 1
+  curCooldown: 0
+  skillSelectionCount: 1
+  isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
+  isReviving: 0
+  isMindControlling: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
+  special: 0
+  effect: {fileID: 11400000, guid: eb3986359ab7841459df333576943858, type: 2}
+  effect2: {fileID: 11400000, guid: 34338a48bdd913a4c825c3e42833c52c, type: 2}
+  effectTurnLength: 1
+  curEffectHitChance: 50
+  startingEffectHitChance: 50
+  baseEffectApplyCount: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
+  upgradeIncPowerCount: 0
+  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
+  skillProjectile: {fileID: 21300000, guid: 6cc2162633098074c9742da95a2508df, type: 3}
+  projectileAllowSpin: 0
+  projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 1
+  projectileAllowRandRotSpawn: 0
+  projectileAC: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  repeatLaunchSFX: 0
+  giveExtraDesc: 0
+  projectileLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  skillHit: {fileID: 8300000, guid: 128e358d37b60b346a094c6589c63450, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 1
+  mindControlled: 0

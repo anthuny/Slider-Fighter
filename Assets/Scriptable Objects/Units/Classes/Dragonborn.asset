@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b5ca964c25ccf542b4b722aabc76bc8, type: 3}
+  m_Name: Dragonborn
+  m_EditorClassIdentifier: 
+  curUnitType: 0
+  curRaceType: 1
+  unitValue: 2
+  unitSprite: {fileID: 21300000, guid: 0eea7ace4b25dd249912b4a4f77450a3, type: 3}
+  unitIcon: {fileID: 21300000, guid: 0eea7ace4b25dd249912b4a4f77450a3, type: 3}
+  unitColour: {r: 1, g: 0.009313964, b: 0, a: 1}
+  unitName: Dragonborn
+  startingSpeed: 9
+  startingDefense: 3
+  startingPower: 25
+  startingHealingPower: 1
+  startingMaxHealth: 750
+  speedIncPerLv: 1
+  powerIncPerLv: 1
+  healingPowerIncPerLv: 2
+  defenseIncPerLv: 1
+  maxHealthIncPerLv: 125
+  statDefense: 2
+  statAttack: 3
+  statHealing: 2
+  statUtility: 0
+  basicSelectionCount: 1
+  characterPrefab: {fileID: 1415871230302792947, guid: 1b2438fd098439146b8d1cf32d749a34, type: 3}
+  curSkills:
+  - {fileID: 11400000, guid: 110642bc0902ebf44892a185f20fbc4c, type: 2}
+  - {fileID: 11400000, guid: a9a2ac2173ce53e41b34392ad23f6f59, type: 2}
+  - {fileID: 11400000, guid: 77174f49403a53844b4e8a503b5e276b, type: 2}
+  - {fileID: 11400000, guid: fd0fee01d33c9554898856f5f3cac161, type: 2}
+  deathClip: {fileID: 8300000, guid: 4cdeeffb3199bdb48a83ec8d89745346, type: 3}
+  hitRecievedClip: {fileID: 8300000, guid: c4b4c41654ac0c14ab233c550191ad2d, type: 3}

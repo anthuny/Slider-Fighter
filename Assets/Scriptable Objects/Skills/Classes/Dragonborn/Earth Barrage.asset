@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Earth Barrage
+  m_EditorClassIdentifier: 
+  curSkillType: 0
+  curSkillSelectionType: 0
+  startingSelectionType: 0
+  curskillSelectionAliveType: 0
+  curRangedType: 1
+  curAnimType: 1
+  curSkillEffectType: 0
+  curSkillActiveType: 0
+  skillSprite: {fileID: 21300000, guid: 673d7226fbd9c3e4aad26083ab8400c1, type: 3}
+  skillName: EARTH BARRAGE
+  skillDescr: Target 1 enemy, damaging. Each hit has a 25% chance to apply Stun effect
+  skillTabDescr: Target 1 enemy, damaging. Each hit has a 25% chance to apply Stun
+    effect
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 12
+  curSkillPower: 12
+  skillAttackAccMult: 1
+  skillBaseHitOutput: 1
+  skillHitAttempts: 1
+  projectileSpeed: 11
+  skillCooldown: 2
+  curCooldown: 0
+  skillSelectionCount: 1
+  isSelfCast: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
+  isReviving: 0
+  isMindControlling: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
+  special: 0
+  effect: {fileID: 11400000, guid: b0c922ba7fc7622408aeb55fbc1a5910, type: 2}
+  effect2: {fileID: 0}
+  effectTurnLength: 1
+  curEffectHitChance: 25
+  startingEffectHitChance: 25
+  baseEffectApplyCount: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
+  upgradeIncPowerCount: 0
+  skillPowerIcon: {fileID: 21300000, guid: 2a5c892bdd014164da633b8c6fd0f246, type: 3}
+  skillProjectile: {fileID: 21300000, guid: 71d25fa8ab6b3674686db9481376bb9b, type: 3}
+  projectileAllowSpin: 0
+  projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 1
+  projectileAllowRandRotSpawn: 1
+  projectileAC: {fileID: 9100000, guid: ce736c592e64c404c9f108a123bf26c2, type: 2}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 04977778de2c37a47bfc74a6eb87564d, type: 3}
+  repeatLaunchSFX: 0
+  giveExtraDesc: 0
+  projectileLaunch: {fileID: 8300000, guid: 52a33254fb716ad43b460d21257811b7, type: 3}
+  skillHit: {fileID: 8300000, guid: 52a33254fb716ad43b460d21257811b7, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 3
+  reanimated: 0
