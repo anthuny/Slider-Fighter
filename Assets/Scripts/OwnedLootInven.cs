@@ -47,7 +47,7 @@ public class OwnedLootInven : MonoBehaviour
         {
             for (int i = 0; i < ownedLootSlots.Count; i++)
             {
-                ownedLootSlots[i].ToggleEquipButtonCover(false);
+                ownedLootSlots[i].ToggleCoverUI(false);
             }
         }
         
@@ -2309,6 +2309,82 @@ public class OwnedLootInven : MonoBehaviour
                         }
                         */
 
+                        #region Toggle Cover UI
+                        ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(false);
+
+                        // If selected base slot is MAIN, and owned item does not equal human
+                        if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN
+                            && GameManager.Instance.activeTeam[0].curRaceType == UnitData.RaceType.HUMAN
+                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                        }
+
+                        if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN
+                            && GameManager.Instance.activeTeam[0].curRaceType == UnitData.RaceType.ETHEREAL
+                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                        }
+
+                        if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN
+                            && GameManager.Instance.activeTeam[0].curRaceType == UnitData.RaceType.BEAST
+                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.BEAST)
+                        {
+                            ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                        }
+
+                        if (GameManager.Instance.activeTeam.Count >= 2)
+                        { 
+                            if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND
+                            && GameManager.Instance.activeTeam[1].curRaceType == UnitData.RaceType.HUMAN
+                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.HUMAN)
+                            {
+                                ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                            }
+
+                            if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND
+                                && GameManager.Instance.activeTeam[1].curRaceType == UnitData.RaceType.ETHEREAL
+                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.ETHEREAL)
+                            {
+                                ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                            }
+
+                            if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND
+                                && GameManager.Instance.activeTeam[1].curRaceType == UnitData.RaceType.BEAST
+                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.BEAST)
+                            {
+                                ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                            }
+                        }
+
+                        if (GameManager.Instance.activeTeam.Count >= 3)
+                        {
+                            if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD
+                                && GameManager.Instance.activeTeam[2].curRaceType == UnitData.RaceType.HUMAN
+                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.HUMAN)
+                            {
+                                ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                            }
+
+                            if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD
+                                && GameManager.Instance.activeTeam[2].curRaceType == UnitData.RaceType.ETHEREAL
+                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.ETHEREAL)
+                            {
+                                ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                            }
+
+                            if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD
+                                && GameManager.Instance.activeTeam[2].curRaceType == UnitData.RaceType.BEAST
+                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.BEAST)
+                            {
+                                ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
+                            }
+                        }
+                        #endregion
+
+
+
                         //wornSkillsAlly.Add(SkillsTabManager.Instance.selectedOwnedSlot);
                         // Update gear icon
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedItemPieces[i].itemSpriteItemTab);
@@ -2327,6 +2403,33 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(false);
                         ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
                         ownedLootSlots[ownedItemSlotIndex].UpdateLinkedItemPiece(ownedItemPieces[i]);
+
+                        // Update owned item Race Icon
+                        if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
+                        }
+                        else if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+                        {
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
+                        }
+                        else if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
+                        }
+                        else if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+                        {
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+                        }
+
+                        if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRarityBG(Slot.ItemRarity.COMMON);
+                        else if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRarityBG(Slot.ItemRarity.RARE);
+                        else if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRarityBG(Slot.ItemRarity.EPIC);
+                        else if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRarity == ItemPiece.Rarity.LEGENDARY)
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRarityBG(Slot.ItemRarity.EPIC, true);
 
                         //ownedLootSlots[ownedItemSlotIndex].skill = ownedSkills[i];
 
@@ -2347,6 +2450,16 @@ public class OwnedLootInven : MonoBehaviour
                 }
                 */
 
+            }
+
+            for (int i = 0; i < ownedLootSlots.Count; i++)
+            {
+                if (ownedLootSlots[i].isEmpty)
+                {
+                    ownedLootSlots[i].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+                    ownedLootSlots[i].ToggleCoverUI(false);
+                    ownedLootSlots[i].UpdateRarityBG(Slot.ItemRarity.COMMON, true);
+                }
             }
         }
         // If skill
@@ -2440,10 +2553,16 @@ public class OwnedLootInven : MonoBehaviour
 
                             ownedLootSlots[ownedItemSlotIndex].skill = ownedSkills[i];
 
+                            ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+
                             ownedItemSlotIndex++;
                         }
                     }
                 }
+
+                if (ownedLootSlots[ownedItemSlotIndex].isEmpty)
+                    ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+
                 /*
                 else
                 {
@@ -2458,6 +2577,15 @@ public class OwnedLootInven : MonoBehaviour
                 }
                 */
 
+            }
+            for (int i = 0; i < ownedLootSlots.Count; i++)
+            {
+                if (ownedLootSlots[i].isEmpty)
+                {
+                    ownedLootSlots[i].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+                    ownedLootSlots[i].ToggleCoverUI(false);
+                    ownedLootSlots[i].UpdateRarityBG(Slot.ItemRarity.COMMON, true);
+                }
             }
         }
         // If Gear
@@ -2534,6 +2662,8 @@ public class OwnedLootInven : MonoBehaviour
                         continue;
                     }
                 }
+
+                ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
 
                 // if an item is equipped, skip it in the own inventory display
                 //if (!gears.Contains(wornGear[i]))
@@ -2614,6 +2744,13 @@ public class OwnedLootInven : MonoBehaviour
                 }
 
                 ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(false);
+
+            }
+
+            for (int x = 0; x < ownedLootSlots.Count; x++)
+            {
+                ownedLootSlots[x].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+                ownedLootSlots[x].UpdateRarityBG(Slot.ItemRarity.COMMON, true);
             }
         }
 
@@ -2622,6 +2759,10 @@ public class OwnedLootInven : MonoBehaviour
         {
             //Debug.Log("setting empty");
             ownedLootSlots[x].ToggleEquipButton(false);
+
+            //if (ownedLootSlots[x].isEmpty)
+            //ownedLootSlots[x].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+
 
             if (ownedLootSlots[x].isEmpty)
             {

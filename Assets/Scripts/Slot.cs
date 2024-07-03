@@ -14,8 +14,14 @@ public class Slot : MonoBehaviour
     public enum SlotStatis { OWNED, UNOWNED, REWARD, DEFAULT }
     public SlotStatis curSlotStatis;
 
+    public enum SlotRace { HUMAN, BEAST, ETHEREAL, ALL }
+    public SlotRace curSlotRace;
+
     public enum SlotOwnedBy { MAIN, SECOND, THIRD, NOONE}
     public SlotOwnedBy curGearOwnedBy;
+
+    public enum SlotPosition { FIRST, SECOND, THIRD }
+    public SlotPosition curSlotPosition;
 
     private string slotName;
     private int gearBonusHealth;
@@ -38,6 +44,10 @@ public class Slot : MonoBehaviour
     public UIElement ownedSlotButton;
     [SerializeField] private UIElement equipSlotButton;
     [SerializeField] private UIElement equipSlotButtonCover;
+    [SerializeField] private UIElement coverUI;
+    [SerializeField] private UIElement raceIcon;
+    [SerializeField] private UIElement rarityBG;
+    [SerializeField] private UIElement remainingUsesUI;
     public bool coverOn;
     public UIElement goldtextUI;
 
@@ -61,6 +71,33 @@ public class Slot : MonoBehaviour
         ToggleSlotSelection(false);
     }
 
+    public void UpdateRaceIcon(Sprite newIcon)
+    {
+        raceIcon.UpdateContentImage(newIcon);
+    }
+
+    public void UpdateRarityBG(ItemRarity itemRarity, bool clear = false)
+    {
+        if (clear)
+        {
+            rarityBG.UpdateColour(GameManager.Instance.invisibleColour);
+            return;
+        }
+
+        if (itemRarity == ItemRarity.COMMON)
+        {
+            rarityBG.UpdateColour(ItemRewardManager.Instance.commonColour);
+        }
+        else if (itemRarity == ItemRarity.RARE)
+        {
+            rarityBG.UpdateColour(ItemRewardManager.Instance.rareColour);
+        }
+        else if (itemRarity == ItemRarity.EPIC)
+        {
+            rarityBG.UpdateColour(ItemRewardManager.Instance.epicColour);
+        }
+    }
+
     public int GetItemUseCount()
     {
         return itemUseCount;
@@ -74,6 +111,59 @@ public class Slot : MonoBehaviour
     public void ResetItemUseCount()
     {
         itemUseCount = 0;
+    }
+
+    /// <summary>
+    /// Updates SLOT details: UPDATE RARITY BG COLOUR, UPDATE RACE ICON, UPDATE ACTIVE / PASSIVE STATUS, UPDATE REMAINING USES, TOGGLE PLUS BUTTON
+    /// </summary>
+    /// <param name="activeType"></param>
+    /// <param name="togglePlusButton"></param>
+    /// <param name="remainingUses"></param>
+    /// <param name="curSlotRace"></param>
+    /// <param name="curRarity"></param>
+    /// <param name="hideRarityBG"></param>
+    public void UpdateSlotDetails(string activeType = "", bool togglePlusButton = false, int remainingUses = 0, SlotRace curSlotRace = SlotRace.ALL, ItemRarity curRarity = ItemRarity.COMMON, bool hideRarityBG = false)
+    {
+        // Update BG rarity of SlOT
+        if (!hideRarityBG)
+            UpdateRarityBG(curRarity);
+        else
+            UpdateRarityBG(curRarity, true);
+
+        // Update Race icon of SLOT
+        if (curSlotRace == SlotRace.HUMAN)
+        {
+            UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
+        }
+        else if (curSlotRace == SlotRace.BEAST)
+        {
+            UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
+        }
+        else if (curSlotRace == SlotRace.ETHEREAL)
+        {
+            UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
+        }
+        else if (curSlotRace == SlotRace.ALL)
+        {
+            UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+        }
+
+        // Update Active / Passive status
+        goldtextUI.UpdateContentText(activeType);
+        if (activeType == "A")
+            goldtextUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
+        else
+            goldtextUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
+
+        // Toggle 
+        remainingUsesUI.UpdateContentText(remainingUses.ToString());
+
+        if (togglePlusButton)
+        {
+            ToggleOwnedGearButton(true);
+        }
+        else
+            ToggleOwnedGearButton(false);
     }
 
     public void ToggleSkillUpgradeButtons(bool toggle)
@@ -359,17 +449,19 @@ public class Slot : MonoBehaviour
             ownedSlotButton.UpdateAlpha(0);
     }
 
-    public void ToggleEquipButtonCover(bool toggle = true)
+    public void ToggleCoverUI(bool toggle = true)
     {
         if (toggle)
         {
-            equipSlotButtonCover.UpdateAlpha(1);
+            //equipSlotButtonCover.UpdateAlpha(1);
+            coverUI.UpdateAlpha(1);
             //equipSlotButton.ToggleButton(false);
             coverOn = true;
         }
         else
         {
-            equipSlotButtonCover.UpdateAlpha(0);
+            //equipSlotButtonCover.UpdateAlpha(0);
+            coverUI.UpdateAlpha(0);
             //equipSlotButton.ToggleButton(true);
 
             coverOn = false;

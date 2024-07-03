@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private UIElement projectileSpinImageUI;
     private Color projectileInvisColor;
     private bool allowAnimate;
+    public bool allowSpin;
     [SerializeField] private float spinSpeed;
 
     private Transform target;
@@ -28,6 +29,8 @@ public class Projectile : MonoBehaviour
 
     bool spinningLeft;
     private Animator animator;
+
+    float spinAmount = 0;
 
     public void UpdateProjectileSprite(Sprite sprite)
     {
@@ -70,8 +73,6 @@ public class Projectile : MonoBehaviour
     {
         rotationAllowedTimer = 0;
         PickRandomisedVariables();
-
-
     }
 
     void IncrementRotationAllowedTimer()
@@ -108,24 +109,40 @@ public class Projectile : MonoBehaviour
     {
         IncrementRotationAllowedTimer();
         MoveForward();
-        //Spin();
+        Spin();
 
         // If projectile has a target, and animation is not playing, look at target
         if (target != null)
             LookAtTarget(target);
     }
 
-    public void ToggleAllowSpin(bool toggle)
+    public void ToggleAllowSpin(bool toggle = true)
     {
-        allowAnimate = toggle;
-
-        if (allowAnimate)
-        {
-            animator = GetComponentInChildren<Animator>();
-            animator.SetTrigger("spin");
-        }
+        allowSpin = toggle;
     }
 
+    void Spin()
+    {
+        if (allowSpin)
+        {
+            spinAmount += spinSpeed;
+            transform.GetChild(0).GetComponent<RectTransform>().localRotation = new Quaternion(0, 0, spinAmount, 0);
+        }
+    }
+    /*
+public void ToggleAllowSpin(bool toggle)
+{
+
+allowAnimate = toggle;
+
+if (allowAnimate)
+{
+    animator = GetComponentInChildren<Animator>();
+    animator.SetTrigger("spin");
+}
+
+}
+    */
     public void ToggleIdle(bool toggle)
     {
         allowAnimate = toggle;

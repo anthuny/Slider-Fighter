@@ -1253,7 +1253,7 @@ public class TeamGearManager : MonoBehaviour
         {
             if (gear.curSlotStatis == Slot.SlotStatis.OWNED)
             {
-                gear.ToggleEquipButtonCover(false);
+                gear.ToggleCoverUI(false);
             }
         }
 

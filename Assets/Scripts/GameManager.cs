@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public Color humanRaceColour;
     public Color beastRaceColour;
     public Color etherealRaceColour;
+    public Color invisibleColour;
     public UnitData startingUnit;
 
     //public bool devMode;

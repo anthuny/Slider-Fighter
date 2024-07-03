@@ -990,6 +990,85 @@ public class TeamItemsManager : MonoBehaviour
 
         GetSelectedBaseItemSlot().UpdateSlotName(item.GetSlotName());
         GetSelectedBaseItemSlot().linkedItemPiece = item.linkedItemPiece;
+
+        string activeStatus = "";
+        if (item.linkedItemPiece.curActiveType == ItemPiece.ActiveType.ACTIVE)
+            activeStatus = "A";
+        else
+            activeStatus = "P";
+
+        int itemUsesRemaining = 0;
+
+        if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.MAIN
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.FIRST)
+        {
+            itemUsesRemaining = equippedItemsMain[0].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[0].item1CurUses;
+        }
+        else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.MAIN
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.SECOND)
+        {
+            itemUsesRemaining = equippedItemsMain[1].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[0].item2CurUses;
+        }
+        else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.MAIN
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.THIRD)
+        {
+            itemUsesRemaining = equippedItemsMain[2].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[0].item3CurUses;
+        }
+
+        if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.SECOND
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.FIRST)
+        {
+            itemUsesRemaining = equippedItemsSecond[0].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[1].item1CurUses;
+        }
+        else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.SECOND
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.SECOND)
+        {
+            itemUsesRemaining = equippedItemsSecond[1].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[1].item2CurUses;
+        }
+        else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.SECOND
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.THIRD)
+        {
+            itemUsesRemaining = equippedItemsSecond[2].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[1].item3CurUses;
+        }
+
+        if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.THIRD
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.FIRST)
+        {
+            itemUsesRemaining = equippedItemsThird[0].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[2].item1CurUses;
+        }
+        else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.THIRD
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.SECOND)
+        {
+            itemUsesRemaining = equippedItemsThird[1].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[2].item2CurUses;
+        }
+        else if (GetSelectedBaseItemSlot().curGearOwnedBy == Slot.SlotOwnedBy.THIRD
+            && GetSelectedBaseItemSlot().curSlotPosition == Slot.SlotPosition.THIRD)
+        {
+            itemUsesRemaining = equippedItemsThird[2].maxUsesPerCombat - GameManager.Instance.activeRoomHeroes[2].item3CurUses;
+        }
+
+        Slot.SlotRace curSlotRace = Slot.SlotRace.ALL;
+
+        if (GetSelectedBaseItemSlot().linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+            curSlotRace = Slot.SlotRace.HUMAN;
+        else if (GetSelectedBaseItemSlot().linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+            curSlotRace = Slot.SlotRace.BEAST;
+        else if (GetSelectedBaseItemSlot().linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+            curSlotRace = Slot.SlotRace.ETHEREAL;
+        else if (GetSelectedBaseItemSlot().linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+            curSlotRace = Slot.SlotRace.ALL;
+
+        Slot.ItemRarity curSlotRarity = Slot.ItemRarity.COMMON;
+
+        if (GetSelectedBaseItemSlot().linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
+            curSlotRarity = Slot.ItemRarity.COMMON;
+        else if (GetSelectedBaseItemSlot().linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
+            curSlotRarity = Slot.ItemRarity.RARE;
+        else if (GetSelectedBaseItemSlot().linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
+            curSlotRarity = Slot.ItemRarity.EPIC;
+
+        GetSelectedBaseItemSlot().UpdateSlotDetails(activeStatus, false, itemUsesRemaining, curSlotRace, curSlotRarity, false);
+
         /*
         GetSelectedBaseGearSlot().UpdateGearBonusHealth(item.GetBonusHealth());
         GetSelectedBaseGearSlot().UpdateGearBonusHealing(item.GetBonusHealing());
@@ -1207,38 +1286,38 @@ public class TeamItemsManager : MonoBehaviour
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.HUMAN)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.BEAST)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.ETHEREAL)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
                                 {
-                                    item.ToggleEquipButtonCover(false);
+                                    item.ToggleCoverUI(false);
                                 }
                             }
                         }
@@ -1253,38 +1332,38 @@ public class TeamItemsManager : MonoBehaviour
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.HUMAN)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.BEAST)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.ETHEREAL)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
                                 {
-                                    item.ToggleEquipButtonCover(false);
+                                    item.ToggleCoverUI(false);
                                 }
                             }
                         }
@@ -1299,38 +1378,38 @@ public class TeamItemsManager : MonoBehaviour
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.HUMAN)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.BEAST)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
                                 {
                                     if (GameManager.Instance.activeRoomHeroes[i].curUnitRace != UnitFunctionality.UnitRace.ETHEREAL)
                                     {
-                                        item.ToggleEquipButtonCover(true);
+                                        item.ToggleCoverUI(true);
                                     }
                                     else
                                     {
-                                        item.ToggleEquipButtonCover(false);
+                                        item.ToggleCoverUI(false);
                                     }
                                 }
                                 else if (item.linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
                                 {
-                                    item.ToggleEquipButtonCover(false);
+                                    item.ToggleCoverUI(false);
                                 }
                             }
                         }
@@ -1339,7 +1418,7 @@ public class TeamItemsManager : MonoBehaviour
             }
             else if (TeamGearManager.Instance.playerInGearTab)
             {
-                item.ToggleEquipButtonCover(false);
+                item.ToggleCoverUI(false);
             }
         }
         else

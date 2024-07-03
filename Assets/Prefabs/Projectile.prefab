@@ -57,7 +57,8 @@ MonoBehaviour:
   allowRandomSpawnPosition: 0
   projectileImage: {fileID: 5778190443330402618}
   projectileSpinImageUI: {fileID: 0}
-  spinSpeed: 25
+  allowSpin: 0
+  spinSpeed: 75
 --- !u!222 &4919165078339311741
 CanvasRenderer:
   m_ObjectHideFlags: 0

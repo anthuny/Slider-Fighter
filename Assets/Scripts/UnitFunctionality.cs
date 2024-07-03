@@ -4304,7 +4304,7 @@ public class UnitFunctionality : MonoBehaviour
             projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveSkill().skillProjectile);
             projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
             projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowSpin);
-            projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowIdle);
+            //projectile.ToggleAllowSpin(GameManager.Instance.GetActiveSkill().projectileAllowIdle);
 
             projectile.LookAtTarget(target);
             projectile.UpdateSpeed(GameManager.Instance.GetActiveSkill().projectileSpeed);
@@ -5043,12 +5043,19 @@ public class UnitFunctionality : MonoBehaviour
                     if (doExtras)
                     {
                         CameraShake.instance.EnableCanShake();
-                       
+
+                        if (GameManager.Instance.isSkillsMode)
+                            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                        else
+                            AudioManager.Instance.Play(GameManager.Instance.GetActiveItem().projectileHit.name);
+
+                        /*
                         if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
                         {
                             if (triggerHitSFX && GameManager.Instance.GetActiveSkill().skillHit != null)
                                 AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
                         }
+                        */
                         
                         StartCoroutine(PlaySoundDelay(.1f));
                     }
