@@ -58,7 +58,7 @@ MonoBehaviour:
   procChance: 0
   ac: {fileID: 0}
   itemVisualAC: {fileID: 0}
-  maxUsesPerCombat: 15
+  maxUsesPerCombat: 2
   targetCount: 3
   hitCount: 10
   projectileSpeed: 8

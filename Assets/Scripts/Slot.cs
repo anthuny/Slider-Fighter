@@ -122,48 +122,153 @@ public class Slot : MonoBehaviour
     /// <param name="curSlotRace"></param>
     /// <param name="curRarity"></param>
     /// <param name="hideRarityBG"></param>
-    public void UpdateSlotDetails(string activeType = "", bool togglePlusButton = false, int remainingUses = 0, SlotRace curSlotRace = SlotRace.ALL, ItemRarity curRarity = ItemRarity.COMMON, bool hideRarityBG = false)
+    public void UpdateSlotDetails()
     {
-        // Update BG rarity of SlOT
-        if (!hideRarityBG)
-            UpdateRarityBG(curRarity);
-        else
-            UpdateRarityBG(curRarity, true);
+        Slot.ItemRarity curSlotRarity = Slot.ItemRarity.COMMON;
+        Slot.SlotRace curSlotRace = Slot.SlotRace.ALL;
+        string activeStatus = "";
+        int itemUsesRemaining = 0;
 
-        // Update Race icon of SLOT
-        if (curSlotRace == SlotRace.HUMAN)
+        if (linkedItemPiece == null)
         {
-            UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
-        }
-        else if (curSlotRace == SlotRace.BEAST)
-        {
-            UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
-        }
-        else if (curSlotRace == SlotRace.ETHEREAL)
-        {
-            UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
-        }
-        else if (curSlotRace == SlotRace.ALL)
-        {
+            UpdateRarityBG(curSlotRarity, true);
             UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+
+            equipSlotButton.ToggleButton(true);
+            equipSlotButton.UpdateAlpha(1);
+
+            ownedSlotButton.UpdateAlpha(0);
+
+            ToggleEquipButton(true);
+
+            // Update Active / Passive status
+            goldtextUI.UpdateContentText(activeStatus);
+            if (activeStatus == "A")
+                goldtextUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
+            else
+                goldtextUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
+
+            if (itemUsesRemaining == 0)
+                remainingUsesUI.UpdateContentText("");
+            else
+                remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
+
+            UpdateSlotName("");
         }
-
-        // Update Active / Passive status
-        goldtextUI.UpdateContentText(activeType);
-        if (activeType == "A")
-            goldtextUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
         else
-            goldtextUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
-
-        // Toggle 
-        remainingUsesUI.UpdateContentText(remainingUses.ToString());
-
-        if (togglePlusButton)
         {
-            ToggleOwnedGearButton(true);
+
+            UpdateSlotName(linkedItemPiece.itemName);
+
+            if (linkedItemPiece.curActiveType == ItemPiece.ActiveType.ACTIVE)
+                activeStatus = "A";
+            else
+                activeStatus = "P";
+
+            if (curGearOwnedBy == Slot.SlotOwnedBy.MAIN
+                && curSlotPosition == Slot.SlotPosition.FIRST)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[0].item1CurUses;
+            }
+            else if (curGearOwnedBy == Slot.SlotOwnedBy.MAIN
+                && curSlotPosition == Slot.SlotPosition.SECOND)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[0].item2CurUses;
+            }
+            else if (curGearOwnedBy == Slot.SlotOwnedBy.MAIN
+                && curSlotPosition == Slot.SlotPosition.THIRD)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[0].item3CurUses;
+            }
+
+            if (curGearOwnedBy == Slot.SlotOwnedBy.SECOND
+                && curSlotPosition == Slot.SlotPosition.FIRST)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[1].item1CurUses;
+            }
+            else if (curGearOwnedBy == Slot.SlotOwnedBy.SECOND
+                && curSlotPosition == Slot.SlotPosition.SECOND)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[1].item2CurUses;
+            }
+            else if (curGearOwnedBy == Slot.SlotOwnedBy.SECOND
+                && curSlotPosition == Slot.SlotPosition.THIRD)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[1].item3CurUses;
+            }
+
+            if (curGearOwnedBy == Slot.SlotOwnedBy.THIRD
+                && curSlotPosition == Slot.SlotPosition.FIRST)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[2].item1CurUses;
+            }
+            else if (curGearOwnedBy == Slot.SlotOwnedBy.THIRD
+                && curSlotPosition == Slot.SlotPosition.SECOND)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[2].item2CurUses;
+            }
+            else if (curGearOwnedBy == Slot.SlotOwnedBy.THIRD
+                && curSlotPosition == Slot.SlotPosition.THIRD)
+            {
+                itemUsesRemaining = GameManager.Instance.activeRoomHeroes[2].item3CurUses;
+            }
+
+            if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+                curSlotRace = Slot.SlotRace.HUMAN;
+            else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+                curSlotRace = Slot.SlotRace.BEAST;
+            else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                curSlotRace = Slot.SlotRace.ETHEREAL;
+            else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+                curSlotRace = Slot.SlotRace.ALL;
+
+            if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
+                curSlotRarity = Slot.ItemRarity.COMMON;
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
+                curSlotRarity = Slot.ItemRarity.RARE;
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
+                curSlotRarity = Slot.ItemRarity.EPIC;
+
+            //UpdateSlotDetails(activeStatus, false, itemUsesRemaining, curSlotRace, curSlotRarity, false);
+
+            // Update BG rarity of SlOT
+            UpdateRarityBG(curSlotRarity);
+
+            // Update Race icon of SLOT
+            if (curSlotRace == SlotRace.HUMAN)
+            {
+                UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
+            }
+            else if (curSlotRace == SlotRace.BEAST)
+            {
+                UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
+            }
+            else if (curSlotRace == SlotRace.ETHEREAL)
+            {
+                UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
+            }
+            else if (curSlotRace == SlotRace.ALL)
+            {
+                UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+            }
+
+            // Update Active / Passive status
+            goldtextUI.UpdateContentText(activeStatus);
+            if (activeStatus == "A")
+                goldtextUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
+            else
+                goldtextUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
+
+            if (itemUsesRemaining == 0)
+                remainingUsesUI.UpdateContentText("");
+            else
+                remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
+
+            equipSlotButton.ToggleButton(false);
+            equipSlotButton.UpdateAlpha(0);
+
+            ownedSlotButton.UpdateAlpha(1);
         }
-        else
-            ToggleOwnedGearButton(false);
     }
 
     public void ToggleSkillUpgradeButtons(bool toggle)
@@ -275,6 +380,11 @@ public class Slot : MonoBehaviour
                 TeamItemsManager.Instance.UpdateSlotsBaseDefault(this, null, false, true, false);
             else if (GetSlotOwnedBy() == SlotOwnedBy.THIRD)
                 TeamItemsManager.Instance.UpdateSlotsBaseDefault(this, null, false, false, true);
+
+            if (linkedItemPiece != null)
+                UpdateLinkedItemPiece(null);
+
+            UpdateSlotDetails();
         }
 
         UpdateSlotName("");
@@ -288,8 +398,8 @@ public class Slot : MonoBehaviour
         // Disable gear equip button if its empty
         TeamGearManager.Instance.UpdateGearNameText("");
 
-        TeamItemsManager.Instance.UpdateItemNameText("");
-        TeamItemsManager.Instance.UpdateItemDesc("");
+        //TeamItemsManager.Instance.UpdateItemNameText("");
+        //TeamItemsManager.Instance.UpdateItemDesc("");
         //UpdateCurGearType(GearType.EMPTY);
     }
 
@@ -441,7 +551,7 @@ public class Slot : MonoBehaviour
 
     public void ToggleOwnedGearButton(bool toggle)
     {
-        equipSlotButton.ToggleButton(toggle);
+
 
         if (toggle)
             ownedSlotButton.UpdateAlpha(1);

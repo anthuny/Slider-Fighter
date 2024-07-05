@@ -2381,6 +2381,10 @@ public class OwnedLootInven : MonoBehaviour
                                 ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                             }
                         }
+
+                        if (ownedItemPieces[i].curRace == ItemPiece.RaceSpecific.ALL)
+                            ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(false);
+
                         #endregion
 
 

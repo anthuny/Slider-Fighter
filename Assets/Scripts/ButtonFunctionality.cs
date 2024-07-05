@@ -610,6 +610,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         else if (TeamItemsManager.Instance.playerInItemTab)
         {
+
+
             if (!OwnedLootInven.Instance.ownedLootOpened)
             {
                 if (openedOwnedSlots)
@@ -821,6 +823,16 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
             //OwnedGearInven.Instance.ToggleOwnedGearEquipButton(true);
+        }
+        else
+        {
+            TeamItemsManager.Instance.itemsNameText.UpdateContentText(TeamItemsManager.Instance.GetSelectedItemSlot().linkedItemPiece.itemName);
+            /*
+            if (TeamItemsManager.Instance.GetSelectedBaseItemSlot())
+            {
+                if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().linkedItemPiece)                    
+            }
+            */
         }
     }
 
