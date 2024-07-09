@@ -183,9 +183,9 @@ public class UnitFunctionality : MonoBehaviour
     public int skill2CurCooldown;
     public int skill3CurCooldown;
 
-    public int item1CurUses;
-    public int item2CurUses;
-    public int item3CurUses;
+    //public int item1CurUses;
+    //public int item2CurUses;
+    //public int item3CurUses;
 
     public Canvas visualCanvas;
     public int teamIndex;
@@ -259,7 +259,7 @@ public class UnitFunctionality : MonoBehaviour
 
         bool enabled = false;
 
-        int count = 0;
+        int equippedItemsCount = 0;
         int index = 0;
         for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
@@ -267,31 +267,31 @@ public class UnitFunctionality : MonoBehaviour
             {
                 if (i == 0)
                 {
-                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
+                    equippedItemsCount = TeamItemsManager.Instance.equippedItemsMain.Count;
                     index = 0;
                     break;
                 }
                 else if (i == 1)
                 {
-                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
+                    equippedItemsCount = TeamItemsManager.Instance.equippedItemsSecond.Count;
                     index = 1;
                     break;
                 }
                 else if (i == 2)
                 {
-                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
+                    equippedItemsCount = TeamItemsManager.Instance.equippedItemsThird.Count;
                     index = 2;
                     break;
                 }
             }
         }
 
-        if (count > 0 || forceDisplay)
+        if (equippedItemsCount > 0 || forceDisplay)
         {
             enabled = true;
             ToggleTooltipItems(true);
         }
-        else if (count <= 0 || forceDisplay)
+        else if (equippedItemsCount <= 0 || forceDisplay)
         {
             enabled = false;
             ToggleTooltipItems(false);
@@ -303,18 +303,8 @@ public class UnitFunctionality : MonoBehaviour
             Destroy(tooltipItems.transform.GetChild(i).gameObject);
         }
 
-        /*
-        if (index == 0)
-            count = TeamItemsManager.Instance.equippedItemsMain.Count;
-        else if (index == 1)
-            count = TeamItemsManager.Instance.equippedItemsSecond.Count;
-        else if (index == 2)
-            count = TeamItemsManager.Instance.equippedItemsThird.Count;
-        */
-
-        bool doneOnce = false;
-
-        for (int i = 0; i < count; i++)
+        // Create 3 items for display
+        for (int i = 0; i < 3; i++)
         {
             GameObject go = Instantiate(toolTipItemGO, tooltipItems.transform.position, Quaternion.identity);
             go.transform.SetParent(tooltipItems.transform);
@@ -323,61 +313,133 @@ public class UnitFunctionality : MonoBehaviour
             go.transform.localScale = Vector3.one;
 
             int newCurCharges = -1;
+            //TeamItemsManager.Instance.IncItemUseCount();
+            if (teamIndex == 0)
+            {
+                if (i == 0)
+                {
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.GetItemUses();
+                }
+                else if (i == 1)
+                {
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.GetItemUses();
+                }
+                else if (i == 2)
+                {
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot.GetItemUses();
+                }
+            }
+            else if (teamIndex == 1)
+            {
+                if (i == 0)
+                {
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.GetItemUses();
+                }
+                else if (i == 1)
+                {
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot.GetItemUses();
+                }
+                else if (i == 2)
+                {
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot.GetItemUses();
+                }
+            }
+            else if (teamIndex == 2)
+            {
+                if (i == 0)
+                {
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally3ItemsSlots[0].linkedSlot.GetItemUses();
+                }
+                else if (i == 1)
+                {
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot.GetItemUses();
+                }
+                else if (i == 2)
+                {
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece)
+                        newCurCharges = TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot.GetItemUses();
+                }
+            }
 
-            if (i == 0)
-                newCurCharges = item1CurUses;
-            else if (i == 1)
-                newCurCharges = item2CurUses;
-            else if (i == 2)
-                newCurCharges = item3CurUses;
-
-            // Set gear data
+            bool entered = false;
+            // Set item Visuals + Slider
             if (index == 0)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSpriteItemTab);
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat, newCurCharges);
-                //Debug.Log(TeamItemsManager.Instance.equippedItemsMain[i].maxUsesPerCombat - 1);
-                //Debug.Log(item1CurUses);
+                if (i == 0 && TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
+                if (i == 1 && TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
+                if (i == 2 && TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
             }
             else if (index == 1)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSpriteItemTab);
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat, newCurCharges);
-                //Debug.Log(TeamItemsManager.Instance.equippedItemsSecond[i].maxUsesPerCombat - 1);
-                //Debug.Log(item2CurUses);
+                if (i == 0 && TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
+                if (i == 1 && TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
+                if (i == 2 && TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
             }
             else if (index == 2)
             {
-                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSpriteItemTab);
-                go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat, newCurCharges);
-                //Debug.Log(TeamItemsManager.Instance.equippedItemsThird[i].maxUsesPerCombat - 1);
-                //Debug.Log(item3CurUses);
+                if (i == 0 && TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
+                if (i == 1 && TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
+                if (i == 2 && TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece)
+                {
+                    entered = true;
+                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece.itemSpriteItemTab);
+                    go.GetComponent<UIElement>().UpdateSlider(TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece.maxUsesPerCombat, newCurCharges);
+                }
             }
 
-
-            /*
-            if (itemIndex == i && !doneOnce)
+            if (!entered)
             {
-                doneOnce = true;
-                if (index == 0)
-                {
-                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsMain[i].itemSpriteItemTab);
-                    go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
-                }
-                else if (index == 1)
-                {
-                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsSecond[i].itemSpriteItemTab);
-                    go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
-                }
-                else if (index == 2)
-                {
-                    go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.equippedItemsThird[i].itemSpriteItemTab);
-                    go.GetComponent<UIElement>().UpdateSlider(maxCharges, curCharges);
-                }
-
-                //               continue;
+                go.GetComponent<UIElement>().UpdateContentImage(TeamItemsManager.Instance.clearSlotSprite);
+                go.GetComponent<UIElement>().ToggleSliderVisiblity(false);
             }
-            */
         }
     }
 
@@ -558,6 +620,9 @@ public class UnitFunctionality : MonoBehaviour
 
     public void ReloadItemUses()
     {
+        TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.UpdateItemUses(
+    TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
+
         // Find all items that trigger on turn start that ally has
         for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
@@ -565,85 +630,220 @@ public class UnitFunctionality : MonoBehaviour
             if (this == GameManager.Instance.activeRoomHeroes[i])
             {
                 int index = i;
-
+                
+                // First position fighter
                 if (index == 0)
                 {
-                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 0)
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                        for (int x = 0; x < OwnedLootInven.Instance.GetWornItemMainAlly().Count; x++)
                         {
-                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item1CurUses = TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUseCount();
+                            if (TeamItemsManager.Instance.ally1ItemsSlots[x].slotIndex == 0)
+                            {
+                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
+                                }
+                            }
+                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 1)
+                            {
+                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
+                                }
+                            }
+                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 2)
+                            {
+                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
+                                }
+                            }
                         }
                     }
-                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 1)
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                        for (int x = 0; x < OwnedLootInven.Instance.GetWornItemMainAlly().Count; x++)
                         {
-                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item2CurUses = TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUseCount();
+                            if (TeamItemsManager.Instance.ally1ItemsSlots[x].slotIndex == 0)
+                            {
+                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
+                                }
+                            }
+                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 1)
+                            {
+                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
+                                }
+                            }
+                            else if(OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 2)
+                            {
+                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
+                                }
+                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
+                                }
+                            }
                         }
+
                     }
-                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 2)
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot)
                     {
                         if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
                         {
                             if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item3CurUses = TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUseCount();
+                                TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot.UpdateItemUses(
+                                    TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
                         }
                     }
                 }
+
+                // 2nd position fighter
                 else if (index == 1)
                 {
-                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 0)
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0])
                         {
                             if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item1CurUses = TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUseCount();
+                                TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.UpdateItemUses(
+                                    TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUses());
                         }
                     }
-                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 1)
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1])
                         {
                             if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item2CurUses = TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUseCount();
+                                TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                    TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUses());
                         }
                     }
-                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 2)
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot)
                     {
                         if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2])
                         {
                             if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item3CurUses = TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUseCount();
+                                TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot.UpdateItemUses(
+                                    TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUses());
                         }
                     }
                 }
+
+                // 3rd position fighter
                 else if (index == 2)
                 {
-                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 0)
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[0].linkedSlot)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0])
                         {
                             if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item1CurUses = TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemThirdAlly()[0].GetItemUseCount();
+                                TeamItemsManager.Instance.ally3ItemsSlots[0].linkedSlot.UpdateItemUses(
+                                    TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUses());
                         }
                     }
-                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 1)
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1])
                         {
                             if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item2CurUses = TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemThirdAlly()[1].GetItemUseCount();
+                                TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot.UpdateItemUses(
+                                    TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUses());
                         }
                     }
-                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 2)
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot)
                     {
                         if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2])
                         {
                             if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                item3CurUses = TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemThirdAlly()[2].GetItemUseCount();
+                                TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot.UpdateItemUses(
+                                    TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUses());
                         }
                     }
                 }
@@ -658,146 +858,64 @@ public class UnitFunctionality : MonoBehaviour
             //Debug.Log("2");
             if (this == GameManager.Instance.activeRoomHeroes[i])
             {
-                int index = i;
+                if (i == 0)
+                {
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece)
+                    {
+                        if (TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.UpdateItemUses(0);
+                    }
 
-                if (index == 0)
-                {
-                    //Debug.Log(OwnedLootInven.Instance.GetWornGearMainAlly()[index]);
-                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 0)
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                && !OwnedLootInven.Instance.GetWornItemMainAlly()[0].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemMainAlly()[0].maxSet = true;
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.maxUsesPerCombat;
-                            }
-                                
-                        }
-                            
+                        if (TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(0);
                     }
-                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 1)
+
+                    if (TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item2CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                && !OwnedLootInven.Instance.GetWornItemMainAlly()[1].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemMainAlly()[1].maxSet = true;
-                                item2CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
-                    }
-                    if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 2)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item3CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                && !OwnedLootInven.Instance.GetWornItemMainAlly()[2].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemMainAlly()[2].maxSet = true;
-                                item3CurUses = OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
+                        if (TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot.UpdateItemUses(0);
                     }
                 }
-                else if (index == 1)
+                else if (i == 1)
                 {
-                    //Debug.Log(OwnedLootInven.Instance.GetWornGearMainAlly()[index]);
-                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 0)
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                && !OwnedLootInven.Instance.GetWornItemSecondAlly()[0].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemSecondAlly()[0].maxSet = true;
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
+                        if (TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.UpdateItemUses(0);
                     }
-                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 1)
+
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item2CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                && !OwnedLootInven.Instance.GetWornItemSecondAlly()[1].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemSecondAlly()[1].maxSet = true;
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
+                        if (TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot.UpdateItemUses(0);
                     }
-                    if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 2)
+
+                    if (TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item3CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                && !OwnedLootInven.Instance.GetWornItemSecondAlly()[2].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemSecondAlly()[2].maxSet = true;
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
+                        if (TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot.UpdateItemUses(0);
                     }
                 }
-                else if (index == 2)
+                else if (i == 2)
                 {
-                    //Debug.Log(OwnedLootInven.Instance.GetWornGearMainAlly()[index]);
-                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 0)
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                && !OwnedLootInven.Instance.GetWornItemThirdAlly()[0].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemThirdAlly()[0].maxSet = true;
-                                item1CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
+                        if (TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally3ItemsSlots[0].linkedSlot.UpdateItemUses(0);
                     }
-                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 1)
+
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item2CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                 && !OwnedLootInven.Instance.GetWornItemThirdAlly()[1].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemThirdAlly()[1].maxSet = true;
-                                item2CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
+                        if (TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot.UpdateItemUses(0);
                     }
-                    if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 2)
+
+                    if (TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece)
                     {
-                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                item3CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.maxUsesPerCombat;
-                            else if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE
-                                 && !OwnedLootInven.Instance.GetWornItemThirdAlly()[2].maxSet)
-                            {
-                                OwnedLootInven.Instance.GetWornItemThirdAlly()[2].maxSet = true;
-                                item3CurUses = OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.maxUsesPerCombat;
-                            }
-                        }
+                        if (TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                            TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot.UpdateItemUses(0);
                     }
                 }
             }
@@ -821,156 +939,82 @@ public class UnitFunctionality : MonoBehaviour
         ToggleTooltipItems(false);
     }
 
-    public void DecreaseUsesItem1()
+    void IncItemIconUses(Slot itemSlot)
     {
-        item1CurUses--;
-        itemVisualAlert.UpdateContentText((item1CurUses).ToString());
+        // if (GameManager.Instance.GetActiveItem().curActiveType == ItemPiece.ActiveType.PASSIVE)
+        //     return;
 
-        //if (item1CurUses < 0)
-        //    item1CurUses = 0;
-
-        int count = 0;
-
-        int index = 0;
-
-        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
-        {
-            if (GameManager.Instance.activeRoomHeroes[i] == this)
-            {
-                if (i == 0)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
-                    index = 0;
-                    break;
-                }
-                else if (i == 1)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
-                    index = 1;
-                    break;
-                }
-                else if (i == 2)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
-                    index = 2;
-                    break;
-                }
-            }
-        }
-
-        if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat, item1CurUses, 0);
-        else if (index == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat, item1CurUses, 0);
-        else if (index == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat, item1CurUses, 0);
-
-        StartCoroutine(DisableItemTooltipWait());
+        TeamItemsManager.Instance.IncItemUseCount(itemSlot);
     }
-    public void DecreaseUsesItem2()
+
+    public void DecreaseUsesItem1(bool active = false)
     {
-        item2CurUses--;
-        itemVisualAlert.UpdateContentText((item2CurUses).ToString());
-
-
-        int count = 0;
-
-        int index = 0;
-
-        //Debug.Log("decreasing item 2");
-
-        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        if (active)
+            IncItemIconUses(GameManager.Instance.GetActiveItemSlot());
+        else
         {
-            if (GameManager.Instance.activeRoomHeroes[i] == this)
-            {
-                if (i == 0)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
-                    index = 0;
-                    break;
-                }
-                else if (i == 1)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
-                    index = 1;
-                    break;
-                }
-                else if (i == 2)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
-                    index = 2;
-                    break;
-                }
-            }
+            if (teamIndex == 0)
+                IncItemIconUses(TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot);
+            else if (teamIndex == 1)
+                IncItemIconUses(TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot);
+            else if (teamIndex == 2)
+                IncItemIconUses(TeamItemsManager.Instance.ally3ItemsSlots[0].linkedSlot);
         }
 
-        if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat, item2CurUses, 1);
-        else if (index == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat, item2CurUses, 1);
-        else if (index == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat, item2CurUses, 1);
+        UpdateTooltipItems();
 
         StartCoroutine(DisableItemTooltipWait());
     }
 
-    public void DecreaseUsesItem3()
+
+    public void DecreaseUsesItem2(bool active = false)
     {
-        item3CurUses--;
-        itemVisualAlert.UpdateContentText((item3CurUses).ToString());
-
-        int count = 0;
-        int index = 0;
-
-        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        if (active)
+            IncItemIconUses(GameManager.Instance.GetActiveItemSlot());
+        else
         {
-            if (GameManager.Instance.activeRoomHeroes[i] == this)
-            {
-                if (i == 0)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsMain.Count;
-                    index = 0;
-                    break;
-                }
-                else if (i == 1)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsSecond.Count;
-                    index = 1;
-                    break;
-                }
-                else if (i == 2)
-                {
-                    count = TeamItemsManager.Instance.equippedItemsThird.Count;
-                    index = 2;
-                    break;
-                }
-            }
+            if (teamIndex == 0)
+                IncItemIconUses(TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot);
+            else if (teamIndex == 1)
+                IncItemIconUses(TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot);
+            else if (teamIndex == 2)
+                IncItemIconUses(TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot);
         }
 
-        if (index == 0)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat, item3CurUses, 2);
-        else if (index == 1)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat, item3CurUses, 2);
-        else if (index == 2)
-            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat, item3CurUses, 2);
+        UpdateTooltipItems();
 
         StartCoroutine(DisableItemTooltipWait());
     }
 
-    public void TriggerItemVisualAlert(Sprite sprite, bool triggered = true, bool activeItem = false)
+    public void DecreaseUsesItem3(bool active = false)
     {
-        itemVisualAlert.UpdateContentImage(sprite);
-
-        if (triggered)
+        if (active)
+            IncItemIconUses(GameManager.Instance.GetActiveItemSlot());
+        else
         {
-            if (activeItem)
-                itemVisualAlert.UpdateContentText("");
+            if (teamIndex == 0)
+                IncItemIconUses(TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot);
+            else if (teamIndex == 1)
+                IncItemIconUses(TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot);
+            else if (teamIndex == 2)
+                IncItemIconUses(TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot);
+        }
 
+        UpdateTooltipItems();
+
+        StartCoroutine(DisableItemTooltipWait());
+    }
+
+    public void TriggerItemVisualAlert(Slot itemSlot, bool playSFX = true, bool activeItem = false)
+    {
+        itemVisualAlert.UpdateContentImage(itemSlot.linkedItemPiece.itemSpriteItemTab);
+
+        itemVisualAlert.UpdateContentText((itemSlot.linkedItemPiece.maxUsesPerCombat - itemSlot.GetItemUses() - 1).ToString());
+
+        if (playSFX)
+        {
             AudioManager.Instance.Play("SFX_ItemTrigger");
         }
-
-        else
-            itemVisualAlert.UpdateContentText("");
 
         itemVisualAlert.UpdateAlpha(1, false, 0, false, false);
     }
@@ -1030,7 +1074,7 @@ public class UnitFunctionality : MonoBehaviour
                     ToggleTooltipStatsInner(false);
 
                 int count = 0;
-                int index = 0;
+                int unitTeamIndex = 0;
 
                 for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
                 {
@@ -1039,55 +1083,25 @@ public class UnitFunctionality : MonoBehaviour
                         if (i == 0)
                         {
                             count = TeamItemsManager.Instance.equippedItemsMain.Count;
-                            index = 0;
+                            unitTeamIndex = 0;
                             break;
                         }
                         else if (i == 1)
                         {
                             count = TeamItemsManager.Instance.equippedItemsSecond.Count;
-                            index = 1;
+                            unitTeamIndex = 1;
                             break;
                         }
                         else if (i == 2)
                         {
                             count = TeamItemsManager.Instance.equippedItemsThird.Count;
-                            index = 2;
+                            unitTeamIndex = 2;
                             break;
                         }
                     }
                 }
 
-                // see if this works 
-                for (int x = 0; x < count; x++)
-                {
-                    if (x == 0)
-                    {
-                        if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat, item1CurUses, 0);
-                        else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat, item1CurUses, 0);
-                        else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat, item1CurUses, 0);
-                    }
-                    else if (x == 1)
-                    {
-                        if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat, item2CurUses, 1);
-                        else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat, item2CurUses, 1);
-                        else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat, item2CurUses, 1);
-                    }
-                    else if (x == 2)
-                    {
-                        if (index == 0 && TeamItemsManager.Instance.equippedItemsMain.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat, item3CurUses, 2);
-                        else if (index == 1 && TeamItemsManager.Instance.equippedItemsSecond.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat, item3CurUses, 2);
-                        else if (index == 2 && TeamItemsManager.Instance.equippedItemsThird.Count > x)
-                            UpdateTooltipItems(TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat, item3CurUses, 2);
-                    }
-                }
+                UpdateTooltipItems();
 
                 UpdateToolTipGear();
 
@@ -1793,763 +1807,133 @@ public class UnitFunctionality : MonoBehaviour
                         if (i == 0)
                         {
                             //Debug.Log("5");
-                            for (int x = 0; x < TeamItemsManager.Instance.equippedItemsMain.Count; x++)
+                            for (int x = 0; x < 3; x++)
                             {
                                 //Debug.Log("6");
-                                if (TeamItemsManager.Instance.equippedItemsMain[x].activeOnTurnStart)
+                                if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece)
                                 {
-                                    // Covers small and big potion
-                                    if (TeamItemsManager.Instance.equippedItemsMain[x].isBaseHealing)
+                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece.activeOnTurnStart)
                                     {
-                                        // Check if unit is low enough health to trigger item
-                                        if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.equippedItemsMain[x].threshHoldAmount)
+                                        // Covers small and big potion
+                                        if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece.isBaseHealing)
                                         {
-                                            if (x == 0 && item1CurUses >= 0)
+                                            // Check if unit is low enough health to trigger item
+                                            if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece.threshHoldAmount)
                                             {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
                                                 {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
                                                 }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
                                                 {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
                                                 }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
                                                 {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
                                                 }
-                                            }
 
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
 
-                                            ItemPiece item = TeamItemsManager.Instance.equippedItemsMain[x];
-                                            float healAmount = ((float)item.itemPower / 100f) * startingRoomMaxHealth;
-                                            UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
-                                            //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
+                                                ItemPiece item = TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece;
+                                                float healAmount = ((float)item.itemPower / 100f) * startingRoomMaxHealth;
+                                                UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
+                                                //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
                                         }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
+                                        else if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("POWERUP"))
                                         {
-                                            if (x == 0 && item1CurUses >= 0)
+                                            if (CheckIfItemSucceeds())
                                             {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
                                                 {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
                                                 }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
                                                 {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
                                                 }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
                                                 {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
                                                 }
-                                            }
 
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
 
-                                            EffectData effect = EffectManager.instance.GetEffect("POWERUP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
+                                                EffectData effect = EffectManager.instance.GetEffect("POWERUP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
                                                 continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
-
-
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsMain[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-
-                                    yield return new WaitForSeconds(.35f);
-                                }
-                            }
-                        }
-                        else if (i == 1)
-                        {
-                            //Debug.Log("5");
-                            for (int x = 0; x < TeamItemsManager.Instance.equippedItemsSecond.Count; x++)
-                            {
-                                //Debug.Log("6");
-                                if (TeamItemsManager.Instance.equippedItemsSecond[x].activeOnTurnStart)
-                                {
-                                    // Covers small and big potion
-                                    if (TeamItemsManager.Instance.equippedItemsSecond[x].isBaseHealing)
-                                    {
-                                        // Check if unit is low enough health to trigger item
-                                        if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.equippedItemsSecond[x].threshHoldAmount)
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            if (x
-                                                == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            ItemPiece item = TeamItemsManager.Instance.equippedItemsSecond[x];
-                                            float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
-                                            UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
-                                            //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("POWERUP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
-
-
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsSecond[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsSecond[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-
-                                    yield return new WaitForSeconds(.35f);
-                                }
-                            }
-                        }
-                        else if (i == 2)
-                        {
-                            //Debug.Log("5");
-                            for (int x = 0; x < TeamItemsManager.Instance.equippedItemsThird.Count; x++)
-                            {
-                                //Debug.Log("6");
-                                if (TeamItemsManager.Instance.equippedItemsThird[x].activeOnTurnStart)
-                                {
-                                    // Covers small and big potion
-                                    if (TeamItemsManager.Instance.equippedItemsThird[x].isBaseHealing)
-                                    {
-                                        // Check if unit is low enough health to trigger item
-                                        if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.equippedItemsThird[x].threshHoldAmount)
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
                                             }
                                             else
                                             {
@@ -2562,301 +1946,940 @@ public class UnitFunctionality : MonoBehaviour
                                                     TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
                                                 */
                                             }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
 
-                                            ItemPiece item = TeamItemsManager.Instance.equippedItemsThird[x];
-                                            float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
-                                            UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
-                                            //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+
+
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
                                         }
                                     }
-                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("POWERUP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("POWERUP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
-
-
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
-                                    else if (TeamItemsManager.Instance.equippedItemsThird[x].effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
-                                    {
-                                        if (CheckIfItemSucceeds())
-                                        {
-                                            if (x == 0 && item1CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem1();
-                                                if (item1CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 1 && item2CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem2();
-                                                if (item2CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-                                            else if (x == 2 && item3CurUses >= 0)
-                                            {
-                                                DecreaseUsesItem3();
-                                                if (item3CurUses == 0)
-                                                {
-                                                    yield return new WaitForSeconds(.2f);
-                                                    AudioManager.Instance.Play("SFX_ItemDepleted");
-                                                    //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
-                                                    //continue;
-                                                }
-                                            }
-
-                                            if (x == 0 && item1CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 1 && item2CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-                                            else if (x == 2 && item3CurUses <= -1)
-                                            {
-                                                continue;
-                                            }
-
-                                            EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
-                                            AddUnitEffect(effect, this, 1, 1, false, true);
-                                            TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsThird[x].itemSpriteItemTab);
-                                            //AudioManager.Instance.Play("SFX_ItemTrigger");
-                                            yield return new WaitForSeconds(.35f);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            /*
-                                            if (x == 0 && item1CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 1 && item2CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            if (x == 2 && item3CurUses > 1)
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
-                                            */
-                                        }
-                                    }
+                                    
 
                                     yield return new WaitForSeconds(.35f);
                                 }
+                            }
+                        }
+                        else if (i == 1)
+                        {
+                            //Debug.Log("5");
+                            for (int x = 0; x < 3; x++)
+                            {
+                                if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece)
+                                {
+                                    //Debug.Log("6");
+                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece.activeOnTurnStart)
+                                    {
+                                        // Covers small and big potion
+                                        if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece.isBaseHealing)
+                                        {
+                                            // Check if unit is low enough health to trigger item
+                                            if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece.threshHoldAmount)
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                ItemPiece item = TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece;
+                                                float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
+                                                UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
+                                                //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("POWERUP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("POWERUP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+
+
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+
+                                        yield return new WaitForSeconds(.35f);
+                                    }
+                                }                          
+                            }
+                        }
+                        else if (i == 2)
+                        {
+                            //Debug.Log("5");
+                            for (int x = 0; x < 3; x++)
+                            {
+                                if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece)
+                                {
+                                    //Debug.Log("6");
+                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece.activeOnTurnStart)
+                                    {
+                                        // Covers small and big potion
+                                        if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece.isBaseHealing)
+                                        {
+                                            // Check if unit is low enough health to trigger item
+                                            if (((GetUnitCurHealth() / GetUnitMaxHealth()) * 100) <= TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece.threshHoldAmount)
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    /*
+                                                    if (x == 0 && item1CurUses > 1)
+                                                        TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                    if (x == 1 && item2CurUses > 1)
+                                                        TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                    if (x == 2 && item3CurUses > 1)
+                                                        TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                    */
+                                                }
+
+                                                ItemPiece item = TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece;
+                                                float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
+                                                UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
+                                                //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("POWERUP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("POWERUP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("HEALTH UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("SPEED UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+
+
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+                                        else if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedItemPiece.effectAdded == EffectManager.instance.GetEffect("DEFENSE UP"))
+                                        {
+                                            if (CheckIfItemSucceeds())
+                                            {
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem1();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem2();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() >= 0)
+                                                {
+                                                    DecreaseUsesItem3();
+                                                    if (TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() == 0)
+                                                    {
+                                                        yield return new WaitForSeconds(.2f);
+                                                        AudioManager.Instance.Play("SFX_ItemDepleted");
+                                                        //TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSprite);
+                                                        //continue;
+                                                    }
+                                                }
+
+                                                if (x == 0 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 1 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+                                                else if (x == 2 && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() <= -1)
+                                                {
+                                                    continue;
+                                                }
+
+                                                EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
+                                                AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                //AudioManager.Instance.Play("SFX_ItemTrigger");
+                                                yield return new WaitForSeconds(.35f);
+                                                continue;
+                                            }
+                                            else
+                                            {
+                                                /*
+                                                if (x == 0 && item1CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 1 && item2CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                if (x == 2 && item3CurUses > 1)
+                                                    TriggerItemVisualAlert(TeamItemsManager.Instance.equippedItemsMain[x].itemSpriteFail, false);
+                                                */
+                                            }
+                                        }
+
+                                        yield return new WaitForSeconds(.35f);
+                                    }
+                                }                      
                             }
                         }
                         break;
@@ -3355,7 +3378,7 @@ public class UnitFunctionality : MonoBehaviour
         holyLinkPartner = null;
     }
 
-    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool passiveItem = false)
+    public void AddUnitEffect(EffectData addedEffect, UnitFunctionality targetUnit, int turnDuration = 1, int effectHitAcc = -1, bool byPassAcc = true, bool passiveItem = false, bool item = false, Slot itemSlot = null)
     {
         //Debug.Log("addedEffect 1 " + addedEffect.curEffectName);
 
@@ -3376,18 +3399,31 @@ public class UnitFunctionality : MonoBehaviour
             {
                 activeEffect = GameManager.Instance.GetActiveSkill().effect;
                 procChance = GameManager.Instance.GetActiveSkill().curEffectHitChance;
-            }
 
+                if (GameManager.Instance.GetActiveSkill().startingEffectHitChance != 0)
+                    byPassAcc = false;
+                else
+                    byPassAcc = true;
+            }
         }
         else
         {
-            if (GameManager.Instance.GetActiveItem())
+            if (item)
             {
                 activeEffect = GameManager.Instance.GetActiveItem().effectAdded;
                 procChance = GameManager.Instance.GetActiveItem().procChance;
+
+                if (itemSlot.linkedItemPiece.procChance != 0)
+                    byPassAcc = false;
+                else
+                    byPassAcc = true;
             }
         }
 
+        if (passiveItem)
+        {
+            activeEffect = addedEffect;
+        }
         // ^^^^^^^^^^^^^^^^^^^^
 
         //Debug.Log("addedEffect 2 " + addedEffect.curEffectName);
@@ -3403,80 +3439,25 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     if (activeEffect != null)
                     {
-                        if (GameManager.Instance.GetActiveSkill() != null && GameManager.Instance.isSkillsMode)
+                        // Determining whether the effect hits, If it fails, stop
+                        if (procChance != 0)
                         {
-                            // Determining whether the effect hits, If it fails, stop
-                            if (procChance != 0)
+                            //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
+
+                            int rand = Random.Range(1, 101);
+
+                            if (rand >= procChance && GameManager.Instance.isSkillsMode)
                             {
-                                //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
+                                if (effectAddedCount < 1)
+                                    activeEffects[i].AddTurnCountText(1);
 
-                                int rand = Random.Range(1, 101);
+                                // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
+                                effectAddedCount++;
 
-                                if (rand >= procChance && GameManager.Instance.isSkillsMode)
-                                {
-                                    if (effectAddedCount < 1)
-                                        activeEffects[i].AddTurnCountText(1);
+                                settingUpEffect = true;
 
-                                    // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-                                    effectAddedCount++;
-
-                                    settingUpEffect = true;
-
-                                    if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
-                                    {
-                                        activeEffects[i].EffectApply(this);
-                                        activeEffects[i].UpdateEffectTierImages();
-                                        if (activeEffects[i] != null)
-                                            activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                                        else
-                                        {
-
-                                        }
-
-                                        string name = addedEffect.effectName;
-                                        if (addedEffect.effectName == "HOLY_LINK")
-                                            name = "HOLY LINK";
-                                        else if (addedEffect.effectName == "OTHER_LINK")
-                                            name = "OTHER LINK";
-                                        else if (addedEffect.effectName == "POWERDOWN")
-                                            name = "POWER DOWN";
-                                        TriggerTextAlert(name, 1, true, "Inflict");
-
-                                        //Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
-
-                                        if (addedEffect.effectName == "HOLY_LINK")
-                                        {
-                                            holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                            GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                            GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-                                        }
-
-                                        // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                                        // being added to this unit, to the other linked fighter also
-                                        if (GetEffect("HOLY_LINK"))
-                                        {
-                                            for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
-                                            {
-                                                if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.curEffectName != EffectData.EffectName.HOLY_LINK)
-                                                {
-                                                    GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
-                                                }
-                                            }
-                                        }
-
-                                    }
-                                }
-                                else
-                                    continue;
-
-                            }
-                            else if (passiveItem || byPassAcc)
-                            {
                                 if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                                 {
-                                    //usedSkill = GameManager.Instance.GetActiveSkill();
-
-                                    activeEffects[i].AddTurnCountText(1);
                                     activeEffects[i].EffectApply(this);
                                     activeEffects[i].UpdateEffectTierImages();
                                     if (activeEffects[i] != null)
@@ -3485,7 +3466,6 @@ public class UnitFunctionality : MonoBehaviour
                                     {
 
                                     }
-                                    //return;
 
                                     string name = addedEffect.effectName;
                                     if (addedEffect.effectName == "HOLY_LINK")
@@ -3496,14 +3476,15 @@ public class UnitFunctionality : MonoBehaviour
                                         name = "POWER DOWN";
                                     TriggerTextAlert(name, 1, true, "Inflict");
 
-                                    //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
+                                    //Debug.Log("addedEffect 3 " + addedEffect.curEffectName);
 
-                                    if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                    if (addedEffect.effectName == "HOLY_LINK")
                                     {
                                         holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
                                         GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                        GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
 
+                                        if (!item)
+                                            GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
                                     }
 
                                     // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
@@ -3512,17 +3493,71 @@ public class UnitFunctionality : MonoBehaviour
                                     {
                                         for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
                                         {
-                                            if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                            if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK") && addedEffect.curEffectName != EffectData.EffectName.HOLY_LINK)
                                             {
-                                                GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                                GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem, false);
                                             }
                                         }
                                     }
                                 }
                             }
+                            else
+                                continue;
+
+                        }
+                        else if (passiveItem || byPassAcc)
+                        {
+                            if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                            {
+                                //usedSkill = GameManager.Instance.GetActiveSkill();
+
+                                activeEffects[i].AddTurnCountText(1);
+                                activeEffects[i].EffectApply(this);
+                                activeEffects[i].UpdateEffectTierImages();
+                                if (activeEffects[i] != null)
+                                    activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                else
+                                {
+
+                                }
+                                //return;
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+                                //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                {
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                    {
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
                         // Item
-                        else if (GameManager.Instance.GetActiveItem() != null && !GameManager.Instance.isSkillsMode)
+                        else if (GameManager.Instance.GetActiveItemSlot() != null && !GameManager.Instance.isSkillsMode)
                         {
                             int rand = Random.Range(1, 101);
 
@@ -3583,52 +3618,51 @@ public class UnitFunctionality : MonoBehaviour
                                 continue;
 
                         }
-                            else if (passiveItem || byPassAcc)
+                        else if (passiveItem || byPassAcc)
+                        {
+                            if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
                             {
-                                if (GameManager.Instance.maxUnitEffectTier >= activeEffects[i].effectPowerStacks)
+                                //usedSkill = GameManager.Instance.GetActiveSkill();
+
+                                activeEffects[i].AddTurnCountText(1);
+                                activeEffects[i].EffectApply(this);
+                                activeEffects[i].UpdateEffectTierImages();
+                                if (activeEffects[i] != null)
+                                    activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
+                                else
                                 {
-                                    //usedSkill = GameManager.Instance.GetActiveSkill();
 
-                                    activeEffects[i].AddTurnCountText(1);
-                                    activeEffects[i].EffectApply(this);
-                                    activeEffects[i].UpdateEffectTierImages();
-                                    if (activeEffects[i] != null)
-                                        activeEffects[i].gameObject.GetComponent<UIElement>().AnimateUI(false);
-                                    else
+                                }
+                                //return;
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+                                //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                {
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
                                     {
-
-                                    }
-                                    //return;
-
-                                    string name = addedEffect.effectName;
-                                    if (addedEffect.effectName == "HOLY_LINK")
-                                        name = "HOLY LINK";
-                                    else if (addedEffect.effectName == "OTHER_LINK")
-                                        name = "OTHER LINK";
-                                    else if (addedEffect.effectName == "POWERDOWN")
-                                        name = "POWER DOWN";
-                                    TriggerTextAlert(name, 1, true, "Inflict");
-
-                                    //Debug.Log("addedEffect 4 " + addedEffect.curEffectName);
-
-                                    if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
-                                    {
-                                        holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                        GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                        GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-
-                                    }
-
-                                    // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                                    // being added to this unit, to the other linked fighter also
-                                    if (GetEffect("HOLY_LINK"))
-                                    {
-                                        for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
                                         {
-                                            if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
-                                            {
-                                                GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
-                                            }
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
                                         }
                                     }
                                 }
@@ -3651,7 +3685,7 @@ public class UnitFunctionality : MonoBehaviour
                 if (GameManager.Instance.GetActiveSkill() != null && GameManager.Instance.isSkillsMode)
                 {
                     // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && byPassAcc && GameManager.Instance.isSkillsMode)
+                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && !byPassAcc && GameManager.Instance.isSkillsMode)
                     {
                         if (m == 0)
                         {
@@ -3806,6 +3840,7 @@ public class UnitFunctionality : MonoBehaviour
                         }
                     }
                 }
+                // First apply, item 
                 else if (GameManager.Instance.GetActiveItem() != null && !GameManager.Instance.isSkillsMode)
                 {
                     // Determining whether the effect hits, If it fails, stop
@@ -4264,7 +4299,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait);
 
-                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, true);
+                            targetUnit.AddUnitEffect(EffectManager.instance.GetEffect("HEALTH UP"), targetUnit, 1, 1, true, false);
 
                             //yield return new WaitForSeconds(GameManager.Instance.leachEffectGainWait/2f);
 
@@ -5047,8 +5082,10 @@ public class UnitFunctionality : MonoBehaviour
                         if (GameManager.Instance.isSkillsMode)
                             AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
                         else
-                            AudioManager.Instance.Play(GameManager.Instance.GetActiveItem().projectileHit.name);
-
+                        {
+                            if (GameManager.Instance.GetActiveItemSlot())
+                                AudioManager.Instance.Play(GameManager.Instance.GetActiveItemSlot().linkedItemPiece.projectileHit.name);
+                        }
                         /*
                         if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)
                         {

@@ -493,7 +493,7 @@ public class MapManager : MonoBehaviour
                 GameManager.Instance.activeRoomHeroes[i].ToggleTooltipGear(false);
                 GameManager.Instance.activeRoomHeroes[i].ToggleTooltipStats(false);
 
-                GameManager.Instance.activeRoomHeroes[i].ReloadItemUses();
+                //GameManager.Instance.activeRoomHeroes[i].ReloadItemUses();
             }
 
             ShopManager.Instance.TogglePlayerInShopRoom(false);

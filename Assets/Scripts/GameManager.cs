@@ -175,6 +175,7 @@ public class GameManager : MonoBehaviour
     public float skillEffectDepleteAppearTime = .5f;
     public SkillData activeSkill;
     public ItemPiece activeItem;
+    public Slot activeItemSlot;
     public TMP_ColorGradient gradientSkillAlert;
     public TMP_ColorGradient gradientLevelUpAlert;
     [SerializeField] private CanvasGroup skill0CG;
@@ -491,6 +492,7 @@ public class GameManager : MonoBehaviour
         // Destroy previous room
         ResetRoom();
 
+        TeamItemsManager.Instance.ResetItemsSpawned();
 
         RoomManager.Instance.SelectFloor();
 
@@ -1401,7 +1403,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     for (int x = 0; x < activeRoomHeroes.Count; x++)
                     {
-                        activeRoomHeroes[x].ReloadItemUses();
+                        //activeRoomHeroes[x].ReloadItemUses();
 
                         if (!activeRoomHeroes[x].isDead)
                         {
@@ -2268,6 +2270,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     // Disable unit level image in team setup tab
                     activeRoomAllUnitFunctionalitys[x].ToggleUnitLevelImage(true);
 
+                    // Set all refillable items back to full uses remaining
                     activeRoomAllUnitFunctionalitys[x].SetItemUsesMax();
 
                     // Hide level up text
@@ -2477,6 +2480,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public void UpdateActiveItem(ItemPiece item)
     {
         activeItem = item;
+    }
+
+    public void UpdateActiveItemSlot(Slot newItemSlot)
+    {
+        activeItemSlot = newItemSlot;
+    }
+
+    public Slot GetActiveItemSlot()
+    {
+        return activeItemSlot;
     }
 
     public int AdjustSkillPowerTargetEffectAmp(float power)
@@ -2781,14 +2794,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                             if (!miss)
                             {
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val2);
+                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val2, false);
 
                                 if (GetActiveSkill().effect2 != null)
                                 {
                                     if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
                                     {
                                         yield return new WaitForSeconds(0.4f);
-                                        unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val2);
+                                        unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val2, false);
                                     }
                                 }
                             }
@@ -2801,9 +2814,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && activeRoomHeroes.Count <= 2
                                 || GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && fallenHeroes.Count > 0)
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val);
+                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val, false);
                             else if (GetActiveSkill().effect.curEffectName != EffectData.EffectName.REANIMATE)
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val);
+                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val, false);
                         }
 
                         if (GetActiveSkill().effect2 != null)
@@ -2811,7 +2824,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK && GetActiveSkill().effect2.curEffectName != EffectData.EffectName.REANIMATE)
                             {
                                 yield return new WaitForSeconds(0.25f);
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val);
+                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val, false);
                             }
                         }
                     }
@@ -2935,11 +2948,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 if (!miss)
                 {
-                    GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), effectHitAcc, effectHitAcc);
+                    GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect, GetActiveUnitFunctionality(), effectHitAcc, effectHitAcc, false);
 
                     if (GetActiveSkill().effect2 != null)
                     {
-                        GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect2, GetActiveUnitFunctionality(), effectHitAcc, effectHitAcc);
+                        GetActiveUnitFunctionality().AddUnitEffect(GetActiveSkill().effect2, GetActiveUnitFunctionality(), effectHitAcc, effectHitAcc, false);
                     }
                 }
 
@@ -3201,20 +3214,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
                         {
                             if (isSkillsMode)
-                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], effectHitAcc, effectHitAcc);
+                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], effectHitAcc, effectHitAcc, false, false, false);
                             else
 
 
                             if (isSkillsMode && GetActiveSkill().effect2 != null)
                             {
                                 if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
-                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[i], effectHitAcc, effectHitAcc);
+                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[i], effectHitAcc, effectHitAcc, false, false, false);
                             }
                         }
                     }
                     else
                     {
-                        unitsSelected[i].AddUnitEffect(GetActiveItem().effectAdded, unitsSelected[i], effectHitAcc, effectHitAcc);
+                        unitsSelected[i].AddUnitEffect(GetActiveItem().effectAdded, unitsSelected[i], effectHitAcc, effectHitAcc, true, false, true, GetActiveItemSlot().linkedSlot);
                     }
 
 #if !UNITY_EDITOR
@@ -5102,9 +5115,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Display Items
         else
         {
-            //if (!itemDeleted)
-                //UpdateActiveItem(GetActiveUnitFunctionality().GetBaseSelectedItem());
-
             if (TeamItemsManager.Instance.equippedItemsMain.Count > 0)
             {
                 if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat)
@@ -5432,31 +5442,34 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     if (i == 0)
                     {
-                        for (int x = 0; x < TeamItemsManager.Instance.equippedItemsMain.Count; x++)
+                        for (int z = 0; z < TeamItemsManager.Instance.ally1ItemsSlots.Count; z++)
                         {
-                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[0]);
-
-                            int subtext = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
-
-                            bool passive = false;
-
-                            if (TeamItemsManager.Instance.equippedItemsMain[x].curActiveType == ItemPiece.ActiveType.PASSIVE)
-                                passive = true;
-
-                            if (TeamItemsManager.Instance.equippedItemsMain[x].curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                subtext = 0;
-
-                            if (x == 0)
+                            if (TeamItemsManager.Instance.ally1ItemsSlots[z].linkedSlot)
                             {
-                                fighterMainSlot1.UpdateSubText(subtext, true, passive);
-                            }
-                            else if (x == 1)
-                            {
-                                fighterMainSlot2.UpdateSubText(subtext, true, passive);
-                            }
-                            else if (x == 2)
-                            {
-                                fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                                UpdateMainIconDetails(null, TeamItemsManager.Instance.ally1ItemsSlots[z].linkedSlot.linkedItemPiece);
+
+                                bool passive = false;
+
+                                if (TeamItemsManager.Instance.ally1ItemsSlots[z].linkedSlot.linkedItemPiece.curActiveType == ItemPiece.ActiveType.PASSIVE)
+                                    passive = true;
+
+                                int subtext = TeamItemsManager.Instance.ally1ItemsSlots[z].linkedSlot.linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally1ItemsSlots[z].linkedSlot.GetItemUseCount();
+
+                                if (TeamItemsManager.Instance.ally1ItemsSlots[z].linkedSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                    subtext = 0;
+
+                                if (z == 0)
+                                {
+                                    fighterMainSlot1.UpdateSubText(subtext, true, passive);
+                                }
+                                else if (z == 1)
+                                {
+                                    fighterMainSlot2.UpdateSubText(subtext, true, passive);
+                                }
+                                else if (z == 2)
+                                {
+                                    fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                                }
                             }
                         }
 
@@ -5464,67 +5477,71 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                     else if (i == 1)
                     {
-                        for (int x = 0; x < TeamItemsManager.Instance.equippedItemsSecond.Count; x++)
+                        for (int z = 0; z < TeamItemsManager.Instance.ally2ItemsSlots.Count; z++)
                         {
-                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
-
-                            bool passive = false;
-
-                            if (TeamItemsManager.Instance.equippedItemsSecond[x].curActiveType == ItemPiece.ActiveType.PASSIVE)
-                                passive = true;
-
-                            int subtext = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
-
-                            if (TeamItemsManager.Instance.equippedItemsSecond[x].curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                subtext = 0;
-
-                            if (x == 0)
+                            if (TeamItemsManager.Instance.ally2ItemsSlots[z].linkedSlot)
                             {
-                                fighterMainSlot1.UpdateSubText(subtext, true, passive);
-                            }
-                            else if (x == 1)
-                            {
-                                fighterMainSlot2.UpdateSubText(subtext, true, passive);
-                            }
-                            else if (x == 2)
-                            {
-                                fighterMainSlot3.UpdateSubText(subtext, true, passive);
-                            }
+                                UpdateMainIconDetails(null, TeamItemsManager.Instance.ally2ItemsSlots[z].linkedSlot.linkedItemPiece);
+
+                                bool passive = false;
+
+                                if (TeamItemsManager.Instance.ally2ItemsSlots[z].linkedSlot.linkedItemPiece.curActiveType == ItemPiece.ActiveType.PASSIVE)
+                                    passive = true;
+
+                                int subtext = TeamItemsManager.Instance.ally2ItemsSlots[z].linkedSlot.linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally2ItemsSlots[z].linkedSlot.GetItemUseCount();
+
+                                if (TeamItemsManager.Instance.ally2ItemsSlots[z].linkedSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                    subtext = 0;
+
+                                if (z == 0)
+                                {
+                                    fighterMainSlot1.UpdateSubText(subtext, true, passive);
+                                }
+                                else if (z == 1)
+                                {
+                                    fighterMainSlot2.UpdateSubText(subtext, true, passive);
+                                }
+                                else if (z == 2)
+                                {
+                                    fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                                }
+                            }   
                         }
 
                         break;
                     }
                     else if (i == 2)
                     {
-                        for (int x = 0; x < TeamItemsManager.Instance.equippedItemsThird.Count; x++)
+                        for (int z = 0; z < TeamItemsManager.Instance.ally3ItemsSlots.Count; z++)
                         {
-                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[0]);
-
-                            bool passive = false;
-
-                            if (TeamItemsManager.Instance.equippedItemsThird[x].curActiveType == ItemPiece.ActiveType.PASSIVE)
-                                passive = true;
-
-                            int subtext = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
-
-                            if (TeamItemsManager.Instance.equippedItemsThird[x].curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
-                                subtext = 0;
-
-                            if (x == 0)
+                            if (TeamItemsManager.Instance.ally3ItemsSlots[z].linkedSlot)
                             {
-                                fighterMainSlot1.UpdateSubText(subtext, true, passive);
-                            }
-                            else if (x == 1)
-                            {
-                                fighterMainSlot2.UpdateSubText(subtext, true, passive);
-                            }
-                            else if (x == 2)
-                            {
-                                fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                                UpdateMainIconDetails(null, TeamItemsManager.Instance.ally3ItemsSlots[z].linkedSlot.linkedItemPiece);
+
+                                bool passive = false;
+
+                                if (TeamItemsManager.Instance.ally3ItemsSlots[z].linkedSlot.linkedItemPiece.curActiveType == ItemPiece.ActiveType.PASSIVE)
+                                    passive = true;
+
+                                int subtext = TeamItemsManager.Instance.ally3ItemsSlots[z].linkedSlot.linkedItemPiece.maxUsesPerCombat - TeamItemsManager.Instance.ally3ItemsSlots[z].linkedSlot.GetItemUseCount();
+
+                                if (TeamItemsManager.Instance.ally3ItemsSlots[z].linkedSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                                    subtext = 0;
+
+                                if (z == 0)
+                                {
+                                    fighterMainSlot1.UpdateSubText(subtext, true, passive);
+                                }
+                                else if (z == 1)
+                                {
+                                    fighterMainSlot2.UpdateSubText(subtext, true, passive);
+                                }
+                                else if (z == 2)
+                                {
+                                    fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                                }
                             }
                         }
-
-                        break;
                     }
                 }
             }
@@ -5693,7 +5710,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (GetActiveItem().itemAnnounce != null)
             AudioManager.Instance.Play(GetActiveItem().itemAnnounce.name);
 
-       
+        // Trigger Item Pop up
+        GetActiveUnitFunctionality().TriggerItemVisualAlert(GetActiveItemSlot(), true, true);
+
         yield return new WaitForSeconds(0.35f);
 
         for (int i = 0; i < unitsSelected.Count; i++)
@@ -5753,7 +5772,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (activeItem.effectAdded != null)
                             {
-                                unitsSelected[x].AddUnitEffect(activeItem.effectAdded, unitsSelected[x], activeItem.effectAddedTurnLength, 2, true, true);
+                                unitsSelected[x].AddUnitEffect(activeItem.effectAdded, unitsSelected[x], activeItem.effectAddedTurnLength, 2, true, true, GetActiveItemSlot().linkedSlot);
                             }
                         }
 
@@ -5772,7 +5791,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (activeItem.effectAdded != null)
                             {
-                                unitsSelected[t].AddUnitEffect(activeItem.effectAdded, unitsSelected[t], 2, 2, true, true);
+                                unitsSelected[t].AddUnitEffect(activeItem.effectAdded, unitsSelected[t], 2, 2, true, true, true, GetActiveItemSlot().linkedSlot);
                             }
                         }
 
@@ -5800,9 +5819,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
-            // Trigger Item Pop up
-            GetActiveUnitFunctionality().TriggerItemVisualAlert(GetActiveItem().itemSpriteItemTab, true, true);
-
             // Do Visual Effect on selected units
             StartCoroutine(UpdateSelectedUnitsEffectVisual(false));
 
@@ -5850,7 +5866,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         ToggleAllowSelection(true);
 
-        bool removeItem = false; 
+        bool removeItem = false;
+
+        //TeamItemsManager.Instance.IncItemUseCount();
 
         // Decrease Item Cooldown
         for (int i = 0; i < activeRoomHeroes.Count; i++)
@@ -5872,7 +5890,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
                                 fighterMainSlot1.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem1();
+                                activeRoomHeroes[i].DecreaseUsesItem1(true);
 
                                 if (minus <= 0)
                                 {
@@ -5891,7 +5909,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
                                 fighterMainSlot2.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem2();
+                                activeRoomHeroes[i].DecreaseUsesItem2(true);
 
                                 if (minus <= 0)
                                 {
@@ -5910,7 +5928,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsMainAlly[x].GetItemUseCount();
                                 fighterMainSlot3.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem3();
+                                activeRoomHeroes[i].DecreaseUsesItem3(true);
 
                                 if (minus <= 0)
                                 {
@@ -5938,7 +5956,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
                                 fighterMainSlot1.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem1();
+                                activeRoomHeroes[i].DecreaseUsesItem1(true);
 
                                 if (minus == 0)
                                 {
@@ -5957,7 +5975,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
                                 fighterMainSlot2.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem2();
+                                activeRoomHeroes[i].DecreaseUsesItem2(true);
 
                                 if (minus == 0)
                                 {
@@ -5976,7 +5994,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsSecondAlly[x].GetItemUseCount();
                                 fighterMainSlot3.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem3();
+                                activeRoomHeroes[i].DecreaseUsesItem3(true);
 
                                 if (minus == 0)
                                 {
@@ -6004,7 +6022,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
                                 fighterMainSlot1.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem1();
+                                activeRoomHeroes[i].DecreaseUsesItem1(true);
 
                                 if (minus == 0)
                                 {
@@ -6023,7 +6041,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
                                 fighterMainSlot2.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem2();
+                                activeRoomHeroes[i].DecreaseUsesItem2(true);
 
                                 if (minus == 0)
                                 {
@@ -6042,7 +6060,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat - OwnedLootInven.Instance.wornItemsThirdAlly[x].GetItemUseCount();
                                 fighterMainSlot3.UpdateSubText(minus, true);
 
-                                activeRoomHeroes[i].DecreaseUsesItem3();
+                                activeRoomHeroes[i].DecreaseUsesItem3(true);
 
                                 if (minus == 0)
                                 {
@@ -6198,6 +6216,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public void SpawnItem()
     {
         GameObject go = Instantiate(ItemRewardManager.Instance.itemGO, nothingnessUI.gameObject.transform.position, Quaternion.identity);
+
+
         go.transform.SetParent(nothingnessUI.gameObject.transform);
         go.transform.localScale = new Vector2(1, 1);
 
@@ -6221,6 +6241,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         slot.UpdateSlotName(newItem.itemName);
         slot.UpdateLinkedItemPiece(newItem);
         slot.UpdateLootGearAlpha(true);
+
+        //TeamItemsManager.Instance.IncItemsSpawned();
+        //slot.UpdateSlotCode(TeamItemsManager.Instance.GetItemsSpawned());
 
         ShopManager.Instance.UpdateUnAssignedItem(null);
 

@@ -2114,6 +2114,8 @@ public class OwnedLootInven : MonoBehaviour
         for (int x = 0; x < startingItemPieces.Count; x++)
         {
             GameObject go = Instantiate(GearRewards.Instance.itemGO, ownedLootUI.transform);
+            //ownedItems[x].UpdateSlotCode(TeamItemsManager.Instance.GetItemsSpawned());
+
             // 1000 pos due to objects spawning in screen and blocking input (they are invisible data carrying objects)
             go.transform.localPosition = new Vector2(1000, 1000);
             go.transform.localScale = Vector2.one;
@@ -2123,10 +2125,14 @@ public class OwnedLootInven : MonoBehaviour
 
             //item.UpdateGearAlpha(false);
 
+            TeamItemsManager.Instance.IncItemsSpawned();
+            ownedItems[x].UpdateSlotCode(TeamItemsManager.Instance.GetItemsSpawned());
+
             ownedItems[x].UpdateSlotImage(startingItemPieces[x].itemSpriteItemTab);
 
             ownedItems[x].UpdateSlotName(startingItemPieces[x].itemName);
             ownedItems[x].linkedItemPiece = startingItemPieces[x];
+            ownedItems[x].gameObject.name = startingItemPieces[x].itemName + " " + TeamItemsManager.Instance.GetItemsSpawned();
             ownedItems[x].ToggleEquipButton(false);
         }
     }
@@ -2182,13 +2188,13 @@ public class OwnedLootInven : MonoBehaviour
         if (toggle)
         {
             if (titleText == "Owned Gear")
-                FillOwnedGearSlots(0);
+                FillOwnedLootSlots(0);
             else if (titleText == "Owned Items")
-                FillOwnedGearSlots(1);
+                FillOwnedLootSlots(1);
             else if (titleText == "Ally Skills")
             {
                 if (SkillsTabManager.Instance.activeSkillBase != null)
-                    FillOwnedGearSlots(2);
+                    FillOwnedLootSlots(2);
                 else
                     return;
             }
@@ -2231,12 +2237,24 @@ public class OwnedLootInven : MonoBehaviour
         }
     }
 
+    public void ClearOwnedItemSlots()
+    {
+        for (int x = 0; x < ownedLootSlots.Count; x++)
+        {
+            ownedLootSlots[x].ResetSlot(true, false);
+
+            ownedLootSlots[x].UpdateLinkedItemPiece(null);
+            ownedLootSlots[x].linkedSlot = null;
+            ownedLootSlots[x].UpdateSlotDetails();
+        }
+    }
+
     public void EnableOwnedItemsSlotSelection(Slot ownedSlot)
     {
         ownedSlot.ToggleSlotSelection(true);
     }
 
-    public void FillOwnedGearSlots(int slotType = 0)
+    public void FillOwnedLootSlots(int slotType = 0)
     {
         //Debug.Log("starting 2");
         //ClearOwnedItemSlots();
@@ -2245,10 +2263,7 @@ public class OwnedLootInven : MonoBehaviour
 
         int ownedItemSlotIndex = 0;
 
-        for (int x = 0; x < ownedLootSlots.Count; x++)
-        {
-            ownedLootSlots[x].ResetSlot(true, false);
-        }
+        ClearOwnedItemSlots();
 
         // If item
         if (slotType == 1)
@@ -2435,7 +2450,11 @@ public class OwnedLootInven : MonoBehaviour
                         else if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRarity == ItemPiece.Rarity.LEGENDARY)
                             ownedLootSlots[ownedItemSlotIndex].UpdateRarityBG(Slot.ItemRarity.EPIC, true);
 
-                        //ownedLootSlots[ownedItemSlotIndex].skill = ownedSkills[i];
+                        ownedLootSlots[i].linkedSlot = ownedItems[i];
+                        //ownedLootSlots[ownedItemSlotIndex].UpdateSlotCode()
+                        //TeamItemsManager.Instance.UpdateOwnedSlotsLinkedSlot();
+
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotDetails();
 
                         ownedItemSlotIndex++;
                     }

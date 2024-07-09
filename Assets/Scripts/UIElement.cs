@@ -239,6 +239,16 @@ public class UIElement : MonoBehaviour
         */
     }
 
+    public void ToggleRaceIconButton(bool toggle = true)
+    {
+        if (toggle)
+            UpdateAlpha(1);
+        else
+            UpdateAlpha(0);
+
+        gameObject.transform.GetChild(0).gameObject.GetComponent<Image>().raycastTarget = toggle;
+        gameObject.transform.GetChild(0).gameObject.GetComponent<Button>().interactable = toggle;
+    }
     public void ToggleLockedMainSlot()
     {
         // In Combat
@@ -340,6 +350,14 @@ public class UIElement : MonoBehaviour
     public void UpdateSlider(float maxCharges = 1f, float curCharges = 0f)
     {
         contentImage2UI.GetComponent<Image>().fillAmount = (curCharges / maxCharges);
+    }
+
+    public void ToggleSliderVisiblity(bool toggle = true)
+    {
+        if (toggle)
+            contentImage2UI.UpdateAlpha(1);
+        else
+            contentImage2UI.UpdateAlpha(0);
     }
 
     public bool GetIsSelectable()

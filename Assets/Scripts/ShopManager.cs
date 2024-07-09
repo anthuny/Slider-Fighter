@@ -32,7 +32,6 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private GameObject fallenHeroPrefab;
     [SerializeField] private int shopMaxCombatItems = 3;
     [SerializeField] private int shopMaxHealthItems = 3;
-    [SerializeField] private List<ItemPiece> shopHealthItems = new List<ItemPiece>();
     [SerializeField] private List<ItemPiece> shopCombatItems = new List<ItemPiece>();
 
     [SerializeField] private UIElement itemsParent;
@@ -296,25 +295,6 @@ public class ShopManager : MonoBehaviour
     {
         return shopCombatItems;
     }
-    public List<ItemPiece> GetShopHealthItems()
-    {
-        return shopHealthItems;
-    }
-
-    ItemPiece GetRandomShopItem(bool combatItem)
-    {
-        int rand = 0;
-        if (combatItem)
-        {
-            rand = Random.Range(0, shopCombatItems.Count);
-            return shopCombatItems[rand];
-        }
-        else
-        {
-            rand = Random.Range(0, shopHealthItems.Count);
-            return shopHealthItems[rand];
-        }
-    }
 
     public void ToggleRandomiser(bool toggle)
     {
@@ -324,42 +304,6 @@ public class ShopManager : MonoBehaviour
             randomiser.UpdateAlpha(0);
 
         ToggleRandomiserButton(toggle);
-    }
-
-    List<ItemPiece> ChooseItems(bool combatItem)
-    {
-        List<ItemPiece> items = new List<ItemPiece>();
-
-        if (combatItem)
-        {
-            for (int i = 0; i < shopCombatItems.Count; i++)
-            {
-                ItemPiece item = GetRandomShopItem(combatItem);
-                if (items.Contains(item))
-                {
-                    if (i != 0)
-                        i--;
-                }
-                else
-                    items.Add(item);
-            }
-        }
-        else
-        {
-            for (int n = 0; n < shopHealthItems.Count; n++)
-            {
-                ItemPiece item = GetRandomShopItem(combatItem);
-                if (items.Contains(item))
-                {
-                    if (n != 0)
-                        n--;
-                }
-                else
-                    items.Add(item);
-            }
-        }
-
-        return items;
     }
 
     public void ClearShopItems(bool hideShop = false)

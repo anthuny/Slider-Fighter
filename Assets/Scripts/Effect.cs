@@ -252,10 +252,8 @@ public class Effect : MonoBehaviour
         {
             turnCountRemaining = 0;
         }
-        else if (turns != 0 && turnCountRemaining == 0)
-            turnCountRemaining += turns;
-        else if (turnCountRemaining >= 1)
-            turnCountRemaining += 1;
+        else if (turnCountRemaining == 0)
+            turnCountRemaining += 2;
 
         if (turnCountRemaining > 9)
             turnCountRemaining = 9;
