@@ -130,6 +130,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 1089311991006042102}
 --- !u!225 &3351684950378466112
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -332,6 +333,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &87021440639586125
 CanvasGroup:
   m_ObjectHideFlags: 0

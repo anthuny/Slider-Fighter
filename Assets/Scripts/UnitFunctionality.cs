@@ -1009,7 +1009,10 @@ public class UnitFunctionality : MonoBehaviour
     {
         itemVisualAlert.UpdateContentImage(itemSlot.linkedItemPiece.itemSpriteItemTab);
 
-        itemVisualAlert.UpdateContentText((itemSlot.linkedItemPiece.maxUsesPerCombat - itemSlot.GetItemUses() - 1).ToString());
+        if (itemSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+            itemVisualAlert.UpdateContentText((itemSlot.linkedItemPiece.maxUsesPerCombat - itemSlot.GetItemUses() - 1).ToString());
+        else if (itemSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+            itemVisualAlert.UpdateContentText((itemSlot.linkedItemPiece.maxUsesPerCombat - itemSlot.GetItemUses()).ToString());
 
         if (playSFX)
         {
@@ -3393,7 +3396,7 @@ public class UnitFunctionality : MonoBehaviour
         EffectData activeEffect = null;
         float procChance = 0;
 
-        if (GameManager.Instance.isSkillsMode)
+        if (GameManager.Instance.isSkillsMode && !passiveItem)
         {
             if (GameManager.Instance.GetActiveSkill())
             {
@@ -3406,24 +3409,22 @@ public class UnitFunctionality : MonoBehaviour
                     byPassAcc = true;
             }
         }
-        else
-        {
-            if (item)
-            {
-                activeEffect = GameManager.Instance.GetActiveItem().effectAdded;
-                procChance = GameManager.Instance.GetActiveItem().procChance;
-
-                if (itemSlot.linkedItemPiece.procChance != 0)
-                    byPassAcc = false;
-                else
-                    byPassAcc = true;
-            }
-        }
 
         if (passiveItem)
         {
             activeEffect = addedEffect;
         }
+        else if (item && !passiveItem)
+        {
+            activeEffect = GameManager.Instance.GetActiveItem().effectAdded;
+            procChance = GameManager.Instance.GetActiveItem().procChance;
+
+            if (itemSlot.linkedItemPiece.procChance != 0)
+                byPassAcc = false;
+            else
+                byPassAcc = true;
+        }
+
         // ^^^^^^^^^^^^^^^^^^^^
 
         //Debug.Log("addedEffect 2 " + addedEffect.curEffectName);

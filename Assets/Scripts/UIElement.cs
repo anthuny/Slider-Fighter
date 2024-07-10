@@ -59,7 +59,16 @@ public class UIElement : MonoBehaviour
     private float originalYPos;
     public bool isEnabled = false;
     public bool displayingAlert = false;
+    public UIElement raceIconEffectBG;
 
+
+    public void ToggleRaceIconEffectBG(bool toggle = true)
+    {
+        if (toggle)
+            raceIconEffectBG.UpdateAlpha(1);
+        else
+            raceIconEffectBG.UpdateAlpha(0);
+    }
 
     public void UpdateTooltipStatsText(string text)
     {

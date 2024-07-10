@@ -658,7 +658,7 @@ public class TeamItemsManager : MonoBehaviour
             SkillsTabManager.Instance.gearTabArrowLeftButton.ToggleButton(true);
             SkillsTabManager.Instance.gearTabArrowRightButton.ToggleButton(true);
 
-            UpdateEquipItemsOrder(true, true, true);
+            //UpdateEquipItemsOrder(true, true, true);
 
             ToggleItemSlotSelection(false);
         }
@@ -805,45 +805,32 @@ public class TeamItemsManager : MonoBehaviour
 
             equippedItemsThird = newItemOrder;
         }
-
-
         
-        List<Slot> ownedItems = OwnedLootInven.Instance.wornItemsMainAlly;
+        List<Slot> ownedItems = new List<Slot>();
         List<Slot> newOwnedItems = new List<Slot>();
 
         if (ally1)
         {
+            ownedItems = OwnedLootInven.Instance.wornItemsMainAlly;
             if (ownedItems.Count > 0)
             {
-                for (int i = 0; i < ownedItems.Count; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    // Need to be more specific for duplicates of items
-                    if (ally1ItemsSlots[0].linkedSlot == ownedItems[i])
+                    for (int z = 0; z < ownedItems.Count; z++)
                     {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
-                    }
-                }
-                for (int i = 0; i < ownedItems.Count; i++)
-                {
-                    if (ally1ItemsSlots[1].linkedSlot == ownedItems[i])
-                    {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
-                    }
-                }
-                for (int i = 0; i < ownedItems.Count; i++)
-                {
-                    if (ally1ItemsSlots[2].linkedSlot == ownedItems[i])
-                    {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
+                        if (ally1ItemsSlots[i].linkedItemPiece)
+                        {
+                            if (ally1ItemsSlots[i].linkedSlot == ownedItems[z])
+                            {
+                                newOwnedItems.Add(ownedItems[z]);
+                                break;
+                            }
+                        }
                     }
                 }
 
                 OwnedLootInven.Instance.wornItemsMainAlly = newOwnedItems;
                 ownedItems.Clear();
-
             }
         }
         if (ally2)
@@ -851,28 +838,18 @@ public class TeamItemsManager : MonoBehaviour
             ownedItems = OwnedLootInven.Instance.wornItemsSecondAlly;
             if (ownedItems.Count > 0)
             {
-                for (int i = 0; i < ownedItems.Count; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    if (ally2ItemsSlots[0].linkedSlot == ownedItems[i])
+                    for (int z = 0; z < ownedItems.Count; z++)
                     {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
-                    }
-                }
-                for (int i = 0; i < ownedItems.Count; i++)
-                {
-                    if (ally2ItemsSlots[1].linkedSlot == ownedItems[i])
-                    {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
-                    }
-                }
-                for (int i = 0; i < ownedItems.Count; i++)
-                {
-                    if (ally2ItemsSlots[2].linkedSlot == ownedItems[i])
-                    {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
+                        if (ally2ItemsSlots[i].linkedItemPiece)
+                        {
+                            if (ally2ItemsSlots[i].linkedSlot == ownedItems[z])
+                            {
+                                newOwnedItems.Add(ownedItems[z]);
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -885,28 +862,19 @@ public class TeamItemsManager : MonoBehaviour
             ownedItems = OwnedLootInven.Instance.wornItemsThirdAlly;
             if (ownedItems.Count > 0)
             {
-                for (int i = 0; i < ownedItems.Count; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    if (ally3ItemsSlots[0].linkedSlot == ownedItems[i])
+                    for (int z = 0; z < ownedItems.Count; z++)
                     {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
-                    }
-                }
-                for (int i = 0; i < ownedItems.Count; i++)
-                {
-                    if (ally3ItemsSlots[1].linkedSlot == ownedItems[i])
-                    {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
-                    }
-                }
-                for (int i = 0; i < ownedItems.Count; i++)
-                {
-                    if (ally3ItemsSlots[2].linkedSlot == ownedItems[i])
-                    {
-                        newOwnedItems.Add(ownedItems[i]);
-                        break;
+                        if (ally3ItemsSlots[i].linkedItemPiece)
+                        {
+                            if (ally3ItemsSlots[i].linkedSlot == ownedItems[z])
+                            {
+                                newOwnedItems.Add(ownedItems[z]);
+                                break;
+                            }
+                        }
+
                     }
                 }
 
@@ -1126,7 +1094,7 @@ public class TeamItemsManager : MonoBehaviour
             UpdateEquipItemsOrder(true, false, false);
         else if (GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
             UpdateEquipItemsOrder(false, true, false);
-        else if (GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
+        else if (GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD)
             UpdateEquipItemsOrder(false, false, true);
 
         GetSelectedBaseItemSlot().UpdateSlotDetails();

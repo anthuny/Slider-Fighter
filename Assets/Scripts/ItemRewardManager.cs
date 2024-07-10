@@ -247,7 +247,7 @@ public class ItemRewardManager : MonoBehaviour
             go.transform.SetParent(itemsParent);
             go.transform.localScale = new Vector2(1, 1);
 
-            UIElement uIElement = go.GetComponent<UIElement>();
+            UIElement itemUI = go.GetComponent<UIElement>();
 
             // Roll rarity chance 
             int itemChance = Random.Range(0, 101);
@@ -267,13 +267,17 @@ public class ItemRewardManager : MonoBehaviour
                         continue;
                     }
 
-                    uIElement.UpdateContentImage(allItemLegendary[rand].itemSpriteItemTab);
-                    uIElement.UpdateItemName(allItemLegendary[rand].itemName);
-                    uIElement.UpdateRarityBorderColour(legendaryColour);
-                    uIElement.curRarity = UIElement.Rarity.LEGENDARY;
+                    Slot slot = itemUI.GetComponent<Slot>();
+                    slot.linkedItemPiece = allItemLegendary[rand];
+                    slot.UpdateSlotDetails();
+
+                    itemUI.UpdateContentImage(allItemLegendary[rand].itemSpriteItemTab);
+                    itemUI.UpdateItemName(allItemLegendary[rand].itemName);
+                    itemUI.UpdateRarityBorderColour(legendaryColour);
+                    itemUI.curRarity = UIElement.Rarity.LEGENDARY;
                     offeredItemsTemp.Add(allItemLegendary[rand]);
-                    offeredItemsUI.Add(uIElement);
-                    uIElement.AnimateUI(false);
+                    offeredItemsUI.Add(itemUI);
+                    itemUI.AnimateUI(false);
                     // Button Click SFX
                     AudioManager.Instance.Play("Button_Click");
 
@@ -307,13 +311,17 @@ public class ItemRewardManager : MonoBehaviour
                     }
 
                     // Set item
-                    uIElement.UpdateContentImage(allItemEpic[rand].itemSpriteItemTab);
-                    uIElement.UpdateItemName(allItemEpic[rand].itemName);
-                    uIElement.UpdateRarityBorderColour(epicColour);
-                    uIElement.curRarity = UIElement.Rarity.EPIC;
+                    Slot slot = itemUI.GetComponent<Slot>();
+                    slot.linkedItemPiece = allItemEpic[rand];
+                    slot.UpdateSlotDetails();
+
+                    itemUI.UpdateContentImage(allItemEpic[rand].itemSpriteItemTab);
+                    itemUI.UpdateItemName(allItemEpic[rand].itemName);
+                    itemUI.UpdateRarityBorderColour(epicColour);
+                    itemUI.curRarity = UIElement.Rarity.EPIC;
                     offeredItemsTemp.Add(allItemEpic[rand]);
-                    offeredItemsUI.Add(uIElement);
-                    uIElement.AnimateUI(false);
+                    offeredItemsUI.Add(itemUI);
+                    itemUI.AnimateUI(false);
                     // Button Click SFX
                     AudioManager.Instance.Play("Button_Click");
 
@@ -344,14 +352,18 @@ public class ItemRewardManager : MonoBehaviour
                         continue;
                     }
 
+                    Slot slot = itemUI.GetComponent<Slot>();
+                    slot.linkedItemPiece = allItemRare[rand];
+                    slot.UpdateSlotDetails();
+
                     // Set item
-                    uIElement.UpdateContentImage(allItemRare[rand].itemSpriteItemTab);
-                    uIElement.UpdateItemName(allItemRare[rand].itemName);
-                    uIElement.UpdateRarityBorderColour(rareColour);
-                    uIElement.curRarity = UIElement.Rarity.RARE;
+                    itemUI.UpdateContentImage(allItemRare[rand].itemSpriteItemTab);
+                    itemUI.UpdateItemName(allItemRare[rand].itemName);
+                    itemUI.UpdateRarityBorderColour(rareColour);
+                    itemUI.curRarity = UIElement.Rarity.RARE;
                     offeredItemsTemp.Add(allItemRare[rand]);
-                    offeredItemsUI.Add(uIElement);
-                    uIElement.AnimateUI(false);
+                    offeredItemsUI.Add(itemUI);
+                    itemUI.AnimateUI(false);
                     // Button Click SFX
                     AudioManager.Instance.Play("Button_Click");
 
@@ -380,14 +392,18 @@ public class ItemRewardManager : MonoBehaviour
                         continue;
                     }
 
+                    Slot slot = itemUI.GetComponent<Slot>();
+                    slot.linkedItemPiece = allItemCommon[rand];
+                    slot.UpdateSlotDetails();
+
                     // Set item
-                    uIElement.UpdateContentImage(allItemCommon[rand].itemSpriteItemTab);
-                    uIElement.UpdateItemName(allItemCommon[rand].itemName);
-                    uIElement.UpdateRarityBorderColour(commonColour);
-                    uIElement.curRarity = UIElement.Rarity.COMMON;
+                    itemUI.UpdateContentImage(allItemCommon[rand].itemSpriteItemTab);
+                    itemUI.UpdateItemName(allItemCommon[rand].itemName);
+                    itemUI.UpdateRarityBorderColour(commonColour);
+                    itemUI.curRarity = UIElement.Rarity.COMMON;
                     offeredItemsTemp.Add(allItemCommon[rand]);
-                    offeredItemsUI.Add(uIElement);
-                    uIElement.AnimateUI(false);
+                    offeredItemsUI.Add(itemUI);
+                    itemUI.AnimateUI(false);
                     // Button Click SFX
                     AudioManager.Instance.Play("Button_Click");
 

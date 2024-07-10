@@ -48,6 +48,7 @@ public class Slot : MonoBehaviour
     [SerializeField] private UIElement raceIcon;
     [SerializeField] private UIElement rarityBG;
     [SerializeField] private UIElement remainingUsesUI;
+    [SerializeField] private UIElement rarityBorder;
     [SerializeField] private int remainingUses;
     [SerializeField] private int itemUses;
     public int slotIndex = -1;
@@ -74,6 +75,27 @@ public class Slot : MonoBehaviour
     private void Start()
     {
         ToggleSlotSelection(false);
+    }
+
+    public void UpdateRarityBorderColour()
+    {
+        if (linkedItemPiece)
+        {
+            rarityBorder.UpdateAlpha(1);
+
+            if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
+                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
+                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
+                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.LEGENDARY)
+                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
+        }
+        else
+        {
+            rarityBorder.UpdateAlpha(0);
+        }
     }
 
     public void UpdateRemainingUses(int newRemainingUses)
@@ -107,9 +129,11 @@ public class Slot : MonoBehaviour
     }
 
     
-    public void UpdateRaceIcon(Sprite newIcon)
+    public void UpdateRaceIcon(Sprite newIcon, bool toggle = true)
     {
         raceIcon.UpdateContentImage(newIcon);
+
+        raceIcon.ToggleRaceIconEffectBG(toggle);
     }
 
     public UIElement GetRaceIcon()
@@ -180,6 +204,8 @@ public class Slot : MonoBehaviour
         string activeStatus = "";
         int itemUsesRemaining = 0;
 
+        UpdateRarityBorderColour();
+
         if (linkedItemPiece == null)
         {
             UpdateRarityBG(curSlotRarity, true);
@@ -210,6 +236,7 @@ public class Slot : MonoBehaviour
         {
             // Update Linked Slot for main slot
             //TeamItemsManager.Instance.UpdateMainSlotLinkedSlot();
+
 
             UpdateSlotName(linkedItemPiece.itemName);
 
@@ -266,7 +293,7 @@ public class Slot : MonoBehaviour
             }
             else if (curSlotRace == SlotRace.ALL)
             {
-                UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+                UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite, false);
             }
 
             // Update Active / Passive status
@@ -281,10 +308,14 @@ public class Slot : MonoBehaviour
             else
                 remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
 
-            equipSlotButton.ToggleButton(false);
-            equipSlotButton.UpdateAlpha(0);
+            if (equipSlotButton)
+            {
+                equipSlotButton.ToggleButton(false);
+                equipSlotButton.UpdateAlpha(0);
+            }
 
-            ownedSlotButton.UpdateAlpha(1);
+            if (ownedSlotButton)
+                ownedSlotButton.UpdateAlpha(1);
         }
     }
 

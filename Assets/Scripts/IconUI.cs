@@ -5,16 +5,60 @@ using UnityEngine.UI;
 using TMPro;
 public class IconUI : MonoBehaviour
 {
-    Image image;
+    public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
+    public Rarity curRarity;
+
+    [SerializeField] private UIElement mainSpriteIcon;
     [SerializeField] private UIElement selectImage;
     [SerializeField] private UIElement hiddenImage;
-    [SerializeField] private TextMeshProUGUI subText;
+    [SerializeField] public TextMeshProUGUI subText;
     [SerializeField] private TextMeshProUGUI mainIconPassiveActiveIcon;
+    public UIElement rarityBG;
+    [SerializeField] private UIElement rarityBGCommon;
+    [SerializeField] private UIElement rarityBGRare;
+    [SerializeField] private UIElement rarityBGEpic;
+    [SerializeField] private UIElement rarityBGLegendary;
+    public UIElement raceIcon;
 
     [SerializeField] private UIElement skillCooldownUI;
 
     public string itemName;
 
+    public void UpdateRaceIcon(Sprite sprite)
+    {
+        raceIcon.UpdateContentImage(sprite);
+    }
+    public void UpdateRarity(Rarity newRarity, bool disable = false)
+    {
+        curRarity = newRarity;
+
+        rarityBGCommon.UpdateAlpha(0);
+        rarityBGRare.UpdateAlpha(0);
+        rarityBGEpic.UpdateAlpha(0);
+        rarityBGLegendary.UpdateAlpha(0);
+
+        if (curRarity == Rarity.COMMON)
+            rarityBGCommon.UpdateAlpha(1);
+        else if (curRarity == Rarity.RARE)
+            rarityBGRare.UpdateAlpha(1);
+        else if (curRarity == Rarity.EPIC)
+            rarityBGEpic.UpdateAlpha(1);
+        else if (curRarity == Rarity.LEGENDARY)
+            rarityBGLegendary.UpdateAlpha(1);
+
+        if (disable)
+        {
+            rarityBGCommon.UpdateAlpha(0);
+            rarityBGRare.UpdateAlpha(0);
+            rarityBGEpic.UpdateAlpha(0);
+            rarityBGLegendary.UpdateAlpha(0);
+        }
+    }
+
+    public Rarity GetCurRarity()
+    {
+        return curRarity;
+    }
 
     public void ToggleSkillCooldownUI(bool toggle = true)
     {
@@ -30,7 +74,6 @@ public class IconUI : MonoBehaviour
 
     private void Awake()
     {
-        image = GetComponent<Image>();
     }
 
     public void UpdateItemName(string name)
@@ -45,13 +88,9 @@ public class IconUI : MonoBehaviour
 
     public void UpdatePortrait(Sprite sprite)
     {
-        image.sprite = sprite;
+        mainSpriteIcon.UpdateContentImage(sprite);
     }
 
-    public void UpdateColour(Color colour)
-    {
-        image.color = colour;
-    }
 
     public void RemoveItemFromSlot()
     {
@@ -62,7 +101,8 @@ public class IconUI : MonoBehaviour
         UpdateItemName("");
     }
 
-    public void UpdateSubText(int level, bool item = false, bool passive = true)
+
+    public void UpdateSubText(int level, bool item = false, bool passive = true, bool remove = true)
     {
         if (item)
         {
@@ -72,7 +112,7 @@ public class IconUI : MonoBehaviour
             {
                 subText.text = "";
 
-                if (!passive)
+                if (!passive && remove)
                     RemoveItemFromSlot();
             }
 

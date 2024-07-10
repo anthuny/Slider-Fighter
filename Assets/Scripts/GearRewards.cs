@@ -203,6 +203,8 @@ public class GearRewards : MonoBehaviour
                     slot.UpdateSlotName(newItem.itemName);
                     slot.UpdateLinkedItemPiece(newItem);
 
+                    slot.UpdateSlotDetails();
+
                     // Disable owned gear button for unowned loot
                     //slot.ToggleOwnedGearButton(false);
                     // Show full visibility of Gear

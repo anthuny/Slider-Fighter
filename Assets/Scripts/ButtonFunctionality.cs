@@ -365,8 +365,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         //Debug.Log("!");
         // If owned gear is opened, do not allow map button to be selected
-        if (OwnedLootInven.Instance.GetOwnedLootOpened())
-            return;
+        //if (OwnedLootInven.Instance.GetOwnedLootOpened())
+        //   return;
+
+        OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
         TeamGearManager.Instance.playerInGearTab = false;
 
