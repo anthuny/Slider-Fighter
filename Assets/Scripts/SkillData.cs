@@ -161,8 +161,10 @@ public class SkillData : ScriptableObject
         //Debug.Log("float in skilldata is " + val);
 
         curEffectHitChance = startingEffectHitChance;
+
+        int calculatedEffectHitChace = 100 - (int)curEffectHitChance;
         //Mathf.RoundToInt(val);
-        return Mathf.RoundToInt(curEffectHitChance);
+        return Mathf.RoundToInt(calculatedEffectHitChace);
     }
 
     public int GetCalculatedSkillEffectChance()

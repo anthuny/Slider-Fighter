@@ -202,6 +202,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &3718657310061081098
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -529,6 +530,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &2914078834039567977
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,6 +662,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!95 &3391284612123565811
 Animator:
   serializedVersion: 4
@@ -853,6 +856,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &6533004875944880402
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1134,6 +1138,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &6936333663621279895
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1211,6 +1216,8 @@ GameObject:
   - component: {fileID: 8159776885668397137}
   - component: {fileID: 1175906660076280062}
   - component: {fileID: 1615091218640812780}
+  - component: {fileID: 5501225356610933505}
+  - component: {fileID: 5708663613112706092}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -1276,6 +1283,67 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5501225356610933505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4702134467988805835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curStatType: 0
+  curRarity: 0
+  contentImage: {fileID: 1615091218640812780}
+  contentImageUI: {fileID: 0}
+  contentImage2UI: {fileID: 0}
+  contentText: {fileID: 0}
+  contentText2: {fileID: 0}
+  contentText3: {fileID: 0}
+  contentSubText: {fileID: 0}
+  contentSubTextTMP: {fileID: 0}
+  buttonCG: {fileID: 0}
+  button2CG: {fileID: 0}
+  button3CG: {fileID: 0}
+  skillLevelText: {fileID: 0}
+  startHidden: 0
+  doScalePunch: 0
+  dieAfterDisplay: 0
+  scaleIncSize: 1
+  scaleIncTime: 0.25
+  vibrato: 5
+  elasticity: 0.25
+  selectable: 0
+  selectBorder: {fileID: 0}
+  statPointsAdded: 0
+  lockedImage: {fileID: 0}
+  unlockedPointsThreshhold: 0
+  isLocked: 0
+  itemName: 
+  rarityBorderUI: {fileID: 0}
+  slot: {fileID: 0}
+  skillUpgradesUI: {fileID: 0}
+  tooltipStats: {fileID: 0}
+  statText: 
+  originalScaleText: 0
+  isEnabled: 0
+  displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
+--- !u!225 &5708663613112706092
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4702134467988805835}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &4731960552797168762
 GameObject:
   m_ObjectHideFlags: 0
@@ -1402,6 +1470,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &1507075558001027333
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1574,6 +1643,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &6398616071702066035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1702,6 +1772,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &3891830942255159829
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1977,6 +2048,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!114 &2829809881091383309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2025,6 +2097,7 @@ MonoBehaviour:
   isSelected: 0
   isMainSlot: 0
   linkedSlot: {fileID: 0}
+  mainIconBG: {fileID: 5501225356610933505}
   curItemRarity: 0
   itemUseCount: 0
   maxSet: 0
@@ -2250,6 +2323,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &7608528657237354258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2663,6 +2737,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &8561344292944666592
 GameObject:
   m_ObjectHideFlags: 0

@@ -3401,7 +3401,7 @@ public class UnitFunctionality : MonoBehaviour
             if (GameManager.Instance.GetActiveSkill())
             {
                 activeEffect = GameManager.Instance.GetActiveSkill().effect;
-                procChance = GameManager.Instance.GetActiveSkill().curEffectHitChance;
+                procChance = GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat();
 
                 if (GameManager.Instance.GetActiveSkill().startingEffectHitChance != 0)
                     byPassAcc = false;
@@ -4226,38 +4226,48 @@ public class UnitFunctionality : MonoBehaviour
             // Otherwise, display the power
             powerText.UpdatePowerTextFontSize(GameManager.Instance.powerHitFontSize);
 
-            // Update Text Colour
-            if (effect == null)
+            if (GameManager.Instance.isSkillsMode)
             {
-                if (offense)
+                // Update Text Colour
+                if (effect == null)
                 {
-                    // Change power text colour to offense colour if the type of attack is offense
-                    if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                        powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-                    // Change power text colour to support colour if the type of attack is support
-                    else if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                    if (offense)
+                    {
+                        // Change power text colour to offense colour if the type of attack is offense
+                        if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
+                        // Change power text colour to support colour if the type of attack is support
+                        else if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                    }
+                    else
+                    {
+                        // Change power text colour to support colour if the type of attack is support
                         powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                    }
+
                 }
                 else
                 {
+                    // Change power text colour to offense colour if the type of attack is offense
+                    if (effect.curEffectType == Effect.EffectType.OFFENSE)
+                        powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
                     // Change power text colour to support colour if the type of attack is support
-                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
-                }
+                    else if (effect.curEffectType == Effect.EffectType.SUPPORT)
+                        powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
 
+                    if (effect.curEffectName == Effect.EffectName.HEALTHUP && offense)
+                        powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
+
+                    if (effect.curEffectName == Effect.EffectName.RECOVER && !offense)
+                        powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                }
             }
             else
             {
-                // Change power text colour to offense colour if the type of attack is offense
-                if (effect.curEffectType == Effect.EffectType.OFFENSE)
+                if (offense)
                     powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-                // Change power text colour to support colour if the type of attack is support
-                else if (effect.curEffectType == Effect.EffectType.SUPPORT)
-                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
-
-                if (effect.curEffectName == Effect.EffectName.HEALTHUP && offense)
-                    powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-
-                if (effect.curEffectName == Effect.EffectName.RECOVER && !offense)
+                else
                     powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
             }
 
@@ -5081,7 +5091,10 @@ public class UnitFunctionality : MonoBehaviour
                         CameraShake.instance.EnableCanShake();
 
                         if (GameManager.Instance.isSkillsMode)
-                            AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                        {
+                            if (GameManager.Instance.GetActiveSkill().skillHit)
+                                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                        }                           
                         else
                         {
                             if (GameManager.Instance.GetActiveItemSlot())
@@ -5095,7 +5108,7 @@ public class UnitFunctionality : MonoBehaviour
                         }
                         */
                         
-                        StartCoroutine(PlaySoundDelay(.1f));
+                        StartCoroutine(PlaySoundDelay(0.1f));
                     }
                 }
 

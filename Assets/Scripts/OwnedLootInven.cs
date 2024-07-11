@@ -33,7 +33,19 @@ public class OwnedLootInven : MonoBehaviour
     public List<Slot> skills = new List<Slot>();
     public List<ItemPiece> items = new List<ItemPiece>();
 
+    [SerializeField] private Color skillSlotBGColour;
+    [SerializeField] private Color otherSlotBGColour;
+
     [SerializeField] private UIElement buttonExitOwnedGear;
+
+    public Color GetSkillSlotBGColour()
+    {
+        return skillSlotBGColour;
+    }
+    public Color GetOtherSlotBGColour()
+    {
+        return otherSlotBGColour;
+    }
 
     private void Awake()
     {

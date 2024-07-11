@@ -66,12 +66,19 @@ public class Slot : MonoBehaviour
     public bool isSelected;
     public bool isMainSlot;
     public Slot linkedSlot;
+    [SerializeField] private UIElement mainIconBG;
 
     public enum ItemRarity { COMMON, RARE, EPIC }
     public ItemRarity curItemRarity;
     public int itemUseCount = 0;
 
     public bool maxSet = false;
+
+    public void UpdateMainIconBGColour(Color color)
+    {
+        mainIconBG.UpdateColour(color);
+    }
+
     private void Start()
     {
         ToggleSlotSelection(false);
@@ -231,12 +238,22 @@ public class Slot : MonoBehaviour
                 remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
 
             UpdateSlotName("");
+
+            if (TeamItemsManager.Instance.playerInItemTab)
+                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            else if (TeamGearManager.Instance.playerInGearTab)
+                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            else if (SkillsTabManager.Instance.playerInSkillTab)
+                UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
         }
         else
         {
-            // Update Linked Slot for main slot
-            //TeamItemsManager.Instance.UpdateMainSlotLinkedSlot();
-
+            if (TeamItemsManager.Instance.playerInItemTab)
+                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            else if (TeamGearManager.Instance.playerInGearTab)
+                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            else if (SkillsTabManager.Instance.playerInSkillTab)
+                UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
 
             UpdateSlotName(linkedItemPiece.itemName);
 

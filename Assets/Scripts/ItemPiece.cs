@@ -100,4 +100,10 @@ public class ItemPiece : ScriptableObject
 
         this.itemSpriteItemTab = itemIcon;
     }
+
+    public int GetEffectProcChance()
+    {
+        int CalculatedProcChance = 100 - procChance;
+        return 100 - procChance;
+    }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Speed Down
   m_EditorClassIdentifier: 
   curEffectTrigger: 1
-  curEffectType: 1
+  curEffectType: 0
   curEffectBenefitType: 1
   curEffectName: 10
   effectName: SPEED DOWN

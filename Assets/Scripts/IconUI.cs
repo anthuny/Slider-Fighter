@@ -14,13 +14,32 @@ public class IconUI : MonoBehaviour
     [SerializeField] public TextMeshProUGUI subText;
     [SerializeField] private TextMeshProUGUI mainIconPassiveActiveIcon;
     public UIElement rarityBG;
-    [SerializeField] private UIElement rarityBGCommon;
-    [SerializeField] private UIElement rarityBGRare;
-    [SerializeField] private UIElement rarityBGEpic;
-    [SerializeField] private UIElement rarityBGLegendary;
+    [SerializeField] private GameObject rarityBGCommon;
+    [SerializeField] private GameObject rarityBGRare;
+    [SerializeField] private GameObject rarityBGEpic;
+    [SerializeField] private GameObject rarityBGLegendary;
     public UIElement raceIcon;
+    public UIElement mainIconBG;
 
     [SerializeField] private UIElement skillCooldownUI;
+
+    public void UpdateMainIconBGColour(Color color)
+    {
+        mainIconBG.UpdateColour(color);
+    }
+
+    public void UpdateRarityBGColour(Color color)
+    {
+        rarityBG.UpdateColour(color);
+    }
+
+    public void ToggleRarityBG(bool toggle = true)
+    {
+        if (toggle)
+            rarityBG.UpdateAlpha(1);
+        else
+            rarityBG.UpdateAlpha(0);
+    }
 
     public string itemName;
 
@@ -32,26 +51,41 @@ public class IconUI : MonoBehaviour
     {
         curRarity = newRarity;
 
-        rarityBGCommon.UpdateAlpha(0);
-        rarityBGRare.UpdateAlpha(0);
-        rarityBGEpic.UpdateAlpha(0);
-        rarityBGLegendary.UpdateAlpha(0);
+        rarityBGCommon.SetActive(false);
+        rarityBGRare.SetActive(false);
+        rarityBGEpic.SetActive(false);
+        rarityBGLegendary.SetActive(false);
 
         if (curRarity == Rarity.COMMON)
-            rarityBGCommon.UpdateAlpha(1);
+        {
+            UpdateRarityBGColour(ItemRewardManager.Instance.commonColour);
+            rarityBGCommon.SetActive(true);
+        }
         else if (curRarity == Rarity.RARE)
-            rarityBGRare.UpdateAlpha(1);
+        {
+            UpdateRarityBGColour(ItemRewardManager.Instance.rareColour);
+            rarityBGRare.SetActive(true);
+        }
         else if (curRarity == Rarity.EPIC)
-            rarityBGEpic.UpdateAlpha(1);
+        {
+            UpdateRarityBGColour(ItemRewardManager.Instance.epicColour);
+            rarityBGEpic.SetActive(true);
+        }
         else if (curRarity == Rarity.LEGENDARY)
-            rarityBGLegendary.UpdateAlpha(1);
+        {
+            UpdateRarityBGColour(ItemRewardManager.Instance.legendaryColour);
+            rarityBGLegendary.SetActive(true);
+        }
+
+        ToggleRarityBG(true);
 
         if (disable)
         {
-            rarityBGCommon.UpdateAlpha(0);
-            rarityBGRare.UpdateAlpha(0);
-            rarityBGEpic.UpdateAlpha(0);
-            rarityBGLegendary.UpdateAlpha(0);
+            rarityBGCommon.SetActive(false);
+            rarityBGRare.SetActive(false);
+            rarityBGEpic.SetActive(false);
+            rarityBGLegendary.SetActive(false);
+            ToggleRarityBG(false);
         }
     }
 
@@ -99,6 +133,9 @@ public class IconUI : MonoBehaviour
         UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
         UpdatePassiveActiveType(false, true);
         UpdateItemName("");
+        UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+
+        //subText.GetComponentInChildren<UIElement>().UpdateAlpha(0);
     }
 
 
@@ -114,6 +151,10 @@ public class IconUI : MonoBehaviour
 
                 if (!passive && remove)
                     RemoveItemFromSlot();
+            }
+            else if (level > 0)
+            {
+                //subText.GetComponentInChildren<UIElement>().UpdateAlpha(1);
             }
 
             return;

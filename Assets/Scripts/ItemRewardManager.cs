@@ -38,13 +38,13 @@ public class ItemRewardManager : MonoBehaviour
     public Color legendaryColour;
 
     [Tooltip("% chance of item dropping as rarity Common")]
-    [SerializeField] private int itemCommonPerc;
+    public int itemCommonPerc;
     [Tooltip("% chance of item dropping as rarity Rare")]
-    [SerializeField] private int itemRarePerc;
+    public int itemRarePerc;
     [Tooltip("% chance of item dropping as rarity Epic")]
-    [SerializeField] private int itemEpicPerc;
+    public int itemEpicPerc;
     [Tooltip("% chance of item dropping as rarity Legendary")]
-    [SerializeField] private int itemLegendaryPerc;
+    public int itemLegendaryPerc;
 
     [Space(5)]
     [SerializeField] private List<ItemPiece> allItems = new List<ItemPiece>();
@@ -237,6 +237,8 @@ public class ItemRewardManager : MonoBehaviour
         else
             count = 3;
 
+        ShopManager.Instance.UpdatePreventableSpawnedItems();
+
         List<ItemPiece> offeredItemsTemp = new List<ItemPiece>();
 
         // Create as many items as needed
@@ -252,6 +254,8 @@ public class ItemRewardManager : MonoBehaviour
             // Roll rarity chance 
             int itemChance = Random.Range(0, 101);
 
+            itemChance += (RoomManager.Instance.GetFloorCount() - 1) * 2;
+
             if (allItemLegendary.Count > 0)
             {
                 if (itemChance > itemLegendaryPerc)
@@ -262,9 +266,40 @@ public class ItemRewardManager : MonoBehaviour
                     if (offeredItemsTemp.Contains(allItemLegendary[rand]))
                     {
                         Destroy(go);
-                        if (i > 0)
+                        if (i > -1)
                             i--;
                         continue;
+                    }
+
+                    if (allItemLegendary[rand].curRace == ItemPiece.RaceSpecific.HUMAN)
+                    {
+                        if (ShopManager.Instance.GetPreventHumanItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
+                    }
+                    if (allItemLegendary[rand].curRace == ItemPiece.RaceSpecific.BEAST)
+                    {
+                        if (ShopManager.Instance.GetPreventBeastItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
+                    }
+                    if (allItemLegendary[rand].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                    {
+                        if (ShopManager.Instance.GetPreventEtherealItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
                     }
 
                     Slot slot = itemUI.GetComponent<Slot>();
@@ -305,9 +340,40 @@ public class ItemRewardManager : MonoBehaviour
                     if (offeredItemsTemp.Contains(allItemEpic[rand]))
                     {
                         Destroy(go);
-                        if (i > 0)
+                        if (i > -1)
                             i--;
                         continue;
+                    }
+
+                    if (allItemEpic[rand].curRace == ItemPiece.RaceSpecific.HUMAN)
+                    {
+                        if (ShopManager.Instance.GetPreventHumanItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
+                    }
+                    if (allItemEpic[rand].curRace == ItemPiece.RaceSpecific.BEAST)
+                    {
+                        if (ShopManager.Instance.GetPreventBeastItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
+                    }
+                    if (allItemEpic[rand].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                    {
+                        if (ShopManager.Instance.GetPreventEtherealItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
                     }
 
                     // Set item
@@ -347,9 +413,39 @@ public class ItemRewardManager : MonoBehaviour
                     if (offeredItemsTemp.Contains(allItemRare[rand]))
                     {
                         Destroy(go);
-                        if (i > 0)
+                        if (i > -1)
                             i--;
                         continue;
+                    }
+
+                    if (allItemRare[rand].curRace == ItemPiece.RaceSpecific.HUMAN)
+                    {
+                        if (ShopManager.Instance.GetPreventHumanItems())
+                        {
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
+                    }
+                    if (allItemRare[rand].curRace == ItemPiece.RaceSpecific.BEAST)
+                    {
+                        if (ShopManager.Instance.GetPreventBeastItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
+                    }
+                    if (allItemRare[rand].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                    {
+                        if (ShopManager.Instance.GetPreventEtherealItems())
+                        {
+                            Destroy(go);
+                            if (i > -1)
+                                i--;
+                            continue;
+                        }
                     }
 
                     Slot slot = itemUI.GetComponent<Slot>();
@@ -378,41 +474,69 @@ public class ItemRewardManager : MonoBehaviour
             }
             if (allItemCommon.Count > 0)
             {
-                if (itemChance >= itemCommonPerc)
-                {
-                    // spawn Common item
-                    int rand = Random.Range(0, allItemCommon.Count);
+                // spawn Common item
+                int rand = Random.Range(0, allItemCommon.Count);
 
-                    // Check if randomised item is already offered, if yes, reset for diff item
-                    if (offeredItemsTemp.Contains(allItemCommon[rand]))
+                // Check if randomised item is already offered, if yes, reset for diff item
+                if (offeredItemsTemp.Contains(allItemCommon[rand]))
+                {
+                    Destroy(go);
+                    if (i > -1)
+                        i--;
+                    continue;
+                }
+
+                if (allItemCommon[rand].curRace == ItemPiece.RaceSpecific.HUMAN)
+                {
+                    if (ShopManager.Instance.GetPreventHumanItems())
                     {
                         Destroy(go);
-                        if (i > 0)
+                        if (i > -1)
                             i--;
                         continue;
                     }
-
-                    Slot slot = itemUI.GetComponent<Slot>();
-                    slot.linkedItemPiece = allItemCommon[rand];
-                    slot.UpdateSlotDetails();
-
-                    // Set item
-                    itemUI.UpdateContentImage(allItemCommon[rand].itemSpriteItemTab);
-                    itemUI.UpdateItemName(allItemCommon[rand].itemName);
-                    itemUI.UpdateRarityBorderColour(commonColour);
-                    itemUI.curRarity = UIElement.Rarity.COMMON;
-                    offeredItemsTemp.Add(allItemCommon[rand]);
-                    offeredItemsUI.Add(itemUI);
-                    itemUI.AnimateUI(false);
-                    // Button Click SFX
-                    AudioManager.Instance.Play("Button_Click");
-
-                    AudioManager.Instance.Play("AttackBar_Bad");
-
-                    yield return new WaitForSeconds(itemTimeBetweenReveal);
-
-                    continue;
                 }
+                if (allItemCommon[rand].curRace == ItemPiece.RaceSpecific.BEAST)
+                {
+                    if (ShopManager.Instance.GetPreventBeastItems())
+                    {
+                        Destroy(go);
+                        if (i > -1)
+                            i--;
+                        continue;
+                    }
+                }
+                if (allItemCommon[rand].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                {
+                    if (ShopManager.Instance.GetPreventEtherealItems())
+                    {
+                        Destroy(go);
+                        if (i > -1)
+                            i--;
+                        continue;
+                    }
+                }
+
+                Slot slot = itemUI.GetComponent<Slot>();
+                slot.linkedItemPiece = allItemCommon[rand];
+                slot.UpdateSlotDetails();
+
+                // Set item
+                itemUI.UpdateContentImage(allItemCommon[rand].itemSpriteItemTab);
+                itemUI.UpdateItemName(allItemCommon[rand].itemName);
+                itemUI.UpdateRarityBorderColour(commonColour);
+                itemUI.curRarity = UIElement.Rarity.COMMON;
+                offeredItemsTemp.Add(allItemCommon[rand]);
+                offeredItemsUI.Add(itemUI);
+                itemUI.AnimateUI(false);
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
+                AudioManager.Instance.Play("AttackBar_Bad");
+
+                yield return new WaitForSeconds(itemTimeBetweenReveal);
+
+                continue;
             }
 
 

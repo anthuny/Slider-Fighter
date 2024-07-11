@@ -37,8 +37,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.51, y: -12.99}
-  m_SizeDelta: {x: 221.78, y: 199.99}
+  m_AnchoredPosition: {x: -0.81, y: -16.17}
+  m_SizeDelta: {x: 236.07, y: 221.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2439355461779746621
 CanvasRenderer:
@@ -334,6 +334,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!114 &5155438670687292347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,7 +350,9 @@ MonoBehaviour:
   curGearType: 3
   curRarity: 0
   curSlotStatis: 3
+  curSlotRace: 0
   curGearOwnedBy: 0
+  curSlotPosition: 0
   skill: {fileID: 0}
   slotUI: {fileID: 8426304138625177753}
   slotSelectionUI: {fileID: 1636042355342586031}
@@ -360,8 +363,16 @@ MonoBehaviour:
   ownedSlotButton: {fileID: 5259889019705451126}
   equipSlotButton: {fileID: 3525426263203022565}
   equipSlotButtonCover: {fileID: 0}
+  coverUI: {fileID: 0}
+  raceIcon: {fileID: 0}
+  rarityBG: {fileID: 0}
+  remainingUsesUI: {fileID: 0}
+  rarityBorder: {fileID: 0}
+  remainingUses: 0
+  itemUses: 0
+  slotIndex: -1
   coverOn: 0
-  goldtextUI: {fileID: 0}
+  activeStatusUI: {fileID: 0}
   isGold: 0
   isEmpty: 0
   code: 0
@@ -370,6 +381,8 @@ MonoBehaviour:
   linkedItemPiece: {fileID: 0}
   baseSlot: 0
   isSelected: 0
+  isMainSlot: 0
+  linkedSlot: {fileID: 0}
   curItemRarity: 0
   itemUseCount: 0
   maxSet: 0
@@ -412,8 +425,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -4.255005, y: 1.2675018}
-  m_SizeDelta: {x: -191.48999, y: -197.465}
+  m_AnchoredPosition: {x: -4.255005, y: -2.1799927}
+  m_SizeDelta: {x: -191.49, y: -204.36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1235993671464071923
 CanvasRenderer:
@@ -534,6 +547,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &3263367111173051638
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,8 +583,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.9185104, y: -4.4300003}
-  m_SizeDelta: {x: -35, y: -47.53}
+  m_AnchoredPosition: {x: 0.19000244, y: -0.29000092}
+  m_SizeDelta: {x: -39.24, y: -39.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8960247474503718083
 CanvasRenderer:
@@ -593,7 +607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  m_Color: {r: 0.12156863, g: 0.14117648, b: 0.29411766, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -813,6 +827,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &2210911529129204462
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -873,6 +888,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &3666851542265818222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1075,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!223 &3665519638951356069
 Canvas:
   m_ObjectHideFlags: 0
@@ -1233,8 +1250,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.15, y: -10.01}
-  m_SizeDelta: {x: 285, y: 263.85}
+  m_AnchoredPosition: {x: -2.74, y: -13.82}
+  m_SizeDelta: {x: 281.83, y: 266.17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1275124700227383309
 CanvasRenderer:
@@ -1337,6 +1354,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &3936564060558501167
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1392,8 +1410,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00006485, y: -13.1}
-  m_SizeDelta: {x: 419.35, y: 419.35}
+  m_AnchoredPosition: {x: 2.1, y: -13.1}
+  m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5259889019705451121
 CanvasRenderer:
@@ -1625,6 +1643,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &5259889021125643383
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,6 +2227,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &7194447718113786691
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2336,6 +2356,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &6409937216398383732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2632,6 +2653,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!114 &2861010337278432425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2851,6 +2873,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &3499861115761903278
 CanvasGroup:
   m_ObjectHideFlags: 0

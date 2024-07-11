@@ -2389,7 +2389,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //ToggleAllAlliesHealthBar(false);    // Disable all unit health bar visual
             ToggleAllowSelection(false);
             ToggleAllyUnitSelection(false);
-            ShopManager.Instance.FillShopItems(false, true);
+            ShopManager.Instance.FillShopItems(false, false);
 
             ShopManager.Instance.lastVisitedShopRoom = RoomManager.Instance.GetActiveRoom();
             // Update allies into position for shop
@@ -3470,6 +3470,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         if (skills)
         {
+            GameManager.Instance.fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            GameManager.Instance.fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            GameManager.Instance.fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            GameManager.Instance.fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+
             GameManager.Instance.UpdateAllSkillIconAvailability();
             SkillsTabManager.Instance.UpdateLockedSkills();
 
@@ -5725,13 +5730,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             fighterMainSlot4.ToggleSelectImage(false);
 
             if (fighterMainSlot1.subText.text == "0")
-                fighterMainSlot1.UpdateSubText(0, true, false);
+                fighterMainSlot1.UpdateSubText(0, true, false, false);
             if (fighterMainSlot2.subText.text == "0")
-                fighterMainSlot2.UpdateSubText(0, true, false);
+                fighterMainSlot2.UpdateSubText(0, true, false, false);
             if (fighterMainSlot3.subText.text == "0")
-                fighterMainSlot3.UpdateSubText(0, true, false);
+                fighterMainSlot3.UpdateSubText(0, true, false, false);
             if (fighterMainSlot4.subText.text == "0")
-                fighterMainSlot4.UpdateSubText(0, true, false);
+                fighterMainSlot4.UpdateSubText(0, true, false, false);
 
             // Update items turns remaining text
             if (GetActiveUnitFunctionality().teamIndex == 0)
@@ -5754,24 +5759,24 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         if (z == 0)
                         {
-                            if (TeamItemsManager.Instance.ally1ItemsSlots[0].linkedItemPiece)
-                                fighterMainSlot1.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[z])
+                                fighterMainSlot1.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot1.UpdateSubText(0, true, passive);
+                                fighterMainSlot1.UpdateSubText(0, true, passive, false);
                         }
                         else if (z == 1)
                         {
-                            if (TeamItemsManager.Instance.ally1ItemsSlots[1].linkedItemPiece)
-                                fighterMainSlot2.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[z])
+                                fighterMainSlot2.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot2.UpdateSubText(0, true, passive);
+                                fighterMainSlot2.UpdateSubText(0, true, passive, false);
                         }
                         else if (z == 2)
                         {
-                            if (TeamItemsManager.Instance.ally1ItemsSlots[2].linkedItemPiece)
-                                fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[z])
+                                fighterMainSlot3.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot3.UpdateSubText(0, true, passive);
+                                fighterMainSlot3.UpdateSubText(0, true, passive, false);
                         }
                     }
                 }
@@ -5796,24 +5801,24 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         if (z == 0)
                         {
-                            if (TeamItemsManager.Instance.ally2ItemsSlots[0].linkedItemPiece)
-                                fighterMainSlot1.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[z])
+                                fighterMainSlot1.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot1.UpdateSubText(0, true, passive);
+                                fighterMainSlot1.UpdateSubText(0, true, passive, false);
                         }
                         else if (z == 1)
                         {
-                            if (TeamItemsManager.Instance.ally2ItemsSlots[1].linkedItemPiece)
-                                fighterMainSlot2.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[z])
+                                fighterMainSlot2.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot2.UpdateSubText(0, true, passive);
+                                fighterMainSlot2.UpdateSubText(0, true, passive, false);
                         }
                         else if (z == 2)
                         {
-                            if (TeamItemsManager.Instance.ally2ItemsSlots[2].linkedItemPiece)
-                                fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[z])
+                                fighterMainSlot3.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot3.UpdateSubText(0, true, passive);
+                                fighterMainSlot3.UpdateSubText(0, true, passive, false);
                         }
                     }   
                 }
@@ -5838,24 +5843,24 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         if (z == 0)
                         {
-                            if (TeamItemsManager.Instance.ally3ItemsSlots[0].linkedItemPiece)
-                                fighterMainSlot1.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[z])
+                                fighterMainSlot1.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot1.UpdateSubText(0, true, passive);
+                                fighterMainSlot1.UpdateSubText(0, true, passive, false);
                         }
                         else if (z == 1)
                         {
-                            if (TeamItemsManager.Instance.ally3ItemsSlots[1].linkedItemPiece)
-                                fighterMainSlot2.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[z])
+                                fighterMainSlot2.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot2.UpdateSubText(0, true, passive);
+                                fighterMainSlot2.UpdateSubText(0, true, passive, false);
                         }
                         else if (z == 2)
                         {
-                            if (TeamItemsManager.Instance.ally3ItemsSlots[2].linkedItemPiece)
-                                fighterMainSlot3.UpdateSubText(subtext, true, passive);
+                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[z])
+                                fighterMainSlot3.UpdateSubText(subtext, true, passive, false);
                             else
-                                fighterMainSlot3.UpdateSubText(0, true, passive);
+                                fighterMainSlot3.UpdateSubText(0, true, passive, false);
                         }
                     }
                 }

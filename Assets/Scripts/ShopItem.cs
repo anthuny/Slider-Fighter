@@ -21,6 +21,7 @@ public class ShopItem : MonoBehaviour
     [SerializeField] private GameObject rarityLegendaryGO;
 
     [SerializeField] private string shopItemName;
+    [SerializeField] private UIElement raceIcon;
     [SerializeField] private TextMeshProUGUI priceText;
 
     public int priceCount;
@@ -29,6 +30,7 @@ public class ShopItem : MonoBehaviour
     [SerializeField] private UIElement textUI;
     [SerializeField] private Animator itemAnimator;
     [SerializeField] private Animator rarityAnimator;
+    [SerializeField] private UIElement shopItemSelectBorder;
 
     public int itemIndex;
 
@@ -39,6 +41,18 @@ public class ShopItem : MonoBehaviour
     private bool purchased;
 
 
+    public void UpdateShopItemSelectBorder(bool toggle = true)
+    {
+        if (toggle)
+            shopItemSelectBorder.UpdateAlpha(1);
+        else
+            shopItemSelectBorder.UpdateAlpha(0);    
+    }
+
+    public void UpdateRaceIcon(Sprite sprite)
+    {
+        raceIcon.UpdateContentImage(sprite);
+    }
     public void ToggleShopItemButton(bool toggle)
     {
         GetComponent<CanvasGroup>().blocksRaycasts = toggle;
@@ -249,6 +263,10 @@ public class ShopItem : MonoBehaviour
         // If the player must first select an ally to give an item, do not allow purchase of another item.
         if (ShopManager.Instance.playerIsYetToSelectAFighter)
             return;
+
+        ShopManager.Instance.ResetShopItemSelectBorder();
+
+        UpdateShopItemSelectBorder(true);
 
         ShopManager.Instance.UpdateSelectedShopItem(this);
 

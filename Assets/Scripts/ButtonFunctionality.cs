@@ -1485,11 +1485,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             GameManager.Instance.fighterMainSlot4.ToggleSelectImage(false);
 
             GameManager.Instance.ResetActiveItem();
+
+            GameManager.Instance.fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            GameManager.Instance.fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            GameManager.Instance.fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            GameManager.Instance.fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
         }
         else
         {
             GameManager.Instance.ToggleSelectingUnits(true);
             GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+
+            GameManager.Instance.fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            GameManager.Instance.fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            GameManager.Instance.fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            GameManager.Instance.fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
         }
 
         GetComponent<UIElement>().AnimateUI(false);
@@ -2218,6 +2228,22 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         ShopManager.Instance.ToggleFallenHeroPrompt(true);
 
         ShopManager.Instance.selectedFallenUnitName = GetComponentInParent<MenuUnitDisplay>().unitName; 
+    }
+
+    public void SelectShopkeeper()
+    {
+        ShopManager.Instance.ToggleShopKeeperSelected(!ShopManager.Instance.GetShopKeeperSelected());
+    }
+
+    public void ButtonRerollShop()
+    {
+        // in shopmanager, determine if player can afford this
+        ShopManager.Instance.FillShopItems(false, true);
+    }
+
+    public void ButtonSellItem()
+    {
+        Debug.Log("sell item");
     }
 
     public void SelectUnit()

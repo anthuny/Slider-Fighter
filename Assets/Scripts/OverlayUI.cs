@@ -43,10 +43,6 @@ public class OverlayUI : MonoBehaviour
 
     public UIElement itemRarityTextUI;
     public TextMeshProUGUI itemRarityText;
-    public Color rarityTextColourCommon;
-    public Color rarityTextColourRare;
-    public Color rarityTextColourEpic;
-    public Color rarityTextColourLegendary;
 
     [SerializeField] private Color powerDamageColour;
     [SerializeField] private Color powerHealColour;
@@ -112,14 +108,14 @@ public class OverlayUI : MonoBehaviour
         itemRarityText.text = text;
 
         if (text == "COMMON")
-            itemRarityText.color = OverlayUI.Instance.rarityTextColourCommon;
+            itemRarityText.color = ItemRewardManager.Instance.commonColour;
         else if (text == "RARE")
-            itemRarityText.color = OverlayUI.Instance.rarityTextColourRare;
+            itemRarityText.color = ItemRewardManager.Instance.rareColour;
         else if (text == "EPIC")
-            itemRarityText.color = OverlayUI.Instance.rarityTextColourEpic;
+            itemRarityText.color = ItemRewardManager.Instance.epicColour;
         else if (text == "LEGENDARY")
-            itemRarityText.color = OverlayUI.Instance.rarityTextColourLegendary;
-        
+            itemRarityText.color = ItemRewardManager.Instance.legendaryColour;
+
     }
 
     public void ToggleSkillItemSwitchButton(bool toggle = true)

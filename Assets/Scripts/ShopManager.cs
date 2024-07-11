@@ -69,11 +69,93 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private List<string> savedHeroNames = new List<string>();
     [SerializeField] private List<int> savedHeroCosts = new List<int>();
 
+    [SerializeField] private bool preventHumanItems = false;
+    [SerializeField] private bool preventBeastItems = false;
+    [SerializeField] private bool preventEtherealItems = false;
+
+    [SerializeField] private UIElement shopKeeperButton;
+    [SerializeField] private UIElement shopKeeperDetailParent;
+    [SerializeField] private UIElement rerollPriceText;
+    [SerializeField] private UIElement rerollButtonUI;
+    [SerializeField] private UIElement sellButtonUI;
+
+    [SerializeField] private bool shopkeeperSelected = false;
+
     public bool playerInShopRoom = false;
 
     public bool playerIsYetToSelectAFighter = false;
 
     public int spawnedItems;
+    public int curRerollPrice = 0;
+
+    public void ToggleShopKeeperSelected(bool toggle = true)
+    {
+        shopkeeperSelected = toggle;
+
+        if (toggle)
+        {
+            ToggleShopkeeperDetails(true);
+        }
+        else
+            ToggleShopkeeperDetails(false);
+    }
+
+    public bool GetShopKeeperSelected()
+    {
+        return shopkeeperSelected;
+    }
+
+    public void ToggleShopkeeperDetails(bool toggle = true)
+    {
+        if (toggle)
+        {
+            shopKeeperDetailParent.UpdateAlpha(1);
+
+            shopKeeperButton.ToggleButton(true);
+            rerollButtonUI.UpdateAlpha(1);
+            rerollButtonUI.ToggleButton(true);
+            sellButtonUI.UpdateAlpha(1);
+            sellButtonUI.ToggleButton(true);
+        }
+        else
+        {
+            //UpdateRerollPrice("");
+
+            shopKeeperDetailParent.UpdateAlpha(0);
+            rerollButtonUI.UpdateAlpha(0);
+            rerollButtonUI.ToggleButton(false);
+            sellButtonUI.UpdateAlpha(0);
+            sellButtonUI.ToggleButton(false);
+        }
+    }
+
+    public void UpdateRerollPrice(string newText)
+    {
+        rerollPriceText.UpdateContentText(newText);
+    }
+
+    public bool GetPreventHumanItems()
+    {
+        return preventHumanItems;
+    }
+
+    public bool GetPreventBeastItems()
+    {
+        return preventBeastItems;
+    }
+
+    public bool GetPreventEtherealItems()
+    {
+        return preventEtherealItems;
+    }
+
+    public void ResetShopItemSelectBorder()
+    {
+        for (int i = 0; i < shopItems.Count; i++)
+        {
+            shopItems[i].UpdateShopItemSelectBorder(false);
+        }
+    }
 
     public void ToggleShopItemsGameObject(bool toggle = true)
     {
@@ -153,6 +235,8 @@ public class ShopManager : MonoBehaviour
         ClearFallenHeroesVisuals();
 
         ToggleInventoryUI(false);
+
+        ToggleShopKeeperSelected(false);
     }
 
     public void CloseShop()
@@ -341,9 +425,10 @@ public class ShopManager : MonoBehaviour
             if (hideShop)
             {
                 ToggleShopVisibility(false);
-
+                // ?????????????????? 
                 GetActiveRoom().ClearShopRoomCombatItems();
-                GetActiveRoom().ClearShopRoomHealthItems();
+
+                shopKeeperButton.ToggleButton(false);
             }
             else
             {
@@ -556,6 +641,39 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    public void UpdatePreventableSpawnedItems()
+    {
+        preventHumanItems = true;
+        preventBeastItems = true;
+        preventEtherealItems = true;
+
+        for (int i = 0; i < GameManager.Instance.activeTeam.Count; i++)
+        {
+            if (GameManager.Instance.activeTeam[i].curRaceType == UnitData.RaceType.HUMAN)
+            {
+                preventHumanItems = false;
+            }
+            else if (GameManager.Instance.activeTeam[i].curRaceType == UnitData.RaceType.BEAST)
+            {
+                preventBeastItems = false;
+            }
+            else if (GameManager.Instance.activeTeam[i].curRaceType == UnitData.RaceType.ETHEREAL)
+            {
+                preventEtherealItems = false;
+            }
+        }
+    }
+
+    void CalculateRerollPrice()
+    {
+        // Update reroll price of Shop room
+        if (!GetActiveRoom().isVisited)
+        {
+            int randPrice = Random.Range(4, 7) * 3;
+            curRerollPrice = RoomManager.Instance.GetFloorCount() + randPrice;
+            UpdateRerollPrice(curRerollPrice.ToString());
+        }
+    }
     public void FillShopItems(bool clearItems, bool refreshItems)
     {
         ToggleShopItemsGameObject(true);
@@ -579,6 +697,17 @@ public class ShopManager : MonoBehaviour
 
         ItemPiece itemCombat = null;
 
+        UpdatePreventableSpawnedItems();
+
+        if (!refreshItems)
+        {
+            ToggleShopKeeperSelected(false);
+        }
+
+        CalculateRerollPrice();
+
+        shopKeeperButton.ToggleButton(true);
+
         // Spawn Combat Items
         for (int i = 0; i < shopMaxCombatItems; i++)
         {
@@ -587,8 +716,10 @@ public class ShopManager : MonoBehaviour
 
             int itemPrice = 0;
 
-            if (!GetActiveRoom().isVisited)
+            if (!GetActiveRoom().isVisited || refreshItems)
             {
+                GetActiveRoom().ClearShopRoomCombatItems();
+
                 bool getRare = false;
                 bool getEpic = false;
                 bool getLegendary = false;
@@ -603,13 +734,9 @@ public class ShopManager : MonoBehaviour
                 if (rand > 100)
                     rand = 100;
 
-                /*
-                if (rand >= 95)
-                    getLegendary = true;
-                */
-                if (rand >= 90)
+                if (rand >= ItemRewardManager.Instance.itemEpicPerc)
                     getEpic = true;
-                else if (rand >= 70)
+                else if (rand >= ItemRewardManager.Instance.itemRarePerc)
                     getRare = true; 
 
                 if (getLegendary)
@@ -664,6 +791,31 @@ public class ShopManager : MonoBehaviour
                             continue;
                         }
 
+                        if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            if (GetPreventHumanItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+                        if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
+                        {
+                            if (GetPreventBeastItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+                        if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            if (GetPreventEtherealItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+
                         itemCombat = epicItems[randInt];
                         itemPrice = itemCombat.basePrice;
                     } 
@@ -701,6 +853,31 @@ public class ShopManager : MonoBehaviour
                             continue;
                         }
 
+                        if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            if (GetPreventHumanItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+                        if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
+                        {
+                            if (GetPreventBeastItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+                        if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            if (GetPreventEtherealItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+
                         itemCombat = rareItems[randInt];
                         itemPrice = itemCombat.basePrice;
                     }
@@ -720,6 +897,31 @@ public class ShopManager : MonoBehaviour
                     randInt = Random.Range(0, commonItems.Count);
                     if (commonItems.Count > 0)
                     {
+                        if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
+                        {
+                            if (GetPreventHumanItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+                        if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
+                        {
+                            if (GetPreventBeastItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+                        if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                        {
+                            if (GetPreventEtherealItems())
+                            {
+                                i--;
+                                continue;
+                            }
+                        }
+
                         itemCombat = commonItems[randInt];
                         itemPrice = itemCombat.basePrice;
                     }                  
@@ -777,7 +979,7 @@ public class ShopManager : MonoBehaviour
             }
             */
 
-            if (GetActiveRoom().isVisited)
+            if (GetActiveRoom().isVisited && !refreshItems)
             {
                 itemCombat = GetActiveRoom().GetShopRoomCombatItems()[i];
 
@@ -799,7 +1001,7 @@ public class ShopManager : MonoBehaviour
             AddShopItems(shopItem);
 
             // If active room has not been visited yet, store shop items to room
-            if (!GetActiveRoom().isVisited)
+            if (!GetActiveRoom().isVisited || refreshItems)
             {
                 activeRoom.AddShopRoomCombatItems(itemCombat);
                 //activeRoom.AddShopRoomShopItems(shopItem);
@@ -857,36 +1059,42 @@ public class ShopManager : MonoBehaviour
 
             shopItem.UpdatePriceTextColour();
 
+            if (itemCombat.curRace == ItemPiece.RaceSpecific.HUMAN)
+                shopItem.UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
+            else if (itemCombat.curRace == ItemPiece.RaceSpecific.BEAST)
+                shopItem.UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
+            else if (itemCombat.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                shopItem.UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
+            else if (itemCombat.curRace == ItemPiece.RaceSpecific.ALL)
+                shopItem.UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+
             // Hiding Purchased Items
-            if (refreshItems)
+            // Loop each item that has been purchased
+            for (int b = 0; b < GetActiveRoom().GetPurchasedShopItems().Count; b++)
             {
-                // Loop each item that has been purchased
-                for (int b = 0; b < GetActiveRoom().GetPurchasedShopItems().Count; b++)
+                // Loop through all actual items in shop
+                for (int x = 0; x < GetShopItems().Count; x++)
                 {
-                    // Loop through all actual items in shop
-                    for (int x = 0; x < GetShopItems().Count; x++)
+                    // If a shop item name matches with the purchased item on first loop, make it invis
+                    if (GetShopItems()[x].GetItemIndex() == GetActiveRoom().GetPurchasedShopItems()[b].GetItemIndex())
                     {
-                        // If a shop item name matches with the purchased item on first loop, make it invis
-                        if (GetShopItems()[x].GetItemIndex() == GetActiveRoom().GetPurchasedShopItems()[b].GetItemIndex())
-                        {
-                            // Make all items that are purchased invisible             
-                            ShopItem shopItemHidden = GetShopItems()[x];
+                        // Make all items that are purchased invisible             
+                        ShopItem shopItemHidden = GetShopItems()[x];
 
-                            shopItemHidden.UpdateShopItemName("");
-                            shopItemHidden.UpdatePriceText("");
-                            shopItemHidden.UpdateShopItemSprite(null);
-                            shopItemHidden.gameObject.GetComponent<UIElement>().UpdateAlpha(0);
-                            shopItemHidden.itemButton.enabled = false;
-                            shopItemHidden.UpdatePurchased(true);
+                        shopItemHidden.UpdateShopItemName("");
+                        shopItemHidden.UpdatePriceText("");
+                        shopItemHidden.UpdateShopItemSprite(null);
+                        shopItemHidden.gameObject.GetComponent<UIElement>().UpdateAlpha(0);
+                        shopItemHidden.itemButton.enabled = false;
+                        shopItemHidden.UpdatePurchased(true);
 
-                            /*
-                            // loop through how many have been purchased of that item 
-                            if (GetActiveRoom().GetShopRoomPurchasedItemsAmount(GetActiveRoom().GetPurchasedItems()[b].itemName) > 0)
-                                continue;
-                            else
-                                break;
-                            */
-                        }
+                        /*
+                        // loop through how many have been purchased of that item 
+                        if (GetActiveRoom().GetShopRoomPurchasedItemsAmount(GetActiveRoom().GetPurchasedItems()[b].itemName) > 0)
+                            continue;
+                        else
+                            break;
+                        */
                     }
                 }
             }
