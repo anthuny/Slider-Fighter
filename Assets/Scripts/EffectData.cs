@@ -28,4 +28,5 @@ public class EffectData : ScriptableObject
     public float powerPercent;
     public float powerAmp;
     public Color titleTextColour;
+    public AudioClip triggerSFX;
 }

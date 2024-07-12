@@ -291,6 +291,8 @@ public class TeamItemsManager : MonoBehaviour
         ClearItemSlots();
         ClearAllGearStats();
         ResetAllItemSelections();
+
+        ToggleTeamItemEquipMainButton(false);
     }
 
     private void Awake()
@@ -318,6 +320,107 @@ public class TeamItemsManager : MonoBehaviour
         selectedBaseItemSlot = gear;
 
         gear.ToggleSlotSelection(true);
+    }
+
+    public void ReloadItemUses()
+    {
+        if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 0)
+        {
+            if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[0].UpdateItemUses(0);
+            }
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 1)
+        {
+            if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[1].UpdateItemUses(0);
+            }
+
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemMainAlly().Count > 2)
+        {
+            if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[2].UpdateItemUses(0);
+            }
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 0)
+        {
+            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[0].UpdateItemUses(0);
+            }
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 1)
+        {
+            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[1].UpdateItemUses(0);
+            }
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemSecondAlly().Count > 2)
+        {
+            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[2].UpdateItemUses(0);
+            }
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 0)
+        {
+            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[0].UpdateItemUses(0);
+            }
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 1)
+        {
+            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[1].UpdateItemUses(0);
+            }
+        }
+
+        if (OwnedLootInven.Instance.GetWornItemThirdAlly().Count > 2)
+        {
+            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2])
+            {
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+                    OwnedLootInven.Instance.GetWornItemMainAlly()[2].UpdateItemUses(0);
+            }
+        }
+    }
+
+    public void ToggleTeamItemEquipMainButton(bool toggle = true)
+    {
+        for (int i = 0; i < ally1ItemsSlots.Count; i++)
+        {
+            ally1ItemsSlots[i].ToggleEquipMainButton(toggle);
+        }
+        for (int i = 0; i < ally2ItemsSlots.Count; i++)
+        {
+            ally2ItemsSlots[i].ToggleEquipMainButton(toggle);
+        }
+        for (int i = 0; i < ally3ItemsSlots.Count; i++)
+        {
+            ally3ItemsSlots[i].ToggleEquipMainButton(toggle);
+        }
     }
 
     public void UpdateItemSlotsBase(bool ally1 = false, bool ally2 = false, bool ally3 = false)
@@ -395,12 +498,7 @@ public class TeamItemsManager : MonoBehaviour
 
     public void ClearEmptyItemSlots()
     {
-        if (GameManager.Instance.activeTeam.Count == 1)
-            UpdateItemSlotsBase(true);
-        else if (GameManager.Instance.activeTeam.Count == 2)
-            UpdateItemSlotsBase(true, true);
-        else if (GameManager.Instance.activeTeam.Count == 3)
-            UpdateItemSlotsBase(true, true, true);
+        UpdateItemSlotsBase(true, true, true);
     }
 
     public void ClearItemSlots()
@@ -501,6 +599,8 @@ public class TeamItemsManager : MonoBehaviour
         if (toggle)
         {
             teamItemsTabUI.UpdateAlpha(1);
+
+            ToggleTeamItemEquipMainButton(true);
 
             ToggleItemSlotSelection(true);
 
@@ -641,6 +741,8 @@ public class TeamItemsManager : MonoBehaviour
         else
         {
             teamItemsTabUI.UpdateAlpha(0);
+
+            ToggleTeamItemEquipMainButton(false);
 
             // Toggle to map button for team gear
             ToggleToMapButton(false);

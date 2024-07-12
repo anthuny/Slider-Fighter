@@ -70,10 +70,24 @@ public class Slot : MonoBehaviour
 
     public enum ItemRarity { COMMON, RARE, EPIC }
     public ItemRarity curItemRarity;
-    public int itemUseCount = 0;
 
     public bool maxSet = false;
+    public bool remove = false;
 
+    public void ToggleEquipMainButton(bool toggle = true)
+    {
+        if (equipSlotButton)
+            equipSlotButton.GetComponent<GraphicRaycaster>().enabled = toggle;
+    }
+    public void UpdateRemoved(bool toggle = true)
+    {
+        remove = toggle;
+    }
+
+    public bool GetRemoved()
+    {
+        return remove;
+    }
     public void UpdateMainIconBGColour(Color color)
     {
         mainIconBG.UpdateColour(color);
@@ -84,6 +98,13 @@ public class Slot : MonoBehaviour
         ToggleSlotSelection(false);
     }
 
+    public void ToggleRarityBorder(bool toggle = true)
+    {
+        if (toggle)
+            rarityBorder.UpdateAlpha(1);
+        else
+            rarityBorder.UpdateAlpha(0);
+    }
     public void UpdateRarityBorderColour()
     {
         if (linkedItemPiece)
@@ -135,7 +156,12 @@ public class Slot : MonoBehaviour
         return linkedSlot.linkedItemPiece.maxUsesPerCombat - linkedSlot.itemUses;
     }
 
-    
+    public int GetCalculatedItemsUsesRemaining2()
+    {
+        return linkedItemPiece.maxUsesPerCombat - itemUses;
+    }
+
+   
     public void UpdateRaceIcon(Sprite newIcon, bool toggle = true)
     {
         raceIcon.UpdateContentImage(newIcon);
@@ -170,20 +196,6 @@ public class Slot : MonoBehaviour
         }
     }
 
-    public int GetItemUseCount()
-    {
-        return itemUseCount;
-    }
-
-    public void IncItemUseCount()
-    {
-        itemUseCount++;
-    }
-
-    public void ResetItemUseCount()
-    {
-        itemUseCount = 0;
-    }
 
     public void IncUseCount()
     {
@@ -211,128 +223,155 @@ public class Slot : MonoBehaviour
         string activeStatus = "";
         int itemUsesRemaining = 0;
 
-        UpdateRarityBorderColour();
-
-        if (linkedItemPiece == null)
+        if (curGearType == SlotType.ITEM)
         {
-            UpdateRarityBG(curSlotRarity, true);
-            UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+            if (linkedItemPiece == null)
+            {
+                UpdateRarityBG(curSlotRarity, true);
+                UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
 
-            equipSlotButton.ToggleButton(true);
-            equipSlotButton.UpdateAlpha(1);
+                equipSlotButton.ToggleButton(true);
+                equipSlotButton.UpdateAlpha(1);
 
-            ownedSlotButton.UpdateAlpha(0);
+                ownedSlotButton.UpdateAlpha(0);
 
-            ToggleEquipButton(true);
+                ToggleEquipButton(true);
 
-            // Update Active / Passive status
-            activeStatusUI.UpdateContentText(activeStatus);
-            if (activeStatus == "A")
-                activeStatusUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
+                // Update Active / Passive status
+                activeStatusUI.UpdateContentText(activeStatus);
+                if (activeStatus == "A")
+                    activeStatusUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
+                else
+                    activeStatusUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
+
+                if (TeamItemsManager.Instance.playerInItemTab)
+                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+                else if (TeamGearManager.Instance.playerInGearTab)
+                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+                else if (SkillsTabManager.Instance.playerInSkillTab)
+                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+
+                if (itemUsesRemaining == 0)
+                    remainingUsesUI.UpdateContentText("");
+                else
+                    remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
+
+                UpdateSlotName("");
+
+                if (linkedItemPiece)
+                {
+                    UpdateSlotImage(linkedItemPiece.itemSpriteItemTab);
+                    UpdateSlotName(linkedItemPiece.itemName);
+                }
+
+                UpdateRarityBorderColour();
+            }
             else
-                activeStatusUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
+            {
+                if (TeamItemsManager.Instance.playerInItemTab)
+                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+                else if (TeamGearManager.Instance.playerInGearTab)
+                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+                else if (SkillsTabManager.Instance.playerInSkillTab)
+                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
 
-            if (itemUsesRemaining == 0)
-                remainingUsesUI.UpdateContentText("");
-            else
-                remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
+                if (linkedItemPiece.curActiveType == ItemPiece.ActiveType.ACTIVE)
+                    activeStatus = "A";
+                else
+                    activeStatus = "P";
 
-            UpdateSlotName("");
+                if (activeStatus == "P")
+                    itemUsesRemaining = linkedItemPiece.maxUsesPerCombat;
+                else
+                {
+                    if (linkedSlot)
+                        itemUsesRemaining = linkedItemPiece.maxUsesPerCombat - linkedSlot.GetItemUses();
+                    else
+                        itemUsesRemaining = linkedItemPiece.maxUsesPerCombat;
+                }
 
-            if (TeamItemsManager.Instance.playerInItemTab)
-                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-            else if (TeamGearManager.Instance.playerInGearTab)
-                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-            else if (SkillsTabManager.Instance.playerInSkillTab)
-                UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+                UpdateRemainingUses(itemUsesRemaining);
+
+                if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
+                    curSlotRace = Slot.SlotRace.HUMAN;
+                else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
+                    curSlotRace = Slot.SlotRace.BEAST;
+                else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                    curSlotRace = Slot.SlotRace.ETHEREAL;
+                else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
+                    curSlotRace = Slot.SlotRace.ALL;
+
+                if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
+                    curSlotRarity = Slot.ItemRarity.COMMON;
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
+                    curSlotRarity = Slot.ItemRarity.RARE;
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
+                    curSlotRarity = Slot.ItemRarity.EPIC;
+
+                //UpdateSlotDetails(activeStatus, false, itemUsesRemaining, curSlotRace, curSlotRarity, false);
+
+                // Update BG rarity of SlOT
+                UpdateRarityBG(curSlotRarity);
+
+                // Update Race icon of SLOT
+                if (curSlotRace == SlotRace.HUMAN)
+                {
+                    UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
+                }
+                else if (curSlotRace == SlotRace.BEAST)
+                {
+                    UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
+                }
+                else if (curSlotRace == SlotRace.ETHEREAL)
+                {
+                    UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
+                }
+                else if (curSlotRace == SlotRace.ALL)
+                {
+                    UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite, false);
+                }
+
+                // Update Active / Passive status
+                activeStatusUI.UpdateContentText(activeStatus);
+                if (activeStatus == "A")
+                    activeStatusUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
+                else
+                    activeStatusUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
+
+                if (itemUsesRemaining == 0)
+                    remainingUsesUI.UpdateContentText("");
+                else
+                    remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
+
+                if (equipSlotButton)
+                {
+                    equipSlotButton.ToggleButton(false);
+                    equipSlotButton.UpdateAlpha(0);
+                }
+
+                if (ownedSlotButton)
+                    ownedSlotButton.UpdateAlpha(1);
+            }
         }
         else
         {
-            if (TeamItemsManager.Instance.playerInItemTab)
-                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-            else if (TeamGearManager.Instance.playerInGearTab)
-                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-            else if (SkillsTabManager.Instance.playerInSkillTab)
-                UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            if (linkedGearPiece)
+            {
+                UpdateSlotImage(linkedGearPiece.gearIcon);
+                UpdateSlotName(linkedGearPiece.gearName);
 
-            UpdateSlotName(linkedItemPiece.itemName);
+                ToggleRarityBorder(false);
 
-            if (linkedItemPiece.curActiveType == ItemPiece.ActiveType.ACTIVE)
-                activeStatus = "A";
-            else
-                activeStatus = "P";
-
-            if (activeStatus == "P")
-                itemUsesRemaining = linkedItemPiece.maxUsesPerCombat;
+            }
             else
             {
-                if (linkedSlot)
-                    itemUsesRemaining = linkedItemPiece.maxUsesPerCombat - linkedSlot.GetItemUses();
-                else
-                    itemUsesRemaining = linkedItemPiece.maxUsesPerCombat;
-            }
-
-            UpdateRemainingUses(itemUsesRemaining);
-
-            if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
-                curSlotRace = Slot.SlotRace.HUMAN;
-            else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.BEAST)
-                curSlotRace = Slot.SlotRace.BEAST;
-            else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.ETHEREAL)
-                curSlotRace = Slot.SlotRace.ETHEREAL;
-            else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
-                curSlotRace = Slot.SlotRace.ALL;
-
-            if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
-                curSlotRarity = Slot.ItemRarity.COMMON;
-            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
-                curSlotRarity = Slot.ItemRarity.RARE;
-            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
-                curSlotRarity = Slot.ItemRarity.EPIC;
-
-            //UpdateSlotDetails(activeStatus, false, itemUsesRemaining, curSlotRace, curSlotRarity, false);
-
-            // Update BG rarity of SlOT
-            UpdateRarityBG(curSlotRarity);
-
-            // Update Race icon of SLOT
-            if (curSlotRace == SlotRace.HUMAN)
-            {
-                UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
-            }
-            else if (curSlotRace == SlotRace.BEAST)
-            {
-                UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
-            }
-            else if (curSlotRace == SlotRace.ETHEREAL)
-            {
-                UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
-            }
-            else if (curSlotRace == SlotRace.ALL)
-            {
-                UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite, false);
-            }
-
-            // Update Active / Passive status
-            activeStatusUI.UpdateContentText(activeStatus);
-            if (activeStatus == "A")
-                activeStatusUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
-            else
-                activeStatusUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
-
-            if (itemUsesRemaining == 0)
+                activeStatusUI.UpdateContentText("");
                 remainingUsesUI.UpdateContentText("");
-            else
-                remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
-
-            if (equipSlotButton)
-            {
-                equipSlotButton.ToggleButton(false);
-                equipSlotButton.UpdateAlpha(0);
+                UpdateSlotName("");
+                ToggleRarityBorder(false);
             }
+            
 
-            if (ownedSlotButton)
-                ownedSlotButton.UpdateAlpha(1);
         }
     }
 

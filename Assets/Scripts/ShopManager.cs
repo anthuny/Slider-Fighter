@@ -88,6 +88,7 @@ public class ShopManager : MonoBehaviour
     public int spawnedItems;
     public int curRerollPrice = 0;
 
+
     public void ToggleShopKeeperSelected(bool toggle = true)
     {
         shopkeeperSelected = toggle;
@@ -105,13 +106,15 @@ public class ShopManager : MonoBehaviour
         return shopkeeperSelected;
     }
 
-    public void ToggleShopkeeperDetails(bool toggle = true)
+    public void ToggleShopkeeperDetails(bool toggle = true, bool forceShopKeeperButtonOff = false)
     {
         if (toggle)
         {
             shopKeeperDetailParent.UpdateAlpha(1);
 
-            shopKeeperButton.ToggleButton(true);
+            //shopKeeperButton.ToggleButton(true);
+            shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = true;
+
             rerollButtonUI.UpdateAlpha(1);
             rerollButtonUI.ToggleButton(true);
             sellButtonUI.UpdateAlpha(1);
@@ -126,6 +129,13 @@ public class ShopManager : MonoBehaviour
             rerollButtonUI.ToggleButton(false);
             sellButtonUI.UpdateAlpha(0);
             sellButtonUI.ToggleButton(false);
+
+
+            if (forceShopKeeperButtonOff)
+            {
+                //shopKeeperButton.ToggleButton(false);
+                shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = false;
+            }
         }
     }
 
@@ -236,7 +246,7 @@ public class ShopManager : MonoBehaviour
 
         ToggleInventoryUI(false);
 
-        ToggleShopKeeperSelected(false);
+        ToggleShopkeeperDetails(false, true);
     }
 
     public void CloseShop()
@@ -337,6 +347,8 @@ public class ShopManager : MonoBehaviour
         // Update gold visual for shop 
         totalGoldText.UpdateContentText(goldString);
         MapManager.Instance.mapOverlay.UpdatePlayerGoldText(goldString);
+
+        UpdateRerollPriceTextColour();
     }
 
     public void ResetPlayerGold()
@@ -429,6 +441,7 @@ public class ShopManager : MonoBehaviour
                 GetActiveRoom().ClearShopRoomCombatItems();
 
                 shopKeeperButton.ToggleButton(false);
+                shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = false;
             }
             else
             {
@@ -664,14 +677,47 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    void CalculateRerollPrice()
+    public void UpdateRerollPriceTextColour()
+    {
+        if (GetPlayerGold() >= GetCurRerollPrice())
+        {
+            rerollPriceText.contentText.color = shopItemCostAllow;
+        }
+        else
+        {
+            rerollPriceText.contentText.color = shopItemCostDeny;
+        }
+    }
+
+    public int GetCurRerollPrice()
+    {
+        return curRerollPrice;
+    }
+
+    public void CalculatePurchaseAcceptReroll()
+    {
+        if (GetPlayerGold() >= GetCurRerollPrice())
+        {
+            UpdatePlayerGold(-GetCurRerollPrice());
+            AudioManager.Instance.Play("Shop_Item_Buy");
+
+            FillShopItems(false, true);
+        }
+        else
+        {
+            AudioManager.Instance.Play("SFX_ShopBuyFail");
+        }
+    }
+
+    void CalculateRerollPrice(bool refreshItems)
     {
         // Update reroll price of Shop room
-        if (!GetActiveRoom().isVisited)
+        if (!GetActiveRoom().isVisited || refreshItems)
         {
             int randPrice = Random.Range(4, 7) * 3;
             curRerollPrice = RoomManager.Instance.GetFloorCount() + randPrice;
             UpdateRerollPrice(curRerollPrice.ToString());
+            UpdateRerollPriceTextColour();
         }
     }
     public void FillShopItems(bool clearItems, bool refreshItems)
@@ -699,14 +745,15 @@ public class ShopManager : MonoBehaviour
 
         UpdatePreventableSpawnedItems();
 
-        if (!refreshItems)
-        {
+        if (refreshItems)
+            GetActiveRoom().ClearShopRoomCombatItems();
+        else
             ToggleShopKeeperSelected(false);
-        }
 
-        CalculateRerollPrice();
+        CalculateRerollPrice(refreshItems);
 
         shopKeeperButton.ToggleButton(true);
+        shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = true;
 
         // Spawn Combat Items
         for (int i = 0; i < shopMaxCombatItems; i++)
@@ -718,7 +765,7 @@ public class ShopManager : MonoBehaviour
 
             if (!GetActiveRoom().isVisited || refreshItems)
             {
-                GetActiveRoom().ClearShopRoomCombatItems();
+
 
                 bool getRare = false;
                 bool getEpic = false;

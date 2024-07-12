@@ -618,238 +618,6 @@ public class UnitFunctionality : MonoBehaviour
         return startingMaxHealth;
     }
 
-    public void ReloadItemUses()
-    {
-        TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.UpdateItemUses(
-    TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
-
-        // Find all items that trigger on turn start that ally has
-        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
-        {
-            //Debug.Log("2");
-            if (this == GameManager.Instance.activeRoomHeroes[i])
-            {
-                int index = i;
-                
-                // First position fighter
-                if (index == 0)
-                {
-                    if (TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot)
-                    {
-                        for (int x = 0; x < OwnedLootInven.Instance.GetWornItemMainAlly().Count; x++)
-                        {
-                            if (TeamItemsManager.Instance.ally1ItemsSlots[x].slotIndex == 0)
-                            {
-                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
-                                }
-                            }
-                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 1)
-                            {
-                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
-                                }
-                            }
-                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 2)
-                            {
-                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
-                                }
-                            }
-                        }
-                    }
-                    if (TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot)
-                    {
-                        for (int x = 0; x < OwnedLootInven.Instance.GetWornItemMainAlly().Count; x++)
-                        {
-                            if (TeamItemsManager.Instance.ally1ItemsSlots[x].slotIndex == 0)
-                            {
-                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUses());
-                                }
-                            }
-                            else if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 1)
-                            {
-                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUses());
-                                }
-                            }
-                            else if(OwnedLootInven.Instance.GetWornItemMainAlly()[x].slotIndex == 2)
-                            {
-                                if (OwnedLootInven.Instance.GetWornItemMainAlly()[0])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[1])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
-                                }
-                                else if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                                {
-                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                        TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                            TeamItemsManager.Instance.ally1ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
-                                }
-                            }
-                        }
-
-                    }
-                    if (TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[2])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot.UpdateItemUses(
-                                    TeamItemsManager.Instance.ally1ItemsSlots[2].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUses());
-                        }
-                    }
-                }
-
-                // 2nd position fighter
-                else if (index == 1)
-                {
-                    if (TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.UpdateItemUses(
-                                    TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUses());
-                        }
-                    }
-                    if (TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                    TeamItemsManager.Instance.ally2ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUses());
-                        }
-                    }
-                    if (TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemSecondAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot.UpdateItemUses(
-                                    TeamItemsManager.Instance.ally2ItemsSlots[2].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUses());
-                        }
-                    }
-                }
-
-                // 3rd position fighter
-                else if (index == 2)
-                {
-                    if (TeamItemsManager.Instance.ally3ItemsSlots[0].linkedSlot)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[0].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                TeamItemsManager.Instance.ally3ItemsSlots[0].linkedSlot.UpdateItemUses(
-                                    TeamItemsManager.Instance.ally2ItemsSlots[0].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUses());
-                        }
-                    }
-                    if (TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[1].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot.UpdateItemUses(
-                                    TeamItemsManager.Instance.ally3ItemsSlots[1].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUses());
-                        }
-                    }
-                    if (TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot)
-                    {
-                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2])
-                        {
-                            if (OwnedLootInven.Instance.GetWornItemThirdAlly()[2].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                                TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot.UpdateItemUses(
-                                    TeamItemsManager.Instance.ally3ItemsSlots[2].linkedSlot.linkedItemPiece.maxUsesPerCombat - OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUses());
-                        }
-                    }
-                }
-            }
-        }
-    }
     public void SetItemUsesMax()
     {
         // Find all items that trigger on turn start that ally has
@@ -941,10 +709,9 @@ public class UnitFunctionality : MonoBehaviour
 
     void IncItemIconUses(Slot itemSlot)
     {
-        // if (GameManager.Instance.GetActiveItem().curActiveType == ItemPiece.ActiveType.PASSIVE)
-        //     return;
-
         TeamItemsManager.Instance.IncItemUseCount(itemSlot);
+        if (!GameManager.Instance.isSkillsMode)
+            GameManager.Instance.UpdatePlayerAbilityUI(false);
     }
 
     public void DecreaseUsesItem1(bool active = false)
@@ -4108,13 +3875,17 @@ public class UnitFunctionality : MonoBehaviour
             //if (GameManager.Instance.GetActiveSkill().skillHit != null && GameManager.Instance.GetActiveSkill().skillHit != null)
             //    AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
 
-            if (effect != null)
+            if (effectTick)
             {
-                if (effect.curEffectName == Effect.EffectName.BLEED)
-                    AudioManager.Instance.Play("Bleed");
-                else if (effect.curEffectName == Effect.EffectName.POISON)
-                    AudioManager.Instance.Play("Poison");
+                if (effect != null)
+                {
+                    if (effect.curEffectName == Effect.EffectName.BLEED)
+                        AudioManager.Instance.Play("Bleed");
+                    else if (effect.curEffectName == Effect.EffectName.POISON)
+                        AudioManager.Instance.Play("Poison");
+                }
             }
+
         }
         else
         {
@@ -4898,7 +4669,7 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true, bool triggerHitSFX = true, bool effect = false, bool isEffect = false)
+    public void UpdateUnitCurHealth(int power, bool damaging = false, bool setHealth = false, bool doExtras = true, bool triggerHitSFX = true, bool effect = false, bool isEffect = false, EffectData effectData = null)
     {
         if (isDead)
             return;
@@ -5090,15 +4861,23 @@ public class UnitFunctionality : MonoBehaviour
                     {
                         CameraShake.instance.EnableCanShake();
 
-                        if (GameManager.Instance.isSkillsMode)
+                        if (!effectData)
                         {
-                            if (GameManager.Instance.GetActiveSkill().skillHit)
-                                AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
-                        }                           
+                            if (GameManager.Instance.isSkillsMode)
+                            {
+                                if (GameManager.Instance.GetActiveSkill().skillHit)
+                                    AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
+                            }
+                            else
+                            {
+                                if (GameManager.Instance.GetActiveItemSlot())
+                                    AudioManager.Instance.Play(GameManager.Instance.GetActiveItemSlot().linkedItemPiece.projectileHit.name);
+                            }
+                        }
                         else
                         {
-                            if (GameManager.Instance.GetActiveItemSlot())
-                                AudioManager.Instance.Play(GameManager.Instance.GetActiveItemSlot().linkedItemPiece.projectileHit.name);
+                            if (effectData.triggerSFX)
+                                AudioManager.Instance.Play(effectData.triggerSFX.name);
                         }
                         /*
                         if (GameManager.Instance.GetActiveSkill().repeatLaunchSFX)

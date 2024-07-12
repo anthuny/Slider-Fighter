@@ -535,14 +535,14 @@ public class Effect : MonoBehaviour
 
         if (curEffectName == EffectName.BLEED)
         {
-            unitTarget.UpdateUnitCurHealth((int)power, true, false, true, true, true, true);
+            unitTarget.UpdateUnitCurHealth((int)power, true, false, true, true, true, true, EffectManager.instance.GetEffect(this.effectName));
         }
         else if (curEffectName == EffectName.POISON)
-            unitTarget.UpdateUnitCurHealth((int)power, true, false, true, true, true, true);
+            unitTarget.UpdateUnitCurHealth((int)power, true, false, true, true, true, true, EffectManager.instance.GetEffect(this.effectName));
         else if (curEffectName == EffectName.RECOVER)
         {
             //Debug.Log("healing power = " + (int)newHealingPower);
-            unitTarget.UpdateUnitCurHealth((int)newHealingPower, false, false, false, true, true);
+            unitTarget.UpdateUnitCurHealth((int)newHealingPower, false, false, false, true, true, EffectManager.instance.GetEffect(this.effectName));
         }
 
 

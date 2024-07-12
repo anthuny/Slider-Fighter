@@ -453,6 +453,12 @@ public class MapManager : MonoBehaviour
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
 
+            TeamItemsManager.Instance.ReloadItemUses();
+
+            TeamGearManager.Instance.ClearEmptyGearSlots();
+            TeamItemsManager.Instance.ClearEmptyItemSlots();
+
+
             ShopManager.Instance.ToggleShopItemsGameObject(false);
 
             ToggleButtonSkillsTabCombat(false);

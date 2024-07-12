@@ -1486,10 +1486,10 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
             GameManager.Instance.ResetActiveItem();
 
-            GameManager.Instance.fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-            GameManager.Instance.fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-            GameManager.Instance.fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-            GameManager.Instance.fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            //GameManager.Instance.fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            //GameManager.Instance.fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            //GameManager.Instance.fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            //GameManager.Instance.fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
         }
         else
         {
@@ -1556,7 +1556,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     if (i == 0)
                     {
                         if (TeamItemsManager.Instance.equippedItemsMain.Count > 0
-                            && OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[0].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemMainAlly()[0].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[0]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemMainAlly()[0]);
@@ -1581,7 +1581,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     else if (i == 1)
                     {
                         if (TeamItemsManager.Instance.equippedItemsSecond.Count > 0
-                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[0].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[0].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[0]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemSecondAlly()[0]);
@@ -1606,7 +1606,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     else if (i == 2)
                     {
                         if (TeamItemsManager.Instance.equippedItemsThird.Count > 0
-                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[0].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[0].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[0].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[0]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemThirdAlly()[0]);
@@ -1726,7 +1726,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     if (i == 0)
                     {
                         if (TeamItemsManager.Instance.equippedItemsMain.Count > 1
-                            && OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[1].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemMainAlly()[1].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[1]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemMainAlly()[1]);
@@ -1751,7 +1751,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     else if (i == 1)
                     {
                         if (TeamItemsManager.Instance.equippedItemsSecond.Count > 1
-                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[1].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[1].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[1]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemSecondAlly()[1]);
@@ -1776,7 +1776,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     else if (i == 2)
                     {
                         if (TeamItemsManager.Instance.equippedItemsThird.Count > 1
-                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[1].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[1].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[1].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[1]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemThirdAlly()[1]);
@@ -1923,7 +1923,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     if (i == 0)
                     {
                         if (TeamItemsManager.Instance.equippedItemsMain.Count > 2
-                            && OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[2].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemMainAlly()[2].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[2]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemMainAlly()[2]);
@@ -1948,7 +1948,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     else if (i == 1)
                     {
                         if (TeamItemsManager.Instance.equippedItemsSecond.Count > 2
-                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[2].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemSecondAlly()[2].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[2]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemSecondAlly()[2]);
@@ -1973,7 +1973,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     else if (i == 2)
                     {
                         if (TeamItemsManager.Instance.equippedItemsThird.Count > 2
-                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[2].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[2].maxUsesPerCombat)
+                            && OwnedLootInven.Instance.GetWornItemThirdAlly()[2].GetCalculatedItemsUsesRemaining2() > 0)
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[2]);
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemThirdAlly()[2]);
@@ -2232,18 +2232,23 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void SelectShopkeeper()
     {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
         ShopManager.Instance.ToggleShopKeeperSelected(!ShopManager.Instance.GetShopKeeperSelected());
     }
 
     public void ButtonRerollShop()
     {
-        // in shopmanager, determine if player can afford this
-        ShopManager.Instance.FillShopItems(false, true);
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        ShopManager.Instance.CalculatePurchaseAcceptReroll();
     }
 
     public void ButtonSellItem()
     {
-        Debug.Log("sell item");
+        //Debug.Log("sell item");
     }
 
     public void SelectUnit()

@@ -123,6 +123,13 @@ public class IconUI : MonoBehaviour
     public void UpdatePortrait(Sprite sprite)
     {
         mainSpriteIcon.UpdateContentImage(sprite);
+
+        if (sprite == TeamItemsManager.Instance.clearSlotSprite)
+        {
+            UpdateRarity(Rarity.COMMON, true);
+            UpdateRaceIcon(sprite);
+            ToggleRarityBG(false);
+        }
     }
 
 

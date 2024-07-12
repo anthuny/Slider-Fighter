@@ -23,3 +23,4 @@ MonoBehaviour:
   powerPercent: 2.5
   powerAmp: 0
   titleTextColour: {r: 0.28773582, g: 1, b: 0.4132007, a: 1}
+  triggerSFX: {fileID: 8300000, guid: 3644c850fe961944696290327633cf46, type: 3}
