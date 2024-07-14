@@ -23,7 +23,7 @@ MonoBehaviour:
   curHitType: 0
   itemName: Unholy Staff
   itemDesc: Target 4 random enemies, Damaging 4 times. Apply Effect Power Down (2)
-    (3 Total Uses)
+    +1 Uses at end of combat.
   itemSpriteItemTab: {fileID: 21300000, guid: 0a417d5447741df41ace6d5e3286057b, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 543d1b1aa554a8549803ad7bb62a7604, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 543d1b1aa554a8549803ad7bb62a7604, type: 3}

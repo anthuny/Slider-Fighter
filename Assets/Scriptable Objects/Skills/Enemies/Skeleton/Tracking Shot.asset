@@ -38,6 +38,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -55,8 +56,8 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 7cf951e90829e534e99434f37266dec2, type: 2}
   effect2: {fileID: 0}
   effectTurnLength: 1
-  curEffectHitChance: 15
-  startingEffectHitChance: 15
+  curEffectHitChance: 25
+  startingEffectHitChance: 25
   baseEffectApplyCount: 0
   curSkillExtraPowerToEffect: 0
   percIncPower: 0

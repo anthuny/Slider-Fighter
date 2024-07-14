@@ -23,7 +23,7 @@ MonoBehaviour:
   curHitType: 0
   itemName: Firework
   itemDesc: Target 4 random enemies, damaging 4 times. Apply Effect Speed Down (2)
-    (3 Total Uses)
+    +1 Uses at end of combat.
   itemSpriteItemTab: {fileID: 21300000, guid: 6aaff0ea738e2fa44b42ec4a4bf6a5d4, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: c5259e6f424e0e24dbb55493fc13bacf, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: c5259e6f424e0e24dbb55493fc13bacf, type: 3}

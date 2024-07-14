@@ -507,7 +507,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotType.HELMET)
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.HELMET)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
@@ -515,7 +515,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.CHESTPIECE)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
@@ -523,7 +523,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotType.BOOTS)
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.BOOTS)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
@@ -536,7 +536,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.HELMET)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.HELMET)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
                         // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -546,7 +546,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.CHESTPIECE)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
                         // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -556,7 +556,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotType.BOOTS)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.BOOTS)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
                         //  go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -570,7 +570,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.HELMET)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.HELMET)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
                         //go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -580,7 +580,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.CHESTPIECE)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.CHESTPIECE)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
                         // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -590,7 +590,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotType.BOOTS)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.BOOTS)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
                         //    go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -876,15 +876,18 @@ public class UnitFunctionality : MonoBehaviour
                 UpdateToolTipGear();
 
                 if (count == 0)
+                {
                     ToggleTooltipItems(false);
+                    //ToggleTooltipGear(false);
+                }
             }
         }
         else
         {
             tooltipStats.UpdateAlpha(0);
             ToggleTooltipItems(false);
+            ToggleTooltipGear(false);
         }
-
     }
 
     public void ToggleTooltipEffect(bool toggle, string effectSelectedName = null)
@@ -3208,7 +3211,7 @@ public class UnitFunctionality : MonoBehaviour
                     if (activeEffect != null)
                     {
                         // Determining whether the effect hits, If it fails, stop
-                        if (procChance != 0)
+                        if (!byPassAcc)
                         {
                             //Debug.Log(GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat());
 
@@ -4863,12 +4866,12 @@ public class UnitFunctionality : MonoBehaviour
 
                         if (!effectData)
                         {
-                            if (GameManager.Instance.isSkillsMode)
+                            if (GameManager.Instance.isSkillsMode && GameManager.Instance.GetActiveSkill().targetEffectVisualAC == null)
                             {
                                 if (GameManager.Instance.GetActiveSkill().skillHit)
                                     AudioManager.Instance.Play(GameManager.Instance.GetActiveSkill().skillHit.name);
                             }
-                            else
+                            else if (!GameManager.Instance.isSkillsMode)
                             {
                                 if (GameManager.Instance.GetActiveItemSlot())
                                     AudioManager.Instance.Play(GameManager.Instance.GetActiveItemSlot().linkedItemPiece.projectileHit.name);

@@ -291,15 +291,15 @@ public class GearRewards : MonoBehaviour
                 // Update gear type
                 if (newGear.gearType == "helmet")
                 {
-                    slot.UpdateCurSlotType(Slot.SlotType.HELMET);
+                    slot.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                 }
                 else if (newGear.gearType == "chestpiece")
                 {
-                    slot.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                    slot.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                 }
                 else if (newGear.gearType == "boots")
                 {
-                    slot.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                    slot.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
                 }
 
                 IncrementSpawnedGearCount();

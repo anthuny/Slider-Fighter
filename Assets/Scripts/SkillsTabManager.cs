@@ -165,7 +165,7 @@ public class SkillsTabManager : MonoBehaviour
                     {
                         selectedBaseSlot.ResetSlot(true, false);
                         selectedBaseSlot.UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
-                        selectedBaseSlot.UpdateCurSlotType(Slot.SlotType.EMPTY);
+                        //selectedBaseSlot.UpdateCurSlotType(Slot.SlotType.EMPTY);
                     }
                 }
 

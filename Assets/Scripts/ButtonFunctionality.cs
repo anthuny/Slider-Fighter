@@ -1208,6 +1208,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             }
         }
 
+        TeamItemsManager.Instance.ReloadItemUses();
+
         postBattleButtonPressed = false;
     }
 

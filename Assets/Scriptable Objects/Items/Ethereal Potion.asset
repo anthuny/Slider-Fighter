@@ -22,7 +22,7 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 0
   itemName: Ethereal Potion
-  itemDesc: Select 2 Random Allies, Healing 4 times. (3 Total Uses)
+  itemDesc: Select 2 Random Allies, Healing 4 times.+1 Uses at end of combat.
   itemSpriteItemTab: {fileID: 21300000, guid: 45c47a12e12f00747a1e3947c98f3cfa, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 94ee200706b06174b9380f4134d576fc, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 94ee200706b06174b9380f4134d576fc, type: 3}
@@ -30,7 +30,7 @@ MonoBehaviour:
   itemSpriteFail: {fileID: 0}
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
-  itemPower: 20
+  itemPower: 25
   threshHoldAmount: 0
   isSelfCast: 0
   isBaseHealing: 0
@@ -52,9 +52,11 @@ MonoBehaviour:
   basePrice: 7
   purchased: 0
   healthItem: 0
+  isSpecial: 0
   power: 0
   procChance: 0
   ac: {fileID: 0}
+  itemVisualAC: {fileID: 0}
   maxUsesPerCombat: 4
   targetCount: 2
   hitCount: 4

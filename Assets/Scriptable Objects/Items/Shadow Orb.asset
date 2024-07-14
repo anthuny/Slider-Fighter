@@ -23,7 +23,7 @@ MonoBehaviour:
   curHitType: 0
   itemName: Shadow Orb
   itemDesc: Target 2 random enemies, Release 3 Damaging Shadow Orbs. Apply Effect
-    Power Down (2) (3 Total Uses)
+    Power Down (2) +1 Uses at end of combat.
   itemSpriteItemTab: {fileID: 21300000, guid: a58b90865c6863c429ed4fde1183b318, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 2dee98dc58dac574b84321c946ca50a3, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 2dee98dc58dac574b84321c946ca50a3, type: 3}
@@ -53,9 +53,11 @@ MonoBehaviour:
   basePrice: 7
   purchased: 0
   healthItem: 0
+  isSpecial: 0
   power: 0
   procChance: 0
   ac: {fileID: 0}
+  itemVisualAC: {fileID: 0}
   maxUsesPerCombat: 4
   targetCount: 2
   hitCount: 3

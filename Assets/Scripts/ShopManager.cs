@@ -116,6 +116,7 @@ public class ShopManager : MonoBehaviour
             shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = true;
 
             rerollButtonUI.UpdateAlpha(1);
+            shopKeeperButton.GetComponent<GraphicRaycaster>().enabled = true;
             rerollButtonUI.ToggleButton(true);
             sellButtonUI.UpdateAlpha(1);
             sellButtonUI.ToggleButton(true);
@@ -133,7 +134,8 @@ public class ShopManager : MonoBehaviour
 
             if (forceShopKeeperButtonOff)
             {
-                //shopKeeperButton.ToggleButton(false);
+                shopKeeperButton.ToggleButton(false);
+                shopKeeperButton.GetComponent<GraphicRaycaster>().enabled = false;
                 shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = false;
             }
         }
@@ -253,6 +255,10 @@ public class ShopManager : MonoBehaviour
     {
         ToggleShopGoldText(false);
         ToggleRefreshItem(false);
+
+        shopKeeperButton.ToggleButton(false);
+        shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = false;
+        shopKeeperButton.GetComponent<GraphicRaycaster>().enabled = false;
 
         itemsParent.UpdateAlpha(0);
 
@@ -437,6 +443,9 @@ public class ShopManager : MonoBehaviour
             if (hideShop)
             {
                 ToggleShopVisibility(false);
+
+
+
                 // ?????????????????? 
                 GetActiveRoom().ClearShopRoomCombatItems();
 
@@ -754,6 +763,7 @@ public class ShopManager : MonoBehaviour
 
         shopKeeperButton.ToggleButton(true);
         shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = true;
+        shopKeeperButton.GetComponent<GraphicRaycaster>().enabled = true;
 
         // Spawn Combat Items
         for (int i = 0; i < shopMaxCombatItems; i++)

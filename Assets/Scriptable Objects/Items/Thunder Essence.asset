@@ -23,7 +23,7 @@ MonoBehaviour:
   curHitType: 1
   itemName: Thunder Essence
   itemDesc: Target 5 random enemies, dealing damaging Thunder 4 times. Apply Effect
-    Power Down (2) (3 Total Uses)
+    Power Down (2) +1 Uses at end of combat.
   itemSpriteItemTab: {fileID: 21300000, guid: e10d8184d5ded854e8bc8ed0af4d2cb5, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: c8001304be0e1fe4595164aac3a3b8aa, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: c8001304be0e1fe4595164aac3a3b8aa, type: 3}

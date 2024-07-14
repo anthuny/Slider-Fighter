@@ -22,8 +22,8 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 0
   itemName: Crystal Wand
-  itemDesc: Target 3 enemies, damaging  5 times. Apply Effect Speed Down (3) (2 Total
-    Uses)
+  itemDesc: Target 3 enemies, damaging  5 times. Apply Effect Speed Down (3) +1 Uses
+    at end of combat.
   itemSpriteItemTab: {fileID: 21300000, guid: 02d59214cf3bf024a8828cdd542b93aa, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 13811e2e79bb553479aa7b0092f47b79, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 13811e2e79bb553479aa7b0092f47b79, type: 3}

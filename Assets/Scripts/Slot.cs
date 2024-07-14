@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour
 {
-    public enum SlotType { HELMET, CHESTPIECE, BOOTS, SKILL, ITEM, EMPTY }
-    public SlotType curGearType;
+    public enum SlotPieceType { HELMET, CHESTPIECE, BOOTS, SKILL, ITEM, EMPTY }
+    public SlotPieceType curGearType;
 
     public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
     public Rarity curRarity;
@@ -20,8 +20,12 @@ public class Slot : MonoBehaviour
     public enum SlotOwnedBy { MAIN, SECOND, THIRD, NOONE}
     public SlotOwnedBy curGearOwnedBy;
 
-    public enum SlotPosition { FIRST, SECOND, THIRD }
+    public enum SlotPosition { FIRST, SECOND, THIRD, NOONE }
     public SlotPosition curSlotPosition;
+
+    public enum SlotType { NOT_REWARD, REWARD}
+    public SlotType curSlotType;
+
 
     private string slotName;
     private int gearBonusHealth;
@@ -74,10 +78,52 @@ public class Slot : MonoBehaviour
     public bool maxSet = false;
     public bool remove = false;
 
+    [SerializeField] private UIElement itemRarityText;
+
+    public void ToggleItemRarityText(bool toggle = true)
+    {
+        if (toggle)
+        {
+            itemRarityText.UpdateAlpha(1);
+        }
+        else
+        {
+            itemRarityText.UpdateAlpha(0);
+        }
+
+        if (toggle)
+        {
+            if (linkedItemPiece)
+            {
+                if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
+                {
+                    itemRarityText.UpdateContentText("COMMON");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.commonColour);
+                }
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
+                {
+                    itemRarityText.UpdateContentText("RARE");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.rareColour);
+                }
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
+                {
+                    itemRarityText.UpdateContentText("EPIC");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.epicColour);
+                }
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.LEGENDARY)
+                {
+                    itemRarityText.UpdateContentText("LEGENDARY");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.legendaryColour);
+                }
+            }
+        }
+    }
+
     public void ToggleEquipMainButton(bool toggle = true)
     {
         if (equipSlotButton)
             equipSlotButton.GetComponent<GraphicRaycaster>().enabled = toggle;
+
     }
     public void UpdateRemoved(bool toggle = true)
     {
@@ -109,7 +155,7 @@ public class Slot : MonoBehaviour
     {
         if (linkedItemPiece)
         {
-            rarityBorder.UpdateAlpha(1);
+            ToggleRarityBorder(true);
 
             if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
                 rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
@@ -122,7 +168,7 @@ public class Slot : MonoBehaviour
         }
         else
         {
-            rarityBorder.UpdateAlpha(0);
+            ToggleRarityBorder(false);
         }
     }
 
@@ -149,6 +195,12 @@ public class Slot : MonoBehaviour
     public int GetItemUses()
     {
         return itemUses;
+    }
+
+    public void ReduceItemUses()
+    {
+        if (itemUses > 0)
+            itemUses--;
     }
 
     public int GetCalculatedItemUsesRemaining()
@@ -223,17 +275,29 @@ public class Slot : MonoBehaviour
         string activeStatus = "";
         int itemUsesRemaining = 0;
 
-        if (curGearType == SlotType.ITEM)
+        if (curGearType == SlotPieceType.SKILL)
         {
-            if (linkedItemPiece == null)
+            UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+        }
+        if (curGearType == SlotPieceType.ITEM)
+        {
+            if (linkedItemPiece == null && linkedGearPiece == null)
             {
+                if (curSlotPosition == SlotPosition.NOONE || isMainSlot)
+                    isEmpty = true;
+
+                if (curSlotType == SlotType.REWARD)
+                    ToggleItemRarityText(true);
+                else
+                    ToggleItemRarityText(false);
+
                 UpdateRarityBG(curSlotRarity, true);
                 UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
 
                 equipSlotButton.ToggleButton(true);
                 equipSlotButton.UpdateAlpha(1);
 
-                ownedSlotButton.UpdateAlpha(0);
+                //ownedSlotButton.UpdateAlpha(0);
 
                 ToggleEquipButton(true);
 
@@ -266,8 +330,16 @@ public class Slot : MonoBehaviour
 
                 UpdateRarityBorderColour();
             }
-            else
+            else if (linkedItemPiece)
             {
+                if (curSlotPosition == SlotPosition.NOONE || isMainSlot)
+                    isEmpty = false;
+
+                if (curSlotType == SlotType.REWARD)
+                    ToggleItemRarityText(true);
+                else
+                    ToggleItemRarityText(false);
+
                 if (TeamItemsManager.Instance.playerInItemTab)
                     UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
                 else if (TeamGearManager.Instance.playerInGearTab)
@@ -351,27 +423,40 @@ public class Slot : MonoBehaviour
 
                 if (ownedSlotButton)
                     ownedSlotButton.UpdateAlpha(1);
+
+                if (linkedItemPiece)
+                {
+                    UpdateSlotImage(linkedItemPiece.itemSpriteItemTab);
+                    UpdateSlotName(linkedItemPiece.itemName);
+                }
+
+                UpdateRarityBorderColour();
             }
         }
-        else
+        else if (curGearType != SlotPieceType.SKILL)
         {
+            if (curSlotType == SlotType.REWARD)
+                ToggleItemRarityText(true);
+            else
+                ToggleItemRarityText(false);
+
             if (linkedGearPiece)
             {
+                isEmpty = false;
+
                 UpdateSlotImage(linkedGearPiece.gearIcon);
                 UpdateSlotName(linkedGearPiece.gearName);
-
-                ToggleRarityBorder(false);
-
             }
             else
             {
+                isEmpty = true;
+
                 activeStatusUI.UpdateContentText("");
                 remainingUsesUI.UpdateContentText("");
                 UpdateSlotName("");
-                ToggleRarityBorder(false);
             }
-            
 
+            UpdateRarityBorderColour();
         }
     }
 
@@ -489,6 +574,9 @@ public class Slot : MonoBehaviour
 
             if (linkedItemPiece != null)
                 UpdateLinkedItemPiece(null);
+
+            if (linkedSlot != null)
+                UpdateLinkedSlot(null);
 
             UpdateSlotDetails();
         }
@@ -640,12 +728,12 @@ public class Slot : MonoBehaviour
         curSlotStatis = gearStatis;
     }
 
-    public SlotType GetCurGearType()
+    public SlotPieceType GetCurGearType()
     {
         return curGearType;
     }
 
-    public void UpdateCurSlotType(SlotType gearType)
+    public void UpdateCurSlotType(SlotPieceType gearType)
     {
         curGearType = gearType;
     }
@@ -716,7 +804,7 @@ public class Slot : MonoBehaviour
         else
             slotSelectionUI.UpdateAlpha(0);
 
-        if (curGearType == SlotType.SKILL)
+        if (curGearType == SlotPieceType.SKILL)
             SkillsTabManager.Instance.UpdateUnspentPointsText(1);
     }
 

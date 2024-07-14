@@ -15,8 +15,6 @@ public class OwnedLootInven : MonoBehaviour
     public List<Slot> ownedGear = new List<Slot>();
     public List<Slot> ownedItems = new List<Slot>();
     public List<SkillData> ownedSkills = new List<SkillData>();
-    public List<GearPiece> ownedGearPieces = new List<GearPiece>();
-    public List<ItemPiece> ownedItemPieces = new List<ItemPiece>();
 
     //public List<Slot> ownedSkillsSlots = new List<Slot>();
     public List<GearPiece> startingGearPieces = new List<GearPiece>();
@@ -1555,6 +1553,21 @@ public class OwnedLootInven : MonoBehaviour
     public void RemoveOwnedItem(Slot item)
     {
         ownedItems.Remove(item);
+
+        /*
+        int count = ownedItems.Count;
+        List<Slot> newList = new List<Slot>();
+
+        newList = ownedItems;
+        for (int i = 0; i < newList.Count; i++)
+        {
+            if (newList[i] == null)
+            {
+
+            }
+
+        }
+        */
     }
 
     public void RemoveWornItemAllyMain(Slot item)
@@ -1623,11 +1636,11 @@ public class OwnedLootInven : MonoBehaviour
 
             ownedGear[newIndex].UpdateSlotImage(trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearIcon);
             if (trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearType == "helmet")
-                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotType.HELMET);
+                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotPieceType.HELMET);
             else if (trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearType == "chestpiece")
-                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
             else if (trans.GetChild(i).GetComponent<Slot>().linkedGearPiece.gearType == "boots")
-                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotType.BOOTS);
+                ownedGear[newIndex].UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
             //GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -1667,7 +1680,7 @@ public class OwnedLootInven : MonoBehaviour
 
                         gear.UpdateLootGearAlpha(false);
                         gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSpriteItemTab);
-                        gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                        gear.UpdateCurSlotType(Slot.SlotPieceType.ITEM);
                         GearRewards.Instance.IncrementSpawnedGearCount();
                         //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
                         gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
@@ -1693,7 +1706,7 @@ public class OwnedLootInven : MonoBehaviour
 
                         gear.UpdateLootGearAlpha(false);
                         gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSpriteItemTab);
-                        gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                        gear.UpdateCurSlotType(Slot.SlotPieceType.ITEM);
                         //GearRewards.Instance.IncrementSpawnedGearCount();
                         gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
                         gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
@@ -1728,11 +1741,11 @@ public class OwnedLootInven : MonoBehaviour
 
                         gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
                         if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                            gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                         else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                            gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                         else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                            gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
                         GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -1766,11 +1779,11 @@ public class OwnedLootInven : MonoBehaviour
 
                         gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
                         if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                            gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                         else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                            gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                         else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                            gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
                         GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -1815,7 +1828,7 @@ public class OwnedLootInven : MonoBehaviour
 
                             gear.UpdateLootGearAlpha(false);
                             gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSpriteItemTab);
-                            gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.ITEM);
                             GearRewards.Instance.IncrementSpawnedGearCount();
                             //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
                             gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
@@ -1841,7 +1854,7 @@ public class OwnedLootInven : MonoBehaviour
 
                             gear.UpdateLootGearAlpha(false);
                             gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSpriteItemTab);
-                            gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                            gear.UpdateCurSlotType(Slot.SlotPieceType.ITEM);
                             //GearRewards.Instance.IncrementSpawnedGearCount();
                             gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
                             gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
@@ -1876,11 +1889,11 @@ public class OwnedLootInven : MonoBehaviour
 
                             gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
                             if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                                gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                             else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                                gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                             else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                                gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
                             GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -1914,11 +1927,11 @@ public class OwnedLootInven : MonoBehaviour
 
                             gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
                             if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                                gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                             else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                                gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                             else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                                gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
                             GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -1962,7 +1975,7 @@ public class OwnedLootInven : MonoBehaviour
 
                                 gear.UpdateLootGearAlpha(false);
                                 gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesCommon[a].itemSpriteItemTab);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.ITEM);
                                 GearRewards.Instance.IncrementSpawnedGearCount();
                                 //gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
                                 gear.UpdateSlotName(GearRewards.Instance.allItemPiecesCommon[a].itemName);
@@ -1988,7 +2001,7 @@ public class OwnedLootInven : MonoBehaviour
 
                                 gear.UpdateLootGearAlpha(false);
                                 gear.UpdateSlotImage(GearRewards.Instance.allItemPiecesRare[b].itemSpriteItemTab);
-                                gear.UpdateCurSlotType(Slot.SlotType.ITEM);
+                                gear.UpdateCurSlotType(Slot.SlotPieceType.ITEM);
                                 //GearRewards.Instance.IncrementSpawnedGearCount();
                                 gear.UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
                                 gear.UpdateSlotName(GearRewards.Instance.allItemPiecesRare[b].itemName);
@@ -2023,11 +2036,11 @@ public class OwnedLootInven : MonoBehaviour
 
                                 gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesCommon[a].gearIcon);
                                 if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                    gear.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                                 else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                    gear.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                                 else if (GearRewards.Instance.allGearPiecesCommon[a].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                                    gear.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
                                 GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -2061,11 +2074,11 @@ public class OwnedLootInven : MonoBehaviour
 
                                 gear.UpdateSlotImage(GearRewards.Instance.allGearPiecesRare[b].gearIcon);
                                 if (GearRewards.Instance.allGearPiecesRare[b].gearType == "helmet")
-                                    gear.UpdateCurSlotType(Slot.SlotType.HELMET);
+                                    gear.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                                 else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "chestpiece")
-                                    gear.UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                                    gear.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                                 else if (GearRewards.Instance.allGearPiecesRare[b].gearType == "boots")
-                                    gear.UpdateCurSlotType(Slot.SlotType.BOOTS);
+                                    gear.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
                                 GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -2104,11 +2117,11 @@ public class OwnedLootInven : MonoBehaviour
 
             ownedGear[i].UpdateSlotImage(startingGearPieces[i].gearIcon);
             if (startingGearPieces[i].gearType == "helmet")
-                ownedGear[i].UpdateCurSlotType(Slot.SlotType.HELMET);
+                ownedGear[i].UpdateCurSlotType(Slot.SlotPieceType.HELMET);
             else if (startingGearPieces[i].gearType == "chestpiece")
-                ownedGear[i].UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                ownedGear[i].UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
             else if (startingGearPieces[i].gearType == "boots")
-                ownedGear[i].UpdateCurSlotType(Slot.SlotType.BOOTS);
+                ownedGear[i].UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
 
             GearRewards.Instance.IncrementSpawnedGearCount();
 
@@ -2222,6 +2235,11 @@ public class OwnedLootInven : MonoBehaviour
         {
             ownedLootUI.UpdateAlpha(0);
 
+            TeamItemsManager.Instance.UpdateItemNameText("");
+            TeamItemsManager.Instance.UpdateItemDesc("");
+
+            TeamItemsManager.Instance.ToggleItemRarityText(false);
+
             SkillsTabManager.Instance.ToggleSelectedSlotDetailsButton(false);
             ToggleOwnedSlotEquipButton(false);
             ownedLootOpened = false;
@@ -2236,6 +2254,8 @@ public class OwnedLootInven : MonoBehaviour
                 SkillsTabManager.Instance.UpdateActiveSkillNameText("");
                 SkillsTabManager.Instance.ResetSkillsBaseSelection();
             }
+
+            //TeamItemsManager.Instance.ToggleTeamItems(true);
         }
 
         buttonExitOwnedGear.ToggleButton(toggle);
@@ -2270,7 +2290,9 @@ public class OwnedLootInven : MonoBehaviour
     {
         //Debug.Log("starting 2");
         //ClearOwnedItemSlots();
-
+        TeamItemsManager.Instance.UpdateItemNameText("");
+        TeamItemsManager.Instance.UpdateItemDesc("");
+        TeamItemsManager.Instance.ToggleTeamItemEquipMainButton(false);
         //ClearOwnedItemsSlotsSelection();
 
         int ownedItemSlotIndex = 0;
@@ -2280,14 +2302,12 @@ public class OwnedLootInven : MonoBehaviour
         // If item
         if (slotType == 1)
         {
-            ownedItemPieces.Clear();
-            List<ItemPiece> ownedItemPiece = new List<ItemPiece>();
             ownedItemSlotIndex = 0;
             wornSkillsAlly.Clear();
 
-            for (int x = 0; x < ownedItems.Count; x++)
+            for (int i = 0; i < ownedLootSlots.Count; i++)
             {
-                ownedItemPieces.Add(ownedItems[x].linkedItemPiece);
+                ownedLootSlots[i].curGearType = Slot.SlotPieceType.ITEM;
             }
 
             TeamGearManager.Instance.ToggleAllSlotsClickable(true, true, false);
@@ -2296,7 +2316,7 @@ public class OwnedLootInven : MonoBehaviour
             for (int i = 0; i < ownedLootSlots.Count; i++)
             {
                 // Safety
-                if (ownedItemPieces.Count > i)
+                if (ownedItems.Count > i)
                 {
                     /*
                     // If unit is currently selecting a skill, AND check if not already hidden, then dont display it in owned skills
@@ -2322,11 +2342,11 @@ public class OwnedLootInven : MonoBehaviour
                     //if (!gears.Contains(wornGear[i]))                      
 
                     ToggleOwnedSlotEquipButton(true);
-
+                    ItemPiece itemPiece = ownedItems[i].linkedItemPiece;
                     //Debug.Log("owned skills count " + ownedSkills.Count);
                     //Debug.Log("index " + ownedGearSlotIndex);
 
-                    if (ownedItemPieces.Count > ownedItemSlotIndex)
+                    if (ownedItems.Count > ownedItemSlotIndex)
                     {
                         /*
                         if (ownedSkillData.Contains(ownedSkills[i]))
@@ -2342,21 +2362,21 @@ public class OwnedLootInven : MonoBehaviour
                         // If selected base slot is MAIN, and owned item does not equal human
                         if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN
                             && GameManager.Instance.activeTeam[0].curRaceType == UnitData.RaceType.HUMAN
-                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.HUMAN)
+                            && itemPiece.curRace != ItemPiece.RaceSpecific.HUMAN)
                         {
                             ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                         }
 
                         if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN
                             && GameManager.Instance.activeTeam[0].curRaceType == UnitData.RaceType.ETHEREAL
-                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.ETHEREAL)
+                            && itemPiece.curRace != ItemPiece.RaceSpecific.ETHEREAL)
                         {
                             ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                         }
 
                         if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN
                             && GameManager.Instance.activeTeam[0].curRaceType == UnitData.RaceType.BEAST
-                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.BEAST)
+                            && itemPiece.curRace != ItemPiece.RaceSpecific.BEAST)
                         {
                             ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                         }
@@ -2365,21 +2385,21 @@ public class OwnedLootInven : MonoBehaviour
                         { 
                             if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND
                             && GameManager.Instance.activeTeam[1].curRaceType == UnitData.RaceType.HUMAN
-                            && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.HUMAN)
+                            && itemPiece.curRace != ItemPiece.RaceSpecific.HUMAN)
                             {
                                 ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                             }
 
                             if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND
                                 && GameManager.Instance.activeTeam[1].curRaceType == UnitData.RaceType.ETHEREAL
-                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.ETHEREAL)
+                                && itemPiece.curRace != ItemPiece.RaceSpecific.ETHEREAL)
                             {
                                 ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                             }
 
                             if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND
                                 && GameManager.Instance.activeTeam[1].curRaceType == UnitData.RaceType.BEAST
-                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.BEAST)
+                                && itemPiece.curRace != ItemPiece.RaceSpecific.BEAST)
                             {
                                 ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                             }
@@ -2389,38 +2409,38 @@ public class OwnedLootInven : MonoBehaviour
                         {
                             if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD
                                 && GameManager.Instance.activeTeam[2].curRaceType == UnitData.RaceType.HUMAN
-                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.HUMAN)
+                                && itemPiece.curRace != ItemPiece.RaceSpecific.HUMAN)
                             {
                                 ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                             }
 
                             if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD
                                 && GameManager.Instance.activeTeam[2].curRaceType == UnitData.RaceType.ETHEREAL
-                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.ETHEREAL)
+                                && itemPiece.curRace != ItemPiece.RaceSpecific.ETHEREAL)
                             {
                                 ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                             }
 
                             if (TeamItemsManager.Instance.GetSelectedBaseItemSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD
                                 && GameManager.Instance.activeTeam[2].curRaceType == UnitData.RaceType.BEAST
-                                && ownedItemPieces[i].curRace != ItemPiece.RaceSpecific.BEAST)
+                                && itemPiece.curRace != ItemPiece.RaceSpecific.BEAST)
                             {
                                 ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(true);
                             }
                         }
 
-                        if (ownedItemPieces[i].curRace == ItemPiece.RaceSpecific.ALL)
+                        if (itemPiece.curRace == ItemPiece.RaceSpecific.ALL)
                             ownedLootSlots[ownedItemSlotIndex].ToggleCoverUI(false);
 
                         #endregion
 
 
-
+ 
                         //wornSkillsAlly.Add(SkillsTabManager.Instance.selectedOwnedSlot);
                         // Update gear icon
-                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedItemPieces[i].itemSpriteItemTab);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(itemPiece.itemSpriteItemTab);
                         //ownedLootSlots[ownedGearSlotIndex].UpdateCurSlotType(Slot.SlotType.ITEM);
-                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedItemPieces[i].itemName);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(itemPiece.itemName);
 
                         ownedLootSlots[ownedItemSlotIndex].UpdateIconSkillSize(false);
                         /*
@@ -2433,7 +2453,7 @@ public class OwnedLootInven : MonoBehaviour
                         ownedLootSlots[ownedItemSlotIndex].UpdateGearStatis(Slot.SlotStatis.OWNED);
                         ownedLootSlots[ownedItemSlotIndex].ToggleEquipButton(false);
                         ownedLootSlots[ownedItemSlotIndex].isEmpty = false;
-                        ownedLootSlots[ownedItemSlotIndex].UpdateLinkedItemPiece(ownedItemPieces[i]);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateLinkedItemPiece(itemPiece);
 
                         // Update owned item Race Icon
                         if (ownedLootSlots[ownedItemSlotIndex].linkedItemPiece.curRace == ItemPiece.RaceSpecific.HUMAN)
@@ -2514,6 +2534,11 @@ public class OwnedLootInven : MonoBehaviour
                 ownedSkills.Add(GameManager.Instance.GetActiveAlly().GetSkill(x));
             }
 
+            for (int i = 0; i < ownedLootSlots.Count; i++)
+            {
+                ownedLootSlots[i].curGearType = Slot.SlotPieceType.SKILL;
+            }
+
             TeamGearManager.Instance.ToggleAllSlotsClickable(true, true, false);
 
             // int index = 0;
@@ -2540,7 +2565,7 @@ public class OwnedLootInven : MonoBehaviour
 
                         ownedLootSlots[i].ToggleEquipButton(false);
                         ownedLootSlots[i].UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
-                        ownedLootSlots[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
+                        //ownedLootSlots[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
                         ownedLootSlots[i].isEmpty = true;
 
                         //index++;
@@ -2589,6 +2614,7 @@ public class OwnedLootInven : MonoBehaviour
                             ownedLootSlots[ownedItemSlotIndex].skill = ownedSkills[i];
 
                             ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+                            ownedLootSlots[ownedItemSlotIndex].UpdateSlotDetails();
 
                             ownedItemSlotIndex++;
                         }
@@ -2598,19 +2624,7 @@ public class OwnedLootInven : MonoBehaviour
                 if (ownedLootSlots[ownedItemSlotIndex].isEmpty)
                     ownedLootSlots[ownedItemSlotIndex].UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
 
-                /*
-                else
-                {
-                    ownedSkillData.Add(ownedSkills[i]);
-                    //ToggleOwnedGearEquipButton(false);
-
-
-                    ownedLootSlots[i].ToggleEquipButton(false);
-                    ownedLootSlots[i].UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
-                    ownedLootSlots[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
-                    ownedLootSlots[i].isEmpty = true;
-                }
-                */
+                ownedLootSlots[i].UpdateSlotDetails();
 
             }
             for (int i = 0; i < ownedLootSlots.Count; i++)
@@ -2622,6 +2636,9 @@ public class OwnedLootInven : MonoBehaviour
                     ownedLootSlots[i].UpdateRarityBG(Slot.ItemRarity.COMMON, true);
                 }
             }
+
+
+
         }
         // If Gear
         else if (slotType == 0)
@@ -2630,6 +2647,11 @@ public class OwnedLootInven : MonoBehaviour
             int index = 0;
 
             gears.Clear();
+
+            for (int i = 0; i < ownedLootSlots.Count; i++)
+            {
+                ownedLootSlots[i].curGearType = Slot.SlotPieceType.HELMET;
+            }
 
             TeamGearManager.Instance.ToggleAllSlotsClickable(true, true);
 
@@ -2653,7 +2675,7 @@ public class OwnedLootInven : MonoBehaviour
 
                         ownedGear[i].ToggleEquipButton(false);
                         ownedGear[i].UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
-                        ownedGear[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
+                        ownedGear[i].UpdateCurSlotType(Slot.SlotPieceType.EMPTY);
                         ownedGear[i].isEmpty = true;
 
                         index++;
@@ -2671,7 +2693,7 @@ public class OwnedLootInven : MonoBehaviour
 
                         ownedGear[i].ToggleEquipButton(false);
                         ownedGear[i].UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
-                        ownedGear[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
+                        ownedGear[i].UpdateCurSlotType(Slot.SlotPieceType.EMPTY);
                         ownedGear[i].isEmpty = true;
 
                         index++;
@@ -2689,7 +2711,7 @@ public class OwnedLootInven : MonoBehaviour
 
                         ownedGear[i].ToggleEquipButton(false);
                         ownedGear[i].UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
-                        ownedGear[i].UpdateCurSlotType(Slot.SlotType.EMPTY);
+                        ownedGear[i].UpdateCurSlotType(Slot.SlotPieceType.EMPTY);
                         ownedGear[i].isEmpty = true;
 
                         index++;
@@ -2705,14 +2727,14 @@ public class OwnedLootInven : MonoBehaviour
 
                 //ToggleOwnedGearEquipButton(true);
                 // If selected armor piece is helmet, display only owned helmets
-                if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotType.HELMET)
+                if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotPieceType.HELMET)
                 {
-                    if (ownedGear[i].GetCurGearType() == Slot.SlotType.HELMET)
+                    if (ownedGear[i].GetCurGearType() == Slot.SlotPieceType.HELMET)
                     {
                         //Debug.Log("loading owned gear helm");
                         // Update gear icon
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
-                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotType.HELMET);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotPieceType.HELMET);
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
                         ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
                         ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
@@ -2729,14 +2751,14 @@ public class OwnedLootInven : MonoBehaviour
                         //Debug.Log("asdasdasd");
                     }
                 }
-                else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotType.CHESTPIECE)
+                else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotPieceType.CHESTPIECE)
                 {
-                    if (ownedGear[i].GetCurGearType() == Slot.SlotType.CHESTPIECE)
+                    if (ownedGear[i].GetCurGearType() == Slot.SlotPieceType.CHESTPIECE)
                     {
                         //Debug.Log("loading owned gear chest");
                         // Update gear icon
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
-                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotType.CHESTPIECE);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
                         ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
                         ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
@@ -2753,14 +2775,14 @@ public class OwnedLootInven : MonoBehaviour
                         //Debug.Log("123123123");
                     }
                 }
-                else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotType.BOOTS)
+                else if (TeamGearManager.Instance.GetSelectedGearSlot().GetCurGearType() == Slot.SlotPieceType.BOOTS)
                 {
-                    if (ownedGear[i].GetCurGearType() == Slot.SlotType.BOOTS)
+                    if (ownedGear[i].GetCurGearType() == Slot.SlotPieceType.BOOTS)
                     {
                         //Debug.Log("loading owned gear boots");
                         // Update gear icon
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotImage(ownedGear[i].GetSlotImage());
-                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotType.BOOTS);
+                        ownedLootSlots[ownedItemSlotIndex].UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
                         ownedLootSlots[ownedItemSlotIndex].UpdateSlotName(ownedGear[i].GetSlotName());
                         ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusHealth(ownedGear[i].GetBonusHealth());
                         ownedLootSlots[ownedItemSlotIndex].UpdateGearBonusDamage(ownedGear[i].GetBonusDamage());
