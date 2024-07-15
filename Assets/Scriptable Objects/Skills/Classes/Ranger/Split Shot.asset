@@ -13,13 +13,18 @@ MonoBehaviour:
   m_Name: Split Shot
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 0
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeMin: 0
+  skillRangeMax: 2
+  skillRangeHitAreas: []
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: f5e1a147817aafd4aa35b740f355159d, type: 3}
   skillName: SPLIT SHOT
   skillDescr: Target 2 enemies, dealing damage
@@ -37,6 +42,7 @@ MonoBehaviour:
   curCooldown: 1
   skillSelectionCount: 2
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0

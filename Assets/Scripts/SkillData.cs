@@ -9,9 +9,9 @@ public class SkillData : ScriptableObject
     public enum SkillType { OFFENSE, SUPPORT };
     public SkillType curSkillType;
 
-    public enum SkillSelectionType { ENEMIES, PLAYERS };
-    public SkillSelectionType curSkillSelectionType;
-    public SkillSelectionType startingSelectionType;
+    public enum SkillSelectionUnitType { ENEMIES, PLAYERS };
+    public SkillSelectionUnitType curSkillSelectionUnitType;
+    public SkillSelectionUnitType startingSelectionUnitType;
 
     public enum SkillSelectionAliveType { ALIVE, DEAD };
     public SkillSelectionAliveType curskillSelectionAliveType;
@@ -27,6 +27,18 @@ public class SkillData : ScriptableObject
 
     public enum SkillActiveType { ACTIVE, PASSIVE }
     public SkillActiveType curSkillActiveType;
+
+    public enum SkillSelectionType { UNITS, AREAS}
+    public SkillSelectionType curSkillSelectionType;
+
+    public int skillRangeMin = 0;
+    public int skillRangeMax = 2;
+
+    // Position of each slot in range of the skill, from the fighter
+    public List<Vector2> skillRangeHitAreas = new List<Vector2>();
+
+    // Position of each slot for the attack area formation, from 0x0
+    public List<Vector2> skillAttackHitAreas = new List<Vector2>();
 
     public Sprite skillSprite;
     public string skillName;
@@ -46,6 +58,7 @@ public class SkillData : ScriptableObject
     public int skillCooldown;
     public int curCooldown;
     public int skillSelectionCount;
+    //
     //public int maxSkillLevel = 5;
     public bool isSelfCast;
     public bool isSpecial;
@@ -111,7 +124,7 @@ public class SkillData : ScriptableObject
 
     public void SetSkillStarting()
     {
-        startingSelectionType = curSkillSelectionType;
+        startingSelectionUnitType = curSkillSelectionUnitType;
     }
 
     public int GetCalculatedSkillSelectionCount()
@@ -122,6 +135,18 @@ public class SkillData : ScriptableObject
             val = 6;
 
         return val;
+    }
+
+    // Returns a list of vector2s which represent the slot locations on the combat grid
+    // from the fighters position
+    public List<Vector2> GetCalculatedHitAreas()
+    {
+        if (curSkillSelectionType == SkillSelectionType.AREAS)
+        {
+            return skillAttackHitAreas;
+        }
+        else
+            return null;
     }
 
     public int GetCalculatedSkillPower()
@@ -186,7 +211,7 @@ public class SkillData : ScriptableObject
         upgradeIncHitsCount = 0;
         upgradeIncPowerCount = 0;
 
-        curSkillSelectionType = startingSelectionType;
+        curSkillSelectionUnitType = startingSelectionUnitType;
         reanimated = false;
     }
 
@@ -203,7 +228,7 @@ public class SkillData : ScriptableObject
 
         if (!toggle)
         {
-            curSkillSelectionType = startingSelectionType;
+            curSkillSelectionUnitType = startingSelectionUnitType;
         }
     }
 }

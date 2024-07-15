@@ -13,12 +13,18 @@ MonoBehaviour:
   m_Name: Defend
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 1
-  startingSelectionType: 1
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
+  curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeMin: 0
+  skillRangeMax: 2
+  skillRangeHitAreas: []
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP
   skillDescr: Target 1 ally, cast Defense Up Effect
@@ -36,6 +42,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -76,4 +83,4 @@ MonoBehaviour:
   skillHit: {fileID: 0}
   skillHitAdditional: {fileID: 0}
   originalIndex: 2
-  mindControlled: 0
+  reanimated: 0

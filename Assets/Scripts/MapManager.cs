@@ -206,7 +206,7 @@ public class MapManager : MonoBehaviour
         OwnedLootInven.Instance.LoadStartingLoot();
 
         // Spawn Starter Ally
-        GameManager.Instance.SpawnHero();
+        GameManager.Instance.SpawnFighter();
 
         GameManager.Instance.UpdateAllyVisibility(false);
 

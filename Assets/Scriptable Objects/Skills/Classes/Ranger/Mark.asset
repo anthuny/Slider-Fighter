@@ -13,13 +13,18 @@ MonoBehaviour:
   m_Name: Mark
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
   curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeMin: 0
+  skillRangeMax: 2
+  skillRangeHitAreas: []
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 9ef8fd37a1319de4e99f44a124e65db3, type: 3}
   skillName: MARK
   skillDescr: Target all enemies, cast Mark Effect
@@ -37,6 +42,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 6
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0

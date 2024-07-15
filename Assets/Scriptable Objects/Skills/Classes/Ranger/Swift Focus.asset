@@ -13,13 +13,18 @@ MonoBehaviour:
   m_Name: Swift Focus
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 1
-  startingSelectionType: 1
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
   curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeMin: 0
+  skillRangeMax: 2
+  skillRangeHitAreas: []
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 8cdfd37f9e223d74c8c1b04387be2592, type: 3}
   skillName: SWIFT FOCUS
   skillDescr: Target 1 ally, cast Speed Up Effect
@@ -37,6 +42,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
