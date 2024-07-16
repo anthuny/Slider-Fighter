@@ -601,6 +601,11 @@ public class WeaponManager : MonoBehaviour
             ToggleHitAreasDisplay(true);
         }
 
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
+            CombatGridManager.Instance.ToggleCombatGrid(false);
+        }
+
         ToggleWeaponAccHits(true);
         ToggleWeaponHitsRemainingText(true);
 
@@ -648,6 +653,11 @@ public class WeaponManager : MonoBehaviour
     public IEnumerator StopHitLine()
     {
         //sDebug.Log("stopping hit line");
+
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        {
+            CombatGridManager.Instance.ToggleCombatGrid(false);
+        }
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)         
             stopHitLine = false;

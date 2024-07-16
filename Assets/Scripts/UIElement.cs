@@ -468,12 +468,12 @@ public class UIElement : MonoBehaviour
             if (contentImage == null)
                 return;
 
-            ResetAnimateScaleImage();
+            //ResetAnimateScaleImage();
 
             if (doScalePunch)
                 contentImage.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 
-            ResetAnimateScaleImage();
+            //ResetAnimateScaleImage();
         }
 
         if (dieAfterDisplay)
@@ -589,7 +589,7 @@ public class UIElement : MonoBehaviour
 
         //Debug.Log("updating alpha " + alpha);
         // Make UI element selectable/unselectable
-        if (alpha == 1)
+        if (alpha != 0)
         {
             AnimateUI(text);
 

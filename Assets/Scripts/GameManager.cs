@@ -8,6 +8,20 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public Color skillsDetailsTabColour;
+    public Color itemsDetailsTabColour;
+    public Color movementDetailsTabColour;
+
+    public Color skillsDetailsTabTextColour;
+    public Color itemsDetailsTabTextColour;
+    public Color movementDetailsTextTabColour;
+
+    [SerializeField] private UIElement detailsBannerStripUI;
+    [SerializeField] private UIElement detailsBannerTitleText;
+    [SerializeField] private UIElement detailsBannerTitleBG;
+    [SerializeField] private UIElement skillsItemToggleButton;
+
+
     public GameObject fighterCarasel;
     public Canvas mainCamCanvas; 
     public Sprite humanRaceIcon;
@@ -231,6 +245,58 @@ public class GameManager : MonoBehaviour
     public int unitID;
     public bool playerInCombat;
     public bool isSkillsMode = true;
+
+    public void ToggleSkillsItemToggleButton(bool toggle = true)
+    {
+        if (toggle)
+        {
+            skillsItemToggleButton.UpdateAlpha(1);
+        }
+        else
+        {
+            skillsItemToggleButton.UpdateAlpha(0);
+        }
+    }
+
+    public void UpdateDetailsBanner()
+    {
+        detailsBannerTitleBG.AnimateUI(false);
+
+        if (isSkillsMode)
+        {
+            detailsBannerTitleText.UpdateContentText("SKILLS");
+            detailsBannerTitleText.UpdateContentTextColour(skillsDetailsTabTextColour);
+            detailsBannerStripUI.UpdateColour(skillsDetailsTabColour);
+        }
+        else
+        {
+            detailsBannerTitleText.UpdateContentText("ITEMS");
+            detailsBannerTitleText.UpdateContentTextColour(itemsDetailsTabTextColour);
+            detailsBannerStripUI.UpdateColour(itemsDetailsTabColour);
+        }
+
+        if (!CombatGridManager.Instance.isCombatMode)
+        {
+            detailsBannerTitleText.UpdateContentText("MOVEMENT");
+            detailsBannerTitleText.UpdateContentTextColour(movementDetailsTextTabColour);
+            detailsBannerStripUI.UpdateColour(movementDetailsTabColour);
+        }
+        else
+        {
+            if (isSkillsMode)
+            {
+                detailsBannerTitleText.UpdateContentText("SKILLS");
+                detailsBannerTitleText.UpdateContentTextColour(skillsDetailsTabTextColour);
+                detailsBannerStripUI.UpdateColour(skillsDetailsTabColour);
+            }
+            else
+            {
+                detailsBannerTitleText.UpdateContentText("ITEMS");
+                detailsBannerTitleText.UpdateContentTextColour(itemsDetailsTabTextColour);
+                detailsBannerStripUI.UpdateColour(itemsDetailsTabColour);
+            }
+        }
+    }
 
     public void ToggleFighterCarasel(bool toggle = true)
     {
@@ -567,6 +633,8 @@ public class GameManager : MonoBehaviour
 
                             unitFunct.UpdateUnitName(unit.unitName);
 
+                            unitFunct.ToggleUnitMoveActiveArrows(false);
+
                             if (unit.curRaceType == UnitData.RaceType.HUMAN)
                                 unitFunct.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
                             else if (unit.curRaceType == UnitData.RaceType.BEAST)
@@ -620,6 +688,8 @@ public class GameManager : MonoBehaviour
 
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
 
+                unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+
                 UIElement unitUI = go.GetComponent<UIElement>();
 
                 HeroRoomManager.Instance.UpdateHero(unitUI);        
@@ -628,11 +698,21 @@ public class GameManager : MonoBehaviour
                 if (!spawnFighterAlly)
                 {
                     if (i == 0)
+                    {
                         unitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                        unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                    }
                     else if (i == 1)
+                    {
                         unitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+                        unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
+                    }
+
                     else if (i == 2)
+                    {
                         unitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+                        unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2));
+                    }
                 }
                 // If spawning a new unit from hero room, add unit to team
                 else
@@ -718,11 +798,21 @@ public class GameManager : MonoBehaviour
                 if (byPass)
                 {
                     if (activeRoomHeroes.Count == 0)
+                    {
                         unitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                        unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                    }
                     else if (activeRoomHeroes.Count == 1)
+                    {
                         unitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+                        unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
+                    }
+  
                     if (activeRoomHeroes.Count == 2)
+                    {
                         unitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+                        unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2));
+                    }
 
                     unitFunctionality.heroRoomUnit = true;
 
@@ -844,17 +934,28 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public void UpdateAllysPositionCombat()
     {
         if (activeRoomHeroes.Count == 1)
+        {
             activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+            activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+        }
+
         else if (activeRoomHeroes.Count == 2)
         {
             activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
             activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+
+            activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+            activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
         }
         else if (activeRoomHeroes.Count == 3)
         {
             activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
             activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
             activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+
+            activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+            activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
+            activeRoomHeroes[2].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2));
         }
     }
     public void SkillsTabChangeAlly(bool toggle, bool byPass = false, bool teamPage = false, bool actuallyDoIt = false)
@@ -1027,10 +1128,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
             //activeRoomAllUnitFunctionalitys.Clear();
 
-            for (int x = 0; x < CombatGridManager.Instance.GetEnemySpawnCombatSlots().Count; x++)
+            for (int x = 0; x < CombatGridManager.Instance.GetAllCombatSlots().Count; x++)
             {
-                if (CombatGridManager.Instance.GetEnemySpawnCombatSlot(x).transform.childCount >= 1)
-                    Destroy(CombatGridManager.Instance.GetEnemySpawnCombatSlot(x).transform.GetChild(0).gameObject);
+                for (int i = 0; i < CombatGridManager.Instance.GetCombatSlot(x).transform.childCount; i++)
+                {
+                    if (CombatGridManager.Instance.GetCombatSlot(x).transform.GetChild(i).GetComponent<UnitFunctionality>())
+                    {
+                        if (CombatGridManager.Instance.GetCombatSlot(x).transform.GetChild(i).GetComponent<UnitFunctionality>().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                            Destroy(CombatGridManager.Instance.GetCombatSlot(x).transform.GetChild(i).gameObject);
+                    }
+                }
             }
 
             for (int y = 0; y < activeRoomEnemies.Count; y++)
@@ -1103,17 +1210,28 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             allyPositions.position = ShopManager.Instance.unitsPositionShopTrans.position;
 
             if (activeRoomHeroes.Count == 1)
+            {
                 activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+            }
+
             else if (activeRoomHeroes.Count == 2)
             {
                 activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                 activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+
+                activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
             }
             else if (activeRoomHeroes.Count == 3)
             {
                 activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                 activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
                 activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+
+                activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
+                activeRoomHeroes[2].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2));
             }
             return;
         }
@@ -1148,17 +1266,27 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             else
             {
                 if (activeRoomHeroes.Count == 1)
+                {
                     activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                    activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                }
                 else if (activeRoomHeroes.Count == 2)
                 {
                     activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                     activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+
+                    activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                    activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
                 }
                 else if (activeRoomHeroes.Count == 3)
                 {
                     activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                     activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
                     activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+
+                    activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                    activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
+                    activeRoomHeroes[2].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2));
                 }
 
                 //Debug.Log("3");
@@ -1175,17 +1303,27 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 allyPositions.position = allyTurnPositionTransform.position;
 
                 if (activeRoomHeroes.Count == 1)
+                {
                     activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                    activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                }
                 else if (activeRoomHeroes.Count == 2)
                 {
                     activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                     activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+
+                    activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                    activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
                 }
                 else if (activeRoomHeroes.Count == 3)
                 {
                     activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                     activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
                     activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+
+                    activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+                    activeRoomHeroes[1].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
+                    activeRoomHeroes[2].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2));
                 }
             }
             else
@@ -1204,14 +1342,24 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             allyPositions.position = allyPostBattlePositionTransform.position;
 
             if (activeRoomHeroes.Count == 1)
+            {
                 activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
+            }
             else if (activeRoomHeroes.Count == 2)
             {
+                activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+
                 activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                 activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
             }
             else if (activeRoomHeroes.Count == 3)
             {
+                activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
+                activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
+                activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+
                 activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
                 activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
                 activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
@@ -1386,7 +1534,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     activeRoomHeroes[i].curSpeed = activeRoomHeroes[i].startingRoomSpeed;
                     activeRoomHeroes[i].curDefense = activeRoomHeroes[i].startingRoomDefense;
                     activeRoomHeroes[i].ResetUnitHealingRecieved();
+
+                    activeRoomHeroes[i].ToggleUnitMoveActiveArrows(false);
                 }
+            }
+
+            for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                activeRoomAllUnitFunctionalitys[i].ToggleUnitMoveActiveArrows(false);
             }
 
             // Re-order activeroomallunitfunctionality order to default team order after a combat win
@@ -1853,6 +2008,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             // Stop Map music
             AudioManager.Instance.PauseMapMusic(true);
+
+            CombatGridManager.Instance.isCombatMode = false;
+            CombatGridManager.Instance.UpdateCombatMainSlots();
+            ToggleSkillsItemToggleButton(false);
 
             // Combat battle music
             AudioManager.Instance.Play("Combat");
@@ -2931,7 +3090,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
 
         // Perform Damage / Heal
-        StartCoroutine(TriggerPowerUI(power, hitCount, miss, effectHitAcc));     
+        StartCoroutine(TriggerPowerUI(power, hitCount, miss, effectHitAcc));
+
+
+        //CombatGridManager.Instance.ToggleCombatGrid(true);
     }
 
 
@@ -4015,12 +4177,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (allyCount == 0)
         {
+            CombatGridManager.Instance.ToggleCombatGrid(false);
+
             playerWon = false;
             StartCoroutine(PlayerLostWait());
             return true;
         }
         else if (enemyCount == 0)
         {
+            CombatGridManager.Instance.ToggleCombatGrid(false);
             playerWon = true;
 
             for (int i = 0; i < activeRoomHeroes.Count; i++)
@@ -4100,7 +4265,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Turn end
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(false));
 
-
+        GetActiveUnitFunctionality().ToggleUnitMoveActiveArrows(false);
 
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
@@ -4119,8 +4284,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
 
         DetermineTurnOrder();
-
-
 
 
         GetActiveUnitFunctionality().CheckSwitchTeams();
@@ -4147,6 +4310,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
 
         GetActiveUnitFunctionality().StartFocusUnit();
+        CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
+
+        CombatGridManager.Instance.ToggleCombatGrid(true);
 
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
@@ -4159,6 +4325,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             UpdateActiveUnitNameText(GetActiveUnitFunctionality().GetUnitName());
 
             ToggleEndTurnButton(true);      // Toggle End Turn Button on
+
+            CombatGridManager.Instance.ToggleButtonAttackMovement(true);
         }
         else
         {
@@ -4169,6 +4337,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ToggleEndTurnButton(false);      // Toggle End Turn Button on
 
             UpdateEnemyPosition(false);
+
+            CombatGridManager.Instance.ToggleButtonAttackMovement(false);
         }
 
         // Reset active unit attack charge
@@ -4197,6 +4367,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         //Trigger Start turn effects
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false));
+
+        CombatGridManager.Instance.isCombatMode = false;
+        CombatGridManager.Instance.UpdateCombatMainSlots();
+
+        UpdateDetailsBanner();
+        ToggleSkillsItemToggleButton(false);
+        UpdatePlayerAbilityUI(false, false, true);
+        UpdateMainIconDetails(null, null, false);
     }
 
     public void ContinueTurnOrder()
@@ -4255,6 +4433,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
+            GetActiveUnitFunctionality().ToggleUnitMoveActiveArrows(true);
+
             // If skill 0 with only 1 skill slot available, if the skill targets dead allies, and there are none, force skip turn.
             if (!deadTargetsRemain && byPass)
             {
@@ -5068,7 +5248,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().curUnitTurnArrow.UpdateAlpha(1);
     }
 
-    public void UpdatePlayerAbilityUI(bool skills = true, bool itemDeleted = false)
+    public void UpdatePlayerAbilityUI(bool skills = true, bool itemDeleted = false, bool movement = false)
     {
         DisableAllMainSlotSelections();
 

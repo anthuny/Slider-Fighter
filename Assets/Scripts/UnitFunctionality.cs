@@ -203,6 +203,74 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private GameObject unitAlertText;
     public bool hitPerfect = false;
 
+    [SerializeField] private UIElement unitMoveArrowUp;
+    [SerializeField] private UIElement unitMoveArrowDown;
+    [SerializeField] private UIElement unitMoveArrowLeft;
+    [SerializeField] private UIElement unitMoveArrowRight;
+
+    [SerializeField] private UIElement unitMoveArrowUpLeft;
+    [SerializeField] private UIElement unitMoveArrowUpRight;
+    [SerializeField] private UIElement unitMoveArrowDownLeft;
+    [SerializeField] private UIElement unitMoveArrowDownRight;
+
+    [Tooltip("The combat slot the unit is currently positioned ontop of")]
+    [SerializeField] private CombatSlot activeCombatSlot;
+    [SerializeField] private int movementRange = 1;
+
+    public void UpdateMovementRange(int newMov)
+    {
+        movementRange = newMov;
+    }
+
+    public int GetMovementRange()
+    {
+        return movementRange;
+    }
+
+    public void UpdateActiveCombatSlot(CombatSlot newCombatSlot)
+    {
+        activeCombatSlot = newCombatSlot;
+    }
+
+    public CombatSlot GetActiveCombatSlot()
+    {
+        return activeCombatSlot;
+    }
+
+    public void ToggleUnitMoveActiveArrows(bool toggle = true)
+    {
+        /*
+        if (toggle)
+        {
+            // Disable all active ones first
+            for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                GameManager.Instance.activeRoomAllUnitFunctionalitys[i].ToggleUnitMoveActiveArrows(false);
+            }
+
+            unitMoveArrowUp.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+            unitMoveArrowDown.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+            unitMoveArrowLeft.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+            unitMoveArrowRight.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+            unitMoveArrowUpLeft.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+            unitMoveArrowUpRight.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+            unitMoveArrowDownLeft.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+            unitMoveArrowDownRight.UpdateAlpha(CombatGridManager.Instance.unitMoveArrowOnAlpha);
+        }
+        else
+        {
+            unitMoveArrowUp.UpdateAlpha(0);
+            unitMoveArrowDown.UpdateAlpha(0);
+            unitMoveArrowLeft.UpdateAlpha(0);
+            unitMoveArrowRight.UpdateAlpha(0);
+            unitMoveArrowUpLeft.UpdateAlpha(0);
+            unitMoveArrowUpRight.UpdateAlpha(0);
+            unitMoveArrowDownLeft.UpdateAlpha(0);
+            unitMoveArrowDownRight.UpdateAlpha(0);
+        }
+        */
+    }
+
     public void UpdateFighterRaceIcon(string fighterRace)
     {
         if (fighterRace == "HUMAN")
@@ -1101,6 +1169,8 @@ public class UnitFunctionality : MonoBehaviour
         ToggleTooltipItems(false);
         ToggleTooltipGear(false);
         ToggleTooltipStats(false);
+
+        ToggleUnitMoveActiveArrows(false);
     }
 
     void SetupFlashHit()
@@ -1432,6 +1502,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
+        ToggleUnitMoveActiveArrows(true);
         /*
         // Do unit's turn automatically if its on idle battle
         if (isDead)
@@ -4293,6 +4364,8 @@ public class UnitFunctionality : MonoBehaviour
             isDead = true;
 
             curUnitTurnArrow.UpdateAlpha(0);
+
+            ToggleUnitMoveActiveArrows(false);
 
             ResetEffects();
 

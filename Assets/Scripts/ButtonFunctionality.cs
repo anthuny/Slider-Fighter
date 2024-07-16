@@ -361,6 +361,20 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         SkillsTabManager.Instance.SkillPointAdd(2);
     }
 
+    public void ButtonSelectCombatSlot()
+    {
+        CombatSlot combatSlot = GetComponentInParent<CombatSlot>();
+        if (combatSlot)
+        {
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            if (combatSlot.selected)
+                combatSlot.ToggleSlotSelected(false);
+            else
+                combatSlot.ToggleSlotSelected(true);
+        }
+    }
     public void ButtonOpenMap()
     {
         //Debug.Log("!");
@@ -1461,6 +1475,21 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         HeroRoomManager.Instance.TogglePrompt(false, true, false);
     }
 
+    public void ButtonCombatAttackMovement()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        if (CombatGridManager.Instance.isCombatMode)
+            GetComponentInChildren<Text>().text = "COMBAT";
+        else
+            GetComponentInChildren<Text>().text = "MOVEMENT";
+
+        GetComponent<UIElement>().AnimateUI(false);
+
+        CombatGridManager.Instance.UpdateAttackMovementMode();
+    }
+
     public void ButtonCombatItemsTab()
     {
         if (!GameManager.Instance.GetAllowSelection())
@@ -1476,6 +1505,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             GetComponentInChildren<Text>().text = "ITEMS";
         else
             GetComponentInChildren<Text>().text = "SKILLS";
+
+        GameManager.Instance.UpdateDetailsBanner();
 
         if (!GameManager.Instance.isSkillsMode)
         {

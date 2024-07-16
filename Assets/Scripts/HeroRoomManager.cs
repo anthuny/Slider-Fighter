@@ -148,10 +148,11 @@ public class HeroRoomManager : MonoBehaviour
         RoomManager.Instance.ToggleInteractable(false);
 
         // Set position of newly spawned hero room unit, based on how many allies player currently has
-        if (GameManager.Instance.activeTeam.Count == 2)
-            GameManager.Instance.spawnedUnitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
-        else if (GameManager.Instance.activeTeam.Count == 3)
-            GameManager.Instance.spawnedUnitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
+
+        //Need to update spawned fighter from hero room to spawn in a unique slot
+        GameManager.Instance.spawnedUnitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetNewFighterCombatSlot().transform);
+        GameManager.Instance.spawnedUnitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetNewFighterCombatSlot());
+
 
         // Save earnt ally
         CharacterCarasel.Instance.SaveUnlockedAlly(GameManager.Instance.spawnedUnitFunctionality.GetUnitName());
