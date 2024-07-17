@@ -7,29 +7,74 @@ public class CombatSlot : MonoBehaviour
     [SerializeField] private Vector2 slotIndex;
     [SerializeField] private UIElement slotBG;
     [SerializeField] private UIElement slotTargetedUI;
-    public bool selected = false;
+    [SerializeField] private bool selected = false;
+    [SerializeField] private bool allowed = false;
+    [SerializeField] private UnitFunctionality linkedUnit;
 
     private bool sizeIncreased;
 
-    public void ToggleSlotAllowed(bool toggle = true)
+    public bool GetSelected()
     {
-        if (toggle)
-            slotTargetedUI.UpdateAlpha(1, false, 0, false, false);
-        else
-            slotTargetedUI.UpdateAlpha(0, false, 0, false, false);
+        return selected;
     }
 
-    public void ToggleSlotSelectedSize()
+    public void UpdateSelected(bool toggle = true)
+    {
+        selected = toggle;
+    }
+
+    public void UpdateLinkedUnit(UnitFunctionality newUnit)
+    {
+        linkedUnit = newUnit;
+    }
+
+    public void UpdateAllowed(bool toggle = true)
+    {
+        allowed = toggle;
+
+        if (GetAllowed())
+            slotBG.UpdateColour(CombatGridManager.Instance.slotSelectedColour);
+        else
+            slotBG.UpdateColour(CombatGridManager.Instance.slotNotAllowedColour);
+
+    }
+
+    public bool GetAllowed()
+    {
+        return allowed;
+    }
+
+    public UnitFunctionality GetLinkedUnit()
+    {
+        return linkedUnit;
+    }
+
+    public void ToggleSlotAllowed(bool toggle = true)
+    {
+        UpdateAllowed(toggle);
+
+        if (toggle)
+        {
+            slotTargetedUI.UpdateAlpha(1, false, 0, false, false);
+        }
+        else
+            slotTargetedUI.UpdateAlpha(0, false, 0, false, false);
+
+    }
+
+    public void ToggleSlotSelectedSize(bool forceOff = false)
     {
         sizeIncreased = !sizeIncreased;
 
-        if (!sizeIncreased)
+        if (forceOff)
+            sizeIncreased = false;
+
+        if (sizeIncreased)
         {
             UpdateSlotSelectedColour(CombatGridManager.Instance.slotSelectedColour);
             slotTargetedUI.gameObject.transform.localScale = new Vector3(2.75f, 2.75f, 1);
             //slotBG.UpdateColour(CombatGridManager.Instance.slotAllowedColour);
         }
-
         else
         {
             UpdateSlotSelectedColour(CombatGridManager.Instance.slotUnSelectedColour);
@@ -43,16 +88,19 @@ public class CombatSlot : MonoBehaviour
         if (toggle)
         {
             selected = true;
-            slotBG.UpdateColour(CombatGridManager.Instance.slotAllowedColour);
-            UpdateSlotSelectedColour(CombatGridManager.Instance.slotSelectedColour);
+
             ToggleSlotAllowed(true);
+            //UpdateSlotSelectedColour(CombatGridManager.Instance.slotSelectedColour);
+            slotBG.UpdateColour(CombatGridManager.Instance.slotAllowedColour);
+
             ToggleSlotSelectedSize();
         }
         else
         {
             selected = false;
+
+            //UpdateSlotSelectedColour(CombatGridManager.Instance.slotUnSelectedColour);
             slotBG.UpdateColour(CombatGridManager.Instance.slotNotAllowedColour);
-            UpdateSlotSelectedColour(CombatGridManager.Instance.slotUnSelectedColour);
             ToggleSlotSelectedSize();
         }
     }

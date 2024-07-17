@@ -366,13 +366,33 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         CombatSlot combatSlot = GetComponentInParent<CombatSlot>();
         if (combatSlot)
         {
-            // Button Click SFX
-            AudioManager.Instance.Play("Button_Click");
+            if (!CombatGridManager.Instance.isCombatMode)
+            {
+                if (CombatGridManager.Instance.GetIsMovementAllowed())
+                {
+                    if (combatSlot.GetAllowed())
+                    {
+                        // Button Click SFX
+                        AudioManager.Instance.Play("Button_Click");
 
-            if (combatSlot.selected)
-                combatSlot.ToggleSlotSelected(false);
-            else
-                combatSlot.ToggleSlotSelected(true);
+                        if (combatSlot.GetSelected())
+                            combatSlot.ToggleSlotSelected(false);
+                        else
+                            combatSlot.ToggleSlotSelected(true);
+
+                        CombatGridManager.Instance.UpdateSelectedCombatSlotMove(combatSlot);
+                        CombatGridManager.Instance.MoveUnitToNewSlot(GameManager.Instance.GetActiveUnitFunctionality());
+                    }
+                    else
+                    {
+                        AudioManager.Instance.Play("SFX_ShopBuyFail");
+                    }
+                }
+                else
+                {
+                    AudioManager.Instance.Play("SFX_ShopBuyFail");
+                }
+            }
         }
     }
     public void ButtonOpenMap()
@@ -1475,19 +1495,26 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         HeroRoomManager.Instance.TogglePrompt(false, true, false);
     }
 
-    public void ButtonCombatAttackMovement()
+    public void ButtonCombatAttackMovement(bool forceMovement = false)
     {
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
+        if (forceMovement)
+            CombatGridManager.Instance.isCombatMode = false;
+
         if (CombatGridManager.Instance.isCombatMode)
+        {
             GetComponentInChildren<Text>().text = "COMBAT";
+        }
         else
+        {
             GetComponentInChildren<Text>().text = "MOVEMENT";
+        }
 
         GetComponent<UIElement>().AnimateUI(false);
 
-        CombatGridManager.Instance.UpdateAttackMovementMode();
+        CombatGridManager.Instance.UpdateAttackMovementMode(forceMovement);
     }
 
     public void ButtonCombatItemsTab()
@@ -2299,6 +2326,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (HeroRoomManager.Instance.playerInHeroRoomView && !unit.heroRoomUnit)
                 return;
         }
+
+        if (!CombatGridManager.Instance.isCombatMode)
+            return;
 
         StartCoroutine(SelectUnitCo());
     }

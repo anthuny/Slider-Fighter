@@ -15,6 +15,7 @@ public class UnitFunctionality : MonoBehaviour
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
+    [SerializeField] private UIElement unitStatBar;
     [SerializeField] private UIElement fighterRaceIcon;
     [SerializeField] private UIElement heroHitsAccTextPos;
     [SerializeField] private UIElement enemyHitsAccTextPos;
@@ -215,16 +216,88 @@ public class UnitFunctionality : MonoBehaviour
 
     [Tooltip("The combat slot the unit is currently positioned ontop of")]
     [SerializeField] private CombatSlot activeCombatSlot;
-    [SerializeField] private int movementRange = 1;
+    [SerializeField] private int curMovementUses = 1;
+    [SerializeField] private int maxMovementUses = 1;
 
-    public void UpdateMovementRange(int newMov)
+    [SerializeField] private UIElement unitButton;
+
+    public void ToggleUnitButton(bool toggle = true)
     {
-        movementRange = newMov;
+        unitButton.GetComponent<GraphicRaycaster>().enabled = toggle;
     }
 
-    public int GetMovementRange()
+    public void ToggleUnitStatBarAlpha(bool toggle = true)
     {
-        return movementRange;
+        float newScale = 0;
+        if (toggle)
+        {
+            newScale = GameManager.Instance.unitStatBarSizeMax;
+            unitStatBar.gameObject.transform.localScale = new Vector2(newScale, newScale);
+            unitStatBar.UpdateAlpha(GameManager.Instance.unitStatBarOnAlpha, false, 0, false , false);
+            unitStatBar.AnimateUI(false);
+        }
+        else
+        {
+            newScale = GameManager.Instance.unitStarBarSizeMin;
+            unitStatBar.gameObject.transform.localScale = new Vector2(newScale, newScale);
+            unitStatBar.UpdateAlpha(GameManager.Instance.unitStatBarOffAlpha, false, 0, false, false);
+        }
+    }
+
+    public bool DetectIfUnitBelow()
+    {
+        bool toggle = false;
+
+        if (activeCombatSlot)
+        {
+            Vector2 unitIndex = activeCombatSlot.GetSlotIndex();
+
+            if (CombatGridManager.Instance.GetCombatSlot(new Vector2(unitIndex.x, unitIndex.y - 1)))
+            {
+                if (CombatGridManager.Instance.GetCombatSlot(new Vector2(unitIndex.x, unitIndex.y - 1)).GetLinkedUnit())
+                    return true;
+                else
+                    return false;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+
+    public void ResetMovementUses()
+    {
+        curMovementUses = maxMovementUses;
+
+        // Update UI
+        OverlayUI.Instance.UpdateRemainingMovementUsesText(curMovementUses);
+    }
+
+    public void UpdatCurMovementUses(int newMov)
+    {
+        curMovementUses = newMov;
+
+        if (curMovementUses < 0)
+            curMovementUses = 0;
+
+        // Update UI
+        OverlayUI.Instance.UpdateRemainingMovementUsesText(curMovementUses);
+    }
+
+    public int GetCurMovementUses()
+    {
+        return curMovementUses;
+    }
+
+    public void UpdatMaxMovementRange(int newMov)
+    {
+        maxMovementUses = newMov;
+    }
+
+    public int GetMaxMovementRange()
+    {
+        return maxMovementUses;
     }
 
     public void UpdateActiveCombatSlot(CombatSlot newCombatSlot)
@@ -1516,18 +1589,24 @@ public class UnitFunctionality : MonoBehaviour
         {
             yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
 
-            // If unit has energy to choose a skill, choose one
-            GameManager.Instance.UpdateActiveSkill(ChooseRandomSkill());
+            // Select a combat slot to move to
+            CombatGridManager.Instance.AutoSelectMovement(this);
+
+            yield return new WaitForSeconds(1.5f);
+
+            StartCoroutine(UnitEndTurn(true, false));
 
             // Trigger current unit's turn energy count to deplete for skill use
             //GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost, true);
             //GameManager.Instance.UpdateActiveUnitHealthBar(false);
 
+            // If unit has energy to choose a skill, choose one
+            //GameManager.Instance.UpdateActiveSkill(ChooseRandomSkill());
             // Select units
-            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
 
-            TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false, null, false, true);
-
+            //TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false, null, false, true);
+            //WeaponManager.Instance.SetEnemyWeapon(this, true);
             /*
             if (GameManager.Instance.GetActiveSkill().curAnimType == SkillData.SkillAnimType.DEFAULT)
             {
@@ -1541,7 +1620,7 @@ public class UnitFunctionality : MonoBehaviour
 
             // Adjust power based on skill effect amp on target then send it 
 
-            WeaponManager.Instance.SetEnemyWeapon(this, true);
+
 
 
             /*
@@ -4462,7 +4541,7 @@ public class UnitFunctionality : MonoBehaviour
             GameManager.Instance.activeRoomHeroes.Remove(this);
         }
 
-        GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
+        //GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
     }
 
     public void ReviveUnit(int acc, bool fullhealth = false, bool enemy = false)
@@ -4483,7 +4562,7 @@ public class UnitFunctionality : MonoBehaviour
         if (GameManager.Instance.fallenEnemies.Contains(this))
             GameManager.Instance.fallenEnemies.Remove(this);
 
-        GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
+        //GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
 
         ToggleUnitDisplay(true);
 

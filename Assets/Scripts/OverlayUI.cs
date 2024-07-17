@@ -43,6 +43,8 @@ public class OverlayUI : MonoBehaviour
 
     public UIElement itemRarityTextUI;
     public TextMeshProUGUI itemRarityText;
+    [SerializeField] private UIElement remainingMovementUsesUI;
+    [SerializeField] private UIElement remainingMovementUsesText;
 
     [SerializeField] private Color powerDamageColour;
     [SerializeField] private Color powerHealColour;
@@ -262,60 +264,22 @@ public class OverlayUI : MonoBehaviour
         */
     }
 
-    public void ToggleAllStats(bool toggle = true, bool skill = true)
+    public void UpdateRemainingMovementUsesText(int uses)
     {
-        if (skill)
+        remainingMovementUsesText.UpdateContentText(uses.ToString());
+        remainingMovementUsesText.AnimateUI(false);
+    }
+
+    public void ToggleAllStats(bool toggle = true, bool skill = true, bool movement = false)
+    {
+        if (movement)
         {
-            if (toggle)
-                skillDetailsPower.UpdateAlpha(1);
-            else
-                skillDetailsPower.UpdateAlpha(0);
-            skillDetailsPower.ToggleButton(toggle);
+            remainingMovementUsesUI.UpdateAlpha(1);
+            remainingMovementUsesUI.AnimateUI(false);
+            remainingMovementUsesText.UpdateAlpha(1);
 
-            if (toggle)
-                skillDetailsMaxCdUi.UpdateAlpha(1);
-            else
-                skillDetailsMaxCdUi.UpdateAlpha(0);
-            skillDetailsMaxCdUi.ToggleButton(toggle);
-
-            if (toggle)
-                skillDetailsHitsRemaininguI.UpdateAlpha(1);
-            else
-                skillDetailsHitsRemaininguI.UpdateAlpha(0);
-            skillDetailsHitsRemaininguI.ToggleButton(toggle);
-
-            if (toggle)
-                skillDetailsBaseHitsUI.UpdateAlpha(1);
-            else
-                skillDetailsBaseHitsUI.UpdateAlpha(0);
-            skillDetailsBaseHitsUI.ToggleButton(toggle);
-
-            if (toggle)
-                skillDetailsAccuracyuI.UpdateAlpha(1);
-            else
-                skillDetailsAccuracyuI.UpdateAlpha(0);
-            skillDetailsAccuracyuI.ToggleButton(toggle);
-
-            if (toggle)
-                skillDetailsMaxTargetsuI.UpdateAlpha(1);
-            else
-                skillDetailsMaxTargetsuI.UpdateAlpha(0);
-            skillDetailsMaxTargetsuI.ToggleButton(toggle);
-        }
-        // Item
-        else
-        {
-            if (toggle)
-                skillDetailsPower.UpdateAlpha(1);
-            else
-                skillDetailsPower.UpdateAlpha(0);
-            skillDetailsPower.ToggleButton(toggle);
-
-            if (toggle)
-                skillDetailsMaxTargetsuI.UpdateAlpha(1);
-            else
-                skillDetailsMaxTargetsuI.UpdateAlpha(0);
-            skillDetailsMaxTargetsuI.ToggleButton(toggle);
+            skillDetailsPower.UpdateAlpha(0);
+            skillDetailsPower.ToggleButton(false);
 
             skillDetailsMaxCdUi.UpdateAlpha(0);
             skillDetailsMaxCdUi.ToggleButton(false);
@@ -328,7 +292,82 @@ public class OverlayUI : MonoBehaviour
 
             skillDetailsAccuracyuI.UpdateAlpha(0);
             skillDetailsAccuracyuI.ToggleButton(false);
+
+            skillDetailsMaxTargetsuI.UpdateAlpha(0);
+            skillDetailsMaxTargetsuI.ToggleButton(false);
         }
+        else
+        {
+            remainingMovementUsesUI.UpdateAlpha(0);
+            remainingMovementUsesText.UpdateAlpha(0);
+
+            if (skill)
+            {
+                if (toggle)
+                    skillDetailsPower.UpdateAlpha(1);
+                else
+                    skillDetailsPower.UpdateAlpha(0);
+                skillDetailsPower.ToggleButton(toggle);
+
+                if (toggle)
+                    skillDetailsMaxCdUi.UpdateAlpha(1);
+                else
+                    skillDetailsMaxCdUi.UpdateAlpha(0);
+                skillDetailsMaxCdUi.ToggleButton(toggle);
+
+                if (toggle)
+                    skillDetailsHitsRemaininguI.UpdateAlpha(1);
+                else
+                    skillDetailsHitsRemaininguI.UpdateAlpha(0);
+                skillDetailsHitsRemaininguI.ToggleButton(toggle);
+
+                if (toggle)
+                    skillDetailsBaseHitsUI.UpdateAlpha(1);
+                else
+                    skillDetailsBaseHitsUI.UpdateAlpha(0);
+                skillDetailsBaseHitsUI.ToggleButton(toggle);
+
+                if (toggle)
+                    skillDetailsAccuracyuI.UpdateAlpha(1);
+                else
+                    skillDetailsAccuracyuI.UpdateAlpha(0);
+                skillDetailsAccuracyuI.ToggleButton(toggle);
+
+                if (toggle)
+                    skillDetailsMaxTargetsuI.UpdateAlpha(1);
+                else
+                    skillDetailsMaxTargetsuI.UpdateAlpha(0);
+                skillDetailsMaxTargetsuI.ToggleButton(toggle);
+            }
+            // Item
+            else if (!skill)
+            {
+                if (toggle)
+                    skillDetailsPower.UpdateAlpha(1);
+                else
+                    skillDetailsPower.UpdateAlpha(0);
+                skillDetailsPower.ToggleButton(toggle);
+
+                if (toggle)
+                    skillDetailsMaxTargetsuI.UpdateAlpha(1);
+                else
+                    skillDetailsMaxTargetsuI.UpdateAlpha(0);
+                skillDetailsMaxTargetsuI.ToggleButton(toggle);
+
+                skillDetailsMaxCdUi.UpdateAlpha(0);
+                skillDetailsMaxCdUi.ToggleButton(false);
+
+                skillDetailsHitsRemaininguI.UpdateAlpha(0);
+                skillDetailsHitsRemaininguI.ToggleButton(false);
+
+                skillDetailsBaseHitsUI.UpdateAlpha(0);
+                skillDetailsBaseHitsUI.ToggleButton(false);
+
+                skillDetailsAccuracyuI.UpdateAlpha(0);
+                skillDetailsAccuracyuI.ToggleButton(false);
+            }
+        }
+
     }
 
     private void UpdateSelectedObjectPowerText(int power)

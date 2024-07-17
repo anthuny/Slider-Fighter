@@ -144,7 +144,7 @@ public class HeroRoomManager : MonoBehaviour
 
         //GameManager.Instance.StartCoroutine(GameManager.Instance.SetupPostBattleUI(true));
         //StartCoroutine(GameManager.Instance.HeroRetrievalScene());
-        GameManager.Instance.UpdateAllAlliesPosition(true);
+        //GameManager.Instance.UpdateAllAlliesPosition(true);
         RoomManager.Instance.ToggleInteractable(false);
 
         // Set position of newly spawned hero room unit, based on how many allies player currently has
@@ -152,6 +152,7 @@ public class HeroRoomManager : MonoBehaviour
         //Need to update spawned fighter from hero room to spawn in a unique slot
         GameManager.Instance.spawnedUnitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetNewFighterCombatSlot().transform);
         GameManager.Instance.spawnedUnitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetNewFighterCombatSlot());
+        CombatGridManager.Instance.GetNewFighterCombatSlot().UpdateLinkedUnit(GameManager.Instance.spawnedUnitFunctionality);
 
 
         // Save earnt ally
@@ -162,11 +163,11 @@ public class HeroRoomManager : MonoBehaviour
 
     void RemoveSpawnedUnit()
     {
-        GameManager.Instance.UpdateAllAlliesPosition(true);
+        //GameManager.Instance.UpdateAllAlliesPosition(true);
         RoomManager.Instance.ToggleInteractable(false);
 
         GameManager.Instance.RemoveUnit(GameManager.Instance.spawnedUnitFunctionality);
-        Debug.Log("Destroying unit " + GameManager.Instance.spawnedUnitFunctionality);
+        //Debug.Log("Destroying unit " + GameManager.Instance.spawnedUnitFunctionality);
 
 
 
