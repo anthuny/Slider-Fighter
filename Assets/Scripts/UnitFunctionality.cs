@@ -15,6 +15,7 @@ public class UnitFunctionality : MonoBehaviour
     public enum LastOpenedMastery { STANDARD, ADVANCED };
     public LastOpenedMastery lastOpenedStatPage;
 
+    public CharacterAnimation characterAnimation;
     [SerializeField] private UIElement unitStatBar;
     [SerializeField] private UIElement fighterRaceIcon;
     [SerializeField] private UIElement heroHitsAccTextPos;
@@ -220,7 +221,31 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private int maxMovementUses = 1;
 
     [SerializeField] private UIElement unitButton;
+    public bool usedExtraMove;
 
+    public void UpdateUnitLookDirection(bool forceDirection = false, bool right = false)
+    {
+        if (!forceDirection)
+        {
+            // Update unit look direction
+            if (GetActiveCombatSlot().GetSlotIndex().x > 2)
+                ToggleUnitVisualsXAxis(true);
+            else if (GetActiveCombatSlot().GetSlotIndex().x < 2)
+                ToggleUnitVisualsXAxis(false);
+        }
+
+        if (forceDirection)
+        {
+            if (right)
+                ToggleUnitVisualsXAxis(true);
+            else
+                ToggleUnitVisualsXAxis(false);
+        }
+    }
+    public void ToggleUnitVisualsXAxis(bool toggle = true)
+    {
+        characterAnimation.ToggleUnitXAxis(toggle);
+    }
     public void ToggleUnitButton(bool toggle = true)
     {
         unitButton.GetComponent<GraphicRaycaster>().enabled = toggle;
@@ -278,11 +303,16 @@ public class UnitFunctionality : MonoBehaviour
     {
         curMovementUses = newMov;
 
+        /*
         if (curMovementUses < 0)
             curMovementUses = 0;
+        */
 
         // Update UI
-        OverlayUI.Instance.UpdateRemainingMovementUsesText(curMovementUses);
+        if (curMovementUses >= 0)
+            OverlayUI.Instance.UpdateRemainingMovementUsesText(curMovementUses);
+        else
+            OverlayUI.Instance.UpdateRemainingMovementUsesText(0);
     }
 
     public int GetCurMovementUses()
@@ -1363,27 +1393,15 @@ public class UnitFunctionality : MonoBehaviour
     public void UpdateCurrentSkills(List<SkillData> skillBaseSlots)
     {
         this.curSkillBaseSlots = skillBaseSlots;
+
+        for (int i = 0; i < skills.Count; i++)
+        {
+            skills[i].ResetSkillDataSkillRange();
+        }
     }
 
     public void UpdateUnitSkills(List<SkillData> skills)
     {
-        //this.skills = skills;
-
-        /*
-        this.skills.Clear();
-        for (int i = 0; i < 4; i++)
-        {
-            if (skills[i].originalIndex == 0)
-                skills.Insert(0, skills[i]);
-            else if (skills[i].originalIndex == 1)
-                skills.Insert(1, skills[i]);
-            else if (skills[i].originalIndex == 2)
-                skills.Insert(2, skills[i]);
-            else if (skills[i].originalIndex == 3)
-                skills.Insert(3, skills[i]);
-        }
-        */
-
         this.skills = skills;
     }
 
@@ -4441,6 +4459,8 @@ public class UnitFunctionality : MonoBehaviour
         if (curHealth <= 0 && !isDead)
         {
             isDead = true;
+
+            GetActiveCombatSlot().UpdateLinkedUnit(null);
 
             curUnitTurnArrow.UpdateAlpha(0);
 

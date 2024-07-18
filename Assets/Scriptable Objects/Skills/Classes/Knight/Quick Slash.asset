@@ -21,9 +21,10 @@ MonoBehaviour:
   curSkillEffectType: 0
   curSkillActiveType: 0
   curSkillSelectionType: 1
-  skillRangeMin: 0
-  skillRangeMax: 2
-  skillRangeHitAreas: []
+  skillRangeHitArea: {x: 1, y: 1}
+  skillRangeMinNo: 0
+  startingSkillRange: 1
+  curSkillRange: 1
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 9f003367cde8e914cadd39e9903c2904, type: 3}
   skillName: QUICK SLASH

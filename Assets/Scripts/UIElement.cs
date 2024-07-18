@@ -468,12 +468,12 @@ public class UIElement : MonoBehaviour
             if (contentImage == null)
                 return;
 
-            //ResetAnimateScaleImage();
+            ResetAnimateScaleImage();
 
             if (doScalePunch)
                 contentImage.gameObject.transform.DOPunchScale(new Vector3(scaleIncSize, scaleIncSize), scaleIncTime, vibrato, elasticity);
 
-            //ResetAnimateScaleImage();
+            StartCoroutine(DecreaseSizeAfterTime());
         }
 
         if (dieAfterDisplay)
@@ -485,6 +485,13 @@ public class UIElement : MonoBehaviour
             else
                 StartCoroutine(HideUIOvertime(scaleIncTime + GameManager.Instance.skillAlertAppearTime));
         }
+    }
+
+    IEnumerator DecreaseSizeAfterTime()
+    {
+        yield return new WaitForSeconds(0.125f);
+
+        ResetAnimateScaleImage();
     }
 
     void AnimateUIMaxCap()
@@ -573,7 +580,7 @@ public class UIElement : MonoBehaviour
         contentImage.color = colour;
     }
 
-    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true)
+    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true, bool doAnim = false)
     {
         if (this == null)
             return;
@@ -591,7 +598,8 @@ public class UIElement : MonoBehaviour
         // Make UI element selectable/unselectable
         if (alpha != 0)
         {
-            AnimateUI(text);
+            if (doAnim)
+                AnimateUI(text);
 
             isEnabled = true;
 

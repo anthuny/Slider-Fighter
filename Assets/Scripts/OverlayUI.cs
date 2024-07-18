@@ -45,6 +45,7 @@ public class OverlayUI : MonoBehaviour
     public TextMeshProUGUI itemRarityText;
     [SerializeField] private UIElement remainingMovementUsesUI;
     [SerializeField] private UIElement remainingMovementUsesText;
+    public UIElement extraMovePrompt;
 
     [SerializeField] private Color powerDamageColour;
     [SerializeField] private Color powerHealColour;

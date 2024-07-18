@@ -452,6 +452,8 @@ public class MapManager : MonoBehaviour
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
+            CombatGridManager.Instance.ToggleCombatSlotsInput(false);
+
             CombatGridManager.Instance.ToggleCombatGrid(false);
             CombatGridManager.Instance.ToggleButtonAttackMovement(false);
 

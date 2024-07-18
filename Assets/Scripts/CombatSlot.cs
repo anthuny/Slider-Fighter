@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CombatSlot : MonoBehaviour
 {
@@ -10,8 +11,24 @@ public class CombatSlot : MonoBehaviour
     [SerializeField] private bool selected = false;
     [SerializeField] private bool allowed = false;
     [SerializeField] private UnitFunctionality linkedUnit;
+    [SerializeField] private Animator animator;
+    [SerializeField] private GraphicRaycaster graphicRaycaster;
 
     private bool sizeIncreased;
+    public bool combatSelected;
+
+    public void ToggleCombatSlotInput(bool toggle = true)
+    {
+        if (graphicRaycaster)
+        {
+            graphicRaycaster.enabled = toggle;
+        }
+    }
+
+    public Animator GetAnimator()
+    {
+        return animator;
+    }
 
     public bool GetSelected()
     {
@@ -47,6 +64,37 @@ public class CombatSlot : MonoBehaviour
     public UnitFunctionality GetLinkedUnit()
     {
         return linkedUnit;
+    }
+
+    public void ToggleCombatSelected(bool toggle = true)
+    {
+        combatSelected = toggle;
+
+        if (toggle)
+        {
+            GetAnimator().SetBool("CombatAttack", true);
+
+            if (GetSelected())
+                ToggleSlotSelected();
+            else
+                ToggleSlotSelected(false);
+
+            slotBG.UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+            UpdateSlotSelectedColour(CombatGridManager.Instance.slotAggressiveColour);
+        }
+        else
+        {
+            GetAnimator().SetBool("CombatAttack", false);
+
+            if (GetAllowed())
+                ToggleSlotAllowed();
+            else
+                ToggleSlotAllowed(false);
+
+            ToggleSlotSelectedSize(true);
+            //slotBG.UpdateColour(CombatGridManager.Instance.slotSelectedColour);
+            UpdateSlotSelectedColour(CombatGridManager.Instance.slotSelectedColour);
+        }
     }
 
     public void ToggleSlotAllowed(bool toggle = true)

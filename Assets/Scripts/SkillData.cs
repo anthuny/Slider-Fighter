@@ -31,11 +31,13 @@ public class SkillData : ScriptableObject
     public enum SkillSelectionType { UNITS, AREAS}
     public SkillSelectionType curSkillSelectionType;
 
-    public int skillRangeMin = 0;
-    public int skillRangeMax = 2;
-
     // Position of each slot in range of the skill, from the fighter
-    public List<Vector2> skillRangeHitAreas = new List<Vector2>();
+    public Vector2 skillRangeHitArea;
+    [Tooltip("When on, all allowed slots in combat for skill will an attack slot")]
+    public bool attackAllSelected = false;
+    public int skillRangeMinNo = 0;
+    public int startingSkillRange = 1;
+    public int curSkillRange;
 
     // Position of each slot for the attack area formation, from 0x0
     public List<Vector2> skillAttackHitAreas = new List<Vector2>();
@@ -121,6 +123,11 @@ public class SkillData : ScriptableObject
     public int originalIndex;
 
     public bool reanimated;
+
+    public void ResetSkillDataSkillRange()
+    {
+        curSkillRange = startingSkillRange;
+    }
 
     public void SetSkillStarting()
     {

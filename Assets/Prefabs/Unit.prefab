@@ -685,7 +685,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 150
+  m_SortingOrder: 380
   m_TargetDisplay: 0
 --- !u!1 &562321631487165601
 GameObject:
@@ -3878,6 +3878,7 @@ MonoBehaviour:
   curUnitType: 0
   curUnitRace: 0
   lastOpenedStatPage: 0
+  characterAnimation: {fileID: 0}
   unitStatBar: {fileID: 1290838154431948151}
   fighterRaceIcon: {fileID: 7749453645207438073}
   heroHitsAccTextPos: {fileID: 5171703168743168375}
@@ -4025,8 +4026,10 @@ MonoBehaviour:
   unitMoveArrowDownLeft: {fileID: 8066357533649495989}
   unitMoveArrowDownRight: {fileID: 3989431389288397035}
   activeCombatSlot: {fileID: 0}
-  movementRange: 1
+  curMovementUses: 1
+  maxMovementUses: 1
   unitButton: {fileID: 3301436897025852628}
+  usedExtraMove: 0
   settingUpEffect: 0
 --- !u!114 &7414491478435158705
 MonoBehaviour:

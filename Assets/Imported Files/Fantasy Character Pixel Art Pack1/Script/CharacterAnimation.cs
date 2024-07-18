@@ -10,10 +10,15 @@ public class CharacterAnimation : MonoBehaviour {
 
     public bool Front_Back;
     public bool Left_Right;
+
+    public UnitFunctionality unit;
     void Start() {
         //ChangeAnimation("CA_Walk_1");
         On_Front_Back(Front_Back);
         ChangeRotate(Left_Right);
+
+        unit = GetComponentInParent<UnitFunctionality>();
+        unit.characterAnimation = this;
     }
     public void On_Front_Back(bool flg) {
         Front_Back = flg;
@@ -23,7 +28,7 @@ public class CharacterAnimation : MonoBehaviour {
             //ChangeAnimation("CA_Walk_2");
         }
     }
-    public void On_Left_Right(bool flg) {
+    public void ToggleUnitXAxis(bool flg) {
         Left_Right = flg;
         if (flg) {
             ChangeRotate(true);
@@ -66,9 +71,9 @@ public class CharacterAnimation : MonoBehaviour {
         for (int cnt = 0; cnt < CharacterList.Length; cnt++) {
             Vector3 tmp = CharacterTransform[cnt].localScale;
             if (flg) {
-                tmp.x = Mathf.Abs(tmp.x);
+                tmp.x = 1;
             } else {
-                tmp.x = 0-tmp.x;
+                tmp.x = -1;
             }
             CharacterTransform[cnt].localScale = tmp;
         }

@@ -370,11 +370,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             {
                 if (CombatGridManager.Instance.GetIsMovementAllowed())
                 {
+                    // Button Click SFX
+                    AudioManager.Instance.Play("Button_Click");
+
                     if (combatSlot.GetAllowed())
                     {
-                        // Button Click SFX
-                        AudioManager.Instance.Play("Button_Click");
-
                         if (combatSlot.GetSelected())
                             combatSlot.ToggleSlotSelected(false);
                         else
@@ -391,6 +391,60 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 else
                 {
                     AudioManager.Instance.Play("SFX_ShopBuyFail");
+                }
+            }
+            // Combat Mode
+            else
+            {
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
+                if (combatSlot.GetAllowed())
+                {
+                    if (combatSlot.combatSelected)
+                    {
+                        // Launch attack on all combat selected slots
+
+                        // If attack area of skill is 1x1
+                        if (GameManager.Instance.GetActiveSkill().skillRangeHitArea.x == 1 &&
+                            GameManager.Instance.GetActiveSkill().skillRangeHitArea.y == 1)
+                        {
+                            if (combatSlot.GetLinkedUnit())
+                            {
+                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
+                            }
+                        }
+                        else if (GameManager.Instance.GetActiveSkill().attackAllSelected)
+                        {
+                            if (combatSlot.GetLinkedUnit())
+                            {
+                                // add all units ontop of a combat selected slot to units selected.
+                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+
+                                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+                                {
+                                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetActiveCombatSlot().combatSelected)
+                                    {
+                                        GameManager.Instance.unitsSelected.Add(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
+                                    }
+                                }
+
+                                GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // If attack area of skill is 1x1, replace other combat selected slot with this one
+                        if (GameManager.Instance.GetActiveSkill().skillRangeHitArea.x == 1 &&
+                            GameManager.Instance.GetActiveSkill().skillRangeHitArea.y == 1)
+                        {
+                            CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                            combatSlot.ToggleCombatSelected(true);
+                            // Remove current placed attack, and move it to target slot
+                        }
+                    }
                 }
             }
         }
@@ -1514,18 +1568,31 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GetComponent<UIElement>().AnimateUI(false);
 
-        CombatGridManager.Instance.UpdateAttackMovementMode(forceMovement);
+        CombatGridManager.Instance.UpdateAttackMovementMode(forceMovement, false, false);
     }
 
-    public void ButtonCombatItemsTab()
+    public void ButtonCombatItemsTab(bool forceItemMode = false)
     {
         if (!GameManager.Instance.GetAllowSelection())
             return;
 
+        if (GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() < 0)
+            forceItemMode = true;
+
+        if (!forceItemMode)
+            GameManager.Instance.isSkillsMode = !GameManager.Instance.isSkillsMode;
+
+        /*
+        if (forceItemMode)
+            GameManager.Instance.isSkillsMode = false;
+        else
+            GameManager.Instance.isSkillsMode = true;
+        */
+
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        GameManager.Instance.isSkillsMode = !GameManager.Instance.isSkillsMode;
         GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
 
         if (GameManager.Instance.isSkillsMode)
@@ -1553,8 +1620,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
         else
         {
+            // Update active unit attack range
+            CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality());
+
             GameManager.Instance.ToggleSelectingUnits(true);
-            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
 
             GameManager.Instance.fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
             GameManager.Instance.fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
@@ -1603,8 +1673,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
 
-            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
         // Item
         else
@@ -1622,8 +1692,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemMainAlly()[0]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[0]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[0]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[0]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -1634,8 +1704,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 1)
@@ -1647,8 +1717,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemSecondAlly()[0]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[0]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -1659,8 +1729,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 2)
@@ -1672,8 +1742,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemThirdAlly()[0]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[0]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[0]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[0]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -1684,15 +1754,15 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                           // GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                 }
             }
 
-            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
     }
 
@@ -1773,8 +1843,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
 
-            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
         // Item
         else
@@ -1792,8 +1862,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemMainAlly()[1]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[1]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[1]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[1]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -1804,8 +1874,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 1)
@@ -1817,8 +1887,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemSecondAlly()[1]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[1]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -1829,8 +1899,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 2)
@@ -1842,8 +1912,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemThirdAlly()[1]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[1]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[1]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[1]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -1854,8 +1924,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                 }
@@ -1873,8 +1943,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
 
-            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
     }
 
@@ -1970,8 +2040,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
 
-            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
         // Item
         else
@@ -1989,8 +2059,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemMainAlly()[2]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[2]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[2]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[2]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -2001,8 +2071,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 1)
@@ -2014,8 +2084,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemSecondAlly()[2]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[2]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -2026,8 +2096,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 2)
@@ -2039,8 +2109,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             GameManager.Instance.UpdateActiveItemSlot(OwnedLootInven.Instance.GetWornItemThirdAlly()[2]);
 
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[2]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[2]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[2]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -2051,8 +2121,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                 }
@@ -2070,8 +2140,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
 
-            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
     }
 
@@ -2113,8 +2183,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
 
-            GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
         // Item
         else
@@ -2129,8 +2199,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[3]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[3]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[3]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[3]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -2141,8 +2211,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 1)
@@ -2151,8 +2221,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[3]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[3]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -2163,8 +2233,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                     else if (i == 2)
@@ -2173,8 +2243,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[3]);
                             GameManager.Instance.UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[3]);
-                            GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[3]);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[3]);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
 
                             GameManager.Instance.DisableAllMainSlotSelections();
                             ToggleSelected(true);
@@ -2185,8 +2255,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             GameManager.Instance.UpdateActiveItem(null);
                             GameManager.Instance.UpdateMainIconDetails(null, null);
-                            GameManager.Instance.UpdateUnitSelection(null, null);
-                            GameManager.Instance.UpdateUnitsSelectedText();
+                            //GameManager.Instance.UpdateUnitSelection(null, null);
+                            //GameManager.Instance.UpdateUnitsSelectedText();
                         }
                     }
                 }
@@ -2204,8 +2274,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 ToggleSelected(true);
             }
 
-            GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
-            GameManager.Instance.UpdateUnitsSelectedText();
+            //GameManager.Instance.UpdateUnitSelection(null, GameManager.Instance.GetActiveItem());
+            //GameManager.Instance.UpdateUnitsSelectedText();
         }
     }
 
@@ -2327,7 +2397,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 return;
         }
 
-        if (!CombatGridManager.Instance.isCombatMode)
+        if (!CombatGridManager.Instance.isCombatMode || CombatGridManager.Instance.isCombatMode)
             return;
 
         StartCoroutine(SelectUnitCo());

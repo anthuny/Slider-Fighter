@@ -7,6 +7,9 @@ public class CombatGridManager : MonoBehaviour
     public static CombatGridManager Instance;
     public float unitMoveArrowOnAlpha = 0.75f;
 
+    public Animation combatSlotIdle;
+    public Animation combatSlotAttackIdle;
+
     public Color slotAllowedColour;
     public Color slotNotAllowedColour;
     public Color slotDisabledColour;
@@ -18,6 +21,7 @@ public class CombatGridManager : MonoBehaviour
     public float moveTimer = 0;
     public float unitMoveSpeed = 1;
     [SerializeField] private ButtonFunctionality buttonAttackMovement;
+    [SerializeField] private ButtonFunctionality buttonSkillsItem;
 
     [SerializeField] private CombatSlot selectedCombatSlotMove;
     [SerializeField] private UIElement buttonAttackMovementToggle;
@@ -34,6 +38,19 @@ public class CombatGridManager : MonoBehaviour
     public bool isCombatMode = false;
     [SerializeField] private bool isMovementAllowed = true;
 
+    public void ToggleCombatSlotsInput(bool toggle = true)
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            allCombatSlots[i].ToggleCombatSlotInput(toggle);
+        }
+    }
+
+    public ButtonFunctionality GetButtonSkillsItems()
+    {
+        return buttonSkillsItem;
+    }
+
     public ButtonFunctionality GetButtonAttackMovement()
     {
         return buttonAttackMovement;
@@ -49,18 +66,26 @@ public class CombatGridManager : MonoBehaviour
         isMovementAllowed = toggle;
     }
 
-    public void UpdateAttackMovementMode(bool forceMovement = false, bool forceCombat = false)
+    public void UpdateAttackMovementMode(bool forceMovement = false, bool forceCombat = false, bool enabled = false)
     {
+        if (forceMovement)
+        {
+            isCombatMode = enabled;
+        }
+        else if (forceCombat)
+        {
+            isCombatMode = enabled;
+        }
+
         if (!forceMovement && !forceCombat)
             isCombatMode = !isCombatMode;
-        else if (forceMovement)
-            isCombatMode = false;
-        else if (forceCombat)
-            isCombatMode = true;
 
         if (isCombatMode)
         {
-            GameManager.Instance.ToggleAllUnitButtons(true);
+            // Disable extra move prompt
+            OverlayUI.Instance.extraMovePrompt.UpdateAlpha(0);
+
+            //GameManager.Instance.ToggleAllUnitButtons(true);
 
             GameManager.Instance.ToggleSkillsItemToggleButton(true);
             UnselectAllSelectedCombatSlots();
@@ -97,6 +122,15 @@ public class CombatGridManager : MonoBehaviour
             OverlayUI.Instance.ToggleAllStats(true, false, true);
 
             UpdateUnitMoveRange(GameManager.Instance.GetActiveUnitFunctionality());
+
+            // Enable extra move prompt if unit has 0 moves left
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() == 0)
+                OverlayUI.Instance.extraMovePrompt.UpdateAlpha(1);
+            else
+                OverlayUI.Instance.extraMovePrompt.UpdateAlpha(0);
+
+            //if (GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() < 0)
+            //    GetButtonAttackMovement().ButtonCombatAttackMovement(true);
         }
 
         UpdateCombatMainSlots();
@@ -172,13 +206,34 @@ public class CombatGridManager : MonoBehaviour
         UpdateCombatSlotsIndex();
     }
 
+    public void CheckToUnlinkCombatSlot()
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            if (allCombatSlots[i].GetLinkedUnit())
+            {
+                if (!allCombatSlots[i].GetComponentInChildren<UnitFunctionality>())
+                    allCombatSlots[i].UpdateLinkedUnit(null);
+            }
+        }
+    }
+
     public void UnselectAllSelectedCombatSlots()
     {
         for (int i = 0; i < allCombatSlots.Count; i++)
         {
+            allCombatSlots[i].ToggleCombatSelected(false);
             allCombatSlots[i].ToggleSlotAllowed(false);
             allCombatSlots[i].ToggleSlotSelected(false);
             allCombatSlots[i].ToggleSlotSelectedSize(true);
+        }
+    }
+
+    public void RemoveAllCombatSelectedCombatSlots()
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            allCombatSlots[i].ToggleCombatSelected(false);
         }
     }
 
@@ -203,12 +258,27 @@ public class CombatGridManager : MonoBehaviour
   
                 GameManager.Instance.UpdateAllUnitStatBars();
                 ToggleIsMovementAllowed(true);
-                movingUnit.UpdatCurMovementUses(movingUnit.GetCurMovementUses() - 1);
+                movingUnit.UpdatCurMovementUses(movingUnit.GetCurMovementUses() - 1); 
+
+                // Update unit look direction
+                movingUnit.UpdateUnitLookDirection();
+
+                if (movingUnit.GetCurMovementUses() == 0)
+                    StartCoroutine(AutoSwapOutOfMovementMode());
+
+                if (movingUnit.GetCurMovementUses() < 0)
+                {
+                    if (!movingUnit.usedExtraMove)
+                        movingUnit.usedExtraMove = true;
+
+                    StartCoroutine(AutoSwapOutOfMovementModeAndLockSkills());
+                }
+
+                movingUnit.SetPositionAndParent(GetSelectedCombatSlotMove().transform);
+
+                CheckToUnlinkCombatSlot();
 
                 UpdateUnitMoveRange(movingUnit);
-
-                if (movingUnit.GetCurMovementUses() <= 0)
-                    StartCoroutine(AutoSwapOutOfMovementMode());
             }
         }
     }
@@ -217,7 +287,17 @@ public class CombatGridManager : MonoBehaviour
     {
         yield return new WaitForSeconds(.25f);
 
-        UpdateAttackMovementMode(false, true);
+        UpdateAttackMovementMode(false, true, true);
+    }
+
+    IEnumerator AutoSwapOutOfMovementModeAndLockSkills()
+    {
+        yield return new WaitForSeconds(.25f);
+
+        GameManager.Instance.isSkillsMode = false;
+        GetButtonAttackMovement().ButtonCombatAttackMovement(false);
+        //UpdateAttackMovementMode(false, true);      
+        GetButtonSkillsItems().ButtonCombatItemsTab(true);        
     }
 
     public void AutoSelectMovement(UnitFunctionality unit)
@@ -257,6 +337,14 @@ public class CombatGridManager : MonoBehaviour
 
     public void MoveUnitToNewSlot(UnitFunctionality unit)
     {
+        // Update unit to look in direction of movement
+        // Moving right
+        if (GetSelectedCombatSlotMove().GetSlotIndex().x > unit.GetActiveCombatSlot().GetSlotIndex().x)
+            unit.UpdateUnitLookDirection(true, false);
+        // Moving left
+        else if (GetSelectedCombatSlotMove().GetSlotIndex().x < unit.GetActiveCombatSlot().GetSlotIndex().x)
+            unit.UpdateUnitLookDirection(true, true);
+
         unit.GetActiveCombatSlot().UpdateLinkedUnit(null);
         ToggleIsMovementAllowed(false);
         movingUnit = unit;
@@ -272,6 +360,8 @@ public class CombatGridManager : MonoBehaviour
 
         unit.UpdateActiveCombatSlot(GetSelectedCombatSlotMove());
         GetSelectedCombatSlotMove().UpdateLinkedUnit(unit);
+
+
 
         UnselectAllSelectedCombatSlots();
         GetSelectedCombatSlotMove().ToggleSlotSelected(true);
@@ -303,34 +393,14 @@ public class CombatGridManager : MonoBehaviour
         int unitMovementRange = unit.GetCurMovementUses();
         //unitMovementRange--;
 
-        if (unitMovementRange <= 0)
+        if (unitMovementRange <= 0 && unit.usedExtraMove)
             return;
 
         UnselectAllSelectedCombatSlots();
 
         for (int i = 0; i < allCombatSlots.Count; i++)
         {
-            if (allCombatSlots[i].GetSlotIndex().x == unitCombatIndex.x 
-                && allCombatSlots[i].GetSlotIndex().y == unitCombatIndex.y)
-            {
-                //self target
-            }
-
-            int negativeXdiff = (int)unitCombatIndex.x - (int)allCombatSlots[i].GetSlotIndex().x;
-            int positiveXdiff = (int)allCombatSlots[i].GetSlotIndex().x - (int)unitCombatIndex.x;
-
-            int negativeYdiff = (int)unitCombatIndex.y - (int)allCombatSlots[i].GetSlotIndex().y;
-            int positiveYdiff = (int)allCombatSlots[i].GetSlotIndex().y - (int)unitCombatIndex.y;
-
-            negativeXdiff = Mathf.Abs(negativeXdiff);
-            positiveXdiff = Mathf.Abs(positiveXdiff);
-
-            negativeYdiff = Mathf.Abs(negativeYdiff);
-            positiveYdiff = Mathf.Abs(positiveYdiff);
-
-  
-
-            for (int x = 1; x < unitMovementRange+1; x++)
+            for (int x = 1; x < 2; x++)
             {
                 CombatSlot combatSlot = null;
 
@@ -401,7 +471,174 @@ public class CombatGridManager : MonoBehaviour
         // Toggle Combat unit slot available around them for movement
 
     }
+    public void UpdateUnitAttackRange(UnitFunctionality unit)
+    {
+        Vector2 unitCombatIndex = Vector2.zero;
 
+        if (unit.GetActiveCombatSlot())
+        {
+            CombatSlot unitCombatSlot = null;
+            unitCombatSlot = unit.GetActiveCombatSlot();
+
+            unitCombatIndex = unitCombatSlot.GetSlotIndex();
+        }
+
+        UnselectAllSelectedCombatSlots();
+
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            for (int x = 1; x < GameManager.Instance.GetActiveSkill().startingSkillRange+1; x++)
+            {
+                CombatSlot combatSlot = null;
+
+                // Select left combat slots
+                if (GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x - x, unitCombatIndex.y))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y));
+                }
+                // Select right combat slots
+                else if (GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x + x, unitCombatIndex.y))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y));
+                }
+                // Select Up combat slots
+                else if (GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y + x)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x, unitCombatIndex.y + x))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y + x));
+                }
+                // Select Down combat slots
+                else if (GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y - x)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x, unitCombatIndex.y - x))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y - x));
+                }
+
+                // Select Up Left combat slots
+                if (GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y + x)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x - x, unitCombatIndex.y + x))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y + x));
+                }
+                // Select Down Left combat slots
+                else if (GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y - x)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x - x, unitCombatIndex.y - x))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y - x));
+                }
+                // Select Up Right combat slots
+                else if (GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y + x)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x + x, unitCombatIndex.y + x))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y + x));
+                }
+                // Select Down Right combat slots
+                else if (GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y - x)) != null
+                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x + x, unitCombatIndex.y - x))
+                {
+                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y - x));
+                }
+
+                if (combatSlot != null)
+                {
+                    combatSlot.ToggleSlotAllowed(true);
+                }
+            }
+        }
+
+        UpdateUnitAttackHitArea(unit);
+    }
+
+    public void UpdateUnitAttackHitArea(UnitFunctionality unit)
+    {
+        Vector2 unitCombatIndex = Vector2.zero;
+
+        if (unit.GetActiveCombatSlot())
+        {
+            CombatSlot unitCombatSlot = null;
+            unitCombatSlot = unit.GetActiveCombatSlot();
+
+            unitCombatIndex = unitCombatSlot.GetSlotIndex();
+        }
+
+        //UnselectAllSelectedCombatSlots();
+
+        Vector2 combatSlotIndex = Vector2.zero;
+        Vector2 unitLocationIndex = Vector2.zero;
+
+        Vector2 skillAreaTargets = Vector2.zero;
+        CombatSlot combatSlot = null;
+
+        List<CombatSlot> allowedCombatSlots = new List<CombatSlot>();
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            if (allCombatSlots[i].GetAllowed())
+            {
+                // For a 1x1 target skill
+                if (GameManager.Instance.GetActiveSkill().skillRangeHitArea.x == 1 &&
+                   GameManager.Instance.GetActiveSkill().skillRangeHitArea.y == 1)
+                {
+                    allowedCombatSlots.Add(allCombatSlots[i]);
+                }
+                // For a skill that targets all allowed slots
+                else if (GameManager.Instance.GetActiveSkill().attackAllSelected)
+                {
+                    allowedCombatSlots.Add(allCombatSlots[i]);
+                }
+            }
+        }
+
+        List<CombatSlot> combatSelectedCombatSlots = new List<CombatSlot>();
+
+        int count = 0;
+        if (!GameManager.Instance.GetActiveSkill().attackAllSelected)
+            count = (int)GameManager.Instance.GetActiveSkill().skillRangeHitArea.x;
+        else
+            count = 1;
+
+        for (int i = 0; i < count; i++)
+        {
+            if (!GameManager.Instance.GetActiveSkill().attackAllSelected)
+            {
+                for (int l = 0; l < allowedCombatSlots.Count; l++)
+                {
+                    if (allowedCombatSlots[l].GetLinkedUnit() != null &&
+                        !allowedCombatSlots[l].GetLinkedUnit().isDead)
+                    {
+                        combatSelectedCombatSlots.Add(allowedCombatSlots[l]);
+
+                        if (GameManager.Instance.GetActiveSkill().skillRangeHitArea.x == 1 &&
+                            GameManager.Instance.GetActiveSkill().skillRangeHitArea.y == 1)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (combatSelectedCombatSlots.Count == 0)
+                {
+                    int rand = Random.Range(0, allowedCombatSlots.Count);
+                    combatSelectedCombatSlots.Add(allowedCombatSlots[rand]);
+                }
+            }
+            else
+            {
+                for (int l = 0; l < allowedCombatSlots.Count; l++)
+                {
+                    combatSelectedCombatSlots.Add(allowedCombatSlots[l]);
+                }
+            }
+        }
+
+        for (int i = 0; i < combatSelectedCombatSlots.Count; i++)
+        {
+            combatSelectedCombatSlots[i].ToggleCombatSelected(true);
+        }
+        // Toggle Combat unit slot available around them for movement
+
+    }
     public Vector2 GetCombatSlotIndex(int slotIndex)
     {
         Vector2 newSlotIndex = new Vector2(0,0);

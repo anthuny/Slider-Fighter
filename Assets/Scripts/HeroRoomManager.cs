@@ -37,10 +37,6 @@ public class HeroRoomManager : MonoBehaviour
     {
         GameManager.Instance.SpawnFighter(true);
 
-
-
-
-
         GameManager.Instance.UpdateAllysPositionCombat();
 
         playerInHeroRoomView = true;

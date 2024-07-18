@@ -21,9 +21,11 @@ MonoBehaviour:
   curSkillEffectType: 0
   curSkillActiveType: 0
   curSkillSelectionType: 1
-  skillRangeMin: 0
-  skillRangeMax: 2
-  skillRangeHitAreas: []
+  skillRangeHitArea: {x: 0, y: 0}
+  attackAllSelected: 1
+  skillRangeMinNo: 0
+  startingSkillRange: 1
+  curSkillRange: 1
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
   skillName: WHIRLWIND
@@ -36,7 +38,7 @@ MonoBehaviour:
   curSkillPower: 10
   skillAttackAccMult: 1
   skillBaseHitOutput: 3
-  skillHitAttempts: 5
+  skillHitAttempts: 2
   projectileSpeed: 1
   skillCooldown: 2
   curCooldown: 0

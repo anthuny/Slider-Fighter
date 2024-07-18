@@ -1953,8 +1953,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void SetupPlayerWeaponUI()
     {
-        if (!CheckIfAnyUnitsSelected())
-            return;
+        //if (!CheckIfAnyUnitsSelected())
+        //    return;
 
         WeaponManager.Instance.DisableAlertUI();
         WeaponManager.Instance.ToggleEnabled(true);
@@ -2066,6 +2066,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             CombatGridManager.Instance.isCombatMode = false;
             CombatGridManager.Instance.UpdateCombatMainSlots();
             ToggleSkillsItemToggleButton(false);
+            CombatGridManager.Instance.ToggleCombatSlotsInput(true);
 
             //CombatGridManager.Instance.GetButtonAttackMovement().ButtonCombatAttackMovement(true);
 
@@ -2694,6 +2695,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public void UpdateActiveSkill(SkillData skill)
     {
         activeSkill = skill;
+
+        if (skill != null)
+        {
+            // Update active unit attack range
+            CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality());
+        }
     }
 
     public void UpdateActiveItem(ItemPiece item)
@@ -2832,7 +2839,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
     }
 
-    public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1, bool miss = false)
+    public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1, bool miss = false, List<UnitFunctionality> selectedUnits = null)
     {
         GetActiveUnitFunctionality().ToggleHeroWeapon(false);
 
@@ -2945,6 +2952,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             StartCoroutine(UpdateSelectedUnitsEffectVisual(true));
 
             yield return new WaitForSeconds(allyMeleeSkillWaitTime);
+
+            GetActiveUnitFunctionality().ToggleTextAlert(false);
 
             // Attack launch SFX
             //AudioManager.Instance.Play("Attack_Sword");
@@ -3527,8 +3536,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         SetupPlayerSkillsUI();
         UpdateMainIconDetails(GetActiveUnitFunctionality().GetNoCDSkill());
         UpdateAllSkillIconAvailability();
-        UpdateUnitSelection(GetActiveUnitFunctionality().GetNoCDSkill());
-        UpdateUnitsSelectedText();
+        //UpdateUnitSelection(GetActiveUnitFunctionality().GetNoCDSkill());
+        //UpdateUnitsSelectedText();
          //EnableFreeSkillSelection();
     }
     #region Update Unit UI
@@ -3804,12 +3813,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 //UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[x]);
                            // else
                             //{
-                                GameManager.Instance.UpdateUnitSelection(null, null);
+                                //GameManager.Instance.UpdateUnitSelection(null, null);
                                 UpdateActiveItem(null);
                            // }
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[x]);
-                            UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[x]);
-                            UpdateUnitsSelectedText();
+                            //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[x]);
+                            //UpdateUnitsSelectedText();
                             break;
                         }
                     }
@@ -3838,12 +3847,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             //    UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
                             //else
                            // {
-                                GameManager.Instance.UpdateUnitSelection(null, null);
+                                //GameManager.Instance.UpdateUnitSelection(null, null);
                                 UpdateActiveItem(null);
                            // }
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
-                            UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
-                            UpdateUnitsSelectedText();
+                            //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
+                            //UpdateUnitsSelectedText();
                             break;
                         }
                     }
@@ -3872,13 +3881,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             //    UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[x]);
                             //else
                            // {
-                                GameManager.Instance.UpdateUnitSelection(null, null);
+                                //GameManager.Instance.UpdateUnitSelection(null, null);
                                 UpdateActiveItem(null);
                            // }
 
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[x]);
-                            UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[x]);
-                            UpdateUnitsSelectedText();
+                            //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[x]);
+                            //UpdateUnitsSelectedText();
                             break;
                         }
                     }
@@ -4364,9 +4373,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().StartFocusUnit();
 
         GetActiveUnitFunctionality().ResetMovementUses();
+        GetActiveUnitFunctionality().usedExtraMove = false;
         CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
+        CombatGridManager.Instance.CheckToUnlinkCombatSlot();
 
         CombatGridManager.Instance.ToggleCombatGrid(true);
+
+        // Update unit look direction
+        GetActiveUnitFunctionality().UpdateUnitLookDirection();
 
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
@@ -4403,7 +4417,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             //UpdateSkillDetails(activeSkill);
 
-            UpdateUnitSelection(activeSkill);
+            //UpdateUnitSelection(activeSkill);
            // UpdateEnemyPosition(true);
         }
 
@@ -4433,7 +4447,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         UpdateAllUnitStatBars();
         CombatGridManager.Instance.ToggleIsMovementAllowed(true);
         CombatGridManager.Instance.GetButtonAttackMovement().ButtonCombatAttackMovement(true);
-
+        //CombatGridManager.Instance.GetButtonSkillsItems().ButtonCombatItemsTab(true, true);
 
     }
 
@@ -5386,8 +5400,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             else
                 fighterMainSlot4.UpdatePassiveActiveType(false);
 
-            UpdateUnitSelection(activeSkill);
-            UpdateUnitsSelectedText();
+            //UpdateUnitSelection(activeSkill);
+            //UpdateUnitsSelectedText();
 
             EnableFirstMainSlotSelection(true);
         }
@@ -6197,7 +6211,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         //GameManager.Instance.UpdateActiveItem(null);
         GameManager.Instance.UpdateMainIconDetails(null, null);
-        GameManager.Instance.UpdateUnitSelection(null, null);
+        //GameManager.Instance.UpdateUnitSelection(null, null);
         GameManager.Instance.UpdateUnitsSelectedText();
     }
     public IEnumerator DoItemAction()
@@ -6901,6 +6915,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             StartCoroutine(WaitTimeThenDeselect(shopRemoveSelectTime, unit));
         }
 
+        if (!unitsSelected.Contains(unit))
+        {
+            unitsSelected.Add(unit);
+        }
         // Ensure units cant change their selection before asd after attack
         // Allows hero rooms to still allow selection if room is defeated
         if (roomDefeated)

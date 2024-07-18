@@ -984,6 +984,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1415705176831191353}
     m_Modifications:
+    - target: {fileID: 929283234139412188, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 668
+      objectReference: {fileID: 0}
+    - target: {fileID: 2665520572243684141, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 669
+      objectReference: {fileID: 0}
     - target: {fileID: 4050831211350253290, guid: 30ebcf1d44df49f41b3ad71fee056a9f, type: 3}
       propertyPath: m_Alpha
       value: 0

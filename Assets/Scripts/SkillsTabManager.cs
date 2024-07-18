@@ -334,6 +334,7 @@ public class SkillsTabManager : MonoBehaviour
 
     public void UpdateStatPage()
     {
+        /*
         //ToggleToMapButton(true);
 
         // Active unit level image for team page
@@ -356,6 +357,7 @@ public class SkillsTabManager : MonoBehaviour
 
         if (GameManager.Instance.activeRoomHeroes.Count == 1)
             GameManager.Instance.GetActiveAlly().SetPositionAndParent(GameManager.Instance.allySpawnPositions[0]);
+        */
     }
 
     // Ensure there is only 1 of each skill, skills added, have 
