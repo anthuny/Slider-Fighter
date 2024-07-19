@@ -13,12 +13,22 @@ MonoBehaviour:
   m_Name: Evil Bond
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 1
-  startingSelectionType: 1
+  curSkillSelectionUnitType: 1
+  startingSelectionUnitType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
+  curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  canTargetSelf: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 3
+  curSkillRange: 0
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 9fb807da16dce25429c5dd769f5b437d, type: 3}
   skillName: EVIL BOND
   skillDescr: Target 1 ally, Cast Immunity effect and speed down
@@ -36,6 +46,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -65,6 +76,8 @@ MonoBehaviour:
   skillProjectile: {fileID: 0}
   projectileAllowSpin: 0
   projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 0
+  projectileAllowRandRotSpawn: 0
   projectileAC: {fileID: 0}
   targetEffectVisualAC: {fileID: 0}
   skillLaunch: {fileID: 8300000, guid: 631ffd232fe58fd43a134916e4a59a66, type: 3}
@@ -74,4 +87,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: b25406aa1a14f844a8d90e079f6427ce, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 3
-  mindControlled: 0
+  reanimated: 0

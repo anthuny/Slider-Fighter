@@ -13,12 +13,22 @@ MonoBehaviour:
   m_Name: Word of God
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 1
-  startingSelectionType: 1
+  curSkillSelectionUnitType: 1
+  startingSelectionUnitType: 1
   curskillSelectionAliveType: 1
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
+  curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  canTargetSelf: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 5
+  curSkillRange: 0
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 98c903bdadf091d4ea3ea32a71eac2bb, type: 3}
   skillName: WORD OF GOD
   skillDescr: Revive 1 Defeated ally this combat with base 10% health
@@ -36,6 +46,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -76,4 +87,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
   skillHitAdditional: {fileID: 8300000, guid: 7e0a596c329f8e743b6384c520fbe0d6, type: 3}
   originalIndex: 3
-  mindControlled: 0
+  reanimated: 0

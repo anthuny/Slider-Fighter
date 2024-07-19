@@ -35,7 +35,10 @@ public class SkillData : ScriptableObject
     public Vector2 skillRangeHitArea;
     [Tooltip("When on, all allowed slots in combat for skill will an attack slot")]
     public bool attackAllSelected = false;
-    public int skillRangeMinNo = 0;
+    [Tooltip("When on, all units in allowed combat slots, are selected")]
+    public bool attackAllUnits = false;
+    public bool canTargetSelf = false;
+    public int skillIgnoreRange = 0;
     public int startingSkillRange = 1;
     public int curSkillRange;
 

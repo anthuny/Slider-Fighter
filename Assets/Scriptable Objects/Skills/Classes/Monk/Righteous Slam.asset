@@ -13,12 +13,21 @@ MonoBehaviour:
   m_Name: Righteous Slam
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 0
   curSkillEffectType: 0
+  curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeHitArea: {x: 2, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 2
+  curSkillRange: 0
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 3227576ce7bc408468136036d5ab4ce1, type: 3}
   skillName: RIGHTEOUS SLAM
   skillDescr: Target 1 enemy, damaging. Each hit has a 25% chance to cleanse 1 debuff
@@ -38,6 +47,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -78,4 +88,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 8fbbd6244f824e643bd19c303b357175, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 0
-  mindControlled: 0
+  reanimated: 0

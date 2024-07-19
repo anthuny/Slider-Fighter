@@ -13,13 +13,22 @@ MonoBehaviour:
   m_Name: Snipe
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 1
+  startingSelectionUnitType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  canTargetSelf: 0
+  skillIgnoreRange: 1
+  startingSkillRange: 4
+  curSkillRange: 4
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Snipe
   skillDescr: Target 1 Enemy, dealing Damage
@@ -37,6 +46,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0

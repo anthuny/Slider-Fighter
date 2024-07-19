@@ -13,12 +13,22 @@ MonoBehaviour:
   m_Name: Holy Assist
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 1
-  startingSelectionType: 1
+  curSkillSelectionUnitType: 1
+  startingSelectionUnitType: 1
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
+  curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  canTargetSelf: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 3
+  curSkillRange: 0
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: fe0215b0a8ac2bf4985549b5dd98104e, type: 3}
   skillName: HOLY ASSIST
   skillDescr: Target 1 Fighter, Cleanse 5 negative effects, Cast Recovery effect
@@ -36,6 +46,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -76,4 +87,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: d8c6c99ab50506c45baeea982e3a8a04, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 2
-  mindControlled: 0
+  reanimated: 0

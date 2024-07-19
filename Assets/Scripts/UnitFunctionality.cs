@@ -1519,7 +1519,7 @@ public class UnitFunctionality : MonoBehaviour
             unitAlertStay.UpdateContentTextColour(GameManager.Instance.gradientSkillAlert);
 
             unitAlertStay.UpdateContentText(name);
-            unitAlertStay.UpdateAlpha(alpha, false, 0, true);
+            unitAlertStay.UpdateAlpha(alpha, false, 0, false, true, true);
         }
 
         ToggleTextAlert(true);
@@ -1612,7 +1612,8 @@ public class UnitFunctionality : MonoBehaviour
 
             yield return new WaitForSeconds(1.5f);
 
-            StartCoroutine(UnitEndTurn(true, false));
+            StartEnemyAttack();
+            //StartCoroutine(UnitEndTurn(true, false));
 
             // Trigger current unit's turn energy count to deplete for skill use
             //GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost, true);
@@ -1676,8 +1677,16 @@ public class UnitFunctionality : MonoBehaviour
         else
             skillAttackCount = GameManager.Instance.GetActiveSkill().GetCalculatedSkillHitAmount() + GetUnitHealingHits();
 
-        StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, skillAttackCount, effectCount));
+        // Add all selected slots to selected units
+        for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetActiveCombatSlot().combatSelected)
+                GameManager.Instance.unitsSelected.Add(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
+        }
 
+
+        if (GameManager.Instance.unitsSelected.Count > 0)
+            StartCoroutine(GameManager.Instance.WeaponAttackCommand(totalPower, skillAttackCount, effectCount));
     }
     public void DecreaseRandomNegativeEffect()
     {

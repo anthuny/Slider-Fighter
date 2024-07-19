@@ -411,7 +411,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         {
                             if (combatSlot.GetLinkedUnit())
                             {
-                                combatSlot.GetLinkedUnit().ToggleSelected(true);
                                 GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
                             }
                         }
@@ -420,13 +419,14 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             if (combatSlot.GetLinkedUnit())
                             {
                                 // add all units ontop of a combat selected slot to units selected.
-                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                //combatSlot.GetLinkedUnit().ToggleSelected(true);
 
                                 for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
                                 {
                                     if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetActiveCombatSlot().combatSelected)
                                     {
                                         GameManager.Instance.unitsSelected.Add(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
+                                        GameManager.Instance.activeRoomAllUnitFunctionalitys[i].ToggleSelected(true);
                                     }
                                 }
 
@@ -1568,7 +1568,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GetComponent<UIElement>().AnimateUI(false);
 
-        CombatGridManager.Instance.UpdateAttackMovementMode(forceMovement, false, false);
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            CombatGridManager.Instance.UpdateAttackMovementMode(forceMovement, false, false);
     }
 
     public void ButtonCombatItemsTab(bool forceItemMode = false)
@@ -2168,8 +2169,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
                 return;
 
-            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
-            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1));
+            GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
+            GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
 
             // If selected, unselect it, dont do skill more stuff
             if (GetIfSelected())

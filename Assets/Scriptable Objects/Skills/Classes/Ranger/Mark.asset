@@ -21,9 +21,12 @@ MonoBehaviour:
   curSkillEffectType: 1
   curSkillActiveType: 0
   curSkillSelectionType: 1
-  skillRangeMin: 0
-  skillRangeMax: 2
-  skillRangeHitAreas: []
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 3
+  curSkillRange: 0
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 9ef8fd37a1319de4e99f44a124e65db3, type: 3}
   skillName: MARK

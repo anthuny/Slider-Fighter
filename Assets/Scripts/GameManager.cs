@@ -2165,7 +2165,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     go = Instantiate(baseUnit, CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).transform);
                     UnitFunctionality unitFunctionality2 = go.GetComponent<UnitFunctionality>();
+
+                    // If a unit is already on the attempted spawn slot, delete unit and start again
+                    if (CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).GetLinkedUnit() != null)
+                    {
+                        Destroy(go);
+                        if (i >= 0)
+                            i--;
+
+                        continue;
+                    }
+
                     CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).UpdateLinkedUnit(unitFunctionality2);
+
+
                     unitFunctionality2.UpdateActiveCombatSlot(CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot));
 
                     spawnEnemyPosIndex++;
@@ -2558,6 +2571,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 activeRoomHeroes[i].ToggleUnitDisplay(true);
             }
+
+
 
             ToggleAllowSelection(true);
             ToggleAllyUnitSelection(true);
@@ -4304,6 +4319,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         isSkillsMode = true;
 
+
         //Debug.Log("updated turn order");
         if (CheckToEndCombat())
             return;
@@ -4330,6 +4346,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
+            activeRoomAllUnitFunctionalitys[i].UpdateUnitLookDirection();
+
             if (activeRoomAllUnitFunctionalitys[i].GetEffect("IMMUNITY"))
             {
                 if (activeRoomAllUnitFunctionalitys[i].beenAttacked)
@@ -4343,6 +4361,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             activeRoomAllUnitFunctionalitys[i].beenAttacked = false;
         }
+
+        GetActiveUnitFunctionality().ToggleTextAlert(false);
+
 
         DetermineTurnOrder();
 
@@ -4376,6 +4397,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().usedExtraMove = false;
         CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
         CombatGridManager.Instance.CheckToUnlinkCombatSlot();
+        GetActiveUnitFunctionality().ToggleTextAlert(false);
 
         CombatGridManager.Instance.ToggleCombatGrid(true);
 
@@ -4385,6 +4407,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
+            OverlayUI.Instance.ToggleSkillItemSwitchButton(true);
+
             playerUIElement.UpdateAlpha(1);
             SetupPlayerUI();
             SetupPlayerSkillsUI();
@@ -4398,6 +4422,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
+            OverlayUI.Instance.ToggleSkillItemSwitchButton(false);
+
             HideMainSlotDetails();
             GetActiveUnitFunctionality().ToggleIdleBattle(true);
             playerUIElement.UpdateAlpha(0);
@@ -6925,11 +6951,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
 
         }
+        /*
         else if (!GetAllowSelection() || !GetSelectingUnitsAllowed())
         {
             //Debug.Log("ending");
             return;
         }
+        */
 
         bool noEnemiesLeft = true;
         // If there are no enemies remaining AND its a hero room, AND hero room has no been offered yet
@@ -6986,13 +7014,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
 
             // If user selects a unit that is already selected, unselect it, and go a different path
-            if (unit.IsSelected() && GetSelectingUnitsAllowed())
+            if (GetSelectingUnitsAllowed())
             {
                 //UnSelectUnit(unit);
                 //UpdateUnitsSelectedText();
                 // If its not a hero room, dont attack on unselecting
                 if (!combatOver)
                 {
+                    unit.ToggleSelected(true);
+
                     ToggleSelectingUnits(false);
                     ToggleAllowSelection(false);
                     HideMainSlotDetails();
@@ -7246,6 +7276,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         DisableButton(skill3Button);
 
         ToggleMainSlotVisibility(false);
+
+        CombatGridManager.Instance.ToggleButtonAttackMovement(false);
 
         GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "Trigger", false, true);
 

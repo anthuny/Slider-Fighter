@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: Dark Magnus
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 1
   curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 1
+  skillIgnoreRange: 0
+  startingSkillRange: 1
+  curSkillRange: 3
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 727f85ff365f3ad46a96b4e104930a08, type: 3}
   skillName: DARK MAGNUS
   skillDescr: 'Target up to 3 enemies, apply effect Reaping. Heal the lowest health

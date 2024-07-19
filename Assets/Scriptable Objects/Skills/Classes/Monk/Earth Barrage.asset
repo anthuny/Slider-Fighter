@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: Earth Barrage
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeHitArea: {x: 2, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 4
+  curSkillRange: 0
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 673d7226fbd9c3e4aad26083ab8400c1, type: 3}
   skillName: EARTH BARRAGE
   skillDescr: Target 1 enemy, damaging. Each hit has a 25% chance to apply Stun effect
@@ -38,6 +46,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0

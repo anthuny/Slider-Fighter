@@ -13,12 +13,22 @@ MonoBehaviour:
   m_Name: Iron Will
   m_EditorClassIdentifier: 
   curSkillType: 1
-  curSkillSelectionType: 1
-  startingSelectionType: 1
+  curSkillSelectionUnitType: 1
+  startingSelectionUnitType: 1
   curskillSelectionAliveType: 0
   curRangedType: 0
   curAnimType: 1
   curSkillEffectType: 1
+  curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  canTargetSelf: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 3
+  curSkillRange: 0
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 99ac60998d47aaf4c920bf9665363a6f, type: 3}
   skillName: IRON WILL
   skillDescr: Target 1 ally, give effect Health Up, and Defense Up
@@ -36,6 +46,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -76,4 +87,4 @@ MonoBehaviour:
   skillHit: {fileID: 0}
   skillHitAdditional: {fileID: 0}
   originalIndex: 2
-  mindControlled: 0
+  reanimated: 0

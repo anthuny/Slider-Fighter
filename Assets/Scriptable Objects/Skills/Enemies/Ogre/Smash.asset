@@ -13,12 +13,21 @@ MonoBehaviour:
   m_Name: Smash
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 0
   curAnimType: 0
   curSkillEffectType: 0
+  curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeHitArea: {x: 1, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 1
+  curSkillRange: 1
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: SMASH
   skillDescr: Target 1 Enemy, dealing damage
@@ -36,6 +45,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -76,4 +86,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: fdb49418ee4cfa4438bc20c930710945, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 0
-  mindControlled: 0
+  reanimated: 0

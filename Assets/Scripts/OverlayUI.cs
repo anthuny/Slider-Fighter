@@ -140,12 +140,14 @@ public class OverlayUI : MonoBehaviour
         if (!toggle)
         {
             GetComponent<CanvasGroup>().alpha = 0;
+
             ToggleSkillItemSwitchButton(false);
         }
         else
         {
             GetComponent<CanvasGroup>().alpha = 1;
-            ToggleSkillItemSwitchButton(true);
+            if (GameManager.Instance.playerInCombat)
+                ToggleSkillItemSwitchButton(true);
         }
     }
 

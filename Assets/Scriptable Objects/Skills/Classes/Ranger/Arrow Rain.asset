@@ -21,9 +21,12 @@ MonoBehaviour:
   curSkillEffectType: 0
   curSkillActiveType: 0
   curSkillSelectionType: 1
-  skillRangeMin: 0
-  skillRangeMax: 2
-  skillRangeHitAreas: []
+  skillRangeHitArea: {x: 3, y: 2}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  skillIgnoreRange: 1
+  startingSkillRange: 5
+  curSkillRange: 0
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: dda72c994f8f49746b3599079b67596a, type: 3}
   skillName: ARROW RAIN

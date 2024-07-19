@@ -2397,7 +2397,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -3.2}
   m_SizeDelta: {x: 134.5294, y: 191.3455}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3914627449621900498
@@ -2577,7 +2577,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 350
+  m_SortingOrder: 812
   m_TargetDisplay: 0
 --- !u!1 &2416314821487630683
 GameObject:
@@ -3126,7 +3126,7 @@ MonoBehaviour:
   button3CG: {fileID: 0}
   skillLevelText: {fileID: 0}
   startHidden: 0
-  doScalePunch: 1
+  doScalePunch: 0
   dieAfterDisplay: 0
   scaleIncSize: 0.3
   scaleIncTime: 0.225
@@ -5847,7 +5847,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6134699016924352059}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -5879,7 +5879,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 5087587989572045583}
   m_OnClick:
     m_PersistentCalls:
@@ -6686,7 +6686,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 158.4, y: 62.699997}
+  m_AnchoredPosition: {x: 144.3, y: 75.9}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7024057320081504298
@@ -7198,8 +7198,8 @@ MonoBehaviour:
   startHidden: 1
   doScalePunch: 1
   dieAfterDisplay: 1
-  scaleIncSize: 0.1
-  scaleIncTime: 0.1
+  scaleIncSize: 0.5
+  scaleIncTime: 0.45
   vibrato: 1
   elasticity: 1
   selectable: 0
@@ -9983,7 +9983,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8513666462835286217, guid: 55733c23dc4c3d7458980ba812d508c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 229
+      value: 201
       objectReference: {fileID: 0}
     - target: {fileID: 8513666462835286217, guid: 55733c23dc4c3d7458980ba812d508c5, type: 3}
       propertyPath: m_AnchoredPosition.y

@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: Hallowed Reaping
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionType: 0
-  startingSelectionType: 0
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 0
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curSkillSelectionType: 0
+  skillRangeHitArea: {x: 2, y: 1}
+  attackAllSelected: 0
+  attackAllUnits: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 3
+  curSkillRange: 0
+  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 6a9b3f9eba020d54088850cdf31a900d, type: 3}
   skillName: HALLOWED REAPING
   skillDescr: Target 1 enemy, dealing damage, each hit has a chance to apply Reaping
@@ -39,6 +47,7 @@ MonoBehaviour:
   curCooldown: 1
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0

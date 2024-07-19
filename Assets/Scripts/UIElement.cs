@@ -489,7 +489,7 @@ public class UIElement : MonoBehaviour
 
     IEnumerator DecreaseSizeAfterTime()
     {
-        yield return new WaitForSeconds(0.125f);
+        yield return new WaitForSeconds(1f);
 
         ResetAnimateScaleImage();
     }
