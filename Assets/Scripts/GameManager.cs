@@ -2857,9 +2857,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1, bool miss = false, List<UnitFunctionality> selectedUnits = null)
     {
         GetActiveUnitFunctionality().ToggleHeroWeapon(false);
+        GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "", false, true);
 
         if (miss)
             power = 0;
+
+        if (unitsSelected.Count == 0)
+            yield break;
 
         // Reset each units power UI
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
@@ -4511,6 +4515,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
         }
       
+
+
+
+
         if (CheckSkipUnitTurn(GetActiveUnitFunctionality()))
             StartCoroutine(SkipTurnAfterWait());
 
@@ -4548,24 +4556,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 //StartCoroutine(SkipTurnAfterWait());
             }
         }
-
-
-        /*
-        if (GetActiveUnitFunctionality().isDead || GetActiveUnitFunctionality().GetUnitCurHealth() <= 0)
-        {
-            Debug.Log("ending unit turn");
-            UpdateTurnOrder();
-        }
-        */
-
-        /*
-        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
-        {
-            UpdateTurnOrder();
-            //combatOver = true;
-            return;
-        }
-        */
     }
 
     public void UpdateAllUnitStatBars()
@@ -7301,7 +7291,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             WeaponManager.Instance.SetHeroWeapon(GetActiveUnitFunctionality().GetUnitName());
             SetupPlayerWeaponUI();
         }
-        else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().reanimated)
+        else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
             WeaponManager.Instance.SetEnemyWeapon(GetActiveUnitFunctionality(), true);
     }
 

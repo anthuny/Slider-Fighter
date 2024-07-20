@@ -328,7 +328,7 @@ public class CombatGridManager : MonoBehaviour
                 }
                 else
                 {
-                    combatSlots[rand].GetComponentInChildren<ButtonFunctionality>().ButtonSelectCombatSlot();
+                    combatSlots[rand].GetComponentInChildren<ButtonFunctionality>().ButtonSelectCombatSlot(true);
                     break;
                 }
             }
@@ -517,8 +517,19 @@ public class CombatGridManager : MonoBehaviour
             if (xDiff <= GameManager.Instance.GetActiveSkill().curSkillRange &&
                 yDiff <= GameManager.Instance.GetActiveSkill().curSkillRange)
             {
-                combatSlot = allCombatSlots[i];
-                combatSlot.ToggleSlotAllowed(true);
+                // If combat slot is an ignored slot, un allow it
+                if (xDiff <= GameManager.Instance.GetActiveSkill().skillIgnoreRange &&
+                    yDiff <= GameManager.Instance.GetActiveSkill().skillIgnoreRange)
+                {
+                    combatSlot = allCombatSlots[i];
+                    combatSlot.ToggleSlotAllowed(false);
+                }
+                // If combat slot should be an allowed slot, make it
+                else
+                {
+                    combatSlot = allCombatSlots[i];
+                    combatSlot.ToggleSlotAllowed(true);
+                }
             }
         }
 
@@ -623,7 +634,7 @@ public class CombatGridManager : MonoBehaviour
 
                 if (combatSelectedCombatSlots.Count == 0 && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
                 {
-                    StartCoroutine(unit.UnitEndTurn(true, false));
+                    StartCoroutine(EndUnitTurnAfterWait(unit));
 
                     //int rand = Random.Range(0, allowedCombatSlots.Count);
                     //combatSelectedCombatSlots.Add(allowedCombatSlots[rand]);
@@ -779,6 +790,13 @@ public class CombatGridManager : MonoBehaviour
         }
         #endregion
         return newSlotIndex;
+    }
+
+    IEnumerator EndUnitTurnAfterWait(UnitFunctionality unit)
+    {
+        yield return new WaitForSeconds(.35f);
+
+        StartCoroutine(unit.UnitEndTurn(true));
     }
 
     public CombatSlot GetCombatSlot(Vector2 index)

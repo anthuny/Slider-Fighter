@@ -119,6 +119,11 @@ public class WeaponManager : MonoBehaviour
         }
 
         //Debug.Log("a");
+        if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+        {
+            unit.TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false, "", false, true);
+        }
+
         StartHitLine(resetWeapon);
         StartCoroutine(CalculateEnemyHitAcc());
     }

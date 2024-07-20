@@ -716,7 +716,7 @@ MonoBehaviour:
       - m_Target: {fileID: 2817570935199266796}
         m_TargetAssemblyTypeName: ButtonFunctionality, Assembly-CSharp
         m_MethodName: ButtonSelectCombatSlot
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

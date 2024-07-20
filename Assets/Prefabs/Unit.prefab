@@ -7060,7 +7060,7 @@ RectTransform:
   m_GameObject: {fileID: 8105829235725958893}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5435384634256165409}
@@ -7198,8 +7198,8 @@ MonoBehaviour:
   startHidden: 1
   doScalePunch: 1
   dieAfterDisplay: 1
-  scaleIncSize: 0.5
-  scaleIncTime: 0.45
+  scaleIncSize: 0.45
+  scaleIncTime: 0.4
   vibrato: 1
   elasticity: 1
   selectable: 0

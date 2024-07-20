@@ -361,8 +361,14 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         SkillsTabManager.Instance.SkillPointAdd(2);
     }
 
-    public void ButtonSelectCombatSlot()
+    public void ButtonSelectCombatSlot(bool flag = false)
     {
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY &&
+            !flag)
+        {
+            return;
+        }
+
         CombatSlot combatSlot = GetComponentInParent<CombatSlot>();
         if (combatSlot)
         {
@@ -405,14 +411,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     {
                         // Launch attack on all combat selected slots
 
-                        // If attack area of skill is 1x1
-                        if (GameManager.Instance.GetActiveSkill().skillRangeHitArea.x == 1 &&
-                            GameManager.Instance.GetActiveSkill().skillRangeHitArea.y == 1)
+                        if (combatSlot.GetLinkedUnit())
                         {
-                            if (combatSlot.GetLinkedUnit())
-                            {
-                                GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
-                            }
+                            GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
                         }
                         else if (GameManager.Instance.GetActiveSkill().attackAllSelected)
                         {

@@ -2956,6 +2956,8 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator UnitEndTurn(bool waitLong = false, bool waitExtraLong = false)
     {
+        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
         if (waitLong)
             yield return new WaitForSeconds(0f);    // old was 1.25f
         else
@@ -2963,6 +2965,9 @@ public class UnitFunctionality : MonoBehaviour
         // End turn
 
         //Debug.Log("bbb");
+
+        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
         GameManager.Instance.UpdateTurnOrder();
     }
 
