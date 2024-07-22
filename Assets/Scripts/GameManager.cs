@@ -1569,6 +1569,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             if (!playerWon)
             {
                 activeRoomAllUnitFunctionalitys.Clear();
+                CombatGridManager.Instance.ToggleButtonAttackMovement(false);
             }
             else
             {
@@ -1944,7 +1945,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(fighterSelectedMainSlotDesc, true);
-        ToggleEndTurnButton(true);
+        ToggleEndTurnButton(true, true);
 
         UpdateUnitsSelectedText();
 
@@ -2707,14 +2708,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     }
     */
 
-    public void UpdateActiveSkill(SkillData skill)
+    public void UpdateActiveSkill(SkillData skill, bool updateRange = true)
     {
         activeSkill = skill;
 
         if (skill != null)
         {
             // Update active unit attack range
-            CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality());
+            if (updateRange)
+                CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality());
         }
     }
 
@@ -3749,49 +3751,51 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 fighterMainSlot4.ToggleHiddenImage(false);
 
 
-            // todo work with new locked skills
-            for (int i = 0; i < GetActiveUnitFunctionality().GetAllSkills().Count; i++)
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             {
-                // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
-                if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(0)) == 0 && !SkillsTabManager.Instance.skillBase1.GetIsLocked())
+                // todo work with new locked skills
+                for (int i = 0; i < GetActiveUnitFunctionality().GetAllSkills().Count; i++)
                 {
-                    mainSlot1.ToggleSelected(true);
+                    // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
+                    if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(0)) == 0 && !SkillsTabManager.Instance.skillBase1.GetIsLocked())
+                    {
+                        mainSlot1.ToggleSelected(true);
 
-                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[0]);
-                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[0]);
+                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[0]);
+                        UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[0]);
 
-                    break;
+                        break;
+                    }
+                    else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(1)) == 0 && !SkillsTabManager.Instance.skillBase2.GetIsLocked())
+                    {
+                        mainSlot2.ToggleSelected(true);
+
+                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[1]);
+                        UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[1]);
+
+                        break;
+                    }
+                    else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(2)) == 0 && !SkillsTabManager.Instance.skillBase3.GetIsLocked())
+                    {
+                        mainSlot3.ToggleSelected(true);
+
+                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[2]);
+                        UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[2]);
+
+                        break;
+                    }
+                    else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(3)) == 0 && !SkillsTabManager.Instance.skillBase4.GetIsLocked())
+                    {
+                        mainSlot4.ToggleSelected(true);
+
+                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[3]);
+                        UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[3]);
+
+                        break;
+                    }
                 }
-                else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(1)) == 0 && !SkillsTabManager.Instance.skillBase2.GetIsLocked())
-                {
-                    mainSlot2.ToggleSelected(true);
-
-                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[1]);
-                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[1]);
-
-                    break;
-                }
-                else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(2)) == 0 && !SkillsTabManager.Instance.skillBase3.GetIsLocked())
-                {
-                    mainSlot3.ToggleSelected(true);
-
-                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[2]);
-                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[2]);
-
-                    break;
-                }
-                else if (GetActiveUnitFunctionality().GetSkillCurCooldown(GetActiveUnitFunctionality().GetSkill(3)) == 0 && !SkillsTabManager.Instance.skillBase4.GetIsLocked())
-                {
-                    mainSlot4.ToggleSelected(true);
-
-                    UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[3]);
-                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[3]);
-
-                    break;
-                }
-
-                //if (SkillsTabManager.Instance.skillBase1.GetIsLocked())
             }
+            
         }
         // Items
         else
@@ -4321,7 +4325,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (combatOver)
             return;
 
-        isSkillsMode = true;
+        //isSkillsMode = true;
 
 
         //Debug.Log("updated turn order");
@@ -4368,9 +4372,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         GetActiveUnitFunctionality().ToggleTextAlert(false);
 
+        GetActiveUnitFunctionality().skillRangeIssue = false;
 
         DetermineTurnOrder();
 
+        GetActiveUnitFunctionality().skillRangeIssue = false;
+
+        //UpdateActiveSkill(GetActiveUnitFunctionality().GetBaseSelectSkill());
 
         GetActiveUnitFunctionality().CheckSwitchTeams();
 
@@ -4392,6 +4400,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         ResetAllUnitPowerUIHeight();
 
         IncreaseAttackBarAllUnits();
+        GetActiveUnitFunctionality().ResetAttackChargeTurnStart();
 
         UpdateAllSkillIconAvailability();   // Update active unit's skill cooldowns to toggle 'On Cooldown' before switching to new active unit
 
@@ -4399,11 +4408,19 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         GetActiveUnitFunctionality().ResetMovementUses();
         GetActiveUnitFunctionality().usedExtraMove = false;
-        CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
-        CombatGridManager.Instance.CheckToUnlinkCombatSlot();
+
         GetActiveUnitFunctionality().ToggleTextAlert(false);
 
         CombatGridManager.Instance.ToggleCombatGrid(true);
+
+        CombatGridManager.Instance.CheckToUnlinkCombatSlot();
+
+        // Choose skill for unit
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            UpdateActiveSkill(GetActiveUnitFunctionality().ChooseRandomSkill(), false);
+
+        CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
+ 
 
         // Update unit look direction
         GetActiveUnitFunctionality().UpdateUnitLookDirection();
@@ -4420,7 +4437,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //UpdatePlayerAbilityUI(false, false, true);
             UpdateActiveUnitNameText(GetActiveUnitFunctionality().GetUnitName());
 
-            ToggleEndTurnButton(true);      // Toggle End Turn Button on
+            //ToggleEndTurnButton(true);      // Toggle End Turn Button on
 
             CombatGridManager.Instance.ToggleButtonAttackMovement(true);
         }
@@ -4512,6 +4529,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 //Debug.Log("ddd");
                 StartCoroutine(activeRoomAllUnitFunctionalitys[0].StartUnitTurn());
+                return;
             }
         }
       
@@ -4638,8 +4656,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         yield return new WaitForSeconds(.75f);
 
         //Debug.Log("skipping turn after wait");
-        UpdateEnemyPosition(false);
-        UpdateTurnOrder();
+        //UpdateEnemyPosition(false);
+        //UpdateTurnOrder();
     }
 
     // If something casts taunt, ally buff skills cant be used - bug
@@ -5287,12 +5305,27 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         return activeRoomHeroes[0];
     }
 
-    public void ToggleEndTurnButton(bool toggle)
+    public void ToggleEndTurnButton(bool toggle, bool delay = false)
     {
         if (toggle)
-            endTurnButtonUI.UpdateAlpha(1);
+        {
+            if (!delay)
+                endTurnButtonUI.UpdateAlpha(1);
+        }
         else
             endTurnButtonUI.UpdateAlpha(0);
+
+        if (delay)
+        {
+            StartCoroutine(ToggleEndTurnButtonWait());
+        }
+    }
+
+    IEnumerator ToggleEndTurnButtonWait()
+    {
+        yield return new WaitForSeconds(.75f);
+
+        endTurnButtonUI.UpdateAlpha(1);
     }
 
     public void ToggleUIElement(UIElement uiElement, bool toggle)
@@ -5366,8 +5399,19 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (skills)
         {
-            UpdateActiveSkill(GetActiveUnitFunctionality().GetBaseSelectSkill());
-            UpdateMainIconDetails(GetActiveUnitFunctionality().GetBaseSelectSkill());
+            if (!GetActiveUnitFunctionality().skillRangeIssue)
+            {
+                if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                {
+                    UpdateActiveSkill(GetActiveUnitFunctionality().GetBaseSelectSkill());
+                    UpdateMainIconDetails(GetActiveUnitFunctionality().GetBaseSelectSkill());
+                }
+                else
+                {
+                    UpdateActiveSkill(GetActiveSkill());
+                }
+                //UpdateActiveSkill(GetActiveUnitFunctionality().ChooseRandomSkill());
+            }
 
             // Update player skill portraits
             fighterMainSlot1.UpdatePortrait(GetActiveUnitFunctionality().GetSkill(0).skillSprite);
@@ -7272,6 +7316,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "Trigger", false, true);
 
         ToggleUnitEffectTooltipsOff();
+
+        for (int i = 0; i < unitsSelected.Count; i++)
+        {
+            unitsSelected[i].ToggleSelected(true, true);
+        }
 
         StartCoroutine(AttackButtonCont());
     }

@@ -1569,7 +1569,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GetComponent<UIElement>().AnimateUI(false);
 
-        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        //if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             CombatGridManager.Instance.UpdateAttackMovementMode(forceMovement, false, false);
     }
 
@@ -1622,8 +1622,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
         else
         {
+            //GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectSkill());
             // Update active unit attack range
-            CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality());
+            //CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality());
 
             GameManager.Instance.ToggleSelectingUnits(true);
             //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);

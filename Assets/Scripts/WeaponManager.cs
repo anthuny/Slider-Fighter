@@ -608,7 +608,7 @@ public class WeaponManager : MonoBehaviour
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            CombatGridManager.Instance.ToggleCombatGrid(false);
+            //CombatGridManager.Instance.ToggleCombatGrid(false);
         }
 
         ToggleWeaponAccHits(true);
@@ -617,7 +617,7 @@ public class WeaponManager : MonoBehaviour
         UpdateWeaponDetails();
         //StartCoroutine(UpdateWeaponAccumulatedHits());
         //ToggleWeaponAccHits(false);
-        GameManager.Instance.UpdateEnemyPosition(false);
+        //GameManager.Instance.UpdateEnemyPosition(false);
 
         GameManager.Instance.ResetButton(GameManager.Instance.skill1Button);
         GameManager.Instance.ResetButton(GameManager.Instance.skill2Button);
@@ -661,7 +661,7 @@ public class WeaponManager : MonoBehaviour
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
         {
-            CombatGridManager.Instance.ToggleCombatGrid(false);
+            //CombatGridManager.Instance.ToggleCombatGrid(false);
         }
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)         

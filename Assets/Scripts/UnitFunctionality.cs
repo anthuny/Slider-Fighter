@@ -223,6 +223,20 @@ public class UnitFunctionality : MonoBehaviour
     [SerializeField] private UIElement unitButton;
     public bool usedExtraMove;
 
+    [SerializeField] private SkillData chosenSkill;
+
+    public bool skillRangeIssue = false;
+
+    public void UpdateChosenSkill(SkillData skillData)
+    {
+        chosenSkill = skillData;
+    }
+
+    public SkillData GetChosenSkill()
+    {
+        return chosenSkill;
+    }
+
     public void UpdateUnitLookDirection(bool forceDirection = false, bool right = false)
     {
         if (!forceDirection)
@@ -1610,9 +1624,9 @@ public class UnitFunctionality : MonoBehaviour
             // Select a combat slot to move to
             CombatGridManager.Instance.AutoSelectMovement(this);
 
-            yield return new WaitForSeconds(1.5f);
+            //yield return new WaitForSeconds(1.5f);
 
-            StartEnemyAttack();
+            //StartEnemyAttack();
             //StartCoroutine(UnitEndTurn(true, false));
 
             // Trigger current unit's turn energy count to deplete for skill use
@@ -2956,7 +2970,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator UnitEndTurn(bool waitLong = false, bool waitExtraLong = false)
     {
-        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+        //CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
 
         if (waitLong)
             yield return new WaitForSeconds(0f);    // old was 1.25f
@@ -3203,7 +3217,34 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    SkillData ChooseRandomSkill()
+    public int GetRangeToUnit(UnitFunctionality fromUnit)
+    {
+        int rangeX = 0;
+        int rangeY = 0;
+
+        if (fromUnit.GetActiveCombatSlot().GetSlotIndex().x > GetActiveCombatSlot().GetSlotIndex().x)
+        {
+            rangeX = (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().x - (int)GetActiveCombatSlot().GetSlotIndex().x;
+        }
+        else
+        {
+            rangeX = (int)GetActiveCombatSlot().GetSlotIndex().x - (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().x;
+        }
+
+        if (fromUnit.GetActiveCombatSlot().GetSlotIndex().y > GetActiveCombatSlot().GetSlotIndex().y)
+        {
+            rangeY = (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().y - (int)GetActiveCombatSlot().GetSlotIndex().y;
+        }
+        else
+        {
+            rangeY = (int)GetActiveCombatSlot().GetSlotIndex().y - (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().y;
+        }
+
+        int totalRange = rangeX + rangeY;
+        return totalRange;
+    }
+
+    public SkillData ChooseRandomSkill()
     {
         int unitEnemyIntelligence = 10;
 
@@ -4393,9 +4434,10 @@ public class UnitFunctionality : MonoBehaviour
             curUnitType = UnitType.PLAYER;
     }
 
-    public void ToggleSelected(bool toggle)
+    public void ToggleSelected(bool toggle, bool onlyToggleDisplay = false)
     {
-        isSelected = toggle;
+        if (!onlyToggleDisplay)
+            isSelected = toggle;
 
         if (toggle)
             selectionCircle.UpdateAlpha(1);
@@ -4520,7 +4562,7 @@ public class UnitFunctionality : MonoBehaviour
                     if (curUnitType == UnitType.PLAYER && !reanimated)
                     {
                         yield return new WaitForSeconds(.75f);
-                        StartCoroutine(UnitEndTurn(true));  // end unit turn
+                        StartCoroutine(UnitEndTurn(false));  // end unit turn
                     }
                 }
             }
@@ -5250,7 +5292,7 @@ public class UnitFunctionality : MonoBehaviour
     }
     public void UpdateUnitCurAttackCharge()
     {
-        ResetAttackChargeTurnStart();
+        //ResetAttackChargeTurnStart();
 
         CalculateUnitAttackChargeTurnStart();
 
