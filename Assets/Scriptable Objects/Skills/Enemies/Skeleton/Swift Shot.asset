@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Swift Shot
   m_EditorClassIdentifier: 
   curSkillType: 0
-  curSkillSelectionUnitType: 1
-  startingSelectionUnitType: 1
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 0

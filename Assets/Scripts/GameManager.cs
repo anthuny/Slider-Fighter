@@ -1219,6 +1219,54 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
     }
 
+    public UnitFunctionality GetLowestHealthUnit(bool ally = true, bool ignoreTeam = false)
+    {
+        int lowestHealth = 100;
+        UnitFunctionality lowestHealthUnit = null;
+
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            if (ignoreTeam)
+            {
+                if (lowestHealth > ((activeRoomAllUnitFunctionalitys[i].GetUnitCurHealth() / activeRoomAllUnitFunctionalitys[i].GetUnitMaxHealth()) * 100))
+                {
+                    lowestHealth = (int)(activeRoomAllUnitFunctionalitys[i].GetUnitCurHealth() / activeRoomAllUnitFunctionalitys[i].GetUnitMaxHealth() * 100);
+                    lowestHealthUnit = activeRoomAllUnitFunctionalitys[i];
+                }
+            }
+            else
+            {
+                if (ally)
+                {
+                    if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    {
+                        if (lowestHealth > ((activeRoomAllUnitFunctionalitys[i].GetUnitCurHealth() / activeRoomAllUnitFunctionalitys[i].GetUnitMaxHealth()) * 100))
+                        {
+                            lowestHealth = (int)(activeRoomAllUnitFunctionalitys[i].GetUnitCurHealth() / activeRoomAllUnitFunctionalitys[i].GetUnitMaxHealth() * 100);
+                            lowestHealthUnit = activeRoomAllUnitFunctionalitys[i];
+                        }
+                    }
+                }
+                else
+                {
+                    if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    {
+                        if (lowestHealth > ((activeRoomAllUnitFunctionalitys[i].GetUnitCurHealth() / activeRoomAllUnitFunctionalitys[i].GetUnitMaxHealth()) * 100))
+                        {
+                            lowestHealth = (int)(activeRoomAllUnitFunctionalitys[i].GetUnitCurHealth() / activeRoomAllUnitFunctionalitys[i].GetUnitMaxHealth() * 100);
+                            lowestHealthUnit = activeRoomAllUnitFunctionalitys[i];
+                        }
+                    }
+                }
+            }
+        }
+
+        if (lowestHealthUnit != null)
+            return lowestHealthUnit;
+        else
+            return null;
+    }
+
     public void UpdateAllAlliesPosition(bool postBattle, bool playersTurn = true, bool skillsTab = false, bool shopPosition = false)
     {
         //Debug.Log('a');
@@ -3153,6 +3201,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             for (int z = 0; z < activeRoomAllUnitFunctionalitys.Count; z++)
             {
                 activeRoomAllUnitFunctionalitys[z].attacked = false;
+                activeRoomAllUnitFunctionalitys[z].hasAttacked = true;
             }
 
             for (int i = 0; i < unitsSelected.Count; i++)
@@ -3249,6 +3298,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         yield return new WaitForSeconds(postHitWaitTime);
 
+        GetActiveUnitFunctionality().hasAttacked = true;
+
         // If active unit is player, setup player UI
         if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER && !GetActiveUnitFunctionality().reanimated)
         {
@@ -3259,7 +3310,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             //SetupPlayerUI();
             //Debug.Log("222");
-            StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
+
+            if (GetActiveUnitFunctionality().GetCurMovementUses() > 0)
+            { 
+                CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+                CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
+            }
+
         }
         // If active unit is enemy, check whether to attack again or end turn
         else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY || GetActiveUnitFunctionality().reanimated)
@@ -3292,8 +3349,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (!GetActiveUnitFunctionality().isDead)
             {
-                //Debug.Log("333");
-                StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
+                if (GetActiveUnitFunctionality().GetCurMovementUses() == 0)
+                    StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
+                else
+                {
+                    CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+                    CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
+                }
             }
         }
     }
@@ -4415,12 +4477,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         CombatGridManager.Instance.CheckToUnlinkCombatSlot();
 
-        // Choose skill for unit
-        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
-            UpdateActiveSkill(GetActiveUnitFunctionality().ChooseRandomSkill(), false);
 
-        CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
- 
 
         // Update unit look direction
         GetActiveUnitFunctionality().UpdateUnitLookDirection();
@@ -4495,7 +4552,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         CombatGridManager.Instance.ToggleIsMovementAllowed(true);
         CombatGridManager.Instance.GetButtonAttackMovement().ButtonCombatAttackMovement(true);
         //CombatGridManager.Instance.GetButtonSkillsItems().ButtonCombatItemsTab(true, true);
-
+        GetActiveUnitFunctionality().hasAttacked = false;
     }
 
     public void ToggleAllUnitButtons(bool toggle = true)

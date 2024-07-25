@@ -143,6 +143,7 @@ public class UnitFunctionality : MonoBehaviour
     public bool isParrying;
     public bool attacked;
     public bool isVisible;
+    public bool hasAttacked;
 
 
     private int curAttackCharge;
@@ -1603,6 +1604,49 @@ public class UnitFunctionality : MonoBehaviour
             effects.UpdateAlpha(0);
     }
 
+    public void UnitMove()
+    {
+        CombatGridManager.Instance.UpdateUnitMoveRange(this);
+        CombatGridManager.Instance.ToggleIsMovementAllowed(true);
+        CombatGridManager.Instance.GetButtonAttackMovement().ButtonCombatAttackMovement(true);
+    }
+
+    public int GetRangeFromUnit(UnitFunctionality unit)
+    {
+        int rangeX = 0;
+        int rangeY = 0;
+
+        if (unit.GetActiveCombatSlot().GetSlotIndex().y > GetActiveCombatSlot().GetSlotIndex().y)
+        {
+            rangeY = (int)unit.GetActiveCombatSlot().GetSlotIndex().y - (int)GetActiveCombatSlot().GetSlotIndex().y;
+        }
+        else if (unit.GetActiveCombatSlot().GetSlotIndex().y < GetActiveCombatSlot().GetSlotIndex().y)
+        {
+            rangeY = (int)unit.GetActiveCombatSlot().GetSlotIndex().y - (int)GetActiveCombatSlot().GetSlotIndex().y;
+        }
+        if (unit.GetActiveCombatSlot().GetSlotIndex().x > GetActiveCombatSlot().GetSlotIndex().x)
+        {
+            rangeX = (int)unit.GetActiveCombatSlot().GetSlotIndex().x - (int)GetActiveCombatSlot().GetSlotIndex().x;
+        }
+        else if (unit.GetActiveCombatSlot().GetSlotIndex().x < GetActiveCombatSlot().GetSlotIndex().x)
+        {
+            rangeX = (int)unit.GetActiveCombatSlot().GetSlotIndex().x - (int)GetActiveCombatSlot().GetSlotIndex().x;
+        }
+
+        int finalRange = 0;
+
+        if (Mathf.Abs(rangeY) > Mathf.Abs(rangeX))
+        {
+            finalRange = Mathf.Abs(rangeY);
+        }
+        else
+        {
+            finalRange = Mathf.Abs(rangeX);
+        }
+
+        return finalRange;
+    }
+
     public IEnumerator StartUnitTurn()
     {
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
@@ -1619,10 +1663,82 @@ public class UnitFunctionality : MonoBehaviour
 
         if (GetIdleBattle() && GameManager.Instance.activeRoomHeroes.Count >= 1 && !isDead)
         {
+            // Choose skill for unit
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+            {
+                GameManager.Instance.UpdateActiveSkill(ChooseSkill(), false);
+            }
+
+
+            // If moving
+            UnitMove();
+
+
             yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
+
+            //targetCombatSlots
+
+            CombatGridManager.Instance.GetTargetCombatSlots().Clear();
+
+            UnitFunctionality targetedUnit = null;
+
+            for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                targetedUnit = GameManager.Instance.activeRoomAllUnitFunctionalitys[i];
+
+                if (GameManager.Instance.GetActiveSkill().isSelfCast && GameManager.Instance.activeRoomAllUnitFunctionalitys[i] == this)
+                {
+                    //CombatGridManager.Instance.isCombatMode = false;
+                    CombatGridManager.Instance.GetTargetCombatSlots().Add(GetActiveCombatSlot());
+                    break;
+                }
+
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+                {
+                    if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                    {
+                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
+                        }
+                    }
+                    else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                    {
+                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        {
+                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
+                        }
+                    }
+                }
+                else if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.PLAYER)
+                {
+                    if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                    {
+                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        {
+                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
+                        }
+                    }
+                    else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                    {
+                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
+                        }
+                    }
+                }              
+            }
+
+            CombatGridManager.Instance.GetTargetCombatSlots().Sort(CombatGridManager.Instance.CompareSlotRangeFromUnit);
+            CombatGridManager.Instance.GetTargetCombatSlots().Reverse();
 
             // Select a combat slot to move to
             CombatGridManager.Instance.AutoSelectMovement(this);
+
+
+            // 
+
+
 
             //yield return new WaitForSeconds(1.5f);
 
@@ -3217,34 +3333,9 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
-    public int GetRangeToUnit(UnitFunctionality fromUnit)
-    {
-        int rangeX = 0;
-        int rangeY = 0;
 
-        if (fromUnit.GetActiveCombatSlot().GetSlotIndex().x > GetActiveCombatSlot().GetSlotIndex().x)
-        {
-            rangeX = (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().x - (int)GetActiveCombatSlot().GetSlotIndex().x;
-        }
-        else
-        {
-            rangeX = (int)GetActiveCombatSlot().GetSlotIndex().x - (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().x;
-        }
 
-        if (fromUnit.GetActiveCombatSlot().GetSlotIndex().y > GetActiveCombatSlot().GetSlotIndex().y)
-        {
-            rangeY = (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().y - (int)GetActiveCombatSlot().GetSlotIndex().y;
-        }
-        else
-        {
-            rangeY = (int)GetActiveCombatSlot().GetSlotIndex().y - (int)fromUnit.GetActiveCombatSlot().GetSlotIndex().y;
-        }
-
-        int totalRange = rangeX + rangeY;
-        return totalRange;
-    }
-
-    public SkillData ChooseRandomSkill()
+    public SkillData ChooseSkill()
     {
         int unitEnemyIntelligence = 10;
 

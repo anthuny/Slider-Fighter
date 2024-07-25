@@ -13,9 +13,20 @@ public class CombatSlot : MonoBehaviour
     [SerializeField] private UnitFunctionality linkedUnit;
     [SerializeField] private Animator animator;
     [SerializeField] private GraphicRaycaster graphicRaycaster;
+    [SerializeField] private int rangeFromActiveUnit;
 
     private bool sizeIncreased;
     public bool combatSelected;
+
+    public int GetRangeFromActiveUnit()
+    {
+        return rangeFromActiveUnit;
+    }
+
+    public void UpdateRangeFromActiveUnit(int newRange)
+    {
+        rangeFromActiveUnit = newRange;
+    }
 
     public void ToggleCombatSlotInput(bool toggle = true)
     {
