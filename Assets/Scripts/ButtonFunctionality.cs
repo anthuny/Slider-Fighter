@@ -431,6 +431,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                     }
                                 }
 
+                                CombatGridManager.Instance.done = true;
+
                                 GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
                             }
                         }

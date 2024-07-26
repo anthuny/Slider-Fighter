@@ -22,12 +22,14 @@ MonoBehaviour:
   curSkillActiveType: 0
   curSkillSelectionType: 0
   skillRangeHitArea: {x: 1, y: 1}
+  skillAreaHitCount: 1
   attackAllSelected: 0
   attackAllUnits: 0
   canTargetSelf: 1
   skillIgnoreRange: 0
   startingSkillRange: 1
   curSkillRange: 1
+  localRangeAreas: []
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP

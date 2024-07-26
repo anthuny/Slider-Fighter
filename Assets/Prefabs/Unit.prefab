@@ -3980,6 +3980,7 @@ MonoBehaviour:
   isParrying: 0
   attacked: 0
   isVisible: 0
+  hasAttacked: 0
   isSpeedUp: 0
   isSpeedDown: 0
   isDefenseUp: 0
@@ -4030,6 +4031,7 @@ MonoBehaviour:
   maxMovementUses: 1
   unitButton: {fileID: 3301436897025852628}
   usedExtraMove: 0
+  chosenSkill: {fileID: 0}
   skillRangeIssue: 0
   settingUpEffect: 0
 --- !u!114 &7414491478435158705
@@ -4575,8 +4577,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 33.9, y: -610.8}
-  m_SizeDelta: {x: 308.0659, y: 642.2319}
+  m_AnchoredPosition: {x: -131, y: -11.2683}
+  m_SizeDelta: {x: 130.72, y: 194.7934}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6520591829505880036
 MonoBehaviour:
@@ -4595,11 +4597,11 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 60, y: 60}
-  m_Spacing: {x: 30.63, y: 11.73}
+  m_ChildAlignment: 8
+  m_StartCorner: 3
+  m_StartAxis: 1
+  m_CellSize: {x: 40, y: 40}
+  m_Spacing: {x: 19.99, y: 21.12}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &5901711136548537919

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CombatSlot : MonoBehaviour
 {
     [SerializeField] private Vector2 slotIndex;
+    [SerializeField] private Vector2 localIndexFromSlot;
     [SerializeField] private UIElement slotBG;
     [SerializeField] private UIElement slotTargetedUI;
     [SerializeField] private bool selected = false;
@@ -177,6 +178,79 @@ public class CombatSlot : MonoBehaviour
     public Vector2 GetSlotIndex()
     {
         return slotIndex;
+    }
+
+    public Vector2 GetLocalIndexFromSlot(CombatSlot fromSlot)
+    {
+        Vector2 newIndex = Vector2.zero;
+        if (GetSlotIndex().x > fromSlot.GetSlotIndex().x)
+        {
+            newIndex.x = 1;
+        }
+        else if (GetSlotIndex().x < fromSlot.GetSlotIndex().x)
+        {
+            newIndex.x = -1;
+        }
+        else if (GetSlotIndex().x == fromSlot.GetSlotIndex().x)
+        {
+            newIndex.x = 0;
+        }
+
+        if (GetSlotIndex().y > fromSlot.GetSlotIndex().y)
+        {
+            newIndex.y = 1;
+        }
+        else if (GetSlotIndex().y < fromSlot.GetSlotIndex().y)
+        {
+            newIndex.y = -1;
+        }
+        else if (GetSlotIndex().y == fromSlot.GetSlotIndex().y)
+        {
+            newIndex.y = 0;
+        }
+
+        localIndexFromSlot = newIndex;
+
+        Debug.Log("index = " + localIndexFromSlot);
+        return localIndexFromSlot;
+    }
+
+    public string GetDirection(CombatSlot fromSlot)
+    {
+        if (fromSlot.GetSlotIndex().x > GetSlotIndex().x &&
+            fromSlot.GetSlotIndex().y > GetSlotIndex().y)
+        {
+            return "UpRight";
+        }
+        else if (fromSlot.GetSlotIndex().x < GetSlotIndex().x &&
+            fromSlot.GetSlotIndex().y > GetSlotIndex().y)
+        {
+            return "Upleft";
+        }
+        else if (fromSlot.GetSlotIndex().x > GetSlotIndex().x &&
+            fromSlot.GetSlotIndex().y < GetSlotIndex().y)
+        {
+            return "DownRight";
+        }
+        else if (fromSlot.GetSlotIndex().x < GetSlotIndex().x &&
+            fromSlot.GetSlotIndex().y < GetSlotIndex().y)
+        {
+            return "DownLeft";
+        }
+        else if (fromSlot.GetSlotIndex().x > GetSlotIndex().x)
+        {
+            return "Right";
+        }
+        else if (fromSlot.GetSlotIndex().x < GetSlotIndex().x)
+        {
+            return "Left";
+        }
+        else
+            return "";
+    }
+    public void UpdateLocalIndexFromSlot(Vector2 newIndex)
+    {
+        localIndexFromSlot = newIndex;
     }
 
     private void Start()

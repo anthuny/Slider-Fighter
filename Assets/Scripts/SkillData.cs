@@ -33,6 +33,7 @@ public class SkillData : ScriptableObject
 
     // Position of each slot in range of the skill, from the fighter
     public Vector2 skillRangeHitArea;
+    public int skillAreaHitCount = 1;
     [Tooltip("When on, all allowed slots in combat for skill will an attack slot")]
     public bool attackAllSelected = false;
     [Tooltip("When on, all units in allowed combat slots, are selected")]
@@ -41,6 +42,8 @@ public class SkillData : ScriptableObject
     public int skillIgnoreRange = 0;
     public int startingSkillRange = 1;
     public int curSkillRange;
+
+    public List<Vector2> localRangeAreas = new List<Vector2>();
 
     // Position of each slot for the attack area formation, from 0x0
     public List<Vector2> skillAttackHitAreas = new List<Vector2>();

@@ -226,6 +226,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &2370200593698301044
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -257,5 +258,5 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 300
+  m_SortingOrder: 371
   m_TargetDisplay: 0

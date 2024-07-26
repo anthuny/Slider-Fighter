@@ -1369,9 +1369,9 @@ public class UnitFunctionality : MonoBehaviour
     public void UpdateFacingDirection(bool right = true)
     {
         if (right)
-            gameObject.transform.localScale = new Vector3(-1, gameObject.transform.localScale.y);
+            unitVisuals.transform.localScale = new Vector3(-1, unitVisuals.transform.localScale.y);
         else
-            gameObject.transform.localScale = new Vector3(1, gameObject.transform.localScale.y);
+            unitVisuals.transform.localScale = new Vector3(1, unitVisuals.transform.localScale.y);
     }
 
     public void UpdateIsVisible(bool toggle)
