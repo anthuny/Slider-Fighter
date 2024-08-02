@@ -1669,14 +1669,10 @@ public class UnitFunctionality : MonoBehaviour
                 GameManager.Instance.UpdateActiveSkill(ChooseSkill(), false);
             }
 
-
             // If moving
             UnitMove();
 
-
             yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
-
-            //targetCombatSlots
 
             CombatGridManager.Instance.GetTargetCombatSlots().Clear();
 
@@ -1734,50 +1730,6 @@ public class UnitFunctionality : MonoBehaviour
 
             // Select a combat slot to move to
             CombatGridManager.Instance.AutoSelectMovement(this);
-
-
-            // 
-
-
-
-            //yield return new WaitForSeconds(1.5f);
-
-            //StartEnemyAttack();
-            //StartCoroutine(UnitEndTurn(true, false));
-
-            // Trigger current unit's turn energy count to deplete for skill use
-            //GameManager.Instance.UpdateActiveUnitEnergyBar(true, false, GameManager.Instance.activeSkill.skillEnergyCost, true);
-            //GameManager.Instance.UpdateActiveUnitHealthBar(false);
-
-            // If unit has energy to choose a skill, choose one
-            //GameManager.Instance.UpdateActiveSkill(ChooseRandomSkill());
-            // Select units
-            //GameManager.Instance.UpdateUnitSelection(GameManager.Instance.activeSkill);
-
-            //TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false, null, false, true);
-            //WeaponManager.Instance.SetEnemyWeapon(this, true);
-            /*
-            if (GameManager.Instance.GetActiveSkill().curAnimType == SkillData.SkillAnimType.DEFAULT)
-            {
-                animator.SetTrigger("AttackFlg");
-            }
-            else if (GameManager.Instance.GetActiveSkill().curAnimType == SkillData.SkillAnimType.SKILL)
-            {
-                animator.SetTrigger("SkillFlg");
-            }
-            */
-
-            // Adjust power based on skill effect amp on target then send it 
-
-
-
-
-            /*
-            // End turn 
-            GameManager.Instance.ToggleEndTurnButton(false);
-            GameManager.Instance.UpdateTurnOrder();
-            yield break;
-            */
         }
     }
 

@@ -124,6 +124,8 @@ public class WeaponManager : MonoBehaviour
             unit.TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false, "", false, true);
         }
 
+        GameManager.Instance.isSkillsMode = true;
+
         StartHitLine(resetWeapon);
         StartCoroutine(CalculateEnemyHitAcc());
     }

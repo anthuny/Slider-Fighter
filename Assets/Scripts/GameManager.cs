@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -1815,7 +1816,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             TriggerTransitionSequence();
     }
 
-    void HideMainSlotDetails()
+    public void HideMainSlotDetails()
     {
         // Toggle player overlay and skill ui off
         ToggleUIElement(playerAbilities, false);
@@ -2764,7 +2765,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             // Update active unit attack range
             if (updateRange)
-                CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality());
+                CombatGridManager.Instance.UpdateUnitAttackRange(GetActiveUnitFunctionality());
         }
     }
 
@@ -3308,11 +3309,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             WeaponManager.Instance.ResetAcc();
 
-            //SetupPlayerUI();
-            //Debug.Log("222");
+            UpdateDetailsBanner();
+            ToggleSkillsItemToggleButton(false);
+            UpdatePlayerAbilityUI(false, false, true);
+            UpdateMainIconDetails(null, null, false);
 
             if (GetActiveUnitFunctionality().GetCurMovementUses() > 0)
-            { 
+            {
+                CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+                CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
+            }
+            else
+            {
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
                 CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
             }
@@ -3558,7 +3566,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 yield return new WaitForSeconds(timeBetweenPowerUIStack - (0.0025f * (hitCount - 1)));
         }
 
-        if (isSkillsMode || GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        if (isSkillsMode)
         {
             // Reset each units power UI
             for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
@@ -3823,7 +3831,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         mainSlot1.ToggleSelected(true);
 
-                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[0]);
+                        //UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[0]);
                         UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[0]);
 
                         break;
@@ -3832,7 +3840,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         mainSlot2.ToggleSelected(true);
 
-                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[1]);
+                        //UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[1]);
                         UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[1]);
 
                         break;
@@ -3841,7 +3849,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         mainSlot3.ToggleSelected(true);
 
-                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[2]);
+                        //UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[2]);
                         UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[2]);
 
                         break;
@@ -3850,7 +3858,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         mainSlot4.ToggleSelected(true);
 
-                        UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[3]);
+                        //UpdateActiveSkill(GetActiveUnitFunctionality().GetAllSkills()[3]);
                         UpdateMainIconDetails(GetActiveUnitFunctionality().GetAllSkills()[3]);
 
                         break;
@@ -6848,7 +6856,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         ShopManager.Instance.ToggleExitShopButton(true);
 
     }
-    public void targetUnit(UnitFunctionality unit)
+    public void targetUnit(UnitFunctionality unit, bool attack = false)
     {
         //Debug.Log("earlier - selecting unit " + unit.GetUnitName());
         //Debug.Log("Targeting unit " + unit.GetUnitName());
@@ -7110,7 +7118,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 //UnSelectUnit(unit);
                 //UpdateUnitsSelectedText();
                 // If its not a hero room, dont attack on unselecting
-                if (!combatOver)
+                if (!combatOver && attack)
                 {
                     unit.ToggleSelected(true);
 
@@ -7122,7 +7130,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 }
 
                 // Select targeted unit
-                UnSelectUnit(unit);
+                //UnSelectUnit(unit);
                 //unit.ToggleSelected(true);
 
                 return;
@@ -7374,12 +7382,22 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         ToggleUnitEffectTooltipsOff();
 
+        //unitsSelected = unitsSelected.Distinct().ToList();
+
         for (int i = 0; i < unitsSelected.Count; i++)
         {
             unitsSelected[i].ToggleSelected(true, true);
         }
 
         StartCoroutine(AttackButtonCont());
+    }
+
+    public void AddUnitsSelected(UnitFunctionality unit)
+    {
+        if (!unitsSelected.Contains(unit))
+        {
+            unitsSelected.Add(unit);
+        }
     }
 
     IEnumerator AttackButtonCont()

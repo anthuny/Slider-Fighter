@@ -411,11 +411,26 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     {
                         // Launch attack on all combat selected slots
 
-                        if (combatSlot.GetLinkedUnit())
+                        if (!GameManager.Instance.GetActiveSkill().attackAllSelected)
                         {
-                            GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
+                            if (!combatSlot.GetLinkedUnit().IsSelected())
+                            {
+                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+
+                                CombatGridManager.Instance.done = true;
+
+                                GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
+                            }
+                            else
+                            {
+                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+
+                                CombatGridManager.Instance.done = true;
+
+                                GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit(), true);
+                            }
                         }
-                        else if (GameManager.Instance.GetActiveSkill().attackAllSelected)
+                        else
                         {
                             if (combatSlot.GetLinkedUnit())
                             {
@@ -426,25 +441,36 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                 {
                                     if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetActiveCombatSlot().combatSelected)
                                     {
-                                        GameManager.Instance.unitsSelected.Add(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
                                         GameManager.Instance.activeRoomAllUnitFunctionalitys[i].ToggleSelected(true);
+
+                                        CombatGridManager.Instance.done = true;
+                                        GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
                                     }
                                 }
 
-                                CombatGridManager.Instance.done = true;
-
-                                GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
+                                if (combatSlot.GetLinkedUnit())
+                                {
+                                    if (combatSlot.GetLinkedUnit().IsSelected())
+                                        GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit(), true);
+                                }
                             }
                         }
                     }
                     else
                     {
                         // If attack area of skill is 1x1, replace other combat selected slot with this one
-                        if (GameManager.Instance.GetActiveSkill().skillRangeHitArea.x == 1 &&
-                            GameManager.Instance.GetActiveSkill().skillRangeHitArea.y == 1)
+                        if (GameManager.Instance.GetActiveSkill().skillAreaHitCount == 1)
                         {
                             CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
                             combatSlot.ToggleCombatSelected(true);
+
+                            GameManager.Instance.ResetSelectedUnits();
+                            if (combatSlot.GetLinkedUnit())
+                            {
+                                GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
+                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+
+                            }
                             // Remove current placed attack, and move it to target slot
                         }
                     }
@@ -1560,6 +1586,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (forceMovement)
             CombatGridManager.Instance.isCombatMode = false;
 
+        GameManager.Instance.ResetSelectedUnits();
+
         if (CombatGridManager.Instance.isCombatMode)
         {
             GetComponentInChildren<Text>().text = "COMBAT";
@@ -1586,6 +1614,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (!forceItemMode)
             GameManager.Instance.isSkillsMode = !GameManager.Instance.isSkillsMode;
 
+        GameManager.Instance.ResetSelectedUnits();
         /*
         if (forceItemMode)
             GameManager.Instance.isSkillsMode = false;

@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotIndex: {x: 0, y: 0}
+  localIndexFromSlot: {x: 0, y: 0}
   slotBG: {fileID: 5995266431058340651}
   slotTargetedUI: {fileID: 3492969405075227064}
   selected: 0
@@ -74,6 +75,7 @@ MonoBehaviour:
   linkedUnit: {fileID: 0}
   animator: {fileID: 3958674738607191047}
   graphicRaycaster: {fileID: 7380630802837651345}
+  rangeFromActiveUnit: 0
   combatSelected: 0
 --- !u!114 &1091233462705775307
 MonoBehaviour:
