@@ -118,11 +118,12 @@ public class WeaponManager : MonoBehaviour
             unit.ToggleHeroWeapon();
         }
 
-        //Debug.Log("a");
+        /*
         if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
         {
             unit.TriggerTextAlert(GameManager.Instance.GetActiveSkill().skillName, 1, false, "", false, true);
         }
+        */
 
         GameManager.Instance.isSkillsMode = true;
 
@@ -223,6 +224,8 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
                     {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().reanimated)
+                            isStopped = true;
                         //GameManager.Instance.GetActiveUnitFunctionality().heroWeapon.WeaponFlash(flashOnColour, flashOffColour, flashDuration);
 
                         //yield return new WaitForSeconds(flashDuration / 2);
@@ -242,6 +245,8 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
                     {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().reanimated)
+                            isStopped = true;
                         //GameManager.Instance.GetActiveUnitFunctionality().heroWeapon.WeaponFlash(flashOnColour, flashOffColour, flashDuration);
 
                         //yield return new WaitForSeconds(flashDuration / 2);
@@ -261,6 +266,8 @@ public class WeaponManager : MonoBehaviour
                 {
                     if (weaponHitAreas[i].CheckIfHitLineHit(hitLine.gameObject))
                     {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().reanimated)
+                            isStopped = true;
                         //GameManager.Instance.GetActiveUnitFunctionality().heroWeapon.WeaponFlash(flashOnColour, flashOffColour, flashDuration);
 
                         //yield return new WaitForSeconds(flashDuration / 2);

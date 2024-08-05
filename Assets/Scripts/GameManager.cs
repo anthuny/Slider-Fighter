@@ -2908,7 +2908,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public IEnumerator WeaponAttackCommand(int power, int hitCount = 0, int effectHitAcc = -1, bool miss = false, List<UnitFunctionality> selectedUnits = null)
     {
         GetActiveUnitFunctionality().ToggleHeroWeapon(false);
-        GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "", false, true);
+
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "", false, true);
 
         if (miss)
             power = 0;
@@ -3301,6 +3303,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         GetActiveUnitFunctionality().hasAttacked = true;
 
+        // Choose next skill for unit
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        {
+            UpdateActiveSkill(GetActiveUnitFunctionality().ChooseSkill(), false);
+            GetActiveUnitFunctionality().UpdateChosenSkill(GetActiveSkill());
+        }
+
         // If active unit is player, setup player UI
         if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER && !GetActiveUnitFunctionality().reanimated)
         {
@@ -3317,53 +3326,29 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             if (GetActiveUnitFunctionality().GetCurMovementUses() > 0)
             {
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
-                CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
+                CombatGridManager.Instance.PerformBotAction(GetActiveUnitFunctionality());
             }
             else
             {
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
-                CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
+                CombatGridManager.Instance.PerformBotAction(GetActiveUnitFunctionality());
             }
 
         }
-        // If active unit is enemy, check whether to attack again or end turn
+        // If active unit is enemy, check whether to move after attacking
         else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY || GetActiveUnitFunctionality().reanimated)
         {
-            /*
-            // If enemy kills all allies in selection, end it's turn
-            if (unitsSelected.Count == 0)
-            {
-                for (int i = 0; i < unitsSelected.Count; i++)
-                {
-                    if (unitsSelected[i] == null)
-                    {
-                        if (i == unitsSelected.Count - 1)
-                        {
-                            // End turn
-                            ToggleEndTurnButton(false);
-                            StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());
-                            break;
-                        }
-                        continue;
-                    }
-                    else
-                        break;
-                }
-            }
-            */
-            // If enemy didnt kill selection, attack again
-
-            //yield return new WaitForSeconds(postHitWaitTime*3);
-
             if (!GetActiveUnitFunctionality().isDead)
             {
-                if (GetActiveUnitFunctionality().GetCurMovementUses() == 0)
-                    StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
-                else
-                {
-                    CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
-                    CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
-                }
+                //if (GetActiveUnitFunctionality().GetCurMovementUses() == 0)
+                    //StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
+                //else
+                //{
+                CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+                CombatGridManager.Instance.isCombatMode = false;
+                StartCoroutine(GetActiveUnitFunctionality().StartUnitTurn());
+                    //CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
+                //}
             }
         }
     }
@@ -4395,6 +4380,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (combatOver)
             return;
 
+        CombatGridManager.Instance.DisableAllButtons();
+
         //isSkillsMode = true;
 
 
@@ -4440,7 +4427,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             activeRoomAllUnitFunctionalitys[i].beenAttacked = false;
         }
 
-        GetActiveUnitFunctionality().ToggleTextAlert(false);
+        //GetActiveUnitFunctionality().ToggleTextAlert(false);
 
         GetActiveUnitFunctionality().skillRangeIssue = false;
 
@@ -4479,7 +4466,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().ResetMovementUses();
         GetActiveUnitFunctionality().usedExtraMove = false;
 
-        GetActiveUnitFunctionality().ToggleTextAlert(false);
+        //GetActiveUnitFunctionality().ToggleTextAlert(false);
 
         CombatGridManager.Instance.ToggleCombatGrid(true);
 
@@ -4558,7 +4545,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         UpdateAllUnitStatBars();
         CombatGridManager.Instance.ToggleIsMovementAllowed(true);
-        CombatGridManager.Instance.GetButtonAttackMovement().ButtonCombatAttackMovement(true);
+        CombatGridManager.Instance.GetButtonMovement().ButtonCombatMovementTab();
         //CombatGridManager.Instance.GetButtonSkillsItems().ButtonCombatItemsTab(true, true);
         GetActiveUnitFunctionality().hasAttacked = false;
     }
@@ -7378,7 +7365,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         CombatGridManager.Instance.ToggleButtonAttackMovement(false);
 
-        GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "Trigger", false, true);
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            GetActiveUnitFunctionality().TriggerTextAlert(GetActiveSkill().skillName, 1, false, "Trigger", false, true);
 
         ToggleUnitEffectTooltipsOff();
 
@@ -7388,6 +7376,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             unitsSelected[i].ToggleSelected(true, true);
         }
+
+        ToggleAllowSelection(false);
 
         StartCoroutine(AttackButtonCont());
     }
@@ -7402,13 +7392,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     IEnumerator AttackButtonCont()
     {
-        yield return new WaitForSeconds(skillAlertAppearTime / 2);
-
-        // Update to correct visual weapon to use for each unit
-        //if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
-            //WeaponManager.Instance.SetEnemyWeapon("Enemy");
-        //else
-        //{
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            yield return new WaitForSeconds(skillAlertAppearTime / 2);
+        else
+            yield return new WaitForSeconds(0);
 
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GetActiveUnitFunctionality().reanimated)
         {

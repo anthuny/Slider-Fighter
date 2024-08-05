@@ -1608,7 +1608,7 @@ public class UnitFunctionality : MonoBehaviour
     {
         CombatGridManager.Instance.UpdateUnitMoveRange(this);
         CombatGridManager.Instance.ToggleIsMovementAllowed(true);
-        CombatGridManager.Instance.GetButtonAttackMovement().ButtonCombatAttackMovement(true);
+        CombatGridManager.Instance.GetButtonMovement().ButtonCombatMovementTab();
     }
 
     public int GetRangeFromUnit(UnitFunctionality unit)
@@ -1664,13 +1664,30 @@ public class UnitFunctionality : MonoBehaviour
         if (GetIdleBattle() && GameManager.Instance.activeRoomHeroes.Count >= 1 && !isDead)
         {
             // Choose skill for unit
-            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+            if (!GameManager.Instance.GetActiveSkill())
             {
-                GameManager.Instance.UpdateActiveSkill(ChooseSkill(), false);
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+                {
+                    UpdateChosenSkill(ChooseSkill());
+                    GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), false);
+                }
+            }
+            else
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+                {
+                    if (!GetChosenSkill())
+                    {
+                        UpdateChosenSkill(ChooseSkill());
+                    }
+
+                    GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), false);
+                }
             }
 
             // If moving
-            UnitMove();
+            if (GetCurMovementUses() > 0)
+                UnitMove();
 
             yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
 
@@ -1682,7 +1699,7 @@ public class UnitFunctionality : MonoBehaviour
             {
                 targetedUnit = GameManager.Instance.activeRoomAllUnitFunctionalitys[i];
 
-                if (GameManager.Instance.GetActiveSkill().isSelfCast && GameManager.Instance.activeRoomAllUnitFunctionalitys[i] == this)
+                if (GameManager.Instance.GetActiveSkill().isSelfCast && targetedUnit == this)
                 {
                     //CombatGridManager.Instance.isCombatMode = false;
                     CombatGridManager.Instance.GetTargetCombatSlots().Add(GetActiveCombatSlot());
@@ -1729,7 +1746,7 @@ public class UnitFunctionality : MonoBehaviour
             CombatGridManager.Instance.GetTargetCombatSlots().Reverse();
 
             // Select a combat slot to move to
-            CombatGridManager.Instance.AutoSelectMovement(this);
+            CombatGridManager.Instance.PerformBotAction(this);
         }
     }
 
