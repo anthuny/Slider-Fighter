@@ -440,6 +440,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                     GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit(), true);
                                 }
                             }
+                            else
+                            {
+                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                                CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                            }
                         }
                         else
                         {
@@ -465,6 +470,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                         GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit(), true);
                                 }
                             }
+                            else
+                            {
+                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                                CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                            }
                         }
                     }
                     else
@@ -473,7 +483,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         if (GameManager.Instance.GetActiveSkill().skillAreaHitCount == 1)
                         {
                             CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
-                            combatSlot.ToggleCombatSelected(true);
+                            //combatSlot.ToggleCombatSelected(true);
 
                             GameManager.Instance.ResetSelectedUnits();
                             if (combatSlot.GetLinkedUnit())
@@ -482,9 +492,14 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                 combatSlot.GetLinkedUnit().ToggleSelected(true);
 
                             }
+
+
+                            CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                            CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
                             // Remove current placed attack, and move it to target slot
                         }
                     }
+
                 }
             }
         }
@@ -1603,22 +1618,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            if (GameManager.Instance.isSkillsMode)
-            {
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonAttack(), false, true);
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonSkills(), false, true);
-
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), true, true);
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonItems(), true, true);
-            }
-            else
-            {
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonItems(), false, true);
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonAttack(), false, true);
-
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), true, true);
-                CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonSkills(), true, true);
-            }
+            CombatGridManager.Instance.ToggleTabButtons("Attack");
         }
     }
     public void ButtonCombatMovementTab()
@@ -1636,11 +1636,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), false, true);
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonSkills(), false, true);
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonItems(), false, true);
-
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonAttack(), true, true);
+            CombatGridManager.Instance.ToggleTabButtons("Movement");
         }
     }
 
@@ -1685,11 +1681,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonItems(), false, true);
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonAttack(), false, true);
-
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), true, true);
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonSkills(), true, true);
+            CombatGridManager.Instance.ToggleTabButtons("Items");
         }
     }
 
@@ -1734,11 +1726,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonItems(), true, true);
-
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonSkills(), false, true);
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonAttack(), false, true);
-            CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), true, true);
+            CombatGridManager.Instance.ToggleTabButtons("Skills");
         }
     }
 

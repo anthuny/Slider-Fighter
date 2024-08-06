@@ -3325,13 +3325,19 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (GetActiveUnitFunctionality().GetCurMovementUses() > 0)
             {
+                isSkillsMode = false;
+
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
                 CombatGridManager.Instance.PerformBotAction(GetActiveUnitFunctionality());
+                CombatGridManager.Instance.ToggleTabButtons("Movement");
             }
             else
             {
+                isSkillsMode = false;
+
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
                 CombatGridManager.Instance.PerformBotAction(GetActiveUnitFunctionality());
+                CombatGridManager.Instance.ToggleTabButtons("Items");
             }
 
         }
@@ -7378,6 +7384,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
 
         ToggleAllowSelection(false);
+        CombatGridManager.Instance.DisableAllButtons();
 
         StartCoroutine(AttackButtonCont());
     }

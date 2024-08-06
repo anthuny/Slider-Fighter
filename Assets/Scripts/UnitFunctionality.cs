@@ -1649,6 +1649,13 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator StartUnitTurn()
     {
+        if (hasAttacked && GetCurMovementUses() <= 0)
+        {
+            StartCoroutine(UnitEndTurn(true));
+            yield break;
+        }
+
+
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         ToggleUnitMoveActiveArrows(true);
