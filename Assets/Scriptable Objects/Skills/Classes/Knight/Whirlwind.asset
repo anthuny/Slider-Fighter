@@ -22,6 +22,15 @@ MonoBehaviour:
   curSkillActiveType: 0
   curSkillSelectionType: 1
   skillRangeHitArea: {x: 1, y: 1}
+  skillRangeHitAreas:
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
+  - {x: 1, y: -1}
+  - {x: 0, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: 0}
+  - {x: -1, y: 1}
+  - {x: 0, y: 1}
   skillAreaHitCount: 8
   attackAllSelected: 1
   attackAllUnits: 0
@@ -45,7 +54,7 @@ MonoBehaviour:
   skillHitAttempts: 2
   projectileSpeed: 1
   skillCooldown: 2
-  curCooldown: 3
+  curCooldown: 2
   skillSelectionCount: 3
   isSelfCast: 0
   isSpecial: 0

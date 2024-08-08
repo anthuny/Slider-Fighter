@@ -44,11 +44,6 @@ public class SkillData : ScriptableObject
     public int startingSkillRange = 1;
     public int curSkillRange;
 
-    public List<Vector2> localRangeAreas = new List<Vector2>();
-
-    // Position of each slot for the attack area formation, from 0x0
-    public List<Vector2> skillAttackHitAreas = new List<Vector2>();
-
     public Sprite skillSprite;
     public string skillName;
     public string skillDescr;
@@ -153,15 +148,6 @@ public class SkillData : ScriptableObject
 
     // Returns a list of vector2s which represent the slot locations on the combat grid
     // from the fighters position
-    public List<Vector2> GetCalculatedHitAreas()
-    {
-        if (curSkillSelectionType == SkillSelectionType.AREAS)
-        {
-            return skillAttackHitAreas;
-        }
-        else
-            return null;
-    }
 
     public int GetCalculatedSkillPower()
     {

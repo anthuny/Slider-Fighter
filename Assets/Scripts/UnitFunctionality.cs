@@ -1673,7 +1673,7 @@ public class UnitFunctionality : MonoBehaviour
             // Choose skill for unit
             if (!GameManager.Instance.GetActiveSkill())
             {
-                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
                 {
                     UpdateChosenSkill(ChooseSkill());
                     GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), false);
@@ -1681,12 +1681,9 @@ public class UnitFunctionality : MonoBehaviour
             }
             else
             {
-                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
                 {
-                    if (!GetChosenSkill())
-                    {
-                        UpdateChosenSkill(ChooseSkill());
-                    }
+                    UpdateChosenSkill(ChooseSkill());
 
                     GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), false);
                 }
@@ -1713,7 +1710,7 @@ public class UnitFunctionality : MonoBehaviour
                     break;
                 }
 
-                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY)
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
                 {
                     if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
                     {
@@ -1724,7 +1721,7 @@ public class UnitFunctionality : MonoBehaviour
                     }
                     else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
                     {
-                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY || reanimated)
                         {
                             CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
                         }
@@ -1734,7 +1731,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
                     {
-                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY || reanimated)
                         {
                             CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
                         }
@@ -4583,6 +4580,7 @@ public class UnitFunctionality : MonoBehaviour
         {
             isDead = true;
 
+            GetActiveCombatSlot().AddFallenUnit(this);
             GetActiveCombatSlot().UpdateLinkedUnit(null);
 
             curUnitTurnArrow.UpdateAlpha(0);
@@ -4626,7 +4624,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     //Debug.Log("111");
 
-                    if (curUnitType == UnitType.PLAYER && !reanimated)
+                    if (curUnitType == UnitType.PLAYER && !reanimated && GameManager.Instance.GetActiveUnitFunctionality() == this)
                     {
                         yield return new WaitForSeconds(.75f);
                         StartCoroutine(UnitEndTurn(false));  // end unit turn
@@ -4704,6 +4702,9 @@ public class UnitFunctionality : MonoBehaviour
 
         if (GameManager.Instance.fallenEnemies.Contains(this))
             GameManager.Instance.fallenEnemies.Remove(this);
+
+        GetActiveCombatSlot().RemoveFallenUnit(this);
+        GetActiveCombatSlot().UpdateLinkedUnit(this);
 
         //GameManager.Instance.UpdateAllAlliesPosition(false, true, false, true);
 

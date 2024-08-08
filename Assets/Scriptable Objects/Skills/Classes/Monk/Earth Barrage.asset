@@ -21,12 +21,20 @@ MonoBehaviour:
   curSkillEffectType: 0
   curSkillActiveType: 0
   curSkillSelectionType: 0
-  skillRangeHitArea: {x: 2, y: 1}
+  skillRangeHitArea: {x: 2, y: 2}
+  skillRangeHitAreas:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
+  skillAreaHitCount: 1
   attackAllSelected: 0
   attackAllUnits: 0
+  canTargetSelf: 0
   skillIgnoreRange: 0
   startingSkillRange: 4
-  curSkillRange: 0
+  curSkillRange: 4
+  localRangeAreas: []
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 673d7226fbd9c3e4aad26083ab8400c1, type: 3}
   skillName: EARTH BARRAGE

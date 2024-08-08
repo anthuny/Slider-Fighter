@@ -2860,11 +2860,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             yield return new WaitForSeconds(allyRangedSkillWaitTime / 3);
 
             // Display effect visual to each selected unit before the power is shown
-            for (int i = 0; i < unitsSelected.Count; i++)
+            for (int i = 0; i < CombatGridManager.Instance.targetedCombatSlots.Count; i++)
             {
                 if (GetActiveSkill().targetEffectVisualAC != null)
                 {
-                    unitsSelected[i].UpdateEffectVisualAnimator(GetActiveSkill().targetEffectVisualAC);
+                    CombatGridManager.Instance.targetedCombatSlots[i].UpdateEffectVisualAnimator(GetActiveSkill().targetEffectVisualAC);
 
                     if (GetActiveSkill().skillHit != null && GetActiveSkill().skillProjectile == null)
                         AudioManager.Instance.Play(GetActiveSkill().skillHit.name);
@@ -2890,11 +2890,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //yield return new WaitForSeconds(allyRangedSkillWaitTime / 3);
 
             // Display effect visual to each selected unit before the power is shown
-            for (int i = 0; i < unitsSelected.Count; i++)
+            for (int i = 0; i < CombatGridManager.Instance.targetedCombatSlots.Count; i++)
             {
                 if (GetActiveItem().itemVisualAC != null)
                 {
-                    unitsSelected[i].UpdateEffectVisualAnimator(GetActiveItem().itemVisualAC);
+                    CombatGridManager.Instance.targetedCombatSlots[i].UpdateEffectVisualAnimator(GetActiveItem().itemVisualAC);
 
                     if (GetActiveItem().projectileHit != null)
                         AudioManager.Instance.Play(GetActiveItem().projectileHit.name);
@@ -2956,13 +2956,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 for (int w = 0; w < hitCount; w++)
                 {
                     // Loop through all selected units, spawn projectiles, if target is dead stop.
-                    for (int z = unitsSelected.Count - 1; z >= 0; z--)
+                    for (int z = CombatGridManager.Instance.targetedCombatSlots.Count - 1; z >= 0; z--)
                     {
-                        if (unitsSelected[z] == null)
+                        if (CombatGridManager.Instance.targetedCombatSlots[z] == null)
                             continue;
                         else
                         {
-                            GetActiveUnitFunctionality().SpawnProjectile(unitsSelected[z].transform);
+                            GetActiveUnitFunctionality().SpawnProjectile(CombatGridManager.Instance.targetedCombatSlots[z].transform);
                         }
                     }
 
@@ -2979,26 +2979,33 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             else
             {
                 // Null check
-                if (unitsSelected.Count > 0)
+                if (CombatGridManager.Instance.targetedCombatSlots.Count > 0)
                 {
-                    // Set timing for player allies projectiles
-                    if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    if (CombatGridManager.Instance.targetedCombatSlots[0].GetLinkedUnit())
                     {
+                        if (CombatGridManager.Instance.targetedCombatSlots[0].GetLinkedUnit())
+                        {
+                            UnitFunctionality unit = CombatGridManager.Instance.targetedCombatSlots[0].GetLinkedUnit();
+                            // Set timing for player allies projectiles
+                            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
 
-                    }
-                    else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
-                    {
-                        yield return new WaitForSeconds(allyRangedSkillWaitTime / 2);
-                    }
+                            }
+                            else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                            {
+                                yield return new WaitForSeconds(allyRangedSkillWaitTime / 2);
+                            }
 
-                    // set timing for enemy allies projectiles
-                    if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
-                    {
+                            // set timing for enemy allies projectiles
+                            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                            {
 
-                    }
-                    else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
-                    {
-                        yield return new WaitForSeconds(allyRangedSkillWaitTime / 2);
+                            }
+                            else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                yield return new WaitForSeconds(allyRangedSkillWaitTime / 2);
+                            }
+                        }
                     }
                 }
             }
@@ -3033,26 +3040,34 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 yield return new WaitForSeconds(unitPowerUIWaitTime);
             else
             {
-                if (unitsSelected.Count > 0)
+                if (CombatGridManager.Instance.targetedCombatSlots.Count > 0)
                 {
-                    // Set timing for player allies projectiles
-                    if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    if (CombatGridManager.Instance.targetedCombatSlots[0].GetLinkedUnit())
                     {
+                        if (CombatGridManager.Instance.targetedCombatSlots[0].GetLinkedUnit())
+                        {
+                            UnitFunctionality unit = CombatGridManager.Instance.targetedCombatSlots[0].GetLinkedUnit();
 
-                    }
-                    else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
-                    {
-                        yield return new WaitForSeconds(allyMeleeSkillWaitTime / 2);
-                    }
+                            // Set timing for player allies projectiles
+                            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
 
-                    // set timing for enemy allies projectiles
-                    if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
-                    {
+                            }
+                            else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                            {
+                                yield return new WaitForSeconds(allyMeleeSkillWaitTime / 2);
+                            }
 
-                    }
-                    else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unitsSelected[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
-                    {
-                        yield return new WaitForSeconds(allyMeleeSkillWaitTime / 2);
+                            // set timing for enemy allies projectiles
+                            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                            {
+
+                            }
+                            else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                yield return new WaitForSeconds(allyMeleeSkillWaitTime / 2);
+                            }
+                        }
                     }
                 }
             }
@@ -3070,11 +3085,37 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             float health = 1;
             UnitFunctionality lowestHealthHero = null;
 
+            int targets = 0;
+
+            UnitFunctionality unit = null;
+
             // Loop through all selected units
-            for (int x = 0; x < unitsSelected.Count; x++)
+            for (int x = 0; x < CombatGridManager.Instance.targetedCombatSlots.Count; x++)
             {
-                if (x > unitsSelected.Count)
+                if (!CombatGridManager.Instance.targetedCombatSlots[x].GetLinkedUnit() && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.ALIVE)
+                    continue;
+                else if (CombatGridManager.Instance.targetedCombatSlots[x].GetLinkedUnit() && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                    continue;
+                else
+                    targets++;
+
+                if (targets > CombatGridManager.Instance.targetedCombatSlots.Count)
                     break;
+
+                if (CombatGridManager.Instance.targetedCombatSlots[x].GetLinkedUnit())
+                {
+                    if (CombatGridManager.Instance.targetedCombatSlots[x].GetLinkedUnit() && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.ALIVE)
+                    {
+                        unit = CombatGridManager.Instance.targetedCombatSlots[x].GetLinkedUnit();
+                    }
+                }
+                else if (CombatGridManager.Instance.targetedCombatSlots[x].GetFallenUnits().Count > 0)
+                {
+                    if (CombatGridManager.Instance.targetedCombatSlots[x].GetFallenUnits()[0] && activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                    {
+                        unit = CombatGridManager.Instance.targetedCombatSlots[x].GetFallenUnits()[0];
+                    }
+                }
 
                 // If active skil has an effect AND it's not a self cast, apply it to selected targets
                 if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast)
@@ -3084,9 +3125,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     // If active skill doubles current effects, do it
                     if (GetActiveSkill().isDoublingEffect)
                     {
-                        if (unitsSelected[x].GetEffect("POISON"))
+                        if (unit.GetEffect("POISON"))
                         {
-                            int val2 = unitsSelected[x].GetEffect("POISON").GetTurnCountRemaining();
+                            int val2 = unit.GetEffect("POISON").GetTurnCountRemaining();
 
                             int maxEffectCount = EffectManager.instance.GetMaxEffectTurnsRemaining();
                             if (val2 > maxEffectCount)
@@ -3094,14 +3135,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                             if (!miss)
                             {
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val2, false);
+                                unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val2, false);
 
                                 if (GetActiveSkill().effect2 != null)
                                 {
                                     if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
                                     {
                                         yield return new WaitForSeconds(0.4f);
-                                        unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val2, false);
+                                        unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, val2, false);
                                     }
                                 }
                             }
@@ -3114,9 +3155,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         {
                             if (GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && activeRoomHeroes.Count <= 2
                                 || GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && fallenHeroes.Count > 0)
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val, false);
+                                unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val, false);
                             else if (GetActiveSkill().effect.curEffectName != EffectData.EffectName.REANIMATE)
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect, unitsSelected[x], effectHitAcc, val, false);
+                                unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val, false);
                         }
 
                         if (GetActiveSkill().effect2 != null)
@@ -3124,7 +3165,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK && GetActiveSkill().effect2.curEffectName != EffectData.EffectName.REANIMATE)
                             {
                                 yield return new WaitForSeconds(0.25f);
-                                unitsSelected[x].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[x], effectHitAcc, val, false);
+                                unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, val, false);
                             }
                         }
                     }
@@ -3176,19 +3217,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     if (GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
                     {
                         // If player scored higher then only a miss, and target is dead
-                        if (unitsSelected[x].isDead && effectHitAcc != 0)
+                        if (unit.isDead && hitCount != 0)
                         {
-                            if (activeRoomHeroes.Count <= 2 || fallenHeroes.Count > 0)
-                            {
-                                unitsSelected[x].ReviveUnit(effectHitAcc, false, false);
+                            unit.ReviveUnit(hitCount, false, false);
 
-                                unitsSelected[x].SwitchTeams();
-                            }
-                            else
-                            {
-                                unitsSelected[x].DecreaseEffectTurnsLeft(false, false, false);
-                            }
+                            if (GetActiveSkill().skillName == "REANIMATE")
+                                unit.SwitchTeams();
                         }
+                        //else
+                            //unit.DecreaseEffectTurnsLeft(false, false, false);
                     }
                 }
 
@@ -3207,20 +3244,25 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 activeRoomAllUnitFunctionalitys[z].hasAttacked = true;
             }
 
-            for (int i = 0; i < unitsSelected.Count; i++)
+            for (int i = 0; i < CombatGridManager.Instance.targetedCombatSlots.Count; i++)
             {
-                // If skill removes random effects, do so
-                if (activeSkill.isCleansingEffectRandom)
+                UnitFunctionality unit = CombatGridManager.Instance.targetedCombatSlots[i].GetLinkedUnit();
+
+                if (unit)
                 {
-                    for (int c = 0; c < activeSkill.cleanseCount; c++)
+                    // If skill removes random effects, do so
+                    if (activeSkill.isCleansingEffectRandom)
                     {
-                        if (unitsSelected[i].activeEffects.Count > 0)
+                        for (int c = 0; c < activeSkill.cleanseCount; c++)
                         {
-                            unitsSelected[i].DecreaseRandomNegativeEffect();
-                            yield return new WaitForSeconds(.15f);
+                            if (unit.activeEffects.Count > 0)
+                            {
+                                unit.DecreaseRandomNegativeEffect();
+                                yield return new WaitForSeconds(.15f);
+                            }
+                            else
+                                break;
                         }
-                        else
-                            break;
                     }
                 }
             }
@@ -3303,15 +3345,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         GetActiveUnitFunctionality().hasAttacked = true;
 
-        // Choose next skill for unit
-        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
-        {
-            UpdateActiveSkill(GetActiveUnitFunctionality().ChooseSkill(), false);
-            GetActiveUnitFunctionality().UpdateChosenSkill(GetActiveSkill());
-        }
+        CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
 
         // If active unit is player, setup player UI
-        if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER && !GetActiveUnitFunctionality().reanimated)
+        if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
         {
             // Resume combat music
             AudioManager.Instance.PauseCombatMusic(false);
@@ -3342,7 +3379,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         }
         // If active unit is enemy, check whether to move after attacking
-        else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY || GetActiveUnitFunctionality().reanimated)
+        else if (GetActiveUnitFunctionality().unitData.curUnitType == UnitData.UnitType.ENEMY)
         {
             if (!GetActiveUnitFunctionality().isDead)
             {
@@ -3364,13 +3401,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         for (int x = 0; x < hitCount; x++)
         {
             // If 1 enemy is trying to target an ally, dont?
-            if (unitsSelected.Count == 0)
+            if (CombatGridManager.Instance.targetedCombatSlots.Count == 0)
             {
                 GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
                 break;
             }
 
-            if (unitsSelected[0] == null)
+            if (CombatGridManager.Instance.targetedCombatSlots[0] == null)
             {
                 GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
                 continue;
@@ -3401,12 +3438,19 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             if (!flag)
             {
                 // Loop through all selected units
-                for (int i = unitsSelected.Count - 1; i >= 0; i--)
+                for (int i = CombatGridManager.Instance.targetedCombatSlots.Count - 1; i >= 0; i--)
                 {
                     bool parrying = false;
 
                     WeaponManager.Instance.CalculatePower(isSkillsMode);
                     power = (int)WeaponManager.Instance.calculatedPower;
+
+                    UnitFunctionality unit = null;
+
+                    if (CombatGridManager.Instance.targetedCombatSlots[i].GetLinkedUnit())
+                    {
+                        unit = CombatGridManager.Instance.targetedCombatSlots[i].GetLinkedUnit();
+                    }
 
                     if (miss)
                     {
@@ -3417,12 +3461,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     int originalPower = power;
 
                     // Helps catch the null error
-                    if (i < unitsSelected.Count)
+                    if (i < CombatGridManager.Instance.targetedCombatSlots.Count && unit)
                     {
-                        if (unitsSelected[i] == null)
+                        if (unit == null)
                             continue;
 
-                        if (unitsSelected[i].isDead)
+                        if (unit.isDead)
                             continue;
                     }
 
@@ -3441,107 +3485,112 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     int orderCount;
 
-                    bool blocked;
+                    bool blocked = false;
 
                     float targetBlockChance = Random.Range(0, 101);
-                    if (unitsSelected[i].GetBlockChance() >= targetBlockChance)
-                        blocked = true;
-                    else
-                        blocked = false;
-
-                    //Debug.Log(unitsSelected[i].GetUnitName() + " " + unitsSelected[i].GetBlockChance());
-
-                    // Cause power
-                    // Skill 
-                    if (isSkillsMode)
+                    if (unit)
                     {
-                        if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                        {
-                            orderCount = 2;
-                            if (hasBeenLuckyHit)
-                            {
-                                hasBeenLuckyHit = false;
-                                orderCount--;
-                            }
-
-                            if (blocked)
-                            {
-                                newPower = 0;
-                            }
-                            unitsSelected[i].UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
-                            //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
-
-                            CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
-                        }
-                        else if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
-                        {
-                            orderCount = 2;
-                            if (hasBeenLuckyHit)
-                            {
-                                hasBeenLuckyHit = false;
-                                orderCount--;
-                            }
-
-                            float finalHealingPower = newHealingPower * unitsSelected[i].curHealingRecieved;
-                            unitsSelected[i].UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
-                        }
-                    }
-                    // Items
-                    else
-                    {
-                        if (GetActiveItem().curItemType == ItemPiece.ItemType.OFFENSE)
-                        {
-                            orderCount = 2;
-                            if (hasBeenLuckyHit)
-                            {
-                                hasBeenLuckyHit = false;
-                                orderCount--;
-                            }
-
-                            if (blocked)
-                            {
-                                newPower = 0;
-                            }
-                            unitsSelected[i].UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
-                            //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
-
-                            CheckAttackForItem(unitsSelected[i], GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
-                        }
-                        else if (GetActiveItem().curItemType == ItemPiece.ItemType.SUPPORT)
-                        {
-                            orderCount = 2;
-                            if (hasBeenLuckyHit)
-                            {
-                                hasBeenLuckyHit = false;
-                                orderCount--;
-                            }
-
-                            float finalHealingPower = newHealingPower * unitsSelected[i].curHealingRecieved;
-                            unitsSelected[i].UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
-                        }
+                        if (unit.GetBlockChance() >= targetBlockChance)
+                            blocked = true;
+                        else
+                            blocked = false;
                     }
 
-                    if (isSkillsMode)
+                    if (unit)
                     {
-                        // If active skill has an effect AND it's not a self cast, apply it to selected targets
-                        if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
+                        // Cause power
+                        // Skill 
+                        if (isSkillsMode)
                         {
-                            if (isSkillsMode)
-                                unitsSelected[i].AddUnitEffect(GetActiveSkill().effect, unitsSelected[i], effectHitAcc, effectHitAcc, false, false, false);
-                            else
-
-
-                            if (isSkillsMode && GetActiveSkill().effect2 != null)
+                            if (GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
                             {
-                                if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
-                                    unitsSelected[i].AddUnitEffect(GetActiveSkill().effect2, unitsSelected[i], effectHitAcc, effectHitAcc, false, false, false);
+                                orderCount = 2;
+                                if (hasBeenLuckyHit)
+                                {
+                                    hasBeenLuckyHit = false;
+                                    orderCount--;
+                                }
+
+                                if (blocked)
+                                {
+                                    newPower = 0;
+                                }
+                                unit.UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
+                                //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+
+                                CheckAttackForItem(unit, GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                            }
+                            else if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                            {
+                                orderCount = 2;
+                                if (hasBeenLuckyHit)
+                                {
+                                    hasBeenLuckyHit = false;
+                                    orderCount--;
+                                }
+
+                                float finalHealingPower = newHealingPower * unit.curHealingRecieved;
+                                unit.UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
                             }
                         }
+                        // Items
+                        else
+                        {
+                            if (GetActiveItem().curItemType == ItemPiece.ItemType.OFFENSE)
+                            {
+                                orderCount = 2;
+                                if (hasBeenLuckyHit)
+                                {
+                                    hasBeenLuckyHit = false;
+                                    orderCount--;
+                                }
+
+                                if (blocked)
+                                {
+                                    newPower = 0;
+                                }
+                                unit.UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
+                                //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+
+                                CheckAttackForItem(unit, GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                            }
+                            else if (GetActiveItem().curItemType == ItemPiece.ItemType.SUPPORT)
+                            {
+                                orderCount = 2;
+                                if (hasBeenLuckyHit)
+                                {
+                                    hasBeenLuckyHit = false;
+                                    orderCount--;
+                                }
+
+                                float finalHealingPower = newHealingPower * unit.curHealingRecieved;
+                                unit.UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
+                            }
+                        }
+
+                        if (isSkillsMode)
+                        {
+                            // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                            if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
+                            {
+                                if (isSkillsMode)
+                                    unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                else
+
+
+                                if (isSkillsMode && GetActiveSkill().effect2 != null)
+                                {
+                                    if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                        unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            unit.AddUnitEffect(GetActiveItem().effectAdded, unit, effectHitAcc, effectHitAcc, true, false, true, GetActiveItemSlot().linkedSlot);
+                        }
                     }
-                    else
-                    {
-                        unitsSelected[i].AddUnitEffect(GetActiveItem().effectAdded, unitsSelected[i], effectHitAcc, effectHitAcc, true, false, true, GetActiveItemSlot().linkedSlot);
-                    }
+
 
 #if !UNITY_EDITOR
                     Vibration.Vibrate(15);
@@ -4383,6 +4432,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     }
     public void UpdateTurnOrder()
     {
+        CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
+
+        // Ensure combat tab is set as skills mode by default, instead of left from items tab from prev fighter turn
+        CombatGridManager.Instance.ToggleTabButtons("Skills");
+        CombatGridManager.Instance.ToggleTabButtons("Movement");
+
         if (combatOver)
             return;
 
@@ -7409,7 +7464,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             WeaponManager.Instance.SetHeroWeapon(GetActiveUnitFunctionality().GetUnitName());
             SetupPlayerWeaponUI();
         }
-        else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        else if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GetActiveUnitFunctionality().reanimated)
             WeaponManager.Instance.SetEnemyWeapon(GetActiveUnitFunctionality(), true);
     }
 

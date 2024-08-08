@@ -408,8 +408,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             // Combat Mode
             else
             {
-
-
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
 
@@ -419,25 +417,37 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     {
                         // Launch attack on all combat selected slots
 
+                        UnitFunctionality selectedUnit = null;
+
+                        if (combatSlot.GetLinkedUnit())
+                            selectedUnit = combatSlot.GetLinkedUnit();
+                        else if (combatSlot.GetFallenUnits().Count > 0 &&
+                                GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                        {
+                            if (combatSlot.GetFallenUnits().Count > 0)
+                                selectedUnit = combatSlot.GetFallenUnits()[0];
+                        }
+
                         if (!GameManager.Instance.GetActiveSkill().attackAllSelected)
                         {
-                            if (combatSlot.GetLinkedUnit())
+                            if (selectedUnit || combatSlot.GetFallenUnits().Count > 0 && 
+                                GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
                             {
-                                if (!combatSlot.GetLinkedUnit().IsSelected())
+                                if (!selectedUnit.IsSelected())
                                 {
-                                    combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                    selectedUnit.ToggleSelected(true);
 
                                     CombatGridManager.Instance.done = true;
 
-                                    GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
+                                    GameManager.Instance.targetUnit(selectedUnit);
                                 }
                                 else
                                 {
-                                    combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                    selectedUnit.ToggleSelected(true);
 
                                     CombatGridManager.Instance.done = true;
 
-                                    GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit(), true);
+                                    GameManager.Instance.targetUnit(selectedUnit, true);
                                 }
                             }
                             else
@@ -448,7 +458,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         }
                         else
                         {
-                            if (combatSlot.GetLinkedUnit())
+                            if (selectedUnit)
                             {
                                 // add all units ontop of a combat selected slot to units selected.
                                 //combatSlot.GetLinkedUnit().ToggleSelected(true);
@@ -460,14 +470,14 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                         GameManager.Instance.activeRoomAllUnitFunctionalitys[i].ToggleSelected(true);
 
                                         CombatGridManager.Instance.done = true;
-                                        GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit());
+                                        GameManager.Instance.targetUnit(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
                                     }
                                 }
 
-                                if (combatSlot.GetLinkedUnit())
+                                if (selectedUnit)
                                 {
-                                    if (combatSlot.GetLinkedUnit().IsSelected())
-                                        GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit(), true);
+                                    if (selectedUnit.IsSelected())
+                                        GameManager.Instance.targetUnit(selectedUnit, true);
                                 }
                             }
                             else
@@ -499,7 +509,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             // Remove current placed attack, and move it to target slot
                         }
                     }
-
                 }
             }
         }
@@ -1613,6 +1622,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.ResetSelectedUnits();
 
         GetComponent<UIElement>().AnimateUI(false);
+
+        if (!GameManager.Instance.GetActiveUnitFunctionality().hasAttacked)
+            GameManager.Instance.isSkillsMode = true;
 
         CombatGridManager.Instance.UpdateAttackMovementMode(false, true, true);
 

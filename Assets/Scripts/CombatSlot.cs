@@ -12,12 +12,103 @@ public class CombatSlot : MonoBehaviour
     [SerializeField] private bool selected = false;
     [SerializeField] private bool allowed = false;
     [SerializeField] private UnitFunctionality linkedUnit;
+    [SerializeField] private List<UnitFunctionality> fallenUnits = new List<UnitFunctionality>();
     [SerializeField] private Animator animator;
     [SerializeField] private GraphicRaycaster graphicRaycaster;
     [SerializeField] private int rangeFromActiveUnit;
 
+    [SerializeField] private UIElement topSelectBorder;
+    [SerializeField] private UIElement leftSelectBorder;
+    [SerializeField] private UIElement rightSelectBorder;
+    [SerializeField] private UIElement bottomSelectBorder;
+
+    [SerializeField] private UIElement transparentBG;
+    public Animator effectDisplayAnimator;
+
     private bool sizeIncreased;
     public bool combatSelected;
+
+    public List<UnitFunctionality> GetFallenUnits()
+    {
+        return fallenUnits;
+    }
+
+    public void AddFallenUnit(UnitFunctionality unit)
+    {
+        if (!fallenUnits.Contains(unit))
+            fallenUnits.Add(unit);
+    }
+
+    public void RemoveFallenUnit(UnitFunctionality unit)
+    {
+        if (fallenUnits.Contains(unit))
+            fallenUnits.Remove(unit);
+    }
+
+    public void ResetFallenUnits()
+    {
+        fallenUnits.Clear();
+    }
+
+    public void ToggleTransparentBG(bool toggle = true)
+    {
+        if (toggle)
+            transparentBG.UpdateAlpha(.35f);
+        else
+            transparentBG.UpdateAlpha(0);
+    }
+
+    public UIElement GetTopSelectBorder()
+    {
+        return topSelectBorder;
+    }
+
+    public UIElement GetLeftSelectBorder()
+    {
+        return leftSelectBorder;
+    }
+
+    public UIElement GetRightSelectBorder()
+    {
+        return rightSelectBorder;
+    }
+
+    public UIElement GetBottomSelectBorder()
+    {
+        return bottomSelectBorder;
+    }
+
+    public void ToggleSelectBorder(UIElement selectBorder, bool toggle = true)
+    {
+        if (selectBorder == GetTopSelectBorder())
+        {
+            if (toggle)
+                GetTopSelectBorder().UpdateAlpha(1);
+            else
+                GetTopSelectBorder().UpdateAlpha(0);
+        }
+        else if (selectBorder == GetLeftSelectBorder())
+        {
+            if (toggle)
+                GetLeftSelectBorder().UpdateAlpha(1);
+            else
+                GetLeftSelectBorder().UpdateAlpha(0);
+        }
+        else if (selectBorder == GetRightSelectBorder())
+        {
+            if (toggle)
+                GetRightSelectBorder().UpdateAlpha(1);
+            else
+                GetRightSelectBorder().UpdateAlpha(0);
+        }
+        else if (selectBorder == GetBottomSelectBorder())
+        {
+            if (toggle)
+                GetBottomSelectBorder().UpdateAlpha(1);
+            else
+                GetBottomSelectBorder().UpdateAlpha(0);
+        }
+    }
 
     public int GetRangeFromActiveUnit()
     {
@@ -78,12 +169,24 @@ public class CombatSlot : MonoBehaviour
         return linkedUnit;
     }
 
+    public void UpdateEffectVisualAnimator(RuntimeAnimatorController ac)
+    {
+        effectDisplayAnimator.runtimeAnimatorController = ac;
+
+        effectDisplayAnimator.SetTrigger("animate");
+        //UpdateIconSize();
+        //StartWalkAnim();
+    }
+
     public void ToggleCombatSelected(bool toggle = true)
     {
         combatSelected = toggle;
 
         if (toggle)
         {
+            if (!CombatGridManager.Instance.targetedCombatSlots.Contains(this))
+                CombatGridManager.Instance.targetedCombatSlots.Add(this);
+
             GetAnimator().SetBool("CombatAttack", true);
 
             if (GetSelected())
@@ -93,9 +196,13 @@ public class CombatSlot : MonoBehaviour
 
             slotBG.UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
             UpdateSlotSelectedColour(CombatGridManager.Instance.slotAggressiveColour);
+            ToggleTransparentBG(true);
         }
         else
         {
+            if (CombatGridManager.Instance.targetedCombatSlots.Contains(this))
+                CombatGridManager.Instance.targetedCombatSlots.Remove(this);
+
             GetAnimator().SetBool("CombatAttack", false);
 
             if (GetAllowed())
@@ -106,6 +213,7 @@ public class CombatSlot : MonoBehaviour
             ToggleSlotSelectedSize(true);
             //slotBG.UpdateColour(CombatGridManager.Instance.slotSelectedColour);
             UpdateSlotSelectedColour(CombatGridManager.Instance.slotSelectedColour);
+            ToggleTransparentBG(false);
         }
     }
 

@@ -22,12 +22,16 @@ MonoBehaviour:
   curSkillActiveType: 0
   curSkillSelectionType: 1
   skillRangeHitArea: {x: 1, y: 1}
+  skillRangeHitAreas:
+  - {x: 0, y: 0}
+  skillAreaHitCount: 1
   attackAllSelected: 0
   attackAllUnits: 0
   canTargetSelf: 0
   skillIgnoreRange: 0
   startingSkillRange: 3
-  curSkillRange: 0
+  curSkillRange: 3
+  localRangeAreas: []
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: a8b157947fece4a47a6534dad1323f92, type: 3}
   skillName: HOLY PARTNER

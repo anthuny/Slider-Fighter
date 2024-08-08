@@ -22,11 +22,17 @@ MonoBehaviour:
   curSkillActiveType: 0
   curSkillSelectionType: 0
   skillRangeHitArea: {x: 2, y: 1}
+  skillRangeHitAreas:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  skillAreaHitCount: 1
   attackAllSelected: 0
   attackAllUnits: 0
+  canTargetSelf: 0
   skillIgnoreRange: 0
   startingSkillRange: 3
-  curSkillRange: 0
+  curSkillRange: 3
+  localRangeAreas: []
   skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 6a9b3f9eba020d54088850cdf31a900d, type: 3}
   skillName: HALLOWED REAPING
@@ -44,7 +50,7 @@ MonoBehaviour:
   skillHitAttempts: 1
   projectileSpeed: 11
   skillCooldown: 0
-  curCooldown: 1
+  curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   isSpecial: 0
