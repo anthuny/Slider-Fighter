@@ -1120,12 +1120,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (!enemies)
         {
-            for (int i = 0; i < CombatGridManager.Instance.GetFighterSpawnCombatSlots().Count; i++)
-            {
-                if (CombatGridManager.Instance.GetFighterSpawnCombatSlots()[i].transform.childCount >= 1)
-                    Destroy(CombatGridManager.Instance.GetFighterSpawnCombatSlots()[i].transform.GetChild(0).gameObject);
-            }
-
             for (int i = 0; i < activeRoomHeroes.Count; i++)
             {
                 activeRoomHeroes.RemoveAt(i);
@@ -1145,19 +1139,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.ENEMY)
                     activeRoomAllUnitFunctionalitys.RemoveAt(i);
-            }
-            //activeRoomAllUnitFunctionalitys.Clear();
-
-            for (int x = 0; x < CombatGridManager.Instance.GetAllCombatSlots().Count; x++)
-            {
-                for (int i = 0; i < CombatGridManager.Instance.GetCombatSlot(x).transform.childCount; i++)
-                {
-                    if (CombatGridManager.Instance.GetCombatSlot(x).transform.GetChild(i).GetComponent<UnitFunctionality>())
-                    {
-                        if (CombatGridManager.Instance.GetCombatSlot(x).transform.GetChild(i).GetComponent<UnitFunctionality>().curUnitType == UnitFunctionality.UnitType.ENEMY)
-                            Destroy(CombatGridManager.Instance.GetCombatSlot(x).transform.GetChild(i).gameObject);
-                    }
-                }
             }
 
             for (int y = 0; y < activeRoomEnemies.Count; y++)
@@ -1614,6 +1595,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (!roomDefeated)
         {
             roomDefeated = true;
+            combatOver = true;
 
             if (!playerWon)
             {
@@ -1647,6 +1629,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             {
                 activeRoomAllUnitFunctionalitys[i].ToggleUnitMoveActiveArrows(false);
             }
+
+            ToggleEndTurnButton(false);
+            CombatGridManager.Instance.DisableAllButtons();
 
             // Re-order activeroomallunitfunctionality order to default team order after a combat win
             if (playerWon)
@@ -1830,10 +1815,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     // Toggle UI accordingly
     public IEnumerator SetupRoomPostBattle(bool playerWon)
     {
+        CombatGridManager.Instance.DisableAllButtons();
         //StartCoroutine(SetupPostBattleUI(playerWon));
 
         // Remove ally unit's effects
-        
+
         for (int i = 0; i < activeRoomHeroes.Count; i++)
         {
             //activeRoomAllies[i].ResetEffects();
@@ -1861,7 +1847,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ResetRoom(false);
 
         yield return new WaitForSeconds(1f);
-        
+
         UnitFunctionality unitFunctionality = null;
 
         if (playerWon)
@@ -1943,6 +1929,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             yield return new WaitForSeconds(0);
 
             playerLost = false;
+
+            CombatGridManager.Instance.ResetCombatSlots(false);
         }
         // If player LOST, reset game
         else
@@ -1961,9 +1949,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             playerLost = true;
 
 
-
             TeamGearManager.Instance.ResetGearOwned();
             TeamItemsManager.Instance.ResetItemOwned();
+            CombatGridManager.Instance.ResetCombatSlots(true);
 
             // Reset map
             //MapManager.instance.ToggleMapVisibility(true, true);
@@ -1994,7 +1982,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(fighterSelectedMainSlotDesc, true);
-        ToggleEndTurnButton(true, true);
+
+        if (!combatOver)
+            ToggleEndTurnButton(true, true);
 
         UpdateUnitsSelectedText();
 
@@ -4353,7 +4343,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         StartCoroutine(SetupPostBattleUI(playerWon));
     }
 
-    bool CheckToEndCombat()
+    public bool CheckToEndCombat()
     {
         #region Check if Player Team Won or Lost, Then end Battle
 

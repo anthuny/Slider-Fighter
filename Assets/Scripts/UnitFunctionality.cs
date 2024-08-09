@@ -4632,6 +4632,8 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
 
+            GameManager.Instance.CheckToEndCombat();
+
             yield return new WaitForSeconds(2.15f);
 
             ToggleUnitDisplay(false);

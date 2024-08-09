@@ -148,6 +148,22 @@ public class CombatSlot : MonoBehaviour
         linkedUnit = newUnit;
     }
 
+    public void ResetSlotUnitData(bool destroy = false)
+    {
+        if (GetLinkedUnit())
+        {
+            if (destroy)
+                Destroy(GetLinkedUnit().gameObject);
+            UpdateLinkedUnit(null);
+        }
+        for (int i = 0; i < fallenUnits.Count; i++)
+        {
+            if (fallenUnits[i] && destroy)
+                Destroy(fallenUnits[i].gameObject);
+            ResetFallenUnits();
+        }
+    }
+
     public void UpdateAllowed(bool toggle = true)
     {
         allowed = toggle;

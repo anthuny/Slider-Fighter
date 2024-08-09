@@ -58,6 +58,13 @@ public class CombatGridManager : MonoBehaviour
         DisableAllButtons();
     }
 
+    public void ResetCombatSlots(bool destroy = false)
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            allCombatSlots[i].ResetSlotUnitData(destroy);
+        }
+    }
     public void DisableAllButtons()
     {
         ToggleButton(GetButtonItems(), false);
@@ -1949,10 +1956,6 @@ public class CombatGridManager : MonoBehaviour
                     {
                         GameManager.Instance.AddUnitsSelected(targetedSlot.GetFallenUnits()[0]);
                         targetedSlot.GetFallenUnits()[0].ToggleSelected(true);
-                    }
-                    else
-                    {
-                        return;
                     }
                 }
             }
