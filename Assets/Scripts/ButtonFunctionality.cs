@@ -420,6 +420,31 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         UnitFunctionality selectedUnit = null;
 
                         if (combatSlot.GetLinkedUnit())
+                        {
+                            if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE &&
+                                GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
+                                GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                if (combatSlot.GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                                    return;
+                            }
+                            else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT &&
+                                GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.PLAYERS &&
+                                GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                if (combatSlot.GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                    return;
+                            }
+                            else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT &&
+                                GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
+                                GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                if (combatSlot.GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                                    return;
+                            }
+                        }
+
+                        if (combatSlot.GetLinkedUnit())
                             selectedUnit = combatSlot.GetLinkedUnit();
                         else if (combatSlot.GetFallenUnits().Count > 0 &&
                                 GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
@@ -2272,7 +2297,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 return;
 
             // If skill is locked, stop
-            if (SkillsTabManager.Instance.skillBase2.GetIsLocked())
+            if (SkillsTabManager.Instance.skillBase4.GetIsLocked())
                 return;
 
             GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3));
@@ -2444,7 +2469,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             isEnabled = true;
             Effect effect = GetComponent<Effect>();
-            GetComponentInParent<UnitFunctionality>().ToggleTooltipEffect(true, effect.effectName);
+            unit.ToggleTooltipEffect(true, effect.effectName);
         }
     }
 
@@ -2545,7 +2570,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 else
                 {
                     // Do not ally selection of enemy units  behind the hero offering, it obstructs selecting new hero
-                    if (unitFunctionality.curUnitType == UnitFunctionality.UnitType.ENEMY && HeroRoomManager.Instance.playerInHeroRoomView)
+                    if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY && HeroRoomManager.Instance.playerInHeroRoomView)
                         yield break;
                     else
                     {
@@ -2557,9 +2582,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
                         if (GameManager.Instance.playerInCombat && !PostBattle.Instance.isInPostBattle || HeroRoomManager.Instance.playerInHeroRoomView)
                         {
-                            if (unitFunctionality.IsSelected())
+                            if (unit.IsSelected())
                             {
-                                GameManager.Instance.targetUnit(unitFunctionality, true);
+                                GameManager.Instance.targetUnit(unit, true);
                             }
                         }
                     }
@@ -2639,8 +2664,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             effectHeldTimer = 0;
             isEnabled = false;
             //Debug.Log("hiding effect tooltip");
-            GetComponentInParent<UnitFunctionality>().ToggleTooltipEffect(false);
-            StartCoroutine(HideEffectTooltipOvertime());
+            unit.ToggleTooltipEffect(false);
+            HideEffectTooltipOvertime();
         }
     }
 
@@ -2651,26 +2676,25 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         locked = false;
     }
 
-    public IEnumerator HideEffectTooltipOvertime(bool onlyEnemies = false)
+    public void HideEffectTooltipOvertime(bool onlyEnemies = false)
     {
-        if (GetComponentInParent<UnitFunctionality>())
+        if (unit)
         {
             if (!onlyEnemies)
             {
-                yield return new WaitForSeconds(0);
                 isHeldDownEffect = false;
                 effectHeldTimer = 0;
                 isEnabled = false;
-                GetComponentInParent<UnitFunctionality>().ToggleTooltipEffect(false);
+                //unit.ToggleTooltipEffect(false);
             }
             else
             {
-                if (GetComponentInParent<UnitFunctionality>().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
                 {
                     isHeldDownEffect = false;
                     effectHeldTimer = 0;
                     isEnabled = false;
-                    GetComponentInParent<UnitFunctionality>().ToggleTooltipEffect(false);
+                    //unit.ToggleTooltipEffect(false);
                 }
             }
         }

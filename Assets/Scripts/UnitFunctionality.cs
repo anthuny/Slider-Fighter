@@ -3364,13 +3364,21 @@ public class UnitFunctionality : MonoBehaviour
                 //Debug.Log(rand);
                 if (rand == 1)  // Skill 1
                 {
+                    if (skill0CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).isPassive
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0) != skill)
+                        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
+                    else
+                        continue;
+                }
+                else if (rand == 2)  // Skill 2
+                {
                     if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive
                         && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1) != skill)
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1);
                     else
                         continue;
                 }
-                else if (rand == 2)  // Skill 2
+                else if (rand == 3)  // Skill 3
                 {
                     if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).isPassive
                         && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2) != skill)
@@ -3378,20 +3386,12 @@ public class UnitFunctionality : MonoBehaviour
                     else
                         continue;
                 }
-                else if (rand == 3)  // Skill 3
+                // Base skill
+                else if (rand == 4)
                 {
                     if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).isPassive
                         && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3) != skill)
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3);
-                    else
-                        continue;
-                }
-                // Base skill
-                else if (rand == 4)
-                {
-                    if (skill0CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0) != skill)
-                        return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
                 }
             }
         }

@@ -1418,35 +1418,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (activeRoomHeroes.Count == 1)
             {
-                activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
-                activeRoomHeroes[0].UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0));
-
-                CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).UpdateLinkedUnit(activeRoomHeroes[0]);
+                activeRoomHeroes[0].SetPositionAndParent(allyPositions.GetChild(1));
             }
             else if (activeRoomHeroes.Count == 2)
             {
-                activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
-                activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
-
-                activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
-                activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
-
-                CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).UpdateLinkedUnit(activeRoomHeroes[0]);
-                CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).UpdateLinkedUnit(activeRoomHeroes[1]);
+                activeRoomHeroes[0].SetPositionAndParent(allyPositions.GetChild(1));
+                activeRoomHeroes[1].SetPositionAndParent(allyPositions.GetChild(0));
             }
             else if (activeRoomHeroes.Count == 3)
             {
-                activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
-                activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
-                activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
-
-                activeRoomHeroes[0].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).transform);
-                activeRoomHeroes[1].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).transform);
-                activeRoomHeroes[2].SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
-
-                CombatGridManager.Instance.GetFighterSpawnCombatSlot(0).UpdateLinkedUnit(activeRoomHeroes[0]);
-                CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).UpdateLinkedUnit(activeRoomHeroes[1]);
-                CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).UpdateLinkedUnit(activeRoomHeroes[2]);
+                activeRoomHeroes[0].SetPositionAndParent(allyPositions.GetChild(1));
+                activeRoomHeroes[1].SetPositionAndParent(allyPositions.GetChild(0));
+                activeRoomHeroes[2].SetPositionAndParent(allyPositions.GetChild(2));
             }
         }
     }
@@ -1712,7 +1695,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //    StartCoroutine(SetupRoomPostBattle(playerWon));
 
             //Debug.Log("-a");
-            //UpdateAllAlliesPosition(true);
+            UpdateAllAlliesPosition(true);
 
 
             // If completed room WAS NOT a hero room
@@ -1894,6 +1877,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         doneOnce = true;
                         float count = GetExperienceGained();
+                        Debug.Log("exp given: " + count);
                         activeRoomHeroes[i].UpdateUnitExp((int)count);
                     }
 
@@ -3112,53 +3096,61 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     int val = effectHitAcc;
 
-                    // If active skill doubles current effects, do it
-                    if (GetActiveSkill().isDoublingEffect)
+                    if (unit)
                     {
-                        if (unit.GetEffect("POISON"))
+                        if (unit.IsSelected())
                         {
-                            int val2 = unit.GetEffect("POISON").GetTurnCountRemaining();
+                            // If active skill doubles current effects, do it
+                            if (GetActiveSkill().isDoublingEffect)
+                            {
+                                if (unit.GetEffect("POISON"))
+                                {
+                                    int val2 = unit.GetEffect("POISON").GetTurnCountRemaining();
 
-                            int maxEffectCount = EffectManager.instance.GetMaxEffectTurnsRemaining();
-                            if (val2 > maxEffectCount)
-                                val2 = maxEffectCount;
+                                    int maxEffectCount = EffectManager.instance.GetMaxEffectTurnsRemaining();
+                                    if (val2 > maxEffectCount)
+                                        val2 = maxEffectCount;
+
+                                    if (!miss)
+                                    {
+                                        unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val2, false);
+
+                                        if (GetActiveSkill().effect2 != null)
+                                        {
+                                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                            {
+                                                yield return new WaitForSeconds(0.4f);
+                                                unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, val2, false);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
                             if (!miss)
                             {
-                                unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val2, false);
+                                if (GetActiveSkill().effect != null)
+                                {
+                                    if (GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && activeRoomHeroes.Count <= 2
+                                        || GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && fallenHeroes.Count > 0)
+                                        unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val, false);
+                                    else if (GetActiveSkill().effect.curEffectName != EffectData.EffectName.REANIMATE)
+                                        unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val, false);
+                                }
 
                                 if (GetActiveSkill().effect2 != null)
                                 {
-                                    if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                    if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK && GetActiveSkill().effect2.curEffectName != EffectData.EffectName.REANIMATE)
                                     {
-                                        yield return new WaitForSeconds(0.4f);
-                                        unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, val2, false);
+                                        yield return new WaitForSeconds(0.25f);
+                                        unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, val, false);
                                     }
                                 }
                             }
                         }
+
                     }
 
-                    if (!miss)
-                    {
-                        if (GetActiveSkill().effect != null)
-                        {
-                            if (GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && activeRoomHeroes.Count <= 2
-                                || GetActiveSkill().effect.curEffectName == EffectData.EffectName.REANIMATE && fallenHeroes.Count > 0)
-                                unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val, false);
-                            else if (GetActiveSkill().effect.curEffectName != EffectData.EffectName.REANIMATE)
-                                unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, val, false);
-                        }
-
-                        if (GetActiveSkill().effect2 != null)
-                        {
-                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK && GetActiveSkill().effect2.curEffectName != EffectData.EffectName.REANIMATE)
-                            {
-                                yield return new WaitForSeconds(0.25f);
-                                unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, val, false);
-                            }
-                        }
-                    }
 
                     yield return new WaitForSeconds(0.15f);
 
@@ -3201,21 +3193,24 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                 }
 
-                if (!miss)
+                if (!miss && unit)
                 {
-                    // If skill targets dead targets, do so
-                    if (GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                    if (unit.IsSelected())
                     {
-                        // If player scored higher then only a miss, and target is dead
-                        if (unit.isDead && hitCount != 0)
+                        // If skill targets dead targets, do so
+                        if (GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
                         {
-                            unit.ReviveUnit(hitCount, false, false);
+                            // If player scored higher then only a miss, and target is dead
+                            if (unit.isDead && hitCount != 0)
+                            {
+                                unit.ReviveUnit(hitCount, false, false);
 
-                            if (GetActiveSkill().skillName == "REANIMATE")
-                                unit.SwitchTeams();
-                        }
-                        //else
+                                if (GetActiveSkill().skillName == "REANIMATE")
+                                    unit.SwitchTeams();
+                            }
+                            //else
                             //unit.DecreaseEffectTurnsLeft(false, false, false);
+                        }
                     }
                 }
 
@@ -3240,18 +3235,21 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 if (unit)
                 {
-                    // If skill removes random effects, do so
-                    if (activeSkill.isCleansingEffectRandom)
+                    if (unit.IsSelected())
                     {
-                        for (int c = 0; c < activeSkill.cleanseCount; c++)
+                        // If skill removes random effects, do so
+                        if (activeSkill.isCleansingEffectRandom)
                         {
-                            if (unit.activeEffects.Count > 0)
+                            for (int c = 0; c < activeSkill.cleanseCount; c++)
                             {
-                                unit.DecreaseRandomNegativeEffect();
-                                yield return new WaitForSeconds(.15f);
+                                if (unit.activeEffects.Count > 0)
+                                {
+                                    unit.DecreaseRandomNegativeEffect();
+                                    yield return new WaitForSeconds(.15f);
+                                }
+                                else
+                                    break;
                             }
-                            else
-                                break;
                         }
                     }
                 }
@@ -3441,6 +3439,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         unit = CombatGridManager.Instance.targetedCombatSlots[i].GetLinkedUnit();
                     }
+                    else
+                        continue;
 
                     if (miss)
                     {
@@ -3458,6 +3458,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                         if (unit.isDead)
                             continue;
+
+                        //if (unit.IsSelected())
+                          //  continue;
                     }
 
                     float absPower = Mathf.Abs(originalPower);
@@ -4328,11 +4331,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     void ToggleUnitEffectTooltipsOff(bool onlyEnemies = false)
     {
-        ButtonFunctionality[] buttons = GameObject.FindObjectsOfType<ButtonFunctionality>();
-
-        foreach (ButtonFunctionality button in buttons)
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
-            StartCoroutine(button.HideEffectTooltipOvertime(onlyEnemies));
+            if (onlyEnemies)
+            {
+                if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    activeRoomAllUnitFunctionalitys[i].ToggleHideEffects(false);
+            }
+            else
+                activeRoomAllUnitFunctionalitys[i].ToggleHideEffects(false);
         }
     }
 
