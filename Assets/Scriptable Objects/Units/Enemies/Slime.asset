@@ -37,8 +37,8 @@ MonoBehaviour:
   characterPrefab: {fileID: 1415871230302792947, guid: 1bf1a9c9f88998b48906be4d2431acc9, type: 3}
   curSkills:
   - {fileID: 11400000, guid: 00b1e19f336e1674a82f75de3538fac2, type: 2}
-  - {fileID: 11400000, guid: 00b1e19f336e1674a82f75de3538fac2, type: 2}
-  - {fileID: 11400000, guid: 00b1e19f336e1674a82f75de3538fac2, type: 2}
-  - {fileID: 11400000, guid: 00b1e19f336e1674a82f75de3538fac2, type: 2}
+  - {fileID: 11400000, guid: 977fd1e4fdc117642a74c56e52ad4314, type: 2}
+  - {fileID: 11400000, guid: c6a4de2a0b0171b469ecac31976f23b8, type: 2}
+  - {fileID: 11400000, guid: ad8fbf90514a568458a31d87d1531afc, type: 2}
   deathClip: {fileID: 8300000, guid: a7e3e569e90d0574ca7c2134c837f020, type: 3}
   hitRecievedClip: {fileID: 8300000, guid: 3bd9d7e52bee410449b328cf51ba37a8, type: 3}

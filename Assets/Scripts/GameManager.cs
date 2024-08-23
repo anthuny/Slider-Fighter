@@ -1993,7 +1993,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else
             powerHitsAdditional = GetActiveUnitFunctionality().curPowerHits;
 
-        StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncHitsCount + powerHitsAdditional, false));
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncHitsCount + powerHitsAdditional, false));
 
         WeaponManager.Instance.StartHitLine();
 
@@ -3372,9 +3373,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             if (!GetActiveUnitFunctionality().isDead)
             {
                 //if (GetActiveUnitFunctionality().GetCurMovementUses() == 0)
-                    //StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
+                //StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());  // end unit turn
                 //else
                 //{
+                WeaponManager.Instance.ResetAcc();
+
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
                 CombatGridManager.Instance.isCombatMode = false;
                 StartCoroutine(GetActiveUnitFunctionality().StartUnitTurn());
@@ -5433,7 +5436,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     IEnumerator ToggleEndTurnButtonWait()
     {
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(1.35f);
 
         endTurnButtonUI.UpdateAlpha(1);
     }

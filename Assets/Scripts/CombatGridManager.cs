@@ -651,7 +651,7 @@ public class CombatGridManager : MonoBehaviour
 
         if (!flag)
         {
-            if (unit.hasAttacked && unit.GetCurMovementUses() <= 0)
+            if (unit.hasAttacked)
             {
                 StartCoroutine(EndUnitTurnAfterWait(unit));
             }
@@ -1957,6 +1957,17 @@ public class CombatGridManager : MonoBehaviour
                         (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
                     }
                 }
+                else if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                    (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)))
+                {
+                    if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                        (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                    {
+                        // Target slot/unit
+                        selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                        (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)));
+                    }
+                }
             }
 
             if (targetedSlot.GetLinkedUnit())
@@ -2074,6 +2085,9 @@ public class CombatGridManager : MonoBehaviour
                                 if (unitsTargeted >= GameManager.Instance.GetActiveSkill().skillAreaHitCount)
                                     break;
 
+                                if (targetunit.isDead)
+                                    continue;
+
                                 if (targetunit == unit && GameManager.Instance.GetActiveSkill().isSelfCast)
                                 {
                                     combatSelectedCombatSlots.Add(allowedCombatSlots[l]);
@@ -2161,80 +2175,112 @@ public class CombatGridManager : MonoBehaviour
                                 else
                                     continue;
                             }
-                            // Select a group of combat slots based on skill
-                            for (int b = 0; b < activeSkill.skillRangeHitAreas.Count; b++)
-                            {
-                                if (allowedCombatSlots[l].GetLinkedUnit())
-                                {
-                                    if (allowedCombatSlots[l].GetLinkedUnit().isDead)
-                                        continue;
 
-                                    if (allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY &&
-                                        unit.curUnitType == UnitFunctionality.UnitType.PLAYER && activeSkill.curSkillType == SkillData.SkillType.OFFENSE ||
-                                        allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY &&
-                                        unit.curUnitType == UnitFunctionality.UnitType.ENEMY && activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                            // Ensure skills cant split attack (bot ai)
+                            if (selectedSlots < GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count)
+                            {
+                                // Select a group of combat slots based on skill
+                                for (int b = 0; b < activeSkill.skillRangeHitAreas.Count; b++)
+                                {
+                                    if (allowedCombatSlots[l].GetLinkedUnit())
                                     {
-                                        if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                                            (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
+                                        if (allowedCombatSlots[l].GetLinkedUnit().isDead)
+                                            continue;
+
+                                        if (allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY &&
+                                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER && activeSkill.curSkillType == SkillData.SkillType.OFFENSE ||
+                                            allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY &&
+                                            unit.curUnitType == UnitFunctionality.UnitType.ENEMY && activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
                                         {
                                             if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
                                             {
-                                                // Target slot/unit
-                                                selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
-                                                selectedSlots++;
-                                                unitsTargeted++;
+                                                if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                {
+                                                    // Target slot/unit
+                                                    selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
+                                                    selectedSlots++;
+                                                    unitsTargeted++;
+                                                }
+                                            }
+                                            else if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
+                                            {
+                                                if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                {
+                                                    // Target slot/unit
+                                                    selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
+                                                    selectedSlots++;
+                                                    unitsTargeted++;
+                                                }
+                                            }
+                                            else if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                (int)allowedCombatSlots[l].GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)))
+                                            {
+                                                if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                {
+                                                    // Target slot/unit
+                                                    selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)));
+                                                    selectedSlots++;
+                                                    unitsTargeted++;
+                                                }
                                             }
                                         }
-                                        else if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                                            (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
-                                        {
-                                            if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
-                                            {
-                                                // Target slot/unit
-                                                selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
-                                                selectedSlots++;
-                                                unitsTargeted++;
-                                            }
-                                        }
-                                    }
-                                    if (allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER &&
-                                        unit.curUnitType == UnitFunctionality.UnitType.ENEMY && activeSkill.curSkillType == SkillData.SkillType.OFFENSE ||
-                                        allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER &&
-                                        unit.curUnitType == UnitFunctionality.UnitType.PLAYER && activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                                    {
-                                        if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                                            (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
+                                        if (allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER &&
+                                            unit.curUnitType == UnitFunctionality.UnitType.ENEMY && activeSkill.curSkillType == SkillData.SkillType.OFFENSE ||
+                                            allowedCombatSlots[l].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER &&
+                                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER && activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
                                         {
                                             if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
                                             {
-                                                // Target slot/unit
-                                                selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
-                                                selectedSlots++;
-                                                unitsTargeted++;
+                                                if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                {
+                                                    // Target slot/unit
+                                                    selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
+                                                    selectedSlots++;
+                                                    unitsTargeted++;
+                                                }
                                             }
-                                        }
-                                        else if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                                            (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
-                                        {
-                                            if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                            else if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
                                             {
-                                                // Target slot/unit
-                                                selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                                                (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
-                                                selectedSlots++;
-                                                unitsTargeted++;
+                                                if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                {
+                                                    // Target slot/unit
+                                                    selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
+                                                    selectedSlots++;
+                                                    unitsTargeted++;
+                                                }
+                                            }
+                                            else if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                (int)allowedCombatSlots[l].GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)))
+                                            {
+                                                if (GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                                                {
+                                                    // Target slot/unit
+                                                    selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)allowedCombatSlots[l].GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                                                    (int)allowedCombatSlots[l].GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)));
+                                                    selectedSlots++;
+                                                    unitsTargeted++;
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+                            
 
                             if (selectedCombatSlots.Count > selectionsAllowed)
                                 continue;

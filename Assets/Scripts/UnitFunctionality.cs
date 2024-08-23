@@ -1655,6 +1655,11 @@ public class UnitFunctionality : MonoBehaviour
             yield break;
         }
 
+        if (isDead)
+        {
+            StartCoroutine(UnitEndTurn(true));
+            yield break;
+        }
 
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
@@ -4624,7 +4629,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     //Debug.Log("111");
 
-                    if (curUnitType == UnitType.PLAYER && !reanimated && GameManager.Instance.GetActiveUnitFunctionality() == this)
+                    if (curUnitType == UnitType.PLAYER && !reanimated)
                     {
                         yield return new WaitForSeconds(.75f);
                         StartCoroutine(UnitEndTurn(false));  // end unit turn
