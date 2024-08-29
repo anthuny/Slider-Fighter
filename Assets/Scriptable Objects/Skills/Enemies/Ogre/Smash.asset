@@ -34,7 +34,7 @@ MonoBehaviour:
   curSkillRange: 1
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: SMASH
-  skillDescr: Target 1 Enemy, dealing damage
+  skillDescr: Target 2x1 area, dealing damage
   skillTabDescr: 
   startingSkillLevel: 0
   curSkillLevel: 0

@@ -41,7 +41,7 @@ MonoBehaviour:
   curSkillRange: 5
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Poison Overload
-  skillDescr: Target 3 enemies, applying Poison
+  skillDescr: Target 3x3 area, apply effect Poison to selected targets
   skillTabDescr: 
   startingSkillLevel: 0
   curSkillLevel: 0

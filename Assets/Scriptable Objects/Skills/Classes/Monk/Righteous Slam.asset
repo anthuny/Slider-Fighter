@@ -32,14 +32,12 @@ MonoBehaviour:
   skillIgnoreRange: 0
   startingSkillRange: 2
   curSkillRange: 2
-  localRangeAreas: []
-  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 3227576ce7bc408468136036d5ab4ce1, type: 3}
   skillName: RIGHTEOUS SLAM
-  skillDescr: Target 1 enemy, damaging. Each hit has a 25% chance to cleanse 1 debuff
-    from Monk's Holy Link.
-  skillTabDescr: Target 1 enemy, damaging. Each hit has a 25% chance to cleanse 1
-    debuff from Monk's Holy Link.
+  skillDescr: Target 1x2 area, dealing damage. Each hit has a 25% chance to cleanse
+    1 debuff from Monk's Holy Link.
+  skillTabDescr: Target 1x2 area, dealing damage. Each hit has a 25% chance to cleanse
+    1 debuff from Monk's Holy Link.
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0

@@ -31,12 +31,10 @@ MonoBehaviour:
   skillIgnoreRange: 0
   startingSkillRange: 1
   curSkillRange: 1
-  localRangeAreas: []
-  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP
-  skillDescr: Target 1 ally, cast Defense Up Effect
-  skillTabDescr: Target 1 ally, cast Defense Up Effect
+  skillDescr: Target 1x1 area, apply effect Defense Up
+  skillTabDescr: Target 1x1 area, apply effect Defense Up
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0

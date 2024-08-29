@@ -1026,6 +1026,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             SkillsTabManager.Instance.UpdateStatPage();
 
             UpdateAllyVisibility(true, teamPage);
+
+            SkillsTabManager.Instance.SetupSkillsTab(SkillsTabManager.Instance.GetActiveUnit(), false);
         }
         else
         {
@@ -1058,6 +1060,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(true);
                     activeRoomAllUnitFunctionalitys[i].ToggleUnitHealthBar(true);
                     activeRoomAllUnitFunctionalitys[i].ToggleUnitAttackBar(false);
+                    activeRoomHeroes[0].ToggleActionNextBar(false);
                 }
             }
             if (teamPage)   // Team page
@@ -1068,6 +1071,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     activeRoomHeroes[0].UpdateIsVisible(true);
                     activeRoomHeroes[0].ToggleUnitHealthBar(false);
                     activeRoomHeroes[0].ToggleUnitAttackBar(false);
+                    activeRoomHeroes[0].ToggleActionNextBar(false);
 
                     activeRoomHeroes[0].gameObject.transform.position = allyPositions.GetChild(0).transform.position;
 
@@ -1091,6 +1095,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(true);
                     activeRoomAllUnitFunctionalitys[i].ToggleUnitHealthBar(true);
                     activeRoomAllUnitFunctionalitys[i].ToggleUnitAttackBar(true);
+                    activeRoomAllUnitFunctionalitys[i].ToggleActionNextBar(true);
                     activeRoomAllUnitFunctionalitys[i].ToggleActionNextBar(true);
                 }
             }
@@ -2744,9 +2749,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
     }
 
-    public void UpdateActiveItem(ItemPiece item)
+    public void UpdateActiveItem(ItemPiece item, bool updateRange = true)
     {
         activeItem = item;
+
+        if (item != null)
+        {
+            // Update active unit attack range
+            if (updateRange)
+                CombatGridManager.Instance.UpdateUnitAttackRange(GetActiveUnitFunctionality());
+        }
     }
 
     public void UpdateActiveItemSlot(Slot newItemSlot)
@@ -4077,18 +4089,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else if (item != null)
             abilityDetailsUI.ToggleAllStats(true, false);
 
+        string hitAreaType = "";
+
         if (skill != null)
         {
             if (skill.curSkillType == SkillData.SkillType.OFFENSE)
             {
                 abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.GetCalculatedSkillPowerStat(),
-                    skill.GetCalculatedSkillHitAmount() + activeUnit.GetUnitPowerHits(), skill.GetCalculatedSkillSelectionCount(),
+                    skill.GetCalculatedSkillHitAmount() + activeUnit.GetUnitPowerHits(), skill.curSkillRange, OverlayUI.Instance.GetHitAreaType(),
                     skill.GetCalculatedSkillPowerStat(), skill.skillCooldown, skill.skillHitAttempts, skill.GetCalculatedSkillEffectStat(), skill.skillPowerIcon, skill.skillSprite, skill.special);
             }
             else
             {
                 abilityDetailsUI.UpdateSkillUI(skill.skillName, skill.skillDescr, skill.GetCalculatedSkillPowerStat(),
-                    skill.GetCalculatedSkillHitAmount() + activeUnit.GetUnitHealingHits(), skill.GetCalculatedSkillSelectionCount(),
+                    skill.GetCalculatedSkillHitAmount() + activeUnit.GetUnitHealingHits(), skill.curSkillRange, OverlayUI.Instance.GetHitAreaType(),
                     skill.GetCalculatedSkillPowerStat(), skill.skillCooldown, skill.skillHitAttempts, skill.GetCalculatedSkillEffectStat(), skill.skillPowerIcon, skill.skillSprite, skill.special);
             }
         }
@@ -4096,7 +4110,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             if (item == null)
             {
-                abilityDetailsUI.UpdateItemUI("", "", 0, 0, TeamItemsManager.Instance.clearSlotSprite);
+                abilityDetailsUI.UpdateItemUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
             }
             else
             {
@@ -4104,7 +4118,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 if (item.curHitType == ItemPiece.HitType.HITS)
                     newPower = GetActiveUnitFunctionality().curPower + 10;
 
-                abilityDetailsUI.UpdateItemUI(item.itemName, item.itemDesc, newPower, item.targetCount, item.itemSpriteCombat);
+                abilityDetailsUI.UpdateItemUI(item.itemName, item.itemDesc, newPower, item.range, item.itemRangeHitArea, item.itemSpriteCombat);
             }
         }
     }
@@ -6766,7 +6780,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             ToggleSelectingUnits(false);
 
             // Set item details to empty
-            OverlayUI.Instance.UpdateItemUI("", "", 0, 0, TeamItemsManager.Instance.clearSlotSprite);
+            OverlayUI.Instance.UpdateItemUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
         }
 
         ToggleSelectingUnits(false);

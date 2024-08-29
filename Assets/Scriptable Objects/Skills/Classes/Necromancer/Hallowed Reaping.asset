@@ -32,14 +32,12 @@ MonoBehaviour:
   skillIgnoreRange: 0
   startingSkillRange: 3
   curSkillRange: 3
-  localRangeAreas: []
-  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 6a9b3f9eba020d54088850cdf31a900d, type: 3}
   skillName: HALLOWED REAPING
-  skillDescr: Target 1 enemy, dealing damage, each hit has a chance to apply Reaping
+  skillDescr: Target 2x1 area, dealing damage, each hit has a chance to apply Reaping
     effect
-  skillTabDescr: Target 1 enemy, dealing damage, each hit has a chance to apply Reaping
-    effect
+  skillTabDescr: Target 2x1 area, dealing damage, each hit has a chance to apply
+    Reaping effect
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0

@@ -31,12 +31,10 @@ MonoBehaviour:
   skillIgnoreRange: 0
   startingSkillRange: 2
   curSkillRange: 2
-  localRangeAreas: []
-  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 7ac91a992e8dc9f4c90aac343e15e174, type: 3}
   skillName: DIVINE HEAL
-  skillDescr: Target 1 ally, healing them
-  skillTabDescr: Target 1 ally, healing them
+  skillDescr: Target 1x1 area, healing target
+  skillTabDescr: Target 1x1 area, healing target
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0

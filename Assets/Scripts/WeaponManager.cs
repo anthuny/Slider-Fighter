@@ -127,6 +127,8 @@ public class WeaponManager : MonoBehaviour
 
         GameManager.Instance.isSkillsMode = true;
 
+        ResetWeaponAccHits();
+
         StartHitLine(resetWeapon);
         StartCoroutine(CalculateEnemyHitAcc());
     }
@@ -457,6 +459,8 @@ public class WeaponManager : MonoBehaviour
 
     public IEnumerator UpdateWeaponAccumulatedHits(int hits, bool doExtras = true)
     {
+        ResetWeaponAccHits();
+
         for (int i = 0; i < hits; i++)
         {
             accumulatedHits++;
@@ -482,7 +486,7 @@ public class WeaponManager : MonoBehaviour
     void ResetWeaponAccHits()
     {
         hitsAccumulatedText.UpdateContentText(0.ToString());
-        //GameManager.Instance.GetActiveUnitFunctionality().hits
+        accumulatedHits = 0;
     }
 
     public void ToggleWeaponAccHits(bool toggle)

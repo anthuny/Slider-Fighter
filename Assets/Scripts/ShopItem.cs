@@ -246,7 +246,8 @@ public class ShopItem : MonoBehaviour
                 OverlayUI.Instance.UpdateItemUI(ShopManager.Instance.GetShopCombatItems()[i].itemName, 
                 ShopManager.Instance.GetShopCombatItems()[i].itemDesc, 
                 ShopManager.Instance.GetShopCombatItems()[i].itemPower, 
-                ShopManager.Instance.GetShopCombatItems()[i].targetCount, 
+                ShopManager.Instance.GetShopCombatItems()[i].range,
+                ShopManager.Instance.GetShopCombatItems()[i].itemRangeHitArea,
                 ShopManager.Instance.GetShopCombatItems()[i].itemSpriteCombatSmaller);
                 ShopManager.Instance.ToggleInventoryUI(true);
 
@@ -321,7 +322,8 @@ public class ShopItem : MonoBehaviour
                 OverlayUI.Instance.UpdateItemUI(ShopManager.Instance.GetShopCombatItems()[i].itemName, 
                 ShopManager.Instance.GetShopCombatItems()[i].itemDesc, 
                 ShopManager.Instance.GetShopCombatItems()[i].itemPower, 
-                ShopManager.Instance.GetShopCombatItems()[i].targetCount, 
+                ShopManager.Instance.GetShopCombatItems()[i].range,
+                ShopManager.Instance.GetShopCombatItems()[i].itemRangeHitArea,
                 ShopManager.Instance.GetShopCombatItems()[i].itemSpriteCombatSmaller);
 
                 GameManager.Instance.ToggleUIElement(GameManager.Instance.fighterSelectedMainSlotDesc, true);

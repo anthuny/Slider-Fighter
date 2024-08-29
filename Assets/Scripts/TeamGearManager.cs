@@ -726,6 +726,11 @@ public class TeamGearManager : MonoBehaviour
         {
             teamGearTabUI.UpdateAlpha(1);
 
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(false);
+            }
+
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
             // Active unit level image for team page

@@ -33,12 +33,10 @@ MonoBehaviour:
   skillIgnoreRange: 0
   startingSkillRange: 3
   curSkillRange: 3
-  localRangeAreas: []
-  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 9fb807da16dce25429c5dd769f5b437d, type: 3}
   skillName: EVIL BOND
-  skillDescr: Target 1 ally, Cast Immunity effect and speed down
-  skillTabDescr: Target 1 ally, Cast Immunity effect and speed down
+  skillDescr: Target 3x1 area, applying effect Immunity and speed down
+  skillTabDescr: Target 3x1 area, applying effect Immunity and speed down
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0

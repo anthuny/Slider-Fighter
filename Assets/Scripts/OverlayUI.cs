@@ -30,8 +30,20 @@ public class OverlayUI : MonoBehaviour
     public UIElement skillDetailsBaseHitsUI;
     public UIElement skillDetailsMaxCdUi;
     public UIElement skillDetailsAccuracyuI;
-    public UIElement skillDetailsMaxTargetsuI;
+    public UIElement skillDetailsRangeuI;
+    public UIElement skillDetailsHitAreauI;
     public UIElement skillsItemsSwitchButton;
+
+    public Sprite hitArea1x1;
+    public Sprite hitArea2x1;
+    public Sprite hitArea3x1;
+    public Sprite hitArea1x2;
+    public Sprite hitArea1x3;
+    public Sprite hitArea2x2;
+    public Sprite hitArea2x3;
+    public Sprite hitArea3x2;
+    public Sprite hitArea3x3;
+    public Sprite hitAreaPlus;
 
     public Image skillDetailsPowerIcon;
     public Image activeSkill;
@@ -151,8 +163,32 @@ public class OverlayUI : MonoBehaviour
         }
     }
 
+    public Vector2 GetHitAreaType()
+    {
+        if (GameManager.Instance.isSkillsMode)
+        {
+            if (GameManager.Instance.GetActiveSkill())
+            {
+                SkillData skill = GameManager.Instance.GetActiveSkill();
+                return skill.skillRangeHitArea;
+            }
+            else
+                return Vector2.one;
+        }
+        else
+        {
+            if (GameManager.Instance.GetActiveItem())
+            {
+                ItemPiece item = GameManager.Instance.GetActiveItem();
+                return item.itemRangeHitArea;
+            }
+            else
+                return Vector2.one;
+        }
+    }
+
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int baseHitCount,
-        int skillTargetCount, int skillPower, int skillCooldown, int hitAttemptCount, float accuracyCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
+        int range, Vector2 hitArea, int skillPower, int skillCooldown, int hitAttemptCount, float accuracyCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
     {
         UpdateMainSlotDetailsName(skillName);
         UpdateMainSlotDetailsDesc(skillDesc);
@@ -166,10 +202,11 @@ public class OverlayUI : MonoBehaviour
         UpdateSkillDetailsCooldownText(skillCooldown);
 
         UpdateSkillDetailsAccuracyText((int)accuracyCount);
-        UpdateSelectedObjectMaxTargetsText(skillTargetCount);
+        UpdateSelectedObjectRangeText(range);
+        UpdateSelectedObjectHitAreaSprite(hitArea);
     }
     
-    public void UpdateItemUI(string itemName, string itemDesc, int itemPower, int targetCount, Sprite itemIcon)
+    public void UpdateItemUI(string itemName, string itemDesc, int itemPower, int range, Vector2 hitArea, Sprite itemIcon)
     {
         ToggleAllStats(true, false);
 
@@ -179,7 +216,8 @@ public class OverlayUI : MonoBehaviour
         UpdateActiveBaseSlotIcon(itemIcon);
 
         UpdateSelectedObjectPowerText(itemPower);
-        UpdateSelectedObjectMaxTargetsText(targetCount);
+        UpdateSelectedObjectRangeText(range);
+        UpdateSelectedObjectHitAreaSprite(hitArea);
     }
 
 
@@ -296,8 +334,8 @@ public class OverlayUI : MonoBehaviour
             skillDetailsAccuracyuI.UpdateAlpha(0);
             skillDetailsAccuracyuI.ToggleButton(false);
 
-            skillDetailsMaxTargetsuI.UpdateAlpha(0);
-            skillDetailsMaxTargetsuI.ToggleButton(false);
+            skillDetailsRangeuI.UpdateAlpha(0);
+            skillDetailsRangeuI.ToggleButton(false);
         }
         else
         {
@@ -337,10 +375,10 @@ public class OverlayUI : MonoBehaviour
                 skillDetailsAccuracyuI.ToggleButton(toggle);
 
                 if (toggle)
-                    skillDetailsMaxTargetsuI.UpdateAlpha(1);
+                    skillDetailsRangeuI.UpdateAlpha(1);
                 else
-                    skillDetailsMaxTargetsuI.UpdateAlpha(0);
-                skillDetailsMaxTargetsuI.ToggleButton(toggle);
+                    skillDetailsRangeuI.UpdateAlpha(0);
+                skillDetailsRangeuI.ToggleButton(toggle);
             }
             // Item
             else if (!skill)
@@ -352,10 +390,10 @@ public class OverlayUI : MonoBehaviour
                 skillDetailsPower.ToggleButton(toggle);
 
                 if (toggle)
-                    skillDetailsMaxTargetsuI.UpdateAlpha(1);
+                    skillDetailsRangeuI.UpdateAlpha(1);
                 else
-                    skillDetailsMaxTargetsuI.UpdateAlpha(0);
-                skillDetailsMaxTargetsuI.ToggleButton(toggle);
+                    skillDetailsRangeuI.UpdateAlpha(0);
+                skillDetailsRangeuI.ToggleButton(toggle);
 
                 skillDetailsMaxCdUi.UpdateAlpha(0);
                 skillDetailsMaxCdUi.ToggleButton(false);
@@ -402,9 +440,70 @@ public class OverlayUI : MonoBehaviour
         skillDetailsAccuracyuI.UpdateContentText(count.ToString());
     }
 
-    private void UpdateSelectedObjectMaxTargetsText(int count)
+    private void UpdateSelectedObjectRangeText(int count)
     {
-        skillDetailsMaxTargetsuI.UpdateContentText(count.ToString());
+        skillDetailsRangeuI.UpdateContentText(count.ToString());
+    }
+
+    private void UpdateSelectedObjectHitAreaSprite(Vector2 hitArea)
+    {
+        if (hitArea == Vector2.zero)
+        {
+            skillDetailsHitAreauI.UpdateAlpha(0);
+        }
+        else
+        {
+            skillDetailsHitAreauI.UpdateAlpha(1);
+
+            if (hitArea == new Vector2(1, 1))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea1x1);
+            }
+            else if (hitArea == new Vector2(1, 2))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea1x2);
+            }
+            else if (hitArea == new Vector2(1, 3))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea1x3);
+            }
+            else if (hitArea == new Vector2(2, 1))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea2x1);
+            }
+            else if (hitArea == new Vector2(3, 1))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea3x1);
+            }
+            else if (hitArea == new Vector2(2, 2))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea2x2);
+            }
+            else if (hitArea == new Vector2(2, 3))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea2x3);
+            }
+            else if (hitArea == new Vector2(3, 2))
+            {
+                skillDetailsHitAreauI.UpdateContentImage(hitArea3x2);
+            }
+            else if (hitArea == new Vector2(3, 3))
+            {
+                if (GameManager.Instance.GetActiveSkill())
+                {
+                    // plus
+                    if (GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count == 5)
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitAreaPlus);
+                    }
+                    // 3x3
+                    else
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea3x3);
+                    }
+                }
+            }
+        }
     }
 
     private void UpdateSkillDetailsPowerImage(Sprite sprite)

@@ -34,13 +34,12 @@ MonoBehaviour:
   skillIgnoreRange: 0
   startingSkillRange: 4
   curSkillRange: 4
-  localRangeAreas: []
-  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 673d7226fbd9c3e4aad26083ab8400c1, type: 3}
   skillName: EARTH BARRAGE
-  skillDescr: Target 1 enemy, damaging. Each hit has a 25% chance to apply Stun effect
-  skillTabDescr: Target 1 enemy, damaging. Each hit has a 25% chance to apply Stun
-    effect
+  skillDescr: Target 2x2 area, dealing damage. Each hit has a 25% chance to apply
+    Stun effect
+  skillTabDescr: Target 2x2 area, dealing damage. Each hit has a 25% chance to apply
+    Stun effect
   startingSkillLevel: 0
   curSkillLevel: 0
   pointsAdded: 0

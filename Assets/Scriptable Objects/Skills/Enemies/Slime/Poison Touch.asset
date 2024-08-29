@@ -34,7 +34,7 @@ MonoBehaviour:
   curSkillRange: 2
   skillSprite: {fileID: 21300000, guid: 0fefff994d70adf4386f3a55e5072725, type: 3}
   skillName: Poison Touch
-  skillDescr: 'Target 1 enemy, dealing damage, each hit has a 15% chance to apply
+  skillDescr: 'Target 2x1 area, dealing damage, each hit has a 15% chance to apply
     poison '
   skillTabDescr: 
   startingSkillLevel: 0

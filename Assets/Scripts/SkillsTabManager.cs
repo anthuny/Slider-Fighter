@@ -471,7 +471,10 @@ public class SkillsTabManager : MonoBehaviour
 
         for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
-            GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(true);
+            if (i == 0)
+                GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(true);
+            else
+                GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(false);
         }
 
     }

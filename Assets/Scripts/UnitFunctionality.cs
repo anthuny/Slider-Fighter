@@ -5434,6 +5434,7 @@ public class UnitFunctionality : MonoBehaviour
     void UpdateUnitAttackBarVisual()
     {
         ToggleUnitAttackBar(true);
+        ToggleActionNextBar(true);
 
         //Debug.Log(GetUnitName() + " Attack Bar = " + (float)curAttackCharge / 100f);
         unitAttackBar.fillAmount = (float)curAttackCharge / 100f;

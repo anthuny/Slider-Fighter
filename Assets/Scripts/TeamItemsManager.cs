@@ -673,6 +673,11 @@ public class TeamItemsManager : MonoBehaviour
     {
         if (toggle)
         {
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(false);
+            }
+
             teamItemsTabUI.UpdateAlpha(1);
 
 

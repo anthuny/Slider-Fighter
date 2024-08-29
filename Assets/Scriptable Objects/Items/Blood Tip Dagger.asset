@@ -29,6 +29,13 @@ MonoBehaviour:
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 61ec7530001bbc5488a58e643d1f67f6, type: 3}
   itemSpriteCombatProjectile: {fileID: 0}
   itemSpriteFail: {fileID: 21300000, guid: 31a1e5de6d87bc9419e95ae37c142e85, type: 3}
+  range: 3
+  itemRangeHitArea: {x: 1, y: 1}
+  itemRangeHitAreas:
+  - {x: 0, y: 0}
+  itemAreaHitCount: 1
+  canTargetSelf: 0
+  attackAllSelected: 0
   effectAdded: {fileID: 11400000, guid: 4d56bebc670b2184f90cda6ba558d462, type: 2}
   effectAddedTurnLength: 1
   itemPower: 0
@@ -53,9 +60,11 @@ MonoBehaviour:
   basePrice: 7
   purchased: 0
   healthItem: 0
+  isSpecial: 0
   power: 0
   procChance: 0
   ac: {fileID: 0}
+  itemVisualAC: {fileID: 0}
   maxUsesPerCombat: 3
   targetCount: 0
   hitCount: 0

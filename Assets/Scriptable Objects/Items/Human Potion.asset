@@ -28,6 +28,13 @@ MonoBehaviour:
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 5bfd5c7d9baaf0445a4728f8efa38043, type: 3}
   itemSpriteCombatProjectile: {fileID: 21300000, guid: a0aafe5185cd76f43905b44fedf12fb5, type: 3}
   itemSpriteFail: {fileID: 0}
+  range: 3
+  itemRangeHitArea: {x: 1, y: 1}
+  itemRangeHitAreas:
+  - {x: 0, y: 0}
+  itemAreaHitCount: 1
+  canTargetSelf: 0
+  attackAllSelected: 0
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0
   itemPower: 25

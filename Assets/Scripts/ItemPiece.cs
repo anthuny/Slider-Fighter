@@ -38,6 +38,12 @@ public class ItemPiece : ScriptableObject
     public Sprite itemSpriteCombatSmaller;
     public Sprite itemSpriteCombatProjectile;
     public Sprite itemSpriteFail;
+    public int range;
+    public Vector2 itemRangeHitArea;
+    public List<Vector2> itemRangeHitAreas = new List<Vector2>();
+    public int itemAreaHitCount = 1;
+    public bool canTargetSelf;
+    public bool attackAllSelected;
 
     public EffectData effectAdded;
     public int effectAddedTurnLength = 1;
