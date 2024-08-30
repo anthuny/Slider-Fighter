@@ -1661,6 +1661,10 @@ public class UnitFunctionality : MonoBehaviour
             yield break;
         }
 
+        // When fighter ends turn on items mode, reset back to skills mode for enemies, causes fatal errors
+        if (curUnitType == UnitType.ENEMY)
+            GameManager.Instance.isSkillsMode = true;
+
         yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         ToggleUnitMoveActiveArrows(true);

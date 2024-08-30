@@ -268,19 +268,6 @@ public class GameManager : MonoBehaviour
     {
         detailsBannerTitleBG.AnimateUI(false);
 
-        if (isSkillsMode)
-        {
-            detailsBannerTitleText.UpdateContentText("SKILLS");
-            detailsBannerTitleText.UpdateContentTextColour(skillsDetailsTabTextColour);
-            detailsBannerStripUI.UpdateColour(skillsDetailsTabColour);
-        }
-        else
-        {
-            detailsBannerTitleText.UpdateContentText("ITEMS");
-            detailsBannerTitleText.UpdateContentTextColour(itemsDetailsTabTextColour);
-            detailsBannerStripUI.UpdateColour(itemsDetailsTabColour);
-        }
-
         if (!CombatGridManager.Instance.isCombatMode)
         {
             detailsBannerTitleText.UpdateContentText("MOVEMENT");

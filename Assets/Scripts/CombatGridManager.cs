@@ -276,6 +276,9 @@ public class CombatGridManager : MonoBehaviour
                 if (GameManager.Instance.GetActiveItem())
                     GameManager.Instance.UpdateMainIconDetails(null, GameManager.Instance.GetActiveItem());
             }
+
+            isCombatMode = true;
+            GameManager.Instance.UpdateDetailsBanner();
         }
         else
         {
@@ -300,11 +303,12 @@ public class CombatGridManager : MonoBehaviour
 
             //if (GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() < 0)
             //    GetButtonAttackMovement().ButtonCombatAttackMovement(true);
+
+            isCombatMode = false;
+            GameManager.Instance.UpdateDetailsBanner();
         }
 
         UpdateCombatMainSlots();
-
-        GameManager.Instance.UpdateDetailsBanner();
     }
 
     public void UpdateCombatMainSlots()
@@ -1746,7 +1750,7 @@ public class CombatGridManager : MonoBehaviour
         if (unit.attacked)
             return;
 
-        if (unit.hasAttacked)
+        if (unit.hasAttacked || GameManager.Instance.GetActiveSkill() == null)
             return;
 
         ToggleAllCombatSlotOutlines();
@@ -1783,9 +1787,16 @@ public class CombatGridManager : MonoBehaviour
             int range = 0;
             // Skill mode
             if (GameManager.Instance.isSkillsMode)
-                range = GameManager.Instance.GetActiveSkill().curSkillRange;
+            {
+                if (GameManager.Instance.GetActiveSkill())
+                    range = GameManager.Instance.GetActiveSkill().curSkillRange;
+            }
             else
-                range = GameManager.Instance.GetActiveItem().range;
+            {
+                if (GameManager.Instance.GetActiveItem())
+                    range = GameManager.Instance.GetActiveItem().range;
+            }
+
 
             if (xDiff <= range &&
                 yDiff <= range)
@@ -2986,6 +2997,9 @@ public class CombatGridManager : MonoBehaviour
         // Item Mode
         else
         {
+            if (!activeItem)
+                return;
+
             for (int b = 0; b < combatSelectedCombatSlots.Count; b++)
             {
                 if (activeItem.curTargetType == ItemPiece.TargetType.DEAD)
