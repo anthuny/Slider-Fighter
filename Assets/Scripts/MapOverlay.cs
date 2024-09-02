@@ -33,8 +33,12 @@ public class MapOverlay : MonoBehaviour
     [HideInInspector]
     public UIElement uiElement;
 
+    public bool promptEnabled = false;
+
     public void ToggleFallenFighterPrompt(bool toggle = true)
     {
+        promptEnabled = toggle;
+
         if (toggle)
         {
             fallenFighterPrompt.UpdateAlpha(1);
@@ -53,6 +57,8 @@ public class MapOverlay : MonoBehaviour
 
     public void ToggleHardRoomPrompt(bool toggle = true)
     {
+        promptEnabled = toggle;
+
         if (toggle)
         {
             hardRoomPrompt.UpdateAlpha(1);

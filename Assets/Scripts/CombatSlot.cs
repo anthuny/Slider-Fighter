@@ -128,6 +128,15 @@ public class CombatSlot : MonoBehaviour
         }
     }
 
+    public void ToggleCombatSlotInput2(bool toggle = true)
+    {
+        if (GetComponent<CanvasGroup>())
+        {
+            GetComponent<CanvasGroup>().interactable = toggle;
+            GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+        }
+    }
+
     public Animator GetAnimator()
     {
         return animator;

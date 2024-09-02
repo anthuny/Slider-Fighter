@@ -469,14 +469,16 @@ public class SkillsTabManager : MonoBehaviour
         if (updateSkillUpgrades)
             UpdateUnspentPointsText(CalculateUnspentSkillPoints());
 
-        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        if (SkillsTabManager.Instance.playerInSkillTab)
         {
-            if (i == 0)
-                GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(true);
-            else
-                GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(false);
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+            {
+                if (i == 0)
+                    GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(true);
+                else
+                    GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(false);
+            }
         }
-
     }
 
     public void UpdateLockedSkills()

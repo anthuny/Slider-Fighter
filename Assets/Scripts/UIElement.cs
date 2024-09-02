@@ -580,6 +580,11 @@ public class UIElement : MonoBehaviour
         contentImage.color = colour;
     }
 
+    public void UpdateAlpha2(float alpha)
+    {
+        cg.alpha = alpha;
+    }
+
     public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true, bool doAnim = false)
     {
         if (this == null)

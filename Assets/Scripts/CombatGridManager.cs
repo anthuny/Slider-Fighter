@@ -50,6 +50,13 @@ public class CombatGridManager : MonoBehaviour
             allCombatSlots[i].ToggleCombatSlotInput(toggle);
         }
     }
+    public void ToggleCombatSlotsInput2(bool toggle = true)
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            allCombatSlots[i].ToggleCombatSlotInput2(toggle);
+        }
+    }
 
     public void Setup()
     {
@@ -247,11 +254,8 @@ public class CombatGridManager : MonoBehaviour
 
         if (isCombatMode)
         {
-            //GameManager.Instance.UpdateActiveSkill(GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectSkill());
             // Disable extra move prompt
             OverlayUI.Instance.extraMovePrompt.UpdateAlpha(0);
-
-            //GameManager.Instance.ToggleAllUnitButtons(true);
 
             if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
                 GameManager.Instance.ToggleSkillsItemToggleButton(true);
@@ -282,10 +286,6 @@ public class CombatGridManager : MonoBehaviour
         }
         else
         {
-            //GameManager.Instance.ToggleAllUnitButtons(false);
-
-            ToggleAllCombatSlotOutlines();
-
             GameManager.Instance.ToggleSkillsItemToggleButton(false);
 
             GameManager.Instance.UpdatePlayerAbilityUI(false, false, true);
@@ -301,11 +301,11 @@ public class CombatGridManager : MonoBehaviour
             else
                 OverlayUI.Instance.extraMovePrompt.UpdateAlpha(0);
 
-            //if (GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() < 0)
-            //    GetButtonAttackMovement().ButtonCombatAttackMovement(true);
-
             isCombatMode = false;
+
             GameManager.Instance.UpdateDetailsBanner();
+            ToggleAllCombatSlotOutlines();
+            GameManager.Instance.ResetSelectedUnits();
         }
 
         UpdateCombatMainSlots();
@@ -528,11 +528,73 @@ public class CombatGridManager : MonoBehaviour
 
         RemoveAllCombatSelectedCombatSlots();
 
-        StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+        int count = 0;
+        for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality() == GameManager.Instance.activeRoomAllUnitFunctionalitys[i])
+                {
+                    if (i == 0)
+                    {
+                        for (int x = 0; x < OwnedLootInven.Instance.GetWornItemMainAlly().Count; x++)
+                        {
+                            if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
+                                && OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                            {
+                                count++;
+                                continue;
+                            }
+                        }
+
+                        if (count == 0)
+                        {
+                            StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+                            //break;
+                        }
+                    }
+                    else if (i == 1)
+                    {
+                        for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
+                        {
+                            if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
+                                && OwnedLootInven.Instance.GetWornGearSecondAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                            {
+                                count++;
+                                continue;
+                            }
+                        }
+
+                        if (count == 0)
+                        {
+                            StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+                            //break;
+                        }
+                    }
+                    else if (i == 2)
+                    {
+                        for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
+                        {
+                            if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
+                                && OwnedLootInven.Instance.GetWornGearThirdAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+                            {
+                                count++;
+                                continue;
+                            }
+                        }
+
+                        if (count == 0)
+                        {
+                            StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+                            //break;
+                        }
+                    }
+                }
+            }
+        }
 
         if (movingUnit.reanimated)
             ToggleButton(GetButtonItems(), false, true);
-
     }
 
     public int GetRangeXToUnit(UnitFunctionality fromUnit, UnitFunctionality toUnit)
@@ -1939,8 +2001,16 @@ public class CombatGridManager : MonoBehaviour
         int unitsTargeted = 0;
 
         int selectionsAllowed = 0;
-        if (GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count != 0)
-            selectionsAllowed = GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count;
+        if (GameManager.Instance.isSkillsMode)
+        {
+            if (GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count != 0)
+                selectionsAllowed = GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count;
+        }
+        else
+        {
+            selectionsAllowed = GameManager.Instance.GetActiveItem().itemRangeHitAreas.Count;
+        }
+
 
 
         List<CombatSlot> selectedCombatSlots = new List<CombatSlot>();
@@ -1951,112 +2021,203 @@ public class CombatGridManager : MonoBehaviour
 
         if (targetedSlot != null)
         {
-            // Select a group of combat slots based on skill
-            for (int b = 0; b < activeSkill.skillRangeHitAreas.Count; b++)
+            if (GameManager.Instance.isSkillsMode)
             {
-                if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                    (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
+                // Select a group of combat slots based on skill
+                for (int b = 0; b < activeSkill.skillRangeHitAreas.Count; b++)
                 {
                     if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                        (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                        (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
                     {
-                        // Target slot/unit
-                        selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
-                        (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
+                        if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                        {
+                            // Target slot/unit
+                            selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeSkill.skillRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
+                        }
+                    }
+                    else if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                        (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
+                    {
+                        if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                        {
+                            // Target slot/unit
+                            selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
+                        }
+                    }
+                    else if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                        (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)))
+                    {
+                        if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
+                        {
+                            // Target slot/unit
+                            selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)));
+                        }
                     }
                 }
-                else if(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                    (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)))
-                {
-                    if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                        (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
-                    {
-                        // Target slot/unit
-                        selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                        (int)targetedSlot.GetSlotIndex().y + (int)activeSkill.skillRangeHitAreas[b].y)));
-                    }
-                }
-                else if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                    (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)))
-                {
-                    if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                        (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)).GetAllowed())
-                    {
-                        // Target slot/unit
-                        selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeSkill.skillRangeHitAreas[b].x,
-                        (int)targetedSlot.GetSlotIndex().y - (int)activeSkill.skillRangeHitAreas[b].y)));
-                    }
-                }
-            }
 
-            if (targetedSlot.GetLinkedUnit())
-            {
+                if (targetedSlot.GetLinkedUnit())
+                {
 
+                }
+                else
+                {
+                    if (targetedSlot.GetFallenUnits().Count > 0)
+                    {
+                        if (activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                        {
+                            GameManager.Instance.AddUnitsSelected(targetedSlot.GetFallenUnits()[0]);
+                            targetedSlot.GetFallenUnits()[0].ToggleSelected(true);
+                        }
+                    }
+                }
+                for (int i = 0; i < selectedCombatSlots.Count; i++)
+                {
+                    combatSelectedCombatSlots.Add(selectedCombatSlots[i]);
+                    selectedCombatSlots[i].ToggleCombatSelected(true);
+
+                    if (selectedCombatSlots[i].GetLinkedUnit())
+                    {
+                        // Necro skill 2
+                        if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
+                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                                continue;
+                        }
+                        else if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
+                            unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                continue;
+                        }
+                        else if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
+                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                                continue;
+                        }
+                        else if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.PLAYERS &&
+                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                continue;
+                        }
+
+                        selectedCombatSlots[i].GetLinkedUnit().ToggleSelected(true);
+                        GameManager.Instance.AddUnitsSelected(selectedCombatSlots[i].GetLinkedUnit());
+                    }
+                }
+
+                unitsTargeted++;
+
+                // Do combat slot outlines
+                UpdateCombatSlotOutlines(combatSelectedCombatSlots);
             }
+            // Items mode
             else
             {
-                if (targetedSlot.GetFallenUnits().Count > 0)
+                // Select a group of combat slots based on skill
+                for (int b = 0; b < activeItem.itemRangeHitAreas.Count; b++)
                 {
-                    if (activeSkill.curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                    if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeItem.itemRangeHitAreas[b].x,
+                        (int)targetedSlot.GetSlotIndex().y + (int)activeItem.itemRangeHitAreas[b].y)))
                     {
-                        GameManager.Instance.AddUnitsSelected(targetedSlot.GetFallenUnits()[0]);
-                        targetedSlot.GetFallenUnits()[0].ToggleSelected(true);
+                        if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeItem.itemRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeItem.itemRangeHitAreas[b].y)).GetAllowed())
+                        {
+                            // Target slot/unit
+                            selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x + (int)activeItem.itemRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeItem.itemRangeHitAreas[b].y)));
+                        }
+                    }
+                    else if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeItem.itemRangeHitAreas[b].x,
+                        (int)targetedSlot.GetSlotIndex().y + (int)activeItem.itemRangeHitAreas[b].y)))
+                    {
+                        if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeItem.itemRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeItem.itemRangeHitAreas[b].y)).GetAllowed())
+                        {
+                            // Target slot/unit
+                            selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeItem.itemRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y + (int)activeItem.itemRangeHitAreas[b].y)));
+                        }
+                    }
+                    else if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeItem.itemRangeHitAreas[b].x,
+                        (int)targetedSlot.GetSlotIndex().y - (int)activeItem.itemRangeHitAreas[b].y)))
+                    {
+                        if (GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeItem.itemRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y - (int)activeItem.itemRangeHitAreas[b].y)).GetAllowed())
+                        {
+                            // Target slot/unit
+                            selectedCombatSlots.Add(GetCombatSlot(new Vector2((int)targetedSlot.GetSlotIndex().x - (int)activeItem.itemRangeHitAreas[b].x,
+                            (int)targetedSlot.GetSlotIndex().y - (int)activeItem.itemRangeHitAreas[b].y)));
+                        }
                     }
                 }
-            }
-            for (int i = 0; i < selectedCombatSlots.Count; i++)
-            {
-                combatSelectedCombatSlots.Add(selectedCombatSlots[i]);
-                selectedCombatSlots[i].ToggleCombatSelected(true);
 
-                if (selectedCombatSlots[i].GetLinkedUnit())
+                if (targetedSlot.GetLinkedUnit())
                 {
-                    // Necro skill 2
-                    if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
-                        unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                    {
-                        if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
-                            continue;
-                    }
-                    else if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
-                        unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
-                    {
-                        if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
-                            continue;
-                    }
-                    else if (activeSkill.curSkillType == SkillData.SkillType.OFFENSE && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
-                        unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                    {
-                        if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
-                            continue;
-                    }
-                    else if (activeSkill.curSkillType == SkillData.SkillType.SUPPORT && activeSkill.curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.PLAYERS &&
-                        unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                    {
-                        if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
-                            continue;
-                    }
 
-                    selectedCombatSlots[i].GetLinkedUnit().ToggleSelected(true);
-                    GameManager.Instance.AddUnitsSelected(selectedCombatSlots[i].GetLinkedUnit());
                 }
+                else
+                {
+                    if (targetedSlot.GetFallenUnits().Count > 0)
+                    {
+                        if (activeItem.curTargetType == ItemPiece.TargetType.DEAD)
+                        {
+                            GameManager.Instance.AddUnitsSelected(targetedSlot.GetFallenUnits()[0]);
+                            targetedSlot.GetFallenUnits()[0].ToggleSelected(true);
+                        }
+                    }
+                }
+                for (int i = 0; i < selectedCombatSlots.Count; i++)
+                {
+                    combatSelectedCombatSlots.Add(selectedCombatSlots[i]);
+                    selectedCombatSlots[i].ToggleCombatSelected(true);
+
+                    if (selectedCombatSlots[i].GetLinkedUnit())
+                    {
+                        // Necro skill 2
+                        if (activeItem.curItemType == ItemPiece.ItemType.SUPPORT && activeItem.curSelectionType == ItemPiece.SelectionType.ENEMIES &&
+                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                                continue;
+                        }
+                        else if (activeItem.curItemType == ItemPiece.ItemType.OFFENSE && activeItem.curSelectionType == ItemPiece.SelectionType.ENEMIES &&
+                            unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                continue;
+                        }
+                        else if (activeItem.curItemType == ItemPiece.ItemType.OFFENSE && activeItem.curSelectionType == ItemPiece.SelectionType.ENEMIES &&
+                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                                continue;
+                        }
+                        else if (activeItem.curItemType == ItemPiece.ItemType.SUPPORT && activeItem.curSelectionType == ItemPiece.SelectionType.ALLIES &&
+                            unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            if (selectedCombatSlots[i].GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                continue;
+                        }
+
+                        selectedCombatSlots[i].GetLinkedUnit().ToggleSelected(true);
+                        GameManager.Instance.AddUnitsSelected(selectedCombatSlots[i].GetLinkedUnit());
+                    }
+                }
+
+                unitsTargeted++;
+
+                // Do combat slot outlines
+                UpdateCombatSlotOutlines(combatSelectedCombatSlots);
             }
-
-
-
-
-            if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
-            {
-                //isCombatMode = true;
-                //selectedCombatSlots[b].GetComponentInChildren<ButtonFunctionality>().ButtonSelectCombatSlot(true);
-
-                //asd
-            }
-
-            unitsTargeted++;
-
-            // Do combat slot outlines
-            UpdateCombatSlotOutlines(combatSelectedCombatSlots);
         }
         else
         {
@@ -2991,6 +3152,7 @@ public class CombatGridManager : MonoBehaviour
                     GameManager.Instance.ToggleAllowSelection(false);
                     GameManager.Instance.HideMainSlotDetails();
                     GameManager.Instance.PlayerAttack();
+                    break;
                 }
             }
         }
@@ -3296,6 +3458,23 @@ public class CombatGridManager : MonoBehaviour
                 allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha(1);
             else
                 allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha(0);
+        }
+        /*
+        if (toggle)
+            combatGrid.UpdateAlpha(1);  
+        else
+            combatGrid.UpdateAlpha(0);
+        */
+    }
+
+    public void ToggleCombatGrid2(bool toggle = true)
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            if (toggle)
+                allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha2(1);
+            else
+                allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha2(0);
         }
         /*
         if (toggle)

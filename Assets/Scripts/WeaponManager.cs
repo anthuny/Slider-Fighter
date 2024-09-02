@@ -451,6 +451,7 @@ public class WeaponManager : MonoBehaviour
         {
             //hitAreaManager.UpdateHitAreaPos();
 
+
             hitsRemainingText.UpdateContentText(hitsRemaining.ToString());
 
             hitsRemainingText.AnimateUI();
@@ -464,6 +465,7 @@ public class WeaponManager : MonoBehaviour
         for (int i = 0; i < hits; i++)
         {
             accumulatedHits++;
+            Debug.Log("accumulatedHits " + accumulatedHits);
             hitsAccumulatedText.UpdateContentText(accumulatedHits.ToString());
 
             if (doExtras)
@@ -483,7 +485,7 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-    void ResetWeaponAccHits()
+    public void ResetWeaponAccHits()
     {
         hitsAccumulatedText.UpdateContentText(0.ToString());
         accumulatedHits = 0;
@@ -1028,6 +1030,9 @@ public class WeaponManager : MonoBehaviour
 
         if (skill)
         {
+            if (GameManager.Instance.GetActiveSkill() == null)
+                return;
+
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().curSkillPower != 0 ||
                 GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT && GameManager.Instance.GetActiveSkill().healPowerAmount != 0)
                 currentPower += GameManager.Instance.GetActiveUnitFunctionality().curHealingPower;
@@ -1038,6 +1043,9 @@ public class WeaponManager : MonoBehaviour
         }
         else
         {
+            if (GameManager.Instance.GetActiveItem() == null)
+                return;
+
             calculatedPower = currentPower + GameManager.Instance.GetActiveItem().itemPower;
             //calculatedPower += GameManager.Instance.randomBaseOffset*2;
             calculatedPower = GameManager.Instance.RandomisePower((int)calculatedPower);

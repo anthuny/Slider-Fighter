@@ -730,7 +730,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140, y: 11}
+  m_AnchoredPosition: {x: 55.9, y: 11}
   m_SizeDelta: {x: 64.2071, y: 245.5563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5142960048438220844
@@ -3875,6 +3875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3273215910bdbf4cbe88d9d5cd66033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasEndedTurn: 0
   curUnitType: 0
   curUnitRace: 0
   lastOpenedStatPage: 0
@@ -5635,7 +5636,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 370
+  m_SortingOrder: 380
   m_TargetDisplay: 0
 --- !u!1 &5950479464168525965
 GameObject:
@@ -6124,7 +6125,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55.900024, y: 11}
+  m_AnchoredPosition: {x: 140, y: 11}
   m_SizeDelta: {x: 64.2071, y: 245.5563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7085090978554227446
@@ -6238,7 +6239,7 @@ CanvasGroup:
   m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
+  m_IgnoreParentGroups: 1
 --- !u!114 &3061899646533187252
 MonoBehaviour:
   m_ObjectHideFlags: 0

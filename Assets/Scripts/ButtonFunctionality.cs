@@ -363,6 +363,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void ButtonSelectCombatSlot(bool flag = false)
     {
+        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO && HeroRoomManager.Instance.playerInHeroRoomView)
+            return;
+
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY &&
             !flag)
         {
@@ -1695,14 +1698,50 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (!GameManager.Instance.isSkillsMode)
         {
-            GameManager.Instance.UpdateMainIconDetails(null, null);
-
             GameManager.Instance.fighterMainSlot1.ToggleSelectImage(false);
             GameManager.Instance.fighterMainSlot2.ToggleSelectImage(false);
             GameManager.Instance.fighterMainSlot3.ToggleSelectImage(false);
             GameManager.Instance.fighterMainSlot4.ToggleSelectImage(false);
 
             GameManager.Instance.ResetActiveItem();
+
+            if (GameManager.Instance.GetActiveItem())
+            {
+                GameManager.Instance.UpdateMainIconDetails(null, GameManager.Instance.GetActiveItem());
+
+                if (GameManager.Instance.GetActiveItem().itemName == GameManager.Instance.fighterMainSlot1.GetItemName())
+                {
+                    GameManager.Instance.fighterMainSlot1.ToggleSelectImage(true);
+                }
+                else if (GameManager.Instance.GetActiveItem().itemName == GameManager.Instance.fighterMainSlot2.GetItemName())
+                {
+                    GameManager.Instance.fighterMainSlot1.ToggleSelectImage(true);
+                }
+                else if (GameManager.Instance.GetActiveItem().itemName == GameManager.Instance.fighterMainSlot3.GetItemName())
+                {
+                    GameManager.Instance.fighterMainSlot1.ToggleSelectImage(true);
+                }
+            }
+            else
+            {
+                GameManager.Instance.UpdateMainIconDetails(null, GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem());
+
+                if (GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem())
+                {
+                    if (GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem().itemName == GameManager.Instance.fighterMainSlot1.GetItemName())
+                    {
+                        GameManager.Instance.fighterMainSlot1.ToggleSelectImage(true);
+                    }
+                    else if (GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem().itemName == GameManager.Instance.fighterMainSlot2.GetItemName())
+                    {
+                        GameManager.Instance.fighterMainSlot2.ToggleSelectImage(true);
+                    }
+                    else if (GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem().itemName == GameManager.Instance.fighterMainSlot3.GetItemName())
+                    {
+                        GameManager.Instance.fighterMainSlot3.ToggleSelectImage(true);
+                    }
+                }
+            }
         }
         else
         {
@@ -2529,7 +2568,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 return;
         }
 
-        if (!CombatGridManager.Instance.isCombatMode || !GameManager.Instance.GetAllowSelection())
+        if (ShopManager.Instance.playerInShopRoom)
+        {
+
+        }
+        else if (!CombatGridManager.Instance.isCombatMode || !GameManager.Instance.GetAllowSelection())
             return;
 
         StartCoroutine(SelectUnitCo());
@@ -2576,13 +2619,15 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     {
                         isHeldDownUnit = false;
                         StartCoroutine(HeldDownCooldown());
-                        GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
+
+                        if (!ShopManager.Instance.playerInShopRoom)
+                            GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
 
                         unitIsSelected = true;
 
                         if (GameManager.Instance.playerInCombat && !PostBattle.Instance.isInPostBattle || HeroRoomManager.Instance.playerInHeroRoomView)
                         {
-                            if (unit.IsSelected())
+                            if (unit.IsSelected() || HeroRoomManager.Instance.playerInHeroRoomView || ShopManager.Instance.playerInShopRoom)
                             {
                                 GameManager.Instance.targetUnit(unit, true);
                             }
@@ -2595,7 +2640,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        //Debug.Log("a");
+        if (ShopManager.Instance.playerInShopRoom)
+            return;
+
         // If not pressing effect button, instead pressing a unit
         if (!isEffectButton)
         {
@@ -2633,6 +2680,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (ShopManager.Instance.playerInShopRoom)
+            return;
+
         if (!isEffectButton)
         {
             if (isStatButton)

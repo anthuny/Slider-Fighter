@@ -119,7 +119,7 @@ public class RoomManager : MonoBehaviour
         yield return new WaitForSeconds(.5f);
 
         GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateContentText(GetFloorCount().ToString());
-        GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateAlpha(1);
+        GameManager.Instance.transitionSprite.floorIncreaseAlertUI.UpdateAlpha(1, false, 0, false, true, true);
     }
 
     public void IncrementDefaultRoomsCleared()

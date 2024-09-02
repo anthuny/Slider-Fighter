@@ -154,6 +154,9 @@ public class RoomMapIcon : MonoBehaviour
     }
     public void SelectRoom()
     {
+        if (MapManager.Instance.mapOverlay.promptEnabled)
+            return;
+
         // Ensure only check if room is revealed
         if (!isHidden)
         {

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UnitFunctionality : MonoBehaviour
 {
+    public bool hasEndedTurn = false;
+
     RectTransform rt;
     public enum UnitType { PLAYER, ENEMY };
     public UnitType curUnitType;
@@ -972,7 +974,7 @@ public class UnitFunctionality : MonoBehaviour
             AudioManager.Instance.Play("SFX_ItemTrigger");
         }
 
-        itemVisualAlert.UpdateAlpha(1, false, 0, false, false);
+        itemVisualAlert.UpdateAlpha(1, false, 0, false, false, true);
     }
 
     public void ToggleUnitBottomStats(bool toggle)
@@ -1759,7 +1761,10 @@ public class UnitFunctionality : MonoBehaviour
             CombatGridManager.Instance.GetTargetCombatSlots().Reverse();
 
             // Select a combat slot to move to
-            CombatGridManager.Instance.PerformBotAction(this);
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
+            {
+                CombatGridManager.Instance.PerformBotAction(this);
+            }
         }
     }
 
@@ -3068,17 +3073,24 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator UnitEndTurn(bool waitLong = false, bool waitExtraLong = false)
     {
-        //CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+        if (GameManager.Instance.GetActiveUnitFunctionality() != this)
+            yield break;
+
+        if (!hasEndedTurn)
+            hasEndedTurn = true;
+        else
+            yield break;
 
         if (waitLong)
             yield return new WaitForSeconds(0f);    // old was 1.25f
         else
             yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
-        // End turn
 
-        //Debug.Log("bbb");
 
         CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
+        WeaponManager.Instance.ResetAcc();
+        WeaponManager.Instance.ResetWeaponAccHits();
 
         GameManager.Instance.UpdateTurnOrder();
     }
@@ -4509,6 +4521,15 @@ public class UnitFunctionality : MonoBehaviour
 
     public void ToggleSelected(bool toggle, bool onlyToggleDisplay = false)
     {
+        if (toggle)
+        {
+            if (activeCombatSlot)
+            {
+                if (!activeCombatSlot.combatSelected)
+                    return;
+            }
+        }
+
         if (!onlyToggleDisplay)
             isSelected = toggle;
 
@@ -5662,8 +5683,11 @@ public class UnitFunctionality : MonoBehaviour
 
         if (GameManager.Instance.isSkillsMode)
         {
-            if (!HeroRoomManager.Instance.playerInHeroRoomView && GameManager.Instance.playerInCombat)
-                GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveSkill(), null, true);
+            if (GameManager.Instance.GetActiveSkill())
+            {
+                if (!HeroRoomManager.Instance.playerInHeroRoomView && GameManager.Instance.playerInCombat)
+                    GameManager.Instance.UpdateMainIconDetails(GameManager.Instance.GetActiveSkill(), null, true);
+            }
         }
     }
 

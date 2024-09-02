@@ -30,9 +30,12 @@ MonoBehaviour:
   itemSpriteCombatProjectile: {fileID: 21300000, guid: f51065a0d406f444f88a60618e96229f, type: 3}
   itemSpriteFail: {fileID: 0}
   range: 3
-  itemRangeHitArea: {x: 1, y: 1}
+  itemRangeHitArea: {x: 2, y: 2}
   itemRangeHitAreas:
   - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
   itemAreaHitCount: 1
   canTargetSelf: 0
   attackAllSelected: 0

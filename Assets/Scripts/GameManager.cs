@@ -1163,6 +1163,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             for (int i = 0; i < activeRoomHeroes.Count; i++)
             {
+                activeRoomHeroes[i].ToggleUnitDisplay(false);
+            }
+
+            for (int i = 0; i < activeRoomHeroes.Count; i++)
+            {
                 activeRoomHeroes[i].ResetPowerUI(true);
             }
 
@@ -1986,9 +1991,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             powerHitsAdditional = GetActiveUnitFunctionality().curPowerHits;
 
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
             StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncHitsCount + powerHitsAdditional, false));
-
-        WeaponManager.Instance.StartHitLine();
+            WeaponManager.Instance.StartHitLine();
+        }
 
         AudioManager.Instance.PauseCombatMusic(true);
 
@@ -2610,7 +2616,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             ShopManager.Instance.TogglePlayerInShopRoom();
 
-            
+            CombatGridManager.Instance.ToggleCombatSlotsInput2(true);
+
             // Map open SFX
             AudioManager.Instance.Play("SFX_ShopEnterLeave");
 
@@ -3275,6 +3282,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         GetActiveUnitFunctionality().ToggleHitsRemainingText(false);
 
+        if (GetActiveSkill() == null)
+            yield break;
+
         // If skill is self cast, do it here
         if (GetActiveSkill().isSelfCast)
         {
@@ -3563,27 +3573,31 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             }
                         }
 
-                        if (isSkillsMode)
+                        if (GetActiveSkill())
                         {
-                            // If active skill has an effect AND it's not a self cast, apply it to selected targets
-                            if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
+                            if (isSkillsMode)
                             {
-                                if (isSkillsMode)
-                                    unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, effectHitAcc, false, false, false);
-                                else
-
-
-                                if (isSkillsMode && GetActiveSkill().effect2 != null)
+                                // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                                if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
                                 {
-                                    if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
-                                        unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                    if (isSkillsMode)
+                                        unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                    else
+
+
+                                    if (isSkillsMode && GetActiveSkill().effect2 != null)
+                                    {
+                                        if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                            unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                    }
                                 }
                             }
+                            else
+                            {
+                                unit.AddUnitEffect(GetActiveItem().effectAdded, unit, effectHitAcc, effectHitAcc, true, false, true, GetActiveItemSlot().linkedSlot);
+                            }
                         }
-                        else
-                        {
-                            unit.AddUnitEffect(GetActiveItem().effectAdded, unit, effectHitAcc, effectHitAcc, true, false, true, GetActiveItemSlot().linkedSlot);
-                        }
+
                     }
 
 
@@ -3827,10 +3841,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         if (skills)
         {
-            GameManager.Instance.fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
-            GameManager.Instance.fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
-            GameManager.Instance.fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
-            GameManager.Instance.fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+            fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
 
             GameManager.Instance.UpdateAllSkillIconAvailability();
             SkillsTabManager.Instance.UpdateLockedSkills();
@@ -3907,6 +3921,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             TeamItemsManager.Instance.UpdateLockedItems();
 
+            fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            fighterMainSlot3.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+            fighterMainSlot4.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+
             fighterMainSlot1.ToggleSkillCooldownUI(false);
             fighterMainSlot2.ToggleSkillCooldownUI(false);
             fighterMainSlot3.ToggleSkillCooldownUI(false);
@@ -3942,7 +3961,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                            // else
                             //{
                                 //GameManager.Instance.UpdateUnitSelection(null, null);
-                                UpdateActiveItem(null);
+                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[x]);
                            // }
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[x]);
                             //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[x]);
@@ -3976,7 +3995,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             //else
                            // {
                                 //GameManager.Instance.UpdateUnitSelection(null, null);
-                                UpdateActiveItem(null);
+                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
                            // }
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
                             //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
@@ -4010,7 +4029,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             //else
                            // {
                                 //GameManager.Instance.UpdateUnitSelection(null, null);
-                                UpdateActiveItem(null);
+                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[x]);
                            // }
 
                             UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[x]);
@@ -4056,6 +4075,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void UpdateMainIconDetails(SkillData skill = null, ItemPiece item = null, bool displaySkillDesc = false)
     {
+        if (item == null && skill == null)
+        {
+            //item.itemDesc = "";
+        }
+
         if (!displaySkillDesc)
             ToggleUIElement(fighterSelectedMainSlotDesc, true);
 
@@ -4380,7 +4404,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else if (enemyCount == 0)
         {
-            CombatGridManager.Instance.ToggleCombatGrid(false);
+            //if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO)
+            CombatGridManager.Instance.ToggleCombatGrid2(false);
             playerWon = true;
 
             for (int i = 0; i < activeRoomHeroes.Count; i++)
@@ -4431,6 +4456,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         #endregion
     }
+
     public void UpdateTurnOrder()
     {
         CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
@@ -4496,6 +4522,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         DetermineTurnOrder();
 
         GetActiveUnitFunctionality().skillRangeIssue = false;
+
+        GetActiveUnitFunctionality().hasEndedTurn = false;
 
         //UpdateActiveSkill(GetActiveUnitFunctionality().GetBaseSelectSkill());
 
@@ -4603,7 +4631,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         UpdateDetailsBanner();
         ToggleSkillsItemToggleButton(false);
         UpdatePlayerAbilityUI(false, false, true);
-        UpdateMainIconDetails(null, null, false);
+        //if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            //UpdateMainIconDetails(null, null, false);
 
         UpdateAllUnitStatBars();
         CombatGridManager.Instance.ToggleIsMovementAllowed(true);
@@ -5380,7 +5409,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         UpdateUnitsSelectedText();
     }
 
-    private void DeselectAllUnits()
+    public void DeselectAllUnits()
     {
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
@@ -5582,6 +5611,17 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Display Items
         else
         {
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                UpdateActiveItem(GetActiveUnitFunctionality().GetBaseSelectedItem());
+                UpdateMainIconDetails(null, GetActiveUnitFunctionality().GetBaseSelectedItem());
+            }
+            else
+            {
+                UpdateActiveItem(null);
+                UpdateMainIconDetails(null, null);
+            }
+
             fighterMainSlot1.UpdateRarity(IconUI.Rarity.COMMON, true);
             fighterMainSlot2.UpdateRarity(IconUI.Rarity.COMMON, true);
             fighterMainSlot3.UpdateRarity(IconUI.Rarity.COMMON, true);
@@ -6384,9 +6424,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     public void ResetActiveItem()
     {
         //GameManager.Instance.UpdateActiveItem(null);
-        GameManager.Instance.UpdateMainIconDetails(null, null);
+        //GameManager.Instance.UpdateMainIconDetails(null, null);
         //GameManager.Instance.UpdateUnitSelection(null, null);
-        GameManager.Instance.UpdateUnitsSelectedText();
+        //GameManager.Instance.UpdateUnitsSelectedText();
     }
     public IEnumerator DoItemAction()
     {
@@ -7086,6 +7126,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             // If item is health item, do the effect of it
 
+            unit.UpdateTooltipItems();
             StartCoroutine(WaitTimeThenDeselect(shopRemoveSelectTime, unit));
         }
 

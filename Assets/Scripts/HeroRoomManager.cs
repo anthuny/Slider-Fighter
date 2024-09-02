@@ -146,9 +146,9 @@ public class HeroRoomManager : MonoBehaviour
         // Set position of newly spawned hero room unit, based on how many allies player currently has
 
         //Need to update spawned fighter from hero room to spawn in a unique slot
-        GameManager.Instance.spawnedUnitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetNewFighterCombatSlot().transform);
-        GameManager.Instance.spawnedUnitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetNewFighterCombatSlot());
-        CombatGridManager.Instance.GetNewFighterCombatSlot().UpdateLinkedUnit(GameManager.Instance.spawnedUnitFunctionality);
+        //GameManager.Instance.spawnedUnitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetNewFighterCombatSlot().transform);
+        //GameManager.Instance.spawnedUnitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetNewFighterCombatSlot());
+        //CombatGridManager.Instance.GetNewFighterCombatSlot().UpdateLinkedUnit(GameManager.Instance.spawnedUnitFunctionality);
 
 
         // Save earnt ally
