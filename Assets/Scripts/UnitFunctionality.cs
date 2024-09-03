@@ -230,6 +230,11 @@ public class UnitFunctionality : MonoBehaviour
 
     public bool skillRangeIssue = false;
 
+    public bool skill1OutOfRange = false;
+    public bool skill2OutOfRange = false;
+    public bool skill3OutOfRange = false;
+    public bool skill4OutOfRange = false;
+
     public void UpdateChosenSkill(SkillData skillData)
     {
         chosenSkill = skillData;
@@ -1649,7 +1654,7 @@ public class UnitFunctionality : MonoBehaviour
         return finalRange;
     }
 
-    public IEnumerator StartUnitTurn()
+    public IEnumerator StartUnitTurn(bool wait = true)
     {
         if (hasAttacked && GetCurMovementUses() <= 0)
         {
@@ -1667,7 +1672,8 @@ public class UnitFunctionality : MonoBehaviour
         if (curUnitType == UnitType.ENEMY)
             GameManager.Instance.isSkillsMode = true;
 
-        yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
+        if (wait)
+            yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         ToggleUnitMoveActiveArrows(true);
         /*
@@ -1700,11 +1706,9 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
 
-            // If moving
-            if (GetCurMovementUses() > 0)
-                UnitMove();
 
-            yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
+            if (wait)
+                yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
 
             CombatGridManager.Instance.GetTargetCombatSlots().Clear();
 
@@ -1754,11 +1758,44 @@ public class UnitFunctionality : MonoBehaviour
                             CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
                         }
                     }
-                }              
+                }
             }
 
             CombatGridManager.Instance.GetTargetCombatSlots().Sort(CombatGridManager.Instance.CompareSlotRangeFromUnit);
             CombatGridManager.Instance.GetTargetCombatSlots().Reverse();
+
+            // If selected skill is out of range, choose another skill
+            for (int i = 0; i < CombatGridManager.Instance.GetTargetCombatSlots().Count; i++)
+            {
+                if (CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit().GetRangeFromUnit(this) > GameManager.Instance.GetActiveSkill().curSkillRange
+                    && !GameManager.Instance.GetActiveSkill().isSelfCast)
+                {
+                    if (GameManager.Instance.GetActiveSkill() == GetSkill(0) && !skill1OutOfRange)
+                    {
+                        skill1OutOfRange = true;
+                        StartCoroutine(StartUnitTurn(false));
+                        yield break;
+                    }
+                    else if (GameManager.Instance.GetActiveSkill() == GetSkill(1) && !skill2OutOfRange)
+                    {
+                        skill2OutOfRange = true;
+                        StartCoroutine(StartUnitTurn(false));
+                        yield break;
+                    }
+                    else if (GameManager.Instance.GetActiveSkill() == GetSkill(2) && !skill3OutOfRange)
+                    {
+                        skill3OutOfRange = true;
+                        StartCoroutine(StartUnitTurn(false));
+                        yield break;
+                    }
+                    else if (GameManager.Instance.GetActiveSkill() == GetSkill(3) && !skill4OutOfRange)
+                    {
+                        skill4OutOfRange = true;
+                        StartCoroutine(StartUnitTurn(false));
+                        yield break;
+                    }
+                }
+            }
 
             // Select a combat slot to move to
             if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
@@ -3386,7 +3423,7 @@ public class UnitFunctionality : MonoBehaviour
                 if (rand == 1)  // Skill 1
                 {
                     if (skill0CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0) != skill)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0) != skill && !skill1OutOfRange)
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
                     else
                         continue;
@@ -3394,7 +3431,7 @@ public class UnitFunctionality : MonoBehaviour
                 else if (rand == 2)  // Skill 2
                 {
                     if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1) != skill)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1) != skill && !skill2OutOfRange)
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1);
                     else
                         continue;
@@ -3402,7 +3439,7 @@ public class UnitFunctionality : MonoBehaviour
                 else if (rand == 3)  // Skill 3
                 {
                     if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2) != skill)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2) != skill && !skill3OutOfRange)
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2);
                     else
                         continue;
@@ -3411,7 +3448,7 @@ public class UnitFunctionality : MonoBehaviour
                 else if (rand == 4)
                 {
                     if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3) != skill)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3) != skill && !skill4OutOfRange)
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3);
                 }
             }
@@ -4534,9 +4571,21 @@ public class UnitFunctionality : MonoBehaviour
             isSelected = toggle;
 
         if (toggle)
+        {
             selectionCircle.UpdateAlpha(1);
+
+            ToggleUnitStatBarAlpha(true);
+        }
         else
+        {
             selectionCircle.UpdateAlpha(0);
+
+            if (GameManager.Instance.unitsSelected.Contains(this))
+                GameManager.Instance.unitsSelected.Remove(this);
+
+            GameManager.Instance.UpdateAllUnitStatBars();
+        }
+
     }
 
     public bool IsSelected()

@@ -1390,6 +1390,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         TeamItemsManager.Instance.ReloadItemUses();
 
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            GameManager.Instance.activeRoomHeroes[i].ToggleUnitDisplay(false);
+        }
+
         postBattleButtonPressed = false;
     }
 
@@ -1741,6 +1746,12 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         GameManager.Instance.fighterMainSlot3.ToggleSelectImage(true);
                     }
                 }
+            }
+
+            if (!GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem())
+            {
+                CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
+                CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
             }
         }
         else
