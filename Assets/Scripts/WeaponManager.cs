@@ -460,12 +460,12 @@ public class WeaponManager : MonoBehaviour
 
     public IEnumerator UpdateWeaponAccumulatedHits(int hits, bool doExtras = true)
     {
-        ResetWeaponAccHits();
+        //ResetWeaponAccHits();
 
         for (int i = 0; i < hits; i++)
         {
             accumulatedHits++;
-            Debug.Log("accumulatedHits " + accumulatedHits);
+            //Debug.Log("accumulatedHits " + accumulatedHits);
             hitsAccumulatedText.UpdateContentText(accumulatedHits.ToString());
 
             if (doExtras)
@@ -588,6 +588,11 @@ public class WeaponManager : MonoBehaviour
     }
     public void StartHitLine(bool resetAcc = true)
     {
+        if (GameManager.Instance.GetActiveSkill() == null && GameManager.Instance.isSkillsMode)
+            return;
+        else if (GameManager.Instance.GetActiveItem() == null && !GameManager.Instance.isSkillsMode)
+            return;
+
         //Debug.Log("starting hit line");
         isStopped = false;
 

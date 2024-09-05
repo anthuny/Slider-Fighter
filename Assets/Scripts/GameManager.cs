@@ -1025,7 +1025,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             UpdateAllyVisibility(true, teamPage);
 
-            SkillsTabManager.Instance.SetupSkillsTab(SkillsTabManager.Instance.GetActiveUnit(), false);
+            SkillsTabManager.Instance.SetupSkillsTab(SkillsTabManager.Instance.GetActiveUnit(), true);
         }
         else
         {
@@ -1119,7 +1119,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         combatOver = false;
 
-        powerUISpawnCount = 0;
+        powerUISpawnCount = 480;
 
         if (!enemies)
         {
@@ -3387,6 +3387,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
                 CombatGridManager.Instance.PerformBotAction(GetActiveUnitFunctionality());
+
+                selectingUnitsAllowed = true;
+                allowSelection = true;
+
                 CombatGridManager.Instance.ToggleTabButtons("Items");
             }
 
@@ -3957,10 +3961,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 // Main
                 if (i == 0 && GetActiveUnitFunctionality() == activeRoomHeroes[i])
                 {
-                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsMain.Count; x++)
+                    for (int x = 0; x < TeamItemsManager.Instance.ally1ItemsSlots.Count; x++)
                     {
                         // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
-                        if (TeamItemsManager.Instance.equippedItemsMain[x] != null)
+                        if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() > 0)
                         {
                             if (x == 0) 
                                 mainSlot1.ToggleSelected(true);
@@ -3971,16 +3975,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             else if (x == 3)
                                 mainSlot4.ToggleSelected(true);
 
-                            //if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsMain[x].maxUsesPerCombat)
-                                //UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[x]);
-                           // else
-                            //{
-                                //GameManager.Instance.UpdateUnitSelection(null, null);
-                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsMain[x]);
-                           // }
-                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsMain[x]);
-                            //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsMain[x]);
-                            //UpdateUnitsSelectedText();
+                            UpdateActiveItem(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot.linkedItemPiece);
+                            UpdateMainIconDetails(null, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot.linkedItemPiece);
                             break;
                         }
                     }
@@ -3991,10 +3987,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 // Second
                 else if (i == 1 && GetActiveUnitFunctionality() == activeRoomHeroes[i])
                 {
-                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsSecond.Count; x++)
+                    for (int x = 0; x < TeamItemsManager.Instance.ally2ItemsSlots.Count; x++)
                     {
                         // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
-                        if (TeamItemsManager.Instance.equippedItemsSecond[x] != null)
+                        if (TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot && TeamItemsManager.Instance.ally2ItemsSlots[x].GetCalculatedItemUsesRemaining() > 0)
                         {
                             if (x == 0)
                                 mainSlot1.ToggleSelected(true);
@@ -4005,16 +4001,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             else if (x == 3)
                                 mainSlot4.ToggleSelected(true);
 
-                            //if (OwnedLootInven.Instance.GetWornItemSecondAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsSecond[x].maxUsesPerCombat)
-                            //    UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
-                            //else
-                           // {
-                                //GameManager.Instance.UpdateUnitSelection(null, null);
-                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsSecond[x]);
-                           // }
-                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
-                            //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsSecond[x]);
-                            //UpdateUnitsSelectedText();
+                            UpdateActiveItem(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot.linkedItemPiece);
+                            UpdateMainIconDetails(null, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot.linkedItemPiece);
                             break;
                         }
                     }
@@ -4025,10 +4013,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 // Third
                 else if (i == 2 && GetActiveUnitFunctionality() == activeRoomHeroes[i])
                 {
-                    for (int x = 0; x < TeamItemsManager.Instance.equippedItemsThird.Count; x++)
+                    for (int x = 0; x < TeamItemsManager.Instance.ally3ItemsSlots.Count; x++)
                     {
                         // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
-                        if (TeamItemsManager.Instance.equippedItemsThird[x] != null)
+                        if (TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot && TeamItemsManager.Instance.ally3ItemsSlots[x].GetCalculatedItemUsesRemaining() > 0)
                         {
                             if (x == 0)
                                 mainSlot1.ToggleSelected(true);
@@ -4039,17 +4027,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             else if (x == 3)
                                 mainSlot4.ToggleSelected(true);
 
-                           // if (OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetItemUseCount() < TeamItemsManager.Instance.equippedItemsThird[x].maxUsesPerCombat)
-                            //    UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[x]);
-                            //else
-                           // {
-                                //GameManager.Instance.UpdateUnitSelection(null, null);
-                            UpdateActiveItem(TeamItemsManager.Instance.equippedItemsThird[x]);
-                           // }
-
-                            UpdateMainIconDetails(null, TeamItemsManager.Instance.equippedItemsThird[x]);
-                            //UpdateUnitSelection(null, TeamItemsManager.Instance.equippedItemsThird[x]);
-                            //UpdateUnitsSelectedText();
+                            UpdateActiveItem(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot.linkedItemPiece);
+                            UpdateMainIconDetails(null, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot.linkedItemPiece);
                             break;
                         }
                     }
@@ -4654,7 +4633,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         UpdateDetailsBanner();
         ToggleSkillsItemToggleButton(false);
-        UpdatePlayerAbilityUI(false, false, true);
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            UpdatePlayerAbilityUI(false, false, true);
         //if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             //UpdateMainIconDetails(null, null, false);
 
@@ -4663,6 +4643,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         CombatGridManager.Instance.GetButtonMovement().ButtonCombatMovementTab();
         //CombatGridManager.Instance.GetButtonSkillsItems().ButtonCombatItemsTab(true, true);
         GetActiveUnitFunctionality().hasAttacked = false;
+
+        GameManager.Instance.UpdateMainIconDetails(null, null);
+        OverlayUI.Instance.UpdateItemUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
+
+        OverlayUI.Instance.ToggleAllStats(false, false, true);
     }
 
     public void ToggleAllUnitButtons(bool toggle = true)
@@ -5637,17 +5622,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Display Items
         else
         {
-            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
-            {
-                UpdateActiveItem(GetActiveUnitFunctionality().GetBaseSelectedItem());
-                UpdateMainIconDetails(null, GetActiveUnitFunctionality().GetBaseSelectedItem());
-            }
-            else
-            {
-                UpdateActiveItem(null);
-                UpdateMainIconDetails(null, null);
-            }
-
             fighterMainSlot1.UpdateRarity(IconUI.Rarity.COMMON, true);
             fighterMainSlot2.UpdateRarity(IconUI.Rarity.COMMON, true);
             fighterMainSlot3.UpdateRarity(IconUI.Rarity.COMMON, true);
@@ -6385,6 +6359,33 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             EnableFirstMainSlotSelection(false);
 
             fighterMainSlot4.UpdateSubText(0, true);
+
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                if (GetActiveItemSlot() && !isSkillsMode)
+                {
+                    if (GetActiveItemSlot().GetCalculatedItemsUsesRemaining2() > 0)
+                    {
+                        UpdateActiveItem(GetActiveUnitFunctionality().GetBaseSelectedItem());
+                        UpdateMainIconDetails(null, GetActiveUnitFunctionality().GetBaseSelectedItem());
+                    }
+                    else
+                    {
+                        UpdateActiveItem(null);
+                        UpdateMainIconDetails(null, null);
+                    }
+                }
+                else
+                {
+                    UpdateActiveItem(null);
+                    UpdateMainIconDetails(null, null);
+                }
+            }
+            else
+            {
+                UpdateActiveItem(null);
+                UpdateMainIconDetails(null, null);
+            }
         }
 
         ToggleMainSlotVisibility(true);
@@ -6512,6 +6513,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 if (unitsSelected.Count == 0)
                     yield break;
                 */
+
+                if (unitsSelected.Count == 0)
+                    continue;
 
                 // Cause the item's functionality to go
                 if (activeItem.curItemType == ItemPiece.ItemType.OFFENSE && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
@@ -6834,6 +6838,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             OverlayUI.Instance.UpdateItemUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
         }
 
+        CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
+        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
         ToggleSelectingUnits(false);
         GameManager.Instance.UpdateMainIconDetails(null, null);
 
@@ -6847,6 +6854,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         ToggleSelectingUnits(true);
         allowSelection = true;
+
+
 
         CheckToEndCombat();
     }
@@ -7242,7 +7251,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     unit.ToggleSelected(true);
 
-                    ToggleSelectingUnits(false);
+                    //ToggleSelectingUnits(false);
                     ToggleAllowSelection(false);
                     HideMainSlotDetails();
                     PlayerAttack();

@@ -1697,7 +1697,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GameManager.Instance.ResetSelectedUnits();
 
-        GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
 
         GameManager.Instance.UpdateDetailsBanner();
 
@@ -1729,7 +1730,25 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             }
             else
             {
-                GameManager.Instance.UpdateMainIconDetails(null, GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem());
+                if (GameManager.Instance.GetActiveItemSlot())
+                {
+                    if (GameManager.Instance.GetActiveItemSlot().GetCalculatedItemsUsesRemaining2() > 0)
+                    {
+                        GameManager.Instance.UpdateMainIconDetails(null, GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem());
+                        // Select main item slot
+                        GameManager.Instance.EnableFirstMainSlotSelection(false);
+                    }
+                }
+
+                if (GameManager.Instance.GetActiveItem() == null)
+                {
+                    CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
+                    CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+                    CombatGridManager.Instance.ToggleTabButtons("Items");
+                    GameManager.Instance.UpdateMainIconDetails(null, null);
+                    OverlayUI.Instance.UpdateItemUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
+                    return;
+                }
 
                 if (GameManager.Instance.GetActiveUnitFunctionality().GetBaseSelectedItem())
                 {
@@ -1768,6 +1787,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
+            GameManager.Instance.selectingUnitsAllowed = true;
+            GameManager.Instance.allowSelection = true;
+
             CombatGridManager.Instance.ToggleTabButtons("Items");
         }
     }
@@ -1784,7 +1806,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         GameManager.Instance.ResetSelectedUnits();
 
-        GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
 
         GameManager.Instance.UpdateDetailsBanner();
 

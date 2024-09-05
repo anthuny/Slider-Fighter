@@ -4711,6 +4711,8 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
 
+            ToggleSelected(false);
+
             GameManager.Instance.CheckToEndCombat();
 
             yield return new WaitForSeconds(2.15f);

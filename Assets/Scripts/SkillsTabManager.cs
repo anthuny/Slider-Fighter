@@ -23,7 +23,8 @@ public class SkillsTabManager : MonoBehaviour
     public UIElement hitsRemainingStatUI;
     public UIElement baseHitsStatsUI;
     public UIElement cdStatUI;
-    public UIElement maxTargetsStatUI;
+    public UIElement rangeStatUI;
+    public UIElement hitAreaStatUI;
     public UIElement hitEffectChanceUI;
     [SerializeField] private UIElement skillNameText;
     [SerializeField] private UIElement gearStatsUI;
@@ -190,7 +191,8 @@ public class SkillsTabManager : MonoBehaviour
             hitsRemainingStatUI.UpdateAlpha(1);
             baseHitsStatsUI.UpdateAlpha(1);
             cdStatUI.UpdateAlpha(1);
-            maxTargetsStatUI.UpdateAlpha(1);
+            rangeStatUI.UpdateAlpha(1);
+            hitAreaStatUI.UpdateAlpha(1);  
             hitEffectChanceUI.UpdateAlpha(1);
         }
         else
@@ -199,12 +201,73 @@ public class SkillsTabManager : MonoBehaviour
             hitsRemainingStatUI.UpdateAlpha(0);
             baseHitsStatsUI.UpdateAlpha(0);
             cdStatUI.UpdateAlpha(0);
-            maxTargetsStatUI.UpdateAlpha(0);
+            rangeStatUI.UpdateAlpha(0);
+            hitAreaStatUI.UpdateAlpha(0);
             hitEffectChanceUI.UpdateAlpha(0);
         }
     }
+    private void UpdateSelectedObjectHitAreaSprite(Vector2 hitArea)
+    {
+        if (hitArea == Vector2.zero)
+        {
+            hitAreaStatUI.UpdateAlpha(0);
+        }
+        else
+        {
+            hitAreaStatUI.UpdateAlpha(1);
 
-    void UpdateSkillStatsDisplay(int power = 0, int hitsRemainingMax = 0, int baseHits = 0, int cd = 0, int maxTargets = 0, int hitEffectChance = 0)
+            if (hitArea == new Vector2(1, 1))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea1x1);
+            }
+            else if (hitArea == new Vector2(1, 2))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea1x2);
+            }
+            else if (hitArea == new Vector2(1, 3))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea1x3);
+            }
+            else if (hitArea == new Vector2(2, 1))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea2x1);
+            }
+            else if (hitArea == new Vector2(3, 1))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea3x1);
+            }
+            else if (hitArea == new Vector2(2, 2))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea2x2);
+            }
+            else if (hitArea == new Vector2(2, 3))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea2x3);
+            }
+            else if (hitArea == new Vector2(3, 2))
+            {
+                hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea3x2);
+            }
+            else if (hitArea == new Vector2(3, 3))
+            {
+                if (GameManager.Instance.GetActiveSkill())
+                {
+                    // plus
+                    if (GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count == 5)
+                    {
+                        hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitAreaPlus);
+                    }
+                    // 3x3
+                    else
+                    {
+                        hitAreaStatUI.UpdateContentImage(OverlayUI.Instance.hitArea3x3);
+                    }
+                }
+            }
+        }
+    }
+
+    void UpdateSkillStatsDisplay(Vector2 hitArea, int power = 0, int hitsRemainingMax = 0, int baseHits = 0, int cd = 0, int range = 0, int hitEffectChance = 0)
     {
         ToggleAllStatsVisual(true);
 
@@ -212,7 +275,8 @@ public class SkillsTabManager : MonoBehaviour
         hitsRemainingStatUI.UpdateContentText(hitsRemainingMax.ToString());
         baseHitsStatsUI.UpdateContentText(baseHits.ToString());
         cdStatUI.UpdateContentText(cd.ToString());
-        maxTargetsStatUI.UpdateContentText(maxTargets.ToString());
+        UpdateSelectedObjectHitAreaSprite(hitArea);
+        rangeStatUI.UpdateContentText(range.ToString());
         hitEffectChanceUI.UpdateContentText(hitEffectChance.ToString());
 
         //UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillAttackCount, activeSkillBase.skillCooldown);
@@ -222,10 +286,12 @@ public class SkillsTabManager : MonoBehaviour
     {
         powerStatUI.UpdateContentText("");
         hitsRemainingStatUI.UpdateContentText("");
+        hitAreaStatUI.UpdateContentText("");
         baseHitsStatsUI.UpdateContentText("");
         cdStatUI.UpdateContentText("");
-        maxTargetsStatUI.UpdateContentText("");
+        rangeStatUI.UpdateContentText("");
         hitEffectChanceUI.UpdateContentText("");
+        UpdateSelectedObjectHitAreaSprite(Vector2.zero);
 
         ToggleAllStatsVisual(false);
     }
@@ -237,7 +303,9 @@ public class SkillsTabManager : MonoBehaviour
             //Debug.Log(activeSkillBase);
             UpdateActiveSkillNameText(activeSkillBase.skillName);
             UpdateSkillDescription(activeSkillBase.skillTabDescr);
-            UpdateSkillStatsDisplay(activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillHitAttempts, activeSkillBase.skillBaseHitOutput + activeSkillBase.upgradeIncHitsCount, activeSkillBase.skillCooldown, activeSkillBase.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(activeSkillBase.GetCalculatedSkillEffectStat()));
+            UpdateSkillStatsDisplay(activeSkillBase.skillRangeHitArea, activeSkillBase.GetCalculatedSkillPowerStat(), activeSkillBase.skillHitAttempts, 
+                activeSkillBase.skillBaseHitOutput + activeSkillBase.upgradeIncHitsCount, activeSkillBase.skillCooldown, 
+                activeSkillBase.curSkillRange, Mathf.RoundToInt(activeSkillBase.GetCalculatedSkillEffectStat()));
         }
         else
         {
@@ -255,7 +323,8 @@ public class SkillsTabManager : MonoBehaviour
             //Debug.Log(activeSkillBase);
             UpdateActiveSkillNameText(skill.skillName);
             UpdateSkillDescription(skill.skillTabDescr);
-            UpdateSkillStatsDisplay(skill.GetCalculatedSkillPowerStat(), skill.skillHitAttempts, skill.skillBaseHitOutput + skill.upgradeIncHitsCount, skill.skillCooldown, skill.GetCalculatedSkillSelectionCount(), Mathf.RoundToInt(skill.GetCalculatedSkillEffectStat()));
+            UpdateSkillStatsDisplay(skill.skillRangeHitArea, skill.GetCalculatedSkillPowerStat(), skill.skillHitAttempts, skill.skillBaseHitOutput + skill.upgradeIncHitsCount, 
+                skill.skillCooldown, skill.curSkillRange, Mathf.RoundToInt(skill.GetCalculatedSkillEffectStat()));
         }
         else
         {
@@ -695,7 +764,7 @@ public class SkillsTabManager : MonoBehaviour
                 //UpdateSelectedBaseSlot(slot);
 
                 AdjustActiveSkills(GetActiveUnit(), slot.skill, activeSkillBase);
-                SetupSkillsTab(GetActiveUnit(), false);
+                SetupSkillsTab(GetActiveUnit(), true);
                 UpdateSkillStatDetails();
             }
             else
