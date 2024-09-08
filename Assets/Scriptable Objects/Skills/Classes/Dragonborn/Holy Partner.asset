@@ -12,13 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
   m_Name: Holy Partner
   m_EditorClassIdentifier: 
+  curSkillTeamType: 1
   curSkillType: 1
-  curSkillSelectionType: 1
-  startingSelectionType: 1
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
   curskillSelectionAliveType: 0
   curRangedType: 1
   curAnimType: 1
   curSkillEffectType: 0
+  curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeHitArea: {x: 0, y: 0}
+  skillRangeHitAreas: []
+  skillAreaHitCount: 1
+  attackAllSelected: 0
+  attackAllUnits: 0
+  canTargetSelf: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 1
+  curSkillRange: 0
   skillSprite: {fileID: 21300000, guid: a8b157947fece4a47a6534dad1323f92, type: 3}
   skillName: HOLY PARTNER
   skillDescr: Target 1 ally, healing, each hit has a 50% chance to apply Holy Link
@@ -38,6 +50,7 @@ MonoBehaviour:
   curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
+  isSpecial: 0
   isDoublingEffect: 0
   isLeaching: 0
   isPassive: 0
@@ -78,4 +91,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: 128e358d37b60b346a094c6589c63450, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 1
-  mindControlled: 0
+  reanimated: 0

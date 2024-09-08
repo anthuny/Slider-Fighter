@@ -513,7 +513,7 @@ public class TeamItemsManager : MonoBehaviour
                 }
                 else
                 {
-                    if (ally1ItemsSlots[i].GetCalculatedItemUsesRemaining() <= 0)
+                    if (ally1ItemsSlots[i].GetCalculatedItemUsesRemaining() <= 0 && ally1ItemsSlots[i].linkedSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                         ally1ItemsSlots[i].ResetSlot(true, true);
                 }
 
@@ -533,7 +533,7 @@ public class TeamItemsManager : MonoBehaviour
                 }
                 else
                 {
-                    if (ally2ItemsSlots[i].GetCalculatedItemUsesRemaining() <= 0)
+                    if (ally2ItemsSlots[i].GetCalculatedItemUsesRemaining() <= 0 && ally2ItemsSlots[i].linkedSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                         ally2ItemsSlots[i].ResetSlot(true, true);
                 }
 
@@ -553,7 +553,7 @@ public class TeamItemsManager : MonoBehaviour
                 }
                 else
                 {
-                    if (ally3ItemsSlots[i].GetCalculatedItemUsesRemaining() <= 0)
+                    if (ally3ItemsSlots[i].GetCalculatedItemUsesRemaining() <= 0 && ally3ItemsSlots[i].linkedSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                         ally3ItemsSlots[i].ResetSlot(true, true);
                 }
 

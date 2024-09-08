@@ -383,32 +383,89 @@ public class OverlayUI : MonoBehaviour
             // Item
             else if (!skill)
             {
-                if (toggle)
-                    skillDetailsPower.UpdateAlpha(1);
+                if (GameManager.Instance.GetActiveItem())
+                {
+                    if (GameManager.Instance.GetActiveItem().curActiveType == ItemPiece.ActiveType.PASSIVE)
+                    {
+                        skillDetailsPower.UpdateAlpha(0);
+                        skillDetailsPower.ToggleButton(false);
+
+                        skillDetailsRangeuI.UpdateAlpha(0);
+                        skillDetailsRangeuI.ToggleButton(false);
+
+                        skillDetailsHitAreauI.UpdateAlpha(0);
+                        skillDetailsHitAreauI.ToggleButton(false);
+
+                        skillDetailsMaxCdUi.UpdateAlpha(0);
+                        skillDetailsMaxCdUi.ToggleButton(false);
+
+                        skillDetailsHitsRemaininguI.UpdateAlpha(0);
+                        skillDetailsHitsRemaininguI.ToggleButton(false);
+
+                        skillDetailsBaseHitsUI.UpdateAlpha(0);
+                        skillDetailsBaseHitsUI.ToggleButton(false);
+
+                        skillDetailsAccuracyuI.UpdateAlpha(0);
+                        skillDetailsAccuracyuI.ToggleButton(false);
+                    }
+                    else
+                    {
+                        if (toggle)
+                            skillDetailsPower.UpdateAlpha(1);
+                        else
+                            skillDetailsPower.UpdateAlpha(0);
+                        skillDetailsPower.ToggleButton(toggle);
+
+                        if (toggle)
+                            skillDetailsRangeuI.UpdateAlpha(1);
+                        else
+                            skillDetailsRangeuI.UpdateAlpha(0);
+                        skillDetailsRangeuI.ToggleButton(toggle);
+
+                        if (toggle)
+                            skillDetailsHitAreauI.UpdateAlpha(1);
+                        else
+                            skillDetailsHitAreauI.UpdateAlpha(0);
+                        skillDetailsHitAreauI.ToggleButton(false);
+
+                        skillDetailsMaxCdUi.UpdateAlpha(0);
+                        skillDetailsMaxCdUi.ToggleButton(false);
+
+                        skillDetailsHitsRemaininguI.UpdateAlpha(0);
+                        skillDetailsHitsRemaininguI.ToggleButton(false);
+
+                        skillDetailsBaseHitsUI.UpdateAlpha(0);
+                        skillDetailsBaseHitsUI.ToggleButton(false);
+
+                        skillDetailsAccuracyuI.UpdateAlpha(0);
+                        skillDetailsAccuracyuI.ToggleButton(false);
+                    }
+                }
                 else
+                {
                     skillDetailsPower.UpdateAlpha(0);
-                skillDetailsPower.ToggleButton(toggle);
+                    skillDetailsPower.ToggleButton(toggle);
 
-                if (toggle)
-                    skillDetailsRangeuI.UpdateAlpha(1);
-                else
                     skillDetailsRangeuI.UpdateAlpha(0);
-                skillDetailsRangeuI.ToggleButton(toggle);
+                    skillDetailsRangeuI.ToggleButton(toggle);
 
-                skillDetailsMaxCdUi.UpdateAlpha(0);
-                skillDetailsMaxCdUi.ToggleButton(false);
+                    skillDetailsHitAreauI.UpdateAlpha(0);
+                    skillDetailsHitAreauI.ToggleButton(false);
 
-                skillDetailsHitsRemaininguI.UpdateAlpha(0);
-                skillDetailsHitsRemaininguI.ToggleButton(false);
+                    skillDetailsMaxCdUi.UpdateAlpha(0);
+                    skillDetailsMaxCdUi.ToggleButton(false);
 
-                skillDetailsBaseHitsUI.UpdateAlpha(0);
-                skillDetailsBaseHitsUI.ToggleButton(false);
+                    skillDetailsHitsRemaininguI.UpdateAlpha(0);
+                    skillDetailsHitsRemaininguI.ToggleButton(false);
 
-                skillDetailsAccuracyuI.UpdateAlpha(0);
-                skillDetailsAccuracyuI.ToggleButton(false);
+                    skillDetailsBaseHitsUI.UpdateAlpha(0);
+                    skillDetailsBaseHitsUI.ToggleButton(false);
+
+                    skillDetailsAccuracyuI.UpdateAlpha(0);
+                    skillDetailsAccuracyuI.ToggleButton(false);
+                }
             }
         }
-
     }
 
     private void UpdateSelectedObjectPowerText(int power)
@@ -446,64 +503,131 @@ public class OverlayUI : MonoBehaviour
     }
 
     private void UpdateSelectedObjectHitAreaSprite(Vector2 hitArea)
-    {
-        if (hitArea == Vector2.zero)
+    {   
+        if (GameManager.Instance.isSkillsMode)
         {
-            skillDetailsHitAreauI.UpdateAlpha(0);
+            if (hitArea == Vector2.zero)
+            {
+                skillDetailsHitAreauI.UpdateAlpha(0);
+            }
+            else
+            {
+                skillDetailsHitAreauI.UpdateAlpha(1);
+
+                if (hitArea == new Vector2(1, 1))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea1x1);
+                }
+                else if (hitArea == new Vector2(1, 2))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea1x2);
+                }
+                else if (hitArea == new Vector2(1, 3))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea1x3);
+                }
+                else if (hitArea == new Vector2(2, 1))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea2x1);
+                }
+                else if (hitArea == new Vector2(3, 1))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea3x1);
+                }
+                else if (hitArea == new Vector2(2, 2))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea2x2);
+                }
+                else if (hitArea == new Vector2(2, 3))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea2x3);
+                }
+                else if (hitArea == new Vector2(3, 2))
+                {
+                    skillDetailsHitAreauI.UpdateContentImage(hitArea3x2);
+                }
+                else if (hitArea == new Vector2(3, 3))
+                {
+                    if (GameManager.Instance.GetActiveSkill())
+                    {
+                        // plus
+                        if (GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count == 5)
+                        {
+                            skillDetailsHitAreauI.UpdateContentImage(hitAreaPlus);
+                        }
+                        // 3x3
+                        else
+                        {
+                            skillDetailsHitAreauI.UpdateContentImage(hitArea3x3);
+                        }
+                    }
+                }
+            }       
         }
         else
         {
-            skillDetailsHitAreauI.UpdateAlpha(1);
-
-            if (hitArea == new Vector2(1, 1))
+            if (GameManager.Instance.GetActiveItem())
             {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea1x1);
-            }
-            else if (hitArea == new Vector2(1, 2))
-            {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea1x2);
-            }
-            else if (hitArea == new Vector2(1, 3))
-            {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea1x3);
-            }
-            else if (hitArea == new Vector2(2, 1))
-            {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea2x1);
-            }
-            else if (hitArea == new Vector2(3, 1))
-            {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea3x1);
-            }
-            else if (hitArea == new Vector2(2, 2))
-            {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea2x2);
-            }
-            else if (hitArea == new Vector2(2, 3))
-            {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea2x3);
-            }
-            else if (hitArea == new Vector2(3, 2))
-            {
-                skillDetailsHitAreauI.UpdateContentImage(hitArea3x2);
-            }
-            else if (hitArea == new Vector2(3, 3))
-            {
-                if (GameManager.Instance.GetActiveSkill())
+                if (hitArea == Vector2.zero || GameManager.Instance.GetActiveItem().curActiveType == ItemPiece.ActiveType.PASSIVE)
                 {
-                    // plus
-                    if (GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count == 5)
+                    skillDetailsHitAreauI.UpdateAlpha(0);
+                }
+                else
+                {
+                    skillDetailsHitAreauI.UpdateAlpha(1);
+
+                    if (hitArea == new Vector2(1, 1))
                     {
-                        skillDetailsHitAreauI.UpdateContentImage(hitAreaPlus);
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea1x1);
                     }
-                    // 3x3
-                    else
+                    else if (hitArea == new Vector2(1, 2))
                     {
-                        skillDetailsHitAreauI.UpdateContentImage(hitArea3x3);
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea1x2);
+                    }
+                    else if (hitArea == new Vector2(1, 3))
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea1x3);
+                    }
+                    else if (hitArea == new Vector2(2, 1))
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea2x1);
+                    }
+                    else if (hitArea == new Vector2(3, 1))
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea3x1);
+                    }
+                    else if (hitArea == new Vector2(2, 2))
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea2x2);
+                    }
+                    else if (hitArea == new Vector2(2, 3))
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea2x3);
+                    }
+                    else if (hitArea == new Vector2(3, 2))
+                    {
+                        skillDetailsHitAreauI.UpdateContentImage(hitArea3x2);
+                    }
+                    else if (hitArea == new Vector2(3, 3))
+                    {
+                        if (GameManager.Instance.GetActiveSkill())
+                        {
+                            // plus
+                            if (GameManager.Instance.GetActiveSkill().skillRangeHitAreas.Count == 5)
+                            {
+                                skillDetailsHitAreauI.UpdateContentImage(hitAreaPlus);
+                            }
+                            // 3x3
+                            else
+                            {
+                                skillDetailsHitAreauI.UpdateContentImage(hitArea3x3);
+                            }
+                        }
                     }
                 }
             }
         }
+
     }
 
     private void UpdateSkillDetailsPowerImage(Sprite sprite)

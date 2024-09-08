@@ -127,7 +127,8 @@ public class WeaponManager : MonoBehaviour
 
         GameManager.Instance.isSkillsMode = true;
 
-        ResetWeaponAccHits();
+        if (resetWeapon)
+            ResetWeaponAccHits();
 
         StartHitLine(resetWeapon);
         StartCoroutine(CalculateEnemyHitAcc());

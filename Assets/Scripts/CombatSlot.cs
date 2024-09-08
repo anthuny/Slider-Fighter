@@ -23,6 +23,7 @@ public class CombatSlot : MonoBehaviour
     [SerializeField] private UIElement bottomSelectBorder;
 
     [SerializeField] private UIElement transparentBG;
+    public ButtonFunctionality button;
     public Animator effectDisplayAnimator;
 
     private bool sizeIncreased;

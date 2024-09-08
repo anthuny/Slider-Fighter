@@ -303,6 +303,7 @@ MonoBehaviour:
   selected: 0
   allowed: 0
   linkedUnit: {fileID: 0}
+  fallenUnits: []
   animator: {fileID: 3958674738607191047}
   graphicRaycaster: {fileID: 7380630802837651345}
   rangeFromActiveUnit: 0
@@ -311,6 +312,7 @@ MonoBehaviour:
   rightSelectBorder: {fileID: 3639723694770826686}
   bottomSelectBorder: {fileID: 9036148921170269534}
   transparentBG: {fileID: 3223613746422012080}
+  button: {fileID: 2817570935199266796}
   effectDisplayAnimator: {fileID: 1211459166837437693}
   combatSelected: 0
 --- !u!114 &1091233462705775307

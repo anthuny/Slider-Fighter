@@ -386,7 +386,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 if (CombatGridManager.Instance.GetIsMovementAllowed())
                 {
                     // Button Click SFX
-                    AudioManager.Instance.Play("Button_Click");
+                    if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        AudioManager.Instance.Play("Button_Click");
 
                     if (combatSlot.GetAllowed())
                     {
@@ -412,10 +413,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             else
             {
                 // Button Click SFX
-                AudioManager.Instance.Play("Button_Click");
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    AudioManager.Instance.Play("Button_Click");
 
-                if (combatSlot.GetAllowed())
-                {
+                //if (combatSlot.GetAllowed())
+                //{
                     if (combatSlot.combatSelected)
                     {
                         // Launch attack on all combat selected slots
@@ -537,7 +539,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             // Remove current placed attack, and move it to target slot
                         }
                     }
-                }
+                //}
             }
         }
     }
@@ -1648,7 +1650,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public void ButtonCombatAttackTab()
     {
         // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            AudioManager.Instance.Play("Button_Click");
 
         CombatGridManager.Instance.isCombatMode = true;
 
@@ -1669,7 +1672,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public void ButtonCombatMovementTab()
     {
         // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            AudioManager.Instance.Play("Button_Click");
 
         CombatGridManager.Instance.isCombatMode = false;
 
@@ -1691,7 +1695,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             return;
 
         // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.isSkillsMode = false;
 
@@ -1792,6 +1797,15 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
             CombatGridManager.Instance.ToggleTabButtons("Items");
         }
+
+        if (GameManager.Instance.GetActiveItem())
+        {
+            if (GameManager.Instance.GetActiveItem().curActiveType == ItemPiece.ActiveType.PASSIVE)
+            {
+                CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
+                CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+            }
+        }
     }
 
     public void ButtonCombatSkillsTab()
@@ -1800,7 +1814,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             return;
 
         // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            AudioManager.Instance.Play("Button_Click");
 
         GameManager.Instance.isSkillsMode = true;
 
@@ -2542,6 +2557,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             isEnabled = true;
             Effect effect = GetComponent<Effect>();
+            if (unit == null)
+            {
+                unit = GetComponentInParent<UnitFunctionality>();
+            }
+
             unit.ToggleTooltipEffect(true, effect.effectName);
         }
     }

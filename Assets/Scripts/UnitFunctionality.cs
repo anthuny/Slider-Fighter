@@ -235,6 +235,8 @@ public class UnitFunctionality : MonoBehaviour
     public bool skill3OutOfRange = false;
     public bool skill4OutOfRange = false;
 
+    public bool textAlertOn = false;
+
     public void UpdateChosenSkill(SkillData skillData)
     {
         chosenSkill = skillData;
@@ -883,6 +885,12 @@ public class UnitFunctionality : MonoBehaviour
         }
     }
 
+    public int GetUnitHealthPerc()
+    {
+        float health = (GetUnitCurHealth() / GetUnitMaxHealth()) * 100f;
+
+        return (int)health;
+    }
     public void ToggleUnitHitsRemaining(bool hero = true)
     {
         if (hero)
@@ -1672,8 +1680,8 @@ public class UnitFunctionality : MonoBehaviour
         if (curUnitType == UnitType.ENEMY)
             GameManager.Instance.isSkillsMode = true;
 
-        if (wait)
-            yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
+        //if (wait)
+            //yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         ToggleUnitMoveActiveArrows(true);
         /*
@@ -1706,63 +1714,8 @@ public class UnitFunctionality : MonoBehaviour
                 }
             }
 
+            CombatGridManager.Instance.UpdateAttackSelection(this);
 
-            if (wait)
-                yield return new WaitForSeconds(GameManager.Instance.enemySkillThinkTime);
-
-            CombatGridManager.Instance.GetTargetCombatSlots().Clear();
-
-            UnitFunctionality targetedUnit = null;
-
-            for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
-            {
-                targetedUnit = GameManager.Instance.activeRoomAllUnitFunctionalitys[i];
-
-                if (GameManager.Instance.GetActiveSkill().isSelfCast && targetedUnit == this)
-                {
-                    //CombatGridManager.Instance.isCombatMode = false;
-                    CombatGridManager.Instance.GetTargetCombatSlots().Add(GetActiveCombatSlot());
-                    break;
-                }
-
-                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
-                {
-                    if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                    {
-                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                        {
-                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
-                        }
-                    }
-                    else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
-                    {
-                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY || reanimated)
-                        {
-                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
-                        }
-                    }
-                }
-                else if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.PLAYER)
-                {
-                    if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                    {
-                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.ENEMY || reanimated)
-                        {
-                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
-                        }
-                    }
-                    else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
-                    {
-                        if (targetedUnit.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                        {
-                            CombatGridManager.Instance.GetTargetCombatSlots().Add(targetedUnit.GetActiveCombatSlot());
-                        }
-                    }
-                }
-            }
-
-            CombatGridManager.Instance.GetTargetCombatSlots().Sort(CombatGridManager.Instance.CompareSlotRangeFromUnit);
-            CombatGridManager.Instance.GetTargetCombatSlots().Reverse();
 
             // If selected skill is out of range, choose another skill
             for (int i = 0; i < CombatGridManager.Instance.GetTargetCombatSlots().Count; i++)
@@ -1795,6 +1748,27 @@ public class UnitFunctionality : MonoBehaviour
                         yield break;
                     }
                 }
+            }
+
+            if (GameManager.Instance.GetActiveSkill() == GetSkill(0) && skill1OutOfRange && GetCurMovementUses() <= 0)
+            {
+                StartCoroutine(UnitEndTurn());
+                yield break;
+            }
+            else if (GameManager.Instance.GetActiveSkill() == GetSkill(1) && skill2OutOfRange && GetCurMovementUses() <= 0)
+            {
+                StartCoroutine(UnitEndTurn());
+                yield break;
+            }
+            else if (GameManager.Instance.GetActiveSkill() == GetSkill(2) && skill3OutOfRange && GetCurMovementUses() <= 0)
+            {
+                StartCoroutine(UnitEndTurn());
+                yield break;
+            }
+            else if (GameManager.Instance.GetActiveSkill() == GetSkill(3) && skill4OutOfRange && GetCurMovementUses() <= 0)
+            {
+                StartCoroutine(UnitEndTurn());
+                yield break;
             }
 
             // Select a combat slot to move to
@@ -4506,6 +4480,8 @@ public class UnitFunctionality : MonoBehaviour
 
     public void ToggleTextAlert(bool toggle)
     {
+        textAlertOn = toggle;
+
         if (toggle)
         {
             unitAlertTextParent.UpdateAlpha(1, false, 0, true);
@@ -5059,6 +5035,10 @@ public class UnitFunctionality : MonoBehaviour
         //Debug.Log(gameObject.name + " " + power);
 
         float absPower = Mathf.Abs((float)power);
+
+        // Hide skill/item name alert if unit gets healed or damaged
+        if (power > 0 && textAlertOn)
+            ToggleTextAlert(false);
 
         if (!setHealth)
         {

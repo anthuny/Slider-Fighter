@@ -113,7 +113,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 25
+  m_SortingOrder: 855
   m_TargetDisplay: 0
 --- !u!1 &1362816980198826160
 GameObject:
@@ -287,7 +287,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 305
+  m_SortingOrder: 857
   m_TargetDisplay: 0
 --- !u!114 &7837929251784568018
 MonoBehaviour:
@@ -623,7 +623,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 54
+  m_SortingOrder: 818
   m_TargetDisplay: 0
 --- !u!1 &2267610319366928589
 GameObject:
@@ -873,7 +873,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 302
+  m_SortingOrder: 857
   m_TargetDisplay: 0
 --- !u!114 &2809178118462647120
 MonoBehaviour:
@@ -965,7 +965,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 235, y: 235}
+  m_SizeDelta: {x: 286.8, y: 286.83}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8505088643546806999
 CanvasRenderer:
@@ -1039,7 +1039,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 35
+  m_SortingOrder: 890
   m_TargetDisplay: 0
 --- !u!225 &8237591816229458483
 CanvasGroup:
@@ -1116,6 +1116,7 @@ GameObject:
   - component: {fileID: 173447061637838546}
   - component: {fileID: 7027447631017853650}
   - component: {fileID: 7462556824011705603}
+  - component: {fileID: 7872128737423127248}
   m_Layer: 5
   m_Name: Item Reward
   m_TagString: Untagged
@@ -1309,6 +1310,27 @@ MonoBehaviour:
   maxSet: 0
   remove: 0
   itemRarityText: {fileID: 391446196919644236}
+--- !u!223 &7872128737423127248
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833263564001360182}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 686
+  m_TargetDisplay: 0
 --- !u!1 &4145098729051744988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,7 +1689,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 255
+  m_SortingOrder: 890
   m_TargetDisplay: 0
 --- !u!114 &1234915262210151697
 MonoBehaviour:
@@ -1845,7 +1867,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 25
+  m_SortingOrder: 856
   m_TargetDisplay: 0
 --- !u!114 &7401095136541803041
 MonoBehaviour:
@@ -2022,7 +2044,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.015625, y: -0.000022888184}
+  m_AnchoredPosition: {x: -0.015625, y: -10.224426}
   m_SizeDelta: {x: 8.86, y: 8.8263}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7380391154155696001
@@ -2082,7 +2104,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 655
   m_TargetDisplay: 0
 --- !u!114 &968320361864946060
 MonoBehaviour:
@@ -2278,7 +2300,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 22
+  m_SortingOrder: 836
   m_TargetDisplay: 0
 --- !u!1 &7959409703291760791
 GameObject:
@@ -2376,7 +2398,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 55
+  m_SortingOrder: 855
   m_TargetDisplay: 0
 --- !u!1 &8136728052688399127
 GameObject:

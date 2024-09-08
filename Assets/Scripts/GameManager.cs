@@ -1119,7 +1119,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         combatOver = false;
 
-        powerUISpawnCount = 480;
+        powerUISpawnCount = 480 ;
 
         if (!enemies)
         {
@@ -2764,8 +2764,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (item != null)
         {
+            CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
+            CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
             // Update active unit attack range
-            if (updateRange)
+            if (updateRange && item.curActiveType == ItemPiece.ActiveType.ACTIVE)
                 CombatGridManager.Instance.UpdateUnitAttackRange(GetActiveUnitFunctionality());
         }
     }
@@ -2913,6 +2916,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (unitsSelected.Count == 0)
             yield break;
+
+        ResetActiveUnitTurnArrow();
 
         // Reset each units power UI
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
@@ -3413,6 +3418,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 //}
             }
         }
+
+        UpdateActiveUnitTurnArrow();
     }
     public IEnumerator TriggerPowerUI(int power = 0, int hitCount = 0, bool miss = false, int effectHitAcc = 0)
     {
@@ -4069,6 +4076,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void UpdateMainIconDetails(SkillData skill = null, ItemPiece item = null, bool displaySkillDesc = false)
     {
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            return;
+
+        if (GetActiveSkill())
+        {
+            if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER &&
+                GetActiveSkill().curSkillTeamType == SkillData.SkillTeamType.ENEMIES)
+            {
+                return;
+            }
+        }
+
         if (item == null && skill == null)
         {
             //item.itemDesc = "";
@@ -5670,11 +5689,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // Update player skill portraits
             for (int i = 0; i < 4; i++)
             {
+                // 1st slot
                 if (i == 0)
                 {
                     for (int x = 0; x < activeTeam.Count; x++)
                     {
-                        // Main fighter
                         if (activeTeam[x].unitName == GetActiveUnitFunctionality().GetUnitName())
                         {
                             if (x == 0)
@@ -5729,6 +5748,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                     fighterMainSlot1.UpdatePassiveActiveType(false, true);
                                     fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
                                 }
+                                break;
+
                             }
                             else if (x == 1)
                             {
@@ -5782,6 +5803,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                     fighterMainSlot1.UpdatePassiveActiveType(false, true);
                                     fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
                                 }
+                                break;
+
                             }
                             else if (x == 2)
                             {
@@ -5835,17 +5858,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                     fighterMainSlot1.UpdatePassiveActiveType(false, true);
                                     fighterMainSlot1.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
                                 }
+
+                                break;
                             }
 
-                            break;
+
                         }
                     }
                 }
+
+                // 2nd slot
                 else if (i == 1)
                 {
                     for (int x = 0; x < activeTeam.Count; x++)
                     {
-                        // Second fighter
                         if (activeTeam[x].unitName == GetActiveUnitFunctionality().GetUnitName())
                         {
                             if (x == 0)
@@ -5900,6 +5926,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                     fighterMainSlot2.UpdatePassiveActiveType(false, true);
                                     fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
                                 }
+
+                                break;
                             }
                             else if (x == 1)
                             {
@@ -5910,8 +5938,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                         fighterMainSlot2.UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
 
                                         UpdateMainIconDetails(null, OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece);
-                                        fighterMainSlot1.UpdatePortrait(OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.itemSpriteCombat);
-                                        fighterMainSlot1.UpdateItemName(OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.itemName);
+                                        fighterMainSlot2.UpdatePortrait(OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.itemSpriteCombat);
+                                        fighterMainSlot2.UpdateItemName(OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece.itemName);
 
                                         ItemPiece itemPiece = OwnedLootInven.Instance.GetWornItemSecondAlly()[1].linkedItemPiece;
 
@@ -6012,11 +6040,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         }
                     }
                 }
+
+                // 3rd slot
                 else if (i == 2)
                 {
                     for (int x = 0; x < activeTeam.Count; x++)
                     {
-                        // Third fighter
                         if (activeTeam[x].unitName == GetActiveUnitFunctionality().GetUnitName())
                         {
                             if (x == 0)
@@ -6183,6 +6212,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         }
                     }
                 }
+                
+                // 4th slot
                 else if (i == 3)
                 {
                     fighterMainSlot4.UpdatePortrait(TeamItemsManager.Instance.clearSlotSprite);
@@ -6645,7 +6676,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetCalculatedItemsUsesRemaining2();
                                 fighterMainSlot1.UpdateSubText(minus, true);
 
-                                if (minus <= 0)
+                                if (minus <= 0 && 
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot1.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6663,7 +6695,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 fighterMainSlot2.UpdateSubText(minus, true);
 
 
-                                if (minus <= 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot2.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6680,7 +6713,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetCalculatedItemsUsesRemaining2();
                                 fighterMainSlot3.UpdateSubText(minus, true);
 
-                                if (minus <= 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot3.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6706,7 +6740,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = OwnedLootInven.Instance.GetWornItemSecondAlly()[x].GetCalculatedItemsUsesRemaining2();
                                 fighterMainSlot1.UpdateSubText(minus, true);
 
-                                if (minus == 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot1.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6724,7 +6759,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 fighterMainSlot2.UpdateSubText(minus, true);
 
 
-                                if (minus == 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot2.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6742,7 +6778,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 fighterMainSlot3.UpdateSubText(minus, true);
 
 
-                                if (minus == 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot3.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6768,7 +6805,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetCalculatedItemsUsesRemaining2();
                                 fighterMainSlot1.UpdateSubText(minus, true);
 
-                                if (minus == 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot1.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6786,7 +6824,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 fighterMainSlot2.UpdateSubText(minus, true);
 
 
-                                if (minus == 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot2.RemoveItemFromSlot();
                                     ResetActiveItem();
@@ -6803,7 +6842,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 int minus = OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetCalculatedItemsUsesRemaining2();
                                 fighterMainSlot3.UpdateSubText(minus, true);
 
-                                if (minus == 0)
+                                if (minus <= 0 &&
+                                    OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                                 {
                                     fighterMainSlot3.RemoveItemFromSlot();
                                     ResetActiveItem();

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
   m_Name: Word of God
   m_EditorClassIdentifier: 
+  curSkillTeamType: 1
   curSkillType: 1
   curSkillSelectionUnitType: 1
   startingSelectionUnitType: 1
@@ -31,8 +32,6 @@ MonoBehaviour:
   skillIgnoreRange: 0
   startingSkillRange: 5
   curSkillRange: 5
-  localRangeAreas: []
-  skillAttackHitAreas: []
   skillSprite: {fileID: 21300000, guid: 98c903bdadf091d4ea3ea32a71eac2bb, type: 3}
   skillName: WORD OF GOD
   skillDescr: Revive 1 Defeated ally this combat with base 10% health
