@@ -32,6 +32,7 @@ public class SkillData : ScriptableObject
     public SkillActiveType curSkillActiveType;
 
     public enum SkillSelectionType { UNITS, AREAS}
+    [Tooltip("Currently useless?")]
     public SkillSelectionType curSkillSelectionType;
 
     // Position of each slot in range of the skill, from the fighter

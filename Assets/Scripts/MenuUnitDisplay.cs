@@ -251,19 +251,19 @@ public class MenuUnitDisplay : MonoBehaviour
             {
                 if (ShopManager.Instance.playerInShopRoom)
                 {
-                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -21);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(-15f, 15f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, -65);
                 }
                 else
                 {
-                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.5f, 4.5f);
-                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, -40);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(-15f, 15f);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(0, -65);
                 }
             }
             else
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-13f, 5);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(-15f, 15f);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-13f, -25);
             }
 
             if (!fallenFighter)
@@ -422,6 +422,8 @@ public class MenuUnitDisplay : MonoBehaviour
     public void StartAttackAnim()
     {
         animator.SetBool("MoveFlg", false);
+
+        animator.SetBool("Skill1", true);
         animator.SetBool("AttackFlg", true);
 
         StartCoroutine(startAttackAnimCo());
@@ -431,5 +433,6 @@ public class MenuUnitDisplay : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         animator.SetBool("AttackFlg", false);
+        animator.SetBool("Skill1", false);
     }
 }

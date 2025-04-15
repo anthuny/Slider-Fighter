@@ -335,11 +335,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         // Face left for combat
 
+        /*
         // Make all allies face left for combat
         for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
         {
             GameManager.Instance.activeRoomHeroes[i].UpdateFacingDirection(false);
         }
+        */
 
         GameManager.Instance.UpdateAllysPositionCombat();
 
@@ -377,6 +379,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
 
         CombatSlot combatSlot = GetComponentInParent<CombatSlot>();
+
         if (combatSlot)
         {
             CombatGridManager.Instance.ResetAllowedSlotAnims();
@@ -416,15 +419,23 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
                     AudioManager.Instance.Play("Button_Click");
 
+                // If this combat slot is further x axis then the active unit, face the active unit right, otherwise left
+                //if (combatSlot.GetLocalIndexFromSlot(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()).x > 0)
+                //    GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitLookDirection(false);
+               // else if (combatSlot.GetLocalIndexFromSlot(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()).x < 0)
+                //    GameManager.Instance.GetActiveUnitFunctionality().UpdateUnitLookDirection(true);
+
                 //if (combatSlot.GetAllowed())
                 //{
-                    if (combatSlot.combatSelected)
+                if (combatSlot.combatSelected)
+                {
+                    // Launch attack on all combat selected slots
+
+                    UnitFunctionality selectedUnit = null;
+
+                    if (combatSlot.GetLinkedUnit())
                     {
-                        // Launch attack on all combat selected slots
-
-                        UnitFunctionality selectedUnit = null;
-
-                        if (combatSlot.GetLinkedUnit())
+                        if (GameManager.Instance.isSkillsMode)
                         {
                             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE &&
                                 GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.ENEMIES &&
@@ -433,11 +444,25 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                 if (combatSlot.GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
                                     return;
                             }
-                            else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT &&
-                                GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.PLAYERS &&
-                                GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE &&
+                                    GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.PLAYERS &&
+                                    GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
                             {
                                 if (combatSlot.GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                    return;
+                            }
+                            else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT &&
+                                    GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.PLAYERS &&
+                                    GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                            {
+                                if (combatSlot.GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                                    return;
+                            }
+                            else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT &&
+                                    GameManager.Instance.GetActiveSkill().curSkillSelectionUnitType == SkillData.SkillSelectionUnitType.PLAYERS &&
+                                    GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                            {
+                                if (combatSlot.GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.PLAYER)
                                     return;
                             }
                             else if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT &&
@@ -448,97 +473,183 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                     return;
                             }
                         }
+                    }
 
-                        if (combatSlot.GetLinkedUnit())
-                            selectedUnit = combatSlot.GetLinkedUnit();
-                        else if (combatSlot.GetFallenUnits().Count > 0 &&
-                                GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
-                        {
-                            if (combatSlot.GetFallenUnits().Count > 0)
-                                selectedUnit = combatSlot.GetFallenUnits()[0];
-                        }
+                    if (combatSlot.GetLinkedUnit())
+                        selectedUnit = combatSlot.GetLinkedUnit();
+                    else if (combatSlot.GetFallenUnits().Count > 0 &&
+                            GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                    {
+                        if (combatSlot.GetFallenUnits().Count > 0)
+                            selectedUnit = combatSlot.GetFallenUnits()[0];
+                    }
 
-                        if (!GameManager.Instance.GetActiveSkill().attackAllSelected)
+                    if (!GameManager.Instance.GetActiveSkill().attackAllSelected)
+                    {
+                        if (selectedUnit || combatSlot.GetFallenUnits().Count > 0 && 
+                            GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
                         {
-                            if (selectedUnit || combatSlot.GetFallenUnits().Count > 0 && 
-                                GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
+                            if (!selectedUnit.IsSelected())
                             {
-                                if (!selectedUnit.IsSelected())
-                                {
-                                    selectedUnit.ToggleSelected(true);
+                                selectedUnit.ToggleSelected(true);
 
-                                    CombatGridManager.Instance.done = true;
+                                CombatGridManager.Instance.done = true;
 
-                                    GameManager.Instance.targetUnit(selectedUnit);
-                                }
-                                else
-                                {
-                                    selectedUnit.ToggleSelected(true);
-
-                                    CombatGridManager.Instance.done = true;
-
-                                    GameManager.Instance.targetUnit(selectedUnit, true);
-                                }
+                                GameManager.Instance.targetUnit(selectedUnit);
                             }
                             else
                             {
-                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
-                                CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                                selectedUnit.ToggleSelected(true);
+
+                                CombatGridManager.Instance.done = true;
+
+                                GameManager.Instance.targetUnit(selectedUnit, true);
                             }
                         }
                         else
                         {
-                            if (selectedUnit)
-                            {
-                                // add all units ontop of a combat selected slot to units selected.
-                                //combatSlot.GetLinkedUnit().ToggleSelected(true);
+                            CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                            //CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                            GameManager.Instance.GetActiveUnitFunctionality().hasAttacked = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill1OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill2OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill3OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill4OutOfRange = false;
 
-                                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
-                                {
-                                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetActiveCombatSlot().combatSelected)
-                                    {
-                                        GameManager.Instance.activeRoomAllUnitFunctionalitys[i].ToggleSelected(true);
-
-                                        CombatGridManager.Instance.done = true;
-                                        GameManager.Instance.targetUnit(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
-                                    }
-                                }
-
-                                if (selectedUnit)
-                                {
-                                    if (selectedUnit.IsSelected())
-                                        GameManager.Instance.targetUnit(selectedUnit, true);
-                                }
-                            }
-                            else
-                            {
-                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
-                                CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
-                            }
+                            StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().StartUnitTurn(false));
                         }
                     }
                     else
                     {
-                        // If attack area of skill is 1x1, replace other combat selected slot with this one
-                        if (GameManager.Instance.GetActiveSkill().skillAreaHitCount == 1)
+                        if (selectedUnit)
                         {
-                            CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
-                            //combatSlot.ToggleCombatSelected(true);
+                            // add all units ontop of a combat selected slot to units selected.
+                            //combatSlot.GetLinkedUnit().ToggleSelected(true);
 
-                            GameManager.Instance.ResetSelectedUnits();
-                            if (combatSlot.GetLinkedUnit())
+                            for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
                             {
-                                GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
-                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetActiveCombatSlot().combatSelected)
+                                {
+                                    GameManager.Instance.activeRoomAllUnitFunctionalitys[i].ToggleSelected(true);
 
+                                    CombatGridManager.Instance.done = true;
+                                    GameManager.Instance.targetUnit(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
+                                }
                             }
 
-
+                            if (selectedUnit)
+                            {
+                                if (selectedUnit.IsSelected())
+                                    GameManager.Instance.targetUnit(selectedUnit, true);
+                            }
+                        }
+                        else
+                        {
                             CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
-                            CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
-                            // Remove current placed attack, and move it to target slot
+                            //CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                            GameManager.Instance.GetActiveUnitFunctionality().hasAttacked = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill1OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill2OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill3OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill4OutOfRange = false;
+
+                            StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().StartUnitTurn(false));
                         }
                     }
+                }
+                else
+                {
+                    // If attack area of skill is 1x1, replace other combat selected slot with this one
+                    if (GameManager.Instance.GetActiveSkill().skillAreaHitCount == 1)
+                    {
+                        CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                        //combatSlot.ToggleCombatSelected(true);
+
+                        GameManager.Instance.ResetSelectedUnits();
+                        if (combatSlot.GetLinkedUnit())
+                        {
+                            GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
+                            combatSlot.GetLinkedUnit().ToggleSelected(true);
+
+                        }
+
+
+                        CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+
+                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        {
+                            GameManager.Instance.GetActiveUnitFunctionality().hasAttacked = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill1OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill2OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill3OutOfRange = false;
+                            GameManager.Instance.GetActiveUnitFunctionality().skill4OutOfRange = false;
+
+                            StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().StartUnitTurn(true));
+                        }
+                        else
+                        {
+                            CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                        }
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                        {
+                            if (combatSlot.GetLinkedUnit())
+                            {
+                                /*
+                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+
+                                GameManager.Instance.ResetSelectedUnits();
+                                if (combatSlot.GetLinkedUnit())
+                                {
+                                    GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
+                                    combatSlot.GetLinkedUnit().ToggleSelected(true);
+
+                                }
+
+                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                                GameManager.Instance.ResetSelectedUnits();
+
+                                GameManager.Instance.GetActiveUnitFunctionality().hasAttacked = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill1OutOfRange = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill2OutOfRange = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill3OutOfRange = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill4OutOfRange = false;
+                                */
+
+                                if (combatSlot.GetLinkedUnit().isSelected)
+                                    GameManager.Instance.targetUnit(combatSlot.GetLinkedUnit(), true);
+                                //StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().UnitEndTurn(true));
+                                //CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                            }
+                            else if (!combatSlot.GetLinkedUnit())
+                            {
+                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+
+                                GameManager.Instance.ResetSelectedUnits();
+                                if (combatSlot.GetLinkedUnit())
+                                {
+                                    GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
+                                    combatSlot.GetLinkedUnit().ToggleSelected(true);
+
+                                }
+
+                                CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
+                                GameManager.Instance.ResetSelectedUnits();
+
+                                GameManager.Instance.GetActiveUnitFunctionality().hasAttacked = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill1OutOfRange = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill2OutOfRange = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill3OutOfRange = false;
+                                GameManager.Instance.GetActiveUnitFunctionality().skill4OutOfRange = false;
+
+                                StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().StartUnitTurn(false));
+                            }
+
+                        }
+                    }
+                }
                 //}
             }
         }
@@ -2628,8 +2739,18 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
         else if (!CombatGridManager.Instance.isCombatMode || !GameManager.Instance.GetAllowSelection())
             return;
+        
+        // If player's turn, and unit is selected, attempt to select the tile too
+        if (GameManager.Instance.playerInCombat && GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
+            if (unit.GetActiveCombatSlot())
+            {
+                unit.GetActiveCombatSlot().GetComponentInChildren<ButtonFunctionality>().ButtonSelectCombatSlot();
+            }
+        }
 
-        StartCoroutine(SelectUnitCo());
+        if (!GameManager.Instance.playerInCombat)
+            StartCoroutine(SelectUnitCo());
     }
 
     IEnumerator SelectUnitCo()
@@ -2677,7 +2798,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         if (!ShopManager.Instance.playerInShopRoom)
                             GetComponentInParent<UnitFunctionality>().ToggleTooltipStats(false);
 
-                        unitIsSelected = true;
+
 
                         if (GameManager.Instance.playerInCombat && !PostBattle.Instance.isInPostBattle || HeroRoomManager.Instance.playerInHeroRoomView)
                         {
@@ -2686,6 +2807,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                                 GameManager.Instance.targetUnit(unit, true);
                             }
                         }
+
+                        unitIsSelected = true;
                     }
                 }
             }

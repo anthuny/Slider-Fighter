@@ -23,7 +23,7 @@ public class HitAreaManager : MonoBehaviour
             float rand = Random.Range(selectedRange.minFloat, selectedRange.maxFloat);
             RectTransform rt = hitAreasTrans.GetComponent<RectTransform>();
             //rt.localPosition = new Vector3(rt.position.x, rand, 0);
-            rt.localPosition = new Vector3(0, rt.localPosition.y, rt.position.z);
+            rt.localPosition = new Vector3(0, rand, rt.position.z);
             //rt2 = bgHitAreaTrans.GetComponent<RectTransform>();
 
             if (bgHitAreaTrans != null)

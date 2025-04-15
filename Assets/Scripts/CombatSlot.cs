@@ -162,9 +162,11 @@ public class CombatSlot : MonoBehaviour
     {
         if (GetLinkedUnit())
         {
-            if (destroy)
+            if (destroy && GetLinkedUnit().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            {
                 Destroy(GetLinkedUnit().gameObject);
-            UpdateLinkedUnit(null);
+                UpdateLinkedUnit(null);
+            }
         }
         for (int i = 0; i < fallenUnits.Count; i++)
         {

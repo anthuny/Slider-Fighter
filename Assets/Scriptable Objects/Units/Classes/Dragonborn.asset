@@ -36,9 +36,10 @@ MonoBehaviour:
   basicSelectionCount: 1
   characterPrefab: {fileID: 1415871230302792947, guid: 1b2438fd098439146b8d1cf32d749a34, type: 3}
   curSkills:
-  - {fileID: 11400000, guid: 110642bc0902ebf44892a185f20fbc4c, type: 2}
-  - {fileID: 11400000, guid: a9a2ac2173ce53e41b34392ad23f6f59, type: 2}
-  - {fileID: 11400000, guid: 77174f49403a53844b4e8a503b5e276b, type: 2}
-  - {fileID: 11400000, guid: fd0fee01d33c9554898856f5f3cac161, type: 2}
+  - {fileID: 11400000, guid: 7a85716a6355a0c4aa5bf53024d63bde, type: 2}
+  - {fileID: 11400000, guid: d42f688159138e44cbc3eb2554527c30, type: 2}
+  - {fileID: 11400000, guid: 2a6a9fd28a190d1468e26bed4808d81c, type: 2}
+  - {fileID: 11400000, guid: 646e298ddd0c66747a358720fefa036c, type: 2}
   deathClip: {fileID: 8300000, guid: 4cdeeffb3199bdb48a83ec8d89745346, type: 3}
   hitRecievedClip: {fileID: 8300000, guid: c4b4c41654ac0c14ab233c550191ad2d, type: 3}
+  flipVisualsX: 1

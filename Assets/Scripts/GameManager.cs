@@ -1923,7 +1923,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             playerLost = false;
 
-            CombatGridManager.Instance.ResetCombatSlots(false);
+            CombatGridManager.Instance.ResetCombatSlots(true);
         }
         // If player LOST, reset game
         else
@@ -1976,7 +1976,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         ToggleUIElement(playerAbilities, true);
         ToggleUIElement(fighterSelectedMainSlotDesc, true);
 
-        if (!combatOver)
+        if (!combatOver && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             ToggleEndTurnButton(true, true);
 
         UpdateUnitsSelectedText();
@@ -2542,8 +2542,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     // Hide level up text
                     activeRoomAllUnitFunctionalitys[x].ToggleTextAlert(false);
-                    
+
                     //activeRoomAllies[i].ToggleActionNextBar(true);
+                    if (activeRoomAllUnitFunctionalitys[x].GetUnitName() == "Dragonborn")
+                        activeRoomAllUnitFunctionalitys[x].UpdateUnitLookDirection(false);
                 }
                 // If unit in room is an ENEMY
                 else
@@ -2929,13 +2931,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         UnitFunctionality castingUnit = GetActiveUnitFunctionality();
 
+        // Play skill animation
+        GetActiveUnitFunctionality().PlaySkillAnimation(GetActiveSkill().originalIndex);
+
         if (GetActiveSkill().curRangedType == SkillData.SkillRangedType.RANGED)
         {
-            if (GetActiveSkill().curAnimType == SkillData.SkillAnimType.SKILL)
-                GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
-            else
-                GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
-
             // Display active unit hits remaining text, Update hits remaining text
             GetActiveUnitFunctionality().ToggleHitsRemainingText(true);
             if (power == 0)
@@ -3013,11 +3013,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
-            if (GetActiveSkill().curAnimType == SkillData.SkillAnimType.SKILL)
-                GetActiveUnitFunctionality().GetAnimator().SetTrigger("SkillFlg");
-            else
-                GetActiveUnitFunctionality().GetAnimator().SetTrigger("AttackFlg");
-
             // Display active unit hits remaining text, Update hits remaining text
             GetActiveUnitFunctionality().ToggleHitsRemainingText(true);
             if (power == 0)
@@ -3125,7 +3120,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                     if (unit)
                     {
-                        if (unit.IsSelected())
+                        if (unitsSelected.Contains(unit))
                         {
                             // If active skill doubles current effects, do it
                             if (GetActiveSkill().isDoublingEffect)
@@ -3222,7 +3217,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 if (!miss && unit)
                 {
-                    if (unit.IsSelected())
+                    if (unitsSelected.Contains(unit))
                     {
                         // If skill targets dead targets, do so
                         if (GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
@@ -3262,7 +3257,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 if (unit)
                 {
-                    if (unit.IsSelected())
+                    if (unitsSelected.Contains(unit))
                     {
                         // If skill removes random effects, do so
                         if (activeSkill.isCleansingEffectRandom)
@@ -3290,6 +3285,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
 
         // Perform Damage / Heal
+
         StartCoroutine(TriggerPowerUI(power, hitCount, miss, effectHitAcc));
 
 
@@ -3546,10 +3542,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     newPower = 0;
                                 }
-                                unit.UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
-                                //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+                                if (unitsSelected.Contains(unit))
+                                {
+                                    unit.UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
+                                    //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
 
-                                CheckAttackForItem(unit, GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                                    CheckAttackForItem(unit, GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                                }
                             }
                             else if (GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
                             {
@@ -3560,8 +3559,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                     orderCount--;
                                 }
 
-                                float finalHealingPower = newHealingPower * unit.curHealingRecieved;
-                                unit.UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
+                                if (unitsSelected.Contains(unit))
+                                {
+                                    float finalHealingPower = newHealingPower * unit.curHealingRecieved;
+                                    unit.UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
+                                }
                             }
                         }
                         // Items
@@ -3580,10 +3582,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 {
                                     newPower = 0;
                                 }
-                                unit.UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
-                                //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
 
-                                CheckAttackForItem(unit, GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                                if (unitsSelected.Contains(unit))
+                                {
+                                    unit.UpdateUnitCurHealth((int)newPower, true, false, true, true, false);
+                                    //unitsSelected[i].StartCoroutine(unitsSelected[i].SpawnPowerUI((int)newPower, false, true, null, blocked));
+
+                                    CheckAttackForItem(unit, GetActiveUnitFunctionality(), (int)newPower, x, orderCount);
+                                }
+
                             }
                             else if (GetActiveItem().curItemType == ItemPiece.ItemType.SUPPORT)
                             {
@@ -3594,36 +3601,41 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                     orderCount--;
                                 }
 
-                                float finalHealingPower = newHealingPower * unit.curHealingRecieved;
-                                unit.UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
+                                if (unitsSelected.Contains(unit))
+                                {
+                                    float finalHealingPower = newHealingPower * unit.curHealingRecieved;
+                                    unit.UpdateUnitCurHealth((int)finalHealingPower, false, false, true, true, false);
+                                }
                             }
                         }
 
                         if (GetActiveSkill())
                         {
-                            if (isSkillsMode)
+                            if (unitsSelected.Contains(unit))
                             {
-                                // If active skill has an effect AND it's not a self cast, apply it to selected targets
-                                if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
+                                if (isSkillsMode)
                                 {
-                                    if (isSkillsMode)
-                                        unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, effectHitAcc, false, false, false);
-                                    else
-
-
-                                    if (isSkillsMode && GetActiveSkill().effect2 != null)
+                                    // If active skill has an effect AND it's not a self cast, apply it to selected targets
+                                    if (GetActiveSkill().effect != null && !GetActiveSkill().isSelfCast && !miss)
                                     {
-                                        if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
-                                            unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                        if (isSkillsMode)
+                                            unit.AddUnitEffect(GetActiveSkill().effect, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                        else
+
+
+                                        if (isSkillsMode && GetActiveSkill().effect2 != null)
+                                        {
+                                            if (GetActiveSkill().effect2.curEffectName != EffectData.EffectName.OTHER_LINK)
+                                                unit.AddUnitEffect(GetActiveSkill().effect2, unit, effectHitAcc, effectHitAcc, false, false, false);
+                                        }
                                     }
                                 }
-                            }
-                            else
-                            {
-                                unit.AddUnitEffect(GetActiveItem().effectAdded, unit, effectHitAcc, effectHitAcc, true, false, true, GetActiveItemSlot().linkedSlot);
+                                else
+                                {
+                                    unit.AddUnitEffect(GetActiveItem().effectAdded, unit, effectHitAcc, effectHitAcc, true, false, true, GetActiveItemSlot().linkedSlot);
+                                }
                             }
                         }
-
                     }
 
 

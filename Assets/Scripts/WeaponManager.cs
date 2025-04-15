@@ -378,6 +378,22 @@ public class WeaponManager : MonoBehaviour
                 hitsAccumulatedText = heroWeapons[i].hitsAccumulatedText;
                 break;
             }
+            else if (heroWeapons[i].ownedUnitName == "Dragonborn" && unitName == "Dragonborn")
+            {
+                heroWeapons[i].gameObject.SetActive(true);
+
+                hitLine = heroWeapons[i].hitLine;
+                topBarBorder = heroWeapons[i].topBarBorder;
+                botBarBorder = heroWeapons[i].botBarBorder;
+                weaponHitAreas = heroWeapons[i].weaponHitAreas;
+                hitAlertText = heroWeapons[i].hitAlertText;
+                weaponUI = heroWeapons[i].weaponUI;
+                weaponLineSpeed = heroWeapons[i].lineSpeed;
+                hitAreaManager = heroWeapons[i].hitAreaManager;
+                hitsRemainingText = heroWeapons[i].hitsRemainingText;
+                hitsAccumulatedText = heroWeapons[i].hitsAccumulatedText;
+                break;
+            }
         }
     }
 

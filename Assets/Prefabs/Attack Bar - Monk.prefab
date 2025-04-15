@@ -521,6 +521,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &8541155251771568828
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -989,7 +990,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -12, y: 55}
+  m_AnchoredPosition: {x: -12, y: -295}
   m_SizeDelta: {x: 147.2, y: 595}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &733080833606148921
@@ -2259,6 +2260,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &7869587631634844730
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2611,6 +2613,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &6525502566018978824
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4057,6 +4060,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &2287671168218275964
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4410,6 +4414,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &1605138127865449668
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5366,6 +5371,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &7188140245009305313
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6111,6 +6117,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &432433563744257097
 CanvasGroup:
   m_ObjectHideFlags: 0

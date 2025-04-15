@@ -225,6 +225,7 @@ public class UnitFunctionality : MonoBehaviour
 
     [SerializeField] private UIElement unitButton;
     public bool usedExtraMove;
+    public bool hasTransformed = false;
 
     [SerializeField] private SkillData chosenSkill;
 
@@ -247,23 +248,19 @@ public class UnitFunctionality : MonoBehaviour
         return chosenSkill;
     }
 
-    public void UpdateUnitLookDirection(bool forceDirection = false, bool right = false)
-    {
-        if (!forceDirection)
-        {
-            // Update unit look direction
-            if (GetActiveCombatSlot().GetSlotIndex().x > 2)
-                ToggleUnitVisualsXAxis(true);
-            else if (GetActiveCombatSlot().GetSlotIndex().x < 2)
-                ToggleUnitVisualsXAxis(false);
-        }
-
-        if (forceDirection)
+    public void UpdateUnitLookDirection(bool right = false)
+    {     
+        if (right)
+            ToggleUnitVisualsXAxis(true);
+        else
+            ToggleUnitVisualsXAxis(false);  
+        
+        if (GetUnitName() == "Dragonborn")
         {
             if (right)
-                ToggleUnitVisualsXAxis(true);
-            else
                 ToggleUnitVisualsXAxis(false);
+            else
+                ToggleUnitVisualsXAxis(true);
         }
     }
     public void ToggleUnitVisualsXAxis(bool toggle = true)
@@ -1268,7 +1265,25 @@ public class UnitFunctionality : MonoBehaviour
 
     private void Update()
     {
-        // If player is holding down on unit, display stats
+        /*
+        if (GetUnitName() == "Dragonborn")
+        {
+            float x = characterAnimation.GetComponentInChildren<RectTransform>().localScale.x;
+
+            if (characterAnimation.transform.GetChild(0).localScale.y <= 0)
+            {
+                if (x > 0)
+                {
+                    characterAnimation.transform.GetChild(0).transform.GetComponent<RectTransform>().localScale = new Vector3(10.6f, 10.6f, 1);
+                }
+                else
+                {
+                    characterAnimation.transform.GetChild(0).transform.GetComponent<RectTransform>().localScale = new Vector3(-10.6f, 10.6f, 1);
+                }
+
+            }
+        }
+        */
     }
 
     public void ResetUnitSkillOrder()
@@ -1379,14 +1394,6 @@ public class UnitFunctionality : MonoBehaviour
     public LastOpenedMastery GetLastOpenedMastery()
     {
         return lastOpenedStatPage;
-    }
-
-    public void UpdateFacingDirection(bool right = true)
-    {
-        if (right)
-            unitVisuals.transform.localScale = new Vector3(-1, unitVisuals.transform.localScale.y);
-        else
-            unitVisuals.transform.localScale = new Vector3(1, unitVisuals.transform.localScale.y);
     }
 
     public void UpdateIsVisible(bool toggle)
@@ -1585,6 +1592,59 @@ public class UnitFunctionality : MonoBehaviour
     {
         return animator;
     }
+
+    public void PlaySkillAnimation(int skillIndex = 0)
+    {
+        if (GetUnitName() != "Dragonborn")
+        {
+            if (skillIndex == 0)
+                GetAnimator().SetTrigger("AttackFlg");
+            else
+                GetAnimator().SetTrigger("SkillFlg");
+        }
+        else
+        {
+            if (!hasTransformed)
+            {
+                if (skillIndex == 0)
+                {
+                    GetAnimator().SetTrigger("Skill1");
+                }
+                else if (skillIndex == 1)
+                {
+                    GetAnimator().SetTrigger("Skill2");
+                }
+                else if (skillIndex == 2)
+                {
+                    GetAnimator().SetTrigger("Skill3");
+                }
+                else if (skillIndex == 3)
+                {
+                    GetAnimator().SetTrigger("Skill4");
+                }
+            }
+            else
+            {
+                if (skillIndex == 0)
+                {
+                    GetAnimator().SetTrigger("AltSkill1");
+                }
+                else if (skillIndex == 1)
+                {
+                    GetAnimator().SetTrigger("AltSkill2");
+                }
+                else if (skillIndex == 2)
+                {
+                    GetAnimator().SetTrigger("AltSkill3");
+                }
+                else if (skillIndex == 3)
+                {
+                    GetAnimator().SetTrigger("AltSkill4");
+                }
+            }
+        }
+    }
+
     public void UpdateEffectVisualAnimator(RuntimeAnimatorController ac)
     {
         effectDisplayAnimator.runtimeAnimatorController = ac;
@@ -1680,8 +1740,8 @@ public class UnitFunctionality : MonoBehaviour
         if (curUnitType == UnitType.ENEMY)
             GameManager.Instance.isSkillsMode = true;
 
-        //if (wait)
-            //yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
+        if (wait)
+            yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         ToggleUnitMoveActiveArrows(true);
         /*

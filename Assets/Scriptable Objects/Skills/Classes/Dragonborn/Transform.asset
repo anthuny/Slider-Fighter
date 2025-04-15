@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30099391c1373994b9220db2a047a825, type: 3}
+  m_Name: Transform
+  m_EditorClassIdentifier: 
+  curSkillTeamType: 1
+  curSkillType: 1
+  curSkillSelectionUnitType: 0
+  startingSelectionUnitType: 0
+  curskillSelectionAliveType: 0
+  curRangedType: 1
+  curAnimType: 1
+  curSkillEffectType: 0
+  curSkillActiveType: 0
+  curSkillSelectionType: 1
+  skillRangeHitArea: {x: 1, y: 1}
+  skillRangeHitAreas:
+  - {x: 0, y: 0}
+  skillAreaHitCount: 1
+  attackAllSelected: 0
+  attackAllUnits: 0
+  canTargetSelf: 0
+  skillIgnoreRange: 0
+  startingSkillRange: 1
+  curSkillRange: 1
+  skillSprite: {fileID: 21300000, guid: 4db6320881f488d42ba3a7b6dd87af41, type: 3}
+  skillName: TRANSFORM
+  skillDescr: Transform into dragon form, changing 3 skills and base stats. Deal
+    damage to foes in a 2 radius from self. Knocking back enemies 1 tile. Heal 20%
+    health
+  skillTabDescr: Transform into dragon form, changing 3 skills and base stats. Deal
+    damage to foes in a 2 radius from self. Knocking back enemies 1 tile. Heal 20%
+    health
+  startingSkillLevel: 0
+  curSkillLevel: 0
+  pointsAdded: 0
+  startingSkillPower: 0
+  curSkillPower: 0
+  skillAttackAccMult: 1
+  skillBaseHitOutput: 0
+  skillHitAttempts: 1
+  projectileSpeed: 0
+  skillCooldown: 2
+  curCooldown: 0
+  skillSelectionCount: 1
+  isSelfCast: 0
+  isSpecial: 0
+  isDoublingEffect: 0
+  isLeaching: 0
+  isPassive: 0
+  isBonusFromTargetAmount: 0
+  isHealingFromResult: 0
+  isLongerSkillAnim: 0
+  healPowerAmount: 0
+  isReviving: 0
+  isMindControlling: 0
+  isCleansingEffect: 0
+  curSkillToCleanse: 0
+  isCleansingEffectRandom: 0
+  cleanseCount: 0
+  special: 0
+  effect: {fileID: 0}
+  effect2: {fileID: 0}
+  effectTurnLength: 1
+  curEffectHitChance: 50
+  startingEffectHitChance: 50
+  baseEffectApplyCount: 0
+  curSkillExtraPowerToEffect: 0
+  percIncPower: 0
+  upgradeIncTargetCount: 0
+  upgradeIncHitsCount: 0
+  upgradeIncPowerCount: 0
+  skillPowerIcon: {fileID: 21300000, guid: af50dc4fa7b6d314895d0f8c79adb4a5, type: 3}
+  skillProjectile: {fileID: 21300000, guid: 6cc2162633098074c9742da95a2508df, type: 3}
+  projectileAllowSpin: 0
+  projectileAllowIdle: 0
+  projectileAllowRandPosSpawn: 1
+  projectileAllowRandRotSpawn: 0
+  projectileAC: {fileID: 0}
+  targetEffectVisualAC: {fileID: 0}
+  skillLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  repeatLaunchSFX: 0
+  giveExtraDesc: 0
+  projectileLaunch: {fileID: 8300000, guid: 94f246ed068d57d4b8c82dc33a15b8ea, type: 3}
+  skillHit: {fileID: 8300000, guid: 128e358d37b60b346a094c6589c63450, type: 3}
+  skillHitAdditional: {fileID: 0}
+  originalIndex: 1
+  reanimated: 0
