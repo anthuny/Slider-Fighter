@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: 
   curUnitType: 0
+  curRaceType: 0
+  curUnitBehaviour: 0
   unitValue: 2
   unitSprite: {fileID: 21300000, guid: 34d9e4090ee8996408dba62e1ccdd554, type: 2}
   unitIcon: {fileID: 21300000, guid: 325b656c97439ea479d694a14f60ff03, type: 3}
@@ -22,7 +24,7 @@ MonoBehaviour:
   startingDefense: 5
   startingPower: 35
   startingHealingPower: 0
-  startingMaxHealth: 750
+  startingMaxHealth: 1050
   speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 2

@@ -21,6 +21,7 @@ MonoBehaviour:
   curAnimType: 1
   curSkillEffectType: 1
   curSkillActiveType: 0
+  curClassType: 0
   curSkillSelectionType: 0
   skillRangeHitArea: {x: 3, y: 3}
   skillRangeHitAreas:
@@ -38,8 +39,8 @@ MonoBehaviour:
   attackAllUnits: 1
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 5
-  curSkillRange: 5
+  startingSkillRange: 3
+  curSkillRange: 3
   skillSprite: {fileID: 21300000, guid: 727f85ff365f3ad46a96b4e104930a08, type: 3}
   skillName: DARK MAGNUS
   skillDescr: 'Target 3x3 area, apply effect Reaping. Heal the lowest health ally

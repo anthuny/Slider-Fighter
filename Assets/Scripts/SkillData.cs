@@ -31,6 +31,9 @@ public class SkillData : ScriptableObject
     public enum SkillActiveType { ACTIVE, PASSIVE }
     public SkillActiveType curSkillActiveType;
 
+    public enum ClassType { STANDARD, AGGRESSIVE, EVASIVE }
+    public ClassType curClassType;
+
     public enum SkillSelectionType { UNITS, AREAS}
     [Tooltip("Currently useless?")]
     public SkillSelectionType curSkillSelectionType;

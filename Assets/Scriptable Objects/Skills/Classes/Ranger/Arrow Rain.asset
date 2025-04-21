@@ -21,6 +21,7 @@ MonoBehaviour:
   curAnimType: 1
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curClassType: 0
   curSkillSelectionType: 1
   skillRangeHitArea: {x: 3, y: 2}
   skillRangeHitAreas:
@@ -35,8 +36,8 @@ MonoBehaviour:
   attackAllUnits: 0
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 5
-  curSkillRange: 5
+  startingSkillRange: 3
+  curSkillRange: 3
   skillSprite: {fileID: 21300000, guid: dda72c994f8f49746b3599079b67596a, type: 3}
   skillName: ARROW RAIN
   skillDescr: Target 3x2 area, dealing damage.

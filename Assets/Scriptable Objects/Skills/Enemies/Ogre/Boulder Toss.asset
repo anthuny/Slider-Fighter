@@ -21,6 +21,7 @@ MonoBehaviour:
   curAnimType: 1
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curClassType: 1
   curSkillSelectionType: 0
   skillRangeHitArea: {x: 2, y: 2}
   skillRangeHitAreas:

@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
 
     public GameObject fighterCarasel;
-    public Canvas mainCamCanvas; 
+    public Canvas mainCamCanvas;
     public Sprite humanRaceIcon;
     public Sprite beastRaceIcon;
     public Sprite etherealRaceIcon;
@@ -659,12 +659,12 @@ public class GameManager : MonoBehaviour
                             //spawnedUnitLevel -= (Random.Range(2,4) * RoomManager.Instance.GetFloorCount()) + (2 * RoomManager.Instance.GetFloorCount());
                             //Debug.Log("spawnedUnitLevel = " + spawnedUnitLevel);
                             //unitFunct.UpdateUnitLevel(spawnedUnitLevel, 0, true);
-                            float newExpStarting = (maxExpStarting * spawnedUnitLevel) + Random.Range(0, maxExpStarting/2f);
+                            float newExpStarting = (maxExpStarting * spawnedUnitLevel) + Random.Range(0, maxExpStarting / 2f);
 
                             unitFunct.UpdateUnitExp((int)newExpStarting);
 
                             //Debug.Log("unit max xp " + maxExpStarting);
-                            
+
                             SkillsTabManager.Instance.ResetAllySkllls(unitFunct);
 
                             unitFunct.UpdateFighterPosition();
@@ -696,7 +696,7 @@ public class GameManager : MonoBehaviour
 
                 UIElement unitUI = go.GetComponent<UIElement>();
 
-                HeroRoomManager.Instance.UpdateHero(unitUI);        
+                HeroRoomManager.Instance.UpdateHero(unitUI);
 
                 // Set ally correct position based on team size
                 if (!spawnFighterAlly)
@@ -743,12 +743,12 @@ public class GameManager : MonoBehaviour
                 {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
                     unitFunctionality.UpdateFighterRaceIcon("HUMAN");
-                }                
+                }
                 else if (unit.curRaceType == UnitData.RaceType.BEAST)
                 {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.BEAST;
                     unitFunctionality.UpdateFighterRaceIcon("BEAST");
-                }                   
+                }
                 else if (unit.curRaceType == UnitData.RaceType.ETHEREAL)
                 {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.ETHEREAL;
@@ -816,7 +816,7 @@ public class GameManager : MonoBehaviour
                         unitFunctionality.UpdateActiveCombatSlot(CombatGridManager.Instance.GetFighterSpawnCombatSlot(1));
                         CombatGridManager.Instance.GetFighterSpawnCombatSlot(1).UpdateLinkedUnit(unitFunctionality);
                     }
-  
+
                     if (activeRoomHeroes.Count == 2)
                     {
                         unitFunctionality.SetPositionAndParent(CombatGridManager.Instance.GetFighterSpawnCombatSlot(2).transform);
@@ -862,20 +862,20 @@ public class GameManager : MonoBehaviour
 
                 //SkillsTabChangeAlly(true);
                 //SkillsTabChangeAlly(false, true);
-                
+
                 if (spawnFighterAlly)
                 {
                     unitFunctionality.ToggleUnitBottomStats(false);
                 }
-                
-                
+
+
                 // If spawn hero ally from hero room, only spawn 1 ally
                 if (spawnFighterAlly)
                     break;
             }
 
 
-        }     
+        }
     }
 
 
@@ -1018,7 +1018,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 SkillsTabManager.Instance.UpdateActiveUnit(GetActiveAlly());
 
             oldActiveRoomAllUnitFunctionalitys = activeRoomAllUnitFunctionalitys;
-            
+
             SkillsTabManager.Instance.UpdateAllyNameText();
 
             SkillsTabManager.Instance.UpdateStatPage();
@@ -1046,7 +1046,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     }
 
     public void UpdateAllyVisibility(bool toggle, bool teamPage = false, bool shop = false)
-    {   
+    {
         //  If enabling
         if (toggle)
         {
@@ -1107,7 +1107,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 if (!toggle)
                     //Debug.Log("ccc");
 
-                activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(toggle);
+                    activeRoomAllUnitFunctionalitys[i].UpdateIsVisible(toggle);
 
             }
         }
@@ -1119,7 +1119,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         combatOver = false;
 
-        powerUISpawnCount = 480 ;
+        powerUISpawnCount = 480;
 
         if (!enemies)
         {
@@ -1160,7 +1160,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Turning map OFF
         if (!toggle)
         {
-            ResetAlliesExpVisual();            
+            ResetAlliesExpVisual();
 
             map.mapOverlay.ToggleBottomBG(false);
             map.gameObject.SetActive(false);
@@ -1574,9 +1574,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 RemoveUnit(fallenHeroes[i]);
 
                 if (activeRoomHeroes.Contains(fallenHeroes[i]))
-                { 
+                {
                     activeRoomHeroes.Remove(fallenHeroes[i]);
-                } 
+                }
             }
         }
     }
@@ -1758,7 +1758,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
 
             StartCoroutine(SetupRoomPostBattle(playerWon));
-        }      
+        }
     }
 
     public IEnumerator HeroRetrievalScene(bool togglePromp = true)
@@ -1973,11 +1973,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         WeaponManager.Instance.ToggleAttackButtonInteractable(false);
 
-        ToggleUIElement(playerAbilities, true);
-        ToggleUIElement(fighterSelectedMainSlotDesc, true);
+        if (!GetActiveUnitFunctionality().isDead)
+        {
+            ToggleUIElement(playerAbilities, true);
+            ToggleUIElement(fighterSelectedMainSlotDesc, true);
 
-        if (!combatOver && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
-            ToggleEndTurnButton(true, true);
+            if (!combatOver && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                ToggleEndTurnButton(true, false);
+        }
 
         UpdateUnitsSelectedText();
 
@@ -2085,8 +2088,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Reset experience gained from killed enemies
         ResetExperienceGained();
 
-        playerInCombat = true;
-
         StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
         if (room == null)
@@ -2097,6 +2098,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         {
             // Stop Map music
             AudioManager.Instance.PauseMapMusic(true);
+
+            if (room.curRoomType != RoomMapIcon.RoomType.ITEM)
+                playerInCombat = true;
+            else if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
+                playerInCombat = true;
+
 
             CombatGridManager.Instance.isCombatMode = false;
             CombatGridManager.Instance.UpdateCombatMainSlots();
@@ -2116,10 +2123,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             FloorData floor = RoomManager.Instance.GetActiveFloor();
 
             int enemySpawnFirst = Random.Range(floor.minRoomValue, floor.maxRoomValue + 1);
-            int enemySpawnValue = (enemySpawnFirst * (RoomManager.Instance.GetFloorCount()*2));
+            int enemySpawnValue = (enemySpawnFirst * (RoomManager.Instance.GetFloorCount() * 2));
 
 
-            enemySpawnValue *= activeTeam.Count;
+            //enemySpawnValue *= activeTeam.Count;
 
             if (RoomManager.Instance.GetFloorCount() == 1)
             {
@@ -2133,11 +2140,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 enemySpawnValue += Random.Range(5, 9) * RoomManager.Instance.GetFloorCount();
                 //enemySpawnValue *= ((RoomManager.Instance.GetFloorCount() * RoomManager.Instance.GetFloorCount()) * 3);
             }
-            
+
+            /*
             if (activeRoomHeroes.Count > 1)
             {
                 enemySpawnValue += (activeRoomHeroes.Count * 2) - 1;
             }
+            */
 
             // If room is hero, spawn additional enemies
             if (room.curRoomType == RoomMapIcon.RoomType.HERO)
@@ -2146,17 +2155,20 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             }
             else if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
             {
-                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount())) - 2;
+                enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount())) - 3;
             }
             else if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
             {
                 if (RoomManager.Instance.GetFloorCount() == 1)
-                    enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount) * (RoomManager.Instance.GetFloorCount()));
+                    enemySpawnValue += (Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1));
                 else
-                    enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) * (RoomManager.Instance.GetFloorCount());
+                    enemySpawnValue += Random.Range(heroRoomMinEnemiesIncCount, heroRoomMaxEnemiesIncCount + 1) + (6 * RoomManager.Instance.GetFloorCount() + 16);
             }
 
-            enemySpawnValue += RoomManager.Instance.GetRoomsCleared() * ((RoomManager.Instance.GetFloorCount() * 4) - 1);
+            /*
+            if (RoomManager.Instance.GetFloorCount() != 1)
+                enemySpawnValue += ((RoomManager.Instance.GetFloorCount() * 4) - 1);
+            */
 
             //Debug.Log("Room value " + enemySpawnValue);
             // Spawn enemy type
@@ -2171,33 +2183,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 int randCombatSlot = Random.Range(0, CombatGridManager.Instance.GetEnemySpawnCombatSlots().Count);
 
                 // Check if there are remaining enemy unit spawn locations left
-                if (spawnEnemyPosIndex <= CombatGridManager.Instance.GetEnemySpawnCombatSlots().Count -1)
+                if (spawnEnemyPosIndex <= CombatGridManager.Instance.GetEnemySpawnCombatSlots().Count - 2)
                 {
-                    if (activeRoomHeroes.Count == 1)
-                    {
-                        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
-                        {
-                            if (spawnEnemyPosIndex >= 3)
-                                break;
-                        }
-
-                        // Force no higher then 2 enemies if fighter team size is 1
-                        if (spawnEnemyPosIndex >= 2)
-                            break;                           
-                    }
-                    else if (activeRoomHeroes.Count == 2)
-                    {
-                        if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
-                        {
-                            if (spawnEnemyPosIndex >= 5)
-                                break;
-                        }
-
-                        // Force no higher then 4 enemies if fighter team size is 1
-                        if (spawnEnemyPosIndex >= 4)
-                            break;
-                    }
-
                     go = Instantiate(baseUnit, CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).transform);
                     UnitFunctionality unitFunctionality2 = go.GetComponent<UnitFunctionality>();
 
@@ -2217,7 +2204,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     unitFunctionality2.UpdateActiveCombatSlot(CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot));
 
                     spawnEnemyPosIndex++;
-                }                
+                }
                 else
                 {
                     Destroy(go);
@@ -2226,165 +2213,35 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 UnitFunctionality unitFunctionality = go.GetComponent<UnitFunctionality>();
 
-               // CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).UpdateLinkedUnit(unitFunctionality);
+                // CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).UpdateLinkedUnit(unitFunctionality);
                 unitFunctionality.UpdateUnitValue(unit.GetUnitValue());
 
-                int rand = Random.Range(RoomManager.Instance.GetFloorCount(), RoomManager.Instance.GetFloorCount()+100);
+                int unitLevel = RoomManager.Instance.GetFloorCount();
 
-                // If unit random max level, check if there is enough room size for it, if not, downscale it down 1 lv
-                if (rand >= RoomManager.Instance.GetFloorCount())
+                //unitLevel += Random.Range(0, 2);
+
+                if (RoomManager.Instance.GetFloorCount() != 1)
                 {
-                    /*
-                    if (i + rand + 1 + unit.GetUnitValue() >= enemySpawnValue)
-                    {
-                        int val = (i + rand + 1 + unit.GetUnitValue()) - enemySpawnValue;
-                        //rand--;
-                        rand -= val;
-
-                        if (rand < 0)
-                            rand = 0;
-                    }
-                    */
-
-                    if (RoomManager.Instance.GetFloorCount() == 1)
-                    {
-                        if (rand >= GetAllyLevelAverage() + 1)
-                        {
-                            //Debug.Log("rand = " + rand);
-                            int val = 0;
-                            if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(5, 7);
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(3, 5);
-                            if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(3, 4);
-                            if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                            {
-                                // Ensure first room is half the difficulty of a normal enemy room
-                                if (RoomManager.Instance.GetRoomsCleared() == 0)
-                                    val = rand - Random.Range(0, 2);
-                                else
-                                    val = rand - Random.Range(0, 3);
-                            }
-
-                            rand -= val;
-
-                            if (rand < 0)
-                                rand = 0;
-                        }
-                    }
-                    else if (RoomManager.Instance.GetFloorCount() == 2)
-                    {
-                        if (rand >= GetAllyLevelAverage())
-                        {
-                            //Debug.Log("rand = " + rand);
-                            int val = 0;
-                            if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(-1, 2) * RoomManager.Instance.GetFloorCount();
-
-                            rand -= val;
-
-                            if (rand < 0)
-                                rand = 0;
-                        }
-                    }
-                    else if (RoomManager.Instance.GetFloorCount() == 3)
-                    {
-                        if (rand >= GetAllyLevelAverage())
-                        {
-                            //Debug.Log("rand = " + rand);
-                            int val = 0;
-                            if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(-1, 2) * RoomManager.Instance.GetFloorCount();
-
-                            rand -= val;
-
-                            if (rand < 0)
-                                rand = 0;
-                        }
-                    }
-                    else if (RoomManager.Instance.GetFloorCount() == 4)
-                    {
-                        if (rand >= GetAllyLevelAverage())
-                        {
-                            //Debug.Log("rand = " + rand);
-                            int val = 0;
-                            if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(-1, 2) * RoomManager.Instance.GetFloorCount();
-
-                            rand -= val;
-
-                            if (rand < 0)
-                                rand = 0;
-                        }
-                    }
-                    else if (RoomManager.Instance.GetFloorCount() == 5)
-                    {
-                        if (rand >= GetAllyLevelAverage())
-                        {
-                            //Debug.Log("rand = " + rand);
-                            int val = 0;
-                            if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                                val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                                val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                                val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
-                            if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                                val = rand - Random.Range(-1, 2) * RoomManager.Instance.GetFloorCount();
-
-                            rand -= val;
-
-                            if (rand < 0)
-                                rand = 0;
-                        }
-                    }
-                    else if (RoomManager.Instance.GetFloorCount() == 6)
-                    {
-                        //Debug.Log("rand = " + rand);
-
-                        int val = 0;
-                        if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
-                            val = rand - Random.Range(3, 5) * RoomManager.Instance.GetFloorCount();
-                        if (room.curRoomType == RoomMapIcon.RoomType.HERO)
-                            val = rand - Random.Range(2, 4) * RoomManager.Instance.GetFloorCount();
-                        if (room.curRoomType == RoomMapIcon.RoomType.ITEM)
-                            val = rand - Random.Range(1, 3) * RoomManager.Instance.GetFloorCount();
-                        if (room.curRoomType == RoomMapIcon.RoomType.ENEMY)
-                            val = rand - Random.Range(-1, 2) * RoomManager.Instance.GetFloorCount();
-
-                        rand -= val;
-
-                        if (rand < 0)
-                            rand = 0;
-                    }
+                    if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ENEMY)
+                        unitLevel += Random.Range(0, 3);
+                    else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ITEM)
+                        unitLevel += Random.Range(1, 4) + (RoomManager.Instance.GetFloorCount() * 2);
+                    else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
+                        unitLevel += Random.Range(2, 5) + (RoomManager.Instance.GetFloorCount() * 3);
+                    else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+                        unitLevel += Random.Range(3, 5) + (RoomManager.Instance.GetFloorCount() * 4);
                 }
-                if (room.curRoomType == RoomMapIcon.RoomType.BOSS)
+                else
                 {
-                    int val = Random.Range(0, 4);
-                    if (val == 0)
-                        rand /= 2;
+                    if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ENEMY)
+                        unitLevel += Random.Range(0, 2);
+                    else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ITEM)
+                        unitLevel += Random.Range(1, 3);
+                    else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
+                        unitLevel += Random.Range(2, 4);
+                    else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
+                        unitLevel += Random.Range(3, 5);
                 }
-
-                int unitLevel = RoomManager.Instance.GetFloorCount() + rand;
 
                 //Debug.Log("i = " + i);
                 i += unit.GetUnitValue() + unitLevel;
@@ -2420,18 +2277,18 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.HUMAN;
                     unitFunctionality.UpdateFighterRaceIcon("HUMAN");
-                }                   
+                }
                 else if (unit.curRaceType == UnitData.RaceType.BEAST)
                 {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.BEAST;
                     unitFunctionality.UpdateFighterRaceIcon("BEAST");
-                }                    
+                }
                 else if (unit.curRaceType == UnitData.RaceType.ETHEREAL)
                 {
                     unitFunctionality.curUnitRace = UnitFunctionality.UnitRace.ETHEREAL;
                     unitFunctionality.UpdateFighterRaceIcon("ETHEREAL");
                 }
-                    
+
                 unitFunctionality.ToggleFighterRaceIcon(true);
 
                 unitFunctionality.UpdateSpeedIncPerLv((int)unit.speedIncPerLv);
@@ -2447,6 +2304,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 unitFunctionality.startingSpeed = unit.startingSpeed;
                 unitFunctionality.UpdateStartingMaxHealth(unit.startingMaxHealth);
 
+                Debug.Log(unitFunctionality.GetUnitName() + " " + enemySpawnValue);
                 unitFunctionality.unitData = unit;
 
                 UnitData unitData = unitFunctionality.unitData;
@@ -2478,11 +2336,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 // If enemy unit spawned is NOT lv 1, spawn with level bonus stats
                 if (unitFunctionality.GetUnitLevel() != 1)
                 {
-                    unitFunctionality.UpdateUnitSpeed(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetSpeedIncPerLv()) + unit.startingSpeed);
-                    unitFunctionality.UpdateUnitPower(((unitFunctionality.GetUnitLevel()-1) * unitFunctionality.GetPowerIncPerLv()) + unit.startingPower);
-                    unitFunctionality.UpdateUnitHealingPower(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetHealingPowerIncPerLv()) + unit.startingHealingPower);
-                    unitFunctionality.UpdateUnitDefense(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetDefenseIncPerLv()) + unit.startingDefense);
-                    unitFunctionality.UpdateUnitMaxHealth(((unitFunctionality.GetUnitLevel()-1) * (int)unitFunctionality.GetMaxHealthIncPerLv()) + unit.startingMaxHealth, true);
+                    unitFunctionality.UpdateUnitSpeed(((unitFunctionality.GetUnitLevel() - 1) * unitFunctionality.GetSpeedIncPerLv()) + unit.startingSpeed);
+                    unitFunctionality.UpdateUnitPower(((unitFunctionality.GetUnitLevel() - 1) * unitFunctionality.GetPowerIncPerLv()) + unit.startingPower);
+                    unitFunctionality.UpdateUnitHealingPower(((unitFunctionality.GetUnitLevel() - 1) * (int)unitFunctionality.GetHealingPowerIncPerLv()) + unit.startingHealingPower);
+                    unitFunctionality.UpdateUnitDefense(((unitFunctionality.GetUnitLevel() - 1) * (int)unitFunctionality.GetDefenseIncPerLv()) + unit.startingDefense);
+                    unitFunctionality.UpdateUnitMaxHealth(((unitFunctionality.GetUnitLevel() - 1) * (int)unitFunctionality.GetMaxHealthIncPerLv()) + unit.startingMaxHealth, true);
                 }
                 // If enemy spawned IS level 1, spawn with starting stats
                 else
@@ -2531,7 +2389,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 // Enable allies level image for combat
                 if (activeRoomAllUnitFunctionalitys[x].curUnitType == UnitFunctionality.UnitType.PLAYER)
-                {                   
+                {
                     activeRoomAllUnitFunctionalitys[x].ToggleUnitHitsRemaining(true);
 
                     // Disable unit level image in team setup tab
@@ -2715,7 +2573,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             transitionSprite.AllowFadeOut();
 
-            
+
             return;
         }
     }
@@ -2734,7 +2592,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             toggle = true;
         else
             toggle = false;
-        
+
         return toggle;
     }
 
@@ -2757,6 +2615,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // Update active unit attack range
             if (updateRange)
                 CombatGridManager.Instance.UpdateUnitAttackRange(GetActiveUnitFunctionality());
+
+           // if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER || GetActiveUnitFunctionality().reanimated)
+                //GameManager.Instance.SetupPlayerUI();
         }
     }
 
@@ -2808,7 +2669,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         float powerToRandomise = ((randomPerc / 100f) * power);
         int powerToRandomiseInt = (int)powerToRandomise;
-        float randPower = Random.Range(power - powerToRandomiseInt - randomBaseOffset, (power + powerToRandomiseInt+1 + randomBaseOffset));
+        float randPower = Random.Range(power - powerToRandomiseInt - randomBaseOffset, (power + powerToRandomiseInt + 1 + randomBaseOffset));
         return (int)randPower;
     }
 
@@ -2841,7 +2702,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         return units;
     }
-        
+
     IEnumerator UpdateSelectedUnitsEffectVisual(bool skill = true)
     {
         if (skill)
@@ -3355,6 +3216,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else if (index == 3)
             GetActiveUnitFunctionality().SetSkill3CooldownMax();
 
+        CombatGridManager.Instance.ToggleTabButtons("Items");
+
         yield return new WaitForSeconds(postHitWaitTime);
 
         GetActiveUnitFunctionality().hasAttacked = true;
@@ -3372,7 +3235,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             UpdateDetailsBanner();
             ToggleSkillsItemToggleButton(false);
             UpdatePlayerAbilityUI(false, false, true);
-            UpdateMainIconDetails(null, null, false);
+            //UpdateMainIconDetails(null, null, false);
 
             if (GetActiveUnitFunctionality().GetCurMovementUses() > 0)
             {
@@ -3392,7 +3255,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 selectingUnitsAllowed = true;
                 allowSelection = true;
 
-                CombatGridManager.Instance.ToggleTabButtons("Items");
+
             }
 
         }
@@ -3409,8 +3272,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
                 CombatGridManager.Instance.isCombatMode = false;
+
+                // Choose new skill after skill land
+                GetActiveUnitFunctionality().UpdateChosenSkill(GetActiveUnitFunctionality().ChooseSkill());
+                UpdateActiveSkill(GetActiveUnitFunctionality().GetChosenSkill());
+
+                CombatGridManager.Instance.GetTargetCombatSlots().Clear();
+
                 StartCoroutine(GetActiveUnitFunctionality().StartUnitTurn());
-                    //CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
+                //CombatGridManager.Instance.AutoSelectMovement(GetActiveUnitFunctionality());
                 //}
             }
         }
@@ -3494,7 +3364,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                             continue;
 
                         //if (unit.IsSelected())
-                          //  continue;
+                        //  continue;
                     }
 
                     float absPower = Mathf.Abs(originalPower);
@@ -3716,7 +3586,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         UpdateAllSkillIconAvailability();
         //UpdateUnitSelection(GetActiveUnitFunctionality().GetNoCDSkill());
         //UpdateUnitsSelectedText();
-         //EnableFreeSkillSelection();
+        //EnableFreeSkillSelection();
     }
     #region Update Unit UI
     public void UpdateActiveUnitEnergyBar(bool toggle = false, bool increasing = false, int energyAmount = 0, bool enemy = false)
@@ -3725,7 +3595,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         //Debug.Log(GetActiveUnitFunctionality().GetUnitName() + " " + GetActiveUnitFunctionality().GetUnitCurEnergy());
 
         //GetActiveUnitFunctionality().energyCostImage.UpdateEnergyBar((int)GetActiveUnitFunctionality().
-           //GetUnitCurEnergy(), energyAmount, increasing, toggle, enemy);
+        //GetUnitCurEnergy(), energyAmount, increasing, toggle, enemy);
     }
 
     public void UpdateActiveUnitStatBar(UnitFunctionality unit, bool attackBar, bool toggle)
@@ -3952,7 +3822,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     }
                 }
             }
-            
+
         }
         // Items
         else
@@ -3985,7 +3855,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         // If Skill has NO cooldown, and IS NOT locked, select the first one it finds
                         if (TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot && TeamItemsManager.Instance.ally1ItemsSlots[x].GetCalculatedItemUsesRemaining() > 0)
                         {
-                            if (x == 0) 
+                            if (x == 0)
                                 mainSlot1.ToggleSelected(true);
                             else if (x == 1)
                                 mainSlot2.ToggleSelected(true);
@@ -4088,7 +3958,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void UpdateMainIconDetails(SkillData skill = null, ItemPiece item = null, bool displaySkillDesc = false)
     {
-        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY && !GetActiveUnitFunctionality().reanimated)
             return;
 
         if (GetActiveSkill())
@@ -4096,7 +3966,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER &&
                 GetActiveSkill().curSkillTeamType == SkillData.SkillTeamType.ENEMIES)
             {
-                return;
+                //return;
             }
         }
 
@@ -4284,7 +4154,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         */
 
                         activeRoomAllUnitFunctionalitys[i].ToggleIsDefenseUp(true);
-                        
+
                         // units current def
                         float curDef = activeRoomAllUnitFunctionalitys[i].startingRoomDefense;
                         // units new def
@@ -4522,6 +4392,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         GetActiveUnitFunctionality().ToggleUnitMoveActiveArrows(false);
 
+        GetActiveUnitFunctionality().lastUsedSkill = null;
+
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
             //activeRoomAllUnitFunctionalitys[i].UpdateUnitLookDirection();
@@ -4561,6 +4433,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().skill3OutOfRange = false;
         GetActiveUnitFunctionality().skill4OutOfRange = false;
 
+
+        /*
+        //// Choose new skill after skill land
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        {
+            GetActiveUnitFunctionality().UpdateChosenSkill(GetActiveUnitFunctionality().ChooseSkill());
+            UpdateActiveSkill(GetActiveUnitFunctionality().GetChosenSkill(), true);
+        }
+        */
+
         /*
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
         {
@@ -4588,12 +4470,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().ResetMovementUses();
         GetActiveUnitFunctionality().usedExtraMove = false;
 
+        CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
+
         //GetActiveUnitFunctionality().ToggleTextAlert(false);
 
         CombatGridManager.Instance.ToggleCombatGrid(true);
 
         CombatGridManager.Instance.CheckToUnlinkCombatSlot();
 
+        GetActiveUnitFunctionality().skillRangeIssue = false;
 
         GetActiveUnitFunctionality().ToggleUnitStatBarAlpha(true);
         UpdateAllUnitStatBars();
@@ -4602,8 +4487,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         //GetActiveUnitFunctionality().UpdateUnitLookDirection();
 
         // Toggle player UI accordingly if it's their turn or not
-        if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
+        if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER || activeRoomAllUnitFunctionalitys[0].reanimated)
         {
+
             OverlayUI.Instance.ToggleSkillItemSwitchButton(true);
 
             playerUIElement.UpdateAlpha(1);
@@ -4641,7 +4527,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //UpdateSkillDetails(activeSkill);
 
             //UpdateUnitSelection(activeSkill);
-           // UpdateEnemyPosition(true);
+            // UpdateEnemyPosition(true);
         }
 
         UpdateActiveUnitTurnArrow();
@@ -4667,7 +4553,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             UpdatePlayerAbilityUI(false, false, true);
         //if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
-            //UpdateMainIconDetails(null, null, false);
+        //UpdateMainIconDetails(null, null, false);
 
         //UpdateAllUnitStatBars();
         CombatGridManager.Instance.ToggleIsMovementAllowed(true);
@@ -4675,10 +4561,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         //CombatGridManager.Instance.GetButtonSkillsItems().ButtonCombatItemsTab(true, true);
         GetActiveUnitFunctionality().hasAttacked = false;
 
-        GameManager.Instance.UpdateMainIconDetails(null, null);
+        //GameManager.Instance.UpdateMainIconDetails(null, null);
         OverlayUI.Instance.UpdateItemUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
 
-        OverlayUI.Instance.ToggleAllStats(false, false, true);
+        OverlayUI.Instance.ToggleAllStats(true, false, true);
+        CombatGridManager.Instance.ToggleTabButtons("Movement");
+        CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonItems(), false, false);
     }
 
     public void ToggleAllUnitButtons(bool toggle = true)
@@ -4715,7 +4603,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 return;
             }
         }
-      
+
 
 
 
@@ -5199,7 +5087,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                                 }
                             }
                         }
- 
+
                     }
                 }
 
@@ -5432,7 +5320,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void ResetSelectedUnits()
     {
-        DeselectAllUnits();
+
 
         for (int i = 0; i < unitsSelected.Count; i++)
         {
@@ -5441,10 +5329,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 unitsSelected[i].ToggleSelected(false);
 
                 // Tell unit button that it is d 
-                if (!unitsSelected[i].isDead)
-                unitsSelected[i].selectUnitButton.unitIsSelected = false;
+                //if (!unitsSelected[i].isDead)
+                //  unitsSelected[i].selectUnitButton.unitIsSelected = false;
             }
         }
+
+        DeselectAllUnits();
 
         unitsSelected.Clear();
 
@@ -5492,17 +5382,34 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void ToggleEndTurnButton(bool toggle, bool delay = false)
     {
-        if (toggle)
+        if (GetActiveUnitFunctionality())
         {
-            if (!delay)
-                endTurnButtonUI.UpdateAlpha(1);
+            if (toggle && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER ||
+                !toggle && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER ||
+                !toggle && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            {
+                if (toggle)
+                {
+                    if (!delay)
+                        endTurnButtonUI.UpdateAlpha(1);
+                }
+                else
+                    endTurnButtonUI.UpdateAlpha(0);
+
+                if (delay)
+                {
+                    if (!GetActiveUnitFunctionality().isDead)
+                    {
+                        StartCoroutine(ToggleEndTurnButtonWait());
+                        endTurnButtonUI.UpdateAlpha(0);
+                    }
+                }
+            }
         }
         else
-            endTurnButtonUI.UpdateAlpha(0);
-
-        if (delay)
         {
-            StartCoroutine(ToggleEndTurnButtonWait());
+            if (!toggle)
+                endTurnButtonUI.UpdateAlpha(0);
         }
     }
 
@@ -5510,7 +5417,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         yield return new WaitForSeconds(1.35f);
 
-        endTurnButtonUI.UpdateAlpha(1);
+        if (!GetActiveUnitFunctionality().isDead && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            endTurnButtonUI.UpdateAlpha(1);
     }
 
     public void ToggleUIElement(UIElement uiElement, bool toggle)
@@ -7568,11 +7476,22 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         for (int i = 0; i < unitsSelected.Count; i++)
         {
-            unitsSelected[i].ToggleSelected(true, true);
+            // fail safe
+            if (unitsSelected[i] != null)
+                unitsSelected[i].ToggleSelected(true, true);
         }
 
         ToggleAllowSelection(false);
         CombatGridManager.Instance.DisableAllButtons();
+
+        // Update unit using skill to face ideal x direction
+        if (CombatGridManager.Instance.targetedCombatSlots.Count > 0)
+        {
+            if (CombatGridManager.Instance.targetedCombatSlots[0].GetSlotIndex().x > GetActiveUnitFunctionality().GetActiveCombatSlot().GetSlotIndex().x)
+                GetActiveUnitFunctionality().UpdateUnitLookDirection(false);
+            else
+                GetActiveUnitFunctionality().UpdateUnitLookDirection(true);
+        }
 
         StartCoroutine(AttackButtonCont());
     }

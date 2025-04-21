@@ -12,6 +12,9 @@ public class UnitData : ScriptableObject
     public enum RaceType { HUMAN, BEAST, ETHEREAL };
     public RaceType curRaceType;
 
+    public enum UnitBehaviour { M_AGGRESSIVE, R_AGGRESSIVE, M_SUPPORT, R_SUPPORT}
+    public UnitBehaviour curUnitBehaviour;
+
     [SerializeField] private int unitValue;
     public Sprite unitSprite;
     public Sprite unitIcon;

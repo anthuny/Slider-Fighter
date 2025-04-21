@@ -21,10 +21,12 @@ MonoBehaviour:
   curAnimType: 0
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curClassType: 0
   curSkillSelectionType: 1
-  skillRangeHitArea: {x: 1, y: 1}
+  skillRangeHitArea: {x: 2, y: 1}
   skillRangeHitAreas:
   - {x: 0, y: 0}
+  - {x: 1, y: 0}
   skillAreaHitCount: 1
   attackAllSelected: 0
   attackAllUnits: 0

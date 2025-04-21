@@ -21,6 +21,7 @@ MonoBehaviour:
   curAnimType: 0
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curClassType: 0
   curSkillSelectionType: 1
   skillRangeHitArea: {x: 2, y: 1}
   skillRangeHitAreas:
@@ -31,8 +32,8 @@ MonoBehaviour:
   attackAllUnits: 0
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 5
-  curSkillRange: 5
+  startingSkillRange: 3
+  curSkillRange: 3
   skillSprite: {fileID: 21300000, guid: f5e1a147817aafd4aa35b740f355159d, type: 3}
   skillName: SPLIT SHOT
   skillDescr: Target 2x1 area, dealing damage.

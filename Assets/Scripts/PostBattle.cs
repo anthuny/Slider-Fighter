@@ -47,7 +47,7 @@ public class PostBattle : MonoBehaviour
             rewardsUI.UpdateAlpha(0);
     }
 
-    void ToggleToMapButton(bool toggle)
+    public void ToggleToMapButton(bool toggle)
     {
         toMapButton.ToggleButton(toggle);
         //Handheld.Vibrate();

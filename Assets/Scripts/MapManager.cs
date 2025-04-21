@@ -272,6 +272,8 @@ public class MapManager : MonoBehaviour
         // If player won
         if (playerWon)
         {
+            RoomManager.Instance.IncrementDefaultRoomsCleared();
+
             if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
             {
                 RoomManager.Instance.FloorCompleted();
@@ -452,7 +454,10 @@ public class MapManager : MonoBehaviour
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
+            PostBattle.Instance.ToggleToMapButton(false);
+
             CombatGridManager.Instance.ToggleCombatSlotsInput(false);
+            CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
 
             CombatGridManager.Instance.ToggleCombatGrid(false);
             CombatGridManager.Instance.ToggleButtonAttackMovement(false);

@@ -21,6 +21,7 @@ MonoBehaviour:
   curAnimType: 0
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curClassType: 0
   curSkillSelectionType: 0
   skillRangeHitArea: {x: 1, y: 2}
   skillRangeHitAreas:
@@ -49,7 +50,7 @@ MonoBehaviour:
   skillHitAttempts: 1
   projectileSpeed: 0
   skillCooldown: 0
-  curCooldown: 0
+  curCooldown: 1
   skillSelectionCount: 1
   isSelfCast: 0
   isSpecial: 0

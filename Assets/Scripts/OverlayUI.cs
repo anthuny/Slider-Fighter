@@ -208,7 +208,15 @@ public class OverlayUI : MonoBehaviour
     
     public void UpdateItemUI(string itemName, string itemDesc, int itemPower, int range, Vector2 hitArea, Sprite itemIcon)
     {
-        ToggleAllStats(true, false);
+        if (CombatGridManager.Instance.isCombatMode)
+        {
+            if (GameManager.Instance.isSkillsMode)
+                ToggleAllStats(true, true);
+            else
+                ToggleAllStats(true, false);
+        }
+        else
+            ToggleAllStats(true, false, true);
 
         UpdateMainSlotDetailsName(itemName);
         UpdateMainSlotDetailsDesc(itemDesc);
@@ -313,6 +321,8 @@ public class OverlayUI : MonoBehaviour
 
     public void ToggleAllStats(bool toggle = true, bool skill = true, bool movement = false)
     {
+        Debug.Log("toggle = " + toggle + " skill = " + skill + " movement = " + movement);
+
         if (movement)
         {
             remainingMovementUsesUI.UpdateAlpha(1);

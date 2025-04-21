@@ -237,6 +237,9 @@ public class UnitFunctionality : MonoBehaviour
     public bool skill4OutOfRange = false;
 
     public bool textAlertOn = false;
+    public SkillData lastUsedSkill;
+    public bool forceStopAttacking = false;
+    public bool rollFirstSkill = false;
 
     public void UpdateChosenSkill(SkillData skillData)
     {
@@ -1719,6 +1722,8 @@ public class UnitFunctionality : MonoBehaviour
             finalRange = Mathf.Abs(rangeX);
         }
 
+        //finalRange ;
+        Debug.Log("range x = " + rangeX + " | range  y = " + rangeY);
         return finalRange;
     }
 
@@ -1744,71 +1749,79 @@ public class UnitFunctionality : MonoBehaviour
             yield return new WaitForSeconds(GameManager.Instance.enemyEffectWaitTime);
 
         ToggleUnitMoveActiveArrows(true);
-        /*
-        // Do unit's turn automatically if its on idle battle
-        if (isDead)
-        {
-            GameManager.Instance.UpdateTurnOrder();
-            yield break;
-        }
-        */
 
         if (GetIdleBattle() && GameManager.Instance.activeRoomHeroes.Count >= 1 && !isDead)
         {
-            // Choose skill for unit
-            if (!GameManager.Instance.GetActiveSkill())
+            if (!rollFirstSkill)
             {
-                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
+                // Choose skill for unit
+                if (!GameManager.Instance.GetActiveSkill())
                 {
-                    UpdateChosenSkill(ChooseSkill());
-                    GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), false);
+                    if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
+                    {
+                        UpdateChosenSkill(ChooseSkill());
+                        GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), true);
+                    }
                 }
-            }
-            else
-            {
-                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
+                else
                 {
-                    UpdateChosenSkill(ChooseSkill());
+                    if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.ENEMY || reanimated)
+                    {
+                        UpdateChosenSkill(ChooseSkill());
 
-                    GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), false);
+                        GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), true);
+                    }
                 }
             }
+
+            lastUsedSkill = GetChosenSkill();
+            GameManager.Instance.UpdateActiveSkill(GetChosenSkill(), false);
 
             CombatGridManager.Instance.UpdateAttackSelection(this);
 
 
+            
             // If selected skill is out of range, choose another skill
             for (int i = 0; i < CombatGridManager.Instance.GetTargetCombatSlots().Count; i++)
             {
-                if (CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit().GetRangeFromUnit(this) > GameManager.Instance.GetActiveSkill().curSkillRange
-                    && !GameManager.Instance.GetActiveSkill().isSelfCast)
+                if (CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit())
                 {
-                    if (GameManager.Instance.GetActiveSkill() == GetSkill(0) && !skill1OutOfRange)
+                    if (CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit().GetRangeFromUnit(this) > GameManager.Instance.GetActiveSkill().curSkillRange
+                        && !GameManager.Instance.GetActiveSkill().isSelfCast)
                     {
-                        skill1OutOfRange = true;
-                        StartCoroutine(StartUnitTurn(false));
-                        yield break;
+                        Debug.Log("Target = " + CombatGridManager.Instance.GetTargetCombatSlots()[i] + "| range from unit = " + CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit().GetRangeFromUnit(this));
+                        if (GameManager.Instance.GetActiveSkill() == GetSkill(0) && !skill1OutOfRange)
+                        {
+                            skill1OutOfRange = true;
+                            skillRangeIssue = true;
+                        }
+                        else if (GameManager.Instance.GetActiveSkill() == GetSkill(1) && !skill2OutOfRange)
+                        {
+                            skill2OutOfRange = true;
+                            skillRangeIssue = true;
+                        }
+                        else if (GameManager.Instance.GetActiveSkill() == GetSkill(2) && !skill3OutOfRange)
+                        {
+                            skill3OutOfRange = true;
+                            skillRangeIssue = true;
+                        }
+                        else if (GameManager.Instance.GetActiveSkill() == GetSkill(3) && !skill4OutOfRange)
+                        {
+                            skill4OutOfRange = true;
+                            skillRangeIssue = true;
+                        }
                     }
-                    else if (GameManager.Instance.GetActiveSkill() == GetSkill(1) && !skill2OutOfRange)
+                    else
                     {
-                        skill2OutOfRange = true;
-                        StartCoroutine(StartUnitTurn(false));
-                        yield break;
-                    }
-                    else if (GameManager.Instance.GetActiveSkill() == GetSkill(2) && !skill3OutOfRange)
-                    {
-                        skill3OutOfRange = true;
-                        StartCoroutine(StartUnitTurn(false));
-                        yield break;
-                    }
-                    else if (GameManager.Instance.GetActiveSkill() == GetSkill(3) && !skill4OutOfRange)
-                    {
-                        skill4OutOfRange = true;
-                        StartCoroutine(StartUnitTurn(false));
-                        yield break;
+                        skill1OutOfRange = false;
+                        skill2OutOfRange = false;
+                        skill3OutOfRange = false;
+                        skill4OutOfRange = false;
+                        skillRangeIssue = false;
                     }
                 }
             }
+            
 
             if (GameManager.Instance.GetActiveSkill() == GetSkill(0) && skill1OutOfRange && GetCurMovementUses() <= 0)
             {
@@ -3144,26 +3157,46 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator UnitEndTurn(bool waitLong = false, bool waitExtraLong = false)
     {
-        if (GameManager.Instance.GetActiveUnitFunctionality() != this)
-            yield break;
+        if (GameManager.Instance.GetActiveUnitFunctionality())
+        {
+            if (GameManager.Instance.GetActiveUnitFunctionality().isDead)
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality() != this)
+                    yield break;
 
-        if (!hasEndedTurn)
-            hasEndedTurn = true;
+                if (!hasEndedTurn)
+                    hasEndedTurn = true;
+                else
+                    yield break;
+
+                if (waitLong)
+                    yield return new WaitForSeconds(0f);    // old was 1.25f
+                else
+                    yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
+
+
+                CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
+                WeaponManager.Instance.ResetAcc();
+                WeaponManager.Instance.ResetWeaponAccHits();
+
+                GameManager.Instance.UpdateTurnOrder();
+            }
+            else
+            {
+                if (GameManager.Instance.playerInCombat)
+                {
+                    GameManager.Instance.UpdateTurnOrder();
+                }
+            }
+        }
         else
-            yield break;
-
-        if (waitLong)
-            yield return new WaitForSeconds(0f);    // old was 1.25f
-        else
-            yield return new WaitForSeconds(GameManager.Instance.enemyAttackWaitTime);
-
-
-        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
-
-        WeaponManager.Instance.ResetAcc();
-        WeaponManager.Instance.ResetWeaponAccHits();
-
-        GameManager.Instance.UpdateTurnOrder();
+        {
+            if (GameManager.Instance.playerInCombat)
+            {
+                GameManager.Instance.UpdateTurnOrder();
+            }
+        }
     }
 
     public List<SkillData> GetStartingSkills()
@@ -3402,6 +3435,8 @@ public class UnitFunctionality : MonoBehaviour
 
     public SkillData ChooseSkill()
     {
+        rollFirstSkill = true;
+
         int unitEnemyIntelligence = 10;
 
         for (int i = 0; i < unitEnemyIntelligence; i++)
@@ -3453,11 +3488,13 @@ public class UnitFunctionality : MonoBehaviour
                 int rand = Random.Range(1, 5);
                 //Debug.Log(rand);
 
+
                 //Debug.Log(rand);
                 if (rand == 1)  // Skill 1
                 {
                     if (skill0CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0) != skill && !skill1OutOfRange)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0) != skill && !skill1OutOfRange 
+                        && lastUsedSkill != GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0))
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(0);
                     else
                         continue;
@@ -3465,7 +3502,8 @@ public class UnitFunctionality : MonoBehaviour
                 else if (rand == 2)  // Skill 2
                 {
                     if (skill1CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1) != skill && !skill2OutOfRange)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1) != skill && !skill2OutOfRange 
+                        && lastUsedSkill != GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1))
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1);
                     else
                         continue;
@@ -3473,7 +3511,8 @@ public class UnitFunctionality : MonoBehaviour
                 else if (rand == 3)  // Skill 3
                 {
                     if (skill2CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2) != skill && !skill3OutOfRange)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2) != skill && !skill3OutOfRange
+                        && lastUsedSkill != GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2))
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(2);
                     else
                         continue;
@@ -3482,7 +3521,8 @@ public class UnitFunctionality : MonoBehaviour
                 else if (rand == 4)
                 {
                     if (skill3CurCooldown == 0 && !GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3).isPassive
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3) != skill && !skill4OutOfRange)
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3) != skill && !skill4OutOfRange
+                        && lastUsedSkill != GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3))
                         return GameManager.Instance.GetActiveUnitFunctionality().GetSkill(3);
                 }
             }
@@ -4531,11 +4571,18 @@ public class UnitFunctionality : MonoBehaviour
                 AudioManager.Instance.Play(GameManager.Instance.GetActiveItem().projectileLaunch.name);
         }
 
+        if (GetActiveCombatSlot())
+        {
+            if (GetActiveCombatSlot().GetSlotIndex().y <= 2)
+            {
+                projectile.UpdateTeam(false);
+            }
+            else
+            {
+                projectile.UpdateTeam(true);
 
-        if (curUnitType == UnitType.PLAYER)
-            projectile.UpdateTeam(true);
-        else
-            projectile.UpdateTeam(false);
+            }
+        }
     }
 
     public void ToggleTextAlert(bool toggle)
@@ -4739,7 +4786,8 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     //Debug.Log("111");
 
-                    if (curUnitType == UnitType.PLAYER && !reanimated)
+                    // If this unit that just died, was having its own turn, end turn here, otherwise DONT
+                    if (curUnitType == UnitType.PLAYER && !reanimated && GameManager.Instance.GetActiveUnitFunctionality() == this)
                     {
                         yield return new WaitForSeconds(.75f);
                         StartCoroutine(UnitEndTurn(false));  // end unit turn
@@ -5263,7 +5311,11 @@ public class UnitFunctionality : MonoBehaviour
 
 
                 if (curHealth < 0)
+                {
                     curHealth = 0;
+                }
+            
+
 
                 //if (curHealth > 0)
 

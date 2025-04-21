@@ -247,10 +247,19 @@ public class CombatSlot : MonoBehaviour
 
     public void ToggleSlotAllowed(bool toggle = true)
     {
+        if (toggle)
+        {
+            CombatGridManager.Instance.ToggleAllSlotsAllowedOff();
+        }
+
         UpdateAllowed(toggle);
 
+
+
         GetAnimator().SetBool("CombatAllowed", toggle);
-        
+
+
+
         //if (toggle)
         //{
         //slotTargetedUI.UpdateAlpha(1, false, 0, false, false);

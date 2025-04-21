@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curUnitType: 1
   curRaceType: 2
+  curUnitBehaviour: 1
   unitValue: 2
   unitSprite: {fileID: -1239719131, guid: fbe5805802964d7489180c0dedd510b7, type: 3}
   unitIcon: {fileID: 21300000, guid: 79e49d6df08cbb647a21eaea4d88d7b5, type: 3}
