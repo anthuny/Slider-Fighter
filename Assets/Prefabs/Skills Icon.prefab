@@ -310,7 +310,7 @@ MonoBehaviour:
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
   buttonCG: {fileID: 5259889019705451127}
-  button2CG: {fileID: 0}
+  button2CG: {fileID: 8843719596811668812}
   button3CG: {fileID: 0}
   skillLevelText: {fileID: 6376363875855536422}
   startHidden: 0
@@ -327,6 +327,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 5155438670687292347}
   skillUpgradesUI: {fileID: 298546759009372408}
@@ -336,6 +337,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!114 &5155438670687292347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,6 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curGearType: 3
+  curRingType: 0
   curRarity: 0
   curSlotStatis: 3
   curSlotRace: 0
@@ -363,8 +373,9 @@ MonoBehaviour:
   buttonSkillUpgrade3: {fileID: 6426338540745907303}
   progressSlider: {fileID: 6317448400657384493}
   ownedSlotButton: {fileID: 5259889019705451126}
-  equipSlotButton: {fileID: 3525426263203022565}
-  equipSlotButtonCover: {fileID: 0}
+  buttonOwnedLoot: {fileID: 3525426263203022565}
+  bagSprite: {fileID: 0}
+  alertBagSprite: {fileID: 0}
   coverUI: {fileID: 0}
   raceIcon: {fileID: 0}
   rarityBG: {fileID: 0}
@@ -390,6 +401,10 @@ MonoBehaviour:
   maxSet: 0
   remove: 0
   itemRarityText: {fileID: 3152906365806857496}
+  skillUpgrades:
+  - {fileID: 5942825298207045289}
+  - {fileID: 3412899500347925729}
+  isDiscovered: 0
 --- !u!1 &2826383016593343593
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,6 +558,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -552,6 +568,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!1 &3263367111173051638
 GameObject:
   m_ObjectHideFlags: 0
@@ -823,6 +847,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -832,6 +857,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &2210911529129204462
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -884,6 +917,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -893,6 +927,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!1 &3666851542265818222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,6 +1113,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1080,6 +1123,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!223 &3665519638951356069
 Canvas:
   m_ObjectHideFlags: 0
@@ -1350,6 +1401,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1359,6 +1411,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &3936564060558501167
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1639,6 +1699,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1648,6 +1709,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!1 &5259889021125643383
 GameObject:
   m_ObjectHideFlags: 0
@@ -2223,6 +2292,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 5155438670687292347}
   skillUpgradesUI: {fileID: 0}
@@ -2232,6 +2302,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &7194447718113786691
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2352,6 +2430,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -2361,6 +2440,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!1 &6409937216398383732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2649,6 +2736,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -2658,6 +2746,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!114 &2861010337278432425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2869,6 +2965,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -2878,6 +2975,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &3499861115761903278
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3075,6 +3180,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
   m_PrefabInstance: {fileID: 4252355633919679919}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5942825298207045289 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7600474131149892358, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+  m_PrefabInstance: {fileID: 4252355633919679919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6426338540745907303 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7074475729247142344, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
@@ -3546,6 +3662,17 @@ PrefabInstance:
 --- !u!114 &2597124285017525807 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7074475729247142344, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+  m_PrefabInstance: {fileID: 5055080538023694311}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3412899500347925729 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7600474131149892358, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
   m_PrefabInstance: {fileID: 5055080538023694311}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

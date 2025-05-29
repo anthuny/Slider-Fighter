@@ -185,6 +185,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!223 &4087095140128948512
 Canvas:
   m_ObjectHideFlags: 0
@@ -526,6 +527,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!223 &6120844413893535315
 Canvas:
   m_ObjectHideFlags: 0
@@ -806,6 +808,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!114 &2460688383783882083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1000,6 +1003,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 1
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!1 &6016855909754213977
 GameObject:
   m_ObjectHideFlags: 0
@@ -1261,6 +1265,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!223 &3677673758292184825
 Canvas:
   m_ObjectHideFlags: 0
@@ -1388,8 +1393,8 @@ MonoBehaviour:
   contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
-  buttonCG: {fileID: 0}
-  button2CG: {fileID: 0}
+  buttonCG: {fileID: 7082798902300504961}
+  button2CG: {fileID: 5940142461124927005}
   button3CG: {fileID: 0}
   skillLevelText: {fileID: 0}
   startHidden: 0
@@ -1414,6 +1419,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &3319832272525238322
 CanvasGroup:
   m_ObjectHideFlags: 0

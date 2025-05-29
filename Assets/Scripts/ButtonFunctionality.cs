@@ -155,6 +155,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
 
+                PostBattle.Instance.TogglePostBattleUI(false);
+
                 CharacterCarasel.Instance.SelectAlly(this);
 
                 UpdateLog.Instance.ToggleUpdateLog(false);
@@ -255,6 +257,32 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         SettingsManager.Instance.ToggleSettingsTab();
     }
 
+    public void ButtonInventoryGear()
+    {
+        FighterInventorManager.Instance.ToggleUnequippedLootInventory(false);
+        FighterInventorManager.Instance.unequippedLootInventoryOpened = false;
+        FighterInventorManager.Instance.ToggleInventoryMode(true, false, true);
+
+        if (!ShopManager.Instance.GetSelectedShopItem())
+            OverlayUI.Instance.ResetDetailsUI();
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+    }
+
+    public void ButtonInventoryItems()
+    {
+        FighterInventorManager.Instance.ToggleUnequippedLootInventory(false);
+        FighterInventorManager.Instance.unequippedLootInventoryOpened = false;
+        FighterInventorManager.Instance.ToggleInventoryMode(false, true, true);
+
+        if (!ShopManager.Instance.GetSelectedShopItem())
+            OverlayUI.Instance.ResetDetailsUI();
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+    }
+
     bool enterRoomButtonPressed = false;
 
     public void ButtonEnterRoom(bool byPass = false)
@@ -265,6 +293,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
             if (!byPass)
             {
+                if (!RoomManager.Instance.GetActiveRoom())
+                    return;
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
 
@@ -343,7 +373,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
         */
 
-        GameManager.Instance.UpdateAllysPositionCombat();
+        if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.SHOP)
+            GameManager.Instance.UpdateAllysPositionCombat();
 
         enterRoomButtonPressed = false;
     }
@@ -506,24 +537,49 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             {
                                 if (selectedUnit.GetActiveCombatSlot().combatSelected)
                                 {
-                                    // If selected skill is out of range, choose another skill
-                                    if (selectedUnit.GetRangeFromUnit(GameManager.Instance.GetActiveUnitFunctionality()) > GameManager.Instance.GetActiveSkill().curSkillRange
-                                        && !GameManager.Instance.GetActiveSkill().isSelfCast)
+                                    if (GameManager.Instance.isSkillsMode)
                                     {
-                                        if (combatSlot.GetLinkedUnit())
+                                        // If selected skill is out of range, choose another skill
+                                        if (selectedUnit.GetRangeFromUnit(GameManager.Instance.GetActiveUnitFunctionality()) > GameManager.Instance.GetActiveSkill().curSkillRange
+                                            && !GameManager.Instance.GetActiveSkill().isSelfCast)
+                                        {
+                                            if (combatSlot.GetLinkedUnit())
+                                            {
+                                                GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
+                                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                            }
+                                        }
+                                        else
                                         {
                                             GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
-                                            combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                            selectedUnit.ToggleSelected(true);
+
+                                            CombatGridManager.Instance.done = true;
+
+                                            GameManager.Instance.targetUnit(selectedUnit, true);
                                         }
-                                    }                                
+                                    }
                                     else
                                     {
-                                        GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
-                                        selectedUnit.ToggleSelected(true);
+                                        // If selected skill is out of range, choose another skill
+                                        if (selectedUnit.GetRangeFromUnit(GameManager.Instance.GetActiveUnitFunctionality()) > GameManager.Instance.GetActiveItem().range
+                                            && !GameManager.Instance.GetActiveItem().isSelfCast)
+                                        {
+                                            if (combatSlot.GetLinkedUnit())
+                                            {
+                                                GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
+                                                combatSlot.GetLinkedUnit().ToggleSelected(true);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //GameManager.Instance.unitsSelected.Add(combatSlot.GetLinkedUnit());
+                                            //selectedUnit.ToggleSelected(true);
 
-                                        CombatGridManager.Instance.done = true;
+                                            CombatGridManager.Instance.done = true;
 
-                                        GameManager.Instance.targetUnit(selectedUnit, true);
+                                            GameManager.Instance.targetUnit(selectedUnit, true);
+                                        }
                                     }
                                 }
 
@@ -650,6 +706,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         SettingsManager.Instance.ToggleSettingsButton(true);
 
         ShopManager.Instance.ClearFallenHeroesVisuals();
+        SkillsTabManager.Instance.ToggleSkillsTabUI(false);
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
@@ -664,6 +721,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         MapManager.Instance.mapOverlay.ToggleTeamPageButton(true);
 
         TeamGearManager.Instance.ToggleGearButtons(false);
+
+        GameManager.Instance.ToggleFighterVisibility(true);
 
         // Disable to map button
         GameManager.Instance.toMapButton.UpdateAlpha(0);
@@ -758,7 +817,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public void ButtonSelectItem()
     {
         // Ensure the player cant select the same item
-        if (ItemRewardManager.Instance.selectedItemName != itemParent.GetItemName())
+        if (ItemRewardManager.Instance.selectedObjectName != itemParent.GetItemName())
             ButtonSelectItemCo();
     }
 
@@ -773,8 +832,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (itemParent != null)
             {
                 //ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
-                ItemRewardManager.Instance.selectedItemName = itemParent.GetItemName();
-                ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedItemName);
+                ItemRewardManager.Instance.selectedObjectName = itemParent.GetItemName();
+                ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedObjectName);
 
                 itemParent.ToggleSelected(true, true);
 
@@ -793,11 +852,18 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     ItemRewardManager.Instance.UpdateItemSelectedRaceIcon("ETHEREAL");
                 }      
                 else if (ItemRewardManager.Instance.selectedItem.curRace == ItemPiece.RaceSpecific.ALL)
-                    ItemRewardManager.Instance.ToggleItemSelectedRaceIcon(false);                       
-            }
+                    ItemRewardManager.Instance.ToggleItemSelectedRaceIcon(false);
 
-            ItemRewardManager.Instance.UpdateItemDescription(true);
-            
+                ItemRewardManager.Instance.UpdateItemDetails(true);
+            }
+            else
+            {
+                ItemRewardManager.Instance.selectedObjectName = itemParent.GetItemName();
+                ItemRewardManager.Instance.selectedGear = ItemRewardManager.Instance.GetGear(ItemRewardManager.Instance.selectedObjectName);
+
+                itemParent.ToggleSelected(true, true);
+                ItemRewardManager.Instance.UpdateGearDetails(true);
+            }            
 
             ItemRewardManager.Instance.ToggleConfirmItemButton(true);
         }
@@ -807,9 +873,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             if (shopItem != null)
             {
                 //ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
-                ItemRewardManager.Instance.selectedItemName = shopItem.GetShopItemName();
-                ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedItemName);
-
+                ItemRewardManager.Instance.selectedObjectName = shopItem.GetShopItemName();
+                ItemRewardManager.Instance.selectedItem = ItemRewardManager.Instance.GetItem(ItemRewardManager.Instance.selectedObjectName);
+                OverlayUI.Instance.ToggleOverlay(true);
                 //itemParent.ToggleSelected(true, true);
             }
 
@@ -828,10 +894,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
             {
-                GameManager.Instance.EnsureHeroIsDead();
-                StartCoroutine(GameManager.Instance.HeroRetrievalScene(false));
+                if (HeroRoomManager.Instance.spawnedFighter)
+                {
+                    GameManager.Instance.EnsureHeroIsDead();
+                    StartCoroutine(GameManager.Instance.HeroRetrievalScene(false));
 
-                StartCoroutine(ConfrimItemCo());
+                    StartCoroutine(ConfrimItemCo());
+                }
             }
         }
 
@@ -1036,7 +1105,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             {
                 AudioManager.Instance.Play("Button_Click");
 
-                TeamGearManager.Instance.UnequipGear();
+                //TeamGearManager.Instance.UnequipGear();
 
                 TeamGearManager.Instance.GearSelection(slot, true);
                 SkillsTabManager.Instance.UpdateSkillStatDetails();
@@ -1090,9 +1159,11 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         else
             TeamItemsManager.Instance.ItemSelection(slot, true);
 
+
         // Display inven
         if (slot.isEmpty)
         {
+
             OwnedLootInven.Instance.ToggleOwnedGearDisplay(true, "Owned Items");
             //OwnedGearInven.Instance.ToggleOwnedGearEquipButton(true);
         }
@@ -1124,13 +1195,18 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (TeamGearManager.Instance.playerInGearTab)
         {
             TeamGearManager.Instance.UpdateGearNameText("");
-            TeamGearManager.Instance.ClearAllGearStats();
+            TeamGearManager.Instance.UpdateGearRarityText("");
+            TeamGearManager.Instance.UpdateGearTypeText("");
+            TeamGearManager.Instance.ToggleAllSlotsClickable(true, false, true);
+            //TeamGearManager.Instance.ClearAllGearStats();
         }
         else if (TeamItemsManager.Instance.playerInItemTab)
         {
             TeamItemsManager.Instance.UpdateItemNameText("");
             TeamItemsManager.Instance.UpdateItemDesc("");
             TeamItemsManager.Instance.ToggleFighterRaceIcon(false);
+            TeamItemsManager.Instance.ToggleTeamItems(true);
+            TeamItemsManager.Instance.ToggleAllSlotsClickable(true, false);
         }
     }
 
@@ -1139,22 +1215,36 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (OwnedLootInven.Instance.ownedLootOpened)
             return;
 
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+        if (TeamGearManager.Instance.playerInGearTab)
+        {
+            if (TeamGearManager.Instance.GetSelectedBaseGearSlot())
+            {
+                if (TeamGearManager.Instance.GetSelectedBaseGearSlot().isEmpty)
+                    return;
+            }
+            else
+                return;
+        }
 
         if (TeamGearManager.Instance.playerInGearTab)
-            TeamGearManager.Instance.UnequipGear();
+        {
+            if (TeamGearManager.Instance.GetSelectedBaseGearSlot())
+            {
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+                TeamGearManager.Instance.UnequipGear(true, GameManager.Instance.activeRoomHeroes[0], 
+                    TeamGearManager.Instance.GetSelectedBaseGearSlot().linkedGearPiece);
+            }
+        }
+
         else if (TeamItemsManager.Instance.playerInItemTab)
+        {
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
             TeamItemsManager.Instance.UnequipItem();
-    }
-
-    public void GearSell()
-    {
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
-
-        TeamGearManager.Instance.SellGear();
-        Debug.Log("b pressed");
+        }
+     
     }
 
     public void SkillSlotSelection()
@@ -1245,23 +1335,44 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Combat Item
         List<ItemPiece> shopCombatItems = new List<ItemPiece>();
         shopCombatItems = ShopManager.Instance.GetShopCombatItems();
+
+        List<GearPiece> shopCombatGear = new List<GearPiece>();
+        shopCombatGear = ShopManager.Instance.GetShopCombatGear();
+
         int shopCombatCount = shopCombatItems.Count;
 
-        // Search for the item
-        for (int i = 0; i < shopCombatCount; i++)
+
+        if (shopItem == ShopManager.Instance.GetSelectedShopItem())
         {
-            if (shopItem.GetShopItemName() == shopCombatItems[i].itemName)
-            {
-                // unit purchased the item
-                shopItem.SelectShopItem(true);
-                return;
-            }
+            OverlayUI.Instance.ResetDetailsUI();
+        }
+        else
+        {
+            shopItem.SelectShopItem(true);
         }
     }
 
     public void PurchaseTryShopItem()
     {
         ShopManager.Instance.GetSelectedShopItem().PurchaseShopItem();
+    }
+
+    public void ButtonGearTabNextFighter()
+    {
+        if (!OwnedLootInven.Instance.ownedLootOpened)
+        {
+            GameManager.Instance.ShuffleThroughFighters();
+            GameManager.Instance.UpdateAllAlliesPosition(false, true, true);
+
+            GameManager.Instance.UpdateAllyVisibility(true, true);
+
+            // Update visible character ally 
+            TeamGearManager.Instance.activeFighterMenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeRoomHeroes[0].GetUnitName());
+
+            TeamGearManager.Instance.UpdateGearSlotsBase(true);
+
+            TeamGearManager.Instance.activeFighterMenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomHeroes[0]);
+        }
     }
 
     // Gear tab from map
@@ -1271,6 +1382,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
 
         CombatGridManager.Instance.ToggleCombatGrid(true);
+
+
 
         OwnedLootInven.Instance.DisableCoverForOwnedSlots();
 
@@ -1295,6 +1408,14 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         TeamItemsManager.Instance.ToggleToMapButton(false);
 
         TeamGearManager.Instance.ToggleGearButtons();
+
+        // Update visible character ally 
+        TeamGearManager.Instance.activeFighterMenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeRoomHeroes[0].GetUnitName());
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            GameManager.Instance.activeRoomHeroes[i].gearIndex = i;
+        }
 
         // Toggle unequip button
         TeamItemsManager.Instance.ToggleUnequipButton(false);
@@ -1333,8 +1454,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         //SkillsTabManager.Instance.
         SkillsTabManager.Instance.ToggleOwnedSkillSlotsClickable(true);
 
-        GameManager.Instance.SkillsTabChangeAlly(true, false, true);
-        
+        SkillsTabManager.Instance.ToggleSkillsTabUI(true);
+
+        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
+        {
+            GameManager.Instance.activeRoomHeroes[i].gearIndex = i;
+        }
+
         TeamGearManager.Instance.ToggleTeamGear(false);
         TeamItemsManager.Instance.ToggleTeamItems(false);
 
@@ -1367,15 +1493,16 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
-        //GameManager.Instance.SetActiveHeroToBase();
-
         TeamGearManager.Instance.playerInGearTab = false;
         SkillsTabManager.Instance.playerInSkillTab = false;
         TeamItemsManager.Instance.playerInItemTab = true;
 
         SkillsTabManager.Instance.ToggleOwnedSkillSlotsClickable(true);
 
-        GameManager.Instance.SkillsTabChangeAlly(false, true, false);
+        //GameManager.Instance.ResetFighterPositions();
+        //GameManager.Instance.SkillsTabChangeAlly(false, true, false);
+        GameManager.Instance.ToggleFighterVisibility(false);
+        SkillsTabManager.Instance.ToggleSkillsTabUI(false);
         TeamItemsManager.Instance.ToggleTeamItems(true);
 
         SkillsTabManager.Instance.ToggleToMapButton(false);
@@ -1399,9 +1526,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         TeamGearManager.Instance.playerInGearTab = true;
 
         TeamItemsManager.Instance.ToggleTeamItems(false);
-        GameManager.Instance.SkillsTabChangeAlly(false, true, false);
 
+        //GameManager.Instance.SkillsTabChangeAlly(false, true, false);
+        GameManager.Instance.ToggleFighterVisibility(true);
+        GameManager.Instance.SetFightersToGearPosition();
         TeamGearManager.Instance.ToggleGearButtons(true);
+
+        TeamGearManager.Instance.ToggleTeamGear(true);
 
         SkillsTabManager.Instance.ToggleToMapButton(false);
         TeamGearManager.Instance.ToggleToMapButton(true);
@@ -1443,6 +1574,273 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
+    public void ButtonCloseDetails()
+    {
+        OverlayUI.Instance.ResetDetailsUI();
+        FighterInventorManager.Instance.DisableAllBagIconSelections();
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+    }
+
+    public void ButtonSellItem()
+    {
+        if (FighterInventorManager.Instance.GetSelectedInventorySlot())
+        {
+            UIElement uiElement;
+            uiElement = GetComponent<UIElement>();
+
+            if (uiElement)
+            {
+                uiElement.AnimateUI(false);
+            }
+
+            // Pop Animate item in inventory before it gets removed
+            if (FighterInventorManager.Instance.GetSelectedInventorySlot())
+            {
+                FighterInventorManager.Instance.GetSelectedInventorySlot().AnimateUI(false);
+            }
+
+            // Button Click SFX
+            AudioManager.Instance.Play("Button_Click");
+
+            StartCoroutine(ButtonSellItemCo());
+        }
+    }
+
+    IEnumerator ButtonSellItemCo()
+    {
+        yield return new WaitForSeconds(.3f);
+
+        ShopManager.Instance.UpdatePlayerGold(ShopManager.Instance.GetLootSellValue());
+
+        if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece)
+        {
+            if (!FighterInventorManager.Instance.GetSelectedInventorySlot().isEquipped)
+            {
+                for (int i = 0; i < OwnedLootInven.Instance.ownedGear.Count; i++)
+                {
+                    if (OwnedLootInven.Instance.ownedGear[i].linkedGearPiece.gearName ==
+                        FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearName)
+                    {
+                        OwnedLootInven.Instance.RemoveOwnedGear(OwnedLootInven.Instance.ownedGear[i]);
+                        FighterInventorManager.Instance.ToggleUnequippedLootInventory(true, true);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit.teamIndex == 0)
+                {
+                    for (int i = 0; i < OwnedLootInven.Instance.GetWornGearMainAlly().Count; i++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[i].linkedGearPiece.gearName ==
+                             FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearName)
+                        {
+                            TeamGearManager.Instance.UnequipGear(false, FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit,
+                                OwnedLootInven.Instance.GetWornGearMainAlly()[i].linkedGearPiece, true, true);
+                            FighterInventorManager.Instance.UpdateFightersInventory(false);
+                            break;
+                        }
+                    }
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit.teamIndex == 1)
+                {
+                    for (int i = 0; i < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; i++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[i].linkedGearPiece.gearName ==
+                         FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearName)
+                        {
+                            TeamGearManager.Instance.UnequipGear(false, FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit,
+                                OwnedLootInven.Instance.GetWornGearSecondAlly()[i].linkedGearPiece, true, true);
+                            FighterInventorManager.Instance.UpdateFightersInventory(false);
+                            break;
+                        }
+                    }
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit.teamIndex == 2)
+                {
+                    for (int i = 0; i < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; i++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[i].linkedGearPiece.gearName ==
+                         FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearName)
+                        {
+                            TeamGearManager.Instance.UnequipGear(false, FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit,
+                                OwnedLootInven.Instance.GetWornGearThirdAlly()[i].linkedGearPiece, true, true);
+                            FighterInventorManager.Instance.UpdateFightersInventory(false);
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+        }
+        else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece)
+        {
+            if (!FighterInventorManager.Instance.GetSelectedInventorySlot().isEquipped)
+            {
+                for (int i = 0; i < OwnedLootInven.Instance.ownedItems.Count; i++)
+                {
+                    if (OwnedLootInven.Instance.ownedItems[i].linkedItemPiece.itemName ==
+                        FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.itemName)
+                    {
+                        OwnedLootInven.Instance.RemoveOwnedItem(OwnedLootInven.Instance.ownedItems[i]);
+                        FighterInventorManager.Instance.ToggleUnequippedLootInventory(true, true);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit.teamIndex == 0)
+                {
+                    for (int i = 0; i < OwnedLootInven.Instance.GetWornItemMainAlly().Count; i++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemMainAlly()[i].linkedItemPiece.itemName ==
+                             FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.itemName)
+                        {
+                            TeamItemsManager.Instance.UnequipItem(false, FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit,
+                                OwnedLootInven.Instance.GetWornItemMainAlly()[i], true);
+                            FighterInventorManager.Instance.UpdateFightersInventory(false);
+                            break;
+                        }
+                    }
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit.teamIndex == 1)
+                {
+                    for (int i = 0; i < OwnedLootInven.Instance.GetWornItemSecondAlly().Count; i++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemSecondAlly()[i].linkedItemPiece.itemName ==
+                         FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.itemName)
+                        {
+                            TeamItemsManager.Instance.UnequipItem(false, FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit,
+                                OwnedLootInven.Instance.GetWornItemSecondAlly()[i], true);
+                            FighterInventorManager.Instance.UpdateFightersInventory(false);
+                            break;
+                        }
+                    }
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit.teamIndex == 2)
+                {
+                    for (int i = 0; i < OwnedLootInven.Instance.GetWornItemThirdAlly().Count; i++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornItemThirdAlly()[i].linkedItemPiece.itemName ==
+                         FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.itemName)
+                        {
+                            TeamItemsManager.Instance.UnequipItem(false, FighterInventorManager.Instance.GetSelectedInventorySlot().linkedUnit,
+                                OwnedLootInven.Instance.GetWornItemThirdAlly()[i], true);
+                            FighterInventorManager.Instance.UpdateFightersInventory(false);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        OverlayUI.Instance.ResetDetailsUI();
+        //FighterInventorManager.Instance.ToggleUnequippedLootInventory(true);
+        FighterInventorManager.Instance.DisableAllBagIconSelections();
+        FighterInventorManager.Instance.UpdateEquippedInvenSlots();
+        FighterInventorManager.Instance.ResetInvenSlotBG();
+
+        if (!FighterInventorManager.Instance.unequippedLootInventoryOpened)
+        {
+            if (FighterInventorManager.Instance.inventoryModeGear)
+            {
+                FighterInventorManager.Instance.ToggleInventoryMode(true, false, true);
+            }
+            else
+            {
+                FighterInventorManager.Instance.ToggleInventoryMode(false, true, true);
+            }
+        }
+    }
+
+    public void ButtonSelectInventorySlot()
+    {
+        UIElement uielement;
+        uielement = transform.parent.GetComponent<UIElement>();
+
+
+        if (!uielement.linkedItemPiece && !uielement.linkedGearPiece)
+            return;
+
+        FighterInventorManager.Instance.DisableAllBagIconSelections();
+        FighterInventorManager.Instance.ResetFighterInventorySelections();
+
+        uielement.contentImage2UI.UpdateAlpha(1);
+        uielement.AnimateUI(false);
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        FighterInventorManager.Instance.UpdateSelectedInventorySlot(uielement);
+
+        ShopManager.Instance.ResetShopItemSelectBorder();
+
+        OverlayUI.Instance.ToggleFighterDetailsTab(true);
+        if (uielement.linkedItemPiece)
+        {
+           OverlayUI.Instance.UpdateItemDetailsUI(uielement.linkedItemPiece.itemName,
+           uielement.linkedItemPiece.itemDesc,
+           uielement.linkedItemPiece.itemPower,
+           uielement.linkedItemPiece.range,
+           uielement.linkedItemPiece.itemRangeHitArea,
+           uielement.linkedItemPiece.itemSpriteCombatSmaller);
+
+           if (uielement.linkedItemPiece.curActiveType == ItemPiece.ActiveType.ACTIVE)
+           {
+               OverlayUI.Instance.UpdateActiveItemUseCountText(uielement.linkedItemPiece.maxUsesPerCombat);
+               OverlayUI.Instance.UpdateActiveItemTriggerStatus(true);
+           }
+           else
+           {
+               OverlayUI.Instance.UpdateActiveItemUseCountText(0);
+               OverlayUI.Instance.UpdateActiveItemTriggerStatus(false);
+           }
+
+            OverlayUI.Instance.UpdateItemRarityText(uielement.linkedItemPiece.curRarity.ToString());
+
+            string race = "";
+            race = uielement.linkedItemPiece.curRace.ToString();
+            OverlayUI.Instance.UpdateActiveItemRaceSpecificIcon(race);
+
+            OverlayUI.Instance.UpdateShopDetailsBanner(null, null, uielement.linkedItemPiece);
+
+            OverlayUI.Instance.ToggleShopDetailsBanner(true);
+        }
+        else if (uielement.linkedGearPiece)
+        {
+            OverlayUI.Instance.UpdateGearDetailsUI(uielement.linkedGearPiece.gearName, "", uielement.linkedGearPiece.bonusHealth,
+                uielement.linkedGearPiece.bonusDamage, uielement.linkedGearPiece.bonusHealing, uielement.linkedGearPiece.bonusDefense,
+                uielement.linkedGearPiece.bonusSpeed, uielement.linkedGearPiece.gearIcon);
+
+            OverlayUI.Instance.UpdateActiveItemUseCountText(0);
+            OverlayUI.Instance.UpdateActiveItemTriggerStatus(false, true);
+
+            OverlayUI.Instance.UpdateItemRarityText(uielement.linkedGearPiece.gearRarity);
+
+            string race = "";
+            OverlayUI.Instance.UpdateActiveItemRaceSpecificIcon(race);
+
+            OverlayUI.Instance.UpdateShopDetailsBanner(null, uielement.linkedGearPiece);
+            OverlayUI.Instance.ToggleShopDetailsBanner(true);
+        }
+
+
+        OverlayUI.Instance.ToggleActiveItemTriggerStatus(true);
+        GameManager.Instance.ToggleUIElement(GameManager.Instance.fighterSelectedMainSlotDesc, true);
+
+        OverlayUI.Instance.ToggleSkillItemSwitchButton(false);
+
+        OverlayUI.Instance.ToggleItemRarityTextUI(true);
+
+        ShopManager.Instance.CalculateLootSellValue();
+        OverlayUI.Instance.ToggleSellItemCostText(true);
+    }
+
     public IEnumerator PostBattleToMapButtonCo()
     {
         yield return new WaitForSeconds(1f);
@@ -1468,6 +1866,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Update unit sorting
         GameManager.Instance.UpdateAllUnitsSorting(GameManager.Instance.unitTabSortingLevel);
 
+        /*
         if (GameManager.Instance.activeRoomHeroes.Count > 0)
         {
             if (GameManager.Instance.GetActiveAlly())
@@ -1476,6 +1875,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 GameManager.Instance.SkillsTabChangeAlly(false, true);
             }
         }
+        */
 
         TeamItemsManager.Instance.ReloadItemUses();
 
@@ -1487,29 +1887,6 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         //CombatGridManager.Instance.TogleCombatGrid(false);
 
         postBattleButtonPressed = false;
-    }
-
-    public void WeaponBackButton()
-    {
-        // Prevent players from backing out of attacking before the final damage is finalised.
-        if (disabled)
-            return;
-
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
-
-        // Return unit energy
-        //GameManager.Instance.ReturnEnergyToUnit();
-
-        GameManager.Instance.ResetButton(GameManager.Instance.attackButton);    // Allow attack button clicks
-
-        GameManager.Instance.SetupPlayerSkillsUI(GameManager.Instance.GetActiveSkill());
-
-        GameManager.Instance.UpdateEnemyPosition(true);
-
-        GameManager.Instance.ToggleSelectingUnits(true);
-        GameManager.Instance.ToggleAllowSelection(true);
-        //GameManager.Instance.ResetSelectedUnits();
     }
 
     public void EnableButton()
@@ -1619,17 +1996,34 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.IncreaseAllPlayerHealth();
     }
 
-    public void EndTurnButton()
+    public void EndTurnButton(bool flag = false)
     {
-        if (disabled)
+        if (disabled && !flag)
             return;
 
-        // Button Click SFX
-        AudioManager.Instance.Play("Button_Click");
+        if (!GameManager.Instance.playerInCombat)
+        {
+            AudioManager.Instance.Play("SFX_ShopBuyFail");
+            return;
+        }
 
-        GameManager.Instance.ToggleEndTurnButton(false);
+        if (flag)
+        {
+            MenuOverlay.Instance.ToggleMenuOverlay(false);
+        }
 
-        GameManager.Instance.UpdateTurnOrder();
+        if (GameManager.Instance.GetActiveUnitFunctionality())
+        {
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                // Button Click SFX
+                AudioManager.Instance.Play("Button_Click");
+
+                GameManager.Instance.ToggleEndTurnButton(false);
+
+                GameManager.Instance.UpdateTurnOrder();
+            }
+        }
     }
 
     public void ToggleSelected(bool toggle)
@@ -1705,10 +2099,28 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
-    public void ButtonInventoryAdd()
+    public void ButtonInventory()
     {
-        GameManager.Instance.SpawnItem();
+        if (ShopManager.Instance.GetSelectedShopItem() && ShopManager.Instance.playerIsYetToSelectAFighter)
+        {
+            GameManager.Instance.SpawnItem(true);
+            FighterInventorManager.Instance.ToggleEquippedLootInventorySlots(false);
+            FighterInventorManager.Instance.ToggleUnequippedLootInventory(true, true);
+        }
+        else
+        {
+            FighterInventorManager.Instance.ToggleEquippedLootInventorySlots(false);
+            FighterInventorManager.Instance.ToggleUnequippedLootInventory(true);
+        }
+
+        FighterInventorManager.Instance.unequippedLootInventoryOpened = true;
+        FighterInventorManager.Instance.ResetFighterInventorySelections();
+
+        FighterInventorManager.Instance.ToggleInventoryGearButton(true, false);
+        FighterInventorManager.Instance.ToggleInventoryItemsButton(true, false);
+        FighterInventorManager.Instance.HideFighterInventorys();
     }
+
     public void FallenHeroPromptNo()
     {
         // Button Click SFX
@@ -1774,6 +2186,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
+            //GameManager.Instance.ToggleEndTurnButton(false);
             CombatGridManager.Instance.ToggleTabButtons("Movement");
         }
     }
@@ -1794,6 +2207,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
             GameManager.Instance.UpdatePlayerAbilityUI(GameManager.Instance.isSkillsMode);
 
+        CombatGridManager.Instance.isCombatMode = true;
+
         GameManager.Instance.UpdateDetailsBanner();
 
         if (!GameManager.Instance.isSkillsMode)
@@ -1807,6 +2222,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
             if (GameManager.Instance.GetActiveItem())
             {
+                CombatGridManager.Instance.ToggleTabButtons("Items");
                 GameManager.Instance.UpdateMainIconDetails(null, GameManager.Instance.GetActiveItem());
 
                 if (GameManager.Instance.GetActiveItem().itemName == GameManager.Instance.fighterMainSlot1.GetItemName())
@@ -1840,7 +2256,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                     CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
                     CombatGridManager.Instance.ToggleTabButtons("Items");
                     GameManager.Instance.UpdateMainIconDetails(null, null);
-                    OverlayUI.Instance.UpdateItemUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
+                    OverlayUI.Instance.UpdateItemDetailsUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
                     return;
                 }
 
@@ -2126,8 +2542,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (GameManager.Instance.isSkillsMode)
         {
-            if (disabled)
-                return;
+            //if (disabled)
+             //   return;
 
             // If skill is on cooldown, stop
             if (GameManager.Instance.GetActiveUnitFunctionality().GetSkillCurCooldown(GameManager.Instance.GetActiveUnitFunctionality().GetSkill(1)) > 0)
@@ -2690,17 +3106,24 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         ShopManager.Instance.CalculatePurchaseAcceptReroll();
     }
 
-    public void ButtonSellItem()
-    {
-        //Debug.Log("sell item");
-    }
 
     public void SelectUnit()
     {
+        if (SkillsTabManager.Instance.playerInSkillTab)
+            return;
+
         // If a unit is selected that is dead during movement, do not select the unit
         if (unit.isDead && GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.ALIVE)
         {
             ButtonSelectCombatSlot(true);
+
+            if (transform.parent.GetComponentInParent<CombatSlot>())
+            {
+                if (transform.parent.GetComponentInParent<CombatSlot>().GetLinkedUnit())
+                {
+                    transform.parent.GetComponentInParent<CombatSlot>().GetLinkedUnit().selectUnitButton.SelectUnit();
+                }
+            }
             return;
         }
 
@@ -2718,7 +3141,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 return;
         }
 
-        if (!CombatGridManager.Instance.isCombatMode && !GameManager.Instance.GetActiveUnitFunctionality().hasAttacked)
+        if (!CombatGridManager.Instance.isCombatMode && !GameManager.Instance.GetActiveUnitFunctionality().hasAttacked
+            && !ShopManager.Instance.playerInShopRoom)
         {
             // Button Click SFX
             AudioManager.Instance.Play("Button_Click");
@@ -2734,7 +3158,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             return;
 
         }
-
+        if (!GameManager.Instance.playerInCombat || RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
+            StartCoroutine(SelectUnitCo());
 
         if (ShopManager.Instance.playerInShopRoom)
         {
@@ -2752,8 +3177,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             }
         }
 
-        if (!GameManager.Instance.playerInCombat || RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
-            StartCoroutine(SelectUnitCo());
+
     }
 
     IEnumerator SelectUnitCo()

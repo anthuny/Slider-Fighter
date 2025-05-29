@@ -80,7 +80,8 @@ public class Item : MonoBehaviour
         ToggleEquipButton(false);
 
         TeamGearManager.Instance.UpdateGearNameText("");
-
+        TeamGearManager.Instance.UpdateGearRarityText("");
+        TeamGearManager.Instance.UpdateGearTypeText("");
         //UpdateCurGearType(GearType.EMPTY);
     }
 

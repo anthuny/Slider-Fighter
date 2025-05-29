@@ -33,7 +33,7 @@ MonoBehaviour:
   itemRangeHitAreas:
   - {x: 0, y: 0}
   itemAreaHitCount: 1
-  canTargetSelf: 0
+  canTargetSelf: 1
   attackAllSelected: 0
   effectAdded: {fileID: 0}
   effectAddedTurnLength: 0

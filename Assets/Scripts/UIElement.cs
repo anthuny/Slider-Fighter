@@ -13,12 +13,12 @@ public class UIElement : MonoBehaviour
     public enum StatType { SKILLSLOT1, SKILLSLOT2, SKILLSLOT3, SKILLSLOT4, BG };
     public StatType curStatType;
 
-    public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
+    public enum Rarity { common, rare, epic, legendary }
     public Rarity curRarity;
 
     public Image contentImage;
     public UIElement contentImageUI;
-    [SerializeField] private UIElement contentImage2UI;
+    public UIElement contentImage2UI;
     public TextMeshProUGUI contentText;
     public TextMeshProUGUI contentText2;
     [SerializeField] private TextMeshProUGUI contentText3;
@@ -46,6 +46,7 @@ public class UIElement : MonoBehaviour
     [SerializeField] private int unlockedPointsThreshhold;
     [SerializeField] bool isLocked;
     public string itemName;
+    public string gearName;
     [SerializeField] private UIElement rarityBorderUI;
     public Slot slot;
     public UIElement skillUpgradesUI;
@@ -61,6 +62,105 @@ public class UIElement : MonoBehaviour
     public bool displayingAlert = false;
     public UIElement raceIconEffectBG;
 
+    public GameObject commonRarityBG;
+    public GameObject rareRarityBG;
+    public GameObject epicRarityBG;
+    public GameObject legendaryRarityBG;
+
+    public UIElement selection;
+    public GearPiece linkedGearPiece;
+    public ItemPiece linkedItemPiece;
+    public UnitFunctionality linkedUnit;
+    public bool isEmpty = true;
+    public bool isEquipped = false;
+
+    public void UpdateInvenSlot(GearPiece gear = null, ItemPiece item = null)
+    {
+        if (gear)
+        {
+            linkedGearPiece = gear;
+            isEmpty = false;
+
+            if (gear.gearRarity == "common" || gear.gearRarity == "COMMON")
+            {
+                curRarity = Rarity.common;
+            }
+            else if (gear.gearRarity == "rare" || gear.gearRarity == "RARE")
+            {
+                curRarity = Rarity.rare;
+            }
+            else if (gear.gearRarity == "epic" || gear.gearRarity == "EPIC")
+            {
+                curRarity = Rarity.epic;
+            }
+            else if (gear.gearRarity == "legendary" || gear.gearRarity == "LEGENDARY")
+            {
+                curRarity = Rarity.legendary;
+            }
+
+            contentImageUI.UpdateContentImage(gear.gearIcon);
+        }
+        else if (item)
+        {
+            isEmpty = false;
+            linkedItemPiece = item;
+
+            if (item.curRarity == ItemPiece.Rarity.common)
+                curRarity = Rarity.common;
+            else if (item.curRarity == ItemPiece.Rarity.rare)
+                curRarity = Rarity.rare;
+            else if (item.curRarity == ItemPiece.Rarity.epic)
+                curRarity = Rarity.epic;
+            else if (item.curRarity == ItemPiece.Rarity.legendary)
+                curRarity = Rarity.legendary;
+
+            contentImageUI.UpdateContentImage(item.itemSpriteItemTab);
+        }
+
+        if (!gear && !item)
+            isEmpty = true;
+
+        UpdateRarityBG();
+    }
+
+    public void ToggleSelection(bool toggle = true)
+    {
+        if (toggle)
+            selection.UpdateAlpha(1);
+        else
+            selection.UpdateAlpha(0);
+    }
+
+    public void UpdateRarityBG(bool forceOff = true)
+    {
+        ToggleAllRaritiesBGOff();
+
+        if (forceOff)
+        {
+            if (curRarity == Rarity.common)
+                ToggleRarityBGOn(commonRarityBG);
+            else if (curRarity == Rarity.rare)
+                ToggleRarityBGOn(rareRarityBG);
+            if (curRarity == Rarity.epic)
+                ToggleRarityBGOn(epicRarityBG);
+            if (curRarity == Rarity.legendary)
+                ToggleRarityBGOn(legendaryRarityBG);
+        }
+    }
+
+    public void ToggleAllRaritiesBGOff()
+    {
+        commonRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+        rareRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+        epicRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+        legendaryRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+    }
+
+    public void ToggleRarityBGOn(GameObject rarityGO = null)
+    {
+        rarityGO.GetComponent<UIElement>().UpdateAlpha(.75f
+            );
+    }
 
     public void ToggleRaceIconEffectBG(bool toggle = true)
     {
@@ -109,6 +209,16 @@ public class UIElement : MonoBehaviour
     public string GetItemName()
     {
         return itemName;
+    }
+
+    public void UpdateGearName(string name)
+    {
+        gearName = name;
+    }
+
+    public string GetGearName()
+    {
+        return gearName;
     }
 
     public void UpdateSkillLevelText(int level)
@@ -341,10 +451,18 @@ public class UIElement : MonoBehaviour
 
     public void UpdateContentImage(Sprite sprite)
     {
+        if (contentImage == null)
+            return;
+
         if (sprite == null)
             contentImage.sprite = MapManager.Instance.invisSprite;
         else
             contentImage.sprite = sprite;
+    }
+
+    public void UpdateContentUINew(Sprite sprite)
+    {
+        contentImage.sprite = sprite;
     }
 
     public void UpdateContentUI(Sprite sprite)
@@ -404,10 +522,14 @@ public class UIElement : MonoBehaviour
 
         // Shit fix for rewards finding their content text
         if (contentText == null)
-            contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
+        {
+            if (transform.GetComponentInChildren<TextMeshProUGUI>())
+                contentText = transform.GetComponentInChildren<TextMeshProUGUI>();
+        }
+
 
         contentText.text = text;
-        //AnimateUI();
+        AnimateUI();
     }
     public void UpdateContentText2(string text)
     {
@@ -442,9 +564,11 @@ public class UIElement : MonoBehaviour
         contentText.color = color;
     }
 
+    bool animating = false;
+
     public void AnimateUI(bool text = true, bool depleteEffect = false)
     {
-        if (!doScalePunch)
+        if (!doScalePunch || animating)
             return;
 
         if (text)
@@ -489,9 +613,11 @@ public class UIElement : MonoBehaviour
 
     IEnumerator DecreaseSizeAfterTime()
     {
-        yield return new WaitForSeconds(1f);
+        animating = true;
+        yield return new WaitForSeconds(.5f);
 
         ResetAnimateScaleImage();
+        animating = false;
     }
 
     void AnimateUIMaxCap()
@@ -585,14 +711,17 @@ public class UIElement : MonoBehaviour
         cg.alpha = alpha;
     }
 
-    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true, bool doAnim = false)
+    public void UpdateAlpha(float alpha, bool difAlpha = false, float difAlphaNum = 0, bool depletingEffect = false, bool text = true, bool doAnim = false, bool shopItem = false)
     {
         if (this == null)
             return;
 
         cg = GetComponent<CanvasGroup>();
 
-        cg.alpha = alpha;   // Update UI Alpha
+        if (cg)
+            cg.alpha = alpha;   // Update UI Alpha
+        else
+            return;
 
         if (difAlpha)
         {
@@ -606,10 +735,12 @@ public class UIElement : MonoBehaviour
             if (doAnim)
                 AnimateUI(text);
 
-            isEnabled = true;
-
-            cg.interactable = true;
-            cg.blocksRaycasts = true;
+            if (!shopItem)
+            {
+                isEnabled = true;
+                cg.interactable = true;
+                cg.blocksRaycasts = true;
+            }
         }
         else
         {
@@ -661,7 +792,8 @@ public class UIElement : MonoBehaviour
             buttonCG.interactable = toggle;
             buttonCG.blocksRaycasts = toggle;
 
-            buttonCG.GetComponent<Button>().interactable = toggle;
+            if (buttonCG.GetComponent<Button>())
+                buttonCG.GetComponent<Button>().interactable = toggle;
         }
 
 

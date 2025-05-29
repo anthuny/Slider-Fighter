@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MapOverlay : MonoBehaviour
 {
+    public static MapOverlay Instance;
     [SerializeField] private UIElement curRoomTypeText;
     [SerializeField] private UIElement curRoomSubText;
     [SerializeField] private UIElement buttonEnterRoom;
@@ -34,6 +35,15 @@ public class MapOverlay : MonoBehaviour
     public UIElement uiElement;
 
     public bool promptEnabled = false;
+
+
+    public void ToggleMapOverlay(bool toggle = true)
+    {
+        if (toggle)
+            GetComponent<UIElement>().UpdateAlpha(1);
+        else
+            GetComponent<UIElement>().UpdateAlpha(0);
+    }
 
     public void ToggleFallenFighterPrompt(bool toggle = true)
     {
@@ -77,6 +87,8 @@ public class MapOverlay : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         uiElement = gameObject.GetComponent<UIElement>();
     }
     private void Start()

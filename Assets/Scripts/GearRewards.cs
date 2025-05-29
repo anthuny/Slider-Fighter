@@ -108,7 +108,7 @@ public class GearRewards : MonoBehaviour
         StartCoroutine(GiveGold());
 
         // Give Item and Gear
-        StartCoroutine(GiveRewards());
+        StartCoroutine(GivePostBattleLoot());
 
         GameManager.Instance.ResetEnemiesKilledCount();
     }
@@ -140,7 +140,8 @@ public class GearRewards : MonoBehaviour
         }
     }
 
-    IEnumerator GiveRewards()
+    // Gives gear for enemies defeated  
+    IEnumerator GivePostBattleLoot()
     {
         int count = GameManager.Instance.GetEnemiesKilledCount();
         bool spawnedItem = false; 
@@ -182,19 +183,19 @@ public class GearRewards : MonoBehaviour
                     uIElement.UpdateContentImage(ItemRewardManager.Instance.selectedItem.itemSpriteItemTab);
                     uIElement.UpdateItemName(ItemRewardManager.Instance.selectedItem.itemName);
 
-                    if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.LEGENDARY)
+                    if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.legendary)
                     {
                         uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
                     }
-                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.EPIC)
+                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.epic)
                     {
                         uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
                     }
-                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.RARE)
+                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.rare)
                     {
                         uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
                     }
-                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.COMMON)
+                    else if (ItemRewardManager.Instance.selectedItem.curRarity == ItemPiece.Rarity.common)
                     {
                         uIElement.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
                     }
@@ -215,6 +216,7 @@ public class GearRewards : MonoBehaviour
 
             int gearChance = Random.Range(0, 101);
 
+            //gearChance = 100;
             // Roll if Gear drops
             if (gearChance >= unitDropRatePerc)
             {
@@ -229,6 +231,7 @@ public class GearRewards : MonoBehaviour
 
                 Slot slot = go.GetComponent<Slot>();
 
+                slot.GetComponent<UIElement>().AnimateUI(false);
                 //gear.gameObject.GetComponent<UIElement>().AnimateUI();
 
                 slot.isGold = false;
@@ -264,42 +267,66 @@ public class GearRewards : MonoBehaviour
                     int rand = Random.Range(0, allGearPiecesCommon.Count);
                     newGear = allGearPiecesCommon[rand];
                     slot.UpdateSlotImage(newGear.gearIcon);
-                    OwnedLootInven.Instance.AddOwnedGear(slot);
+                    GameManager.Instance.SpawnItem(false, null, newGear);
+                    AudioManager.Instance.Play("Button_Click");
+
+                    AudioManager.Instance.Play("AttackBar_Bad");
+
+
                 }
                 else if (slot.GetRarity() == Slot.Rarity.RARE)
                 {
                     int rand = Random.Range(0, allGearPiecesRare.Count);
                     newGear = allGearPiecesRare[rand];
                     slot.UpdateSlotImage(newGear.gearIcon);
-                    OwnedLootInven.Instance.AddOwnedGear(slot);
+                    GameManager.Instance.SpawnItem(false, null, newGear);
+                    AudioManager.Instance.Play("AttackBar_Bad");
+                    yield return new WaitForSeconds(ItemRewardManager.Instance.itemTimeBetweenRaritySFX);
+                    AudioManager.Instance.Play("AttackBar_Good");
                 }
                 else if (slot.GetRarity() == Slot.Rarity.EPIC)
                 {
                     int rand = Random.Range(0, allGearPiecesEpic.Count);
                     newGear = allGearPiecesEpic[rand];
                     slot.UpdateSlotImage(newGear.gearIcon);
-                    OwnedLootInven.Instance.AddOwnedGear(slot);
+                    GameManager.Instance.SpawnItem(false, null, newGear);
+                    AudioManager.Instance.Play("Button_Click");
+
+                    AudioManager.Instance.Play("AttackBar_Bad");
+                    yield return new WaitForSeconds(ItemRewardManager.Instance.itemTimeBetweenRaritySFX);
+                    AudioManager.Instance.Play("AttackBar_Good");
+                    yield return new WaitForSeconds(ItemRewardManager.Instance.itemTimeBetweenRaritySFX);
+                    AudioManager.Instance.Play("AttackBar_Great");
                 }
                 else if (slot.GetRarity() == Slot.Rarity.LEGENDARY)
                 {
                     int rand = Random.Range(0, allGearPiecesLegendary.Count);
                     newGear = allGearPiecesLegendary[rand];
-                    OwnedLootInven.Instance.AddOwnedGear(slot);
+                    GameManager.Instance.SpawnItem(false, null, newGear);
+                    AudioManager.Instance.Play("Button_Click");
+
+                    AudioManager.Instance.Play("AttackBar_Bad");
+                    yield return new WaitForSeconds(ItemRewardManager.Instance.itemTimeBetweenRaritySFX);
+                    AudioManager.Instance.Play("AttackBar_Good");
+                    yield return new WaitForSeconds(ItemRewardManager.Instance.itemTimeBetweenRaritySFX);
+                    AudioManager.Instance.Play("AttackBar_Great");
+                    yield return new WaitForSeconds(ItemRewardManager.Instance.itemTimeBetweenRaritySFX);
+                    AudioManager.Instance.Play("AttackBar_Perfect");
                 }
 
 
                 // Update gear type
                 if (newGear.gearType == "helmet")
                 {
-                    slot.UpdateCurSlotType(Slot.SlotPieceType.HELMET);
+                    slot.UpdateCurSlotType(Slot.SlotPieceType.helmet);
                 }
                 else if (newGear.gearType == "chestpiece")
                 {
-                    slot.UpdateCurSlotType(Slot.SlotPieceType.CHESTPIECE);
+                    slot.UpdateCurSlotType(Slot.SlotPieceType.chestpiece);
                 }
                 else if (newGear.gearType == "boots")
                 {
-                    slot.UpdateCurSlotType(Slot.SlotPieceType.BOOTS);
+                    slot.UpdateCurSlotType(Slot.SlotPieceType.boots);
                 }
 
                 IncrementSpawnedGearCount();
@@ -319,6 +346,7 @@ public class GearRewards : MonoBehaviour
                 slot.ToggleOwnedGearButton(false);
                 // Show full visibility of Gear
                 slot.UpdateLootGearAlpha(true);
+                slot.UpdateSlotDetails();
             }
         }
 
@@ -339,11 +367,13 @@ public class GearRewards : MonoBehaviour
 
         UIElement uiElement = go.GetComponent<UIElement>();
 
+        int gold = 0;
+        gold = CalculateGoldRecieved();
         uiElement.UpdateContentImage(goldSprite);
-        uiElement.UpdateContentText(CalculateGoldRecieved().ToString());
-        uiElement.AnimateUI(false);
+        uiElement.UpdateContentText(gold.ToString());
+        //uiElement.AnimateUI(false);
 
-        ShopManager.Instance.UpdatePlayerGold(CalculateGoldRecieved());
+        ShopManager.Instance.UpdatePlayerGold(gold);
 
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");

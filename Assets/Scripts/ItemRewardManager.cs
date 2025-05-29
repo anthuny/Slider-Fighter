@@ -29,6 +29,7 @@ public class ItemRewardManager : MonoBehaviour
     [SerializeField] private UIElement chooseItemPromptText;
     [SerializeField] private ButtonFunctionality confirmItemButton;
     public UIElement itemDescriptionUI;
+    [SerializeField] private UIElement selectedItemRarity;
 
     [Space(5)]
     [Header("Item Rarity")]
@@ -56,15 +57,27 @@ public class ItemRewardManager : MonoBehaviour
     public List<ItemPiece> allItemEpic = new List<ItemPiece>();
     [Space(3)]
     public List<ItemPiece> allItemLegendary = new List<ItemPiece>();
-    
+
+    [Space(5)]
+    [SerializeField] private List<GearPiece> allGear = new List<GearPiece>();
+    [Space(5)]
+    public List<GearPiece> allGearCommon = new List<GearPiece>();
+    [Space(3)]
+    public List<GearPiece> allGearRare = new List<GearPiece>();
+    [Space(3)]
+    public List<GearPiece> allGearEpic = new List<GearPiece>();
+    [Space(3)]
+    public List<GearPiece> allGearLegendary = new List<GearPiece>();
+
     [HideInInspector]
     public UIElement uiElement;
 
     [HideInInspector]
-    public bool itemSelected;
-    public string selectedItemName;
+    public bool objectSelected;
+    public string selectedObjectName;
     public ItemPiece selectedItem;
-    public List<UIElement> offeredItemsUI = new List<UIElement>();
+    public GearPiece selectedGear;
+    public List<UIElement> offeredObjectsUI = new List<UIElement>();
 
     public void UpdateItemSelectedRaceIcon(string fighterRace)
     {
@@ -95,6 +108,9 @@ public class ItemRewardManager : MonoBehaviour
         {
             itemSelectedRaceIcon.UpdateAlpha(0);
         }
+
+        itemSelectedRaceIcon.ToggleButton(toggle);
+        itemSelectedRaceIcon.ToggleButton2(toggle);
     }
 
     private void Awake()
@@ -115,13 +131,13 @@ public class ItemRewardManager : MonoBehaviour
     {
         for (int i = 0; i < allItems.Count; i++)
         {
-            if (allItems[i].curRarity == ItemPiece.Rarity.COMMON)
+            if (allItems[i].curRarity == ItemPiece.Rarity.common)
                 allItemCommon.Add(allItems[i]);
-            else if (allItems[i].curRarity == ItemPiece.Rarity.RARE)
+            else if (allItems[i].curRarity == ItemPiece.Rarity.rare)
                 allItemRare.Add(allItems[i]);
-            else if (allItems[i].curRarity == ItemPiece.Rarity.EPIC)
+            else if (allItems[i].curRarity == ItemPiece.Rarity.epic)
                 allItemEpic.Add(allItems[i]);
-            else if (allItems[i].curRarity == ItemPiece.Rarity.LEGENDARY)
+            else if (allItems[i].curRarity == ItemPiece.Rarity.legendary)
                 allItemLegendary.Add(allItems[i]);
         }
     }
@@ -145,9 +161,10 @@ public class ItemRewardManager : MonoBehaviour
 
         ToggleConfirmItemButton(false);
 
-        offeredItemsUI.Clear();
+        offeredObjectsUI.Clear();
 
-        UpdateItemDescription(false);
+        UpdateItemDetails(false);
+        UpdateGearDetails(false);
 
         ToggleItemSelectedRaceIcon(false);   
         //itemSelected = false;
@@ -155,23 +172,32 @@ public class ItemRewardManager : MonoBehaviour
 
     public void ClearItemSelection()
     {
-        for (int i = 0; i < offeredItemsUI.Count; i++)
+        for (int i = 0; i < offeredObjectsUI.Count; i++)
         {
-            offeredItemsUI[i].ToggleSelected(false);
+            offeredObjectsUI[i].ToggleSelected(false);
         }
     }
 
     public void FillItemsTable()
     {
-        Setup();
+        if (RoomManager.Instance.GetActiveRoom().hasOfferedItems)
+        {
+            return;
+        }
+        else
+        {
+            RoomManager.Instance.GetActiveRoom().hasOfferedItems = true;
 
-        ResetRewardsTable();
-        chooseItemPromptText.UpdateAlpha(0);
+            Setup();
 
-        ToggleItemRewards(true);
+            ResetRewardsTable();
+            chooseItemPromptText.UpdateAlpha(0);
 
-        // Give item(s)
-        StartCoroutine(GiveItems());
+            ToggleItemRewards(true);
+
+            // Give item(s)
+            StartCoroutine(GiveItems());
+        }
     }
 
     public void ResetRewardsTable()
@@ -194,20 +220,94 @@ public class ItemRewardManager : MonoBehaviour
 
         return null;
     }
-    public void UpdateItemDescription(bool toggle)
+
+    public GearPiece GetGear(string name)
+    {
+        for (int i = 0; i < allItems.Count; i++)
+        {
+            if (allItems[i].itemName == name)
+            {
+                return allGear[i];
+            }
+        }
+
+        return null;
+    }
+    public void UpdateItemDetails(bool toggle)
     {
         if (toggle)
         {
-            selectedItem = GetItem(selectedItemName);
+            selectedItem = GetItem(selectedObjectName);
             itemDescriptionUI.UpdateAlpha(1);
             itemDescriptionUI.UpdateContentText(selectedItem.itemName);
             itemDescriptionUI.UpdateContentSubText(selectedItem.itemDesc);
 
-            //itemSelected = true;
+            selectedItemRarity.UpdateAlpha(1);
+            if (selectedItem.curRarity == ItemPiece.Rarity.legendary)
+            {
+                selectedItemRarity.UpdateContentText("Legendary");
+                selectedItemRarity.UpdateContentTextColour(legendaryColour);
+            }
+            else if (selectedItem.curRarity == ItemPiece.Rarity.epic)
+            {
+                selectedItemRarity.UpdateContentText("Epic");
+                selectedItemRarity.UpdateContentTextColour(epicColour);
+            }
+            else if (selectedItem.curRarity == ItemPiece.Rarity.rare)
+            {
+                selectedItemRarity.UpdateContentText("Rare");
+                selectedItemRarity.UpdateContentTextColour(rareColour);
+            }
+            else if (selectedItem.curRarity == ItemPiece.Rarity.common)
+            {
+                selectedItemRarity.UpdateContentText("Common");
+                selectedItemRarity.UpdateContentTextColour(commonColour);
+            }
         }
         else
         {
-            itemDescriptionUI.UpdateAlpha(0);   
+            itemDescriptionUI.UpdateAlpha(0);
+            //selectedItemRarity.UpdateAlpha(0);
+            selectedItemRarity.UpdateContentText("");
+        }
+    }
+
+    public void UpdateGearDetails(bool toggle)
+    {
+        if (toggle)
+        {
+            selectedGear = GetGear(selectedObjectName);
+            itemDescriptionUI.UpdateAlpha(1);
+            itemDescriptionUI.UpdateContentText(selectedGear.gearName);
+            itemDescriptionUI.UpdateContentSubText("");
+
+            selectedItemRarity.UpdateAlpha(1);
+            if (selectedGear.gearRarity == "legendary")
+            {
+                selectedItemRarity.UpdateContentText("Legendary");
+                selectedItemRarity.UpdateContentTextColour(legendaryColour);
+            }
+            else if (selectedGear.gearRarity == "epic")
+            {
+                selectedItemRarity.UpdateContentText("Epic");
+                selectedItemRarity.UpdateContentTextColour(epicColour);
+            }
+            else if (selectedGear.gearRarity == "rare")
+            {
+                selectedItemRarity.UpdateContentText("Rare");
+                selectedItemRarity.UpdateContentTextColour(rareColour);
+            }
+            else if (selectedGear.gearRarity == "common")
+            {
+                selectedItemRarity.UpdateContentText("Common");
+                selectedItemRarity.UpdateContentTextColour(commonColour);
+            }
+        }
+        else
+        {
+            itemDescriptionUI.UpdateAlpha(0);
+            //selectedItemRarity.UpdateAlpha(0);
+            selectedItemRarity.UpdateContentText("");
         }
     }
 
@@ -244,6 +344,9 @@ public class ItemRewardManager : MonoBehaviour
         // Create as many items as needed
         for (int i = 0; i < count; i++)
         {
+            if (i >= 3)
+                break;
+
             // Spawn Item
             GameObject go = Instantiate(itemGO, itemsParent.position, Quaternion.identity);
             go.transform.SetParent(itemsParent);
@@ -309,9 +412,9 @@ public class ItemRewardManager : MonoBehaviour
                     itemUI.UpdateContentImage(allItemLegendary[rand].itemSpriteItemTab);
                     itemUI.UpdateItemName(allItemLegendary[rand].itemName);
                     itemUI.UpdateRarityBorderColour(legendaryColour);
-                    itemUI.curRarity = UIElement.Rarity.LEGENDARY;
+                    itemUI.curRarity = UIElement.Rarity.legendary;
                     offeredItemsTemp.Add(allItemLegendary[rand]);
-                    offeredItemsUI.Add(itemUI);
+                    offeredObjectsUI.Add(itemUI);
                     itemUI.AnimateUI(false);
                     // Button Click SFX
                     AudioManager.Instance.Play("Button_Click");
@@ -323,7 +426,7 @@ public class ItemRewardManager : MonoBehaviour
                     AudioManager.Instance.Play("AttackBar_Great");
                     yield return new WaitForSeconds(itemTimeBetweenRaritySFX);
                     AudioManager.Instance.Play("AttackBar_Perfect");
-
+                    slot.UpdateSlotDetails();
                     yield return new WaitForSeconds(itemTimeBetweenReveal);
 
                     continue;
@@ -384,9 +487,9 @@ public class ItemRewardManager : MonoBehaviour
                     itemUI.UpdateContentImage(allItemEpic[rand].itemSpriteItemTab);
                     itemUI.UpdateItemName(allItemEpic[rand].itemName);
                     itemUI.UpdateRarityBorderColour(epicColour);
-                    itemUI.curRarity = UIElement.Rarity.EPIC;
+                    itemUI.curRarity = UIElement.Rarity.epic;
                     offeredItemsTemp.Add(allItemEpic[rand]);
-                    offeredItemsUI.Add(itemUI);
+                    offeredObjectsUI.Add(itemUI);
                     itemUI.AnimateUI(false);
                     // Button Click SFX
                     AudioManager.Instance.Play("Button_Click");
@@ -396,7 +499,7 @@ public class ItemRewardManager : MonoBehaviour
                     AudioManager.Instance.Play("AttackBar_Good");
                     yield return new WaitForSeconds(itemTimeBetweenRaritySFX);
                     AudioManager.Instance.Play("AttackBar_Great");
-
+                    slot.UpdateSlotDetails();
                     yield return new WaitForSeconds(itemTimeBetweenReveal);
 
                     continue;
@@ -456,9 +559,9 @@ public class ItemRewardManager : MonoBehaviour
                     itemUI.UpdateContentImage(allItemRare[rand].itemSpriteItemTab);
                     itemUI.UpdateItemName(allItemRare[rand].itemName);
                     itemUI.UpdateRarityBorderColour(rareColour);
-                    itemUI.curRarity = UIElement.Rarity.RARE;
+                    itemUI.curRarity = UIElement.Rarity.rare;
                     offeredItemsTemp.Add(allItemRare[rand]);
-                    offeredItemsUI.Add(itemUI);
+                    offeredObjectsUI.Add(itemUI);
                     itemUI.AnimateUI(false);
                     // Button Click SFX
                     AudioManager.Instance.Play("Button_Click");
@@ -466,7 +569,7 @@ public class ItemRewardManager : MonoBehaviour
                     AudioManager.Instance.Play("AttackBar_Bad");
                     yield return new WaitForSeconds(itemTimeBetweenRaritySFX);
                     AudioManager.Instance.Play("AttackBar_Good");
-
+                    slot.UpdateSlotDetails();
                     yield return new WaitForSeconds(itemTimeBetweenReveal);
 
                     continue;
@@ -525,15 +628,16 @@ public class ItemRewardManager : MonoBehaviour
                 itemUI.UpdateContentImage(allItemCommon[rand].itemSpriteItemTab);
                 itemUI.UpdateItemName(allItemCommon[rand].itemName);
                 itemUI.UpdateRarityBorderColour(commonColour);
-                itemUI.curRarity = UIElement.Rarity.COMMON;
+                itemUI.curRarity = UIElement.Rarity.common;
                 offeredItemsTemp.Add(allItemCommon[rand]);
-                offeredItemsUI.Add(itemUI);
+                offeredObjectsUI.Add(itemUI);
                 itemUI.AnimateUI(false);
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
 
                 AudioManager.Instance.Play("AttackBar_Bad");
 
+                slot.UpdateSlotDetails();
                 yield return new WaitForSeconds(itemTimeBetweenReveal);
 
                 continue;

@@ -16,6 +16,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float spinSpeed;
 
     private Transform target;
+    public CombatSlot startingCombatSlot;
+    public CombatSlot endingCombatSlot;
 
     private float speed = 1;
 
@@ -30,7 +32,7 @@ public class Projectile : MonoBehaviour
     bool spinningLeft;
     private Animator animator;
 
-    float spinAmount = 0;
+    public float spinAmount = 0;
 
     public void UpdateProjectileSprite(Sprite sprite)
     {
@@ -123,11 +125,16 @@ public class Projectile : MonoBehaviour
 
     void Spin()
     {
+        /*
         if (allowSpin)
         {
-            spinAmount += spinSpeed;
+            spinAmount += spinSpeed * Time.deltaTime;
             transform.GetChild(0).GetComponent<RectTransform>().localRotation = new Quaternion(0, 0, spinAmount, 0);
+
+            if (spinAmount >= 359.99f || spinAmount <= -359.99f)
+                spinAmount = 0;
         }
+        */
     }
     /*
 public void ToggleAllowSpin(bool toggle)
@@ -161,7 +168,7 @@ if (allowAnimate)
         Vector3 difference = newTarget.position - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
 
-        transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, rotationZ+90);
+        transform.localRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, rotationZ+90);
 
 
         //transform.LookAt(target);
@@ -201,10 +208,49 @@ if (allowAnimate)
             HitTarget();
         else
         {
-            if (!GetTeam())
-                transform.Translate(transform.up * (Time.deltaTime * speed));
-            else
+            Vector2 dir = startingCombatSlot.GetLocalIndexFromSlot(endingCombatSlot);
+
+            // If Aiming Left
+            if (dir == new Vector2(-1,0))
+            {
+                transform.Translate(transform.right * (Time.deltaTime * speed));
+            }
+            // If Aiming Right
+            else if (dir == new Vector2(1, 0))
+            {
+                transform.Translate(-transform.right * (Time.deltaTime * speed));
+            }
+            // If Aiming Up
+            else if (dir == new Vector2(0, 1))
+            {
                 transform.Translate(-transform.up * (Time.deltaTime * speed));
+            }
+            // If Aiming Down
+            else if (dir == new Vector2(0, -1))
+            {
+                transform.Translate(transform.up * (Time.deltaTime * speed));
+            }
+
+            // If Aiming LeftDown
+            else if (dir == new Vector2(-1, -1))
+            {
+                transform.Translate(transform.up * (Time.deltaTime * speed));
+            }
+            // If Aiming LeftUp
+            else if (dir == new Vector2(-1, 1))
+            {
+                transform.Translate(-transform.up * (Time.deltaTime * speed));
+            }
+            // If Aiming RightDown
+            else if (dir == new Vector2(1, -1))
+            {
+                transform.Translate(transform.up * (Time.deltaTime * speed));
+            }
+            // If Aiming RightUp
+            else if (dir == new Vector2(1, 1))
+            {
+                transform.Translate(-transform.up * (Time.deltaTime * speed));
+            }
         }
     }
 

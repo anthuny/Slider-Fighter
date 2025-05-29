@@ -7,6 +7,7 @@ public class SkillsTabManager : MonoBehaviour
     public static SkillsTabManager Instance;
 
     [SerializeField] private ButtonFunctionality toMapButton;
+    public UIElement skillsTabUI;
 
 
     [SerializeField] private int skillPointsPerLv = 2;
@@ -15,6 +16,11 @@ public class SkillsTabManager : MonoBehaviour
     public UIElement skillBase2;
     public UIElement skillBase3;
     public UIElement skillBase4;
+
+    public Slot baseSkillSlot1;
+    public Slot baseSkillSlot2;
+    public Slot baseSkillSlot3;
+    public Slot baseSkillSlot4;
 
     public UIElement holdingButton;
 
@@ -51,6 +57,73 @@ public class SkillsTabManager : MonoBehaviour
     public ButtonFunctionality gearTabArrowRightButton;
 
     private int statPageCount;
+
+    public void ToggleBaseSlotsClickable(bool toggle = true)
+    {
+        skillBase1.ToggleButton(toggle);
+        skillBase2.ToggleButton(toggle);
+        skillBase3.ToggleButton(toggle);
+        skillBase4.ToggleButton(toggle);
+
+        skillBase1.ToggleButton2(toggle);
+        skillBase2.ToggleButton2(toggle);
+        skillBase3.ToggleButton2(toggle);
+        skillBase4.ToggleButton2(toggle);
+    }
+
+    public void ToggleSkillUpgradesClickable(bool toggle = true)
+    {
+        baseSkillSlot1.ToggleSkillUpgradesClickable(toggle);
+        baseSkillSlot2.ToggleSkillUpgradesClickable(toggle);
+        baseSkillSlot3.ToggleSkillUpgradesClickable(toggle);
+        baseSkillSlot4.ToggleSkillUpgradesClickable(toggle);
+    }
+    public void ToggleSkillsTabUI(bool toggle = true)
+    {
+        if (toggle)
+        {
+            skillsTabUI.UpdateAlpha(1);
+
+            ToggleBaseSlotsClickable(true);
+            ToggleSkillUpgradesClickable(true);
+
+            gearTabArrowLeftButton.ToggleButton(true);
+            gearTabArrowRightButton.ToggleButton(true);
+
+            // Update UI
+            activeSkillBase = null;
+            UpdateActiveSkillNameText("");
+            UpdateSkillStatDetails();
+            ResetSkillsBaseSelection();
+
+            ToggleToMapButton(true);
+            GameManager.Instance.UpdateAllAlliesPosition(false, true, true);
+
+            if (GameManager.Instance.activeRoomHeroes[0])
+                Instance.UpdateActiveUnit(GameManager.Instance.activeRoomHeroes[0]);
+
+            GameManager.Instance.oldActiveRoomAllUnitFunctionalitys = GameManager.Instance.activeRoomAllUnitFunctionalitys;
+
+            Instance.UpdateAllyNameText();
+
+            GameManager.Instance.UpdateAllyVisibility(true, true);
+
+            Instance.SetupSkillsTab(GameManager.Instance.activeRoomHeroes[0], true);
+        }
+
+        else
+        {
+            Instance.gearTabArrowLeftButton.ToggleButton(false);
+            Instance.gearTabArrowRightButton.ToggleButton(false);
+            Instance.ToggleToMapButton(false);
+
+            GameManager.Instance.UpdateAllAlliesPosition(false, true, false);
+            GameManager.Instance.UpdateAllysPositionCombat();
+
+            skillsTabUI.UpdateAlpha(0);
+        }
+
+    }
 
     private void Awake()
     {
@@ -401,33 +474,6 @@ public class SkillsTabManager : MonoBehaviour
         statPageCount = 0;
     }
 
-    public void UpdateStatPage()
-    {
-        /*
-        //ToggleToMapButton(true);
-
-        // Active unit level image for team page
-        for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
-        {
-            GameManager.Instance.activeRoomHeroes[i].ToggleUnitLevelImage(true);
-        }
-
-        UnitFunctionality unit = GetActiveUnit();
-        UnitData unitData = unit.unitData;
-        //Debug.Log("4");
-        unit.UpdateUnitSkills(unitData.GetUnitSkills());
-        unit.UpdateCurrentSkills(unitData.GetUnitSkills());
-
-        //unit.GetSkillBaseSlot(0).se
-
-        ToggleOwnedSkillSlotsClickable(true);
-
-        SetupSkillsTab(unit);
-
-        if (GameManager.Instance.activeRoomHeroes.Count == 1)
-            GameManager.Instance.GetActiveAlly().SetPositionAndParent(GameManager.Instance.allySpawnPositions[0]);
-        */
-    }
 
     // Ensure there is only 1 of each skill, skills added, have 
     public void AdjustActiveSkills(UnitFunctionality unit, SkillData skillAdded, SkillData skillRemoved)
@@ -471,17 +517,6 @@ public class SkillsTabManager : MonoBehaviour
     public void ResetTeamSetup()
     {
         ResetSpendStatPoints();
-
-        /*
-        skillBase1.UpdateStatPoindsAdded(true, true);
-        skillBase2.UpdateStatPoindsAdded(true, true);
-        skillBase3.UpdateStatPoindsAdded(true, true);
-        skillBase4.UpdateStatPoindsAdded(true, true);
-        */
-
-        //UnitFunctionality unit = GetActiveUnit();
-
-        UpdateStatPage();
     }
 
     public void SetupSkillsTab(UnitFunctionality unit, bool updateSkillUpgrades = true)
@@ -499,7 +534,7 @@ public class SkillsTabManager : MonoBehaviour
 
 
         //activeSkillBase = unit.GetCurrentSkillBase(0);
-
+        ToggleSelectedSlotDetailsButton(false);
         //ToggleSkillBaseSelection(skillBase1, true);
 
         UpdateSkillStatDetails();
@@ -819,7 +854,7 @@ public class SkillsTabManager : MonoBehaviour
         //  error check with starting with allies 
         if (GameManager.Instance.activeRoomHeroes.Count > 0)
         {
-            for (int i = 0; i < GameManager.Instance.activeTeam.Count; i++)
+            for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
             {
                 unitsCombinedLevel += GameManager.Instance.activeRoomHeroes[i].GetUnitLevel() * skillPointsPerLv;
                 spentPoints += GameManager.Instance.activeRoomHeroes[i].GetSpentSkillPoints();

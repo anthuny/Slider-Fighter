@@ -171,7 +171,11 @@ public class CombatSlot : MonoBehaviour
         for (int i = 0; i < fallenUnits.Count; i++)
         {
             if (fallenUnits[i] && destroy)
-                Destroy(fallenUnits[i].gameObject);
+            {
+                if (fallenUnits[i].curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    Destroy(fallenUnits[i].gameObject);
+            }
+
             ResetFallenUnits();
         }
     }

@@ -21,6 +21,7 @@ MonoBehaviour:
   curAnimType: 1
   curSkillEffectType: 1
   curSkillActiveType: 0
+  curClassType: 0
   curSkillSelectionType: 0
   skillRangeHitArea: {x: 1, y: 1}
   skillRangeHitAreas:
@@ -48,7 +49,7 @@ MonoBehaviour:
   skillHitAttempts: 1
   projectileSpeed: 0
   skillCooldown: 0
-  curCooldown: 0
+  curCooldown: 1
   skillSelectionCount: 1
   isSelfCast: 0
   isSpecial: 0
@@ -68,7 +69,7 @@ MonoBehaviour:
   special: 0
   effect: {fileID: 11400000, guid: a4744e70b753d624cbfa94a0259daa21, type: 2}
   effect2: {fileID: 0}
-  effectTurnLength: 1
+  effectTurnLength: 2
   curEffectHitChance: 0
   startingEffectHitChance: 0
   baseEffectApplyCount: 0

@@ -91,4 +91,4 @@ MonoBehaviour:
   skillHit: {fileID: 8300000, guid: bcd623edd9b33454e9bdfe662deadd8e, type: 3}
   skillHitAdditional: {fileID: 0}
   originalIndex: 3
-  reanimated: 0
+  reanimated: 1

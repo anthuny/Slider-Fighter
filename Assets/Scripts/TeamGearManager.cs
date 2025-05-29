@@ -14,6 +14,8 @@ public class TeamGearManager : MonoBehaviour
     public Color statIncreasedColour;
     public Color statDecreasedColour;
 
+    public Color gearIconColour;
+
     public float timeStatIncColour = 1;
     public float timeStatDecColour = 1;
 
@@ -21,6 +23,20 @@ public class TeamGearManager : MonoBehaviour
     public Sprite helmetSlotSprite;
     public Sprite chestSlotSprite;
     public Sprite bootsSlotSprite;
+    public Sprite earringSlotSprite;
+    public Sprite necklessSlotSprite;
+    public Sprite beltSlotSprite;
+    public Sprite gloveSlotSprite;
+    public Sprite ringSlotSprite;
+
+    public Sprite helmetWhiteSlotSprite;
+    public Sprite chestWhiteSlotSprite;
+    public Sprite bootsWhiteSlotSprite;
+    public Sprite earringWhiteSlotSprite;
+    public Sprite necklessWhiteSlotSprite;
+    public Sprite beltWhiteSlotSprite;
+    public Sprite gloveWhiteSlotSprite;
+    public Sprite ringWhiteSlotSprite;
 
     public ButtonFunctionality teamSetupTabArrowLeftButton;
     public ButtonFunctionality teamSetupTabArrowRightButton;
@@ -29,11 +45,11 @@ public class TeamGearManager : MonoBehaviour
     [SerializeField] private UIElement ally2GearTabUI;
     [SerializeField] private UIElement ally3GearTabUI;
 
-    [SerializeField] private MenuUnitDisplay ally1MenuUnitDisplay;
-    [SerializeField] private MenuUnitDisplay ally2MenuUnitDisplay;
-    [SerializeField] private MenuUnitDisplay ally3MenuUnitDisplay;
+    public MenuUnitDisplay activeFighterMenuUnitDisplay;
+    public MenuUnitDisplay ally2MenuUnitDisplay;
+    public MenuUnitDisplay ally3MenuUnitDisplay;
 
-    public List<Slot> ally1GearSlots = new List<Slot>();
+    public List<Slot> mainFighterGearSlots = new List<Slot>();
     public List<Slot> ally2GearSlots = new List<Slot>();
     public List<Slot> ally3GearSlots = new List<Slot>();
 
@@ -41,7 +57,8 @@ public class TeamGearManager : MonoBehaviour
     [SerializeField] private GameObject gearStatGO;
     [SerializeField] private UIElement gearDescUI;
     [SerializeField] private UIElement gearNameText;
-
+    [SerializeField] private UIElement gearRarityText;
+    [SerializeField] private UIElement gearTypeText;
     public Slot selectedGearSlot;
     public Slot selectedBaseGearSlot;
     [Space(2)]
@@ -49,18 +66,45 @@ public class TeamGearManager : MonoBehaviour
     public GearPiece equippedHelmetMain;
     public GearPiece equippedChestpieceMain;
     public GearPiece equippedBootsMain;
+    public GearPiece equippedNecklessMain;
+    public GearPiece equippedEarringMain;
+    public GearPiece equippedBeltMain;
+    public GearPiece equippedGloveMain;
+    public GearPiece equippedRing1Main;
+    public GearPiece equippedRing2Main;
     [Space(2)]
     [Header("Second Ally")]
     public GearPiece equippedHelmetSec;
     public GearPiece equippedChestpieceSec;
     public GearPiece equippedBootsSec;
+    public GearPiece equippedNecklessSec;
+    public GearPiece equippedEarringSec;
+    public GearPiece equippedBeltSec;
+    public GearPiece equippedGloveSec;
+    public GearPiece equippedRing1Sec;
+    public GearPiece equippedRing2Sec;
     [Space(2)]
     [Header("Third Ally")]
     public GearPiece equippedHelmetThi;
     public GearPiece equippedChestpieceThi;
     public GearPiece equippedBootsThi;
+    public GearPiece equippedNecklessThi;
+    public GearPiece equippedEarringThi;
+    public GearPiece equippedBeltThi;
+    public GearPiece equippedGloveThi;
+    public GearPiece equippedRing1Thi;
+    public GearPiece equippedRing2Thi;
     [Space(2)]
     public bool playerInGearTab;
+
+    public UIElement statParent;
+
+    [SerializeField] private UIElement nextFighterArrow;
+
+    public void ToggleNextFighterArrow(bool toggle = true)
+    {
+        nextFighterArrow.ToggleButton(toggle);
+    }
 
     public void UpdateUnequiptGearAlert()
     {
@@ -106,27 +150,52 @@ public class TeamGearManager : MonoBehaviour
         gearNameText.UpdateContentText(name);
     }
 
+    public void UpdateGearRarityText(string text)
+    {
+        gearRarityText.UpdateContentText(text);
+
+        if (text == "common" || text == "COMMON")
+            gearRarityText.UpdateContentTextColour(ItemRewardManager.Instance.commonColour);
+        else if (text == "rare" || text == "RARE")
+            gearRarityText.UpdateContentTextColour(ItemRewardManager.Instance.rareColour);
+        else if (text == "epic" || text == "EPIC")
+            gearRarityText.UpdateContentTextColour(ItemRewardManager.Instance.epicColour);
+        else if (text == "legendary" || text == "LEGENDARY")
+            gearRarityText.UpdateContentTextColour(ItemRewardManager.Instance.legendaryColour);
+    }
+
+    public void UpdateGearTypeText(string text)
+    {
+        if (text == "neckless")
+            text = "pendant";
+
+        gearTypeText.UpdateContentText(text);
+    }
+
     public void ClearAllGearStats()
     {
         // Clear all gear stats
         GameObject gearStatGO = gearStatsUI.gameObject;
         for (int i = 0; i < gearStatGO.transform.childCount; i++)
         {
-            Destroy(gearStatGO.transform.GetChild(i).gameObject);
+            //Destroy(gearStatGO.transform.GetChild(i).gameObject);
+            gearStatGO.transform.GetChild(i).GetComponent<UIElement>().UpdateContentText("");
         }
 
+        /*
         GameObject gearDescGO = gearDescUI.gameObject;
         for (int x = 0; x < gearDescGO.transform.childCount; x++)
         {
             Destroy(gearDescGO.transform.GetChild(x).gameObject);
         }
+        */
     }
 
     UnitFunctionality GetKnownUnitFunct(bool ally1 = false, bool ally2 = false, bool ally3 = false)
     {
         if (ally1)
         {
-            string unitName = GameManager.Instance.activeTeam[0].unitName;
+            string unitName = GameManager.Instance.activeRoomHeroes[0].GetUnitName();
 
             for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
             {
@@ -139,7 +208,7 @@ public class TeamGearManager : MonoBehaviour
 
         if (ally2)
         {
-            string unitName2 = GameManager.Instance.activeTeam[1].unitName;
+            string unitName2 = GameManager.Instance.activeRoomHeroes[1].GetUnitName();
 
             for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
             {
@@ -151,7 +220,7 @@ public class TeamGearManager : MonoBehaviour
         }
         if (ally3)
         {
-            string unitName3 = GameManager.Instance.activeTeam[2].unitName;
+            string unitName3 = GameManager.Instance.activeRoomHeroes[2].GetUnitName();
 
             for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
             {
@@ -222,123 +291,88 @@ public class TeamGearManager : MonoBehaviour
 
         return null;
     }
-    public void UpdateUnitStatsEquip(Slot gear)
+
+    public void UpdateUnitStatsEquip(GearPiece gear)
     {
-        if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
-        {
-            UnitFunctionality unitFunc = GetKnownUnitFunct(true, false, false);
+        UnitFunctionality unitFunc = GameManager.Instance.activeRoomHeroes[0];
+        // If new gear has a higher stat then current, make the stat bounce
+        unitFunc.prevStatHealth = (int)unitFunc.GetUnitMaxHealth();
+        unitFunc.prevStatPower = (int)unitFunc.curPower;
+        unitFunc.prevStatHealingPower = (int)unitFunc.curHealingPower;
+        unitFunc.prevStatDefense = (int)unitFunc.GetCurDefense();
+        unitFunc.prevStatSpeed = (int)unitFunc.GetUnitSpeed();
 
-            // Equipping a gear piece, needs to increase max hp by a set amount
-            // set amount = unit starting max health
-            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false);
-            unitFunc.UpdateHealingPower(gear.GetBonusHealing(), false, true);
-            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
-            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
 
-            ally1MenuUnitDisplay.UpdateUnitStats(unitFunc);
-        }
-        else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
-        {
-            UnitFunctionality unitFunc = GetKnownUnitFunct(false, true, false);
+        // Equipping a gear piece, needs to increase max hp by a set amount
+        // set amount = unit starting max health
+        unitFunc.UpdateUnitMaxHealth(gear.bonusHealth, false, true);
+        unitFunc.UpdateUnitCurHealth(gear.bonusHealth, false, false);
+        unitFunc.UpdateUnitPower(gear.bonusDamage, false);
+        unitFunc.UpdateHealingPower(gear.bonusHealing, false, true);
+        unitFunc.UpdateUnitDefenseChange(gear.bonusDefense, true);
+        unitFunc.UpdateUnitSpeedChange(gear.bonusSpeed, true);
 
-            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false);
-            unitFunc.UpdateHealingPower(gear.GetBonusHealing(), false, true);
-            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
-            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
-
-            ally2MenuUnitDisplay.UpdateUnitStats(unitFunc);
-        }
-        else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD)
-        {
-            UnitFunctionality unitFunc = GetKnownUnitFunct(false, false, true);
-
-            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, true);
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false);
-            unitFunc.UpdateHealingPower(gear.GetBonusHealing(), false, true);
-            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), true);
-            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), true);
-
-            ally3MenuUnitDisplay.UpdateUnitStats(unitFunc);
-        }
+        activeFighterMenuUnitDisplay.UpdateUnitStats(unitFunc);
     }
 
-    public void UpdateUnitStatsUnEquip(Slot gear)
+    public void UpdateUnitStatsUnEquip(Slot loot, bool skipStatPopup = false)
     {
-        if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
-        {
-            UnitFunctionality unitFunc = GetKnownUnitFunct(true,false,false);
+        UnitFunctionality unitFunc = GameManager.Instance.activeRoomHeroes[0];
 
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
-            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false, false);
-            unitFunc.UpdateHealingPower(gear.GetBonusHealing(), false, false);
-            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
-            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
+        /*
+        unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
+        unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
+        unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false, false);
+        unitFunc.UpdateHealingPower(gear.GetBonusHealing(), false, false);
+        unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
+        unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
+        */
 
-            ally1MenuUnitDisplay.UpdateUnitStats(unitFunc);
-        }
-        else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
-        {
-            UnitFunctionality unitFunc = GetKnownUnitFunct(false,true,false);
+        unitFunc.UpdateUnitCurHealth(loot.linkedGearPiece.bonusHealth, true, false);
+        unitFunc.UpdateUnitMaxHealth(loot.linkedGearPiece.bonusHealth, false, false);
+        unitFunc.UpdateUnitPower(loot.linkedGearPiece.bonusDamage, false, false);
+        unitFunc.UpdateHealingPower(loot.linkedGearPiece.bonusHealing, false, false);
+        unitFunc.UpdateUnitDefenseChange(loot.linkedGearPiece.bonusDefense, false);
+        unitFunc.UpdateUnitSpeedChange(loot.linkedGearPiece.bonusSpeed, false);
 
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
-            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false, false);
-            unitFunc.UpdateHealingPower(gear.GetBonusHealing(), false, false);
-            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
-            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
-
-            ally2MenuUnitDisplay.UpdateUnitStats(unitFunc);
-        }
-        else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD)
-        {
-            UnitFunctionality unitFunc = GetKnownUnitFunct(false,false,true);
-
-            unitFunc.UpdateUnitCurHealth(gear.GetBonusHealth(), true, false, false);
-            unitFunc.UpdateUnitMaxHealth(gear.GetBonusHealth(), false, false);
-            unitFunc.UpdateUnitPower(gear.GetBonusDamage(), false, false);
-            unitFunc.UpdateHealingPower(gear.GetBonusHealing(), false, false);
-            unitFunc.UpdateUnitDefenseChange(gear.GetBonusDefense(), false);
-            unitFunc.UpdateUnitSpeedChange(gear.GetBonusSpeed(), false);
-
-            ally3MenuUnitDisplay.UpdateUnitStats(unitFunc);
-        }
+        activeFighterMenuUnitDisplay.UpdateUnitStats(unitFunc, skipStatPopup);
     }
 
     public void UpdateGearStatDetails()
     {
-        ClearAllGearStats();
+        //ClearAllGearStats();
 
-        // Gear Stats Update
-        for (int i = 0; i < 5; i++)
+        if (GetSelectedGearSlot())
         {
-            GameObject spawnedStat = Instantiate(gearStatGO, gearStatsUI.transform.position, Quaternion.identity);
-            spawnedStat.transform.SetParent(gearStatsUI.transform);
-            spawnedStat.transform.localPosition = Vector2.zero;
-            spawnedStat.transform.localScale = Vector2.one;
+            if (GetSelectedGearSlot().linkedGearPiece == null)
+                return;
 
-            UIElement statUI = spawnedStat.GetComponent<UIElement>();
+            // Gear Stats Update
+            for (int i = 0; i < statParent.transform.childCount; i++)
+            {
+                //GameObject spawnedStat = Instantiate(gearStatGO, gearStatsUI.transform.position, Quaternion.identity);
+                //spawnedStat.transform.SetParent(gearStatsUI.transform);
+                //spawnedStat.transform.localPosition = Vector2.zero;
+                //spawnedStat.transform.localScale = Vector2.one;
 
-            // Update gear stat UI
-            if (i == 0)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusHealth().ToString());
-            else if (i == 1)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusDamage().ToString());
-            else if (i == 2)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusHealing().ToString());
-            else if (i == 3)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusDefense().ToString());
-            else if (i == 4)
-                statUI.UpdateContentText(GetSelectedGearSlot().GetBonusSpeed().ToString());
+                // Update gear stat UI
+                if (i == 0)
+                    statParent.transform.GetChild(0).GetComponent<UIElement>().UpdateContentText(GetSelectedGearSlot().linkedGearPiece.bonusHealth.ToString());
+                else if (i == 1)
+                    statParent.transform.GetChild(1).GetComponent<UIElement>().UpdateContentText(GetSelectedGearSlot().linkedGearPiece.bonusDamage.ToString());
+                else if (i == 2)
+                    statParent.transform.GetChild(2).GetComponent<UIElement>().UpdateContentText(GetSelectedGearSlot().linkedGearPiece.bonusHealing.ToString());
+                else if (i == 3)
+                    statParent.transform.GetChild(3).GetComponent<UIElement>().UpdateContentText(GetSelectedGearSlot().linkedGearPiece.bonusDefense.ToString());
+                else if (i == 4)
+                    statParent.transform.GetChild(4).GetComponent<UIElement>().UpdateContentText(GetSelectedGearSlot().linkedGearPiece.bonusSpeed.ToString());
 
-            // Gear Stat Name Update
-            gearNameText.UpdateContentText(GetSelectedGearSlot().GetSlotName());
+                // Gear Stat Name Update
+
+            }
         }
+
+
 
         // Gear Stat Description Update
     }
@@ -348,7 +382,7 @@ public class TeamGearManager : MonoBehaviour
     {
         ToggleTeamGear(false);
         ClearGearSlots();
-        ClearAllGearStats();
+        //ClearAllGearStats();
         //ResetAllGearSelections();
 
         StartCoroutine(ToggleGearButtonsCo());
@@ -389,11 +423,9 @@ public class TeamGearManager : MonoBehaviour
 
     public void ClearGearSlots()
     {
-        for (int i = 0; i < ally3GearSlots.Count; i++)
+        for (int i = 0; i < mainFighterGearSlots.Count; i++)
         {
-            ally1GearSlots[i].UpdateSlotImage(clearSlotSprite);
-            ally2GearSlots[i].UpdateSlotImage(clearSlotSprite);
-            ally3GearSlots[i].UpdateSlotImage(clearSlotSprite);
+            mainFighterGearSlots[i].UpdateSlotImage(clearSlotSprite);
         }
     }
 
@@ -411,85 +443,85 @@ public class TeamGearManager : MonoBehaviour
 
         if (ally1)
         {
-            for (int i = 0; i < ally1GearSlots.Count; i++)
+            for (int i = 0; i < mainFighterGearSlots.Count; i++)
             {
                 // Place helmet
                 if (i == 0)
                 {
-                    if (removedPieceType == "HELMET")
-                        ally1GearSlots[i].UpdateSlotImage(helmetSlotSprite);
+                    if (removedPieceType == "helmet")
+                        mainFighterGearSlots[i].UpdateSlotImage(helmetSlotSprite);
                 }
                 // Place chestpiece
                 if (i == 1)
                 {
-                    if (removedPieceType == "CHESTPIECE")
-                        ally1GearSlots[i].UpdateSlotImage(chestSlotSprite);
+                    if (removedPieceType == "chestpiece")
+                        mainFighterGearSlots[i].UpdateSlotImage(chestSlotSprite);
                 }
                 // Place boots 
                 if (i == 2)
                 {
-                    if (removedPieceType == "BOOTS")
-                        ally1GearSlots[i].UpdateSlotImage(bootsSlotSprite);
+                    if (removedPieceType == "boots")
+                        mainFighterGearSlots[i].UpdateSlotImage(bootsSlotSprite);
+                }
+                if (i == 3)
+                {
+                    if (removedPieceType == "neckless" || removedPieceType == "pendant")
+                        mainFighterGearSlots[i].UpdateSlotImage(necklessSlotSprite);
+                }
+                if (i == 4)
+                {
+                    if (removedPieceType == "earring")
+                        mainFighterGearSlots[i].UpdateSlotImage(earringSlotSprite);
+                }
+                if (i == 5)
+                {
+                    if (removedPieceType == "belt")
+                        mainFighterGearSlots[i].UpdateSlotImage(beltSlotSprite);
+                }
+                if (i == 6)
+                {
+                    if (removedPieceType == "glove")
+                        mainFighterGearSlots[i].UpdateSlotImage(gloveSlotSprite);
+                }
+                if (i == 7)
+                {
+                    if (removedPieceType == "ring")
+                    {
+                        if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                    }
+                }
+                if (i == 8)
+                {
+                    if (removedPieceType == "ring")
+                    {
+                        if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring2)
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                    }
                 }
 
-                ally1GearSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally1GearSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
+                mainFighterGearSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
+                mainFighterGearSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
             }
         }
 
-        if (ally2)
-        {
-            for (int x = 0; x < ally2GearSlots.Count; x++)
-            {
-                // Place helmet
-                if (x == 0)
-                {
-                    if (removedPieceType == "HELMET")
-                        ally2GearSlots[x].UpdateSlotImage(helmetSlotSprite);
-                }
-                // Place chestpiece
-                if (x == 1)
-                {
-                    if (removedPieceType == "CHESTPIECE")
-                        ally2GearSlots[x].UpdateSlotImage(chestSlotSprite);
-                }
-                // Place boots 
-                if (x == 2)
-                {
-                    if (removedPieceType == "BOOTS")
-                        ally2GearSlots[x].UpdateSlotImage(bootsSlotSprite);
-                }
+       
+    }
 
-                ally2GearSlots[x].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally2GearSlots[x].UpdateGearOwnedBy(Slot.SlotOwnedBy.SECOND);
+    public void ToggleMainSlotRarityBorder()
+    {
+        if (OwnedLootInven.Instance.ownedLootOpened)
+        {
+            for (int i = 0; i < mainFighterGearSlots.Count; i++)
+            {
+                mainFighterGearSlots[i].ToggleRarityBorder(false);
             }
         }
-
-        if (ally3)
+        else
         {
-            for (int y = 0; y < ally3GearSlots.Count; y++)
+            for (int i = 0; i < mainFighterGearSlots.Count; i++)
             {
-                // Place helmet
-                if (y == 0)
-                {
-                    if (removedPieceType == "HELMET")
-                        ally3GearSlots[y].UpdateSlotImage(helmetSlotSprite);
-                }
-                // Place chestpiece
-                if (y == 1)
-                {
-                    if (removedPieceType == "CHESTPIECE")
-                        ally3GearSlots[y].UpdateSlotImage(chestSlotSprite);
-                }
-                // Place boots 
-                if (y == 2)
-                {
-                    if (removedPieceType == "BOOTS")
-                        ally3GearSlots[y].UpdateSlotImage(bootsSlotSprite);
-                }
-
-                ally3GearSlots[y].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally3GearSlots[y].UpdateGearOwnedBy(Slot.SlotOwnedBy.THIRD);
+                mainFighterGearSlots[i].ToggleRarityBorder(true);
             }
         }
     }
@@ -500,131 +532,358 @@ public class TeamGearManager : MonoBehaviour
 
         if (ally1)
         {
-            for (int i = 0; i < ally1GearSlots.Count; i++)
+            for (int i = 0; i < mainFighterGearSlots.Count; i++)
             {
-                // Place helmet
-                if (i == 0)
+                if (GameManager.Instance.activeRoomHeroes[0].teamIndex == 0)
                 {
-                    if (equippedHelmetMain == null)
+                    // Place helmet
+                    if (i == 0)
                     {
-                        ally1GearSlots[i].isEmpty = true;
-                        ally1GearSlots[i].UpdateSlotImage(helmetSlotSprite);
+                        if (equippedHelmetMain == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "helmet");
+                            mainFighterGearSlots[i].UpdateSlotImage(helmetSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedHelmetMain, false, "helmet");
+                        }
                     }
-                    else
-                        ally1GearSlots[i].UpdateSlotImage(equippedHelmetMain.gearIcon);
+                    // Place chestpiece
+                    if (i == 1)
+                    {
+                        if (equippedChestpieceMain == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "chestpiece");
+                            mainFighterGearSlots[i].UpdateSlotImage(chestSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedChestpieceMain, false, "chestpiece");
+                        }
+                    }                   
+                    // Place boots 
+                    if (i == 2)
+                    {
+                        if (equippedBootsMain == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "boots");
+                            mainFighterGearSlots[i].UpdateSlotImage(bootsSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedBootsMain, false, "boots");
+                        }
+                    }
+                    if (i == 3)
+                    {
+                        if (equippedNecklessMain == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "neckless");
+                            mainFighterGearSlots[i].UpdateSlotImage(necklessSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedNecklessMain, false, "neckless");
+                        }
+                    }
+                    if (i == 4)
+                    {
+                        if (equippedEarringMain == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "earring");
+                            mainFighterGearSlots[i].UpdateSlotImage(earringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedEarringMain, false, "earring");
+                        }
+                    }
+                    if (i == 5)
+                    {
+                        if (equippedBeltMain == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "belt");
+                            mainFighterGearSlots[i].UpdateSlotImage(beltSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedBeltMain, false, "belt");
+                        }
+                    }
+                    if (i == 6)
+                    {
+                        if (equippedGloveMain == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "glove");
+                            mainFighterGearSlots[i].UpdateSlotImage(gloveSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedGloveMain, false, "glove");
+                        }
+                    }
+                    if (i == 7)
+                    {
+                        if (equippedRing1Main == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "ring");
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedRing1Main, false, "ring");
+                        }
+                    }
+                    if (i == 8)
+                    {
+                        if (equippedRing2Main == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "ring");
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedRing2Main, false, "ring");
+                        }
+                    }
+                    mainFighterGearSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
+                    mainFighterGearSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
                 }
-                // Place chestpiece
-                if (i == 1)
+                else if (GameManager.Instance.activeRoomHeroes[0].teamIndex == 1)
                 {
-                    if (equippedChestpieceMain == null)
+                    // Place helmet
+                    if (i == 0)
                     {
-                        ally1GearSlots[i].isEmpty = true;
-                        ally1GearSlots[i].UpdateSlotImage(chestSlotSprite);
+                        if (equippedHelmetSec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "helmet");
+                            mainFighterGearSlots[i].UpdateSlotImage(helmetSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedHelmetSec, false, "helmet");
+                        }
                     }
-                    else
-                        ally1GearSlots[i].UpdateSlotImage(equippedChestpieceMain.gearIcon);
+                    // Place chestpiece
+                    if (i == 1)
+                    {
+                        if (equippedChestpieceSec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "chestpiece");
+                            mainFighterGearSlots[i].UpdateSlotImage(chestSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedChestpieceSec, false, "chestpiece");
+                        }
+                    }
+                    // Place boots 
+                    if (i == 2)
+                    {
+                        if (equippedBootsSec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "boots");
+                            mainFighterGearSlots[i].UpdateSlotImage(bootsSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedBootsSec, false, "boots");
+                        }
+                    }
+                    if (i == 3)
+                    {
+                        if (equippedNecklessSec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "neckless");
+                            mainFighterGearSlots[i].UpdateSlotImage(necklessSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedNecklessSec, false, "neckless");
+                        }
+                    }
+                    if (i == 4)
+                    {
+                        if (equippedEarringSec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "earring");
+                            mainFighterGearSlots[i].UpdateSlotImage(earringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedEarringSec, false, "earring");
+                        }
+                    }
+                    if (i == 5)
+                    {
+                        if (equippedBeltSec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "belt");
+                            mainFighterGearSlots[i].UpdateSlotImage(beltSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedBeltSec, false, "belt");
+                        }
+                    }
+                    if (i == 6)
+                    {
+                        if (equippedGloveSec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "glove");
+                            mainFighterGearSlots[i].UpdateSlotImage(gloveSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedGloveSec, false, "glove");
+                        }
+                    }
+                    if (i == 7)
+                    {
+                        if (equippedRing1Sec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "ring");
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedRing1Sec, false, "ring");
+                        }
+                    }
+                    if (i == 8)
+                    {
+                        if (equippedRing2Sec == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "ring");
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedRing2Sec, false, "ring");
+                        }
+                    }
+                    mainFighterGearSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
+                    mainFighterGearSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.SECOND);
                 }
-                // Place boots 
-                if (i == 2)
+                else if (GameManager.Instance.activeRoomHeroes[0].teamIndex == 2)
                 {
-                    if (equippedBootsMain == null)
+                    // Place helmet
+                    if (i == 0)
                     {
-                        ally1GearSlots[i].isEmpty = true;
-                        ally1GearSlots[i].UpdateSlotImage(bootsSlotSprite);
+                        if (equippedHelmetThi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "helmet");
+                            mainFighterGearSlots[i].UpdateSlotImage(helmetSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedHelmetThi, false, "helmet");
+                        }
                     }
-                    else
-                        ally1GearSlots[i].UpdateSlotImage(equippedBootsMain.gearIcon);
+                    // Place chestpiece
+                    if (i == 1)
+                    {
+                        if (equippedChestpieceThi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "chestpiece");
+                            mainFighterGearSlots[i].UpdateSlotImage(chestSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedChestpieceThi, false, "chestpiece");
+                        }
+                    }
+                    // Place boots 
+                    if (i == 2)
+                    {
+                        if (equippedBootsThi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "boots");
+                            mainFighterGearSlots[i].UpdateSlotImage(bootsSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedBootsThi, false, "boots");
+                        }
+                    }
+                    if (i == 3)
+                    {
+                        if (equippedNecklessThi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "neckless");
+                            mainFighterGearSlots[i].UpdateSlotImage(necklessSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedNecklessThi, false, "neckless");
+                        }
+                    }
+                    if (i == 4)
+                    {
+                        if (equippedEarringThi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "earring");
+                            mainFighterGearSlots[i].UpdateSlotImage(earringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedEarringThi, false, "earring");
+                        }
+                    }
+                    if (i == 5)
+                    {
+                        if (equippedBeltThi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "belt");
+                            mainFighterGearSlots[i].UpdateSlotImage(beltSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedBeltThi, false, "belt");
+                        }
+                    }
+                    if (i == 6)
+                    {
+                        if (equippedGloveThi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "glove");
+                            mainFighterGearSlots[i].UpdateSlotImage(gloveSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedGloveThi, false, "glove");
+                        }
+                    }
+                    if (i == 7)
+                    {
+                        if (equippedRing1Thi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "ring");
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedRing1Thi, false, "ring");
+                        }
+                    }
+                    if (i == 8)
+                    {
+                        if (equippedRing2Thi == null)
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(null, true, "ring");
+                            mainFighterGearSlots[i].UpdateSlotImage(ringSlotSprite);
+                        }
+                        else
+                        {
+                            mainFighterGearSlots[i].UpdateSlotDetails(equippedRing2Thi, false, "ring");
+                        }
+                    }
+                    mainFighterGearSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
+                    mainFighterGearSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.THIRD);
                 }
 
-                ally1GearSlots[i].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally1GearSlots[i].UpdateGearOwnedBy(Slot.SlotOwnedBy.MAIN);
-            }
-        }
-
-        if (ally2)
-        {
-            for (int x = 0; x < ally2GearSlots.Count; x++)
-            {
-                // Place helmet
-                if (x == 0)
-                {
-                    if (equippedHelmetSec == null)
-                    {
-                        ally2GearSlots[x].isEmpty = true;
-                        ally2GearSlots[x].UpdateSlotImage(helmetSlotSprite);
-                    }
-                    else
-                        ally2GearSlots[x].UpdateSlotImage(equippedHelmetSec.gearIcon);
-                }
-                // Place chestpiece
-                if (x == 1)
-                {
-                    if (equippedChestpieceSec == null)
-                    {
-                        ally2GearSlots[x].isEmpty = true;
-                        ally2GearSlots[x].UpdateSlotImage(chestSlotSprite);
-                    }
-
-                    else
-                        ally2GearSlots[x].UpdateSlotImage(equippedChestpieceSec.gearIcon);
-                }
-                // Place boots 
-                if (x == 2)
-                {
-                    if (equippedBootsSec == null)
-                    {
-                        ally2GearSlots[x].isEmpty = true;
-                        ally2GearSlots[x].UpdateSlotImage(bootsSlotSprite);
-                    }
-                    else
-                        ally2GearSlots[x].UpdateSlotImage(equippedBootsSec.gearIcon);
-                }
-
-                ally2GearSlots[x].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally2GearSlots[x].UpdateGearOwnedBy(Slot.SlotOwnedBy.SECOND);
-            }
-        }
-
-        if (ally3)
-        {
-            for (int y = 0; y < ally3GearSlots.Count; y++)
-            {
-                // Place helmet
-                if (y == 0)
-                {
-                    if (equippedHelmetThi == null)
-                    {
-                        ally3GearSlots[y].isEmpty = true;
-                        ally3GearSlots[y].UpdateSlotImage(helmetSlotSprite);
-                    }
-                    else
-                        ally3GearSlots[y].UpdateSlotImage(equippedHelmetThi.gearIcon);
-                }
-                // Place chestpiece
-                if (y == 1)
-                {
-                    if (equippedChestpieceThi == null)
-                    {
-                        ally3GearSlots[y].isEmpty = true;
-                        ally3GearSlots[y].UpdateSlotImage(chestSlotSprite);
-                    }
-                    else
-                        ally3GearSlots[y].UpdateSlotImage(equippedChestpieceThi.gearIcon);
-                }
-                // Place boots 
-                if (y == 2)
-                {
-                    if (equippedBootsThi == null)
-                    {
-                        ally3GearSlots[y].isEmpty = true;
-                        ally3GearSlots[y].UpdateSlotImage(bootsSlotSprite);
-                    }
-                    else
-                        ally3GearSlots[y].UpdateSlotImage(equippedBootsThi.gearIcon);
-                }
-
-                ally3GearSlots[y].UpdateGearStatis(Slot.SlotStatis.DEFAULT);
-                ally3GearSlots[y].UpdateGearOwnedBy(Slot.SlotOwnedBy.THIRD);
+                mainFighterGearSlots[i].UpdateSlotDetails();
             }
         }
     }
@@ -642,89 +901,45 @@ public class TeamGearManager : MonoBehaviour
     public void ResetAllGearSelections()
     {
         //Debug.Log("resetting");
-        for (int x = 0; x < ally1GearSlots.Count; x++)
+        for (int x = 0; x < mainFighterGearSlots.Count; x++)
         {
-            ally1GearSlots[x].ToggleSlotSelection(false);
-        }
-        for (int y = 0; y < ally1GearSlots.Count; y++)
-        {
-            ally2GearSlots[y].ToggleSlotSelection(false);
-        }
-        for (int z = 0; z < ally1GearSlots.Count; z++)
-        {
-            ally3GearSlots[z].ToggleSlotSelection(false);
+            mainFighterGearSlots[x].ToggleSlotSelection(false);
         }
     }
 
     public void ToggleAllyGearSets()
     {
-        if (GetKnownUnitFunct(true, false, false) == null)
+        if (GameManager.Instance.activeRoomHeroes[0] == null)
             return;
 
-        // If ally team has 1 total allies
-        if (GameManager.Instance.activeTeam.Count == 1)
+        ally1GearTabUI.UpdateAlpha(1);
+
+        if (GameManager.Instance.activeRoomHeroes[0])
         {
-            // Toggle correct gear tabs
-            ally2GearTabUI.UpdateAlpha(0);
-            ally3GearTabUI.UpdateAlpha(0);
-            ally1GearTabUI.UpdateAlpha(1);
-
             // Display unit level image
-            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GetKnownUnitFunct(true,false,false).GetUnitLevel());
-
-            // Update visible character ally 
-            ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
-
-            // Ensure each gear slot has correct bg gear sprite
-            UpdateGearSlotsBase(true);
+            activeFighterMenuUnitDisplay.ToggleUnitLevelImage(true, GameManager.Instance.activeRoomHeroes[0].GetUnitLevel());
         }
-        // If ally team has 2 total allies
-        else if (GameManager.Instance.activeTeam.Count == 2)
-        {
-            // Toggle correct gear tabs
-            ally3GearTabUI.UpdateAlpha(0);
-            ally1GearTabUI.UpdateAlpha(1);
-            ally2GearTabUI.UpdateAlpha(1);
 
-            // Display unit level image
-            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GetKnownUnitFunct(true, false, false).GetUnitLevel());
-            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GetKnownUnitFunct(false, true, false).GetUnitLevel());
 
-            // Update visible character ally 
-            ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
-            ally2MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[1].unitName);
+        // Update visible character ally 
+        activeFighterMenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeRoomHeroes[0].GetUnitName());
 
-            // Ensure each gear slot has correct bg gear sprite
-            UpdateGearSlotsBase(true, true);
-        }
-        // If ally team has 3 total allies
-        else if (GameManager.Instance.activeTeam.Count == 3)
-        {
-            // Toggle correct gear tabs
-            ally1GearTabUI.UpdateAlpha(1);
-            ally2GearTabUI.UpdateAlpha(1);
-            ally3GearTabUI.UpdateAlpha(1);
-
-            // Display unit level image
-            ally1MenuUnitDisplay.ToggleUnitLevelImage(true, GetKnownUnitFunct(true, false, false).GetUnitLevel());
-            ally2MenuUnitDisplay.ToggleUnitLevelImage(true, GetKnownUnitFunct(false, true, false).GetUnitLevel());
-            ally3MenuUnitDisplay.ToggleUnitLevelImage(true, GetKnownUnitFunct(false, false, true).GetUnitLevel());
-
-            // Update visible character ally 
-            ally1MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[0].unitName);
-            ally2MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[1].unitName);
-            ally3MenuUnitDisplay.UpdateUnitDisplay(GameManager.Instance.activeTeam[2].unitName);
-
-            // Ensure each gear slot has correct bg gear sprite
-            UpdateGearSlotsBase(true, true, true);
-        }
+        // Ensure each gear slot has correct bg gear sprite
+        UpdateGearSlotsBase(true);   
     }
-
+    static int SortByIndex(UnitFunctionality p1, UnitFunctionality p2)
+    {
+        return p1.teamIndex.CompareTo(p2.teamIndex);
+    }
     public void ToggleTeamGear(bool toggle)
     {
         if (toggle)
         {
+            GameManager.Instance.activeRoomHeroes.Sort(SortByIndex);
+
             teamGearTabUI.UpdateAlpha(1);
+
+            ToggleNextFighterArrow(true);
 
             for (int i = 0; i < GameManager.Instance.activeRoomHeroes.Count; i++)
             {
@@ -764,60 +979,21 @@ public class TeamGearManager : MonoBehaviour
 
             ClearAllGearStats();
 
-            if (GameManager.Instance.activeTeam.Count == 1)
-            {
-                string unitName = GameManager.Instance.activeTeam[0].unitName;
+            string unitName = GameManager.Instance.activeTeam[0].unitName;
 
-                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+            for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+            {
+                if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName)
                 {
-                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName)
-                    {
-                        ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
-                    }
+                    activeFighterMenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
                 }
             }
 
-            if (GameManager.Instance.activeTeam.Count == 2)
-            {
-                string unitName1 = GameManager.Instance.activeTeam[0].unitName;
-                string unitName2 = GameManager.Instance.activeTeam[1].unitName;
+            UpdateGearSlotsBase(true);
 
-                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
-                {
-
-                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName2)
-                    {
-                        ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
-                    }
-
-                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName1)
-                    {
-                        ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
-                    }
-                }
-            }
-            if (GameManager.Instance.activeTeam.Count == 3)
-            {
-                string unitName1 = GameManager.Instance.activeTeam[0].unitName;
-                string unitName2 = GameManager.Instance.activeTeam[1].unitName;
-                string unitName3 = GameManager.Instance.activeTeam[2].unitName;
-
-                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
-                {
-                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName3)
-                    {
-                        ally3MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
-                    }
-                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName2)
-                    {
-                        ally2MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
-                    }
-                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].GetUnitName() == unitName1)
-                    {
-                        ally1MenuUnitDisplay.UpdateUnitStats(GameManager.Instance.activeRoomAllUnitFunctionalitys[i]);
-                    }
-                }
-            }
+            UpdateGearNameText("");
+            UpdateGearRarityText("");
+            UpdateGearTypeText("");
         }
         else
         {
@@ -843,17 +1019,9 @@ public class TeamGearManager : MonoBehaviour
 
     public void ResetAllBaseGearSelections()
     {
-        for (int x = 0; x < ally1GearSlots.Count; x++)
+        for (int x = 0; x < mainFighterGearSlots.Count; x++)
         {
-            ally1GearSlots[x].ToggleSlotSelection(false);
-        }
-        for (int y = 0; y < ally2GearSlots.Count; y++)
-        {
-            ally2GearSlots[y].ToggleSlotSelection(false);
-        }
-        for (int z = 0; z < ally3GearSlots.Count; z++)
-        {
-            ally3GearSlots[z].ToggleSlotSelection(false);
+            mainFighterGearSlots[x].ToggleSlotSelection(false);
         }
     }
 
@@ -863,58 +1031,21 @@ public class TeamGearManager : MonoBehaviour
 
         if (doBaseGearSlots)
         {
-            for (int x = 0; x < ally1GearSlots.Count; x++)
+            for (int x = 0; x < mainFighterGearSlots.Count; x++)
             {
                 if (toggle)
                 {
-                    ally1GearSlots[x].GetSlotUI().ToggleButton(true);
-                    ally1GearSlots[x].ToggleMainSlot(true);
-                    ally1GearSlots[x].ToggleOwnedGearButton(true);
-                    ally1GearSlots[x].ToggleEquipButton(true);
+                    mainFighterGearSlots[x].GetSlotUI().ToggleButton(true);
+                    mainFighterGearSlots[x].ToggleMainSlot(true);
+                    mainFighterGearSlots[x].ToggleOwnedGearButton(true);
+                    mainFighterGearSlots[x].ToggleEquipButton(true, true);
                 }
                 else
                 {
-                    ally1GearSlots[x].GetSlotUI().ToggleButton(false);
-                    ally1GearSlots[x].ToggleMainSlot(false);
+                    mainFighterGearSlots[x].GetSlotUI().ToggleButton(false);
+                    mainFighterGearSlots[x].ToggleMainSlot(false);
                     //ally1GearSlots[x].ToggleOwnedGearButton(false);
                     //ally1GearSlots[x].ToggleEquipButton(false);
-                }
-            }
-
-            for (int y = 0; y < ally2GearSlots.Count; y++)
-            {
-                if (toggle)
-                {
-                    ally2GearSlots[y].GetSlotUI().ToggleButton(true);
-                    ally2GearSlots[y].ToggleMainSlot(true);
-                    ally2GearSlots[y].ToggleOwnedGearButton(true);
-                    ally2GearSlots[y].ToggleEquipButton(true);
-                }
-
-                else
-                {
-                    ally2GearSlots[y].GetSlotUI().ToggleButton(false);
-                    ally2GearSlots[y].ToggleMainSlot(false);
-                    ally2GearSlots[y].ToggleOwnedGearButton(false);
-                    ally2GearSlots[y].ToggleEquipButton(false);
-                }
-            }
-
-            for (int z = 0; z < ally3GearSlots.Count; z++)
-            {
-                if (toggle)
-                {
-                    ally3GearSlots[z].GetSlotUI().ToggleButton(true);
-                    ally3GearSlots[z].ToggleMainSlot(true);
-                    ally3GearSlots[z].ToggleOwnedGearButton(true);
-                    ally3GearSlots[z].ToggleEquipButton(true);
-                }
-                else
-                {
-                    ally3GearSlots[z].GetSlotUI().ToggleButton(false);
-                    ally3GearSlots[z].ToggleMainSlot(false);
-                    ally3GearSlots[z].ToggleOwnedGearButton(false);
-                    ally3GearSlots[z].ToggleEquipButton(false);
                 }
             }
         }
@@ -933,7 +1064,7 @@ public class TeamGearManager : MonoBehaviour
                     OwnedLootInven.Instance.ownedLootSlots[i].GetSlotUI().ToggleButton(true);
                     OwnedLootInven.Instance.ownedLootSlots[i].ToggleMainSlot(true);
                     //OwnedLootInven.Instance.ownedLootSlots[i].ToggleOwnedGearEquipButton(true);
-                    OwnedLootInven.Instance.ownedLootSlots[i].ToggleEquipButton(true);
+                    //OwnedLootInven.Instance.ownedLootSlots[i].ToggleEquipButton(true);
                 }
                 else
                 {
@@ -948,117 +1079,120 @@ public class TeamGearManager : MonoBehaviour
         }
     }
 
-    public void EquipGear(Slot gear)
+    public void EquipGear(Slot slot, UnitFunctionality unit = null, GearPiece gear = null, ItemPiece item = null)
     {
         OwnedLootInven.Instance.ToggleOwnedGearDisplay(false);
 
         Slot removedGear = null;
 
-        // Remove current equipt item, and place into owned gear
-        /*
-        if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearMainAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearMainAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x])
-                    {
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllyMain(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-        else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearSecondAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x])
-                    {
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllySecond(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-        else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD)
-        {
-            // If play ownst at least 1 item
-            if (OwnedLootInven.Instance.GetWornGearThirdAlly().Count > 0)
-            {
-                // Loop through all worn gear
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
-                {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x])
-                    {
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllyThird(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-                        break;
-                    }
-                }
-            }
-        }
-        */
-
         // Remove gear from owned gear list when equipping
         // Add gear to worn gear
-        for (int i = 0; i < OwnedLootInven.Instance.ownedGear.Count; i++)
+
+        AudioManager.Instance.Play("SFX_EquipGear");
+
+        // Update unit stats with stats from gear
+        UpdateUnitStatsEquip(slot.linkedGearPiece);
+
+        // shop 
+        if (!playerInGearTab)
         {
-            if (OwnedLootInven.Instance.ownedGear[i].GetSlotName() == gear.GetSlotName())
+            if (unit.teamIndex == 0)
             {
-                removedGear = OwnedLootInven.Instance.ownedGear[i];
-
-                OwnedLootInven.Instance.RemoveOwnedGear(removedGear);
-
-                if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
-                    OwnedLootInven.Instance.AddWornGearAllyMain(removedGear);
-                else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
-                    OwnedLootInven.Instance.AddWornGearAllySecond(removedGear);
-                else if (selectedBaseGearSlot.GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD)
-                    OwnedLootInven.Instance.AddWornGearAllyThird(removedGear);
-                break;
+                for (int i = 0; i < OwnedLootInven.Instance.wornGearMainAlly.Count; i++)
+                {
+                    if (OwnedLootInven.Instance.wornGearMainAlly[i].linkedGearPiece.gearType == gear.gearType)
+                    {
+                        UnequipGear(false, unit, OwnedLootInven.Instance.wornGearMainAlly[i].linkedGearPiece, item, true);
+                        break;
+                    }
+                }
             }
+            else if (unit.teamIndex == 1)
+            {
+                for (int i = 0; i < OwnedLootInven.Instance.wornGearSecondAlly.Count; i++)
+                {
+                    if (OwnedLootInven.Instance.wornGearSecondAlly[i].linkedGearPiece.gearType == gear.gearType)
+                    {
+                        UnequipGear(false, unit, OwnedLootInven.Instance.wornGearSecondAlly[i].linkedGearPiece, item, true);
+                        break;
+                    }
+                }
+            }
+            else if (unit.teamIndex == 2)
+            {
+                for (int i = 0; i < OwnedLootInven.Instance.wornGearThirdAlly.Count; i++)
+                {
+                    if (OwnedLootInven.Instance.wornGearThirdAlly[i].linkedGearPiece.gearType == gear.gearType)
+                    {
+                        UnequipGear(false, unit, OwnedLootInven.Instance.wornGearThirdAlly[i].linkedGearPiece, item, true);
+                        break;
+                    }
+                }
+            }
+        }
+        else if (playerInGearTab)
+        {
+            if (!unit)
+                unit = GameManager.Instance.activeRoomHeroes[0];
+
+            if (GetSelectedBaseGearSlot())
+            {
+                if (GetSelectedBaseGearSlot().linkedGearPiece)
+                {
+                    // Remove worn gear
+                    UnequipGear(false, unit, GetSelectedBaseGearSlot().linkedGearPiece, item, true);
+
+                }
+            }
+        }
+
+        OwnedLootInven.Instance.RemoveOwnedGear(slot);
+        //OwnedLootInven.Instance.RemoveFighterEquippedGear(unit, gear.linkedGearPiece);
+
+        if (unit.teamIndex == 0)
+        {
+            OwnedLootInven.Instance.AddWornGearAllyMain(slot);
+            OwnedLootInven.Instance.AddFighterEquippedGear(unit, slot.linkedGearPiece);
+            UpdateEquippedGearPiece(slot.linkedGearPiece.gearType + "Main", slot.linkedGearPiece);
+        }
+        else if (unit.teamIndex == 1)
+        {
+            OwnedLootInven.Instance.AddWornGearAllySecond(slot);
+            OwnedLootInven.Instance.AddFighterEquippedGear(unit, slot.linkedGearPiece);
+            UpdateEquippedGearPiece(slot.linkedGearPiece.gearType + "Second", slot.linkedGearPiece);
+        }
+        else if (unit.teamIndex == 2)
+        {
+            OwnedLootInven.Instance.AddWornGearAllyThird(slot);
+            OwnedLootInven.Instance.AddFighterEquippedGear(unit, slot.linkedGearPiece);
+            UpdateEquippedGearPiece(slot.linkedGearPiece.gearType + "Third", slot.linkedGearPiece);
         }
 
         GearRewards.Instance.IncrementSpawnedGearCount();
 
-        GetSelectedBaseGearSlot().UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
+        if (GetSelectedBaseGearSlot())
+        {
+            GetSelectedBaseGearSlot().UpdateSlotCode(GearRewards.Instance.spawnedGearCount);
 
-        GetSelectedBaseGearSlot().UpdateSlotImage(gear.GetSlotImage());
-        GetSelectedBaseGearSlot().UpdateSlotName(gear.GetSlotName());
-        GetSelectedBaseGearSlot().UpdateGearBonusHealth(gear.GetBonusHealth());
-        GetSelectedBaseGearSlot().UpdateGearBonusHealing(gear.GetBonusHealing());
-        GetSelectedBaseGearSlot().UpdateGearBonusDefense(gear.GetBonusDefense());
-        GetSelectedBaseGearSlot().UpdateGearBonusDamage(gear.GetBonusDamage());
-        GetSelectedBaseGearSlot().UpdateGearBonusSpeed(gear.GetBonusSpeed());
+            GetSelectedBaseGearSlot().UpdateSlotImage(slot.linkedGearPiece.gearIcon);
+            GetSelectedBaseGearSlot().UpdateSlotName(slot.linkedGearPiece.gearName);
+            GetSelectedBaseGearSlot().UpdateGearBonusHealth(slot.linkedGearPiece.bonusHealth);
+            GetSelectedBaseGearSlot().UpdateGearBonusHealing(slot.linkedGearPiece.bonusHealing);
+            GetSelectedBaseGearSlot().UpdateGearBonusDefense(slot.linkedGearPiece.bonusDefense);
+            GetSelectedBaseGearSlot().UpdateGearBonusDamage(slot.linkedGearPiece.bonusDamage);
+            GetSelectedBaseGearSlot().UpdateGearBonusSpeed(slot.linkedGearPiece.bonusSpeed);
 
+            GetSelectedBaseGearSlot().linkedGearPiece = slot.linkedGearPiece;
+        }
         UpdateGearStatDetails();
+        ClearAllGearStats();
 
-        // Update unit stats with stats from gear
-        UpdateUnitStatsEquip(gear);
 
-        // Show combined calculated values next to unit
+        UpdateGearSlotsBase(true);
+
+        if (playerInGearTab)
+            ToggleAllSlotsClickable(true, false, true);
+
     }
 
     public void ResetGearTab()
@@ -1075,18 +1209,26 @@ public class TeamGearManager : MonoBehaviour
             equippedHelmetMain = null;
             equippedChestpieceMain = null;
             equippedBootsMain = null;
+            equippedNecklessMain = null;
+            equippedEarringMain = null;
+            equippedBeltMain = null;
+            equippedGloveMain = null;
+            equippedRing1Main = null;
+            equippedRing2Main = null;
 
             //OwnedLootInven.Instance.ResetWornGearAllyMain();
 
-            ally1MenuUnitDisplay.ResetUnitStats();
+            activeFighterMenuUnitDisplay.ResetUnitStats();
 
             for (int i = 0; i < 3; i++)
             {
-                ally1GearSlots[i].isEmpty = true;
+                mainFighterGearSlots[i].isEmpty = true;
             }
 
-            ClearAllGearStats();
+           // ClearAllGearStats();
             UpdateGearNameText("");
+            UpdateGearRarityText("");
+            UpdateGearTypeText("");
 
             ClearEmptyGearSlots();
         }
@@ -1096,18 +1238,25 @@ public class TeamGearManager : MonoBehaviour
             equippedHelmetSec = null;
             equippedChestpieceSec = null;
             equippedBootsSec = null;
-
+            equippedNecklessSec = null;
+            equippedEarringSec = null;
+            equippedBeltSec = null;
+            equippedGloveSec = null;
+            equippedRing1Sec = null;
+            equippedRing2Sec = null;
             //OwnedLootInven.Instance.ResetWornGearAllySecond();
 
-            ally2MenuUnitDisplay.ResetUnitStats();
-            
+            //ally2MenuUnitDisplay.ResetUnitStats();
+            /*
             for (int i = 0; i < 3; i++)
             {
                 ally2GearSlots[i].isEmpty = true;
             }
-
-            ClearAllGearStats();
+            */
+            //ClearAllGearStats();
             UpdateGearNameText("");
+            UpdateGearRarityText("");
+            UpdateGearTypeText("");
 
             ClearEmptyGearSlots();
         }
@@ -1116,19 +1265,26 @@ public class TeamGearManager : MonoBehaviour
             equippedHelmetThi = null;
             equippedChestpieceThi = null;
             equippedBootsThi = null;
-
+            equippedNecklessThi = null;
+            equippedEarringThi = null;
+            equippedBeltThi = null;
+            equippedGloveThi = null;
+            equippedRing1Thi = null;
+            equippedRing2Thi = null;
             //OwnedLootInven.Instance.ResetWornGearAllyThird();
 
-            ally3MenuUnitDisplay.ResetUnitStats();
-
+            //ally3MenuUnitDisplay.ResetUnitStats();
+            /*
             for (int i = 0; i < 3; i++)
             {
                 ally3GearSlots[i].isEmpty = true;
             }
-            
+            */
 
-            ClearAllGearStats();
+            //ClearAllGearStats();
             UpdateGearNameText("");
+            UpdateGearRarityText("");
+            UpdateGearTypeText("");
 
             ClearEmptyGearSlots();
         }
@@ -1139,60 +1295,90 @@ public class TeamGearManager : MonoBehaviour
         equippedHelmetMain = null;
         equippedChestpieceMain = null;
         equippedBootsMain = null;
+        equippedNecklessMain = null;
+        equippedEarringMain = null;
+        equippedBeltMain = null;
+        equippedGloveMain = null;
+        equippedRing1Main = null;
+        equippedRing2Main = null;
 
         equippedHelmetSec = null;
         equippedChestpieceSec = null;
         equippedBootsSec = null;
+        equippedNecklessSec = null;
+        equippedEarringSec = null;
+        equippedBeltSec = null;
+        equippedGloveSec = null;
+        equippedRing1Sec = null;
+        equippedRing2Sec = null;
 
         equippedHelmetThi = null;
         equippedChestpieceThi = null;
         equippedBootsThi = null;
+        equippedNecklessThi = null;
+        equippedEarringThi = null;
+        equippedBeltThi = null;
+        equippedGloveThi = null;
+        equippedRing1Thi = null;
+        equippedRing2Thi = null;
 
         OwnedLootInven.Instance.ResetWornGearAllyMain();
         OwnedLootInven.Instance.ResetWornGearAllySecond();
         OwnedLootInven.Instance.ResetWornGearAllyThird();
 
-        ally1MenuUnitDisplay.ResetUnitStats();
-        ally2MenuUnitDisplay.ResetUnitStats();
-        ally3MenuUnitDisplay.ResetUnitStats();
+        activeFighterMenuUnitDisplay.ResetUnitStats();
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < mainFighterGearSlots.Count; i++)
         {
-            ally1GearSlots[i].isEmpty = true;
-            ally2GearSlots[i].isEmpty = true;
-            ally3GearSlots[i].isEmpty = true;
+            mainFighterGearSlots[i].isEmpty = true;
         }
 
-
-        ClearAllGearStats();
+        //ClearAllGearStats();
         UpdateGearNameText("");
+        UpdateGearRarityText("");
+        UpdateGearTypeText("");
 
         ClearEmptyGearSlots();
     }
 
     public void ToggleGearButtons(bool toggle = true)
     {
-        for (int i = 0; i < ally1GearSlots.Count; i++)
+        for (int i = 0; i < mainFighterGearSlots.Count; i++)
         {
-            ally1GearSlots[i].ownedSlotButton.ToggleButton(toggle);
-            ally1GearSlots[i].ToggleEquipButton(toggle);
+            mainFighterGearSlots[i].ownedSlotButton.ToggleButton(toggle);
+            mainFighterGearSlots[i].ToggleEquipButton(toggle);
+            /*
             ally2GearSlots[i].ownedSlotButton.ToggleButton(toggle);
             ally2GearSlots[i].ToggleEquipButton(toggle);
             ally3GearSlots[i].ownedSlotButton.ToggleButton(toggle);
             ally3GearSlots[i].ToggleEquipButton(toggle);
+            */
         }
     }
 
     public void UpdateEquippedGearPiece(string gearPieceTypeName, GearPiece newGearPiece, bool replacing = true)
     {
-        if (gearPieceTypeName == "helmMain")
+        /*
+        GearPiece replacedGear = null;
+        if (replacing)
+        {
+            if (equippedHelmetMain)
+                replacedGear = equippedHelmetMain;
+        }
+
+        OwnedLootInven.Instance.AddWornGearAllyMain()
+        */
+
+        if (gearPieceTypeName == "helmMain" || gearPieceTypeName == "helmetMain")
         {
             if (replacing)
+            {
                 equippedHelmetMain = newGearPiece;
+            }
             else
                 equippedHelmetMain = null;
         }
-        else if (gearPieceTypeName == "chestMain")
+        else if (gearPieceTypeName == "chestMain" || gearPieceTypeName == "chestpieceMain")
         {
             if (replacing)
                 equippedChestpieceMain = newGearPiece;
@@ -1206,15 +1392,107 @@ public class TeamGearManager : MonoBehaviour
             else
                 equippedBootsMain = null;
         }
+        else if (gearPieceTypeName == "necklessMain")
+        {
+            if (replacing)
+                equippedNecklessMain = newGearPiece;
+            else
+                equippedNecklessMain = null;
+        }
+        else if (gearPieceTypeName == "earringMain")
+        {
+            if (replacing)
+                equippedEarringMain = newGearPiece;
+            else
+                equippedEarringMain = null;
+        }
+        else if (gearPieceTypeName == "beltMain")
+        {
+            if (replacing)
+                equippedBeltMain = newGearPiece;
+            else
+                equippedBeltMain = null;
+        }
+        else if (gearPieceTypeName == "gloveMain")
+        {
+            if (replacing)
+                equippedGloveMain = newGearPiece;
+            else
+                equippedGloveMain = null;
+        }
+        else if (gearPieceTypeName == "ring1Main" || gearPieceTypeName == "ringMain")
+        {
+            if (replacing)
+            {
+                if (GetSelectedBaseGearSlot())
+                {
+                    if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                        equippedRing1Main = newGearPiece;
+                    else
+                        equippedRing2Main = newGearPiece;
+                }
+                else
+                {
+                    if (equippedRing1Main)
+                    {
+                        if (!equippedRing2Main)
+                            equippedRing2Main = newGearPiece;
+                        else
+                        {
+                            equippedRing1Main = newGearPiece;
+                        }
+                    }
+                    else
+                    {
+                        equippedRing1Main = newGearPiece;
+                    }
 
-        else if (gearPieceTypeName == "helmSecond")
+                }
+            }
+            else
+                equippedRing1Main = null;
+        }
+        else if (gearPieceTypeName == "ring2Main" || gearPieceTypeName == "ringMain")
+        {
+            if (replacing)
+            {
+                if (GetSelectedBaseGearSlot())
+                {
+                    if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                        equippedRing1Main = newGearPiece;
+                    else
+                        equippedRing2Main = newGearPiece;
+                }
+                else
+                {
+                    if (equippedRing1Main)
+                    {
+                        if (!equippedRing2Main)
+                            equippedRing2Main = newGearPiece;
+                        else
+                        {
+                            equippedRing2Main = newGearPiece;
+                        }
+                    }
+                    else
+                    {
+                        equippedRing1Main = newGearPiece;
+                    }
+
+                }
+            }
+            else
+                equippedRing2Main = null;
+        }
+
+        else if (gearPieceTypeName == "helmSecond" || gearPieceTypeName == "helmetSecond")
         {
             if (replacing)
                 equippedHelmetSec = newGearPiece;
             else
                 equippedHelmetSec = null;
         }
-        else if (gearPieceTypeName == "chestSecond")
+        else if (gearPieceTypeName == "chestSecond" || gearPieceTypeName == "chestpieceSecond")
         {
             if (replacing)
                 equippedChestpieceSec = newGearPiece;
@@ -1228,15 +1506,107 @@ public class TeamGearManager : MonoBehaviour
             else
                 equippedBootsSec = null;
         }
+        else if (gearPieceTypeName == "necklessSecond")
+        {
+            if (replacing)
+                equippedNecklessSec = newGearPiece;
+            else
+                equippedNecklessSec = null;
+        }
+        else if (gearPieceTypeName == "earringSecond")
+        {
+            if (replacing)
+                equippedEarringSec = newGearPiece;
+            else
+                equippedEarringSec = null;
+        }
+        else if (gearPieceTypeName == "beltSecond")
+        {
+            if (replacing)
+                equippedBeltSec = newGearPiece;
+            else
+                equippedBeltSec = null;
+        }
+        else if (gearPieceTypeName == "gloveSecond")
+        {
+            if (replacing)
+                equippedGloveSec = newGearPiece;
+            else
+                equippedGloveSec = null;
+        }
+        else if (gearPieceTypeName == "ring1Second" || gearPieceTypeName == "ringSecond")
+        {
+            if (replacing)
+            {
+                if (GetSelectedBaseGearSlot())
+                {
+                    if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                        equippedRing1Sec = newGearPiece;
+                    else
+                        equippedRing2Sec = newGearPiece;
+                }
+                else
+                {
+                    if (equippedRing1Main)
+                    {
+                        if (!equippedRing2Sec)
+                            equippedRing2Sec = newGearPiece;
+                        else
+                        {
+                            equippedRing1Sec = newGearPiece;
+                        }
+                    }
+                    else
+                    {
+                        equippedRing1Sec = newGearPiece;
+                    }
 
-        else if (gearPieceTypeName == "helmThird")
+                }
+            }
+            else
+                equippedRing1Sec = null;
+        }
+        else if (gearPieceTypeName == "ring2Second" || gearPieceTypeName == "ringSecond")
+        {
+            if (replacing)
+            {
+                if (GetSelectedBaseGearSlot())
+                {
+                    if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                        equippedRing1Sec = newGearPiece;
+                    else
+                        equippedRing2Sec = newGearPiece;
+                }
+                else
+                {
+                    if (equippedRing1Sec)
+                    {
+                        if (!equippedRing2Sec)
+                            equippedRing2Sec = newGearPiece;
+                        else
+                        {
+                            equippedRing2Sec = newGearPiece;
+                        }
+                    }
+                    else
+                    {
+                        equippedRing1Sec = newGearPiece;
+                    }
+
+                }
+            }
+            else
+                equippedRing2Sec = null;
+        }
+
+        else if (gearPieceTypeName == "helmThird" || gearPieceTypeName == "helmetThird")
         {
             if (replacing)
                 equippedHelmetThi = newGearPiece;
             else
                 equippedHelmetThi = null;
         }
-        else if (gearPieceTypeName == "chestThird")
+        else if (gearPieceTypeName == "chestThird" || gearPieceTypeName == "chestpieceThird")
         {
             if (replacing)
                 equippedChestpieceThi = newGearPiece;
@@ -1250,32 +1620,126 @@ public class TeamGearManager : MonoBehaviour
             else
                 equippedBootsThi = null;
         }
+        else if (gearPieceTypeName == "necklessThird")
+        {
+            if (replacing)
+                equippedNecklessThi = newGearPiece;
+            else
+                equippedNecklessThi = null;
+        }
+        else if (gearPieceTypeName == "earringThird")
+        {
+            if (replacing)
+                equippedEarringThi = newGearPiece;
+            else
+                equippedEarringThi = null;
+        }
+        else if (gearPieceTypeName == "beltThird")
+        {
+            if (replacing)
+                equippedBeltThi = newGearPiece;
+            else
+                equippedBeltThi = null;
+        }
+        else if (gearPieceTypeName == "gloveThird")
+        {
+            if (replacing)
+                equippedGloveThi = newGearPiece;
+            else
+                equippedGloveThi = null;
+        }
+        else if (gearPieceTypeName == "ring1Third" || gearPieceTypeName == "ringThird")
+        {
+            if (replacing)
+            {
+                if (GetSelectedBaseGearSlot())
+                {
+                    if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                        equippedRing1Thi = newGearPiece;
+                    else
+                        equippedRing2Thi = newGearPiece;
+                }
+                else
+                {
+                    if (equippedRing1Main)
+                    {
+                        if (!equippedRing2Thi)
+                            equippedRing2Thi = newGearPiece;
+                        else
+                        {
+                            equippedRing1Thi = newGearPiece;
+                        }
+                    }
+                    else
+                    {
+                        equippedRing1Thi = newGearPiece;
+                    }
+
+                }
+            }
+            else
+                equippedRing1Thi = null;
+        }
+        else if (gearPieceTypeName == "ring2Third" || gearPieceTypeName == "ringThird")
+        {
+            if (replacing)
+            {
+                if (GetSelectedBaseGearSlot())
+                {
+                    if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                        equippedRing1Thi = newGearPiece;
+                    else
+                        equippedRing2Thi = newGearPiece;
+                }
+                else
+                {
+                    if (equippedRing1Thi)
+                    {
+                        if (!equippedRing2Thi)
+                            equippedRing2Thi = newGearPiece;
+                        else
+                        {
+                            equippedRing2Thi = newGearPiece;
+                        }
+                    }
+                    else
+                    {
+                        equippedRing1Thi = newGearPiece;
+                    }
+
+                }
+            }
+            else
+                equippedRing2Thi = null;
+        }
     }
 
-    public void GearSelection(Slot gear, bool select = false)
+    public void GearSelection(Slot slot, bool select = false)
     {
         if (playerInGearTab)
         {
-            if (gear.curSlotStatis == Slot.SlotStatis.OWNED)
+            if (slot.curSlotStatis == Slot.SlotStatis.OWNED)
             {
-                gear.ToggleCoverUI(false);
+                slot.ToggleCoverUI(false);
             }
         }
+
+        ClearAllGearStats();
 
         // Disable all gear selection border
         ResetAllBaseGearSelections();
 
         // Enable selected gear slot border
-        gear.ToggleSlotSelection(true);
+        slot.ToggleSlotSelection(true);
         //OwnedGearInven.Instance.FillOwnedGearSlots();
 
         // Bug todo - 2nd / 3rd ally arent having their gear saved.
 
-        if (gear.curSlotStatis == Slot.SlotStatis.DEFAULT)
+        if (slot.curSlotStatis == Slot.SlotStatis.DEFAULT)
         {
-            UpdateSelectedBaseGearSlot(gear);
+            UpdateSelectedBaseGearSlot(slot);
 
-            UpdateSelectedGearSlot(gear);
+            UpdateSelectedGearSlot(slot);
 
             OwnedLootInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedBaseGearSlot());
 
@@ -1285,82 +1749,145 @@ public class TeamGearManager : MonoBehaviour
         }
         else
         {
-            UpdateSelectedGearSlot(gear);
+            UpdateSelectedGearSlot(slot);
             OwnedLootInven.Instance.EnableOwnedItemsSlotSelection(GetSelectedGearSlot());
-            SkillsTabManager.Instance.UpdateSelectedOwnedSlot(gear);
+            SkillsTabManager.Instance.UpdateSelectedOwnedSlot(slot);
 
             GetSelectedGearSlot().ToggleSlotSelection(true);
 
             if (!select)
             {
                 OwnedLootInven.Instance.ResetOwnedSlotEquipButton();
-                OwnedLootInven.Instance.ownedLootSlots[OwnedLootInven.Instance.ownedLootSlots.IndexOf(gear)].ToggleEquipButton(true);
+                OwnedLootInven.Instance.ownedLootSlots[OwnedLootInven.Instance.ownedLootSlots.IndexOf(slot)].ToggleEquipButton(true);
             }
 
             if (select)
             {
-                GearPiece gearPiece = new GearPiece();
+                GearPiece gear = null;
 
-                if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
+                for (int i = 0; i < OwnedLootInven.Instance.ownedGear.Count; i++)
                 {
-                    if (gear.curGearType == Slot.SlotPieceType.HELMET)
+                    if (OwnedLootInven.Instance.ownedGear[i].linkedGearPiece.gearName == slot.linkedGearPiece.gearName)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("helmMain", gearPiece);
-                    }
-                    else if (gear.curGearType == Slot.SlotPieceType.CHESTPIECE)
-                    {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("chestMain", gearPiece);
-                    }
-                    else if (gear.curGearType == Slot.SlotPieceType.BOOTS)
-                    {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("bootsMain", gearPiece);
+                        slot = OwnedLootInven.Instance.ownedGear[i];
                     }
                 }
-                if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
+                if (slot.linkedGearPiece)
+                    gear = slot.linkedGearPiece;
+
+                if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN && gear)
                 {
-                    if (gear.curGearType == Slot.SlotPieceType.HELMET)
+                    if (slot.curGearType == Slot.SlotPieceType.helmet)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("helmSecond", gearPiece);
+                        UpdateEquippedGearPiece("helmMain", gear);
                     }
-                    else if (gear.curGearType == Slot.SlotPieceType.CHESTPIECE)
+                    else if (slot.curGearType == Slot.SlotPieceType.chestpiece)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("chestSecond", gearPiece);
+                        UpdateEquippedGearPiece("chestMain", gear);
                     }
-                    else if (gear.curGearType == Slot.SlotPieceType.BOOTS)
+                    else if (slot.curGearType == Slot.SlotPieceType.boots)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("bootsSecond", gearPiece);
+                        UpdateEquippedGearPiece("bootsMain", gear);
                     }
+                    else if (slot.curGearType == Slot.SlotPieceType.neckless)
+                    {
+                        UpdateEquippedGearPiece("necklessMain", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.earring)
+                    {
+                        UpdateEquippedGearPiece("earringMain", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.belt)
+                    {
+                        UpdateEquippedGearPiece("beltMain", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.glove)
+                    {
+                        UpdateEquippedGearPiece("gloveMain", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.ring)
+                    {
+                        UpdateEquippedGearPiece("ringMain", gear);
+                    }
+                    if (select)
+                        EquipGear(slot, GameManager.Instance.activeRoomHeroes[0]);
                 }
-                if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD)
+                if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND && gear)
                 {
-                    if (gear.curGearType == Slot.SlotPieceType.HELMET)
+                    if (slot.curGearType == Slot.SlotPieceType.helmet)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("helmThird", gearPiece);
+                        UpdateEquippedGearPiece("helmetSecond", gear);
                     }
-                    else if (gear.curGearType == Slot.SlotPieceType.CHESTPIECE)
+                    else if (slot.curGearType == Slot.SlotPieceType.chestpiece)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("chestThird", gearPiece);
+                        UpdateEquippedGearPiece("chestSecond", gear);
                     }
-                    else if (gear.curGearType == Slot.SlotPieceType.BOOTS)
+                    else if (slot.curGearType == Slot.SlotPieceType.boots)
                     {
-                        gearPiece.UpdateGearPiece(gear.GetSlotName(), gear.GetCurGearType().ToString(), gear.GetRarity().ToString(), gear.GetSlotImage(), gear.GetBonusHealth(), gear.GetBonusDamage(), gear.GetBonusHealing(), gear.GetBonusDefense(), gear.GetBonusSpeed());
-                        UpdateEquippedGearPiece("bootsThird", gearPiece);
+                        UpdateEquippedGearPiece("bootsSecond", gear);
                     }
+                    else if (slot.curGearType == Slot.SlotPieceType.neckless)
+                    {
+                        UpdateEquippedGearPiece("necklessSecond", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.earring)
+                    {
+                        UpdateEquippedGearPiece("earringSecond", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.belt)
+                    {
+                        UpdateEquippedGearPiece("beltSecond", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.glove)
+                    {
+                        UpdateEquippedGearPiece("gloveSecond", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.ring)
+                    {
+                        UpdateEquippedGearPiece("ringSecond", gear);
+                    }
+
+                    if (select)
+                        EquipGear(slot, GameManager.Instance.activeRoomHeroes[0]);
                 }
+                if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD && gear)
+                {
+                    if (slot.curGearType == Slot.SlotPieceType.helmet)
+                    {
+                        UpdateEquippedGearPiece("helmThird", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.chestpiece)
+                    {
+                        UpdateEquippedGearPiece("chestThird", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.boots)
+                    {
+                        UpdateEquippedGearPiece("bootsThird", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.neckless)
+                    {
+                        UpdateEquippedGearPiece("necklessThird", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.earring)
+                    {
+                        UpdateEquippedGearPiece("earringThird", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.belt)
+                    {
+                        UpdateEquippedGearPiece("beltThird", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.glove)
+                    {
+                        UpdateEquippedGearPiece("gloveThird", gear);
+                    }
+                    else if (slot.curGearType == Slot.SlotPieceType.ring)
+                    {
+                        UpdateEquippedGearPiece("ringThird", gear);
+                    }
 
-
-
-                // Display inven
-                if (select)
-                    EquipGear(gear);
+                    if (select)
+                        EquipGear(slot, GameManager.Instance.activeRoomHeroes[0]);
+                }
             }
         }
 
@@ -1369,10 +1896,12 @@ public class TeamGearManager : MonoBehaviour
 
 
         // If gear is NOT empty, put gear in it
-        if (!gear.isEmpty && !select)
+        if (!slot.isEmpty)
         {
             UpdateGearStatDetails();
-            UpdateGearNameText(gear.GetSlotName());
+            UpdateGearNameText(GetSelectedGearSlot().linkedGearPiece.gearName);
+            UpdateGearRarityText(GetSelectedGearSlot().linkedGearPiece.gearRarity);
+            UpdateGearTypeText(GetSelectedGearSlot().linkedGearPiece.gearType);
         }
 
         // If gear IS empty, dont put gear in it, display it as empty
@@ -1380,15 +1909,14 @@ public class TeamGearManager : MonoBehaviour
         {
             ClearAllGearStats();
             UpdateGearNameText("");
+            UpdateGearRarityText("");
+            UpdateGearTypeText("");
         }
     }
 
-    public void UnequipGear()
+    public void UnequipGear(bool gearTab = true, UnitFunctionality unit = null, GearPiece gear = null, bool skipStatPopup = false, bool removeGear = false)
     {
-        if (GetSelectedBaseGearSlot() == null)
-            return;
-
-        if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.MAIN)
+        if (unit.teamIndex == 0)
         {
             // If play ownst at least 1 item
             if (OwnedLootInven.Instance.GetWornGearMainAlly().Count > 0)
@@ -1396,37 +1924,74 @@ public class TeamGearManager : MonoBehaviour
                 // Loop through all worn gear
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearMainAlly().Count; x++)
                 {
-                    // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetSlotName() == GetSelectedBaseGearSlot().GetSlotName())
+                    if (gear)
                     {
-                        // Remove saved equipped gear piece (data side)
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Slot.SlotPieceType.HELMET)
+                        // if equipped gear name is the same as any worn gear
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].linkedGearPiece.gearName == gear.gearName)
                         {
-                            UpdateEquippedGearPiece("helmMain", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Slot.SlotPieceType.CHESTPIECE)
-                        {
-                            UpdateEquippedGearPiece("chestMain", null, false);
-                        }
-                        else if (OwnedLootInven.Instance.GetWornGearMainAlly()[x].GetCurGearType() == Slot.SlotPieceType.BOOTS)
-                        {
-                            UpdateEquippedGearPiece("bootsMain", null, false);
-                        }
+                            // Remove saved equipped gear piece (data side)
+                            if (gear.gearType == "helmet" ||
+                                gear.gearType == "HELMET")
+                            {
+                                UpdateEquippedGearPiece("helmMain", null, false);
+                            }
+                            if (gear.gearType == "chestpiece" ||
+                                gear.gearType == "CHESTPIECE")
+                            {
+                                UpdateEquippedGearPiece("chestMain", null, false);
+                            }
+                            if (gear.gearType == "boots" ||
+                                gear.gearType == "BOOTS")
+                            {
+                                UpdateEquippedGearPiece("bootsMain", null, false);
+                            }
+                            if (gear.gearType == "neckless" ||
+                                gear.gearType == "NECKLESS" ||
+                                gear.gearType == "pendant" ||
+                                gear.gearType == "PENDANT")
+                            {
+                                UpdateEquippedGearPiece("necklessMain", null, false);
+                            }
+                            if (gear.gearType == "earring" ||
+                                gear.gearType == "EARRING")
+                            {
+                                UpdateEquippedGearPiece("earringMain", null, false);
+                            }
+                            if (gear.gearType == "belt" ||
+                                gear.gearType == "BELT")
+                            {
+                                UpdateEquippedGearPiece("beltMain", null, false);
+                            }
+                            if (gear.gearType == "glove" ||
+                                gear.gearType == "GLOVE")
+                            {
+                                UpdateEquippedGearPiece("gloveMain", null, false);
+                            }
+                            if (gear.gearType == "ring" ||
+                                gear.gearType == "RING")
+                            {
+                                if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                                    UpdateEquippedGearPiece("ring1Main", null, false);
+                                else if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring2)
+                                    UpdateEquippedGearPiece("ring2Main", null, false);
+                            }
 
-                        // Update unit stats when unequiping
-                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
+                            // Update unit stats when unequiping
+                            UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearMainAlly()[x], skipStatPopup);
 
-                        // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
+                            // Add gear into owned gear
+                            if (!removeGear)
+                                OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
+                            OwnedLootInven.Instance.RemoveWornGearAllyMain(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
+                            break;
 
-                        // Remove worn gear
-                        OwnedLootInven.Instance.RemoveWornGearAllyMain(OwnedLootInven.Instance.GetWornGearMainAlly()[x]);
-                        break;
+                        }
                     }
+                    
                 }
             }
         }
-        else if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.SECOND)
+        else if (unit.teamIndex == 1)
         {
             // If play ownst at least 1 item
             if (OwnedLootInven.Instance.GetWornGearSecondAlly().Count > 0)
@@ -1435,36 +2000,69 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetSlotName() == GetSelectedBaseGearSlot().GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].linkedGearPiece.gearName == gear.gearName)
                     {
                         // Remove saved equipped gear piece (data side)
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotPieceType.HELMET)
+                        if (gear.gearType == "helmet" ||
+                            gear.gearType == "HELMET")
                         {
                             UpdateEquippedGearPiece("helmSecond", null, false);
                         }
-                        else if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotPieceType.CHESTPIECE)
+                        if (gear.gearType == "chestpiece" ||
+                            gear.gearType == "CHESTPIECE")
                         {
                             UpdateEquippedGearPiece("chestSecond", null, false);
                         }
-                        else if (OwnedLootInven.Instance.GetWornGearSecondAlly()[x].GetCurGearType() == Slot.SlotPieceType.BOOTS)
+                        if (gear.gearType == "boots" ||
+                            gear.gearType == "BOOTS")
                         {
                             UpdateEquippedGearPiece("bootsSecond", null, false);
                         }
+                        if (gear.gearType == "neckless" ||
+                            gear.gearType == "NECKLESS" ||
+                            gear.gearType == "pendant" ||
+                            gear.gearType == "PENDANT")
+                        {
+                            UpdateEquippedGearPiece("necklessSecond", null, false);
+                        }
+                        if (gear.gearType == "earring" ||
+                            gear.gearType == "EARRING")
+                        {
+                            UpdateEquippedGearPiece("earringSecond", null, false);
+                        }
+                        if (gear.gearType == "belt" ||
+                            gear.gearType == "BELT")
+                        {
+                            UpdateEquippedGearPiece("beltSecond", null, false);
+                        }
+                        if (gear.gearType == "glove" ||
+                            gear.gearType == "GLOVE")
+                        {
+                            UpdateEquippedGearPiece("gloveSecond", null, false);
+                        }
+                        if (gear.gearType == "ring" ||
+                            gear.gearType == "RING")
+                        {
+                            if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                                UpdateEquippedGearPiece("ring1Second", null, false);
+                            else if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring2)
+                                UpdateEquippedGearPiece("ring2Second", null, false);
+                        }
 
                         // Update unit stats when unequiping
-                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
+                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearSecondAlly()[x], skipStatPopup);
 
                         // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
-
-                        // Remove worn gear
+                        if (!removeGear)
+                            OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
                         OwnedLootInven.Instance.RemoveWornGearAllySecond(OwnedLootInven.Instance.GetWornGearSecondAlly()[x]);
                         break;
+
                     }
                 }
             }
         }
-        else if (GetSelectedBaseGearSlot().GetSlotOwnedBy() == Slot.SlotOwnedBy.THIRD)
+        else if (unit.teamIndex == 2)
         {
             // If play ownst at least 1 item
             if (OwnedLootInven.Instance.GetWornGearThirdAlly().Count > 0)
@@ -1473,42 +2071,78 @@ public class TeamGearManager : MonoBehaviour
                 for (int x = 0; x < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; x++)
                 {
                     // if equipped gear name is the same as any worn gear
-                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetSlotName() == GetSelectedBaseGearSlot().GetSlotName())
+                    if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].linkedGearPiece.gearName == gear.gearName)
                     {
                         // Remove saved equipped gear piece (data side)
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotPieceType.HELMET)
+                        if (gear.gearType == "helmet" ||
+                            gear.gearType == "HELMET")
                         {
                             UpdateEquippedGearPiece("helmThird", null, false);
                         }
-                        else if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotPieceType.CHESTPIECE)
+                        if (gear.gearType == "chestpiece" ||
+                            gear.gearType == "CHESTPIECE")
                         {
                             UpdateEquippedGearPiece("chestThird", null, false);
                         }
-                        else if (OwnedLootInven.Instance.GetWornGearThirdAlly()[x].GetCurGearType() == Slot.SlotPieceType.BOOTS)
+                        if (gear.gearType == "boots" ||
+                            gear.gearType == "BOOTS")
                         {
                             UpdateEquippedGearPiece("bootsThird", null, false);
                         }
+                        if (gear.gearType == "neckless" ||
+                            gear.gearType == "NECKLESS" ||
+                            gear.gearType == "pendant" ||
+                            gear.gearType == "PENDANT")
+                        {
+                            UpdateEquippedGearPiece("necklessThird", null, false);
+                        }
+                        if (gear.gearType == "earring" ||
+                            gear.gearType == "EARRING")
+                        {
+                            UpdateEquippedGearPiece("earringThird", null, false);
+                        }
+                        if (gear.gearType == "belt" ||
+                            gear.gearType == "BELT")
+                        {
+                            UpdateEquippedGearPiece("beltThird", null, false);
+                        }
+                        if (gear.gearType == "glove" ||
+                            gear.gearType == "GLOVE")
+                        {
+                            UpdateEquippedGearPiece("gloveThird", null, false);
+                        }
+                        if (gear.gearType == "ring" ||
+                            gear.gearType == "RING")
+                        {
+                            if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring1)
+                                UpdateEquippedGearPiece("ring1Third", null, false);
+                            else if (GetSelectedBaseGearSlot().curRingType == Slot.RingType.ring2)
+                                UpdateEquippedGearPiece("ring2Third", null, false);
+                        }
 
                         // Update unit stats when unequiping
-                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
+                        UpdateUnitStatsUnEquip(OwnedLootInven.Instance.GetWornGearThirdAlly()[x], skipStatPopup);
 
                         // Add gear into owned gear
-                        OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-
-                        // Remove worn gear
+                        if (!removeGear)
+                            OwnedLootInven.Instance.AddOwnedGear(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
                         OwnedLootInven.Instance.RemoveWornGearAllyThird(OwnedLootInven.Instance.GetWornGearThirdAlly()[x]);
-
                         break;
+
                     }
                 }
             }
         }
 
-        // Remove gear icon display
-        GetSelectedBaseGearSlot().ResetSlot(true, true);
+        if (playerInGearTab)
+        {
+            GetSelectedBaseGearSlot().ResetSlot(true, true);
+        }
+
 
         // Remove gear icon details (name / stats)
-        ClearAllGearStats();
+        //ClearAllGearStats();
+        AudioManager.Instance.Play("SFX_UnequipGear");
     }
 
     public void SellGear()

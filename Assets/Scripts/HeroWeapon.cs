@@ -17,6 +17,7 @@ public class HeroWeapon : MonoBehaviour
     public UIElement flashUI;
     public UIElement hitsRemainingText;
     public UIElement hitsAccumulatedText;
+    public UIElement hitsAccumulatedPopup;
 
     private Color heroColour;
 

@@ -34,6 +34,13 @@ public class RoomMapIcon : MonoBehaviour
     [SerializeField] private List<ItemPiece> purchasedItems = new List<ItemPiece>();
     [SerializeField] private List<ShopItem> purchasedShopItems = new List<ShopItem>();
 
+    [SerializeField] private List<ShopItem> alreadyShopitems = new List<ShopItem>();
+
+    [SerializeField] private List<GearPiece> shopRoomCombatGear = new List<GearPiece>();
+    [SerializeField] private List<GearPiece> shopRoomHealthGear = new List<GearPiece>();
+    [SerializeField] private List<GearPiece> purchasedGear = new List<GearPiece>();
+    [SerializeField] private List<ShopItem> purchasedShopGear = new List<ShopItem>();
+
     public bool isHidden;
     public bool isSelected;
     public bool isDiscovered;
@@ -44,11 +51,26 @@ public class RoomMapIcon : MonoBehaviour
     public bool bossRoomDefeated;
 
     public bool hasEntered;
+    public bool hasOfferedItems;
 
     bool revealedOnce;
 
     private RectTransform rt;
 
+    public List<ShopItem> GetAlreadyShopItems()
+    {
+        return alreadyShopitems;
+    }
+
+    public void ClearAlreadyShopItems()
+    {
+        alreadyShopitems.Clear();
+    }
+
+    public void AddAlreadyShopItems(ShopItem shopitem)
+    {
+        alreadyShopitems.Add(shopitem);
+    }
 
     private void Awake()
     {
@@ -81,9 +103,30 @@ public class RoomMapIcon : MonoBehaviour
         return purchasedItems;
     }
 
+    public void AddPurchasedGearPiece(ShopItem shopItem)
+    {
+        purchasedShopGear.Add(shopItem);
+    }
+    public void AddPurchasedGearPiece(GearPiece gear)
+    {
+        purchasedGear.Add(gear);
+    }
+    public List<ShopItem> GetPurchasedShopGear()
+    {
+        return purchasedShopItems;
+    }
+    public List<GearPiece> GetPurchasedGear()
+    {
+        return purchasedGear;
+    }
+
     public void ClearPurchasedItems()
     {
         purchasedItems.Clear();
+    }
+    public void ClearPurchasedGear()
+    {
+        purchasedGear.Clear();
     }
 
     // Combat Items
@@ -100,6 +143,22 @@ public class RoomMapIcon : MonoBehaviour
     public List<ItemPiece> GetShopRoomCombatItems()
     {
         return shopRoomCombatItems;
+    }
+
+    // Combat Gear
+    public void AddShopRoomCombatGear(GearPiece gear)
+    {
+        shopRoomCombatGear.Add(gear);
+    }
+
+    public void ClearShopRoomCombatGear()
+    {
+        shopRoomCombatItems.Clear();
+    }
+
+    public List<GearPiece> GetShopRoomCombatGear()
+    {
+        return shopRoomCombatGear;
     }
 
     public int GetShopRoomCombatItemsAmount(string itemName)

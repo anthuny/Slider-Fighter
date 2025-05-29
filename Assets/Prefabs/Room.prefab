@@ -134,6 +134,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -142,6 +143,12 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
 --- !u!225 &8876155709448444676
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -238,6 +245,11 @@ MonoBehaviour:
   shopRoomHealthItems: []
   purchasedItems: []
   purchasedShopItems: []
+  alreadyShopitems: []
+  shopRoomCombatGear: []
+  shopRoomHealthGear: []
+  purchasedGear: []
+  purchasedShopGear: []
   isHidden: 0
   isSelected: 0
   isDiscovered: 0
@@ -247,6 +259,7 @@ MonoBehaviour:
   isVisited: 0
   bossRoomDefeated: 0
   hasEntered: 0
+  hasOfferedItems: 0
 --- !u!223 &8230447574900321245
 Canvas:
   m_ObjectHideFlags: 0
@@ -266,7 +279,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 167
+  m_SortingOrder: 26000
   m_TargetDisplay: 0
 --- !u!225 &5690197334166295081
 CanvasGroup:
@@ -404,6 +417,8 @@ GameObject:
   - component: {fileID: 7064347236713240888}
   - component: {fileID: 1708859215729858898}
   - component: {fileID: 5521988149852552486}
+  - component: {fileID: 4009357549830486677}
+  - component: {fileID: 6082382202705083778}
   m_Layer: 5
   m_Name: Room Button
   m_TagString: Untagged
@@ -550,6 +565,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   room: {fileID: 0}
+--- !u!223 &4009357549830486677
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7255061833085160400}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 28000
+  m_TargetDisplay: 0
+--- !u!114 &6082382202705083778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7255061833085160400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &8086733978122549882
 GameObject:
   m_ObjectHideFlags: 0

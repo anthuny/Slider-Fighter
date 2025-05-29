@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b1acb7c48ac8e4794d42cad5696501, type: 3}
+  m_Name: 030525 - Combat Softlocks
+  m_EditorClassIdentifier: 
+  updateLogPreText: 03/05/25 - Combat Softlocks
+  updateLogText: BUG - Fixed combat from sometimes softlocking the player in combat
+    under certain scerarios. Fixed fighter deaths in combat breaking combat if the
+    next unit's is an eneny.

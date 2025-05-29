@@ -22,8 +22,8 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 0
   itemName: Throwing Hatchet
-  itemDesc: Target 2 enemies, damaging 4 times. Apply Effect Bleed (2) +1 Uses at
-    end of combat.
+  itemDesc: Target 2x2 area, dealing damage. hits have chance to apply effect Bleed
+    (2).
   itemSpriteItemTab: {fileID: 21300000, guid: a181ede4da91aaf478f6c20522e5fab6, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 3e45dd79657c927488623d2aeb9ec24a, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 3e45dd79657c927488623d2aeb9ec24a, type: 3}
@@ -69,8 +69,8 @@ MonoBehaviour:
   ac: {fileID: 0}
   itemVisualAC: {fileID: 0}
   maxUsesPerCombat: 3
-  targetCount: 2
-  hitCount: 4
+  targetCount: 4
+  hitCount: 6
   projectileSpeed: 10
   allowRandomSpawnPosition: 1
   allowRandomSpawnRotation: 1

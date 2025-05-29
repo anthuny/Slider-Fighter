@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
 public class ItemPiece : ScriptableObject
 {
-    public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
+    public enum Rarity { common, rare, epic, legendary }
     public Rarity curRarity;
 
     public enum RaceSpecific { ALL, HUMAN, BEAST, ETHEREAL }
@@ -96,13 +96,13 @@ public class ItemPiece : ScriptableObject
         this.itemName = newName;
         //this.gearType = gearType;
         if (itemRarity == "common")
-            curRarity = Rarity.COMMON;
+            curRarity = Rarity.common;
         else if (itemRarity == "rare")
-            curRarity = Rarity.RARE;
+            curRarity = Rarity.rare;
         else if (itemRarity == "epic")
-            curRarity = Rarity.EPIC;
+            curRarity = Rarity.epic;
         else if (itemRarity == "legendary")
-            curRarity = Rarity.LEGENDARY;
+            curRarity = Rarity.legendary;
 
         this.itemSpriteItemTab = itemIcon;
     }

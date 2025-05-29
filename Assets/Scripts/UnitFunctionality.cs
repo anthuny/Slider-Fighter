@@ -18,6 +18,7 @@ public class UnitFunctionality : MonoBehaviour
     public LastOpenedMastery lastOpenedStatPage;
 
     public CharacterAnimation characterAnimation;
+    public UIElement unitUI;
     [SerializeField] private UIElement unitStatBar;
     [SerializeField] private UIElement fighterRaceIcon;
     [SerializeField] private UIElement heroHitsAccTextPos;
@@ -194,6 +195,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public Canvas visualCanvas;
     public int teamIndex;
+    public int gearIndex;
     public bool purchased = false;
     //public bool unitDouble;
 
@@ -203,6 +205,7 @@ public class UnitFunctionality : MonoBehaviour
     public bool reanimated;
     public bool beenAttacked = false;
     public UnitFunctionality holyLinkPartner;
+    public bool holyLinkHost = false;
     [SerializeField] private UIElement unitAlertTextParent;
     [SerializeField] private UIElement unitAlertStay;
     [SerializeField] private GameObject unitAlertText;
@@ -240,6 +243,81 @@ public class UnitFunctionality : MonoBehaviour
     public SkillData lastUsedSkill;
     public bool forceStopAttacking = false;
     public bool rollFirstSkill = false;
+    public bool allyLow = false;
+    public float turnTimer = 0;
+    public bool turnTimerStarted = false;
+    bool resettingSelection = false;
+
+    public int GetGearPowerStat()
+    {
+        int power = 0;
+
+        if (teamIndex == 0)
+        {
+            if (TeamGearManager.Instance.equippedHelmetMain)
+                power += TeamGearManager.Instance.equippedHelmetMain.bonusDamage;
+            else if (TeamGearManager.Instance.equippedChestpieceMain)
+                power += TeamGearManager.Instance.equippedChestpieceMain.bonusDamage;
+            else if (TeamGearManager.Instance.equippedBootsMain)
+                power += TeamGearManager.Instance.equippedBootsMain.bonusDamage;
+            else if (TeamGearManager.Instance.equippedNecklessMain)
+                power += TeamGearManager.Instance.equippedNecklessMain.bonusDamage;
+            else if (TeamGearManager.Instance.equippedEarringMain)
+                power += TeamGearManager.Instance.equippedEarringMain.bonusDamage;
+            else if (TeamGearManager.Instance.equippedBeltMain)
+                power += TeamGearManager.Instance.equippedBeltMain.bonusDamage;
+            else if (TeamGearManager.Instance.equippedGloveMain)
+                power += TeamGearManager.Instance.equippedGloveMain.bonusDamage;
+            else if (TeamGearManager.Instance.equippedRing1Main)
+                power += TeamGearManager.Instance.equippedRing1Main.bonusDamage;
+            else if (TeamGearManager.Instance.equippedRing2Main)
+                power += TeamGearManager.Instance.equippedRing2Main.bonusDamage;
+        }
+        else if (teamIndex == 1)
+        {
+            if (TeamGearManager.Instance.equippedHelmetSec)
+                power += TeamGearManager.Instance.equippedHelmetSec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedChestpieceSec)
+                power += TeamGearManager.Instance.equippedChestpieceSec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedBootsSec)
+                power += TeamGearManager.Instance.equippedBootsSec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedNecklessSec)
+                power += TeamGearManager.Instance.equippedNecklessSec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedEarringSec)
+                power += TeamGearManager.Instance.equippedEarringSec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedBeltSec)
+                power += TeamGearManager.Instance.equippedBeltSec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedGloveSec)
+                power += TeamGearManager.Instance.equippedGloveSec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedRing1Sec)
+                power += TeamGearManager.Instance.equippedRing1Sec.bonusDamage;
+            else if (TeamGearManager.Instance.equippedRing2Sec)
+                power += TeamGearManager.Instance.equippedRing2Sec.bonusDamage;
+        }
+        else
+        {
+            if (TeamGearManager.Instance.equippedHelmetThi)
+                power += TeamGearManager.Instance.equippedHelmetThi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedChestpieceThi)
+                power += TeamGearManager.Instance.equippedChestpieceThi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedBootsThi)
+                power += TeamGearManager.Instance.equippedBootsThi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedNecklessThi)
+                power += TeamGearManager.Instance.equippedNecklessThi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedEarringThi)
+                power += TeamGearManager.Instance.equippedEarringThi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedBeltThi)
+                power += TeamGearManager.Instance.equippedBeltThi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedGloveThi)
+                power += TeamGearManager.Instance.equippedGloveThi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedRing1Thi)
+                power += TeamGearManager.Instance.equippedRing1Thi.bonusDamage;
+            else if (TeamGearManager.Instance.equippedRing2Thi)
+                power += TeamGearManager.Instance.equippedRing2Thi.bonusDamage;
+        }
+
+        return power;
+    }
 
     public void UpdateChosenSkill(SkillData skillData)
     {
@@ -275,21 +353,31 @@ public class UnitFunctionality : MonoBehaviour
         unitButton.GetComponent<GraphicRaycaster>().enabled = toggle;
     }
 
-    public void ToggleUnitStatBarAlpha(bool toggle = true)
+    public void ToggleUnitStatBarAlpha(bool toggle = true, bool byPass = false)
     {
-        float newScale = 0;
-        if (toggle)
+        if (!byPass)
         {
-            newScale = GameManager.Instance.unitStatBarSizeMax;
-            unitStatBar.gameObject.transform.localScale = new Vector2(newScale, newScale);
-            unitStatBar.UpdateAlpha(GameManager.Instance.unitStatBarOnAlpha, false, 0, false , false);
-            unitStatBar.AnimateUI(false);
+            float newScale = 0;
+            if (toggle)
+            {
+                newScale = GameManager.Instance.unitStatBarSizeMax;
+                unitStatBar.gameObject.transform.localScale = new Vector2(newScale, newScale);
+                unitStatBar.UpdateAlpha(GameManager.Instance.unitStatBarOnAlpha, false, 0, false, false);
+                unitStatBar.AnimateUI(false);
+            }
+            else
+            {
+                newScale = GameManager.Instance.unitStarBarSizeMin;
+                unitStatBar.gameObject.transform.localScale = new Vector2(newScale, newScale);
+                unitStatBar.UpdateAlpha(GameManager.Instance.unitStatBarOffAlpha, false, 0, false, false);
+            }
         }
         else
         {
-            newScale = GameManager.Instance.unitStarBarSizeMin;
-            unitStatBar.gameObject.transform.localScale = new Vector2(newScale, newScale);
-            unitStatBar.UpdateAlpha(GameManager.Instance.unitStatBarOffAlpha, false, 0, false, false);
+            if (toggle)
+                unitStatBar.UpdateAlpha(1);
+            else
+                unitStatBar.UpdateAlpha(0);
         }
     }
 
@@ -702,7 +790,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.HELMET)
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.helmet)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
@@ -710,7 +798,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.CHESTPIECE)
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.chestpiece)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
@@ -718,7 +806,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.BOOTS)
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.boots)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
@@ -731,7 +819,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.HELMET)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.helmet)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
                         // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -741,7 +829,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.CHESTPIECE)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.chestpiece)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
                         // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -751,7 +839,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.BOOTS)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.boots)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
                         //else
                         //  go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -765,7 +853,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.HELMET)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.helmet)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
                         //go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -775,7 +863,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.CHESTPIECE)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.chestpiece)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
                         // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -785,7 +873,7 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.BOOTS)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.boots)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
                         //else
                         //    go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
@@ -973,7 +1061,7 @@ public class UnitFunctionality : MonoBehaviour
         StartCoroutine(DisableItemTooltipWait());
     }
 
-    public void TriggerItemVisualAlert(Slot itemSlot, bool playSFX = true, bool activeItem = false)
+    public void TriggerItemDecreaseAlert(Slot itemSlot, bool playSFX = true)
     {
         itemVisualAlert.UpdateContentImage(itemSlot.linkedItemPiece.itemSpriteItemTab);
 
@@ -981,6 +1069,23 @@ public class UnitFunctionality : MonoBehaviour
             itemVisualAlert.UpdateContentText((itemSlot.linkedItemPiece.maxUsesPerCombat - itemSlot.GetItemUses() - 1).ToString());
         else if (itemSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
             itemVisualAlert.UpdateContentText((itemSlot.linkedItemPiece.maxUsesPerCombat - itemSlot.GetItemUses()).ToString());
+
+        if (playSFX)
+        {
+            AudioManager.Instance.Play("SFX_ItemTrigger");
+        }
+
+        itemVisualAlert.UpdateAlpha(1, false, 0, false, false, true);
+    }
+
+    public void TriggerItemIncreaseAlert(Slot itemSlot, bool playSFX = true)
+    {
+        itemVisualAlert.UpdateContentImage(itemSlot.linkedItemPiece.itemSpriteItemTab);
+
+        if (itemSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
+            itemVisualAlert.UpdateContentText((itemSlot.linkedItemPiece.maxUsesPerCombat - itemSlot.GetItemUses() + 1).ToString());
+        else if (itemSlot.linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.REFILLABLE)
+            itemVisualAlert.UpdateContentText(itemSlot.linkedItemPiece.maxUsesPerCombat.ToString());
 
         if (playSFX)
         {
@@ -1266,6 +1371,24 @@ public class UnitFunctionality : MonoBehaviour
         rt = GetComponent<RectTransform>();
     }
 
+    private void FixedUpdate()
+    {
+        RunTurnTimer();
+
+        // Check if unit is selected without a tile selected underneath, if yes, unselect
+
+        if (GetActiveCombatSlot() && GameManager.Instance.playerInCombat)
+        {
+            if (GameManager.Instance.unitsSelected.Contains(this) && !GetActiveCombatSlot().combatSelected)
+            {
+                //resettingSelection = true;
+
+                GameManager.Instance.unitsSelected.Remove(this);
+                ToggleSelected(false);
+            }
+        }
+
+    }
     private void Update()
     {
         /*
@@ -1600,6 +1723,15 @@ public class UnitFunctionality : MonoBehaviour
     {
         if (GetUnitName() != "Dragonborn")
         {
+            if (GetUnitName() == "Knight")
+            {
+                if (skillIndex == 1)
+                {
+                    GetAnimator().SetTrigger("AttackFlg");
+                    return;
+                }         
+            }
+
             if (skillIndex == 0)
                 GetAnimator().SetTrigger("AttackFlg");
             else
@@ -1723,12 +1855,40 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         //finalRange ;
-        Debug.Log("range x = " + rangeX + " | range  y = " + rangeY);
+        //Debug.Log("range x = " + rangeX + " | range  y = " + rangeY);
         return finalRange;
     }
+    
+    void RunTurnTimer()
+    {
+        if (turnTimerStarted)
+            turnTimer += Time.deltaTime;
 
+        if (turnTimer >= 7 && turnTimerStarted)
+        {
+            turnTimerStarted = false;
+            StartCoroutine(UnitEndTurn(true));
+        }
+    }
+
+    void StartTurnTimer()
+    {
+        if (curUnitType == UnitType.ENEMY)
+        {
+            turnTimer = 0;
+            turnTimerStarted = true;
+        }
+
+    }
     public IEnumerator StartUnitTurn(bool wait = true)
     {
+        StartTurnTimer();
+
+        if (curUnitType == UnitType.ENEMY)
+        {
+            CombatGridManager.Instance.DisableAllButtons();
+        }
+
         if (hasAttacked && GetCurMovementUses() <= 0)
         {
             StartCoroutine(UnitEndTurn(true));
@@ -1742,7 +1902,7 @@ public class UnitFunctionality : MonoBehaviour
         }
 
         // When fighter ends turn on items mode, reset back to skills mode for enemies, causes fatal errors
-        if (curUnitType == UnitType.ENEMY)
+        if (curUnitType == UnitType.ENEMY || reanimated)
             GameManager.Instance.isSkillsMode = true;
 
         if (wait)
@@ -1789,7 +1949,7 @@ public class UnitFunctionality : MonoBehaviour
                     if (CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit().GetRangeFromUnit(this) > GameManager.Instance.GetActiveSkill().curSkillRange
                         && !GameManager.Instance.GetActiveSkill().isSelfCast)
                     {
-                        Debug.Log("Target = " + CombatGridManager.Instance.GetTargetCombatSlots()[i] + "| range from unit = " + CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit().GetRangeFromUnit(this));
+                       // Debug.Log("Target = " + CombatGridManager.Instance.GetTargetCombatSlots()[i] + "| range from unit = " + CombatGridManager.Instance.GetTargetCombatSlots()[i].GetLinkedUnit().GetRangeFromUnit(this));
                         if (GameManager.Instance.GetActiveSkill() == GetSkill(0) && !skill1OutOfRange)
                         {
                             skill1OutOfRange = true;
@@ -1825,22 +1985,22 @@ public class UnitFunctionality : MonoBehaviour
 
             if (GameManager.Instance.GetActiveSkill() == GetSkill(0) && skill1OutOfRange && GetCurMovementUses() <= 0)
             {
-                StartCoroutine(UnitEndTurn());
+                StartCoroutine(UnitEndTurn(true));
                 yield break;
             }
             else if (GameManager.Instance.GetActiveSkill() == GetSkill(1) && skill2OutOfRange && GetCurMovementUses() <= 0)
             {
-                StartCoroutine(UnitEndTurn());
+                StartCoroutine(UnitEndTurn(true));
                 yield break;
             }
             else if (GameManager.Instance.GetActiveSkill() == GetSkill(2) && skill3OutOfRange && GetCurMovementUses() <= 0)
             {
-                StartCoroutine(UnitEndTurn());
+                StartCoroutine(UnitEndTurn(true));
                 yield break;
             }
             else if (GameManager.Instance.GetActiveSkill() == GetSkill(3) && skill4OutOfRange && GetCurMovementUses() <= 0)
             {
-                StartCoroutine(UnitEndTurn());
+                StartCoroutine(UnitEndTurn(true));
                 yield break;
             }
 
@@ -2022,7 +2182,7 @@ public class UnitFunctionality : MonoBehaviour
                                                 float healAmount = ((float)item.itemPower / 100f) * startingRoomMaxHealth;
                                                 UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
                                                 //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2081,7 +2241,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("POWERUP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2151,7 +2311,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2221,7 +2381,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
 
 
                                                 yield return new WaitForSeconds(.35f);
@@ -2292,7 +2452,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally1ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2382,7 +2542,7 @@ public class UnitFunctionality : MonoBehaviour
                                                 float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
                                                 UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
                                                 //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2441,7 +2601,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("POWERUP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2511,7 +2671,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2581,7 +2741,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
 
 
                                                 yield return new WaitForSeconds(.35f);
@@ -2652,7 +2812,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally2ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2740,7 +2900,7 @@ public class UnitFunctionality : MonoBehaviour
                                                 float healAmount = ((float)item.itemPower / 100f) * GetUnitMaxHealth();
                                                 UpdateUnitCurHealth((int)healAmount, false, false, true, false, true);
                                                 //StartCoroutine(SpawnPowerUI((int)healAmount, false, false, null, false));
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2799,7 +2959,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("POWERUP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2869,7 +3029,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("HEALTH UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -2939,7 +3099,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("SPEED UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
 
 
                                                 yield return new WaitForSeconds(.35f);
@@ -3010,7 +3170,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                                 EffectData effect = EffectManager.instance.GetEffect("DEFENSE UP");
                                                 AddUnitEffect(effect, this, 1, 1, false, true, true, TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
-                                                TriggerItemVisualAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
+                                                TriggerItemDecreaseAlert(TeamItemsManager.Instance.ally3ItemsSlots[x].linkedSlot);
                                                 //AudioManager.Instance.Play("SFX_ItemTrigger");
                                                 yield return new WaitForSeconds(.35f);
                                                 continue;
@@ -3043,7 +3203,7 @@ public class UnitFunctionality : MonoBehaviour
 
     public IEnumerator DecreaseEffectTurnsLeft(bool turnStart, bool parry = false, bool immune = false, bool otherLink = false)
     {
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0f);
 
         // If no effects remain on the unit, stop
         if (activeEffects.Count >= 1)
@@ -3145,7 +3305,7 @@ public class UnitFunctionality : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.15f);
 
         // Continue turn order system after effects have been depleted from turn start
         if (turnStart && !isDead)
@@ -3180,12 +3340,22 @@ public class UnitFunctionality : MonoBehaviour
                 WeaponManager.Instance.ResetAcc();
                 WeaponManager.Instance.ResetWeaponAccHits();
 
+                if (curUnitType == UnitType.ENEMY)
+                {
+                    yield return new WaitForSeconds(0.2f);
+                }
+
                 GameManager.Instance.UpdateTurnOrder();
             }
             else
             {
                 if (GameManager.Instance.playerInCombat)
                 {
+                    if (waitExtraLong)
+                        yield return new WaitForSeconds(.8f);
+
+                    WeaponManager.Instance.ResetAcc();
+                    WeaponManager.Instance.ResetWeaponAccHits();
                     GameManager.Instance.UpdateTurnOrder();
                 }
             }
@@ -3197,6 +3367,8 @@ public class UnitFunctionality : MonoBehaviour
                 GameManager.Instance.UpdateTurnOrder();
             }
         }
+
+        turnTimerStarted = false;
     }
 
     public List<SkillData> GetStartingSkills()
@@ -3441,7 +3613,7 @@ public class UnitFunctionality : MonoBehaviour
 
         for (int i = 0; i < unitEnemyIntelligence; i++)
         {
-            bool allyLow = false;
+            allyLow = false;
             for (int y = 0; y < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; y++)
             {
                 if (GameManager.Instance.activeRoomAllUnitFunctionalitys[y].curUnitType == UnitType.ENEMY && !GameManager.Instance.activeRoomAllUnitFunctionalitys[y].isDead)
@@ -3449,6 +3621,7 @@ public class UnitFunctionality : MonoBehaviour
                     if (GameManager.Instance.activeRoomAllUnitFunctionalitys[y].GetUnitCurHealth() / GameManager.Instance.activeRoomAllUnitFunctionalitys[y].GetUnitMaxHealth() <= GameManager.Instance.allyHealthThreshholdHeal)
                     {
                         allyLow = true;
+                        break;
                     }
                 }
             }
@@ -3608,7 +3781,7 @@ public class UnitFunctionality : MonoBehaviour
             activeEffect = GameManager.Instance.GetActiveItem().effectAdded;
             procChance = GameManager.Instance.GetActiveItem().procChance;
 
-            if (itemSlot.linkedItemPiece.procChance != 0)
+            if (GameManager.Instance.GetActiveItem().procChance != 0)
                 byPassAcc = false;
             else
                 byPassAcc = true;
@@ -3638,11 +3811,11 @@ public class UnitFunctionality : MonoBehaviour
 
                             if (rand >= procChance && GameManager.Instance.isSkillsMode)
                             {
-                                if (effectAddedCount < 1)
+                                if (activeEffects[i].GetTurnCountRemaining() < 2)
                                     activeEffects[i].AddTurnCountText(1);
 
                                 // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
-                                effectAddedCount++;
+                                //effectAddedCount++;
 
                                 settingUpEffect = true;
 
@@ -3753,7 +3926,7 @@ public class UnitFunctionality : MonoBehaviour
 
                             if (rand >= procChance && !GameManager.Instance.isSkillsMode)
                             {
-                                if (effectAddedCount < 1)
+                                if (activeEffects[i].GetTurnCountRemaining() < 2)
                                     activeEffects[i].AddTurnCountText(1);
 
                                 // Cause Effect. Do not trigger text alert if its casting a skill on self. (BECAUSE: Skill announce overtakes this).
@@ -3872,70 +4045,18 @@ public class UnitFunctionality : MonoBehaviour
             {
                 GameObject go = null;
 
-                if (GameManager.Instance.GetActiveSkill() != null && GameManager.Instance.isSkillsMode)
+                if (GameManager.Instance.isSkillsMode)
                 {
                     // Determining whether the effect hits, If it fails, stop
-                    if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && !byPassAcc && GameManager.Instance.isSkillsMode)
-                    {
-                        if (m == 0)
-                        {
-                            int rand = Random.Range(1, 101);
-                            if (rand >= procChance)
-                            {
-                                // Spawn new effect on target unit
-                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
-                                go.transform.SetParent(effectsParent);
-                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-                                go.transform.localScale = new Vector3(1, 1, 1);
-
-                                effect = go.GetComponent<Effect>();
-                                activeEffects.Add(effect);
-                                effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
-
-                                string name = addedEffect.effectName;
-                                if (addedEffect.effectName == "HOLY_LINK")
-                                    name = "HOLY LINK";
-                                else if (addedEffect.effectName == "OTHER_LINK")
-                                    name = "OTHER LINK";
-                                else if (addedEffect.effectName == "POWERDOWN")
-                                    name = "POWER DOWN";
-                                TriggerTextAlert(name, 1, true, "Inflict");
-
-
-                                //Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
-
-                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
-                                {
-                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
-                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
-                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
-                                }
-
-                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
-                                // being added to this unit, to the other linked fighter also
-                                if (GetEffect("HOLY_LINK"))
-                                {
-                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
-                                    {
-                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
-                                        {
-                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
-                                        }
-                                    }
-                                }
-
-                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
-
-                                settingUpEffect = true;
-                            }
-                        }
-                    }
-                    else if (passiveItem || byPassAcc)
+                    if (passiveItem || byPassAcc)
                     {
                         if (m == 0)
                         {
                             if (!passiveItem)
                             {
+                                if (addedEffect.effectName == "HOLY_LINK" && GetEffect("OTHER_LINK"))
+                                    break;
+
                                 // Spawn new effect on target unit
                                 go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
                                 go.transform.SetParent(effectsParent);
@@ -3957,9 +4078,12 @@ public class UnitFunctionality : MonoBehaviour
 
                                 //Debug.Log("addedEffect 6 " + addedEffect.curEffectName);
 
+
+
                                 if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
                                 {
                                     holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkHost = true;
                                     GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
                                     GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
                                 }
@@ -4029,9 +4153,64 @@ public class UnitFunctionality : MonoBehaviour
                             }
                         }
                     }
+                    else if (GameManager.Instance.GetActiveSkill().GetCalculatedSkillEffectStat() != 0 && !byPassAcc && GameManager.Instance.isSkillsMode)
+                    {
+                        if (m == 0)
+                        {
+                            int rand = Random.Range(1, 101);
+                            if (rand >= procChance)
+                            {
+                                // Spawn new effect on target unit
+                                go = Instantiate(EffectManager.instance.effectPrefab, effectsParent.transform);
+                                go.transform.SetParent(effectsParent);
+                                go.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                                go.transform.localScale = new Vector3(1, 1, 1);
+
+                                effect = go.GetComponent<Effect>();
+                                activeEffects.Add(effect);
+                                effect.Setup(addedEffect, targetUnit, effectHitAcc, false);
+
+                                string name = addedEffect.effectName;
+                                if (addedEffect.effectName == "HOLY_LINK")
+                                    name = "HOLY LINK";
+                                else if (addedEffect.effectName == "OTHER_LINK")
+                                    name = "OTHER LINK";
+                                else if (addedEffect.effectName == "POWERDOWN")
+                                    name = "POWER DOWN";
+                                TriggerTextAlert(name, 1, true, "Inflict");
+
+
+                                //Debug.Log("addedEffect 5 " + addedEffect.curEffectName);
+
+                                if (addedEffect.effectName == "HOLY_LINK" && targetUnit != GameManager.Instance.GetActiveUnitFunctionality())
+                                {
+                                    holyLinkPartner = GameManager.Instance.GetActiveUnitFunctionality();
+                                    GameManager.Instance.GetActiveUnitFunctionality().holyLinkPartner = this;
+                                    GameManager.Instance.GetActiveUnitFunctionality().AddUnitEffect(GameManager.Instance.GetActiveSkill().effect2, GameManager.Instance.GetActiveUnitFunctionality(), 1, 1, true, false);
+                                }
+
+                                // If this unit has holy link, check all other fighters to see if they have other link, then give the effect thats
+                                // being added to this unit, to the other linked fighter also
+                                if (GetEffect("HOLY_LINK"))
+                                {
+                                    for (int X = 0; X < GameManager.Instance.activeRoomHeroes.Count; X++)
+                                    {
+                                        if (GameManager.Instance.activeRoomHeroes[X].GetEffect("OTHER_LINK"))
+                                        {
+                                            GameManager.Instance.activeRoomHeroes[X].AddUnitEffect(addedEffect, targetUnit, turnDuration, effectHitAcc, byPassAcc, passiveItem);
+                                        }
+                                    }
+                                }
+
+                                effect.gameObject.GetComponent<UIElement>().AnimateUI(false);
+
+                                settingUpEffect = true;
+                            }
+                        }
+                    }
                 }
                 // First apply, item 
-                else if (GameManager.Instance.GetActiveItem() != null && !GameManager.Instance.isSkillsMode)
+                else if (!GameManager.Instance.isSkillsMode)
                 {
                     // Determining whether the effect hits, If it fails, stop
                     if (procChance != 0 && byPassAcc && !GameManager.Instance.isSkillsMode)
@@ -4103,6 +4282,7 @@ public class UnitFunctionality : MonoBehaviour
 
                                 effect = go.GetComponent<Effect>();
                                 activeEffects.Add(effect);
+                                //if (GameManager.Instance.GetActiveItem().curHitType == ItemPiece.HitType.HITS)
                                 effect.Setup(addedEffect, targetUnit, effectHitAcc);
 
                                 string name = addedEffect.effectName;
@@ -4288,8 +4468,10 @@ public class UnitFunctionality : MonoBehaviour
         //Debug.Log("power = " + power);
 
         // If player in gear tab, stop power ui from appearing from armor equipping
-        if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab)
+        if (TeamGearManager.Instance.playerInGearTab || TeamItemsManager.Instance.playerInItemTab || ShopManager.Instance.playerInShopRoom)
             yield break;
+
+        ToggleUnitStatBarAlpha(true);
 
         // Play Audio
         if (offense)
@@ -4426,12 +4608,15 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     if (offense)
                     {
-                        // Change power text colour to offense colour if the type of attack is offense
-                        if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
-                            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
-                        // Change power text colour to support colour if the type of attack is support
-                        else if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
-                            powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                        if (GameManager.Instance.activeSkill)
+                        {
+                            // Change power text colour to offense colour if the type of attack is offense
+                            if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.OFFENSE)
+                                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillAttack);
+                            // Change power text colour to support colour if the type of attack is support
+                            else if (GameManager.Instance.activeSkill.curSkillType == SkillData.SkillType.SUPPORT)
+                                powerText.UpdatePowerTextColour(GameManager.Instance.gradientSkillSupport);
+                        }
                     }
                     else
                     {
@@ -4533,6 +4718,9 @@ public class UnitFunctionality : MonoBehaviour
 
         Projectile projectile = go.GetComponent<Projectile>();
 
+        projectile.startingCombatSlot = GetActiveCombatSlot();
+        projectile.endingCombatSlot = target.GetComponent<CombatSlot>();
+
         if (skill)
         {
             if (GameManager.Instance.GetActiveSkill().projectileAllowRandPosSpawn)
@@ -4561,7 +4749,7 @@ public class UnitFunctionality : MonoBehaviour
                 projectile.allowRandomSpawnRotation = true;
 
             projectile.UpdateProjectileSprite(GameManager.Instance.GetActiveItem().itemSpriteCombatProjectile);
-            //projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveSkill().projectileAC);
+            projectile.UpdateProjectileAnimator(GameManager.Instance.GetActiveItem().ac);
             projectile.ToggleAllowSpin(GameManager.Instance.GetActiveItem().projectileAllowSpin);
 
             projectile.LookAtTarget(target);
@@ -4639,11 +4827,21 @@ public class UnitFunctionality : MonoBehaviour
             curUnitType = UnitType.PLAYER;
     }
 
-    public void ToggleSelected(bool toggle, bool onlyToggleDisplay = false)
+    public void ToggleSelected(bool toggle, bool onlyToggleDisplay = false, bool shopItem = false)
     {
+        if (shopItem)
+        {
+            if (toggle)
+                selectionCircle.UpdateAlpha(1, false, 0, false, false, false, true);
+            else
+                selectionCircle.UpdateAlpha(0);
+
+            return;
+        }
+
         if (toggle)
         {
-            if (activeCombatSlot)
+            if (activeCombatSlot && GameManager.Instance.playerInCombat)
             {
                 if (!activeCombatSlot.combatSelected)
                     return;
@@ -4742,6 +4940,8 @@ public class UnitFunctionality : MonoBehaviour
         {
             isDead = true;
 
+            ToggleUnitStatBarAlpha(false, true);
+
             GetActiveCombatSlot().AddFallenUnit(this);
             GetActiveCombatSlot().UpdateLinkedUnit(null);
 
@@ -4787,10 +4987,19 @@ public class UnitFunctionality : MonoBehaviour
                     //Debug.Log("111");
 
                     // If this unit that just died, was having its own turn, end turn here, otherwise DONT
-                    if (curUnitType == UnitType.PLAYER && !reanimated && GameManager.Instance.GetActiveUnitFunctionality() == this)
+                    if (!reanimated)
                     {
                         yield return new WaitForSeconds(.75f);
-                        StartCoroutine(UnitEndTurn(false));  // end unit turn
+
+                        if (curUnitType == UnitType.PLAYER && GameManager.Instance.GetActiveUnitFunctionality() == this)
+                            StartCoroutine(UnitEndTurn(false));  // end unit turn
+                        //else
+                            //GameManager.Instance.UpdateTurnOrder(true);
+                    }
+                    else
+                    {
+                        yield return new WaitForSeconds(.75f);
+                        GameManager.Instance.UpdateTurnOrder(true);
                     }
                 }
             }
@@ -5164,7 +5373,7 @@ public class UnitFunctionality : MonoBehaviour
 
                 float newPower = 0;
 
-                if (!TeamGearManager.Instance.playerInGearTab && !TeamItemsManager.Instance.playerInItemTab)
+                if (!TeamGearManager.Instance.playerInGearTab && !TeamItemsManager.Instance.playerInItemTab && !ShopManager.Instance.playerInShopRoom)
                 {
                     if (GameManager.Instance.GetActiveSkill().isCleansingEffectRandom && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
                     {
@@ -5320,7 +5529,7 @@ public class UnitFunctionality : MonoBehaviour
                 //if (curHealth > 0)
 
                 // If the hit wasnt a miss, or 0 dmg, cause hit recieved animation
-                if (power != 0 && !TeamGearManager.Instance.playerInGearTab)
+                if (power != 0 && !TeamGearManager.Instance.playerInGearTab && !ShopManager.Instance.playerInShopRoom)
                 {
                     animator.SetBool("DamageFlg", true);
 
@@ -5382,7 +5591,7 @@ public class UnitFunctionality : MonoBehaviour
                         {
                             if (GameManager.Instance.isSkillsMode)
                             {
-                                if (power != 0 && GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
+                                if (power != 0)
                                 {
                                     newPower = ((activeEffects[i].effectPowerStacks * GetEffect("POISON").powerPercent) / 100f) * power;
                                     float finalHealingPower2 = power - newPower;
@@ -5403,7 +5612,7 @@ public class UnitFunctionality : MonoBehaviour
                             }
                             else
                             {
-                                if (power != 0 && GameManager.Instance.GetActiveItem().curItemType == ItemPiece.ItemType.SUPPORT)
+                                if (power != 0)
                                 {
                                     newPower = ((activeEffects[i].effectPowerStacks * GetEffect("POISON").powerPercent) / 100f) * power;
                                     float finalHealingPower2 = power - newPower;
@@ -5541,43 +5750,29 @@ public class UnitFunctionality : MonoBehaviour
 
         // If unit is player, give more exp the lower allies there are on team
 
-
-        if (GameManager.Instance.activeRoomEnemies.Count == 1)
+        
+        if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count == 1)
         {
-            attackChargeTurnStart *= 6;
+            attackChargeTurnStart *= 4;
+        }
+        else if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count == 2)
+        {
+            attackChargeTurnStart *= 3;
+        }
+        else if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count == 3)
+        {
+            attackChargeTurnStart *= 2;
+        }
+        else if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count == 4)
+        {
+            attackChargeTurnStart *= 1;
+        }
+        else if (GameManager.Instance.activeRoomAllUnitFunctionalitys.Count >= 5)
+        {
+            attackChargeTurnStart *= 1;
         }
 
-        else if (GameManager.Instance.activeRoomEnemies.Count == 2)
-        {
-            attackChargeTurnStart *= 6;
-        }
-
-        else if (GameManager.Instance.activeRoomEnemies.Count == 3)
-        {
-            attackChargeTurnStart *= 6;
-        }
-
-        else if (GameManager.Instance.activeRoomEnemies.Count == 4)
-        {
-            attackChargeTurnStart *= 6;
-        }
-
-        else if (GameManager.Instance.activeRoomEnemies.Count == 5)
-        {
-            if (curUnitType == UnitType.ENEMY)
-                attackChargeTurnStart *= 5;
-            else
-                attackChargeTurnStart *= 6;
-        }
-
-        else if (GameManager.Instance.activeRoomEnemies.Count == 6)
-        {
-            if (curUnitType == UnitType.ENEMY)
-                attackChargeTurnStart *= 4;
-            else
-                attackChargeTurnStart *= 6;
-        }
-
+        /*
         int diff = GameManager.Instance.activeRoomEnemies.Count - GameManager.Instance.activeRoomHeroes.Count;
         if (diff > 1 && curUnitType == UnitType.ENEMY)
         {
@@ -5587,8 +5782,9 @@ public class UnitFunctionality : MonoBehaviour
         {
             attackChargeTurnStart /= 6;
         }
-
-        //Debug.Log(GetUnitName() + " 's attack charge = " + attackChargeTurnStart);
+        */
+        
+        Debug.Log(GetUnitName() + " 's attack charge = " + attackChargeTurnStart);
         
         curAttackCharge += attackChargeTurnStart;
 
@@ -5599,7 +5795,7 @@ public class UnitFunctionality : MonoBehaviour
         UpdateUnitAttackBarNextVisual();
     }
 
-    void UpdateUnitAttackBarVisual()
+    public void UpdateUnitAttackBarVisual()
     {
         ToggleUnitAttackBar(true);
         ToggleActionNextBar(true);
@@ -5801,9 +5997,9 @@ public class UnitFunctionality : MonoBehaviour
 
         float block_chance = (a * Mathf.Log(GetCurDefense() + 1)) / (b * GetCurDefense() + 1);
 
-        block_chance -= 10;
+        block_chance -= 15;
 
-        //Debug.Log("Block Chance " + block_chance);
+        Debug.Log("Block Chance " + block_chance);
 
         if (block_chance < 0)
             block_chance = 0;

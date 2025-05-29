@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour
 {
-    public enum SlotPieceType { HELMET, CHESTPIECE, BOOTS, SKILL, ITEM, EMPTY }
+    public enum SlotPieceType { helmet, chestpiece, boots, neckless, earring, belt, glove, ring, SKILL, ITEM, EMPTY }
     public SlotPieceType curGearType;
+
+    public enum RingType { ring1, ring2 }
+    public RingType curRingType;
 
     public enum Rarity { COMMON, RARE, EPIC, LEGENDARY }
     public Rarity curRarity;
@@ -25,6 +28,9 @@ public class Slot : MonoBehaviour
 
     public enum SlotType { NOT_REWARD, REWARD}
     public SlotType curSlotType;
+
+    public enum SlotType2 { NOTBASE, BASE }
+    public SlotType2 curSlotType2;
 
 
     private string slotName;
@@ -46,8 +52,9 @@ public class Slot : MonoBehaviour
     public UIElement progressSlider;
 
     public UIElement ownedSlotButton;
-    [SerializeField] private UIElement equipSlotButton;
-    [SerializeField] private UIElement equipSlotButtonCover;
+    [SerializeField] private UIElement buttonOwnedLoot;
+    [SerializeField] private UIElement bagSprite;
+    [SerializeField] private UIElement alertBagSprite;
     [SerializeField] private UIElement coverUI;
     [SerializeField] private UIElement raceIcon;
     [SerializeField] private UIElement rarityBG;
@@ -72,13 +79,124 @@ public class Slot : MonoBehaviour
     public Slot linkedSlot;
     [SerializeField] private UIElement mainIconBG;
 
-    public enum ItemRarity { COMMON, RARE, EPIC }
+    public enum ItemRarity { common, rare, epic, legendary }
     public ItemRarity curItemRarity;
 
     public bool maxSet = false;
     public bool remove = false;
 
     [SerializeField] private UIElement itemRarityText;
+
+    [SerializeField] private List<UIElement> skillUpgrades = new List<UIElement>();
+    public bool isDiscovered = false;
+
+    public void UpdateSlotBGRarity()
+    {
+        float onAlphaCommon = .6f;
+        float onAlphaRare = .65f;
+        float onAlphaEpic = .7f;
+        float onAlphaLegendary = .75f;
+
+        if (linkedGearPiece)
+        {
+            if (!isEmpty)
+            {
+                if (linkedGearPiece.gearRarity == "common" || linkedGearPiece.gearRarity == "COMMON")
+                {
+                    if (GetComponent<UIElement>().commonRarityBG)
+                    {
+                        ResetAllBGRarity();
+                        GetComponent<UIElement>().commonRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaCommon);
+                    }
+                }
+                else if (linkedGearPiece.gearRarity == "rare" || linkedGearPiece.gearRarity == "RARE")
+                {
+                    if (GetComponent<UIElement>().rareRarityBG)
+                    {
+                        ResetAllBGRarity();
+                        GetComponent<UIElement>().rareRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaRare);
+                    }
+                }
+                else if (linkedGearPiece.gearRarity == "epic" || linkedGearPiece.gearRarity == "EPIC")
+                {
+                    if (GetComponent<UIElement>().epicRarityBG)
+                    {
+                        ResetAllBGRarity();
+                        GetComponent<UIElement>().epicRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaEpic);
+                    }
+                }
+                else if (linkedGearPiece.gearRarity == "legendary" || linkedGearPiece.gearRarity == "LEGENDARY")
+                {
+                    if (GetComponent<UIElement>().legendaryRarityBG)
+                    {
+                        ResetAllBGRarity();
+                        GetComponent<UIElement>().legendaryRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaLegendary);
+                    }
+                }
+            }
+            else
+            {
+                ResetAllBGRarity();
+            }
+        }
+        else if (linkedItemPiece)
+        {
+            if (!isEmpty)
+            {
+                if (linkedItemPiece.curRarity == ItemPiece.Rarity.common)
+                {
+                    if (GetComponent<UIElement>().commonRarityBG)
+                        GetComponent<UIElement>().commonRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaCommon);
+                }
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.rare)
+                {
+                    if (GetComponent<UIElement>().rareRarityBG)
+                        GetComponent<UIElement>().rareRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaRare);
+                }
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.epic)
+                {
+                    if (GetComponent<UIElement>().epicRarityBG)
+                        GetComponent<UIElement>().epicRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaEpic);
+                }
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.legendary)
+                {
+                    if (GetComponent<UIElement>().legendaryRarityBG)
+                        GetComponent<UIElement>().legendaryRarityBG.GetComponent<UIElement>().UpdateAlpha(onAlphaLegendary);
+                }
+            }
+            else
+            {
+                ResetAllBGRarity();
+            }
+        }
+        else
+        {
+            ResetAllBGRarity();
+        }
+    }
+
+    void ResetAllBGRarity()
+    {
+        if (GetComponent<UIElement>().commonRarityBG)
+        {
+            GetComponent<UIElement>().commonRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+            GetComponent<UIElement>().rareRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+            GetComponent<UIElement>().epicRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+            GetComponent<UIElement>().legendaryRarityBG.GetComponent<UIElement>().UpdateAlpha(0);
+        }
+    }
+
+    public void ToggleSkillUpgradesClickable(bool toggle = true)
+    {
+        if (skillUpgrades.Count > 0)
+        {
+            for (int i = 0; i < skillUpgrades.Count; i++)
+            {
+                skillUpgrades[i].ToggleButton(toggle);
+                skillUpgrades[i].ToggleButton2(toggle);
+            }
+        }
+    }
 
     public void ToggleItemRarityText(bool toggle = true)
     {
@@ -95,22 +213,49 @@ public class Slot : MonoBehaviour
         {
             if (linkedItemPiece)
             {
-                if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
+                if (linkedItemPiece.curRarity == ItemPiece.Rarity.common)
                 {
                     itemRarityText.UpdateContentText("COMMON");
                     itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.commonColour);
                 }
-                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.rare)
                 {
                     itemRarityText.UpdateContentText("RARE");
                     itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.rareColour);
                 }
-                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.epic)
                 {
                     itemRarityText.UpdateContentText("EPIC");
                     itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.epicColour);
                 }
-                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.LEGENDARY)
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.legendary)
+                {
+                    itemRarityText.UpdateContentText("LEGENDARY");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.legendaryColour);
+                }
+            }
+            else if (linkedGearPiece)
+            {
+                if (linkedGearPiece.gearRarity == "common" ||
+                    linkedGearPiece.gearRarity == "COMMON")
+                {
+                    itemRarityText.UpdateContentText("COMMON");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.commonColour);
+                }
+                if (linkedGearPiece.gearRarity == "rare" ||
+                    linkedGearPiece.gearRarity == "RARE")
+                {
+                    itemRarityText.UpdateContentText("RARE");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.rareColour);
+                }
+                if (linkedGearPiece.gearRarity == "epic" ||
+                    linkedGearPiece.gearRarity == "EPIC")
+                {
+                    itemRarityText.UpdateContentText("EPIC");
+                    itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.epicColour);
+                }
+                if (linkedGearPiece.gearRarity == "legendary" ||
+                    linkedGearPiece.gearRarity == "LEGENDARY")
                 {
                     itemRarityText.UpdateContentText("LEGENDARY");
                     itemRarityText.UpdateContentTextColour(ItemRewardManager.Instance.legendaryColour);
@@ -121,8 +266,8 @@ public class Slot : MonoBehaviour
 
     public void ToggleEquipMainButton(bool toggle = true)
     {
-        if (equipSlotButton)
-            equipSlotButton.GetComponent<GraphicRaycaster>().enabled = toggle;
+        if (buttonOwnedLoot)
+            buttonOwnedLoot.GetComponent<GraphicRaycaster>().enabled = toggle;
 
     }
     public void UpdateRemoved(bool toggle = true)
@@ -136,7 +281,8 @@ public class Slot : MonoBehaviour
     }
     public void UpdateMainIconBGColour(Color color)
     {
-        mainIconBG.UpdateColour(color);
+        if (mainIconBG != null)
+            mainIconBG.UpdateColour(color);
     }
 
     private void Start()
@@ -153,22 +299,38 @@ public class Slot : MonoBehaviour
     }
     public void UpdateRarityBorderColour()
     {
-        if (linkedItemPiece)
+        if (!isEmpty)
         {
-            ToggleRarityBorder(true);
+            if (linkedItemPiece)
+            {
+                ToggleRarityBorder(true);
 
-            if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
-                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
-            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
-                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
-            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
-                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
-            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.LEGENDARY)
-                rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
+                if (linkedItemPiece.curRarity == ItemPiece.Rarity.common)
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.rare)
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.epic)
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.legendary)
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
+            }
+            else if (linkedGearPiece)
+            {
+                ToggleRarityBorder(true);
+
+                if (linkedGearPiece.gearRarity == "common" || linkedGearPiece.gearRarity == "COMMON")
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.commonColour);
+                else if (linkedGearPiece.gearRarity == "rare" || linkedGearPiece.gearRarity == "RARE")
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.rareColour);
+                else if (linkedGearPiece.gearRarity == "epic" || linkedGearPiece.gearRarity == "EPIC")
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.epicColour);
+                else if (linkedGearPiece.gearRarity == "legendary" || linkedGearPiece.gearRarity == "LEGENDARY")
+                    rarityBorder.UpdateRarityBorderColour(ItemRewardManager.Instance.legendaryColour);
+            }
         }
         else
         {
-            ToggleRarityBorder(false);
+            rarityBorder.UpdateRarityBorderColour(GameManager.Instance.invisibleColour);
         }
     }
 
@@ -234,17 +396,21 @@ public class Slot : MonoBehaviour
             return;
         }
 
-        if (itemRarity == ItemRarity.COMMON)
+        if (itemRarity == ItemRarity.common)
         {
             rarityBG.UpdateColour(ItemRewardManager.Instance.commonColour);
         }
-        else if (itemRarity == ItemRarity.RARE)
+        else if (itemRarity == ItemRarity.rare)
         {
             rarityBG.UpdateColour(ItemRewardManager.Instance.rareColour);
         }
-        else if (itemRarity == ItemRarity.EPIC)
+        else if (itemRarity == ItemRarity.epic)
         {
             rarityBG.UpdateColour(ItemRewardManager.Instance.epicColour);
+        }
+        else if (itemRarity == ItemRarity.legendary)
+        {
+            rarityBG.UpdateColour(ItemRewardManager.Instance.legendaryColour);
         }
     }
 
@@ -268,19 +434,66 @@ public class Slot : MonoBehaviour
     /// <param name="curSlotRace"></param>
     /// <param name="curRarity"></param>
     /// <param name="hideRarityBG"></param>
-    public void UpdateSlotDetails()
+    public void UpdateSlotDetails(bool flag = false)
     {
-        Slot.ItemRarity curSlotRarity = Slot.ItemRarity.COMMON;
+        if (curSlotStatis == SlotStatis.OWNED)
+            ToggleEquipButton(false, false);
+
+        Slot.ItemRarity curSlotRarity = Slot.ItemRarity.common;
         Slot.SlotRace curSlotRace = Slot.SlotRace.ALL;
         string activeStatus = "";
         int itemUsesRemaining = 0;
 
+        if (TeamItemsManager.Instance.playerInItemTab)
+            UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+        else if (TeamGearManager.Instance.playerInGearTab)
+            UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+        else if (SkillsTabManager.Instance.playerInSkillTab)
+            UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
+
+        if (linkedGearPiece)
+        {
+            if (linkedGearPiece.gearRarity == "common")
+                curRarity = Rarity.COMMON;
+            else if (linkedGearPiece.gearRarity == "rare")
+                curRarity = Rarity.RARE;
+            else if (linkedGearPiece.gearRarity == "epic")
+                curRarity = Rarity.EPIC;
+            else if (linkedGearPiece.gearRarity == "legendary")
+                curRarity = Rarity.LEGENDARY;
+
+            if (linkedGearPiece.gearRarity == "common" || linkedGearPiece.gearRarity == "COMMON")
+                curRarity = Rarity.COMMON;
+            else if (linkedGearPiece.gearRarity == "rare" || linkedGearPiece.gearRarity == "RARE")
+                curRarity = Rarity.RARE;
+            else if (linkedGearPiece.gearRarity == "epic" || linkedGearPiece.gearRarity == "EPIC")
+                curRarity = Rarity.EPIC;
+            else if (linkedGearPiece.gearRarity == "legendary" || linkedGearPiece.gearRarity == "LEGENDARY")
+                curRarity = Rarity.LEGENDARY;
+        }
+        else if (linkedItemPiece)
+        {
+            if (linkedItemPiece.curRarity == ItemPiece.Rarity.common)
+                curRarity = Rarity.COMMON;
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.rare)
+                curRarity = Rarity.RARE;
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.epic)
+                curRarity = Rarity.EPIC;
+            else if (linkedItemPiece.curRarity == ItemPiece.Rarity.legendary)
+                curRarity = Rarity.LEGENDARY;
+        }
+
         if (curGearType == SlotPieceType.SKILL)
         {
+            if (!flag)
+                ToggleEquipButton(false, false);
             UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
         }
         if (curGearType == SlotPieceType.ITEM)
         {
+            if (!flag)
+                ToggleEquipButton(true, true);
+
             if (linkedItemPiece == null && linkedGearPiece == null)
             {
                 if (curSlotPosition == SlotPosition.NOONE || isMainSlot)
@@ -294,12 +507,12 @@ public class Slot : MonoBehaviour
                 UpdateRarityBG(curSlotRarity, true);
                 UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
 
-                equipSlotButton.ToggleButton(true);
-                equipSlotButton.UpdateAlpha(1);
+                buttonOwnedLoot.ToggleButton(true);
+                buttonOwnedLoot.UpdateAlpha(1);
 
                 //ownedSlotButton.UpdateAlpha(0);
-
-                ToggleEquipButton(true);
+                if (!flag)
+                    ToggleEquipButton(true);
 
                 // Update Active / Passive status
                 activeStatusUI.UpdateContentText(activeStatus);
@@ -307,13 +520,6 @@ public class Slot : MonoBehaviour
                     activeStatusUI.UpdateContentTextColour(GameManager.Instance.activeSkillColour);
                 else
                     activeStatusUI.UpdateContentTextColour(GameManager.Instance.passiveSkillColour);
-
-                if (TeamItemsManager.Instance.playerInItemTab)
-                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-                else if (TeamGearManager.Instance.playerInGearTab)
-                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
-                else if (SkillsTabManager.Instance.playerInSkillTab)
-                    UpdateMainIconBGColour(OwnedLootInven.Instance.GetSkillSlotBGColour());
 
                 if (itemUsesRemaining == 0)
                     remainingUsesUI.UpdateContentText("");
@@ -327,8 +533,14 @@ public class Slot : MonoBehaviour
                     UpdateSlotImage(linkedItemPiece.itemSpriteItemTab);
                     UpdateSlotName(linkedItemPiece.itemName);
                 }
-
+                else
+                {
+                    UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
+                    UpdateSlotName("");
+                }
                 UpdateRarityBorderColour();
+                UpdateSlotBGRarity();
+
             }
             else if (linkedItemPiece)
             {
@@ -373,18 +585,16 @@ public class Slot : MonoBehaviour
                 else if (linkedItemPiece.curRace == ItemPiece.RaceSpecific.ALL)
                     curSlotRace = Slot.SlotRace.ALL;
 
-                if (linkedItemPiece.curRarity == ItemPiece.Rarity.COMMON)
-                    curSlotRarity = Slot.ItemRarity.COMMON;
-                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.RARE)
-                    curSlotRarity = Slot.ItemRarity.RARE;
-                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.EPIC)
-                    curSlotRarity = Slot.ItemRarity.EPIC;
-
-                //UpdateSlotDetails(activeStatus, false, itemUsesRemaining, curSlotRace, curSlotRarity, false);
+                if (linkedItemPiece.curRarity == ItemPiece.Rarity.common)
+                    curSlotRarity = Slot.ItemRarity.common;
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.rare)
+                    curSlotRarity = Slot.ItemRarity.rare;
+                else if (linkedItemPiece.curRarity == ItemPiece.Rarity.epic)
+                    curSlotRarity = Slot.ItemRarity.epic;
 
                 // Update BG rarity of SlOT
                 UpdateRarityBG(curSlotRarity);
-
+                UpdateSlotBGRarity();
                 // Update Race icon of SLOT
                 if (curSlotRace == SlotRace.HUMAN)
                 {
@@ -415,11 +625,11 @@ public class Slot : MonoBehaviour
                 else
                     remainingUsesUI.UpdateContentText(itemUsesRemaining.ToString());
 
-                if (equipSlotButton)
-                {
-                    equipSlotButton.ToggleButton(false);
-                    equipSlotButton.UpdateAlpha(0);
-                }
+                //if (buttonOwnedLoot)
+                //{
+                    //buttonOwnedLoot.ToggleButton(false);
+                    //buttonOwnedLoot.UpdateAlpha(0);
+                //}
 
                 if (ownedSlotButton)
                     ownedSlotButton.UpdateAlpha(1);
@@ -440,12 +650,27 @@ public class Slot : MonoBehaviour
             else
                 ToggleItemRarityText(false);
 
+            //if (!flag)
+                //ToggleEquipButton(true, true);
+
+            if (TeamGearManager.Instance.playerInGearTab)
+                UpdateMainIconBGColour(OwnedLootInven.Instance.GetOtherSlotBGColour());
+
             if (linkedGearPiece)
             {
                 isEmpty = false;
 
                 UpdateSlotImage(linkedGearPiece.gearIcon);
                 UpdateSlotName(linkedGearPiece.gearName);
+                if (linkedGearPiece.gearRarity == "common" || linkedGearPiece.gearRarity == "COMMON")
+                    curSlotRarity = Slot.ItemRarity.common;
+                else if (linkedGearPiece.gearRarity == "rare" || linkedGearPiece.gearRarity == "RARE")
+                    curSlotRarity = Slot.ItemRarity.rare;
+                else if (linkedGearPiece.gearRarity == "epic" || linkedGearPiece.gearRarity == "EPIC")
+                    curSlotRarity = Slot.ItemRarity.epic;
+                else if (linkedGearPiece.gearRarity == "legendary" || linkedGearPiece.gearRarity == "LEGENDARY")
+                    curSlotRarity = Slot.ItemRarity.legendary;
+                UpdateRarityBG(curSlotRarity, false);
             }
             else
             {
@@ -454,16 +679,33 @@ public class Slot : MonoBehaviour
                 activeStatusUI.UpdateContentText("");
                 remainingUsesUI.UpdateContentText("");
                 UpdateSlotName("");
+                UpdateRarityBG(curSlotRarity, true);
             }
 
+            remainingUsesUI.UpdateAlpha(0);
+            activeStatusUI.UpdateAlpha(0);
+
+            UpdateSlotBGRarity();
             UpdateRarityBorderColour();
         }
+
+        if (isEmpty)
+        {
+            UpdateRarityBG(curSlotRarity, true);
+            UpdateRarityBorderColour();
+        }
+        else
+        {
+            UpdateRarityBG(curSlotRarity, false);
+            UpdateRarityBorderColour();
+        }
+        UpdateRarityBorderColour();
     }
 
     public void ToggleSkillUpgradeButtons(bool toggle)
     {
-        if (SkillsTabManager.Instance.GetActiveSkillBase().curSkillLevel >= 5)
-            toggle = false;
+        //if (SkillsTabManager.Instance.GetActiveSkillBase().curSkillLevel >= 5)
+            //toggle = false;
 
         buttonSkillUpgrade1.ToggleButton(toggle);
 
@@ -570,16 +812,37 @@ public class Slot : MonoBehaviour
             else if (GetSlotOwnedBy() == SlotOwnedBy.THIRD)
                 TeamItemsManager.Instance.UpdateSlotsBaseDefault(this, null, false, false, true);
 
-            UpdateSlotImage(TeamItemsManager.Instance.clearSlotSprite);
+            if (curGearType == SlotPieceType.helmet)
+                UpdateSlotImage(TeamGearManager.Instance.helmetSlotSprite);
+            else if (curGearType == SlotPieceType.chestpiece)
+                UpdateSlotImage(TeamGearManager.Instance.chestSlotSprite);
+            else if (curGearType == SlotPieceType.boots)
+                UpdateSlotImage(TeamGearManager.Instance.bootsSlotSprite);
+            else if (curGearType == SlotPieceType.neckless)
+                UpdateSlotImage(TeamGearManager.Instance.necklessSlotSprite);
+            else if (curGearType == SlotPieceType.earring)
+                UpdateSlotImage(TeamGearManager.Instance.earringSlotSprite);
+            else if (curGearType == SlotPieceType.belt)
+                UpdateSlotImage(TeamGearManager.Instance.beltSlotSprite);
+            else if (curGearType == SlotPieceType.glove)
+                UpdateSlotImage(TeamGearManager.Instance.gloveSlotSprite);
+            else if (curGearType == SlotPieceType.ring)
+                UpdateSlotImage(TeamGearManager.Instance.ringSlotSprite);
+            else if (curGearType == SlotPieceType.ITEM)
+                UpdateSlotImage(TeamGearManager.Instance.clearSlotSprite);
 
             if (linkedItemPiece != null)
                 UpdateLinkedItemPiece(null);
+
+            if (linkedGearPiece != null)
+                UpdateLinkedGearPiece(null);
 
             if (linkedSlot != null)
                 UpdateLinkedSlot(null);
 
             UpdateSlotDetails();
         }
+
 
         UpdateSlotName("");
         UpdateGearBonusHealth(0);
@@ -589,9 +852,11 @@ public class Slot : MonoBehaviour
         UpdateGearBonusSpeed(0);
 
         isEmpty = true;
+        UpdateSlotBGRarity();
         // Disable gear equip button if its empty
         TeamGearManager.Instance.UpdateGearNameText("");
-
+        TeamGearManager.Instance.UpdateGearRarityText("");
+        TeamGearManager.Instance.UpdateGearTypeText("");
         //TeamItemsManager.Instance.UpdateItemNameText("");
         //TeamItemsManager.Instance.UpdateItemDesc("");
         //UpdateCurGearType(GearType.EMPTY);
@@ -772,27 +1037,119 @@ public class Slot : MonoBehaviour
         }
     }
 
-    public void ToggleEquipButton(bool toggle)
+    public void ToggleEquipButton(bool toggle, bool flag = false)
     {
         //Debug.Log("togging " + gameObject.name + " equip slot button " + toggle);
 
-        if (equipSlotButton != null)
+        if (buttonOwnedLoot != null)
         {
             //equipSlotButton.gameObject.transform.GetChild(0).gameObject.GetComponent<UIElement>().UpdateImage(toggle);
 
             if (toggle)
             {
-                equipSlotButton.UpdateAlpha(1);
+                buttonOwnedLoot.UpdateAlpha(1);
             }
             else
             {
-                equipSlotButton.UpdateAlpha(0);
+                buttonOwnedLoot.UpdateAlpha(0);
             }
 
-            equipSlotButton.ToggleButton(toggle);
+            if (!toggle)
+            {
+                if (curSlotType2 == SlotType2.NOTBASE)
+                    buttonOwnedLoot.ToggleButton(toggle);
+            }
+            else
+            {
+                buttonOwnedLoot.ToggleButton(toggle);
+            }
+
+        }
+
+        // Update equip button icon
+        if (toggle && flag && bagSprite)
+        {
+            bagSprite.UpdateAlpha(1);
+
+            if (curGearType != SlotPieceType.ITEM)
+            {
+                for (int i = 0; i < OwnedLootInven.Instance.ownedGear.Count; i++)
+                {
+                    if (OwnedLootInven.Instance.ownedGear.Count < i)
+                        break;
+
+                    if (!OwnedLootInven.Instance.ownedGear[i].isDiscovered &&
+                        OwnedLootInven.Instance.ownedGear[i].linkedGearPiece.gearType == GetCurGearType().ToString())
+                    {
+                        alertBagSprite.UpdateAlpha(1);
+                        break;
+                    }
+                    else
+                    {
+                        alertBagSprite.UpdateAlpha(0);
+                    }
+                }
+
+                if (OwnedLootInven.Instance.ownedGear.Count == 0)
+                    alertBagSprite.UpdateAlpha(0);
+            }
+            else if (curGearType == SlotPieceType.ITEM)
+            {
+                for (int i = 0; i < OwnedLootInven.Instance.ownedItems.Count; i++)
+                {
+                    if (OwnedLootInven.Instance.ownedItems[i].isDiscovered)
+                    {
+                        alertBagSprite.UpdateAlpha(0);
+                    }
+                    else if (!OwnedLootInven.Instance.ownedItems[i].isDiscovered)
+                    {
+                        alertBagSprite.UpdateAlpha(1);
+                        break;
+                    }
+                }
+
+                if (OwnedLootInven.Instance.ownedItems.Count == 0)
+                    alertBagSprite.UpdateAlpha(0);
+            }
+
         }
     }
 
+    public void UpdateSlotDetails(GearPiece gear, bool toggle = true, string gearType = "")
+    {
+        linkedGearPiece = gear;
+
+        if (!toggle)
+        {
+            if (gear)
+                UpdateSlotImage(gear.gearIcon);
+            isEmpty = false;
+            UpdateSlotBGRarity();
+        }
+        else
+        {
+            if (gearType == "helmet")
+                UpdateSlotImage(TeamGearManager.Instance.helmetSlotSprite);
+            else if (gearType == "chestpiece")
+                UpdateSlotImage(TeamGearManager.Instance.chestSlotSprite);
+            else if (gearType == "boots")
+                UpdateSlotImage(TeamGearManager.Instance.bootsSlotSprite);
+            else if (gearType == "neckless")
+                UpdateSlotImage(TeamGearManager.Instance.necklessSlotSprite);
+            else if (gearType == "earring")
+                UpdateSlotImage(TeamGearManager.Instance.earringSlotSprite);
+            else if (gearType == "belt")
+                UpdateSlotImage(TeamGearManager.Instance.beltSlotSprite);
+            else if (gearType == "glove")
+                UpdateSlotImage(TeamGearManager.Instance.gloveSlotSprite);
+            else if (gearType == "ring")
+                UpdateSlotImage(TeamGearManager.Instance.ringSlotSprite);
+
+            isEmpty = true;
+            UpdateSlotBGRarity();
+
+        }
+    }
 
     public void ToggleSlotSelection(bool toggle)
     {

@@ -33,6 +33,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private int shopMaxCombatItems = 3;
     [SerializeField] private int shopMaxHealthItems = 3;
     [SerializeField] private List<ItemPiece> shopCombatItems = new List<ItemPiece>();
+    [SerializeField] private List<GearPiece> shopCombatGear = new List<GearPiece>();
 
     [SerializeField] private UIElement itemsParent;
     [SerializeField] private UIElement randomiser;
@@ -52,6 +53,7 @@ public class ShopManager : MonoBehaviour
     public UIElement shopSelectAllyPrompt;
     public bool selectAlly;
     [SerializeField] private ItemPiece unassigedItem;
+    [SerializeField] private GearPiece unassigedGear;
     [SerializeField] private ButtonFunctionality buttonExitShop;
     public Transform unitsPositionShopTrans;
     public UIElement totalGoldText;
@@ -62,7 +64,7 @@ public class ShopManager : MonoBehaviour
     public string selectedFallenUnitName;
     private bool activeRoomEntered;
 
-    [SerializeField] private List<ShopItem> shopItems = new List<ShopItem>();
+    [SerializeField] private List<ShopItem> shopObjects = new List<ShopItem>();
     [SerializeField] private List<string> fallenHeroesNamesBase = new List<string>();
 
     public RoomMapIcon activeRoom;
@@ -78,6 +80,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private UIElement rerollPriceText;
     [SerializeField] private UIElement rerollButtonUI;
     [SerializeField] private UIElement sellButtonUI;
+    public float emptySlotTransparency = .5f;
 
     [SerializeField] private bool shopkeeperSelected = false;
 
@@ -87,6 +90,128 @@ public class ShopManager : MonoBehaviour
 
     public int spawnedItems;
     public int curRerollPrice = 0;
+    public int commonGearBasePrice = 0;
+    public int rareGearBasePrice = 0;
+    public int epicGearBasePrice = 0;
+    public int legendaryGearBasePrice = 0;
+
+    public int commonGearBaseSellValue = 0;
+    public int rareGearBaseSellValue = 0;
+    public int epicGearBaseSellValue = 0;
+    public int legendaryGearBaseSellValue = 0;
+
+    public int commonItemBaseSellValue = 0;
+    public int rareItemBaseSellValue = 0;
+    public int epicItemBaseSellValue = 0;
+    public int legendaryItemBaseSellValue = 0;
+
+    public string onlySpawnGearType = "";
+
+
+    public int GetLootSellValue()
+    {
+        int sellValue = 0;
+
+        if (FighterInventorManager.Instance.GetSelectedInventorySlot())
+        {
+            if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece)
+            {
+                if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "common"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "COMMON")
+                {
+                    sellValue = commonGearBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "rare"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "RARE")
+                {
+                    sellValue = rareGearBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "epic"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "EPIC")
+                {
+                    sellValue = epicGearBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "legendary"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "LEGENDARY")
+                {
+                    sellValue = legendaryGearBaseSellValue;
+                }
+            }
+            else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece)
+            {
+                if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.common)
+                {
+                    sellValue = commonItemBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.rare)
+                {
+                    sellValue = rareItemBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.epic)
+                {
+                    sellValue = epicItemBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.legendary)
+                {
+                    sellValue = legendaryItemBaseSellValue;
+                }
+            }
+        }
+
+        return sellValue;
+    }
+    public void CalculateLootSellValue()
+    {
+        int sellValue = 0;
+
+        if (FighterInventorManager.Instance.GetSelectedInventorySlot())
+        {
+            if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece)
+            {
+                if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "common"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "COMMON")
+                {
+                    sellValue = commonGearBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "rare"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "RARE")
+                {
+                    sellValue = rareGearBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "epic"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "EPIC")
+                {
+                    sellValue = epicGearBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "legendary"
+                    || FighterInventorManager.Instance.GetSelectedInventorySlot().linkedGearPiece.gearRarity == "LEGENDARY")
+                {
+                    sellValue = legendaryGearBaseSellValue;
+                }
+            }
+            else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece)
+            {
+                if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.common)
+                {
+                    sellValue = commonItemBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.rare)
+                {
+                    sellValue = rareItemBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.epic)
+                {
+                    sellValue = epicItemBaseSellValue;
+                }
+                else if (FighterInventorManager.Instance.GetSelectedInventorySlot().linkedItemPiece.curRarity == ItemPiece.Rarity.legendary)
+                {
+                    sellValue = legendaryItemBaseSellValue;
+                }
+            }
+        }
+
+        OverlayUI.Instance.UpdateSellItemPrice(sellValue);
+    }
 
 
     public void ToggleShopKeeperSelected(bool toggle = true)
@@ -163,9 +288,10 @@ public class ShopManager : MonoBehaviour
 
     public void ResetShopItemSelectBorder()
     {
-        for (int i = 0; i < shopItems.Count; i++)
+        for (int i = 0; i < shopObjects.Count; i++)
         {
-            shopItems[i].UpdateShopItemSelectBorder(false);
+            shopObjects[i].ToggleButtonPurchase(false);
+            shopObjects[i].UpdateShopItemSelectBorder(false);
         }
     }
 
@@ -186,6 +312,17 @@ public class ShopManager : MonoBehaviour
         }
 
         inventoryUI.ToggleButton(toggle);
+    }
+
+    public void AnimateInventoryUI()
+    {
+        inventoryUI.buttonCG.GetComponent<UIElement>().AnimateUI(false);
+    }
+
+    public IEnumerator DisableInventoryUI()
+    {
+        yield return new WaitForSeconds(.75f);
+        //ToggleInventoryUI(false);
     }
 
     public void TogglePartyNoRacePrompt(bool toggle = true)
@@ -312,17 +449,17 @@ public class ShopManager : MonoBehaviour
 
     public void AddShopItems(ShopItem shopItem)
     {
-        shopItems.Add(shopItem);
+        shopObjects.Add(shopItem);
     }
 
     public void ResetShopItems()
     {
-        shopItems.Clear();
+        shopObjects.Clear();
     }
 
-    public List<ShopItem> GetShopItems()
+    public List<ShopItem> GetShopObjects()
     {
-        return shopItems;
+        return shopObjects;
     }
 
     public ShopItem GetSelectedShopItem()
@@ -348,6 +485,11 @@ public class ShopManager : MonoBehaviour
     {
         playerGold += goldAdded;
 
+        if (goldAdded >= 0)
+        {
+            AudioManager.Instance.Play("SFX_ShopSell");
+        }
+
         string goldString = GetPlayerGold().ToString();
 
         // Update gold visual for shop 
@@ -355,6 +497,7 @@ public class ShopManager : MonoBehaviour
         MapManager.Instance.mapOverlay.UpdatePlayerGoldText(goldString);
 
         UpdateRerollPriceTextColour();
+        UpdateAllShopItemPriceTextColour();
     }
 
     public void ResetPlayerGold()
@@ -368,6 +511,15 @@ public class ShopManager : MonoBehaviour
     public void UpdateUnAssignedItem(ItemPiece item)
     {
         unassigedItem = item;
+    }
+
+    public GearPiece GetUnassignedGear()
+    {
+        return unassigedGear;
+    }
+    public void UpdateUnAssignedGear(GearPiece gear)
+    {
+        unassigedGear = gear;
     }
 
     public ItemPiece GetUnassignedItem()
@@ -396,6 +548,11 @@ public class ShopManager : MonoBehaviour
     public List<ItemPiece> GetShopCombatItems()
     {
         return shopCombatItems;
+    }
+
+    public List<GearPiece> GetShopCombatGear()
+    {
+        return shopCombatGear;
     }
 
     public void ToggleRandomiser(bool toggle)
@@ -448,7 +605,7 @@ public class ShopManager : MonoBehaviour
 
                 // ?????????????????? 
                 GetActiveRoom().ClearShopRoomCombatItems();
-
+                GetActiveRoom().ClearShopRoomCombatGear();
                 shopKeeperButton.ToggleButton(false);
                 shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = false;
             }
@@ -497,7 +654,8 @@ public class ShopManager : MonoBehaviour
 
                     //GameManager.Instance.AddActiveRoomAllUnitsFunctionality(GameManager.Instance.fallenHeroes[i]);
 
-                    GameManager.Instance.AddUnitToTeam(GameManager.Instance.fallenHeroes[i].unitData);
+                    //GameManager.Instance.AddUnitToTeam(GameManager.Instance.fallenHeroes[i].unitData);
+                    //GameManager.Instance.activeRoomHeroes.Add(GameManager.Instance.fallenHeroes[i]);
 
                     GameManager.Instance.fallenHeroes[i].ReviveUnit(100, true);
 
@@ -517,12 +675,15 @@ public class ShopManager : MonoBehaviour
 
                     // re-display fallen heroes to update the fallen hero being revived and removed
                     DisplayFallenHeroes();
+
+                    // Re place revived fighter in correct position in shop
+                    GameManager.Instance.UpdateAllAlliesPosition(false, false, false, true);
                 }
             }
         }
 
-        TeamGearManager.Instance.ResetGearTab();
-        TeamItemsManager.Instance.ResetItemsTab();
+        //TeamGearManager.Instance.ResetGearTab();
+        //TeamItemsManager.Instance.ResetItemsTab();
     }
 
     public void ClearFallenHeroesVisuals()
@@ -609,9 +770,9 @@ public class ShopManager : MonoBehaviour
 
     public void UpdateAllShopItemPriceTextColour()
     {
-        for (int i = 0; i < shopItems.Count; i++)
+        for (int i = 0; i < shopObjects.Count; i++)
         {
-            shopItems[i].UpdatePriceTextColour();
+            shopObjects[i].UpdatePriceTextColour();
         }
     }
 
@@ -657,9 +818,9 @@ public class ShopManager : MonoBehaviour
 
     public void ToggleShopItemButtons(bool toggle = true)
     {
-        for (int i = 0; i < shopItems.Count; i++)
+        for (int i = 0; i < shopObjects.Count; i++)
         {
-            shopItems[i].ToggleShopItemButton(toggle);
+            shopObjects[i].ToggleShopItemButton(toggle);
         }
     }
 
@@ -710,6 +871,11 @@ public class ShopManager : MonoBehaviour
             UpdatePlayerGold(-GetCurRerollPrice());
             AudioManager.Instance.Play("Shop_Item_Buy");
 
+            OverlayUI.Instance.ToggleOverlay(false);
+            OverlayUI.Instance.ToggleShopDetailsBanner(false);
+            ResetShopItemSelectBorder();
+
+            FighterInventorManager.Instance.ResetFighterInventorySelections();
             FillShopItems(false, true);
         }
         else
@@ -729,6 +895,48 @@ public class ShopManager : MonoBehaviour
             UpdateRerollPriceTextColour();
         }
     }
+
+    public void ResetShopItem()
+    {
+        if (!selectedShopItem.linkedGearPiece)
+        {
+            ResetShopItemSelectBorder();
+            ResetShopItemSelectBorder();
+            selectedShopItem.rarityCommonGO.SetActive(false);
+            selectedShopItem.rarityRareGO.SetActive(false);
+            selectedShopItem.rarityEpicGO.SetActive(false);
+            selectedShopItem.rarityLegendaryGO.SetActive(false);
+
+            ResetShopItemSelectBorder();
+            selectedShopItem.rarityCommonGO.SetActive(false);
+            selectedShopItem.rarityRareGO.SetActive(false);
+            selectedShopItem.rarityEpicGO.SetActive(false);
+            selectedShopItem.rarityLegendaryGO.SetActive(false);
+
+            selectedShopItem.TogglePriceText(false);
+            selectedShopItem.TogglePurchaseButton(false);
+            selectedShopItem.ToggleRarityBG(false);
+            selectedShopItem.priceText.GetComponent<UIElement>().contentImage.GetComponent<UIElement>().UpdateAlpha(0);
+
+            selectedShopItem.GetImageUI().UpdateAlpha(0);
+            selectedShopItem.GetImageUI().ToggleButton(false);
+            selectedShopItem.UpdateRaceIcon(TeamGearManager.Instance.clearSlotSprite);
+        }
+
+        ResetShopItemSelectBorder();
+        selectedShopItem.rarityCommonGO.SetActive(false);
+        selectedShopItem.rarityRareGO.SetActive(false);
+        selectedShopItem.rarityEpicGO.SetActive(false);
+        selectedShopItem.rarityLegendaryGO.SetActive(false);
+
+        selectedShopItem.TogglePriceText(false);
+        selectedShopItem.TogglePurchaseButton(false);
+        selectedShopItem.ToggleRarityBG(false);
+        selectedShopItem.priceText.GetComponent<UIElement>().contentImage.GetComponent<UIElement>().UpdateAlpha(0);
+
+        selectedShopItem.GetImageUI().UpdateAlpha(0);
+        selectedShopItem.GetImageUI().ToggleButton(false);
+    }
     public void FillShopItems(bool clearItems, bool refreshItems)
     {
         ToggleShopItemsGameObject(true);
@@ -736,7 +944,7 @@ public class ShopManager : MonoBehaviour
         ToggleRandomiser(true);
         ToggleExitShopButton(true);
 
-        ClearShopItems(clearItems);
+        ClearShopItems(refreshItems);
 
         ToggleShopVisibility(true);
         ToggleShopGoldText(true);
@@ -751,11 +959,16 @@ public class ShopManager : MonoBehaviour
         ShopItem shopItem = null;
 
         ItemPiece itemCombat = null;
+        GearPiece gearCombat = null;
 
         UpdatePreventableSpawnedItems();
 
         if (refreshItems)
+        {
             GetActiveRoom().ClearShopRoomCombatItems();
+            GetActiveRoom().ClearShopRoomCombatGear();
+        }
+
         else
             ToggleShopKeeperSelected(false);
 
@@ -765,6 +978,10 @@ public class ShopManager : MonoBehaviour
         shopKeeperButton.GetComponentInChildren<Image>().raycastTarget = true;
         shopKeeperButton.GetComponent<GraphicRaycaster>().enabled = true;
 
+        if (refreshItems)
+        {
+            GetActiveRoom().ClearAlreadyShopItems();
+        }
         // Spawn Combat Items
         for (int i = 0; i < shopMaxCombatItems; i++)
         {
@@ -772,10 +989,16 @@ public class ShopManager : MonoBehaviour
                 i = 0;
 
             int itemPrice = 0;
+            bool gear = false;
 
             if (!GetActiveRoom().isVisited || refreshItems)
             {
-
+                // 30% chance for each item in shop to be a gear piece
+                int rand2 = Random.Range(0, 2);
+                if (rand2 == 0)
+                    gear = false;
+                else
+                    gear = true;
 
                 bool getRare = false;
                 bool getEpic = false;
@@ -791,200 +1014,386 @@ public class ShopManager : MonoBehaviour
                 if (rand > 100)
                     rand = 100;
 
-                if (rand >= ItemRewardManager.Instance.itemEpicPerc)
-                    getEpic = true;
-                else if (rand >= ItemRewardManager.Instance.itemRarePerc)
-                    getRare = true; 
+                //gear = true;
 
-                if (getLegendary)
-                {   
-                    List<ItemPiece> legItems = new List<ItemPiece>();
-                    
-                    for (int x = 0; x < shopCombatItems.Count; x++)
+                if (!gear)
+                {
+                    if (rand >= ItemRewardManager.Instance.itemEpicPerc)
+                        getEpic = true;
+                    else if (rand >= ItemRewardManager.Instance.itemRarePerc)
+                        getRare = true;
+
+                    if (getLegendary)
                     {
-                        if (shopCombatItems[x].curRarity == ItemPiece.Rarity.LEGENDARY)
+                        List<ItemPiece> legItems = new List<ItemPiece>();
+
+                        for (int x = 0; x < shopCombatItems.Count; x++)
                         {
-                            legItems.Add(shopCombatItems[x]);
+                            if (shopCombatItems[x].curRarity == ItemPiece.Rarity.legendary)
+                            {
+                                legItems.Add(shopCombatItems[x]);
+                            }
+                        }
+
+                        randInt = Random.Range(0, legItems.Count);
+                        if (legItems.Count > 0)
+                        {
+                            itemCombat = legItems[randInt];
+                            itemPrice = itemCombat.basePrice;
                         }
                     }
+                    else if (getEpic)
+                    {
+                        List<ItemPiece> epicItems = new List<ItemPiece>();
 
-                    randInt = Random.Range(0, legItems.Count);
-                    if (legItems.Count > 0)
-                    {
-                        itemCombat = legItems[randInt];
-                        itemPrice = itemCombat.basePrice;
-                    }                   
-                }
-                else if (getEpic)
-                {   
-                    List<ItemPiece> epicItems = new List<ItemPiece>();
-                    
-                    for (int x = 0; x < shopCombatItems.Count; x++)
-                    {
-                        if (shopCombatItems[x].curRarity == ItemPiece.Rarity.EPIC)
+                        for (int x = 0; x < shopCombatItems.Count; x++)
                         {
-                            epicItems.Add(shopCombatItems[x]);
+                            if (shopCombatItems[x].curRarity == ItemPiece.Rarity.epic)
+                            {
+                                epicItems.Add(shopCombatItems[x]);
+                            }
+                        }
+
+                        randInt = Random.Range(0, epicItems.Count);
+                        if (epicItems.Count > 0)
+                        {
+                            bool flag = false;
+
+                            // If item already exists in shop, dont spawn it, spawn another item
+                            for (int t = 0; t < GetShopObjects().Count; t++)
+                            {
+                                if (GetShopObjects()[t].GetShopItemName() == epicItems[randInt].itemName)
+                                {
+                                    flag = true;
+                                    continue;
+                                }
+                            }
+
+                            if (flag)
+                            {
+                                i--;
+                                continue;
+                            }
+
+                            if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
+                            {
+                                if (GetPreventHumanItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
+                            if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
+                            {
+                                if (GetPreventBeastItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
+                            if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                            {
+                                if (GetPreventEtherealItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
+
+                            itemCombat = epicItems[randInt];
+                            itemPrice = itemCombat.basePrice;
                         }
                     }
-
-                    randInt = Random.Range(0, epicItems.Count);
-                    if (epicItems.Count > 0)
+                    else if (getRare)
                     {
-                        bool flag = false; 
+                        List<ItemPiece> rareItems = new List<ItemPiece>();
 
-                        // If item already exists in shop, dont spawn it, spawn another item
-                        for (int t = 0; t < GetShopItems().Count; t++)
+                        for (int x = 0; x < shopCombatItems.Count; x++)
                         {
-                            if (GetShopItems()[t].GetShopItemName() == epicItems[randInt].itemName)
+                            if (shopCombatItems[x].curRarity == ItemPiece.Rarity.rare)
                             {
-                                flag = true;
-                                continue;
+                                rareItems.Add(shopCombatItems[x]);
                             }
                         }
 
-                        if (flag)
+                        randInt = Random.Range(0, rareItems.Count);
+                        if (rareItems.Count > 0)
                         {
-                            i--;
-                            continue;
-                        }
+                            bool flag = false;
 
-                        if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
-                        {
-                            if (GetPreventHumanItems())
+                            // If item already exists in shop, dont spawn it, spawn another item
+                            for (int t = 0; t < GetShopObjects().Count; t++)
                             {
-                                i--;
-                                continue;
+                                if (GetShopObjects()[t].GetShopItemName() == rareItems[randInt].itemName)
+                                {
+                                    flag = true;
+                                    continue;
+                                }
                             }
-                        }
-                        if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
-                        {
-                            if (GetPreventBeastItems())
+
+                            if (flag)
                             {
                                 i--;
                                 continue;
                             }
-                        }
-                        if (epicItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
-                        {
-                            if (GetPreventEtherealItems())
+
+                            if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
                             {
-                                i--;
-                                continue;
+                                if (GetPreventHumanItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
                             }
-                        }
+                            if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
+                            {
+                                if (GetPreventBeastItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
+                            if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                            {
+                                if (GetPreventEtherealItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
 
-                        itemCombat = epicItems[randInt];
-                        itemPrice = itemCombat.basePrice;
-                    } 
-                }
-                else if (getRare)
-                {   
-                    List<ItemPiece> rareItems = new List<ItemPiece>();
-
-                    for (int x = 0; x < shopCombatItems.Count; x++)
-                    {
-                        if (shopCombatItems[x].curRarity == ItemPiece.Rarity.RARE)
-                        {
-                            rareItems.Add(shopCombatItems[x]);
+                            itemCombat = rareItems[randInt];
+                            itemPrice = itemCombat.basePrice;
                         }
                     }
-
-                    randInt = Random.Range(0, rareItems.Count);
-                    if (rareItems.Count > 0)
+                    else
                     {
-                        bool flag = false;
+                        List<ItemPiece> commonItems = new List<ItemPiece>();
 
-                        // If item already exists in shop, dont spawn it, spawn another item
-                        for (int t = 0; t < GetShopItems().Count; t++)
+                        for (int x = 0; x < shopCombatItems.Count; x++)
                         {
-                            if (GetShopItems()[t].GetShopItemName() == rareItems[randInt].itemName)
+                            if (shopCombatItems[x].curRarity == ItemPiece.Rarity.common)
                             {
-                                flag = true;
-                                continue;
+                                commonItems.Add(shopCombatItems[x]);
                             }
                         }
 
-                        if (flag)
+                        randInt = Random.Range(0, commonItems.Count);
+                        if (commonItems.Count > 0)
                         {
-                            i--;
-                            continue;
-                        }
+                            bool flag = false;
 
-                        if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
-                        {
-                            if (GetPreventHumanItems())
+                            // If item already exists in shop, dont spawn it, spawn another item
+                            for (int t = 0; t < GetShopObjects().Count; t++)
                             {
-                                i--;
-                                continue;
+                                if (GetShopObjects()[t].GetShopItemName() == commonItems[randInt].itemName)
+                                {
+                                    flag = true;
+                                    continue;
+                                }
                             }
-                        }
-                        if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
-                        {
-                            if (GetPreventBeastItems())
+
+                            if (flag)
                             {
                                 i--;
                                 continue;
                             }
-                        }
-                        if (rareItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
-                        {
-                            if (GetPreventEtherealItems())
-                            {
-                                i--;
-                                continue;
-                            }
-                        }
 
-                        itemCombat = rareItems[randInt];
-                        itemPrice = itemCombat.basePrice;
+                            if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
+                            {
+                                if (GetPreventHumanItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
+                            if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
+                            {
+                                if (GetPreventBeastItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
+                            if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                            {
+                                if (GetPreventEtherealItems())
+                                {
+                                    i--;
+                                    continue;
+                                }
+                            }
+
+                            itemCombat = commonItems[randInt];
+                            itemPrice = itemCombat.basePrice;
+                        }
                     }
                 }
                 else
-                {   
-                    List<ItemPiece> commonItems = new List<ItemPiece>();
-                    
-                    for (int x = 0; x < shopCombatItems.Count; x++)
+                {
+                    if (rand >= ItemRewardManager.Instance.itemLegendaryPerc)
+                        getLegendary = true;
+                    else if (rand >= ItemRewardManager.Instance.itemEpicPerc)
+                        getEpic = true;
+                    else if (rand >= ItemRewardManager.Instance.itemRarePerc)
+                        getRare = true;
+                    else if (rand >= ItemRewardManager.Instance.itemCommonPerc)
                     {
-                        if (shopCombatItems[x].curRarity == ItemPiece.Rarity.COMMON)
-                        {
-                            commonItems.Add(shopCombatItems[x]);
-                        }
+                        getRare = false;
+                        getEpic = false;
+                        getLegendary = false;
                     }
 
-                    randInt = Random.Range(0, commonItems.Count);
-                    if (commonItems.Count > 0)
+
+                    if (getLegendary)
                     {
-                        if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.HUMAN)
+                        List<GearPiece> legGear = new List<GearPiece>();
+
+                        for (int x = 0; x < shopCombatGear.Count; x++)
                         {
-                            if (GetPreventHumanItems())
+                            if (shopCombatGear[x].gearRarity == "legendary")
                             {
-                                i--;
-                                continue;
-                            }
-                        }
-                        if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.BEAST)
-                        {
-                            if (GetPreventBeastItems())
-                            {
-                                i--;
-                                continue;
-                            }
-                        }
-                        if (commonItems[randInt].curRace == ItemPiece.RaceSpecific.ETHEREAL)
-                        {
-                            if (GetPreventEtherealItems())
-                            {
-                                i--;
-                                continue;
+                                if (onlySpawnGearType != "")
+                                {
+                                    if (shopCombatGear[x].gearType == onlySpawnGearType)
+                                    {
+                                        legGear.Add(shopCombatGear[x]);
+                                    }
+                                }
+                                else
+                                    legGear.Add(shopCombatGear[x]);
                             }
                         }
 
-                        itemCombat = commonItems[randInt];
-                        itemPrice = itemCombat.basePrice;
-                    }                  
+                        randInt = Random.Range(0, legGear.Count);
+                        if (legGear.Count > 0)
+                        {
+                            gearCombat = legGear[randInt];
+                            itemPrice = legendaryGearBasePrice;
+                        }
+                    }
+                    else if (getEpic)
+                    {
+                        List<GearPiece> epicGear = new List<GearPiece>();
+
+                        for (int x = 0; x < shopCombatGear.Count; x++)
+                        {
+                            if (shopCombatGear[x].gearRarity == "epic")
+                            {
+                                if (onlySpawnGearType != "")
+                                {
+                                    if (shopCombatGear[x].gearType == onlySpawnGearType)
+                                    {
+                                        epicGear.Add(shopCombatGear[x]);
+                                    }
+                                }
+                                else
+                                    epicGear.Add(shopCombatGear[x]);
+                            }
+                        }
+
+                        randInt = Random.Range(0, epicGear.Count);
+                        if (epicGear.Count > 0)
+                        {
+                            bool flag = false;
+
+                            // If item already exists in shop, dont spawn it, spawn another item
+                            for (int t = 0; t < GetShopObjects().Count; t++)
+                            {
+                                if (GetShopObjects()[t].GetShopItemName() == epicGear[randInt].gearName)
+                                {
+                                    flag = true;
+                                    continue;
+                                }
+                            }
+
+                            if (flag)
+                            {
+                                i--;
+                                continue;
+                            }
+
+
+                            gearCombat = epicGear[randInt];
+                            itemPrice = epicGearBasePrice;
+                        }
+                    }
+                    else if (getRare)
+                    {
+                        List<GearPiece> rareGear = new List<GearPiece>();
+
+                        for (int x = 0; x < shopCombatGear.Count; x++)
+                        {
+                            if (shopCombatGear[x].gearRarity == "rare")
+                            {
+                                if (onlySpawnGearType != "")
+                                {
+                                    if (shopCombatGear[x].gearType == onlySpawnGearType)
+                                    {
+                                        rareGear.Add(shopCombatGear[x]);
+                                    }
+                                }
+                                else
+                                    rareGear.Add(shopCombatGear[x]);
+                            }
+                        }
+
+                        randInt = Random.Range(0, rareGear.Count);
+                        if (rareGear.Count > 0)
+                        {
+                            bool flag = false;
+
+                            // If item already exists in shop, dont spawn it, spawn another item
+                            for (int t = 0; t < GetShopObjects().Count; t++)
+                            {
+                                if (GetShopObjects()[t].GetShopItemName() == rareGear[randInt].gearName)
+                                {
+                                    flag = true;
+                                    continue;
+                                }
+                            }
+
+                            if (flag)
+                            {
+                                i--;
+                                continue;
+                            }
+
+                            gearCombat = rareGear[randInt];
+                            itemPrice = rareGearBasePrice;
+                        }
+                    }
+                    else
+                    {
+                        List<GearPiece> commonGear = new List<GearPiece>();
+
+                        for (int x = 0; x < shopCombatGear.Count; x++)
+                        {
+                            if (shopCombatGear[x].gearRarity == "common")
+                            {
+                                if (onlySpawnGearType != "")
+                                {
+                                    if (shopCombatGear[x].gearType == onlySpawnGearType)
+                                    {
+                                        commonGear.Add(shopCombatGear[x]);
+                                    }
+                                }
+                                else
+                                    commonGear.Add(shopCombatGear[x]);
+                            }
+                        }
+
+                        randInt = Random.Range(0, commonGear.Count);
+                        if (commonGear.Count > 0)
+                        {
+                            gearCombat = commonGear[randInt];
+                            itemPrice = commonGearBasePrice;
+                        }
+                    }
                 }
 
-                if (itemCombat == null || itemPrice < 4)
+
+                if (itemPrice < 4)
                 {
                     Debug.Log("Item Combat = " + itemCombat);
                     i--;
@@ -1038,7 +1447,15 @@ public class ShopManager : MonoBehaviour
 
             if (GetActiveRoom().isVisited && !refreshItems)
             {
-                itemCombat = GetActiveRoom().GetShopRoomCombatItems()[i];
+                if (GetActiveRoom().GetAlreadyShopItems()[i].linkedItemPiece)
+                    gear = false;
+                else if (GetActiveRoom().GetAlreadyShopItems()[i].linkedGearPiece)
+                    gear = true;
+
+                if (GetActiveRoom().GetAlreadyShopItems()[i].linkedItemPiece)
+                    itemCombat = GetActiveRoom().GetAlreadyShopItems()[i].linkedItemPiece;
+                else if (GetActiveRoom().GetAlreadyShopItems()[i].linkedGearPiece)
+                    gearCombat = GetActiveRoom().GetAlreadyShopItems()[i].linkedGearPiece;
 
                 //shopItem = GetActiveRoom().GetShopRoomShopItems()[i];         
                 if (i == 0)
@@ -1060,12 +1477,11 @@ public class ShopManager : MonoBehaviour
             // If active room has not been visited yet, store shop items to room
             if (!GetActiveRoom().isVisited || refreshItems)
             {
-                activeRoom.AddShopRoomCombatItems(itemCombat);
-                //activeRoom.AddShopRoomShopItems(shopItem);
+                activeRoom.AddAlreadyShopItems(shopItem);
 
                 int rand2 = Random.Range(0,4);
                 if (rand2 == 0)
-                    itemPrice++;
+                    itemPrice += 1 * RoomManager.Instance.GetFloorCount();
                 else if (rand2 == 1)
                     itemPrice--;
                 else if (rand2 == 2)
@@ -1085,58 +1501,95 @@ public class ShopManager : MonoBehaviour
                 else if (i == 5)
                     GetActiveRoom().item6Cost = itemPrice;
             }
-            
-            shopItem.UpdateShopItemName(itemCombat.itemName);
-            shopItem.UpdateItemIndex(i);
 
-            shopItem.UpdateShopItemSprite(itemCombat.itemSpriteCombat);
+            if (!gear)
+            {
+                shopItem.UpdateShopItemName(itemCombat.itemName);
+                shopItem.UpdateItemIndex(i);
+
+                shopItem.UpdateShopItemSprite(itemCombat.itemSpriteCombat);
+                shopItem.linkedItemPiece = itemCombat;
+            }
+            else
+            {
+                shopItem.UpdateShopItemName(gearCombat.gearName);
+                shopItem.UpdateItemIndex(i);
+                shopItem.UpdateShopItemSprite(gearCombat.gearIcon, true);
+                shopItem.linkedGearPiece = gearCombat;
+            }
+
             shopItem.gameObject.GetComponent<UIElement>().UpdateAlpha(1);
             shopItem.itemButton.enabled = true;
 
-            if (itemCombat.ac)
-                shopItem.UpdateAnimatorController(itemCombat.ac);
+            if (!gear)
+            {
+                if (itemCombat.curRarity == ItemPiece.Rarity.common)
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.COMMON);
+                else if (itemCombat.curRarity == ItemPiece.Rarity.rare)
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.RARE);
+                else if (itemCombat.curRarity == ItemPiece.Rarity.epic)
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.EPIC);
+                else if (itemCombat.curRarity == ItemPiece.Rarity.legendary)
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.LEGENDARY);
 
-            if (itemCombat.curRarity == ItemPiece.Rarity.COMMON)
-                shopItem.UpdateItemRarity(ShopItem.RarityType.COMMON);
-            else if (itemCombat.curRarity == ItemPiece.Rarity.RARE)
-                shopItem.UpdateItemRarity(ShopItem.RarityType.RARE);
-            else if (itemCombat.curRarity == ItemPiece.Rarity.EPIC)
-                shopItem.UpdateItemRarity(ShopItem.RarityType.EPIC);
-            else if (itemCombat.curRarity == ItemPiece.Rarity.LEGENDARY)
-                shopItem.UpdateItemRarity(ShopItem.RarityType.LEGENDARY);
+                if (itemCombat.curRace == ItemPiece.RaceSpecific.HUMAN)
+                    shopItem.UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
+                else if (itemCombat.curRace == ItemPiece.RaceSpecific.BEAST)
+                    shopItem.UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
+                else if (itemCombat.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                    shopItem.UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
+                else if (itemCombat.curRace == ItemPiece.RaceSpecific.ALL)
+                    shopItem.UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
 
-            if (itemCombat.curRace == ItemPiece.RaceSpecific.ALL)
+                if (itemCombat.curRace == ItemPiece.RaceSpecific.ALL)
+                    shopItem.curRaceSpecific = ShopItem.RaceSpecific.ALL;
+                else if (itemCombat.curRace == ItemPiece.RaceSpecific.HUMAN)
+                    shopItem.curRaceSpecific = ShopItem.RaceSpecific.HUMAN;
+                else if (itemCombat.curRace == ItemPiece.RaceSpecific.BEAST)
+                    shopItem.curRaceSpecific = ShopItem.RaceSpecific.BEAST;
+                else if (itemCombat.curRace == ItemPiece.RaceSpecific.ETHEREAL)
+                    shopItem.curRaceSpecific = ShopItem.RaceSpecific.ETHEREAL;
+            }
+            else
+            {
+                if (gearCombat.gearRarity == "common")
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.COMMON);
+                else if (gearCombat.gearRarity == "rare")
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.RARE);
+                else if (gearCombat.gearRarity == "epic")
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.EPIC);
+                else if (gearCombat.gearRarity == "legendary")
+                    shopItem.UpdateItemRarity(ShopItem.RarityType.LEGENDARY);
+
                 shopItem.curRaceSpecific = ShopItem.RaceSpecific.ALL;
-            else if (itemCombat.curRace == ItemPiece.RaceSpecific.HUMAN)
-                shopItem.curRaceSpecific = ShopItem.RaceSpecific.HUMAN;
-            else if (itemCombat.curRace == ItemPiece.RaceSpecific.BEAST)
-                shopItem.curRaceSpecific = ShopItem.RaceSpecific.BEAST;
-            else if (itemCombat.curRace == ItemPiece.RaceSpecific.ETHEREAL)
-                shopItem.curRaceSpecific = ShopItem.RaceSpecific.ETHEREAL;
+                shopItem.UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+            }
 
             shopItem.UpdatePriceTextColour();
 
-            if (itemCombat.curRace == ItemPiece.RaceSpecific.HUMAN)
-                shopItem.UpdateRaceIcon(GameManager.Instance.humanRaceIcon);
-            else if (itemCombat.curRace == ItemPiece.RaceSpecific.BEAST)
-                shopItem.UpdateRaceIcon(GameManager.Instance.beastRaceIcon);
-            else if (itemCombat.curRace == ItemPiece.RaceSpecific.ETHEREAL)
-                shopItem.UpdateRaceIcon(GameManager.Instance.etherealRaceIcon);
-            else if (itemCombat.curRace == ItemPiece.RaceSpecific.ALL)
-                shopItem.UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
+            /*
+            if (!gear)
+            {
+                shopItem.gameObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200);
+            }
+            else
+            {
+                shopItem.gameObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+            }
+            */
 
             // Hiding Purchased Items
             // Loop each item that has been purchased
             for (int b = 0; b < GetActiveRoom().GetPurchasedShopItems().Count; b++)
             {
                 // Loop through all actual items in shop
-                for (int x = 0; x < GetShopItems().Count; x++)
+                for (int x = 0; x < GetShopObjects().Count; x++)
                 {
                     // If a shop item name matches with the purchased item on first loop, make it invis
-                    if (GetShopItems()[x].GetItemIndex() == GetActiveRoom().GetPurchasedShopItems()[b].GetItemIndex())
+                    if (GetShopObjects()[x].GetItemIndex() == GetActiveRoom().GetPurchasedShopItems()[b].GetItemIndex())
                     {
                         // Make all items that are purchased invisible             
-                        ShopItem shopItemHidden = GetShopItems()[x];
+                        ShopItem shopItemHidden = GetShopObjects()[x];
 
                         shopItemHidden.UpdateShopItemName("");
                         shopItemHidden.UpdatePriceText("");
@@ -1144,20 +1597,9 @@ public class ShopManager : MonoBehaviour
                         shopItemHidden.gameObject.GetComponent<UIElement>().UpdateAlpha(0);
                         shopItemHidden.itemButton.enabled = false;
                         shopItemHidden.UpdatePurchased(true);
-
-                        /*
-                        // loop through how many have been purchased of that item 
-                        if (GetActiveRoom().GetShopRoomPurchasedItemsAmount(GetActiveRoom().GetPurchasedItems()[b].itemName) > 0)
-                            continue;
-                        else
-                            break;
-                        */
                     }
                 }
             }
-
-        // After filling shop items, room is now considered Visited.
-        //activeRoom.UpdateIsVisited(true);
         }
 
         UpdateAllShopItemPriceTextColour();

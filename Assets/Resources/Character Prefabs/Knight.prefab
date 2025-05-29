@@ -216,6 +216,7 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
 --- !u!225 &2549471148917377576
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -317,6 +318,7 @@ MonoBehaviour:
   - {fileID: 1206063116506342159}
   Front_Back: 1
   Left_Right: 1
+  unit: {fileID: 0}
 --- !u!1 &1797718579662037266
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,7 +451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6955487332121442128
 RectTransform:
   m_ObjectHideFlags: 0

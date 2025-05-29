@@ -194,6 +194,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -203,6 +204,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &3718657310061081098
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -247,7 +256,7 @@ RectTransform:
   - {fileID: 6058160363103517859}
   - {fileID: 2663448481380380228}
   m_Father: {fileID: 2198779717224622378}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -451,7 +460,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 302
+  m_SortingOrder: 31018
   m_TargetDisplay: 0
 --- !u!114 &2663448481380380233
 MonoBehaviour:
@@ -522,6 +531,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -531,6 +541,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!1 &2914078834039567977
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,6 +564,7 @@ GameObject:
   - component: {fileID: 3723642615920320124}
   - component: {fileID: 3391284612123565811}
   - component: {fileID: 4398360813769466754}
+  - component: {fileID: 6054795399094792875}
   m_Layer: 0
   m_Name: Rarity BG
   m_TagString: Untagged
@@ -600,7 +619,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: -1
   m_SortingLayerID: 0
-  m_SortingOrder: 300
+  m_SortingOrder: 299
   m_TargetDisplay: 0
 --- !u!225 &5349814401544206582
 CanvasGroup:
@@ -654,6 +673,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -663,6 +683,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!95 &3391284612123565811
 Animator:
   serializedVersion: 4
@@ -713,6 +741,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6054795399094792875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2914078834039567977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &2967111259781511220
 GameObject:
   m_ObjectHideFlags: 0
@@ -848,6 +889,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -857,6 +899,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &6533004875944880402
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -888,7 +938,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 350
+  m_SortingOrder: 31013
   m_TargetDisplay: 0
 --- !u!1 &3775399752715138792
 GameObject:
@@ -930,7 +980,7 @@ RectTransform:
   - {fileID: 9151182703363105181}
   - {fileID: 1295174003357357392}
   m_Father: {fileID: 2198779717224622378}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -994,7 +1044,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 1800
+  m_SortingOrder: 31015
   m_TargetDisplay: 0
 --- !u!114 &6298526805641320237
 MonoBehaviour:
@@ -1130,6 +1180,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1139,6 +1190,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &6936333663621279895
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1147,9 +1206,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3775399752715138792}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &853583462290078694
 MonoBehaviour:
@@ -1323,6 +1382,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1332,6 +1392,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &5708663613112706092
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1462,6 +1530,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1471,6 +1540,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &1507075558001027333
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1581,7 +1658,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 147
+  m_SortingOrder: 31019
   m_TargetDisplay: 0
 --- !u!225 &5697368721810253772
 CanvasGroup:
@@ -1591,7 +1668,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5418337341284550740}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1635,6 +1712,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1644,6 +1722,54 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
+--- !u!1 &6151540024578073427
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2663184002412395254}
+  m_Layer: 0
+  m_Name: Rarity BG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2663184002412395254
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6151540024578073427}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.3340491, y: 1.3340491, z: 1.0018282}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1417812172728251310}
+  - {fileID: 2023231635212982325}
+  - {fileID: 7878482334419551503}
+  - {fileID: 4785225467241256743}
+  m_Father: {fileID: 2198779717224622378}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -7}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6398616071702066035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,7 +1805,7 @@ RectTransform:
   m_Children:
   - {fileID: 6673555240313924004}
   m_Father: {fileID: 2198779717224622378}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1764,6 +1890,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -1773,6 +1900,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!225 &3891830942255159829
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1804,7 +1939,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1900
+  m_SortingOrder: 31018
   m_TargetDisplay: 0
 --- !u!1 &6648748800757768084
 GameObject:
@@ -1972,6 +2107,7 @@ RectTransform:
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2663184002412395254}
   - {fileID: 727795010578113000}
   - {fileID: 818202724647449824}
   - {fileID: 8728921206301441244}
@@ -2041,6 +2177,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -2050,6 +2187,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 6775116586029043537}
+  rareRarityBG: {fileID: 5888718714846356682}
+  epicRarityBG: {fileID: 2377590522717665776}
+  legendaryRarityBG: {fileID: 1135911230238501848}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!114 &2829809881091383309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2063,6 +2208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curGearType: 0
+  curRingType: 0
   curRarity: 0
   curSlotStatis: 0
   curSlotRace: 0
@@ -2077,8 +2223,9 @@ MonoBehaviour:
   buttonSkillUpgrade3: {fileID: 0}
   progressSlider: {fileID: 0}
   ownedSlotButton: {fileID: 2663448481380380235}
-  equipSlotButton: {fileID: 8039893604692454850}
-  equipSlotButtonCover: {fileID: 934939840542596644}
+  buttonOwnedLoot: {fileID: 8039893604692454850}
+  bagSprite: {fileID: 0}
+  alertBagSprite: {fileID: 0}
   coverUI: {fileID: 934939840542596644}
   raceIcon: {fileID: 881378928986736102}
   rarityBG: {fileID: 3723642615920320124}
@@ -2104,6 +2251,8 @@ MonoBehaviour:
   maxSet: 0
   remove: 0
   itemRarityText: {fileID: 893051623937852442}
+  skillUpgrades: []
+  isDiscovered: 0
 --- !u!1 &7402963001798473258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2138,7 +2287,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2198779717224622378}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2276,7 +2425,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 305
+  m_SortingOrder: 31015
   m_TargetDisplay: 0
 --- !u!114 &4306977089301429433
 MonoBehaviour:
@@ -2318,6 +2467,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -2327,6 +2477,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!1 &7608528657237354258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2516,7 +2674,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 299
+  m_SortingOrder: 31011
   m_TargetDisplay: 0
 --- !u!1 &8542872052114290221
 GameObject:
@@ -2552,7 +2710,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2198779717224622378}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2690,7 +2848,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 302
+  m_SortingOrder: 31015
   m_TargetDisplay: 0
 --- !u!114 &8541068141697456803
 MonoBehaviour:
@@ -2732,6 +2890,7 @@ MonoBehaviour:
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -2741,6 +2900,14 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  isEmpty: 1
 --- !u!1 &8561344292944666592
 GameObject:
   m_ObjectHideFlags: 0
@@ -2752,8 +2919,8 @@ GameObject:
   - component: {fileID: 6563219646821568908}
   - component: {fileID: 7640996136588738978}
   - component: {fileID: 4579684471891777322}
-  - component: {fileID: 543815792835248343}
   - component: {fileID: 4573687782035437791}
+  - component: {fileID: 2476541716093152725}
   m_Layer: 0
   m_Name: Rarity Mask
   m_TagString: Untagged
@@ -2775,7 +2942,7 @@ RectTransform:
   m_Children:
   - {fileID: 6949695174321719050}
   m_Father: {fileID: 2198779717224622378}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2820,20 +2987,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &543815792835248343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8561344292944666592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
-  m_Softness: {x: 0, y: 0}
 --- !u!223 &4573687782035437791
 Canvas:
   m_ObjectHideFlags: 0
@@ -2853,8 +3006,529 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 301
+  m_SortingOrder: 31013
   m_TargetDisplay: 0
+--- !u!114 &2476541716093152725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8561344292944666592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
+--- !u!1001 &172332954503175629
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2663184002412395254}
+    m_Modifications:
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 852.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1022.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 22.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5941788535532009854, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_SortingOrder
+      value: 31017
+      objectReference: {fileID: 0}
+    - target: {fileID: 6656939597334778524, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_Name
+      value: Owned Gear Rarity BG Common
+      objectReference: {fileID: 0}
+    - target: {fileID: 6656939597334778524, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320469904212443066, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+--- !u!224 &1417812172728251310 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1281603124887318115, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+  m_PrefabInstance: {fileID: 172332954503175629}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6775116586029043537 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6656939597334778524, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
+  m_PrefabInstance: {fileID: 172332954503175629}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1276527051460882884
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2663184002412395254}
+    m_Modifications:
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 852.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1022.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 22.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2448456333599849092, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4407833193324030590, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 31017
+      objectReference: {fileID: 0}
+    - target: {fileID: 4616133472700601614, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_Name
+      value: Owned Gear Rarity BG Rare
+      objectReference: {fileID: 0}
+    - target: {fileID: 4616133472700601614, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+--- !u!224 &2023231635212982325 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 983144698345646577, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+  m_PrefabInstance: {fileID: 1276527051460882884}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5888718714846356682 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4616133472700601614, guid: 186c7ec240e19c641a3a25e8f9b309a2, type: 3}
+  m_PrefabInstance: {fileID: 1276527051460882884}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3114331791635631068
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2663184002412395254}
+    m_Modifications:
+    - target: {fileID: 559674703166484095, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 848560984289063468, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_Name
+      value: Owned Gear Rarity BG Epic
+      objectReference: {fileID: 0}
+    - target: {fileID: 848560984289063468, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 925533447854196484, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_SortingOrder
+      value: 31017
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 852.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1022.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 22.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+--- !u!1 &2377590522717665776 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 848560984289063468, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+  m_PrefabInstance: {fileID: 3114331791635631068}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7878482334419551503 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5074898943148642003, guid: ad644c49eaf58664eb1611e078f72424, type: 3}
+  m_PrefabInstance: {fileID: 3114331791635631068}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3544018400180009093
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2663184002412395254}
+    m_Modifications:
+    - target: {fileID: 1050885624206863385, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4534404420813935453, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_Name
+      value: Owned Gear Rarity BG Legendary
+      objectReference: {fileID: 0}
+    - target: {fileID: 4534404420813935453, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7917813541256635169, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_SortingOrder
+      value: 31017
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 852.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1022.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 22.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+--- !u!1 &1135911230238501848 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4534404420813935453, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+  m_PrefabInstance: {fileID: 3544018400180009093}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &4785225467241256743 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8306441739480870818, guid: a674f7c38b5854546aa46bfd3b873824, type: 3}
+  m_PrefabInstance: {fileID: 3544018400180009093}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4013655538838493058
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2880,7 +3554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2527232219793085236, guid: c686c8fe2731ff445a31d02ae927750e, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2527232219793085236, guid: c686c8fe2731ff445a31d02ae927750e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2964,7 +3638,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3142018520799082453, guid: c686c8fe2731ff445a31d02ae927750e, type: 3}
       propertyPath: m_SortingOrder
-      value: 1902
+      value: 31015
       objectReference: {fileID: 0}
     - target: {fileID: 8008139536537762851, guid: c686c8fe2731ff445a31d02ae927750e, type: 3}
       propertyPath: statText
@@ -2997,7 +3671,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3894464595490884019, guid: 86439ad7608f7fa49b8f6cd7ef84809b, type: 3}
       propertyPath: m_SortingOrder
-      value: 302
+      value: 31014
       objectReference: {fileID: 0}
     - target: {fileID: 5645862965141496033, guid: 86439ad7608f7fa49b8f6cd7ef84809b, type: 3}
       propertyPath: m_Name
@@ -3013,7 +3687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6030945461583096096, guid: 86439ad7608f7fa49b8f6cd7ef84809b, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6030945461583096096, guid: 86439ad7608f7fa49b8f6cd7ef84809b, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3126,7 +3800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8042522947263973818, guid: d86ddb2b8d1ee0d4faea21eb31df2fda, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8042522947263973818, guid: d86ddb2b8d1ee0d4faea21eb31df2fda, type: 3}
       propertyPath: m_AnchorMax.x

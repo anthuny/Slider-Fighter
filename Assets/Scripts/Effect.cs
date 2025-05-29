@@ -188,19 +188,67 @@ public class Effect : MonoBehaviour
 
         UpdateEffectIcon(effect);
 
-        int powerStacks = 0;
+        int powerStacks = 1;
 
-
-        if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+        if (GameManager.Instance.GetActiveSkill())
         {
-            powerStacks += turnDuration / 2;
-            effectPowerStacks += (int)powerStacks - 1;
+            if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+            {
+                powerStacks += turnDuration / 2;
+                effectPowerStacks += (int)powerStacks - 1;
+            }
+            else
+            {
+                //powerStacks = 1;
+                effectPowerStacks++;
+            }
         }
         else
         {
-            powerStacks = 1;
+            powerStacks++;
             effectPowerStacks++;
         }
+
+        if (GameManager.Instance.isSkillsMode)
+        {
+            if (GameManager.Instance.GetActiveSkill())
+            {
+                if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
+                {
+                    if (turnDuration > 2)
+                        turnDuration = 2;
+                }
+                else
+                {
+                    turnDuration = 2;
+                }
+            }
+            else
+            {
+                turnDuration = 2;
+            }
+        }
+        else
+        {
+            turnDuration = 2;
+
+            if (GameManager.Instance.GetActiveItem())
+            {
+                if (GameManager.Instance.GetActiveItem().curHitType == ItemPiece.HitType.INSTANT)
+                {
+                    powerStacks = 2;
+                    effectPowerStacks = 2;
+                }
+                else
+                {
+                    powerStacks++;
+                    effectPowerStacks++;
+                }
+            }
+        }
+
+        if (curEffectName == EffectName.OTHER_LINK)
+            turnDuration = 9;
 
         CapEffect();
 
@@ -211,26 +259,6 @@ public class Effect : MonoBehaviour
         }
         else if (curEffectName != EffectName.REANIMATE && curEffectName != EffectName.IMMUNITY && curEffectName != EffectName.OTHER_LINK)
             UpdateEffectTierImages((int)powerStacks);
-
-        if (GameManager.Instance.isSkillsMode)
-        {
-            if (GameManager.Instance.GetActiveSkill().curSkillEffectType == SkillData.SkillEffectType.INSTANT)
-            {
-                if (turnDuration > 2)
-                    turnDuration = 2;
-            }
-            else
-            {
-                turnDuration = 1;
-            }
-        }
-        else
-        {
-            turnDuration = 2;
-        }
-
-        if (curEffectName == EffectName.OTHER_LINK)
-            turnDuration = 9;
 
         AddTurnCountText(turnDuration);
 
@@ -254,6 +282,10 @@ public class Effect : MonoBehaviour
         }
         else if (turnCountRemaining == 0)
             turnCountRemaining += 2;
+        else
+        {
+            turnCountRemaining += turns;
+        }
 
         if (turnCountRemaining > 9)
             turnCountRemaining = 9;
@@ -322,8 +354,6 @@ public class Effect : MonoBehaviour
     }
     public void EffectApply(UnitFunctionality targetUnit)
     {
-        effectPowerStacks++;
-
         CapEffect();
 
         if (curEffectName == EffectName.HEALTHUP)

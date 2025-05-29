@@ -204,6 +204,7 @@ public class MapManager : MonoBehaviour
         OwnedLootInven.Instance.ResetOwnedItems();
 
         OwnedLootInven.Instance.LoadStartingLoot();
+        ShopManager.Instance.ToggleShopVisibility(false);
 
         // Spawn Starter Ally
         GameManager.Instance.SpawnFighter();
@@ -454,6 +455,18 @@ public class MapManager : MonoBehaviour
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
 
+            OverlayUI.Instance.ToggleShopDetailsBanner(false);
+            MapOverlay.Instance.ToggleMapOverlay(true);
+            FighterInventorManager.Instance.ResetFighterInventorySelections();
+            FighterInventorManager.Instance.HideFighterInventorys();
+            //FighterInventorManager.Instance.ToggleInventoryMode(true);
+            FighterInventorManager.Instance.DisableFighterInventoryUI();
+            FighterInventorManager.Instance.ToggleUnequippedLootInventory(false);
+            ShopManager.Instance.ToggleShopVisibility(false);
+            HeroRoomManager.Instance.spawnedFighter = false;
+
+            ItemRewardManager.Instance.ToggleItemSelectedRaceIcon(false);
+
             PostBattle.Instance.ToggleToMapButton(false);
 
             CombatGridManager.Instance.ToggleCombatSlotsInput(false);
@@ -605,13 +618,19 @@ public class MapManager : MonoBehaviour
             //GameManager.Instance.transitionSequienceUI.UpdateAlpha(0);
 
             mapOverlay.UpdateRoomDifficultyIcons();
+
+            SkillsTabManager.Instance.ToggleBaseSlotsClickable(false);
+            SkillsTabManager.Instance.ToggleSkillUpgradesClickable(false);
+
+            TeamGearManager.Instance.ToggleNextFighterArrow(false);
         }
         else
         {
             //GameManager.Instance.UpdateAllyVisibility(true);
-
+            FighterInventorManager.Instance.ResetFighterInventorySelections();
             map.UpdateAlpha(0);
             //ToggleMapScroll(false);
+            MapOverlay.Instance.ToggleMapOverlay(false);
         }
     }
 

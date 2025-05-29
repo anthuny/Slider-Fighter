@@ -12,6 +12,8 @@ public class EffectData : ScriptableObject
     public enum EffectType { OFFENSE, SUPPORT }
     public EffectType curEffectType;
 
+    public enum EffectActiveType { ACTIVE, PASSIVE }
+    public EffectActiveType curEffectActiveType;
     public enum EffectBenefitType { BUFF, DEBUFF }
     public EffectBenefitType curEffectBenefitType;
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c98df06682a0b046bbcbdca0e2e04c7, type: 3}
   m_Name: Thunder Essence
   m_EditorClassIdentifier: 
-  curRarity: 0
+  curRarity: 1
   curRace: 3
   curItemCombatType: 1
   curItemTargetType: 1
@@ -22,28 +22,25 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 1
   itemName: Thunder Essence
-  itemDesc: Target 5 random enemies, dealing damaging Thunder 4 times. Apply Effect
-    Power Down (2) +1 Uses at end of combat.
+  itemDesc: Target 3x3 area, dealing damage. hits have chance to apply effect Power
+    Down (2).
   itemSpriteItemTab: {fileID: 21300000, guid: e10d8184d5ded854e8bc8ed0af4d2cb5, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: c8001304be0e1fe4595164aac3a3b8aa, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: c8001304be0e1fe4595164aac3a3b8aa, type: 3}
   itemSpriteCombatProjectile: {fileID: 21300000, guid: d28d8551d2898fb42a8b81d3246dc08d, type: 3}
   itemSpriteFail: {fileID: 0}
-  range: 5
+  range: 3
   itemRangeHitArea: {x: 4, y: 3}
   itemRangeHitAreas:
-  - {x: 0, y: 0}
-  - {x: 1, y: 0}
-  - {x: 2, y: 0}
-  - {x: 3, y: 0}
-  - {x: 0, y: 1}
-  - {x: 1, y: 1}
-  - {x: 2, y: 1}
-  - {x: 3, y: 1}
+  - {x: -1, y: -1}
   - {x: 0, y: -1}
   - {x: 1, y: -1}
-  - {x: 2, y: -1}
-  - {x: 3, y: -1}
+  - {x: -1, y: 0}
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: -1, y: 1}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
   itemAreaHitCount: 1
   canTargetSelf: 0
   attackAllSelected: 0
@@ -73,11 +70,11 @@ MonoBehaviour:
   healthItem: 0
   isSpecial: 0
   power: 0
-  procChance: 25
+  procChance: 0
   ac: {fileID: 0}
   itemVisualAC: {fileID: 9100000, guid: 04069fedaf60421489abbe5c0e0b3d63, type: 2}
   maxUsesPerCombat: 3
-  targetCount: 5
+  targetCount: 9
   hitCount: 4
   projectileSpeed: 10
   allowRandomSpawnPosition: 1

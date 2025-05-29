@@ -22,31 +22,24 @@ MonoBehaviour:
   curActiveType: 0
   curHitType: 0
   itemName: Star Blaster
-  itemDesc: Target 3 random enemies, Shooting 5 Damaging Stars. Apply Effect Power
-    Down (3) +1 Uses at end of combat.
+  itemDesc: Target 3x3 area, dealing damage. hits have chance to apply effect Power
+    Down (2)
   itemSpriteItemTab: {fileID: 21300000, guid: 0039b8c7a7a28834daf513b84c6b0b50, type: 3}
   itemSpriteCombat: {fileID: 21300000, guid: 8a152f3ae9e6bfc45ad9ec284dd465ff, type: 3}
   itemSpriteCombatSmaller: {fileID: 21300000, guid: 8a152f3ae9e6bfc45ad9ec284dd465ff, type: 3}
   itemSpriteCombatProjectile: {fileID: 21300000, guid: 447fd59cc5a75e443a04854f41bbbcdc, type: 3}
   itemSpriteFail: {fileID: 0}
-  range: 4
-  itemRangeHitArea: {x: 4, y: 4}
+  range: 3
+  itemRangeHitArea: {x: 3, y: 3}
   itemRangeHitAreas:
-  - {x: -2, y: -2}
-  - {x: -1, y: -2}
-  - {x: 0, y: -2}
-  - {x: 1, y: -2}
-  - {x: -2, y: -1}
   - {x: -1, y: -1}
-  - {x: 0, y: -1}
-  - {x: 1, y: -1}
-  - {x: -2, y: 0}
   - {x: -1, y: 0}
-  - {x: 0, y: 0}
-  - {x: 1, y: 0}
-  - {x: -2, y: 1}
   - {x: -1, y: 1}
+  - {x: 0, y: -1}
+  - {x: 0, y: 0}
   - {x: 0, y: 1}
+  - {x: 1, y: -1}
+  - {x: 1, y: 0}
   - {x: 1, y: 1}
   itemAreaHitCount: 1
   canTargetSelf: 0
@@ -72,18 +65,18 @@ MonoBehaviour:
   activeOnAlliesAttacked: 0
   activeOnEnemiesHealing: 0
   activeOnSelfAttacked: 0
-  basePrice: 18
+  basePrice: 24
   purchased: 0
   healthItem: 0
   isSpecial: 0
   power: 0
   procChance: 0
-  ac: {fileID: 0}
+  ac: {fileID: 9100000, guid: ba55b5dbe2e20104486fb5d1aa2737b7, type: 2}
   itemVisualAC: {fileID: 0}
   maxUsesPerCombat: 2
-  targetCount: 3
-  hitCount: 10
-  projectileSpeed: 10
+  targetCount: 9
+  hitCount: 8
+  projectileSpeed: 9
   allowRandomSpawnPosition: 1
   allowRandomSpawnRotation: 1
   projectileAllowSpin: 1

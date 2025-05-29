@@ -46,7 +46,7 @@ public class OverlayUI : MonoBehaviour
     public Sprite hitAreaPlus;
 
     public Image skillDetailsPowerIcon;
-    public Image activeSkill;
+    public Image activeObjectIcon;
 
     public TextMeshProUGUI unitOverlayCurEnergyText;
     public TextMeshProUGUI unitOverlayCurHealthText;
@@ -58,11 +58,277 @@ public class OverlayUI : MonoBehaviour
     [SerializeField] private UIElement remainingMovementUsesUI;
     [SerializeField] private UIElement remainingMovementUsesText;
     public UIElement extraMovePrompt;
+    public CanvasGroup cg;
+
+    public UIElement shopDetailsUI;
+    public UIElement combatDetailsUI;
+
+    public UIElement gearDetailsTopBanner;
+    public UIElement gearDetailsBottomBanner;
+
+    public UIElement gearDetailsHealthStatUI;
+    public UIElement gearDetailsDamageStatUI;
+    public UIElement gearDetailsHealingStatUI;
+    public UIElement gearDetailsDefenseStatUI;
+    public UIElement gearDetailsSpeedStatUI;
+    public UIElement gearDetailsActiveGearTypeUI;
 
     [SerializeField] private Color powerDamageColour;
     [SerializeField] private Color powerHealColour;
 
+    [SerializeField] private UIElement combatDetailsParent;
+
+    public UIElement buttonCloseDetails;
+    public UIElement buttonSellItemDetails;
+    public UIElement sellItemCostText;
+
     private int oldHits;
+
+    public void ToggleShopDetailsActiveGearType(bool toggle = true)
+    {
+        if (toggle)
+        {
+            gearDetailsActiveGearTypeUI.UpdateAlpha(1);
+        }
+        else
+        {
+            gearDetailsActiveGearTypeUI.UpdateAlpha(0);
+        }
+    }
+    public void ToggleShopDetailsItemRarityText(bool toggle = true)
+    {
+        if (toggle)
+        {
+            itemRarityTextUI.UpdateAlpha(1);
+        }
+        else
+        {
+            itemRarityTextUI.UpdateAlpha(0);
+        }
+    }
+
+    public void UpdateSellItemPrice(int newCost = 0)
+    {
+        sellItemCostText.UpdateContentText(newCost.ToString());
+    }
+
+    public void ToggleSellItemCostText(bool toggle = true)
+    {
+        if (toggle)
+            sellItemCostText.UpdateAlpha(1);
+        else
+            sellItemCostText.UpdateAlpha(0);
+    }
+
+    public void ToggleCombatDetailsParent(bool toggle = true)
+    {
+        if (toggle)
+            combatDetailsParent.UpdateAlpha(1);
+        else
+            combatDetailsParent.UpdateAlpha(0);
+    }
+
+    private void Start()
+    {
+        ToggleShopDetailsBanner(false);
+        ToggleCombatDetailsBanner(false);
+    }
+
+    public void ToggleShopDetailsBanner(bool toggle = true)
+    {
+        if (toggle)
+        {
+            shopDetailsUI.UpdateAlpha(1);
+            gearDetailsTopBanner.UpdateAlpha(1);
+            gearDetailsBottomBanner.UpdateAlpha(1);
+
+            buttonCloseDetails.UpdateAlpha(1);
+            buttonCloseDetails.ToggleButton(true);
+
+            if (FighterInventorManager.Instance.GetSelectedInventorySlot())
+            {
+                buttonSellItemDetails.UpdateAlpha(1);
+                buttonSellItemDetails.ToggleButton(true);
+            }
+            else
+            {
+                buttonSellItemDetails.UpdateAlpha(0);
+                buttonSellItemDetails.ToggleButton(false);
+            }
+
+            ToggleShopDetailsActiveGearType(true);
+            ToggleShopDetailsItemRarityText(true);
+        }
+        else
+        {
+            shopDetailsUI.UpdateAlpha(0);
+
+            buttonCloseDetails.UpdateAlpha(0);
+            buttonCloseDetails.ToggleButton(false);
+
+            buttonSellItemDetails.UpdateAlpha(0);
+            buttonSellItemDetails.ToggleButton(false);
+            ToggleSellItemCostText(false);
+            ToggleShopDetailsActiveGearType(false);
+            ToggleShopDetailsItemRarityText(false);
+        }
+    }
+
+    public void ToggleCombatDetailsBanner(bool toggle = true)
+    {
+        if (toggle)
+        {
+            combatDetailsUI.UpdateAlpha(1);
+
+            buttonCloseDetails.UpdateAlpha(1);
+            buttonCloseDetails.ToggleButton(true);
+
+            buttonSellItemDetails.UpdateAlpha(1);
+            buttonSellItemDetails.ToggleButton(true);
+        }
+        else
+        {
+            combatDetailsUI.UpdateAlpha(0);
+
+            buttonCloseDetails.UpdateAlpha(0);
+            buttonCloseDetails.ToggleButton(false);
+
+            buttonSellItemDetails.UpdateAlpha(0);
+            buttonSellItemDetails.ToggleButton(false);
+        }
+    }
+
+    public void UpdateShopDetailsBanner(ShopItem shopItem = null, GearPiece gearPiece = null, ItemPiece itemPiece = null)
+    {
+        if (shopItem)
+        {
+            if (shopItem.GetPurchased())
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamItemsManager.Instance.clearSlotSprite);
+                gearDetailsHealthStatUI.UpdateContentText("");
+                gearDetailsDamageStatUI.UpdateContentText("");
+                gearDetailsHealingStatUI.UpdateContentText("");
+                gearDetailsDefenseStatUI.UpdateContentText("");
+                gearDetailsSpeedStatUI.UpdateContentText("");
+                ToggleShopDetailsBanner(false);
+                return;
+            }
+        }
+
+        ToggleOverlay(true);
+        ToggleShopDetailsBanner(true);
+
+        GearPiece gear = null;
+        ItemPiece item = null;
+
+        if (shopItem)
+        {
+            if (shopItem.linkedGearPiece != null)
+                gear = shopItem.linkedGearPiece;
+            else if (shopItem.linkedItemPiece)
+            {
+                item = shopItem.linkedItemPiece;
+            }
+        }
+        else
+        {
+            if (gearPiece)
+                gear = gearPiece;
+            else if (itemPiece)
+                item = itemPiece;
+        }
+
+        if (gear)
+        {
+            UpdateActiveItemUseCountText(0);
+            UpdateActiveItemTriggerStatus(false);
+
+            gearDetailsHealthStatUI.UpdateContentText(gear.bonusHealth.ToString());
+            gearDetailsDamageStatUI.UpdateContentText(gear.bonusDamage.ToString());
+            gearDetailsHealingStatUI.UpdateContentText(gear.bonusHealing.ToString());
+            gearDetailsDefenseStatUI.UpdateContentText(gear.bonusDefense.ToString());
+            gearDetailsSpeedStatUI.UpdateContentText(gear.bonusSpeed.ToString());
+
+            gearDetailsActiveGearTypeUI.UpdateContentTextColour(TeamGearManager.Instance.gearIconColour);
+
+            if (gear.gearType == "neckless" || gear.gearType == "pendant")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("Pendant");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.necklessSlotSprite);
+            }
+            else if (gear.gearType == "earring")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("Earring");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.earringSlotSprite);
+            }
+            else if (gear.gearType == "belt")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("belt");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.beltSlotSprite);
+            }
+            else if (gear.gearType == "glove")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("glove");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.gloveSlotSprite);
+            }
+            else if (gear.gearType == "ring")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("ring");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.ringSlotSprite);
+            }
+            else if (gear.gearType == "helmet")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("helmet");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.helmetSlotSprite);
+            }
+            else if (gear.gearType == "chestpiece")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("chest");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.chestSlotSprite);
+            }
+            else if (gear.gearType == "boots")
+            {
+                gearDetailsActiveGearTypeUI.UpdateContentText("boots");
+                gearDetailsActiveGearTypeUI.UpdateContentImage(TeamGearManager.Instance.bootsSlotSprite);
+            }
+
+            ToggleCombatDetailsBanner(false);
+            ToggleShopDetailsBanner(true);
+        }
+        else
+        // item
+        {
+
+            gearDetailsActiveGearTypeUI.UpdateContentText("Item");
+            gearDetailsActiveGearTypeUI.UpdateContentTextColour(GameManager.Instance.itemsDetailsTabColour);
+            gearDetailsActiveGearTypeUI.UpdateContentImage(item.itemSpriteItemTab);
+
+            gearDetailsActiveGearTypeUI.UpdateContentImage(TeamItemsManager.Instance.clearSlotSprite);
+            gearDetailsHealthStatUI.UpdateContentText("");
+            gearDetailsDamageStatUI.UpdateContentText("");
+            gearDetailsHealingStatUI.UpdateContentText("");
+            gearDetailsDefenseStatUI.UpdateContentText("");
+            gearDetailsSpeedStatUI.UpdateContentText("");
+
+            //ToggleShopDetailsBanner(false);
+            ToggleCombatDetailsBanner(true);
+
+            UpdateItemDetailsUI(item.itemName, item.itemDesc, item.itemPower, item.range, item.itemRangeHitArea, item.itemSpriteCombat);
+        }
+    }
+
+    public void ToggleOverlay(bool toggle = true)
+    {
+        if (toggle)
+        {
+            cg.alpha = 1;
+        }
+        else
+        {
+            cg.alpha = 0;
+        }
+    }
 
     void Awake()
     {
@@ -88,20 +354,20 @@ public class OverlayUI : MonoBehaviour
                 activeItemRaceSpecificIcon.UpdateContentImage(GameManager.Instance.humanRaceIcon);
                 activeItemRaceSpecificIcon.contentImageUI.UpdateColour(GameManager.Instance.humanRaceColour);
                 text = "Item can only be equipped by humans";
-            }        
+            }
             else if (raceSpecific == "BEAST")
             {
                 activeItemRaceSpecificIcon.UpdateContentImage(GameManager.Instance.beastRaceIcon);
                 activeItemRaceSpecificIcon.contentImageUI.UpdateColour(GameManager.Instance.beastRaceColour);
                 text = "Item can only be equipped by beasts";
-            }            
+            }
             else if (raceSpecific == "ETHEREAL")
             {
                 activeItemRaceSpecificIcon.UpdateContentImage(GameManager.Instance.etherealRaceIcon);
                 activeItemRaceSpecificIcon.contentImageUI.UpdateColour(GameManager.Instance.etherealRaceColour);
                 text = "Item can only be equipped by ethereal";
             }
-                
+
             activeItemRaceSpecificIcon.tooltipStats.UpdateTooltipStatsText(text);
         }
     }
@@ -122,19 +388,19 @@ public class OverlayUI : MonoBehaviour
     {
         itemRarityText.text = text;
 
-        if (text == "COMMON")
+        if (text == "COMMON" || text == "common")
             itemRarityText.color = ItemRewardManager.Instance.commonColour;
-        else if (text == "RARE")
+        else if (text == "RARE" || text == "rare")
             itemRarityText.color = ItemRewardManager.Instance.rareColour;
-        else if (text == "EPIC")
+        else if (text == "EPIC" || text == "epic")
             itemRarityText.color = ItemRewardManager.Instance.epicColour;
-        else if (text == "LEGENDARY")
+        else if (text == "LEGENDARY" || text == "legendary")
             itemRarityText.color = ItemRewardManager.Instance.legendaryColour;
 
     }
 
     public void ToggleSkillItemSwitchButton(bool toggle = true)
-    {
+    {/*
         if (toggle)
         {
             skillsItemsSwitchButton.UpdateAlpha(1);
@@ -145,10 +411,12 @@ public class OverlayUI : MonoBehaviour
             skillsItemsSwitchButton.UpdateAlpha(0);
             skillsItemsSwitchButton.ToggleButton(false);
         }
+        */
     }
 
     public void ToggleFighterDetailsTab(bool toggle = false)
     {
+        /*
         if (!toggle)
         {
             GetComponent<CanvasGroup>().alpha = 0;
@@ -161,6 +429,7 @@ public class OverlayUI : MonoBehaviour
             if (GameManager.Instance.playerInCombat)
                 ToggleSkillItemSwitchButton(true);
         }
+        */
     }
 
     public Vector2 GetHitAreaType()
@@ -190,6 +459,22 @@ public class OverlayUI : MonoBehaviour
     public void UpdateSkillUI(string skillName, string skillDesc, int skillDescPower, int baseHitCount,
         int range, Vector2 hitArea, int skillPower, int skillCooldown, int hitAttemptCount, float accuracyCount, Sprite skillPowerImage, Sprite skillIcon, bool special = false)
     {
+        if (skillName != "")
+        {
+            if (!CombatGridManager.Instance.isCombatMode)
+            {
+                if (GameManager.Instance.isSkillsMode)
+                    ToggleAllStats(true, true, false);
+                else
+                    ToggleAllStats(true, false, false);
+                return;
+            }
+            else
+            {
+                ToggleAllStats(true, true, false);
+            }
+        }
+
         UpdateMainSlotDetailsName(skillName);
         UpdateMainSlotDetailsDesc(skillDesc);
 
@@ -205,9 +490,48 @@ public class OverlayUI : MonoBehaviour
         UpdateSelectedObjectRangeText(range);
         UpdateSelectedObjectHitAreaSprite(hitArea);
     }
-    
-    public void UpdateItemUI(string itemName, string itemDesc, int itemPower, int range, Vector2 hitArea, Sprite itemIcon)
+
+    public void ResetDetailsUI()
     {
+        // Unselect
+        ToggleOverlay(false);
+        ToggleShopDetailsBanner(false);
+        ShopManager.Instance.UpdateSelectedShopItem(null);
+        ShopManager.Instance.ResetShopItemSelectBorder();
+        FighterInventorManager.Instance.ResetFighterInventorySelections();
+
+        buttonCloseDetails.UpdateAlpha(0);
+        buttonCloseDetails.ToggleButton(false);
+
+        buttonSellItemDetails.UpdateAlpha(0);
+        buttonSellItemDetails.ToggleButton(false);
+
+        FighterInventorManager.Instance.ResetSelectedInventorySlot();
+    }
+
+    public void UpdateGearDetailsUI(string gearName, string desc, int gearHealth, int gearDamage = 0, int gearHealing = 0, int gearDefense = 0, int gearSpeed = 0, Sprite itemIcon = null)
+    {
+        // stuffs, to do
+        UpdateMainSlotDetailsName(gearName);
+        UpdateMainSlotDetailsDesc(desc);
+        UpdateSelectedObjectPowerText(gearDamage);
+        UpdateActiveBaseSlotIcon(itemIcon, true);
+    }
+    public void UpdateItemDetailsUI(string itemName, string itemDesc, int itemPower, int range, Vector2 hitArea, Sprite itemIcon)
+    {
+        if (itemName != "")
+        {
+            if (!CombatGridManager.Instance.isCombatMode || GameManager.Instance.isSkillsMode)
+            {
+                if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.SHOP)
+                {
+                    //ToggleAllStats(true, false, true);
+                    //return;
+                }
+
+            }
+        }
+
         if (CombatGridManager.Instance.isCombatMode)
         {
             if (GameManager.Instance.isSkillsMode)
@@ -216,7 +540,7 @@ public class OverlayUI : MonoBehaviour
                 ToggleAllStats(true, false);
         }
         else
-            ToggleAllStats(true, false, true);
+            ToggleAllStats(true, false, false);
 
         UpdateMainSlotDetailsName(itemName);
         UpdateMainSlotDetailsDesc(itemDesc);
@@ -226,9 +550,10 @@ public class OverlayUI : MonoBehaviour
         UpdateSelectedObjectPowerText(itemPower);
         UpdateSelectedObjectRangeText(range);
         UpdateSelectedObjectHitAreaSprite(hitArea);
+
+        remainingMovementUsesUI.UpdateAlpha(0);
+
     }
-
-
     public void ToggleActiveItemTriggerStatus(bool toggle = true)
     {
         if (toggle)
@@ -240,8 +565,15 @@ public class OverlayUI : MonoBehaviour
             activeItemTriggerStatus.UpdateAlpha(0);
         }
     }
-    public void UpdateActiveItemTriggerStatus(bool toggle = true)
+    public void UpdateActiveItemTriggerStatus(bool toggle = true, bool gear = false)
     {
+        if (gear)
+        {
+            activeItemTriggerStatus.UpdateContentText("G");
+            activeItemTriggerStatus.UpdateContentTextColourTMP(TeamGearManager.Instance.gearIconColour);
+            return;
+        }
+
         if (toggle)
         {
             activeItemTriggerStatus.UpdateContentText("A");
@@ -321,7 +653,7 @@ public class OverlayUI : MonoBehaviour
 
     public void ToggleAllStats(bool toggle = true, bool skill = true, bool movement = false)
     {
-        Debug.Log("toggle = " + toggle + " skill = " + skill + " movement = " + movement);
+        //Debug.Log("toggle = " + toggle + " skill = " + skill + " movement = " + movement);
 
         if (movement)
         {
@@ -645,8 +977,15 @@ public class OverlayUI : MonoBehaviour
         skillDetailsPowerIcon.sprite = sprite;
     }
 
-    private void UpdateActiveBaseSlotIcon(Sprite sprite)
+    private void UpdateActiveBaseSlotIcon(Sprite sprite, bool gear = false)
     {
-        activeSkill.sprite = sprite;
+        activeObjectIcon.sprite = sprite;
+
+        if (gear)
+        {
+            activeObjectIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200);
+        }
+        else
+            activeObjectIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 400);
     }
 }

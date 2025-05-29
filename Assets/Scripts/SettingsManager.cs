@@ -8,6 +8,8 @@ public class SettingsManager : MonoBehaviour
     public static SettingsManager Instance;
 
     [SerializeField] private UIElement uiElement;
+    [SerializeField] private UIElement sfxSliderButton;
+    [SerializeField] private UIElement musicSliderButton;
     [SerializeField] private Image sfxImage;
     [SerializeField] private Image musicImage;
 
@@ -36,6 +38,9 @@ public class SettingsManager : MonoBehaviour
     {
         sfxSliderFill.color = soundOnColour;
         musicSliderFill.color = soundOnColour;
+
+        sfxSliderButton.ToggleButton(false);
+        musicSliderButton.ToggleButton(false);
     }
 
     public void ToggleSettingsButton(bool toggle)
@@ -49,11 +54,15 @@ public class SettingsManager : MonoBehaviour
         {
             settingsOpened = true;
             uiElement.UpdateAlpha(1);
+            sfxSliderButton.ToggleButton(true);
+            musicSliderButton.ToggleButton(true);
         }
         else
         {
             settingsOpened = false;
             uiElement.UpdateAlpha(0);
+            sfxSliderButton.ToggleButton(false);
+            musicSliderButton.ToggleButton(false);
         }
     }
 

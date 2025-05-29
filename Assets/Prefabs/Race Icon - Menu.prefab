@@ -104,9 +104,9 @@ MonoBehaviour:
   contentText3: {fileID: 0}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
-  buttonCG: {fileID: 0}
-  button2CG: {fileID: 0}
-  button3CG: {fileID: 0}
+  buttonCG: {fileID: 3351684950378466112}
+  button2CG: {fileID: 9212200094798321273}
+  button3CG: {fileID: 9212200094798321273}
   skillLevelText: {fileID: 0}
   startHidden: 0
   doScalePunch: 0
@@ -140,8 +140,8 @@ CanvasGroup:
   m_GameObject: {fileID: 2050026823082709817}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!223 &3142018520799082453
 Canvas:
@@ -162,7 +162,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 370
+  m_SortingOrder: 891
   m_TargetDisplay: 0
 --- !u!1 &4147040663118118816
 GameObject:
@@ -185,7 +185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6046752065319694603
 RectTransform:
   m_ObjectHideFlags: 0
@@ -263,7 +263,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 250
+  m_SortingOrder: 989
   m_TargetDisplay: 0
 --- !u!95 &5545360043508337077
 Animator:
@@ -369,7 +369,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4974246142724685461
 RectTransform:
   m_ObjectHideFlags: 0
@@ -586,7 +586,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 255
+  m_SortingOrder: 990
   m_TargetDisplay: 0
 --- !u!114 &1161827036455724377
 MonoBehaviour:

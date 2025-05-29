@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0659ce007fba754eac8559e8266c4d7, type: 3}
+  m_Name: Drowning Robe
+  m_EditorClassIdentifier: 
+  gearName: Arcane Robe
+  gearType: chestpiece
+  gearRarity: rare
+  gearIcon: {fileID: 21300000, guid: 0496a54c34717494ba4a9d429bde316b, type: 3}
+  bonusHealth: 150
+  bonusDamage: 3
+  bonusHealing: 8
+  bonusDefense: 8
+  bonusSpeed: 2

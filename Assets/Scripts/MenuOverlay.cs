@@ -9,6 +9,7 @@ public class MenuOverlay : MonoBehaviour
     [SerializeField] private UIElement menuOverlay;
     [SerializeField] private UIElement menuOverlayExitButton;
     [SerializeField] private UIElement killRunButton;
+    [SerializeField] private UIElement endTurnButton;
     [SerializeField] private UIElement killRunPrompt;
     [SerializeField] private UIElement killRunPromptButtonYes;
     [SerializeField] private UIElement killRunPrompButtonNo;
@@ -55,6 +56,7 @@ public class MenuOverlay : MonoBehaviour
             menuOverlay.UpdateAlpha(1);
             menuOverlayExitButton.UpdateAlpha(1);
             killRunButton.UpdateAlpha(1);
+            endTurnButton.UpdateAlpha(1);
 
             killRunPrompt.UpdateAlpha(0);
             killRunPromptButtonYes.UpdateAlpha(0);
@@ -77,6 +79,7 @@ public class MenuOverlay : MonoBehaviour
             killRunPrompButtonNo.ToggleButton(toggle);
             killRunPromptButtonYes.ToggleButton(toggle);
             exitPromptButton.ToggleButton(toggle);
+            endTurnButton.ToggleButton(toggle);
         }
     }
 

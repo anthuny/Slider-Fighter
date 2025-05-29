@@ -45,6 +45,17 @@ public class IconUI : MonoBehaviour
 
     public void UpdateRaceIcon(Sprite sprite)
     {
+
+        if (!CombatGridManager.Instance.isCombatMode)
+        {
+            // Enable button
+            if (sprite == TeamItemsManager.Instance.clearSlotSprite)
+            {
+                raceIcon.ToggleButton(false);
+                raceIcon.ToggleButton2(false);
+            }
+        }
+
         raceIcon.UpdateContentImage(sprite);
     }
     public void UpdateRarity(Rarity newRarity, bool disable = false)

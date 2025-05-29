@@ -16,6 +16,7 @@ public class HeroRoomManager : MonoBehaviour
     [SerializeField] private float timeWaitAfterHeroJoining = 1.5f;
 
     private bool playerOffered;
+    public bool spawnedFighter;
     public bool playerInHeroRoomView;
 
     private void Awake()

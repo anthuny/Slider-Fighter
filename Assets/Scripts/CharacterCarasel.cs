@@ -85,9 +85,12 @@ public class CharacterCarasel : MonoBehaviour
         LoadSave();
         LoadCarasel();
 
+
         UpdateLog.Instance.ToggleUpdateLogbutton(true);
 
         RoomManager.Instance.SaveLoadHighestFloor();
+
+        MapOverlay.Instance.ToggleMapOverlay(false);
     }
 
     public void ToggleMenu(bool toggle)
