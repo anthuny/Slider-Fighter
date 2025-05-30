@@ -418,10 +418,7 @@ public class ShopItem : MonoBehaviour
 
         ShopManager.Instance.UpdateSelectedShopItem(this);
 
-        if (linkedGearPiece)
-            OverlayUI.Instance.UpdateShopDetailsBanner(null, linkedGearPiece, null);
-        else if (linkedItemPiece)
-            OverlayUI.Instance.UpdateShopDetailsBanner(null, null, linkedItemPiece);
+
 
         ShopManager.Instance.TogglePartyNoRacePrompt(true);
 
@@ -516,7 +513,7 @@ public class ShopItem : MonoBehaviour
                     OverlayUI.Instance.UpdateActiveItemRaceSpecificIcon(race);
 
                     FighterInventorManager.Instance.ToggleInventoryMode(false, true, true);
-                    return;
+                    break;
                 }
             }
             else
@@ -546,10 +543,15 @@ public class ShopItem : MonoBehaviour
 
                     FighterInventorManager.Instance.ToggleInventoryMode(true, false, true);
                     FighterInventorManager.Instance.UpdateFighterInventorySelection();
-                    return;
+                    break;
                 }
             }
 
         }
+
+        if (linkedGearPiece)
+            OverlayUI.Instance.UpdateShopDetailsBanner(null, linkedGearPiece, null);
+        else if (linkedItemPiece)
+            OverlayUI.Instance.UpdateShopDetailsBanner(null, null, linkedItemPiece);
     }
 }

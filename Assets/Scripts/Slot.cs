@@ -729,7 +729,7 @@ public class Slot : MonoBehaviour
             buttonSkillUpgrade3.UpdateAlpha(1);
         else
             buttonSkillUpgrade3.UpdateAlpha(0);
-
+        /*
         // Skill upgrade power inc
         if (SkillsTabManager.Instance.GetActiveSkillBase().startingSkillPower == 0)
         {
@@ -749,7 +749,7 @@ public class Slot : MonoBehaviour
 
             buttonSkillUpgrade3.UpdateAlpha(1);
         }
-
+        */
         if (!toggle)
             buttonSkillUpgrade3.ToggleButton(false);
     }

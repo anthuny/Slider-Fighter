@@ -24,12 +24,12 @@ MonoBehaviour:
   startingDefense: 5
   startingPower: 15
   startingHealingPower: 1
-  startingMaxHealth: 325
+  startingMaxHealth: 275
   speedIncPerLv: 1
   powerIncPerLv: 2
   healingPowerIncPerLv: 2
   defenseIncPerLv: 2
-  maxHealthIncPerLv: 110
+  maxHealthIncPerLv: 85
   statDefense: 0
   statAttack: 0
   statHealing: 0

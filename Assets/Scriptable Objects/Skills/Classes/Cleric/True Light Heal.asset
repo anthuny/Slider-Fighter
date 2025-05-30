@@ -21,6 +21,7 @@ MonoBehaviour:
   curAnimType: 1
   curSkillEffectType: 0
   curSkillActiveType: 0
+  curClassType: 0
   curSkillSelectionType: 1
   skillRangeHitArea: {x: 3, y: 3}
   skillRangeHitAreas:
@@ -47,8 +48,8 @@ MonoBehaviour:
   startingSkillPower: 40
   curSkillPower: 40
   skillAttackAccMult: 1
-  skillBaseHitOutput: 2
-  skillHitAttempts: 2
+  skillBaseHitOutput: 0
+  skillHitAttempts: 1
   projectileSpeed: 10
   skillCooldown: 1
   curCooldown: 0

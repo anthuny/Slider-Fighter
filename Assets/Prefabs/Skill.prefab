@@ -665,6 +665,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -684,6 +685,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!1 &546712994711130991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,6 +1249,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1262,6 +1269,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!95 &8740548708716775137
 Animator:
   serializedVersion: 4
@@ -2931,6 +2943,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2950,6 +2963,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!225 &8378374604524578683
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3805,6 +3823,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -3824,6 +3843,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!223 &8470548783598149685
 Canvas:
   m_ObjectHideFlags: 0
@@ -3843,7 +3867,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 355
+  m_SortingOrder: 200
   m_TargetDisplay: 0
 --- !u!1 &3117890089550310101
 GameObject:
@@ -5440,6 +5464,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -5459,6 +5484,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!225 &5779916517057961755
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6608,6 +6638,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -6627,6 +6658,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!223 &8056356939167545804
 Canvas:
   m_ObjectHideFlags: 0
@@ -6872,6 +6908,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -6891,6 +6928,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!1 &5907738421763570686
 GameObject:
   m_ObjectHideFlags: 0
@@ -7942,6 +7984,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!225 &7270212666006155310
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8136,6 +8179,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -8155,6 +8199,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!223 &4007428621577338940
 Canvas:
   m_ObjectHideFlags: 0
@@ -8337,6 +8386,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -8356,6 +8406,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!223 &4999310306305561881
 Canvas:
   m_ObjectHideFlags: 0
@@ -8375,7 +8430,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 173
+  m_SortingOrder: 199
   m_TargetDisplay: 0
 --- !u!1 &7270212668023562989
 GameObject:
@@ -9482,6 +9537,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -9501,6 +9557,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!1 &8361663838190881014
 GameObject:
   m_ObjectHideFlags: 0

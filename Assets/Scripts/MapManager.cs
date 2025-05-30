@@ -91,6 +91,7 @@ public class MapManager : MonoBehaviour
 
     public UIElement exitShopRoom;
     [SerializeField] private UIElement mapManager;
+    public bool roomStarted = false;
 
 
     // The minimum and maximum values for the x and y positions of the spawned objects
@@ -454,7 +455,7 @@ public class MapManager : MonoBehaviour
         if (toggle)
         {
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
-
+            roomStarted = false;
             OverlayUI.Instance.ToggleShopDetailsBanner(false);
             MapOverlay.Instance.ToggleMapOverlay(true);
             FighterInventorManager.Instance.ResetFighterInventorySelections();

@@ -47,7 +47,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     public bool isStatButton;
     public UIElement selectBorder;
     public bool postBattleButtonPressed = false;
-
+    public bool enterRoomButtonPressed = false;
     private void Awake()
     {
         unitFunctionality = transform.parent.GetComponent<UnitFunctionality>();
@@ -283,7 +283,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         AudioManager.Instance.Play("Button_Click");
     }
 
-    bool enterRoomButtonPressed = false;
+
 
     public void ButtonEnterRoom(bool byPass = false)
     {
@@ -296,6 +296,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 if (!RoomManager.Instance.GetActiveRoom())
                     return;
                 // Button Click SFX
+
+                MapManager.Instance.roomStarted = true;
                 AudioManager.Instance.Play("Button_Click");
 
                 if (RoomManager.Instance.GetActiveRoom().GetRoomType() != RoomMapIcon.RoomType.SHOP 
@@ -1378,6 +1380,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     // Gear tab from map
     public void ButtonGearTabFromMap()
     {
+        if (MapManager.Instance.roomStarted)
+            return;
+
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 

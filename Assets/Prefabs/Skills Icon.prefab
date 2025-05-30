@@ -302,7 +302,7 @@ MonoBehaviour:
   curStatType: 0
   curRarity: 0
   contentImage: {fileID: 5259889019705451123}
-  contentImageUI: {fileID: 0}
+  contentImageUI: {fileID: 2966838680102629048}
   contentImage2UI: {fileID: 0}
   contentText: {fileID: 622400475874870787}
   contentText2: {fileID: 5175577135997222088}
@@ -323,6 +323,7 @@ MonoBehaviour:
   selectable: 1
   selectBorder: {fileID: 1636042355342586031}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 8995928786012618700}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -344,7 +345,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!114 &5155438670687292347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,6 +368,7 @@ MonoBehaviour:
   curGearOwnedBy: 0
   curSlotPosition: 0
   curSlotType: 0
+  curSlotType2: 0
   skill: {fileID: 0}
   slotUI: {fileID: 8426304138625177753}
   slotSelectionUI: {fileID: 1636042355342586031}
@@ -554,6 +558,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -575,7 +580,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &3263367111173051638
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,6 +850,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -864,7 +872,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &2210911529129204462
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -913,6 +923,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -934,7 +945,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &3666851542265818222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1109,6 +1122,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1130,7 +1144,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!223 &3665519638951356069
 Canvas:
   m_ObjectHideFlags: 0
@@ -1397,6 +1413,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1418,7 +1435,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &3936564060558501167
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1695,6 +1714,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1716,7 +1736,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &5259889021125643383
 GameObject:
   m_ObjectHideFlags: 0
@@ -1908,7 +1930,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 77
+    m_Top: 128
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 39.36
@@ -2288,6 +2310,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2309,7 +2332,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &7194447718113786691
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2426,6 +2451,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2447,7 +2473,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &6409937216398383732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2732,6 +2760,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2753,7 +2782,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!114 &2861010337278432425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2961,6 +2992,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2982,7 +3014,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &3499861115761903278
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3006,6 +3040,27 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -114.9
       objectReference: {fileID: 0}
+    - target: {fileID: 1254806086456659443, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1310321974828741399, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: statText
+      value: Increases hit count for <color=yellow>Great</color> or <color=green>Perfect</color>
+        Accuracy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1310321974828741399, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: contentText
+      value: 
+      objectReference: {fileID: 8758326211685004516}
+    - target: {fileID: 1310321974828741399, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: doScalePunch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1310321974828741399, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: scaleIncSize
+      value: 1.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1509145918554072824, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 11.2
@@ -3018,6 +3073,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: b9d3659108f11b94d9fc10b1c8afab91, type: 3}
+    - target: {fileID: 1990403892026286110, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: mainUIelement
+      value: 
+      objectReference: {fileID: 2966838680102629048}
     - target: {fileID: 3319832272525238322, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_Alpha
       value: 1
@@ -3025,6 +3084,10 @@ PrefabInstance:
     - target: {fileID: 3663812750556576042, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 80.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3720064569438608300, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_text
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_Pivot.x
@@ -3110,6 +3173,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4304395970250109228, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304395970250109228, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4794281512739793227, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_text
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4794281512739793227, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_fontSize
+      value: 72.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5237706219686960461, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 68.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5237706219686960461, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 67.4
+      objectReference: {fileID: 0}
     - target: {fileID: 5817648615482339164, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -3118,13 +3205,17 @@ PrefabInstance:
       propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7309322302955857151, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7600474131149892358, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: statText
-      value: Increase skill base power by +2
+      value: Increase <color=orange>skill</color> <color=red>power</color> by +2
       objectReference: {fileID: 0}
     - target: {fileID: 7751331016326035524, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 201.2
+      value: 120.4
       objectReference: {fileID: 0}
     - target: {fileID: 7913974500228217969, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_Name
@@ -3137,6 +3228,15 @@ PrefabInstance:
     - target: {fileID: 8151838329458864031, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ButtonAddSkillPointIncreasePower
+      objectReference: {fileID: 0}
+    - target: {fileID: 8167252387522103892, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_text
+      value: Increases hit count for <color=yellow>Great</color> or <color=green>Perfect</color>
+        Accuracy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8167252387522103892, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_fontSize
+      value: 41.3
       objectReference: {fileID: 0}
     - target: {fileID: 8494982871291820950, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_fontColorGradient.topRight.b
@@ -3160,7 +3260,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8861046561154029541, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9186005052832020684, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_text
+      value: Increase <color=orange>skill</color> <color=red>power</color> by +2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9186005052832020684, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_fontSize
+      value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
@@ -3180,6 +3288,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
   m_PrefabInstance: {fileID: 4252355633919679919}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2966838680102629048 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1310321974828741399, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+  m_PrefabInstance: {fileID: 4252355633919679919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5942825298207045289 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7600474131149892358, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
@@ -3200,6 +3319,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdb7056e790af8b4ba700dda87256f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8758326211685004516 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4794281512739793227, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+  m_PrefabInstance: {fileID: 4252355633919679919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4724119439114122593
@@ -3543,7 +3673,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchorMin.x
@@ -3551,7 +3681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3591,11 +3721,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -266.36
       objectReference: {fileID: 0}
     - target: {fileID: 3934180774429739857, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3628,6 +3758,10 @@ PrefabInstance:
     - target: {fileID: 7913974500228217969, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_Name
       value: Skill Upgrade - Increase Power Hits
+      objectReference: {fileID: 0}
+    - target: {fileID: 7913974500228217969, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8151838329458864031, guid: a3f0c5d0b82834346b7934aa854afad5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName

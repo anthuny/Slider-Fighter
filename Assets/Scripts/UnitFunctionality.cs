@@ -123,16 +123,15 @@ public class UnitFunctionality : MonoBehaviour
     public Animator effectDisplayAnimator;
 
     // Team Stat Page
-    public int statsBase1Added;
-    public int statsBase2Added;
-    public int statsBase3Added;
-    public int statsBase4Added;
-    public int statsBase5Added;
+    public int skill1PowerInc;
+    public int skill2PowerInc;
+    public int skill3PowerInc;
+    public int skill4PowerInc;
 
-    public int statsAdv1Added;
-    public int statsAdv2Added;
-    public int statsAdv3Added;
-    public int statsAdv4Added;
+    public int skill1ExtraHits;
+    public int skill2ExtraHits;
+    public int skill3ExtraHits;
+    public int skill4ExtraHits;
 
     public int spentMasteryTotalPoints = 0;
     public int SkillSpentPoints = 0;

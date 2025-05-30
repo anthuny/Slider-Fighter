@@ -42,6 +42,16 @@ public class AudioManager : MonoBehaviour
         }        
     }
 
+    public void IncreaseAttackBarTrackPitch(float incAmount = 0)
+    {
+        attackBarMusic.source.pitch += incAmount;
+    }
+
+    public void ResetAttackBarTrackPitch()
+    {
+        if (attackBarMusic.source)
+            attackBarMusic.source.pitch = 1;
+    }
     private void Start()
     {
         AdjustSFXVolume(.75f, true);

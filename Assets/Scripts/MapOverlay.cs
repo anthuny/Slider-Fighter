@@ -8,8 +8,8 @@ public class MapOverlay : MonoBehaviour
     public static MapOverlay Instance;
     [SerializeField] private UIElement curRoomTypeText;
     [SerializeField] private UIElement curRoomSubText;
-    [SerializeField] private UIElement buttonEnterRoom;
-    [SerializeField] private UIElement buttonTeamPage;
+    public UIElement buttonEnterRoom;
+    public UIElement buttonTeamPage;
     [SerializeField] private UIElement playerGoldText;
     [SerializeField] private UIElement roomCountText;
     [SerializeField] private UIElement floorName;

@@ -1650,6 +1650,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     #region Setup Multiple UIs
     public IEnumerator SetupPostBattleUI(bool playerWon)
     {
+        MapManager.Instance.roomStarted = false;
         if (!roomDefeated)
         {
             roomDefeated = true;
@@ -2144,7 +2145,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(1 + GetActiveSkill().skillBaseHitOutput + GetActiveSkill().upgradeIncHitsCount + powerHitsAdditional, false));
+            StartCoroutine(WeaponManager.Instance.UpdateWeaponAccumulatedHits(0 + GetActiveSkill().skillBaseHitOutput, false));
             WeaponManager.Instance.StartHitLine();
         }
 

@@ -53,8 +53,8 @@ MonoBehaviour:
   startingSkillPower: 3
   curSkillPower: 3
   skillAttackAccMult: 1
-  skillBaseHitOutput: 1
-  skillHitAttempts: 2
+  skillBaseHitOutput: 0
+  skillHitAttempts: 1
   projectileSpeed: 10
   skillCooldown: 1
   curCooldown: 0

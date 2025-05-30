@@ -109,6 +109,8 @@ public class SkillsTabManager : MonoBehaviour
             GameManager.Instance.UpdateAllyVisibility(true, true);
 
             Instance.SetupSkillsTab(GameManager.Instance.activeRoomHeroes[0], true);
+
+            ToggleAllStatsVisual(true);
         }
 
         else
@@ -121,8 +123,8 @@ public class SkillsTabManager : MonoBehaviour
             GameManager.Instance.UpdateAllysPositionCombat();
 
             skillsTabUI.UpdateAlpha(0);
+            ToggleAllStatsVisual(false);
         }
-
     }
 
     private void Awake()
@@ -146,6 +148,10 @@ public class SkillsTabManager : MonoBehaviour
         // Check to disable buttons if no points remain for the ally  
         //GetSelectedSlot().pointsAdded++;
         // Increase skill point
+
+        if (!activeSkillBase)
+            return;
+
         if (skillUpgradeType == 0)
         {
             // cap 
@@ -267,6 +273,14 @@ public class SkillsTabManager : MonoBehaviour
             rangeStatUI.UpdateAlpha(1);
             hitAreaStatUI.UpdateAlpha(1);  
             hitEffectChanceUI.UpdateAlpha(1);
+
+            powerStatUI.ToggleButton(true);
+            hitsRemainingStatUI.ToggleButton(true);
+            baseHitsStatsUI.ToggleButton(true);
+            cdStatUI.ToggleButton(true);
+            rangeStatUI.ToggleButton(true);
+            hitAreaStatUI.ToggleButton(true);
+            hitEffectChanceUI.ToggleButton(true);
         }
         else
         {
@@ -277,6 +291,14 @@ public class SkillsTabManager : MonoBehaviour
             rangeStatUI.UpdateAlpha(0);
             hitAreaStatUI.UpdateAlpha(0);
             hitEffectChanceUI.UpdateAlpha(0);
+
+            powerStatUI.ToggleButton(false);
+            hitsRemainingStatUI.ToggleButton(false);
+            baseHitsStatsUI.ToggleButton(false);
+            cdStatUI.ToggleButton(false);
+            rangeStatUI.ToggleButton(false);
+            hitAreaStatUI.ToggleButton(false);
+            hitEffectChanceUI.ToggleButton(false);
         }
     }
     private void UpdateSelectedObjectHitAreaSprite(Vector2 hitArea)
@@ -553,6 +575,44 @@ public class SkillsTabManager : MonoBehaviour
         skillBase3.GetSkillLevelText().UpdateContentText(GetActiveUnit().GetSkill(2).curSkillLevel.ToString());
         skillBase4.GetSkillLevelText().UpdateContentText(GetActiveUnit().GetSkill(3).curSkillLevel.ToString());
 
+        //skillBase1.UpdateStatPoindsAdded(false, true);
+        //skillBase2.UpdateStatPoindsAdded(false, true);
+        //skillBase3.UpdateStatPoindsAdded(false, true);
+        //skillBase4.UpdateStatPoindsAdded(false, true);
+
+        skillBase1.statPointsAdded = unit.GetSkill(0).upgradeIncPowerCount;
+        skillBase1.extraHitsPointsAdded = unit.GetSkill(0).upgradeIncPowerCount / 3;
+        skillBase2.statPointsAdded = unit.GetSkill(1).upgradeIncPowerCount;
+        skillBase2.extraHitsPointsAdded = unit.GetSkill(1).upgradeIncPowerCount / 3;
+        skillBase3.statPointsAdded = unit.GetSkill(2).upgradeIncPowerCount;
+        skillBase3.extraHitsPointsAdded = unit.GetSkill(2).upgradeIncPowerCount / 3;
+        skillBase4.statPointsAdded = unit.GetSkill(3).upgradeIncPowerCount;
+        skillBase4.extraHitsPointsAdded = unit.GetSkill(3).upgradeIncPowerCount / 3;
+
+        skillBase1.UpdateStatPoindsAdded(true, false, 0, false, true);
+        skillBase2.UpdateStatPoindsAdded(true, false, 0, false, true);
+        skillBase3.UpdateStatPoindsAdded(true, false, 0, false, true);
+        skillBase4.UpdateStatPoindsAdded(true, false, 0, false, true);
+
+
+        skillBase1.skillUpgradesUI.UpdateAlpha(0);
+        skillBase1.skillUpgradesUI.UpdateContentText(skillBase1.skillUpgradesUI.statPointsAdded.ToString());
+
+        skillBase2.skillUpgradesUI.UpdateAlpha(0);
+        skillBase2.skillUpgradesUI.UpdateContentText(skillBase2.skillUpgradesUI.statPointsAdded.ToString());
+
+
+
+        skillBase3.skillUpgradesUI.UpdateAlpha(0);
+        skillBase3.skillUpgradesUI.UpdateContentText(skillBase3.skillUpgradesUI.statPointsAdded.ToString());
+
+
+
+        skillBase4.skillUpgradesUI.UpdateAlpha(0);
+        skillBase4.skillUpgradesUI.UpdateContentText(skillBase4.skillUpgradesUI.statPointsAdded.ToString());
+
+
+
         skillBase1.ToggleButton(true);
         skillBase2.ToggleButton(true);
         skillBase3.ToggleButton(true);
@@ -744,7 +804,20 @@ public class SkillsTabManager : MonoBehaviour
         slot.ToggleSlotSelection(true);
 
         if (slot.GetComponent<UIElement>().skillUpgradesUI != null)
+        {
             slot.GetComponent<UIElement>().skillUpgradesUI.UpdateAlpha(1);
+        }
+
+        if (slot.skill)
+        {
+            if (slot.skill.upgradeIncPowerCount >= 3)
+                slot.GetComponent<UIElement>().contentImageUI.UpdateAlpha(1);
+            else
+                slot.GetComponent<UIElement>().contentImageUI.UpdateAlpha(0);
+
+            slot.GetComponent<UIElement>().skillUpgradesUI.UpdateAlpha(1);
+        }
+
 
     }
 

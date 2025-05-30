@@ -40,7 +40,8 @@ public class UIElement : MonoBehaviour
 
     [SerializeField] private bool selectable;
     public UIElement selectBorder;
-    [SerializeField] private int statPointsAdded;
+    public int statPointsAdded;
+    public int extraHitsPointsAdded;
 
     [SerializeField] private UIElement lockedImage;
     [SerializeField] private int unlockedPointsThreshhold;
@@ -304,18 +305,12 @@ public class UIElement : MonoBehaviour
     }
     */
 
-    public void UpdateStatPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false)
+    public void UpdateStatPoindsAdded(bool adding, bool isReset = false, int bulkPointsAdding = 0, bool bulkAdding = false, bool byPass = false)
     {
         if (isReset)
         {
-            /*
-            if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetSkillPointThreshhold())
-                ToggleLockedImage(true);
-            else
-                ToggleLockedImage(false);
-            */
-
             statPointsAdded = 0;
+            extraHitsPointsAdded = 0;
             return;
         }
 
@@ -329,33 +324,76 @@ public class UIElement : MonoBehaviour
                 statPointsAdded = bulkPointsAdding;
             else
             {
-                statPointsAdded++;
-                SkillsTabManager.Instance.UpdateUnspentSkillPoints(true);
+                if (!byPass)
+                {
+                    statPointsAdded++;
+                    SkillsTabManager.Instance.UpdateUnspentSkillPoints(true);
+                }
+
             }
 
-            // Adds
+            if (statPointsAdded >= 3)
+            {
+                if (statPointsAdded % 3 == 0)
+                {
+                    contentImageUI.UpdateContentText(extraHitsPointsAdded.ToString());
 
-            if (curStatType == StatType.SKILLSLOT1)
-                SkillsTabManager.Instance.GetActiveUnit().statsBase1Added = GetStatPointsAdded();
-            else if (curStatType == StatType.SKILLSLOT2)
-                SkillsTabManager.Instance.GetActiveUnit().statsBase2Added = GetStatPointsAdded();
-            else if (curStatType == StatType.SKILLSLOT3)
-                SkillsTabManager.Instance.GetActiveUnit().statsBase3Added = GetStatPointsAdded();
-            else if (curStatType == StatType.SKILLSLOT4)
-                SkillsTabManager.Instance.GetActiveUnit().statsBase4Added = GetStatPointsAdded();
+                    if (!byPass)
+                    {
+                        extraHitsPointsAdded++;
+                    }
+
+                    if (contentImageUI)
+                    {
+                        contentImageUI.UpdateAlpha(1);
+                        contentImageUI.UpdateContentText(extraHitsPointsAdded.ToString());
+                        //Debug.Log(gameObject.name);
+                    }
+                }
+                else if (contentImageUI)
+                {
+                    contentImageUI.UpdateAlpha(1, false, 0, false, false, false, false);
+                    //contentImageUI.UpdateContentText(extraHitsPointsAdded.ToString());
+                }
+            }
+
+
+            if (!byPass)
+            {
+                // Adds
+                if (curStatType == StatType.SKILLSLOT1)
+                {
+                    SkillsTabManager.Instance.GetActiveUnit().skill1PowerInc = GetStatPointsAdded();
+                    SkillsTabManager.Instance.GetActiveUnit().skill1ExtraHits = extraHitsPointsAdded;
+                }
+                else if (curStatType == StatType.SKILLSLOT2)
+                {
+                    SkillsTabManager.Instance.GetActiveUnit().skill2PowerInc = GetStatPointsAdded();
+                    SkillsTabManager.Instance.GetActiveUnit().skill2ExtraHits = extraHitsPointsAdded;
+                }
+                else if (curStatType == StatType.SKILLSLOT3)
+                {
+                    SkillsTabManager.Instance.GetActiveUnit().skill3PowerInc = GetStatPointsAdded();
+                    SkillsTabManager.Instance.GetActiveUnit().skill3ExtraHits = extraHitsPointsAdded;
+                }
+                else if (curStatType == StatType.SKILLSLOT4)
+                {
+                    SkillsTabManager.Instance.GetActiveUnit().skill4PowerInc = GetStatPointsAdded();
+                    SkillsTabManager.Instance.GetActiveUnit().skill4ExtraHits = extraHitsPointsAdded;
+                }
+
+                SkillsTabManager.Instance.activeSkillBase.upgradeIncHitsCount = extraHitsPointsAdded;
+                SkillsTabManager.Instance.activeSkillBase.upgradeIncPowerCount = GetStatPointsAdded();
+            }
         }
         else
         {
-            statPointsAdded--;
-            SkillsTabManager.Instance.UpdateUnspentSkillPoints(false);
+            if (!byPass)
+            {
+                statPointsAdded--;
+                SkillsTabManager.Instance.UpdateUnspentSkillPoints(false);
+            }
         }
-
-        /*
-        if (SkillsTabManager.Instance.GetActiveUnit().GetSpentSkillPoints() < GetSkillPointThreshhold())
-            ToggleLockedImage(true);
-        else
-            ToggleLockedImage(false);
-        */
     }
 
     public void ToggleRaceIconButton(bool toggle = true)

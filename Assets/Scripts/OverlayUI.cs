@@ -21,7 +21,7 @@ public class OverlayUI : MonoBehaviour
     [SerializeField] private string damageWordTextColour;
     [SerializeField] private string healWordTextColour;
     [SerializeField] private string skillMultihitColour;
-
+    public Sprite healthSprite;
     public TextMeshProUGUI skillDetailsName;
     public TextMeshProUGUI skillDetailsDesc;
 
@@ -207,6 +207,7 @@ public class OverlayUI : MonoBehaviour
                 gearDetailsActiveGearTypeUI.UpdateContentText("");
                 gearDetailsActiveGearTypeUI.UpdateContentImage(TeamItemsManager.Instance.clearSlotSprite);
                 gearDetailsHealthStatUI.UpdateContentText("");
+                gearDetailsHealthStatUI.UpdateContentImage(TeamItemsManager.Instance.clearSlotSprite);
                 gearDetailsDamageStatUI.UpdateContentText("");
                 gearDetailsHealingStatUI.UpdateContentText("");
                 gearDetailsDefenseStatUI.UpdateContentText("");
@@ -244,7 +245,9 @@ public class OverlayUI : MonoBehaviour
             UpdateActiveItemUseCountText(0);
             UpdateActiveItemTriggerStatus(false);
 
+            gearDetailsHealthStatUI.contentImageUI.UpdateAlpha(1);
             gearDetailsHealthStatUI.UpdateContentText(gear.bonusHealth.ToString());
+            gearDetailsHealthStatUI.UpdateContentImage(healthSprite);
             gearDetailsDamageStatUI.UpdateContentText(gear.bonusDamage.ToString());
             gearDetailsHealingStatUI.UpdateContentText(gear.bonusHealing.ToString());
             gearDetailsDefenseStatUI.UpdateContentText(gear.bonusDefense.ToString());
@@ -305,7 +308,8 @@ public class OverlayUI : MonoBehaviour
             gearDetailsActiveGearTypeUI.UpdateContentImage(item.itemSpriteItemTab);
 
             gearDetailsActiveGearTypeUI.UpdateContentImage(TeamItemsManager.Instance.clearSlotSprite);
-            gearDetailsHealthStatUI.UpdateContentText("");
+
+
             gearDetailsDamageStatUI.UpdateContentText("");
             gearDetailsHealingStatUI.UpdateContentText("");
             gearDetailsDefenseStatUI.UpdateContentText("");
@@ -315,6 +319,11 @@ public class OverlayUI : MonoBehaviour
             ToggleCombatDetailsBanner(true);
 
             UpdateItemDetailsUI(item.itemName, item.itemDesc, item.itemPower, item.range, item.itemRangeHitArea, item.itemSpriteCombat);
+
+            gearDetailsHealthStatUI.UpdateContentText("");
+            gearDetailsHealthStatUI.UpdateContentImage(TeamItemsManager.Instance.clearSlotSprite);
+
+            gearDetailsHealthStatUI.contentImageUI.UpdateAlpha(0);
         }
     }
 

@@ -378,6 +378,8 @@ public class WeaponManager : MonoBehaviour
             heroWeapons[x].gameObject.SetActive(false);
         }
 
+        hitsAccumulatedPopup.UpdateAlpha(0);
+        AudioManager.Instance.ResetAttackBarTrackPitch();
         // Enable correct weapon
         for (int i = 0; i < heroWeapons.Count; i++)
         {
@@ -514,6 +516,9 @@ public class WeaponManager : MonoBehaviour
 
     public void UpdateWeaponDetails(bool playerMissed = false, bool hero = true)
     {
+        if (hero)
+            hitAreaManager.UpdateHitAreaPos();
+        /*
         hitsRemaining = GameManager.Instance.GetActiveSkill().skillHitAttempts - hitsPerformed;
 
         if (hitsRemaining >= 3)
@@ -521,8 +526,7 @@ public class WeaponManager : MonoBehaviour
             hitsRemainingText.UpdateContentTextColour(threeHitRemainingTextColour);
             hitsRemainingText.UpdateContentSubTextTMPColour(threeHitRemainingTextColour);
             hitsRemainingText.UpdateAlpha(1);
-            //if (hero)
-                hitAreaManager.UpdateHitAreaPos();
+
         }
         else if (hitsRemaining == 2)
         {
@@ -546,22 +550,22 @@ public class WeaponManager : MonoBehaviour
             hitsRemainingText.ToggleContentSubTextTMP(false);
             hitsRemainingText.UpdateAlpha(0);
         }
-
+        */
         if (playerMissed)
         {
             stopHitLine = true;
-            hitsRemainingText.ToggleContentSubTextTMP(false);
-            hitsRemainingText.UpdateAlpha(0);
-            hitsAccumulatedText.UpdateAlpha(0);
+            //hitsRemainingText.ToggleContentSubTextTMP(false);
+            //hitsRemainingText.UpdateAlpha(0);
+            //hitsAccumulatedText.UpdateAlpha(0);
         }
         else
         {
             //hitAreaManager.UpdateHitAreaPos();
 
 
-            hitsRemainingText.UpdateContentText(hitsRemaining.ToString());
+            hitsAccumulatedText.UpdateContentText(accumulatedHits.ToString());
 
-            hitsRemainingText.AnimateUI();
+            hitsAccumulatedText.AnimateUI();
         }
     }
 
@@ -569,6 +573,7 @@ public class WeaponManager : MonoBehaviour
     {
         //ResetWeaponAccHits();
 
+        hitsAccumulatedText.UpdateContentText(accumulatedHits.ToString());
         for (int i = 0; i < hits; i++)
         {
             accumulatedHits++;
@@ -651,8 +656,7 @@ public class WeaponManager : MonoBehaviour
 
         //AudioManager.Instance.PauseAttackBarMusic(true);
 
-        //Increase Hit Line Speed
-        IncreaseHitLineSpeed(lineSpeedIncPerHit);
+
 
         StartCoroutine(StopHitLine());
     }
@@ -791,36 +795,42 @@ public class WeaponManager : MonoBehaviour
                     if (weaponHitAreas[i].curHitAreaType == WeaponHitArea.HitAreaType.MISS)
                         stopHitLine = true;
 
+                    AudioManager.Instance.attackBarMusic.source.Pause();
 
                     int acc = 0;
+                    float accFloat = 0;
 
                     // If unit hit perfect, give them another hit
                     if (curHitAreaType == HitAreaType.PERFECT)
                     {
-                        hitAccuracy += 3;
-                        acc += 3;
-                        StartCoroutine(HitsAccumuatedPopup(3));
+                        hitAccuracy += 2;
+                        hitAccuracy += GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
+                        acc += 1;
+                        accFloat = -2.5f;
+                        AudioManager.Instance.IncreaseAttackBarTrackPitch(0.05f);
+
+                        StartCoroutine(HitsAccumuatedPopup(2 + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount));
+                        StartCoroutine(UpdateWeaponAccumulatedHits(2 + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount));
                     }
                     else if (curHitAreaType == HitAreaType.GREAT)
                     {
-                        hitAccuracy += 3;
-                        acc += 3;
+                        hitAccuracy += 1;
+                        hitAccuracy += GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
+                        acc += 1;
+                        accFloat = -1f;
+                        AudioManager.Instance.IncreaseAttackBarTrackPitch(0.1f);
                         hitsPerformed++;
-                        StartCoroutine(HitsAccumuatedPopup(3));
+                        StartCoroutine(HitsAccumuatedPopup(1 + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount));
+                        StartCoroutine(UpdateWeaponAccumulatedHits(1 + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount));
                     }
                     else if (curHitAreaType == HitAreaType.GOOD)
-                    {
-                        hitAccuracy += 2;
-                        acc += 2;
-                        hitsPerformed++;
-                        StartCoroutine(HitsAccumuatedPopup(2));
-                    }
-                    else if (curHitAreaType == HitAreaType.BAD)
                     {
                         hitAccuracy += 1;
                         acc += 1;
                         hitsPerformed++;
+                        AudioManager.Instance.IncreaseAttackBarTrackPitch(0.125f);
                         StartCoroutine(HitsAccumuatedPopup(1));
+                        StartCoroutine(UpdateWeaponAccumulatedHits(1));
                     }
                     else if (curHitAreaType == HitAreaType.MISS)
                     {
@@ -831,24 +841,31 @@ public class WeaponManager : MonoBehaviour
                     }
 
                     if (curHitAreaType == HitAreaType.PERFECT)
-                        effectHitAccuracy += 3;
+                        effectHitAccuracy += 1;
                     else if (curHitAreaType == HitAreaType.GREAT)
-                        effectHitAccuracy += 3;
+                        effectHitAccuracy += 1;
                     else if (curHitAreaType == HitAreaType.GOOD)
-                        effectHitAccuracy += 2;
+                        effectHitAccuracy += 1;
                     else if (curHitAreaType == HitAreaType.BAD)
                         effectHitAccuracy += 1;
                     else if (curHitAreaType == HitAreaType.MISS)
                         effectHitAccuracy += 0;
 
+                    //Increase Hit Line Speed
+                    IncreaseHitLineSpeed(lineSpeedIncPerHit + accFloat);
+
                     AnimateWeaponUI();
 
-                    StartCoroutine(UpdateWeaponAccumulatedHits(acc));
+
 
 
 
                     if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    {
                         yield return new WaitForSeconds(pausedMovementTime);
+                        AudioManager.Instance.attackBarMusic.source.UnPause();
+                    }
+
 
                     ToggleWeaponAccHits(true);
 
@@ -856,7 +873,7 @@ public class WeaponManager : MonoBehaviour
 
                     if (curHitAreaType == HitAreaType.MISS)
                     {
-                        ToggleWeaponHitsRemainingText(false);
+                        //ToggleWeaponHitsRemainingText(false);
                         UpdateWeaponDetails(true, false);
                     }
                     else
@@ -1026,7 +1043,8 @@ public class WeaponManager : MonoBehaviour
                 //isStopped = false;
         }
 
-        if (stopHitLine && hitsRemaining <= 0)
+        if (stopHitLine && hitsRemaining <= 0 && GameManager.Instance.activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.ENEMY ||
+            stopHitLine && GameManager.Instance.activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
             isStopped = true;
 
@@ -1065,16 +1083,16 @@ public class WeaponManager : MonoBehaviour
             if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || GameManager.Instance.GetActiveUnitFunctionality().reanimated)
             {
                 if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                    finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount - 1;
+                    finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() - 1;
                 else
                     finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitHealingHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount - 1;
             }
             else
             {
                 if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
-                    finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitPowerHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
+                    finalHitCount = hitAccuracy;
                 else
-                    finalHitCount = hitAccuracy + GameManager.Instance.GetActiveSkill().skillBaseHitOutput + GameManager.Instance.GetActiveUnitFunctionality().GetUnitHealingHits() + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
+                    finalHitCount = hitAccuracy;
             }
             // If user missed on first hit, send 1 hit count
             bool miss = false;
@@ -1104,8 +1122,7 @@ public class WeaponManager : MonoBehaviour
 
             if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
             {
-
-                finalHitCount++;
+                //finalHitCount++;
                 effectCount += 2;
             }
             else
