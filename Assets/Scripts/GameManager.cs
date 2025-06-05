@@ -715,6 +715,7 @@ public class GameManager : MonoBehaviour
                 unitFunctionality.UpdateUnitSpeed(unit.startingSpeed);
                 unitFunctionality.UpdateUnitPower(unit.startingPower);
                 unitFunctionality.UpdateUnitDefense(unit.startingDefense);
+                unitFunctionality.UpdateMaxMovementRange(unit.startingMaxMovements);
 
                 if (unit.curRaceType == UnitData.RaceType.HUMAN)
                 {
@@ -1879,7 +1880,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     // Toggle UI accordingly
     public IEnumerator SetupRoomPostBattle(bool playerWon)
     {
+        CombatGridManager.Instance.ToggleCombatSlotsInput(false);
+        CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
+
+        CombatGridManager.Instance.ToggleCombatGrid(false);
+        CombatGridManager.Instance.ToggleCombatUIElement(false);
+        CombatGridManager.Instance.ToggleButtonAttackMovement(false);
+
         OverlayUI.Instance.ToggleCombatDetailsParent(false);
+        CombatGridManager.Instance.ToggleScaleButtons(false);
 
         CombatGridManager.Instance.DisableAllButtons();
         //StartCoroutine(SetupPostBattleUI(playerWon));
@@ -2261,7 +2270,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             AudioManager.Instance.Play("Combat");
 
             // Update background
-            BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetCombatForest());
+            //BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetCombatForest());
 
             int spawnEnemyPosIndex = 0;
 
@@ -2332,17 +2341,42 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 int spawnEnemyIndex = Random.Range(0, activeFloor.enemyUnits.Count);
 
                 UnitData unit = activeFloor.enemyUnits[spawnEnemyIndex];  // Reference
+                int randCombatSlot = 0;
 
-                int randCombatSlot = Random.Range(0, CombatGridManager.Instance.GetEnemySpawnCombatSlots().Count);
+                List<CombatSlot> combatSlots = new List<CombatSlot>();
+                for (int x = 0; x < CombatGridManager.Instance.GetAllCombatSlots().Count; x++)
+                {
+                    if (CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().x >= 3 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().y >= 3 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().x <= 14 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().y <= 14 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().x != 7 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().x != 8 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().x != 9 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().y != 7 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().y != 8 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().y != 9 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().x != 10 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().x != 11 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().y != 10 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].GetSlotIndex().y != 11 &&
+                        CombatGridManager.Instance.GetAllCombatSlots()[x].walkable &&
+                        !CombatGridManager.Instance.GetAllCombatSlots()[x].GetLinkedUnit())
+                    {
+                        combatSlots.Add(CombatGridManager.Instance.GetAllCombatSlots()[x]);
+                    }
+                }
+
+                randCombatSlot = Random.Range(0, combatSlots.Count);
 
                 // Check if there are remaining enemy unit spawn locations left
-                if (spawnEnemyPosIndex <= CombatGridManager.Instance.GetEnemySpawnCombatSlots().Count - 2)
+                if (spawnEnemyPosIndex <= combatSlots.Count - 2)
                 {
-                    go = Instantiate(baseUnit, CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).transform);
+                    go = Instantiate(baseUnit, combatSlots[randCombatSlot].transform);
                     UnitFunctionality unitFunctionality2 = go.GetComponent<UnitFunctionality>();
 
                     // If a unit is already on the attempted spawn slot, delete unit and start again
-                    if (CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).GetLinkedUnit() != null)
+                    if (combatSlots[randCombatSlot].GetLinkedUnit() != null)
                     {
                         Destroy(go);
                         if (i >= 0)
@@ -2351,10 +2385,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                         continue;
                     }
 
-                    CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot).UpdateLinkedUnit(unitFunctionality2);
+                    combatSlots[randCombatSlot].UpdateLinkedUnit(unitFunctionality2);
 
 
-                    unitFunctionality2.UpdateActiveCombatSlot(CombatGridManager.Instance.GetEnemySpawnCombatSlot(randCombatSlot));
+                    unitFunctionality2.UpdateActiveCombatSlot(combatSlots[randCombatSlot]);
 
                     spawnEnemyPosIndex++;
                 }
@@ -2458,7 +2492,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 unitFunctionality.startingDefense = unit.startingDefense;
                 unitFunctionality.startingSpeed = unit.startingSpeed;
                 unitFunctionality.UpdateStartingMaxHealth(unit.startingMaxHealth);
-
+                unitFunctionality.UpdateMaxMovementRange(unit.startingMaxMovements);
                 //Debug.Log(unitFunctionality.GetUnitName() + " " + enemySpawnValue);
                 unitFunctionality.unitData = unit;
 
@@ -2586,25 +2620,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             oldActiveRoomEnemies = activeRoomEnemies;
             Shuffle(activeRoomEnemies);
 
-            List<int> rands = new List<int>();
-
-            for (int i = 0; i < oldActiveRoomEnemies.Count; i++)
-            {
-                int rand = Random.Range(0, CombatGridManager.Instance.GetEnemySpawnCombatSlots().Count);
-
-                if (rands.Contains(rand))
-                {
-                    if (i != 0)
-                        i--;
-                    continue;
-                }
-
-                rands.Add(rand);
-
-                //activeRoomEnemies[i].SetPositionAndParent(CombatGridManager.Instance.GetEnemySpawnCombatSlot(rand).transform);
-                //CombatGridManager.Instance.GetEnemySpawnCombatSlot(rand).UpdateLinkedUnit(activeRoomEnemies[i]);
-            }
-
             RoomManager.Instance.ToggleInteractable(true);
 
             UpdateAllyVisibility(true, false);
@@ -2661,7 +2676,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             AudioManager.Instance.PauseMapMusic(true);
 
             // Update background
-            BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetShopForest());
+            //BackgroundManager.Instance.UpdateBackground(BackgroundManager.Instance.GetShopForest());
 
             UpdateAllyVisibility(true, false, true);
 
@@ -3379,6 +3394,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             WeaponManager.Instance.ResetAcc();
 
+            CombatGridManager.Instance.ToggleScaleButtons(true);
             UpdateDetailsBanner();
             ToggleSkillsItemToggleButton(false);
             UpdatePlayerAbilityUI(false, false, true);
@@ -4640,6 +4656,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (allyCount == 0)
         {
             CombatGridManager.Instance.ToggleCombatGrid(false);
+            CombatGridManager.Instance.ToggleCombatUIElement(false);
             playerInCombat = false;
             playerWon = false;
             StartCoroutine(PlayerLostWait());
@@ -4706,6 +4723,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     public void UpdateTurnOrder(bool StopTurnOrderIncrement = false)
     {
+        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
         CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
 
         // Ensure combat tab is set as skills mode by default, instead of left from items tab from prev fighter turn
@@ -4791,6 +4809,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().skill4OutOfRange = false;
 
         CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), false, false);
+
+        CombatGridManager.Instance.UpdateCameraToUnit(GetActiveUnitFunctionality());
         /*
         //// Choose new skill after skill land
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
@@ -4824,13 +4844,19 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().ResetMovementUses();
         GetActiveUnitFunctionality().usedExtraMove = false;
 
+        GetActiveUnitFunctionality().enemyMoved = false;
+
         CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
+
+        CombatGridManager.Instance.ToggleScaleButtons(true);
 
         //GetActiveUnitFunctionality().ToggleTextAlert(false);
 
         CombatGridManager.Instance.ToggleCombatGrid(true);
-
+        CombatGridManager.Instance.ToggleCombatUIElement(true);
         CombatGridManager.Instance.CheckToUnlinkCombatSlot();
+
+        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
 
         GetActiveUnitFunctionality().skillRangeIssue = false;
 
@@ -4904,7 +4930,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn());
             return;
         }
-
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
         //Trigger Start turn effects
         GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().DecreaseEffectTurnsLeft(true, false));
 
@@ -4930,6 +4957,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         OverlayUI.Instance.ToggleAllStats(true, false, true);
         CombatGridManager.Instance.ToggleTabButtons("Movement");
         CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonItems(), false, false);
+
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
     }
 
     public void ToggleAllUnitButtons(bool toggle = true)
@@ -4943,6 +4973,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
     {
         if (!PostBattle.Instance.isInPostBattle)
             GetActiveUnitFunctionality().StartCoroutine(GetActiveUnitFunctionality().TriggerItems(true));
+
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
 
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.ENEMY && !activeRoomAllUnitFunctionalitys[0].reanimated)

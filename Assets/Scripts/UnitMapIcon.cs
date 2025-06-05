@@ -8,6 +8,19 @@ public class UnitMapIcon : MonoBehaviour
     public Animator iconAnimator;
     [SerializeField] private float timeTillWalkStops = 1f;
     [SerializeField] private string unitName;
+    [SerializeField] private UIElement ui;
+
+    public void ToggleVisibility(bool toggle = true)
+    {
+        if (toggle)
+        {
+            ui.UpdateAlpha(1);
+        }
+        else
+        {
+            ui.UpdateAlpha(0);
+        }
+    }
 
     public void UpdateUnitPosition(Vector2 pos)
     {

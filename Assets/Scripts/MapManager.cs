@@ -115,6 +115,17 @@ public class MapManager : MonoBehaviour
     public Sprite arrowDownSprite;
     public Sprite invisSprite;
     int allowBossRoom = 0;
+    [SerializeField] private float mapMovementAmount = 1;
+
+    public void MoveMapUp()
+    {
+        gameObject.GetComponent<RectTransform>().localPosition = new Vector3(gameObject.GetComponent<RectTransform>().localPosition.x, gameObject.GetComponent<RectTransform>().localPosition.y - mapMovementAmount, 0);
+    }
+
+    public void MoveMapDown()
+    {
+        gameObject.GetComponent<RectTransform>().localPosition = new Vector3(gameObject.GetComponent<RectTransform>().localPosition.x, gameObject.GetComponent<RectTransform>().localPosition.y + mapMovementAmount, 0);
+    }
 
     private void Awake()
     {
@@ -466,15 +477,14 @@ public class MapManager : MonoBehaviour
             ShopManager.Instance.ToggleShopVisibility(false);
             HeroRoomManager.Instance.spawnedFighter = false;
 
+            unitMapIcon.ToggleVisibility(true);
+
+
             ItemRewardManager.Instance.ToggleItemSelectedRaceIcon(false);
 
             PostBattle.Instance.ToggleToMapButton(false);
 
-            CombatGridManager.Instance.ToggleCombatSlotsInput(false);
-            CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
 
-            CombatGridManager.Instance.ToggleCombatGrid(false);
-            CombatGridManager.Instance.ToggleButtonAttackMovement(false);
 
             TeamGearManager.Instance.ClearEmptyGearSlots();
             TeamItemsManager.Instance.ClearEmptyItemSlots();
@@ -681,7 +691,7 @@ public class MapManager : MonoBehaviour
     void ResetMap()
     {
         ResetMapYPosition();
-
+        CombatGridManager.Instance.ResetVCamera();
         ResetMapYPos();
 
         spawnedStartingRoom = false;
@@ -1580,6 +1590,7 @@ public class MapManager : MonoBehaviour
             UpdateSpawnedPaths();
 
             go.GetComponent<RectTransform>().localPosition = new Vector3(go.GetComponent<RectTransform>().localPosition.x, go.GetComponent<RectTransform>().localPosition.y, 0);
+            //go.GetComponent<RectTransform>().position = new Vector3(go.GetComponent<RectTransform>().position.x, go.GetComponent<RectTransform>().position.y-1800, 0);
         }
     }
 
@@ -1716,7 +1727,12 @@ public class MapManager : MonoBehaviour
         {
             //spawnedPaths[i].transform.position = Vector3.zero;
             RectTransform spawnedPath = spawnedPaths[i].GetComponent<RectTransform>();
-            spawnedPath.position = new Vector3(spawnedPath.position.x, spawnedPath.position.y, 1);
+            spawnedPath.localPosition = new Vector3(spawnedPath.localPosition.x, spawnedPath.localPosition.y, 1);
+
+            spawnedPath.localPosition = new Vector3(spawnedPath.localPosition.x, 0, 0);
+            //spawnedPath.localPosition = new Vector3(spawnedPath.localPosition.x, spawnedPath.localPosition.y-1800f, 0);
+            spawnedPath.gameObject.transform.localPosition = new Vector3(spawnedPath.localPosition.x, spawnedPath.localPosition.y - 1800f, 0);
+            //spawnedPath.gameObject.transform.Translate(new Vector3(0, -1800, 0));
             //spawnedPath.localScale = new Vector3(300, 300, 1);
         }
     }

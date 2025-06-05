@@ -25,6 +25,7 @@ public class UnitData : ScriptableObject
     public int startingPower;
     public int startingHealingPower;
     public int startingMaxHealth;
+    public int startingMaxMovements = 1;
 
     public float speedIncPerLv;
     public float powerIncPerLv;
@@ -49,6 +50,11 @@ public class UnitData : ScriptableObject
     public AudioClip hitRecievedClip;
 
     private int curAttackChargeTurnStart;
+
+    public List<SkillData> GetCurSkills()
+    {
+        return curSkills;
+    }
 
     public void UpdateUnitCurAttackCharge(int newCharge)
     {

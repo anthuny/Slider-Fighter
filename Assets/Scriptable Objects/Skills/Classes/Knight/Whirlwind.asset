@@ -33,13 +33,27 @@ MonoBehaviour:
   - {x: -1, y: 0}
   - {x: -1, y: 1}
   - {x: 0, y: 1}
-  skillAreaHitCount: 8
+  - {x: 0, y: 2}
+  - {x: 1, y: 2}
+  - {x: 2, y: 2}
+  - {x: -1, y: 2}
+  - {x: -2, y: 2}
+  - {x: 0, y: -2}
+  - {x: 1, y: -2}
+  - {x: 2, y: -2}
+  - {x: -1, y: -2}
+  - {x: -2, y: -2}
+  - {x: -2, y: 1}
+  - {x: -2, y: -1}
+  - {x: 1, y: 2}
+  - {x: -1, y: -2}
+  skillAreaHitCount: 22
   attackAllSelected: 1
   attackAllUnits: 0
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 1
-  curSkillRange: 1
+  startingSkillRange: 2
+  curSkillRange: 2
   skillSprite: {fileID: 21300000, guid: 5b35595395ee4fc4fb13b9524555137d, type: 3}
   skillName: WHIRLWIND
   skillDescr: Target all surrounding units within 1 range, dealing damage.

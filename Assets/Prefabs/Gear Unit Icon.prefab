@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1512671464979707157}
   - component: {fileID: 829186606926360225}
   - component: {fileID: 1020368927439610104}
+  - component: {fileID: 4721810926461468566}
   m_Layer: 5
   m_Name: Gear Unit Icon
   m_TagString: Untagged
@@ -114,10 +115,12 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -126,6 +129,17 @@ MonoBehaviour:
   originalScaleText: 0
   isEnabled: 0
   displayingAlert: 0
+  raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!225 &1020368927439610104
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -138,3 +152,24 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!223 &4721810926461468566
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6841715361498291646}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 400
+  m_TargetDisplay: 0

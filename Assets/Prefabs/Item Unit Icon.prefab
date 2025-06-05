@@ -143,7 +143,7 @@ RectTransform:
   m_GameObject: {fileID: 2440088012088481404}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4737755124034136544}
@@ -230,10 +230,12 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -243,6 +245,16 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!225 &8144580581664697146
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -527,10 +539,12 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -540,6 +554,16 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!225 &1519341365658086522
 CanvasGroup:
   m_ObjectHideFlags: 0

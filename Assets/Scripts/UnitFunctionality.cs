@@ -223,7 +223,7 @@ public class UnitFunctionality : MonoBehaviour
     [Tooltip("The combat slot the unit is currently positioned ontop of")]
     [SerializeField] private CombatSlot activeCombatSlot;
     [SerializeField] private int curMovementUses = 1;
-    [SerializeField] private int maxMovementUses = 1;
+    [SerializeField] private int maxMovementUses = 3;
 
     [SerializeField] private UIElement unitButton;
     public bool usedExtraMove;
@@ -246,6 +246,7 @@ public class UnitFunctionality : MonoBehaviour
     public float turnTimer = 0;
     public bool turnTimerStarted = false;
     bool resettingSelection = false;
+    public bool enemyMoved = false;
 
     public int GetGearPowerStat()
     {
@@ -410,7 +411,7 @@ public class UnitFunctionality : MonoBehaviour
         OverlayUI.Instance.UpdateRemainingMovementUsesText(curMovementUses);
     }
 
-    public void UpdatCurMovementUses(int newMov)
+    public void UpdateCurMovementUses(int newMov)
     {
         curMovementUses = newMov;
 
@@ -431,7 +432,7 @@ public class UnitFunctionality : MonoBehaviour
         return curMovementUses;
     }
 
-    public void UpdatMaxMovementRange(int newMov)
+    public void UpdateMaxMovementRange(int newMov)
     {
         maxMovementUses = newMov;
     }
@@ -774,7 +775,7 @@ public class UnitFunctionality : MonoBehaviour
             Destroy(tooltipGear.transform.GetChild(i).gameObject);
         }
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 9; i++)
         {
             GameObject go = Instantiate(tooltipGearGO, tooltipGear.transform.position, Quaternion.identity);
             go.transform.SetParent(tooltipGear.transform);
@@ -789,11 +790,35 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.helmet)
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.neckless)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
                 if (i == 1)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.helmet)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 2)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.earring)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 3)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.belt)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 4)
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
@@ -801,7 +826,20 @@ public class UnitFunctionality : MonoBehaviour
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
-                if (i == 2)
+                if (i == 5)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearMainAlly()[c].curGearType == Slot.SlotPieceType.glove)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 6)
+                {
+                    if (TeamGearManager.Instance.equippedRing1Main)
+                        go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.equippedRing1Main.gearIcon);
+                }
+                if (i == 7)
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearMainAlly().Count; c++)
                     {
@@ -809,8 +847,12 @@ public class UnitFunctionality : MonoBehaviour
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearMainAlly()[c].GetSlotImage());
                     }
                 }
+                if (i == 8)
+                {
+                    if (TeamGearManager.Instance.equippedRing2Main)
+                        go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.equippedRing2Main.gearIcon);
+                }
             }
-            //                            go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
             else if (index == 1)
             {
                 // Set gear data
@@ -818,31 +860,67 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.helmet)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.neckless)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
-                        //else
-                        // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 1)
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.chestpiece)
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.helmet)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
-                        //else
-                        // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 2)
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
                     {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.earring)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 3)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.belt)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 4)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.chestpiece)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 5)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.glove)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 6)
+                {
+                    if (TeamGearManager.Instance.equippedRing1Sec)
+                        go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.equippedRing1Sec.gearIcon);
+                }
+                if (i == 7)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearSecondAlly().Count; c++)
+                    {
                         if (OwnedLootInven.Instance.GetWornGearSecondAlly()[c].curGearType == Slot.SlotPieceType.boots)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearSecondAlly()[c].GetSlotImage());
-                        //else
-                        //  go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
+                }
+                if (i == 8)
+                {
+                    if (TeamGearManager.Instance.equippedRing2Sec)
+                        go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.equippedRing2Sec.gearIcon);
                 }
             }
             else if (index == 2)
@@ -852,31 +930,67 @@ public class UnitFunctionality : MonoBehaviour
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.helmet)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.neckless)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
-                        //else
-                        //go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 1)
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
-                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.chestpiece)
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.helmet)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
-                        //else
-                        // go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
                 }
                 if (i == 2)
                 {
                     for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
                     {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.earring)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 3)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.belt)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 4)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.chestpiece)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 5)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
+                    {
+                        if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.glove)
+                            go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
+                    }
+                }
+                if (i == 6)
+                {
+                    if (TeamGearManager.Instance.equippedRing1Thi)
+                        go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.equippedRing1Thi.gearIcon);
+                }
+                if (i == 7)
+                {
+                    for (int c = 0; c < OwnedLootInven.Instance.GetWornGearThirdAlly().Count; c++)
+                    {
                         if (OwnedLootInven.Instance.GetWornGearThirdAlly()[c].curGearType == Slot.SlotPieceType.boots)
                             go.GetComponent<UIElement>().UpdateContentImage(OwnedLootInven.Instance.GetWornGearThirdAlly()[c].GetSlotImage());
-                        //else
-                        //    go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.clearSlotSprite);
                     }
+                }
+                if (i == 8)
+                {
+                    if (TeamGearManager.Instance.equippedRing2Thi)
+                        go.GetComponent<UIElement>().UpdateContentImage(TeamGearManager.Instance.equippedRing2Thi.gearIcon);
                 }
             }
         }
@@ -1669,6 +1783,11 @@ public class UnitFunctionality : MonoBehaviour
         transform.localPosition = new Vector3(0, 0, 0);
     }
 
+    public void SetParent(Transform parent)
+    {
+        transform.SetParent(parent);
+    }
+
     public void ToggleIsPoisonLeaching(bool toggle)
     {
         isPoisonLeaching = toggle;
@@ -1886,9 +2005,10 @@ public class UnitFunctionality : MonoBehaviour
         if (curUnitType == UnitType.ENEMY)
         {
             CombatGridManager.Instance.DisableAllButtons();
+            //CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
         }
 
-        if (hasAttacked && GetCurMovementUses() <= 0)
+        if (hasAttacked && enemyMoved)
         {
             StartCoroutine(UnitEndTurn(true));
             yield break;

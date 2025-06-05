@@ -415,7 +415,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (combatSlot)
         {
-            CombatGridManager.Instance.ResetAllowedSlotAnims();
+            //CombatGridManager.Instance.ResetAllowedSlotAnims();
 
             if (!CombatGridManager.Instance.isCombatMode)
             {
@@ -433,7 +433,15 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             combatSlot.ToggleSlotSelected(true);
 
                         CombatGridManager.Instance.UpdateSelectedCombatSlotMove(combatSlot);
-                        CombatGridManager.Instance.MoveUnitToNewSlot(GameManager.Instance.GetActiveUnitFunctionality());
+                        //CombatGridManager.Instance.MoveUnitToNewSlot(GameManager.Instance.GetActiveUnitFunctionality());
+
+                        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                        {
+                            if (!CombatGridManager.Instance.spawnedGhostTiles || !CombatGridManager.Instance.GetSelectedCombatSlotMove().movementSelected)
+                                CombatGridManager.Instance.SetGhostTiles(GameManager.Instance.GetActiveUnitFunctionality());
+                            else
+                                CombatGridManager.Instance.StartCoroutine(CombatGridManager.Instance.MoveUnitToNewSlot(GameManager.Instance.GetActiveUnitFunctionality()));
+                        }
                     }
                     else
                     {
@@ -658,9 +666,9 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                         }
                         else
                         {
+                            CombatGridManager.Instance.ToggleCombatSelectedSlotOutlines();
                             CombatGridManager.Instance.RemoveAllCombatSelectedCombatSlots();
-                            CombatGridManager.Instance.ToggleAllCombatSlotOutlines();
-                            CombatGridManager.Instance.UpdateUnitAttackHitArea(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
+                            CombatGridManager.Instance.UpdateUnitAttackRange(GameManager.Instance.GetActiveUnitFunctionality(), combatSlot);
                         }
                     }
                     else
@@ -1386,8 +1394,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
 
-        CombatGridManager.Instance.ToggleCombatGrid(true);
-
+        CombatGridManager.Instance.ToggleCombatGrid(false);
+        CombatGridManager.Instance.ToggleCombatUIElement(false);
 
 
         OwnedLootInven.Instance.DisableCoverForOwnedSlots();
@@ -2029,6 +2037,16 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 GameManager.Instance.UpdateTurnOrder();
             }
         }
+    }
+
+    public void ButtonScaleInc()
+    {
+        CombatGridManager.Instance.UpdateGridScale(true, GetComponent<UIElement>());
+    }
+
+    public void ButtonScaleDec()
+    {
+        CombatGridManager.Instance.UpdateGridScale(false, GetComponent<UIElement>());
     }
 
     public void ToggleSelected(bool toggle)
@@ -3059,6 +3077,24 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
             }
         }
+    }
+
+    public void ButtonMapMoveUp()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        GetComponent<UIElement>().AnimateUI(false);
+        MapManager.Instance.MoveMapUp();
+    }
+
+    public void ButtonMapMoveDown()
+    {
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        GetComponent<UIElement>().AnimateUI(false);
+        MapManager.Instance.MoveMapDown();
     }
 
     public void SelectEffect()

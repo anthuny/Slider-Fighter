@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Ranger
   m_EditorClassIdentifier: 
   curUnitType: 0
+  curRaceType: 0
+  curUnitBehaviour: 0
   unitValue: 2
   unitSprite: {fileID: -1040719728, guid: a6076953ce938e94b9aabb14d7ecaed3, type: 3}
   unitIcon: {fileID: 21300000, guid: 2e60975a96af8444daa50ac973ed19a7, type: 3}
@@ -23,6 +25,7 @@ MonoBehaviour:
   startingPower: 25
   startingHealingPower: 0
   startingMaxHealth: 700
+  startingMaxMovements: 3
   speedIncPerLv: 2
   powerIncPerLv: 1
   healingPowerIncPerLv: 0.25

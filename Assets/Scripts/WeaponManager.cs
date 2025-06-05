@@ -378,6 +378,8 @@ public class WeaponManager : MonoBehaviour
             heroWeapons[x].gameObject.SetActive(false);
         }
 
+        CombatGridManager.Instance.ToggleScaleButtons(false);
+
         hitsAccumulatedPopup.UpdateAlpha(0);
         AudioManager.Instance.ResetAttackBarTrackPitch();
         // Enable correct weapon
@@ -639,9 +641,10 @@ public class WeaponManager : MonoBehaviour
             FlipHitLineDirection();
 
             if (goingUp)
-                hitLine.Translate(Vector2.up * weaponLineSpeed * Time.deltaTime);
+                hitLine.Translate((Vector2.up * weaponLineSpeed) * Time.deltaTime);
             else
-                hitLine.Translate(Vector2.down * weaponLineSpeed * Time.deltaTime);
+                hitLine.Translate((Vector2.down * weaponLineSpeed) * Time.deltaTime);
+
         }
     }
 

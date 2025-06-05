@@ -1,10 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Cinemachine;
+using System.Linq;
+using System;
 
 public class CombatGridManager : MonoBehaviour
 {
     public static CombatGridManager Instance;
+
+
+    private const int MOVE_STRAIGHT_COST = 10;
+    private const int MOVE_DIAGONAL_COST = 14;
+
     public float unitMoveArrowOnAlpha = 0.75f;
 
     [SerializeField] private List<CombatSlot> aimTargetCombatSlots = new List<CombatSlot>();
@@ -17,6 +26,7 @@ public class CombatGridManager : MonoBehaviour
     public Color slotNotAllowedColour;
     public Color slotDisabledColour;
     public Color slotSelectedColour;
+    public Color slotMovementSelectedColour;
     public Color slotUnSelectedColour;
     public Color slotAggressiveColour;
     public Color slotSupportColour;
@@ -45,13 +55,293 @@ public class CombatGridManager : MonoBehaviour
     [SerializeField] private bool isMovementAllowed = true;
 
     public Transform gridParent;
+    [SerializeField] private float camZoomAmount = 15f;
+    [SerializeField] private float camZoomMin = 15f;
+    [SerializeField] private float camZoomMax = 15f;
+    [SerializeField] private UIElement combatUIElement;
+    [SerializeField] private GraphicRaycaster graycaster;
+    [SerializeField] private Camera mainCam;
+    [SerializeField] private CinemachineVirtualCamera virtCam;
+    [SerializeField] private UIElement scaleButton;
+    [SerializeField] private UIElement deScaleButton;
 
+    [SerializeField] private Transform scalingButtonParent;
+    [SerializeField] private Transform TopScalingLocation;
+    [SerializeField] private Transform BotScalingLocation;
+    public List<CombatSlot> finalPath = new List<CombatSlot>();
+    List<CombatSlot> openList = new List<CombatSlot>();
+    List<CombatSlot> closedList = new List<CombatSlot>();
+
+    public bool spawnedGhostTiles = false;
+    bool moved = false;
+
+    public List<CombatSlot> FindPath(CombatSlot start, CombatSlot end)
+    {
+        CombatSlot startSlot = start;
+
+        openList = new List<CombatSlot> { start };
+        closedList = new List<CombatSlot>();
+
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            allCombatSlots[i].gCost = int.MaxValue;
+            allCombatSlots[i].CalculateFCost();
+
+            allCombatSlots[i].previousSlot = null;
+        }
+
+        start.gCost = 0;
+        start.hCost = GetDistance(start, end);
+        startSlot.CalculateFCost();
+
+        while (openList.Count > 0)
+        {
+            CombatSlot curSlot = GetLowestFCostSlot(openList);
+            if (curSlot == end)
+            {
+                return CalculatePath(end);
+            }
+
+            openList.Remove(curSlot);
+            closedList.Add(curSlot);
+
+            foreach (CombatSlot neighbour in GetNeighbourList(curSlot))
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                {
+                    if (closedList.Contains(neighbour) || neighbour.GetLinkedUnit() || !neighbour.walkable)
+                        continue;
+                }
+                else
+                {
+                    if (neighbour != end)
+                    {
+                        if (closedList.Contains(neighbour) || neighbour.GetLinkedUnit() || !neighbour.walkable)
+                            continue;
+                    }
+
+                }
+
+                int tentativeGCost = curSlot.gCost + GetDistance(curSlot, neighbour);
+                if (tentativeGCost < neighbour.gCost)
+                {
+                    neighbour.previousSlot = curSlot;
+                    neighbour.gCost = tentativeGCost;
+                    neighbour.hCost = GetDistance(neighbour, end);
+                    neighbour.CalculateFCost();
+
+                    if (!openList.Contains(neighbour))
+                    {
+                        openList.Add(neighbour);
+                    }
+                }
+            }
+        }
+
+        // out of nodes on the openlist
+        return null;
+    }
+
+    private List<CombatSlot> CalculatePath(CombatSlot endSlot)
+    {
+        List<CombatSlot> path = new List<CombatSlot>();
+        path.Add(endSlot);
+        CombatSlot curSlot = endSlot;
+        
+        while (curSlot.previousSlot != null)
+        {
+            path.Add(curSlot.previousSlot);
+            curSlot = curSlot.previousSlot;
+        }
+
+        path.Reverse();
+        return path;
+    }
+
+    private int GetDistance(CombatSlot start, CombatSlot neighbour)
+    {
+        int xDistance = 0;
+        int yDistance = 0;
+        int remaining = 0;
+        if (start && neighbour)
+        {
+            xDistance = (int)Mathf.Abs(start.GetSlotIndex().x - neighbour.GetSlotIndex().x);
+            yDistance = (int)Mathf.Abs(start.GetSlotIndex().y - neighbour.GetSlotIndex().y);
+            remaining = Mathf.Abs(xDistance - yDistance);
+        }
+        return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remaining;
+    }
+
+    private CombatSlot GetLowestFCostSlot(List<CombatSlot> pathList)
+    {
+        CombatSlot lowestFCostNode = pathList[0];
+
+        for (int i = 0; i < pathList.Count; i++)
+        {
+            if (pathList[i].fCost < lowestFCostNode.fCost)
+                lowestFCostNode = pathList[i];
+        }
+
+        return lowestFCostNode;
+    }
+
+
+    private List<CombatSlot> GetNeighbourList(CombatSlot curSlot)
+    {
+        List<CombatSlot> neighbours = new List<CombatSlot>();
+
+        if (curSlot.GetSlotIndex().x - 1 >= 0)
+        {
+            // Left
+            neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x - 1, curSlot.GetSlotIndex().y)));
+            // Left Down
+            if (curSlot.GetSlotIndex().y - 1 >= 0)
+            {
+                neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x - 1, curSlot.GetSlotIndex().y - 1)));
+            }
+            // Left up
+            if (curSlot.GetSlotIndex().y < 18)
+            {
+                neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x - 1, curSlot.GetSlotIndex().y + 1)));
+            }
+        }
+
+        if (curSlot.GetSlotIndex().x + 1 <= 15)
+        {
+            // Right
+            neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x + 1, curSlot.GetSlotIndex().y)));
+            // Right Down
+            if (curSlot.GetSlotIndex().y - 1 >= 0)
+            {
+                neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x + 1, curSlot.GetSlotIndex().y - 1)));
+            }
+            // Right up
+            if (curSlot.GetSlotIndex().y + 1 <= 18)
+            {
+                neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x + 1, curSlot.GetSlotIndex().y + 1)));
+            }
+        }
+
+        // Down
+        if (curSlot.GetSlotIndex().y - 1 >= 0)
+        {
+            neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x, curSlot.GetSlotIndex().y +- 1)));
+        }
+        // Up
+        if (curSlot.GetSlotIndex().y + 1 <= 18)
+        {
+            neighbours.Add(GetCombatSlot(new Vector2(curSlot.GetSlotIndex().x, curSlot.GetSlotIndex().y + 1)));
+        }
+
+        return neighbours;
+    }
+
+    public void ToggleScaleButtons(bool toggle = true)
+    {
+        if (toggle)
+        {
+            scaleButton.UpdateAlpha(1);
+            scaleButton.ToggleButton(true);
+            deScaleButton.UpdateAlpha(1);
+            deScaleButton.ToggleButton(true);
+
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            {
+                scalingButtonParent.SetParent(TopScalingLocation);
+                scalingButtonParent.localPosition = Vector3.zero;
+            }
+            else
+            {
+                scalingButtonParent.SetParent(BotScalingLocation);
+                scalingButtonParent.localPosition = Vector3.zero;
+            }
+        }
+        else
+        {
+            scaleButton.UpdateAlpha(0);
+            scaleButton.ToggleButton(false);
+            deScaleButton.UpdateAlpha(0);
+            deScaleButton.ToggleButton(false);
+        }
+    }
+
+    public void UpdateCameraToUnit(UnitFunctionality unit = null)
+    {
+        //mainCam.transform.position = unit.transform.position;
+        //mainCam.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+
+        virtCam.Follow = unit.transform;
+
+        StartCoroutine(StopFollowingUnit());
+    }
+
+    public void ResetVCamera()
+    {
+        virtCam.ForceCameraPosition(Vector3.zero, Quaternion.identity);
+    }
+
+    public void UpdateGridScale(bool inc = true, UIElement ui = null)
+    {
+        if (moved)
+            return;
+
+        if (ui)
+        {
+            ui.AnimateUI(false);
+        }
+
+        // Button Click SFX
+        AudioManager.Instance.Play("Button_Click");
+
+        if (inc)
+        {
+            if (gridParent.localScale.x < camZoomMax)
+            {
+                gridParent.localScale = new Vector3(gridParent.localScale.x + camZoomAmount, gridParent.localScale.y + camZoomAmount, 0);
+                AudioManager.Instance.Play("SFX_CameraZoomIn");
+            }
+            else
+            {
+                AudioManager.Instance.Play("SFX_ShopBuyFail");
+            }
+        }
+        else
+        {
+            if (gridParent.localScale.x > camZoomMin)
+            {
+                gridParent.localScale = new Vector3(gridParent.localScale.x - camZoomAmount, gridParent.localScale.y - camZoomAmount, 0);
+                AudioManager.Instance.Play("SFX_CameraZoomOut");
+            }
+            else
+            {
+                AudioManager.Instance.Play("SFX_ShopBuyFail");
+            }
+        }
+    }
+
+    IEnumerator StopFollowingUnit()
+    {
+        yield return new WaitForSeconds(0.35f);
+        virtCam.Follow = null;
+    }
+
+    public void ToggleCombatUIElement(bool toggle = true)
+    {
+        combatUIElement.GetComponent<CanvasGroup>().interactable = toggle;
+        combatUIElement.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+        graycaster.enabled = toggle;
+    }
 
     public void ToggleCombatSlotsInput(bool toggle = true)
     {
         for (int i = 0; i < allCombatSlots.Count; i++)
         {
             allCombatSlots[i].ToggleCombatSlotInput(toggle);
+            allCombatSlots[i].buttonUI.ToggleButton(toggle);
+            if (toggle)
+                allCombatSlots[i].buttonUI.UpdateAlpha(1);
+            else
+                allCombatSlots[i].buttonUI.UpdateAlpha(0);
         }
     }
     public void ToggleCombatSlotsInput2(bool toggle = true)
@@ -376,7 +666,7 @@ public class CombatGridManager : MonoBehaviour
         {
             if (allCombatSlots[i].GetAllowed())
             {
-                allCombatSlots[i].ResetAnimation();
+                //allCombatSlots[i].ResetAnimation();
             }
         }
     }
@@ -397,6 +687,7 @@ public class CombatGridManager : MonoBehaviour
 
         if (isCombatMode)
         {
+            ToggleAllCombatSlotOutlines();
             // Disable extra move prompt
             OverlayUI.Instance.extraMovePrompt.UpdateAlpha(0);
 
@@ -435,9 +726,11 @@ public class CombatGridManager : MonoBehaviour
 
             isCombatMode = true;
             GameManager.Instance.UpdateDetailsBanner();
+            ResetCombatSlotMovementSelected();
         }
         else
         {
+            ToggleAllCombatSlotOutlines();
             // Disable rarity bg for skills + race icon
             GameManager.Instance.fighterMainSlot1.UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
             GameManager.Instance.fighterMainSlot2.UpdateRaceIcon(TeamItemsManager.Instance.clearSlotSprite);
@@ -467,7 +760,7 @@ public class CombatGridManager : MonoBehaviour
             isCombatMode = false;
 
             GameManager.Instance.UpdateDetailsBanner();
-            ToggleAllCombatSlotOutlines();
+            //ToggleAllCombatSlotOutlines();
             GameManager.Instance.ResetSelectedUnits();
         }
 
@@ -564,7 +857,7 @@ public class CombatGridManager : MonoBehaviour
         for (int i = 0; i < allCombatSlots.Count; i++)
         {
             allCombatSlots[i].ToggleCombatSelected(false);
-            allCombatSlots[i].ToggleSlotAllowed(false);
+            allCombatSlots[i].ToggleSlotAllowed(false, false);
             allCombatSlots[i].ToggleSlotSelected(false);
             allCombatSlots[i].ToggleSlotSelectedSize(true);
         }
@@ -606,40 +899,22 @@ public class CombatGridManager : MonoBehaviour
             {
                 allowMovement = false;
                 moveTimer = 1;
-
+                moved = false;
                 GameManager.Instance.UpdateAllUnitStatBars();
                 ToggleIsMovementAllowed(true);
-                movingUnit.UpdatCurMovementUses(movingUnit.GetCurMovementUses() - 1);
+
 
                 // Update unit look direction
                 //movingUnit.UpdateUnitLookDirection();
 
-                if (movingUnit.GetCurMovementUses() == 0)
-                    StartCoroutine(AutoSwapOutOfMovementMode());
+                UpdateCameraToUnit(movingUnit);
 
-                if (movingUnit.GetCurMovementUses() < 0)
-                {
-                    if (!movingUnit.usedExtraMove)
-                        movingUnit.usedExtraMove = true;
 
-                    if (movingUnit.curUnitType == UnitFunctionality.UnitType.PLAYER)
-                        StartCoroutine(AutoSwapOutOfMovementModeAndLockSkills());
-                }
 
                 movingUnit.skill1OutOfRange = false;
                 movingUnit.skill2OutOfRange = false;
                 movingUnit.skill3OutOfRange = false;
                 movingUnit.skill4OutOfRange = false;
-
-                movingUnit.SetPositionAndParent(GetSelectedCombatSlotMove().transform);
-
-                CheckToUnlinkCombatSlot();
-
-                if (movingUnit.curUnitType == UnitFunctionality.UnitType.ENEMY || movingUnit.reanimated)
-                {
-                    //if (movingUnit.GetCurMovementUses() <= 0 && movingUnit.hasAttacked)
-                        //movingUnit.StartCoroutine(movingUnit.UnitEndTurn());
-                }
             }
 
             if (movingUnit.reanimated)
@@ -649,15 +924,19 @@ public class CombatGridManager : MonoBehaviour
 
     IEnumerator AutoSwapOutOfMovementMode()
     {
-        //if (movingUnit != GameManager.Instance.GetActiveUnitFunctionality())
-        //    yield break;
-
-        if (movingUnit.reanimated)
-            ToggleButton(GetButtonItems(), false, true);
-
         yield return new WaitForSeconds(0);
 
         UnitFunctionality unit = movingUnit;
+
+        if (unit != GameManager.Instance.GetActiveUnitFunctionality())
+            yield break;
+
+        if (movingUnit)
+        {
+            if (movingUnit.reanimated)
+                ToggleButton(GetButtonItems(), false, true);
+        }
+
         // If fighter HASNT attacked, display skills tab
         if (!unit.hasAttacked)
         {
@@ -694,8 +973,11 @@ public class CombatGridManager : MonoBehaviour
                 StartCoroutine(unit.UnitEndTurn(true));
         }
 
-        if (movingUnit.reanimated)
-            ToggleButton(GetButtonItems(), false, true);
+        if (movingUnit)
+        {
+            if (movingUnit.reanimated)
+                ToggleButton(GetButtonItems(), false, true);
+        }
     }
 
     IEnumerator AutoSwapOutOfMovementModeAndLockSkills()
@@ -722,57 +1004,57 @@ public class CombatGridManager : MonoBehaviour
         int count = 0;
 
 
-            if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
+        if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 0)
+        {
+            for (int x = 0; x < OwnedLootInven.Instance.GetWornItemMainAlly().Count; x++)
             {
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornItemMainAlly().Count; x++)
+                if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
+                    && OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                 {
-                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
-                        && OwnedLootInven.Instance.GetWornItemMainAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                    {
-                        count++;
-                        continue;
-                    }
-                }
-
-                if (count == 0)
-                {
-                    StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+                    count++;
+                    continue;
                 }
             }
-            else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
-            {
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornItemSecondAlly().Count; x++)
-                {
-                    if (OwnedLootInven.Instance.GetWornItemSecondAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
-                        && OwnedLootInven.Instance.GetWornItemSecondAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                    {
-                        count++;
-                        continue;
-                    }
-                }
 
-                if (count == 0)
+            if (count == 0)
+            {
+                StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+            }
+        }
+        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 1)
+        {
+            for (int x = 0; x < OwnedLootInven.Instance.GetWornItemSecondAlly().Count; x++)
+            {
+                if (OwnedLootInven.Instance.GetWornItemSecondAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
+                    && OwnedLootInven.Instance.GetWornItemSecondAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                 {
-                    StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+                    count++;
+                    continue;
                 }
             }
-            else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
-            {
-                for (int x = 0; x < OwnedLootInven.Instance.GetWornItemThirdAlly().Count; x++)
-                {
-                    if (OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
-                        && OwnedLootInven.Instance.GetWornItemThirdAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
-                    {
-                        count++;
-                        continue;
-                    }
-                }
 
-                if (count == 0)
+            if (count == 0)
+            {
+                StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+            }
+        }
+        else if (GameManager.Instance.GetActiveUnitFunctionality().teamIndex == 2)
+        {
+            for (int x = 0; x < OwnedLootInven.Instance.GetWornItemThirdAlly().Count; x++)
+            {
+                if (OwnedLootInven.Instance.GetWornItemThirdAlly()[x].GetCalculatedItemsUsesRemaining2() > 0
+                    && OwnedLootInven.Instance.GetWornItemThirdAlly()[x].linkedItemPiece.curItemCombatType == ItemPiece.ItemCombatType.CONSUMABLE)
                 {
-                    StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+                    count++;
+                    continue;
                 }
             }
+
+            if (count == 0)
+            {
+                StartCoroutine(EndUnitTurnAfterWait(movingUnit));
+            }
+        }
 
         if (count != 0)
         {
@@ -847,9 +1129,9 @@ public class CombatGridManager : MonoBehaviour
 
     public int CompareSlotRangeFromUnit(CombatSlot combatSlotA, CombatSlot combatSlotB)
     {
-        if (combatSlotA.GetRangeFromActiveUnit() < combatSlotB.GetRangeFromActiveUnit())
+        if (combatSlotA.GetRangeFromActiveCombatSlot(combatSlotA) < combatSlotB.GetRangeFromActiveCombatSlot(combatSlotB))
             return 1;
-        if (combatSlotA.GetRangeFromActiveUnit() > combatSlotB.GetRangeFromActiveUnit())
+        if (combatSlotA.GetRangeFromActiveCombatSlot(combatSlotA) > combatSlotB.GetRangeFromActiveCombatSlot(combatSlotB))
             return -1;
         else
             return 0;
@@ -883,7 +1165,7 @@ public class CombatGridManager : MonoBehaviour
         {
             for (int i = 0; i < 35; i++)
             {
-                int rand = Random.Range(0, combatSlots.Count-1);
+                int rand = UnityEngine.Random.Range(0, combatSlots.Count-1);
                 //Debug.Log("rand = " + rand);
 
                 if (rand > combatSlots.Count - 1)
@@ -943,7 +1225,7 @@ public class CombatGridManager : MonoBehaviour
 
     }
 
-    bool moved = false;
+
 
     void SelectSlotToMove(UnitFunctionality unit, List<CombatSlot> combatSlots, string moveDirection)
     {
@@ -1587,7 +1869,8 @@ public class CombatGridManager : MonoBehaviour
         if (GetTargetCombatSlots().Count >= 1)
         {
             //Debug.Log("")
-            distance = GetTargetCombatSlots()[0].GetLinkedUnit().GetRangeFromUnit(GameManager.Instance.GetActiveUnitFunctionality());
+            if (GetTargetCombatSlots()[0].GetLinkedUnit())
+                distance = GetTargetCombatSlots()[0].GetLinkedUnit().GetRangeFromUnit(GameManager.Instance.GetActiveUnitFunctionality());
         }
         
         // Make melee enemies keep their distance for their targets
@@ -1644,7 +1927,7 @@ public class CombatGridManager : MonoBehaviour
 
 
         List<CombatSlot> combatSlots = new List<CombatSlot>();
-        if (unit.GetCurMovementUses() > 0)
+        if (unit.GetCurMovementUses() > 0 && !unit.enemyMoved)
         {
             unit.UnitMove();
         }
@@ -1771,6 +2054,14 @@ public class CombatGridManager : MonoBehaviour
                                     return;
                                 }
                             }
+           
+
+                            if (hold && unit.hasAttacked)
+                            {
+                                unit.StartCoroutine(unit.UnitEndTurn(true));
+                                //UpdateUnitMoveRange(unit);
+                                return;
+                            }
 
                             // If target is self
                             if (GetTargetCombatSlots()[0].GetSlotIndex().x == unit.GetActiveCombatSlot().GetSlotIndex().x &&
@@ -1779,161 +2070,10 @@ public class CombatGridManager : MonoBehaviour
                                 MoveRandomly(unit, GetTargetCombatSlots());
                                 break;
                             }
-                            // If target is top right
-                            else if (GetTargetCombatSlots()[0].GetSlotIndex().x > unit.GetActiveCombatSlot().GetSlotIndex().x &&
-                                GetTargetCombatSlots()[0].GetSlotIndex().y > unit.GetActiveCombatSlot().GetSlotIndex().y)
+                            else
                             {
-                                if (run)
-                                {
-                                    switched = true;
-                                    SelectSlotToMove(unit, combatSlots, "DownLeft");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    switched = true;
-                                    SelectSlotToMove(unit, combatSlots, "UpRight");
-                                    break;
-                                }
-                            }
-                            // If target is bottom left
-                            else if (GetTargetCombatSlots()[0].GetSlotIndex().x < unit.GetActiveCombatSlot().GetSlotIndex().x &&
-                                    GetTargetCombatSlots()[0].GetSlotIndex().y < unit.GetActiveCombatSlot().GetSlotIndex().y)
-                            {
-                                if (run)
-                                {
-                                    switched = true;
-                                    SelectSlotToMove(unit, combatSlots, "UpRight");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    switched = true;
-                                    SelectSlotToMove(unit, combatSlots, "DownLeft");
-                                    break;
-                                }
-                            }
-                            // If target is Top Left
-                            else if (GetTargetCombatSlots()[0].GetSlotIndex().x < unit.GetActiveCombatSlot().GetSlotIndex().x &&
-                                GetTargetCombatSlots()[0].GetSlotIndex().y > unit.GetActiveCombatSlot().GetSlotIndex().y)
-                            {
-                                if (run)
-                                {
-                                    switched = true;
-                                    SelectSlotToMove(unit, combatSlots, "DownRight");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    switched = true;
-                                    SelectSlotToMove(unit, combatSlots, "UpLeft");
-                                    break;
-                                }
-                            }
-                            // If target is bottom right
-                            else if (GetTargetCombatSlots()[0].GetSlotIndex().x > unit.GetActiveCombatSlot().GetSlotIndex().x &&
-                                GetTargetCombatSlots()[0].GetSlotIndex().y < unit.GetActiveCombatSlot().GetSlotIndex().y)
-                            {
-                                if (run)
-                                {
-                                    switched = true;
-                                    // Select Up/left slot to move
-                                    SelectSlotToMove(unit, combatSlots, "UpLeft");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    switched = true;
-                                    // Select down/right slot to move
-                                    SelectSlotToMove(unit, combatSlots, "DownRight");
-                                    break;
-                                }
-                            }
-
-                            // If target is directly Above
-                            if (GetTargetCombatSlots()[0].GetSlotIndex().y > unit.GetActiveCombatSlot().GetSlotIndex().y)
-                            {
-                                // Target slot is Above the unit
-                                if (run)
-                                {
-                                    switched = true;
-                                    // Select Down slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Down");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    switched = true;
-                                    // Select Up slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Up");
-                                    break;
-                                }
-                            }
-                            // If target is directly Below
-                            else if (GetTargetCombatSlots()[0].GetSlotIndex().y < unit.GetActiveCombatSlot().GetSlotIndex().y)
-                            {
-                                // Target slot is below the unit
-                                if (run)
-                                {
-                                    switched = true;
-                                    // Select Down slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Up");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    switched = true;
-                                    // Select Up slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Down");
-                                    break;
-                                }
-                            }
-
-                            // If target is directly right
-                            if (GetTargetCombatSlots()[0].GetSlotIndex().x > unit.GetActiveCombatSlot().GetSlotIndex().x)
-                            {
-                                switched = true;
-
-                                // Target slot is on the right of unit
-                                if (run)
-                                {
-                                    // Select left slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Left");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    // Select right slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Right");
-                                    break;
-                                }
-                            }
-                            // If target is directly Left
-                            else if (GetTargetCombatSlots()[0].GetSlotIndex().x < unit.GetActiveCombatSlot().GetSlotIndex().x)
-                            {
-                                switched = true;
-
-                                // Target slot is on the Left of unit
-                                if (run)
-                                {
-                                    // Select Down slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Right");
-                                    break;
-                                }
-                                else if (chase)
-                                {
-                                    // Select Up slot to move
-                                    SelectSlotToMove(unit, combatSlots, "Left");
-                                    break;
-                                }
-                            }
-           
-
-                            if (hold && unit.hasAttacked)
-                            {
-                                unit.StartCoroutine(unit.UnitEndTurn(true));
-                                //UpdateUnitMoveRange(unit);
-                                return;
+                                SetGhostTiles(unit);
+                                break;
                             }
                         }
 
@@ -1973,48 +2113,191 @@ public class CombatGridManager : MonoBehaviour
         }
     }
 
-    public void MoveUnitToNewSlot(UnitFunctionality unit)
+    public void SetGhostTiles(UnitFunctionality unit)
     {
-        // Update unit to look in direction of movement
-        // Moving right
-        if (GetSelectedCombatSlotMove().GetSlotIndex().x > unit.GetActiveCombatSlot().GetSlotIndex().x)
+        ResetCombatSlotMovementSelected();
+
+        if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+            finalPath = FindPath(unit.GetActiveCombatSlot(), GetTargetCombatSlots()[0]);
+        else
+            finalPath = FindPath(unit.GetActiveCombatSlot(), GetSelectedCombatSlotMove());
+
+        if (finalPath.Count > 0)
+            finalPath.RemoveAt(0);
+
+
+        for (int i = 0; i < finalPath.Count; i++)
         {
-            unit.UpdateUnitLookDirection(false);
+            if (finalPath[i].GetLinkedUnit())
+            {
+                finalPath.RemoveAt(i);
+                break;
+            }
+
+            if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY && i + 1 == unit.GetCurMovementUses())
+                UpdateSelectedCombatSlotMove(finalPath[i]);
+
+            if (i < unit.GetCurMovementUses())
+            {
+                finalPath[i].ToggleMovementSelected(true);
+            }
+
+
+
+            // Update unit to look in direction of movement
+            // Moving right
+            if (i == finalPath.Count-1)
+            {
+                // Moving left
+                if (finalPath[i].GetSlotIndex().x > unit.GetActiveCombatSlot().GetSlotIndex().x)
+                {
+                    unit.UpdateUnitLookDirection(false);
+                }
+                // Moving Right
+                else if (finalPath[i].GetSlotIndex().x < unit.GetActiveCombatSlot().GetSlotIndex().x)
+                {
+                    unit.UpdateUnitLookDirection(true);
+                }
+            }
         }
 
-        // Moving left
-        else if (GetSelectedCombatSlotMove().GetSlotIndex().x < unit.GetActiveCombatSlot().GetSlotIndex().x)
+        spawnedGhostTiles = true;
+
+        if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+            StartCoroutine(MoveUnitToNewSlot(unit));
+    }
+
+    public IEnumerator MoveUnitToNewSlot(UnitFunctionality unit)
+    {
+        if (unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            unit.UpdateUnitLookDirection(true);
+            finalPath = FindPath(unit.GetActiveCombatSlot(), GetSelectedCombatSlotMove());
+            finalPath.RemoveAt(0);
         }
 
-        //if (unit.GetCurMovementUses() <= 1)
-        //{
-            //GameManager.Instance.ToggleEndTurnButton(false);
         GameManager.Instance.ToggleEndTurnButton(false);
-        //}
-
-        unit.GetActiveCombatSlot().UpdateLinkedUnit(null);
-        ToggleIsMovementAllowed(false);
-        movingUnit = unit;
-
-        startingPos = unit.gameObject.transform.position;
-        endingPos = GetSelectedCombatSlotMove().transform.position;
-
-        startingPos = new Vector3(startingPos.x, startingPos.y, 0);
-        endingPos = new Vector3(endingPos.x, endingPos.y, 0);
-
-        moveTimer = 0;
-        allowMovement = true;
-
-        unit.UpdateActiveCombatSlot(GetSelectedCombatSlotMove());
-        GetSelectedCombatSlotMove().UpdateLinkedUnit(unit);
 
 
 
-        UnselectAllSelectedCombatSlots();
-        GetSelectedCombatSlotMove().ToggleSlotSelected(true);
-        GetSelectedCombatSlotMove().ToggleSlotAllowed(true);
+        GetComponent<ScrollRect>().enabled = false;
+
+        //GetSelectedCombatSlotMove().ToggleMovementSelected(true);
+        //ResetCombatSlotMovementSelected();
+
+        if (spawnedGhostTiles && GetSelectedCombatSlotMove().movementSelected || unit.curUnitType == UnitFunctionality.UnitType.ENEMY && finalPath.Count > 0)
+        {
+            ToggleCombatSelectedSlotOutlines();
+
+            // Start moving unit
+            for (int i = 0; i < finalPath.Count; i++)
+            {
+                if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                {
+                    if (GetTargetCombatSlots()[0].GetRangeFromActiveCombatSlot(unit.GetActiveCombatSlot()) <=
+                        GameManager.Instance.GetActiveSkill().curSkillRange)
+                    {
+                        break;
+                    }
+                }
+
+                // Update unit to look in direction of movement
+                // Moving right
+                if (finalPath.Count > i)
+                {
+                    // Moving left
+                    if (finalPath[i].GetSlotIndex().x > unit.GetActiveCombatSlot().GetSlotIndex().x)
+                    {
+                        unit.UpdateUnitLookDirection(false);
+                    }
+                }
+
+                if (finalPath.Count > i)
+                {
+                    // Moving left
+                    if (finalPath[i].GetSlotIndex().x < unit.GetActiveCombatSlot().GetSlotIndex().x)
+                    {
+                        unit.UpdateUnitLookDirection(true);
+                    }
+                }
+
+                movingUnit = unit;
+
+                if (movingUnit.GetCurMovementUses() > 0)
+                {
+
+                    //Debug.Log("movements left = " + movingUnit.GetCurMovementUses());
+
+                    startingPos = unit.GetActiveCombatSlot().transform.position;
+
+                    unit.GetActiveCombatSlot().UpdateLinkedUnit(null);
+                    ToggleIsMovementAllowed(false);
+
+                    if (finalPath.Count > i)
+                        endingPos = finalPath[i].transform.position;
+
+                    startingPos = new Vector3(startingPos.x, startingPos.y, 0);
+                    endingPos = new Vector3(endingPos.x, endingPos.y, 0);
+
+                    moveTimer = 0;
+
+                    unit.UpdateActiveCombatSlot(finalPath[i]);
+                    finalPath[i].UpdateLinkedUnit(unit);
+
+                    UnselectAllSelectedCombatSlots();
+                    finalPath[i].ToggleSlotSelected(true);
+                    finalPath[i].ToggleSlotAllowed(true);
+                    allowMovement = true;
+                    movingUnit.UpdateCurMovementUses(movingUnit.GetCurMovementUses() - 1);
+
+                    movingUnit.UpdateActiveCombatSlot(finalPath[i]);
+                    movingUnit.SetParent(finalPath[i].transform);
+                    yield return new WaitForSeconds(.5f);
+                    CheckToUnlinkCombatSlot();
+                }
+                else
+                    break;
+            }
+        }
+
+
+        GetComponent<ScrollRect>().enabled = true;
+
+        if (finalPath.Count > 0)
+        {
+            if (unit.GetCurMovementUses() == 0 && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                StartCoroutine(AutoSwapOutOfMovementMode());
+            else if (unit.GetCurMovementUses() >= 0 && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                StartCoroutine(AutoSwapOutOfMovementMode());
+
+            if (unit.GetCurMovementUses() < 0)
+            {
+                if (!unit.usedExtraMove)
+                    movingUnit.usedExtraMove = true;
+
+                if (unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+                    StartCoroutine(AutoSwapOutOfMovementModeAndLockSkills());
+            }
+        }
+
+
+        unit.enemyMoved = true;
+
+
+        //ResetCombatSlotMovementSelected();
+        ResetCombatSlotMovementSelected();
+        spawnedGhostTiles = false;
+
+
+        if (unit.GetCurMovementUses() > 0 && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
+            unit.UnitMove();
+        }
+        else if (unit.GetCurMovementUses() == 0 && !unit.attacked && unit.curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
+            unit.UnitMove();
+        }
+
+        GameManager.Instance.ToggleEndTurnButton(true);
     }
 
     public void UpdateSelectedCombatSlotMove(CombatSlot slot)
@@ -2029,6 +2312,20 @@ public class CombatGridManager : MonoBehaviour
 
     public void UpdateUnitMoveRange(UnitFunctionality unit)
     {
+        UnselectAllSelectedCombatSlots();
+
+        if (unit.GetCurMovementUses() <= 0)
+            return;
+        if (GameManager.Instance.GetActiveSkill() && unit.curUnitType == UnitFunctionality.UnitType.ENEMY && GetTargetCombatSlots().Count > 0)
+        {
+            if (unit.enemyMoved || unit.hasAttacked && GameManager.Instance.GetActiveSkill().curSkillRange >= GetTargetCombatSlots()[0].GetRangeFromActiveCombatSlot(unit.GetActiveCombatSlot()))
+            {
+                return;
+            }
+
+        }
+
+
         Vector2 unitCombatIndex = Vector2.zero;
 
         if (unit.GetActiveCombatSlot())
@@ -2053,94 +2350,44 @@ public class CombatGridManager : MonoBehaviour
 
         for (int i = 0; i < allCombatSlots.Count; i++)
         {
-            for (int x = 1; x < 2; x++)
+            if (unit.GetCurMovementUses() >= 1)
             {
-                CombatSlot combatSlot = null;
-
-                // Select left combat slots
-                if (GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x - x, unitCombatIndex.y)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y)).GetLinkedUnit() == null)
+                if (allCombatSlots[i].GetRangeFromActiveCombatSlot(unit.GetActiveCombatSlot()) <= unit.GetCurMovementUses())
                 {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y));
-                }
-                // Select right combat slots
-                else if (GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x + x, unitCombatIndex.y)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y)).GetLinkedUnit() == null)
-                {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y));
-                }
-                // Select Up combat slots
-                else if (GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y + x)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x, unitCombatIndex.y + x)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y + x)).GetLinkedUnit() == null)
-                {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y + x));
-                }
-                // Select Down combat slots
-                else if (GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y - x)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x, unitCombatIndex.y - x)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y - x)).GetLinkedUnit() == null)
-                {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x, unitCombatIndex.y - x));
-                }
-
-                // Select Up Left combat slots
-                if (GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y + x)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x - x, unitCombatIndex.y + x)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y + x)).GetLinkedUnit() == null)
-                {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y + x));
-                }
-                // Select Down Left combat slots
-                else if (GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y - x)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x - x, unitCombatIndex.y - x)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y - x)).GetLinkedUnit() == null)
-                {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x - x, unitCombatIndex.y - x));
-                }
-                // Select Up Right combat slots
-                else if (GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y + x)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x + x, unitCombatIndex.y + x)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y + x)).GetLinkedUnit() == null)
-                {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y + x));
-                }
-                // Select Down Right combat slots
-                else if (GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y - x)) != null
-                    && allCombatSlots[i].GetSlotIndex() == new Vector2(unitCombatIndex.x + x, unitCombatIndex.y - x)
-                    && GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y - x)).GetLinkedUnit() == null)
-                {
-                    combatSlot = GetCombatSlot(new Vector2(unitCombatIndex.x + x, unitCombatIndex.y - x));
-                }
-
-                if (combatSlot != null)
-                {
-                    combatSlot.ToggleSlotAllowed(true);
+                    if (allCombatSlots != null && allCombatSlots[i].walkable && !allCombatSlots[i].GetLinkedUnit())
+                    {
+                        allCombatSlots[i].ToggleSlotAllowed(true);
+                    }
                 }
             }
         }
-        // Toggle Combat unit slot available around them for movement
+        List<CombatSlot> allowedSlots = new List<CombatSlot>();
 
-    }
-
-    public void ToggleAllSlotsAllowedOff()
-    {
         for (int i = 0; i < allCombatSlots.Count; i++)
         {
             if (allCombatSlots[i].GetAllowed())
             {
-                allCombatSlots[i].GetAnimator().SetBool("CombatAllowed", false);
-                allCombatSlots[i].GetAnimator().StopPlayback();
+                allowedSlots.Add(allCombatSlots[i]);
+            }
+        }
 
+        UpdateCombatSlotOutlines(allowedSlots, false, true);
+    }
 
-                allCombatSlots[i].GetAnimator().SetBool("CombatAllowed", true);
+    public void ResetCombatSlotMovementSelected()
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            if (allCombatSlots[i].movementSelected)
+            {
+                allCombatSlots[i].ToggleMovementSelected(false);
             }
         }
     }
-    public void UpdateUnitAttackRange(UnitFunctionality unit)
+
+    public void UpdateUnitAttackRange(UnitFunctionality unit, CombatSlot slot = null)
     {
+        isCombatMode = true;
         ToggleAllCombatSlotOutlines();
 
         if (GameManager.Instance.GetActiveUnitFunctionality().hasAttacked && unit.curUnitType == UnitFunctionality.UnitType.ENEMY)
@@ -2252,7 +2499,19 @@ public class CombatGridManager : MonoBehaviour
             }
         }
 
-        UpdateUnitAttackHitArea(unit);
+        List<CombatSlot> allowedSlots = new List<CombatSlot>();
+
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            if (allCombatSlots[i].GetAllowed())
+            {
+                allowedSlots.Add(allCombatSlots[i]);
+            }
+        }
+
+        UpdateCombatSlotOutlines(allowedSlots, false);
+
+        UpdateUnitAttackHitArea(unit, slot);
     }
 
     public bool done = false;
@@ -2280,9 +2539,21 @@ public class CombatGridManager : MonoBehaviour
         }
     }
 
-    void UpdateCombatSlotOutlines(List<CombatSlot> selectedCombatSlots)
+    public void ToggleCombatSelectedSlotOutlines()
     {
-        ToggleAllCombatSlotOutlines();
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            allCombatSlots[i].ToggleSelectBorder(allCombatSlots[i].GetRightSelectBorder(), false);
+            allCombatSlots[i].ToggleSelectBorder(allCombatSlots[i].GetLeftSelectBorder(), false);
+            allCombatSlots[i].ToggleSelectBorder(allCombatSlots[i].GetTopSelectBorder(), false);
+            allCombatSlots[i].ToggleSelectBorder(allCombatSlots[i].GetBottomSelectBorder(), false);
+        }
+    }
+
+    void UpdateCombatSlotOutlines(List<CombatSlot> selectedCombatSlots, bool skill = true, bool movement = false)
+    {
+        if (!skill)
+            ToggleAllCombatSlotOutlines();
 
         for (int b = 0; b < selectedCombatSlots.Count; b++)
         {
@@ -2291,49 +2562,153 @@ public class CombatGridManager : MonoBehaviour
             selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), false);
             selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), false);
 
-            // Right side
-            if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)))
+            if (!movement)
             {
-                if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)).combatSelected)
+                if (skill)
+                {
+                    // Right side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)).combatSelected)
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), true);
+
+                    // Left side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)).combatSelected)
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), true);
+
+                    // Up side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)).combatSelected)
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), true);
+
+                    // Down side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)).combatSelected)
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
+                }
+
+                // skill range
+                else
+                {
+                    // Right side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)).GetAllowed())
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), true);
+
+                    // Left side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)).GetAllowed())
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), true);
+
+                    // Up side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)).GetAllowed())
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), true);
+
+                    // Down side
+                    if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)))
+                    {
+                        if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)).GetAllowed())
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
+                        else
+                            selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), false);
+                    }
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
+                }
+            }
+            else
+            {
+                // Right side
+                if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)))
+                {
+                    if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)).GetAllowed() &&
+                        (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x + 1, selectedCombatSlots[b].GetSlotIndex().y)).movementSelected))
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), true);
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), false);
+                }
+                else
                     selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), true);
-                else
-                    selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), false);
-            }
-            else
-                selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetRightSelectBorder(), true);
 
-            // Left side
-            if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)))
-            {
-                if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)).combatSelected)
+                // Left side
+                if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)))
+                {
+                    if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)).GetAllowed() &&
+                        (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x - 1, selectedCombatSlots[b].GetSlotIndex().y)).movementSelected))
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), true);
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), false);
+                }
+                else
                     selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), true);
-                else
-                    selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), false);
-            }
-            else
-                selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetLeftSelectBorder(), true);
 
-            // Up side
-            if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)))
-            {
-                if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)).combatSelected)
+                // Up side
+                if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)))
+                {
+                    if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)).GetAllowed() &&
+                        (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y + 1)).movementSelected))
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), true);
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), false);
+                }
+                else
                     selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), true);
-                else
-                    selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), false);
-            }
-            else
-                selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetTopSelectBorder(), true);
 
-            // Down side
-            if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)))
-            {
-                if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)).combatSelected)
-                    selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
+                // Down side
+                if (GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)))
+                {
+                    if (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)).GetAllowed() &&
+                        (!GetCombatSlot(new Vector2(selectedCombatSlots[b].GetSlotIndex().x, selectedCombatSlots[b].GetSlotIndex().y - 1)).movementSelected))
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
+                    else
+                        selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), false);
+                }
                 else
-                    selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), false);
+                    selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
             }
-            else
-                selectedCombatSlots[b].ToggleSelectBorder(selectedCombatSlots[b].GetBottomSelectBorder(), true);
         }
 
 
@@ -2386,7 +2761,7 @@ public class CombatGridManager : MonoBehaviour
 
         if (activeItem == null && !GameManager.Instance.isSkillsMode)
         {
-            ToggleAllCombatSlotOutlines();
+            //ToggleAllCombatSlotOutlines();
             UnselectAllSelectedCombatSlots();
             GameManager.Instance.UpdateMainIconDetails(null, null);
             OverlayUI.Instance.UpdateItemDetailsUI("", "", 0, 0, Vector2.zero, TeamItemsManager.Instance.clearSlotSprite);
@@ -3624,6 +3999,7 @@ public class CombatGridManager : MonoBehaviour
         //}
 
 
+        /*
         if (targetedCombatSlots.Count > 0)
         {
             if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.SUPPORT)
@@ -3638,6 +4014,20 @@ public class CombatGridManager : MonoBehaviour
                 CombatGridManager.Instance.GetTargetCombatSlots().Reverse();
             }
         }
+        */
+    }
+
+    public CombatSlot GetCombatSlotByIndex(Vector2 index)
+    {
+        for (int i = 0; i < allCombatSlots.Count; i++)
+        {
+            if (allCombatSlots[i].GetSlotIndex() == index)
+            {
+                return allCombatSlots[i];
+            }
+        }
+
+        return null;
     }
 
     public Vector2 GetCombatSlotIndex(int slotIndex)
@@ -3666,111 +4056,1236 @@ public class CombatGridManager : MonoBehaviour
         {
             newSlotIndex = new Vector2(4, 0);
         }
-        // 2nd row
         else if (slotIndex == 5)
         {
-            newSlotIndex = new Vector2(0, 1);
+            newSlotIndex = new Vector2(5, 0);
         }
         else if (slotIndex == 6)
         {
-            newSlotIndex = new Vector2(1, 1);
+            newSlotIndex = new Vector2(6, 0);
         }
         else if (slotIndex == 7)
         {
-            newSlotIndex = new Vector2(2, 1);
+            newSlotIndex = new Vector2(7, 0);
         }
         else if (slotIndex == 8)
         {
-            newSlotIndex = new Vector2(3, 1);
+            newSlotIndex = new Vector2(8, 0);
         }
         else if (slotIndex == 9)
         {
-            newSlotIndex = new Vector2(4, 1);
+            newSlotIndex = new Vector2(9, 0);
         }
-        // 3nd row
         else if (slotIndex == 10)
         {
-            newSlotIndex = new Vector2(0, 2);
+            newSlotIndex = new Vector2(10, 0);
         }
         else if (slotIndex == 11)
         {
-            newSlotIndex = new Vector2(1, 2);
+            newSlotIndex = new Vector2(11, 0);
         }
         else if (slotIndex == 12)
         {
-            newSlotIndex = new Vector2(2, 2);
+            newSlotIndex = new Vector2(12, 0);
         }
         else if (slotIndex == 13)
         {
-            newSlotIndex = new Vector2(3, 2);
+            newSlotIndex = new Vector2(13, 0);
         }
         else if (slotIndex == 14)
         {
-            newSlotIndex = new Vector2(4, 2);
+            newSlotIndex = new Vector2(14, 0);
         }
-
-        // 4th row
         else if (slotIndex == 15)
         {
-            newSlotIndex = new Vector2(0, 3);
+            newSlotIndex = new Vector2(15, 0);
         }
+        // 2nd row
         else if (slotIndex == 16)
         {
-            newSlotIndex = new Vector2(1, 3);
+            newSlotIndex = new Vector2(0, 1);
         }
         else if (slotIndex == 17)
         {
-            newSlotIndex = new Vector2(2, 3);
+            newSlotIndex = new Vector2(1, 1);
         }
         else if (slotIndex == 18)
         {
-            newSlotIndex = new Vector2(3, 3);
+            newSlotIndex = new Vector2(2, 1);
         }
         else if (slotIndex == 19)
         {
-            newSlotIndex = new Vector2(4, 3);
+            newSlotIndex = new Vector2(3, 1);
         }
-        // 5th row
         else if (slotIndex == 20)
         {
-            newSlotIndex = new Vector2(0, 4);
+            newSlotIndex = new Vector2(4, 1);
         }
         else if (slotIndex == 21)
         {
-            newSlotIndex = new Vector2(1, 4);
+            newSlotIndex = new Vector2(5, 1);
         }
         else if (slotIndex == 22)
         {
-            newSlotIndex = new Vector2(2, 4);
+            newSlotIndex = new Vector2(6, 1);
         }
         else if (slotIndex == 23)
         {
-            newSlotIndex = new Vector2(3, 4);
+            newSlotIndex = new Vector2(7, 1);
         }
         else if (slotIndex == 24)
         {
-            newSlotIndex = new Vector2(4, 4);
+            newSlotIndex = new Vector2(8, 1);
         }
-        // 6th row
         else if (slotIndex == 25)
         {
-            newSlotIndex = new Vector2(0, 5);
+            newSlotIndex = new Vector2(9, 1);
         }
         else if (slotIndex == 26)
         {
-            newSlotIndex = new Vector2(1, 5);
+            newSlotIndex = new Vector2(10, 1);
         }
         else if (slotIndex == 27)
         {
-            newSlotIndex = new Vector2(2, 5);
+            newSlotIndex = new Vector2(11, 1);
         }
         else if (slotIndex == 28)
         {
-            newSlotIndex = new Vector2(3, 5);
+            newSlotIndex = new Vector2(12, 1);
         }
         else if (slotIndex == 29)
         {
+            newSlotIndex = new Vector2(13, 1);
+        }
+        else if (slotIndex == 30)
+        {
+            newSlotIndex = new Vector2(14, 1);
+        }
+        else if (slotIndex == 31)
+        {
+            newSlotIndex = new Vector2(15, 1);
+        }
+
+        // 3rd row
+        else if (slotIndex == 32)
+        {
+            newSlotIndex = new Vector2(0, 2);
+        }
+        else if (slotIndex == 33)
+        {
+            newSlotIndex = new Vector2(1, 2);
+        }
+        else if (slotIndex == 34)
+        {
+            newSlotIndex = new Vector2(2, 2);
+        }
+        else if (slotIndex == 35)
+        {
+            newSlotIndex = new Vector2(3, 2);
+        }
+        else if (slotIndex == 36)
+        {
+            newSlotIndex = new Vector2(4, 2);
+        }
+        else if (slotIndex == 37)
+        {
+            newSlotIndex = new Vector2(5, 2);
+        }
+        else if (slotIndex == 38)
+        {
+            newSlotIndex = new Vector2(6, 2);
+        }
+        else if (slotIndex == 39)
+        {
+            newSlotIndex = new Vector2(7, 2);
+        }
+        else if (slotIndex == 40)
+        {
+            newSlotIndex = new Vector2(8, 2);
+        }
+        else if (slotIndex == 41)
+        {
+            newSlotIndex = new Vector2(9, 2);
+        }
+        else if (slotIndex == 42)
+        {
+            newSlotIndex = new Vector2(10, 2);
+        }
+        else if (slotIndex == 43)
+        {
+            newSlotIndex = new Vector2(11, 2);
+        }
+        else if (slotIndex == 44)
+        {
+            newSlotIndex = new Vector2(12, 2);
+        }
+        else if (slotIndex == 45)
+        {
+            newSlotIndex = new Vector2(13, 2);
+        }
+        else if (slotIndex == 46)
+        {
+            newSlotIndex = new Vector2(14, 2);
+        }
+        else if (slotIndex == 47)
+        {
+            newSlotIndex = new Vector2(15, 2);
+        }
+
+        // 4th row
+        else if (slotIndex == 48)
+        {
+            newSlotIndex = new Vector2(0, 3);
+        }
+        else if (slotIndex == 49)
+        {
+            newSlotIndex = new Vector2(1, 3);
+        }
+        else if (slotIndex == 50)
+        {
+            newSlotIndex = new Vector2(2, 3);
+        }
+        else if (slotIndex == 51)
+        {
+            newSlotIndex = new Vector2(3, 3);
+        }
+        else if (slotIndex == 52)
+        {
+            newSlotIndex = new Vector2(4, 3);
+        }
+        else if (slotIndex == 53)
+        {
+            newSlotIndex = new Vector2(5, 3);
+        }
+        else if (slotIndex == 54)
+        {
+            newSlotIndex = new Vector2(6, 3);
+        }
+        else if (slotIndex == 55)
+        {
+            newSlotIndex = new Vector2(7, 3);
+        }
+        else if (slotIndex == 56)
+        {
+            newSlotIndex = new Vector2(8, 3);
+        }
+        else if (slotIndex == 57)
+        {
+            newSlotIndex = new Vector2(9, 3);
+        }
+        else if (slotIndex == 58)
+        {
+            newSlotIndex = new Vector2(10, 3);
+        }
+        else if (slotIndex == 59)
+        {
+            newSlotIndex = new Vector2(11, 3);
+        }
+        else if (slotIndex == 60)
+        {
+            newSlotIndex = new Vector2(12, 3);
+        }
+        else if (slotIndex == 61)
+        {
+            newSlotIndex = new Vector2(13, 3);
+        }
+        else if (slotIndex == 62)
+        {
+            newSlotIndex = new Vector2(14, 3);
+        }
+        else if (slotIndex == 63)
+        {
+            newSlotIndex = new Vector2(15, 3);
+        }
+
+        // 5th row
+        else if (slotIndex == 64)
+        {
+            newSlotIndex = new Vector2(0, 4);
+        }
+        else if (slotIndex == 65)
+        {
+            newSlotIndex = new Vector2(1, 4);
+        }
+        else if (slotIndex == 66)
+        {
+            newSlotIndex = new Vector2(2, 4);
+        }
+        else if (slotIndex == 67)
+        {
+            newSlotIndex = new Vector2(3, 4);
+        }
+        else if (slotIndex == 68)
+        {
+            newSlotIndex = new Vector2(4, 4);
+        }
+        else if (slotIndex == 69)
+        {
+            newSlotIndex = new Vector2(5, 4);
+        }
+        else if (slotIndex == 70)
+        {
+            newSlotIndex = new Vector2(6, 4);
+        }
+        else if (slotIndex == 71)
+        {
+            newSlotIndex = new Vector2(7, 4);
+        }
+        else if (slotIndex == 72)
+        {
+            newSlotIndex = new Vector2(8, 4);
+        }
+        else if (slotIndex == 73)
+        {
+            newSlotIndex = new Vector2(9, 4);
+        }
+        else if (slotIndex == 74)
+        {
+            newSlotIndex = new Vector2(10, 4);
+        }
+        else if (slotIndex == 75)
+        {
+            newSlotIndex = new Vector2(11, 4);
+        }
+        else if (slotIndex == 76)
+        {
+            newSlotIndex = new Vector2(12, 4);
+        }
+        else if (slotIndex == 77)
+        {
+            newSlotIndex = new Vector2(13, 4);
+        }
+        else if (slotIndex == 78)
+        {
+            newSlotIndex = new Vector2(14, 4);
+        }
+        else if (slotIndex == 79)
+        {
+            newSlotIndex = new Vector2(15, 4);
+        }
+
+        // 6th row
+        else if (slotIndex == 80)
+        {
+            newSlotIndex = new Vector2(0, 5);
+        }
+        else if (slotIndex == 81)
+        {
+            newSlotIndex = new Vector2(1, 5);
+        }
+        else if (slotIndex == 82)
+        {
+            newSlotIndex = new Vector2(2, 5);
+        }
+        else if (slotIndex == 83)
+        {
+            newSlotIndex = new Vector2(3, 5);
+        }
+        else if (slotIndex == 84)
+        {
             newSlotIndex = new Vector2(4, 5);
+        }
+        else if (slotIndex == 85)
+        {
+            newSlotIndex = new Vector2(5, 5);
+        }
+        else if (slotIndex == 86)
+        {
+            newSlotIndex = new Vector2(6, 5);
+        }
+        else if (slotIndex == 87)
+        {
+            newSlotIndex = new Vector2(7, 5);
+        }
+        else if (slotIndex == 88)
+        {
+            newSlotIndex = new Vector2(8, 5);
+        }
+        else if (slotIndex == 89)
+        {
+            newSlotIndex = new Vector2(9, 5);
+        }
+        else if (slotIndex == 90)
+        {
+            newSlotIndex = new Vector2(10, 5);
+        }
+        else if (slotIndex == 91)
+        {
+            newSlotIndex = new Vector2(11, 5);
+        }
+        else if (slotIndex == 92)
+        {
+            newSlotIndex = new Vector2(12, 5);
+        }
+        else if (slotIndex == 93)
+        {
+            newSlotIndex = new Vector2(13, 5);
+        }
+        else if (slotIndex == 94)
+        {
+            newSlotIndex = new Vector2(14, 5);
+        }
+        else if (slotIndex == 95)
+        {
+            newSlotIndex = new Vector2(15, 5);
+        }
+
+        // 7th row
+        else if (slotIndex == 96)
+        {
+            newSlotIndex = new Vector2(0, 6);
+        }
+        else if (slotIndex == 97)
+        {
+            newSlotIndex = new Vector2(1, 6);
+        }
+        else if (slotIndex == 98)
+        {
+            newSlotIndex = new Vector2(2, 6);
+        }
+        else if (slotIndex == 99)
+        {
+            newSlotIndex = new Vector2(3, 6);
+        }
+        else if (slotIndex == 100)
+        {
+            newSlotIndex = new Vector2(4, 6);
+        }
+        else if (slotIndex == 101)
+        {
+            newSlotIndex = new Vector2(5, 6);
+        }
+        else if (slotIndex == 102)
+        {
+            newSlotIndex = new Vector2(6, 6);
+        }
+        else if (slotIndex == 103)
+        {
+            newSlotIndex = new Vector2(7, 6);
+        }
+        else if (slotIndex == 104)
+        {
+            newSlotIndex = new Vector2(8, 6);
+        }
+        else if (slotIndex == 105)
+        {
+            newSlotIndex = new Vector2(9, 6);
+        }
+        else if (slotIndex == 106)
+        {
+            newSlotIndex = new Vector2(10, 6);
+        }
+        else if (slotIndex == 107)
+        {
+            newSlotIndex = new Vector2(11, 6);
+        }
+        else if (slotIndex == 108)
+        {
+            newSlotIndex = new Vector2(12, 6);
+        }
+        else if (slotIndex == 109)
+        {
+            newSlotIndex = new Vector2(13, 6);
+        }
+        else if (slotIndex == 110)
+        {
+            newSlotIndex = new Vector2(14, 6);
+        }
+        else if (slotIndex == 111)
+        {
+            newSlotIndex = new Vector2(15, 6);
+        }
+
+        // 8th row
+        else if (slotIndex == 112)
+        {
+            newSlotIndex = new Vector2(0, 7);
+        }
+        else if (slotIndex == 113)
+        {
+            newSlotIndex = new Vector2(1, 7);
+        }
+        else if (slotIndex == 114)
+        {
+            newSlotIndex = new Vector2(2, 7);
+        }
+        else if (slotIndex == 115)
+        {
+            newSlotIndex = new Vector2(3, 7);
+        }
+        else if (slotIndex == 116)
+        {
+            newSlotIndex = new Vector2(4, 7);
+        }
+        else if (slotIndex == 117)
+        {
+            newSlotIndex = new Vector2(5, 7);
+        }
+        else if (slotIndex == 118)
+        {
+            newSlotIndex = new Vector2(6, 7);
+        }
+        else if (slotIndex == 119)
+        {
+            newSlotIndex = new Vector2(7, 7);
+        }
+        else if (slotIndex == 120)
+        {
+            newSlotIndex = new Vector2(8, 7);
+        }
+        else if (slotIndex == 121)
+        {
+            newSlotIndex = new Vector2(9, 7);
+        }
+        else if (slotIndex == 122)
+        {
+            newSlotIndex = new Vector2(10, 7);
+        }
+        else if (slotIndex == 123)
+        {
+            newSlotIndex = new Vector2(11, 7);
+        }
+        else if (slotIndex == 124)
+        {
+            newSlotIndex = new Vector2(12, 7);
+        }
+        else if (slotIndex == 125)
+        {
+            newSlotIndex = new Vector2(13, 7);
+        }
+        else if (slotIndex == 126)
+        {
+            newSlotIndex = new Vector2(14, 7);
+        }
+        else if (slotIndex == 127)
+        {
+            newSlotIndex = new Vector2(15, 7);
+        }
+
+        // 9th row
+        else if (slotIndex == 128)
+        {
+            newSlotIndex = new Vector2(0, 8);
+        }
+        else if (slotIndex == 129)
+        {
+            newSlotIndex = new Vector2(1, 8);
+        }
+        else if (slotIndex == 130)
+        {
+            newSlotIndex = new Vector2(2, 8);
+        }
+        else if (slotIndex == 131)
+        {
+            newSlotIndex = new Vector2(3, 8);
+        }
+        else if (slotIndex == 132)
+        {
+            newSlotIndex = new Vector2(4, 8);
+        }
+        else if (slotIndex == 133)
+        {
+            newSlotIndex = new Vector2(5, 8);
+        }
+        else if (slotIndex == 134)
+        {
+            newSlotIndex = new Vector2(6, 8);
+        }
+        else if (slotIndex == 135)
+        {
+            newSlotIndex = new Vector2(7, 8);
+        }
+        else if (slotIndex == 136)
+        {
+            newSlotIndex = new Vector2(8, 8);
+        }
+        else if (slotIndex == 137)
+        {
+            newSlotIndex = new Vector2(9, 8);
+        }
+        else if (slotIndex == 138)
+        {
+            newSlotIndex = new Vector2(10, 8);
+        }
+        else if (slotIndex == 139)
+        {
+            newSlotIndex = new Vector2(11, 8);
+        }
+        else if (slotIndex == 140)
+        {
+            newSlotIndex = new Vector2(12, 8);
+        }
+        else if (slotIndex == 141)
+        {
+            newSlotIndex = new Vector2(13, 8);
+        }
+        else if (slotIndex == 142)
+        {
+            newSlotIndex = new Vector2(14, 8);
+        }
+        else if (slotIndex == 143)
+        {
+            newSlotIndex = new Vector2(15, 8);
+        }
+
+        // 10th row
+        else if (slotIndex == 144)
+        {
+            newSlotIndex = new Vector2(0, 9);
+        }
+        else if (slotIndex == 145)
+        {
+            newSlotIndex = new Vector2(1, 9);
+        }
+        else if (slotIndex == 146)
+        {
+            newSlotIndex = new Vector2(2, 9);
+        }
+        else if (slotIndex == 147)
+        {
+            newSlotIndex = new Vector2(3, 9);
+        }
+        else if (slotIndex == 148)
+        {
+            newSlotIndex = new Vector2(4, 9);
+        }
+        else if (slotIndex == 149)
+        {
+            newSlotIndex = new Vector2(5, 9);
+        }
+        else if (slotIndex == 150)
+        {
+            newSlotIndex = new Vector2(6, 9);
+        }
+        else if (slotIndex == 151)
+        {
+            newSlotIndex = new Vector2(7, 9);
+        }
+        else if (slotIndex == 152)
+        {
+            newSlotIndex = new Vector2(8, 9);
+        }
+        else if (slotIndex == 153)
+        {
+            newSlotIndex = new Vector2(9, 9);
+        }
+        else if (slotIndex == 154)
+        {
+            newSlotIndex = new Vector2(10, 9);
+        }
+        else if (slotIndex == 155)
+        {
+            newSlotIndex = new Vector2(11, 9);
+        }
+        else if (slotIndex == 156)
+        {
+            newSlotIndex = new Vector2(12, 9);
+        }
+        else if (slotIndex == 157)
+        {
+            newSlotIndex = new Vector2(13, 9);
+        }
+        else if (slotIndex == 158)
+        {
+            newSlotIndex = new Vector2(14, 9);
+        }
+        else if (slotIndex == 159)
+        {
+            newSlotIndex = new Vector2(15, 9);
+        }
+
+        // 11th row
+        else if (slotIndex == 160)
+        {
+            newSlotIndex = new Vector2(0, 10);
+        }
+        else if (slotIndex == 161)
+        {
+            newSlotIndex = new Vector2(1, 10);
+        }
+        else if (slotIndex == 162)
+        {
+            newSlotIndex = new Vector2(2, 10);
+        }
+        else if (slotIndex == 163)
+        {
+            newSlotIndex = new Vector2(3, 10);
+        }
+        else if (slotIndex == 164)
+        {
+            newSlotIndex = new Vector2(4, 10);
+        }
+        else if (slotIndex == 165)
+        {
+            newSlotIndex = new Vector2(5, 10);
+        }
+        else if (slotIndex == 166)
+        {
+            newSlotIndex = new Vector2(6, 10);
+        }
+        else if (slotIndex == 167)
+        {
+            newSlotIndex = new Vector2(7, 10);
+        }
+        else if (slotIndex == 168)
+        {
+            newSlotIndex = new Vector2(8, 10);
+        }
+        else if (slotIndex == 169)
+        {
+            newSlotIndex = new Vector2(9, 10);
+        }
+        else if (slotIndex == 170)
+        {
+            newSlotIndex = new Vector2(10, 10);
+        }
+        else if (slotIndex == 171)
+        {
+            newSlotIndex = new Vector2(11, 10);
+        }
+        else if (slotIndex == 172)
+        {
+            newSlotIndex = new Vector2(12, 10);
+        }
+        else if (slotIndex == 173)
+        {
+            newSlotIndex = new Vector2(13, 10);
+        }
+        else if (slotIndex == 174)
+        {
+            newSlotIndex = new Vector2(14, 10);
+        }
+        else if (slotIndex == 175)
+        {
+            newSlotIndex = new Vector2(15, 10);
+        }
+
+        // 12th row
+        else if (slotIndex == 176)
+        {
+            newSlotIndex = new Vector2(0, 11);
+        }
+        else if (slotIndex == 177)
+        {
+            newSlotIndex = new Vector2(1, 11);
+        }
+        else if (slotIndex == 178)
+        {
+            newSlotIndex = new Vector2(2, 11);
+        }
+        else if (slotIndex == 179)
+        {
+            newSlotIndex = new Vector2(3, 11);
+        }
+        else if (slotIndex == 180)
+        {
+            newSlotIndex = new Vector2(4, 11);
+        }
+        else if (slotIndex == 181)
+        {
+            newSlotIndex = new Vector2(5, 11);
+        }
+        else if (slotIndex == 182)
+        {
+            newSlotIndex = new Vector2(6, 11);
+        }
+        else if (slotIndex == 183)
+        {
+            newSlotIndex = new Vector2(7, 11);
+        }
+        else if (slotIndex == 184)
+        {
+            newSlotIndex = new Vector2(8, 11);
+        }
+        else if (slotIndex == 185)
+        {
+            newSlotIndex = new Vector2(9, 11);
+        }
+        else if (slotIndex == 186)
+        {
+            newSlotIndex = new Vector2(10, 11);
+        }
+        else if (slotIndex == 187)
+        {
+            newSlotIndex = new Vector2(11, 11);
+        }
+        else if (slotIndex == 188)
+        {
+            newSlotIndex = new Vector2(12, 11);
+        }
+        else if (slotIndex == 189)
+        {
+            newSlotIndex = new Vector2(13, 11);
+        }
+        else if (slotIndex == 190)
+        {
+            newSlotIndex = new Vector2(14, 11);
+        }
+        else if (slotIndex == 191)
+        {
+            newSlotIndex = new Vector2(15, 11);
+        }
+
+        // 13th row
+        else if (slotIndex == 192)
+        {
+            newSlotIndex = new Vector2(0, 12);
+        }
+        else if (slotIndex == 193)
+        {
+            newSlotIndex = new Vector2(1, 12);
+        }
+        else if (slotIndex == 194)
+        {
+            newSlotIndex = new Vector2(2, 12);
+        }
+        else if (slotIndex == 195)
+        {
+            newSlotIndex = new Vector2(3, 12);
+        }
+        else if (slotIndex == 196)
+        {
+            newSlotIndex = new Vector2(4, 12);
+        }
+        else if (slotIndex == 197)
+        {
+            newSlotIndex = new Vector2(5, 12);
+        }
+        else if (slotIndex == 198)
+        {
+            newSlotIndex = new Vector2(6, 12);
+        }
+        else if (slotIndex == 199)
+        {
+            newSlotIndex = new Vector2(7, 12);
+        }
+        else if (slotIndex == 200)
+        {
+            newSlotIndex = new Vector2(8, 12);
+        }
+        else if (slotIndex == 201)
+        {
+            newSlotIndex = new Vector2(9, 12);
+        }
+        else if (slotIndex == 202)
+        {
+            newSlotIndex = new Vector2(10, 12);
+        }
+        else if (slotIndex == 203)
+        {
+            newSlotIndex = new Vector2(11, 12);
+        }
+        else if (slotIndex == 204)
+        {
+            newSlotIndex = new Vector2(12, 12);
+        }
+        else if (slotIndex == 205)
+        {
+            newSlotIndex = new Vector2(13, 12);
+        }
+        else if (slotIndex == 206)
+        {
+            newSlotIndex = new Vector2(14, 12);
+        }
+        else if (slotIndex == 207)
+        {
+            newSlotIndex = new Vector2(15, 12);
+        }
+
+        // 14th row
+        else if (slotIndex == 208)
+        {
+            newSlotIndex = new Vector2(0, 13);
+        }
+        else if (slotIndex == 209)
+        {
+            newSlotIndex = new Vector2(1, 13);
+        }
+        else if (slotIndex == 210)
+        {
+            newSlotIndex = new Vector2(2, 13);
+        }
+        else if (slotIndex == 211)
+        {
+            newSlotIndex = new Vector2(3, 13);
+        }
+        else if (slotIndex == 212)
+        {
+            newSlotIndex = new Vector2(4, 13);
+        }
+        else if (slotIndex == 213)
+        {
+            newSlotIndex = new Vector2(5, 13);
+        }
+        else if (slotIndex == 214)
+        {
+            newSlotIndex = new Vector2(6, 13);
+        }
+        else if (slotIndex == 215)
+        {
+            newSlotIndex = new Vector2(7, 13);
+        }
+        else if (slotIndex == 216)
+        {
+            newSlotIndex = new Vector2(8, 13);
+        }
+        else if (slotIndex == 217)
+        {
+            newSlotIndex = new Vector2(9, 13);
+        }
+        else if (slotIndex == 218)
+        {
+            newSlotIndex = new Vector2(10, 13);
+        }
+        else if (slotIndex == 219)
+        {
+            newSlotIndex = new Vector2(11, 13);
+        }
+        else if (slotIndex == 220)
+        {
+            newSlotIndex = new Vector2(12, 13);
+        }
+        else if (slotIndex == 221)
+        {
+            newSlotIndex = new Vector2(13, 13);
+        }
+        else if (slotIndex == 222)
+        {
+            newSlotIndex = new Vector2(14, 13);
+        }
+        else if (slotIndex == 223)
+        {
+            newSlotIndex = new Vector2(15, 13);
+        }
+
+        // 15th row
+        else if (slotIndex == 224)
+        {
+            newSlotIndex = new Vector2(0, 14);
+        }
+        else if (slotIndex == 225)
+        {
+            newSlotIndex = new Vector2(1, 14);
+        }
+        else if (slotIndex == 226)
+        {
+            newSlotIndex = new Vector2(2, 14);
+        }
+        else if (slotIndex == 227)
+        {
+            newSlotIndex = new Vector2(3, 14);
+        }
+        else if (slotIndex == 228)
+        {
+            newSlotIndex = new Vector2(4, 14);
+        }
+        else if (slotIndex == 229)
+        {
+            newSlotIndex = new Vector2(5, 14);
+        }
+        else if (slotIndex == 230)
+        {
+            newSlotIndex = new Vector2(6, 14);
+        }
+        else if (slotIndex == 231)
+        {
+            newSlotIndex = new Vector2(7, 14);
+        }
+        else if (slotIndex == 232)
+        {
+            newSlotIndex = new Vector2(8, 14);
+        }
+        else if (slotIndex == 233)
+        {
+            newSlotIndex = new Vector2(9, 14);
+        }
+        else if (slotIndex == 234)
+        {
+            newSlotIndex = new Vector2(10, 14);
+        }
+        else if (slotIndex == 235)
+        {
+            newSlotIndex = new Vector2(11, 14);
+        }
+        else if (slotIndex == 236)
+        {
+            newSlotIndex = new Vector2(12, 14);
+        }
+        else if (slotIndex == 237)
+        {
+            newSlotIndex = new Vector2(13, 14);
+        }
+        else if (slotIndex == 238)
+        {
+            newSlotIndex = new Vector2(14, 14);
+        }
+        else if (slotIndex == 239)
+        {
+            newSlotIndex = new Vector2(15, 14);
+        }
+
+        // 16th row
+        else if (slotIndex == 240)
+        {
+            newSlotIndex = new Vector2(0, 15);
+        }
+        else if (slotIndex == 241)
+        {
+            newSlotIndex = new Vector2(1, 15);
+        }
+        else if (slotIndex == 242)
+        {
+            newSlotIndex = new Vector2(2, 15);
+        }
+        else if (slotIndex == 243)
+        {
+            newSlotIndex = new Vector2(3, 15);
+        }
+        else if (slotIndex == 244)
+        {
+            newSlotIndex = new Vector2(4, 15);
+        }
+        else if (slotIndex == 245)
+        {
+            newSlotIndex = new Vector2(5, 15);
+        }
+        else if (slotIndex == 246)
+        {
+            newSlotIndex = new Vector2(6, 15);
+        }
+        else if (slotIndex == 247)
+        {
+            newSlotIndex = new Vector2(7, 15);
+        }
+        else if (slotIndex == 248)
+        {
+            newSlotIndex = new Vector2(8, 15);
+        }
+        else if (slotIndex == 249)
+        {
+            newSlotIndex = new Vector2(9, 15);
+        }
+        else if (slotIndex == 250)
+        {
+            newSlotIndex = new Vector2(10, 15);
+        }
+        else if (slotIndex == 251)
+        {
+            newSlotIndex = new Vector2(11, 15);
+        }
+        else if (slotIndex == 252)
+        {
+            newSlotIndex = new Vector2(12, 15);
+        }
+        else if (slotIndex == 253)
+        {
+            newSlotIndex = new Vector2(13, 15);
+        }
+        else if (slotIndex == 254)
+        {
+            newSlotIndex = new Vector2(14, 15);
+        }
+        else if (slotIndex == 255)
+        {
+            newSlotIndex = new Vector2(15, 15);
+        }
+
+        // 17th row
+        else if (slotIndex == 256)
+        {
+            newSlotIndex = new Vector2(0, 16);
+        }
+        else if (slotIndex == 257)
+        {
+            newSlotIndex = new Vector2(1, 16);
+        }
+        else if (slotIndex == 258)
+        {
+            newSlotIndex = new Vector2(2, 16);
+        }
+        else if (slotIndex == 259)
+        {
+            newSlotIndex = new Vector2(3, 16);
+        }
+        else if (slotIndex == 260)
+        {
+            newSlotIndex = new Vector2(4, 16);
+        }
+        else if (slotIndex == 261)
+        {
+            newSlotIndex = new Vector2(5, 16);
+        }
+        else if (slotIndex == 262)
+        {
+            newSlotIndex = new Vector2(6, 16);
+        }
+        else if (slotIndex == 263)
+        {
+            newSlotIndex = new Vector2(7, 16);
+        }
+        else if (slotIndex == 264)
+        {
+            newSlotIndex = new Vector2(8, 16);
+        }
+        else if (slotIndex == 265)
+        {
+            newSlotIndex = new Vector2(9, 16);
+        }
+        else if (slotIndex == 266)
+        {
+            newSlotIndex = new Vector2(10, 16);
+        }
+        else if (slotIndex == 267)
+        {
+            newSlotIndex = new Vector2(11, 16);
+        }
+        else if (slotIndex == 268)
+        {
+            newSlotIndex = new Vector2(12, 16);
+        }
+        else if (slotIndex == 269)
+        {
+            newSlotIndex = new Vector2(13, 16);
+        }
+        else if (slotIndex == 270)
+        {
+            newSlotIndex = new Vector2(14, 16);
+        }
+        else if (slotIndex == 271)
+        {
+            newSlotIndex = new Vector2(15, 16);
+        }
+
+        // 18th row
+        else if (slotIndex == 272)
+        {
+            newSlotIndex = new Vector2(0, 17);
+        }
+        else if (slotIndex == 273)
+        {
+            newSlotIndex = new Vector2(1, 17);
+        }
+        else if (slotIndex == 274)
+        {
+            newSlotIndex = new Vector2(2, 17);
+        }
+        else if (slotIndex == 275)
+        {
+            newSlotIndex = new Vector2(3, 17);
+        }
+        else if (slotIndex == 276)
+        {
+            newSlotIndex = new Vector2(4, 17);
+        }
+        else if (slotIndex == 277)
+        {
+            newSlotIndex = new Vector2(5, 17);
+        }
+        else if (slotIndex == 278)
+        {
+            newSlotIndex = new Vector2(6, 17);
+        }
+        else if (slotIndex == 279)
+        {
+            newSlotIndex = new Vector2(7, 17);
+        }
+        else if (slotIndex == 280)
+        {
+            newSlotIndex = new Vector2(8, 17);
+        }
+        else if (slotIndex == 281)
+        {
+            newSlotIndex = new Vector2(9, 17);
+        }
+        else if (slotIndex == 282)
+        {
+            newSlotIndex = new Vector2(10, 17);
+        }
+        else if (slotIndex == 283)
+        {
+            newSlotIndex = new Vector2(11, 17);
+        }
+        else if (slotIndex == 284)
+        {
+            newSlotIndex = new Vector2(12, 17);
+        }
+        else if (slotIndex == 285)
+        {
+            newSlotIndex = new Vector2(13, 17);
+        }
+        else if (slotIndex == 286)
+        {
+            newSlotIndex = new Vector2(14, 17);
+        }
+        else if (slotIndex == 287)
+        {
+            newSlotIndex = new Vector2(15, 17);
+        }
+
+        // 19th row
+        else if (slotIndex == 288)
+        {
+            newSlotIndex = new Vector2(0, 18);
+        }
+        else if (slotIndex == 289)
+        {
+            newSlotIndex = new Vector2(1, 18);
+        }
+        else if (slotIndex == 290)
+        {
+            newSlotIndex = new Vector2(2, 18);
+        }
+        else if (slotIndex == 291)
+        {
+            newSlotIndex = new Vector2(3, 18);
+        }
+        else if (slotIndex == 292)
+        {
+            newSlotIndex = new Vector2(4, 18);
+        }
+        else if (slotIndex == 293)
+        {
+            newSlotIndex = new Vector2(5, 18);
+        }
+        else if (slotIndex == 294)
+        {
+            newSlotIndex = new Vector2(6, 18);
+        }
+        else if (slotIndex == 295)
+        {
+            newSlotIndex = new Vector2(7, 18);
+        }
+        else if (slotIndex == 296)
+        {
+            newSlotIndex = new Vector2(8, 18);
+        }
+        else if (slotIndex == 297)
+        {
+            newSlotIndex = new Vector2(9, 18);
+        }
+        else if (slotIndex == 298)
+        {
+            newSlotIndex = new Vector2(10, 18);
+        }
+        else if (slotIndex == 299)
+        {
+            newSlotIndex = new Vector2(11, 18);
+        }
+        else if (slotIndex == 300)
+        {
+            newSlotIndex = new Vector2(12, 18);
+        }
+        else if (slotIndex == 301)
+        {
+            newSlotIndex = new Vector2(13, 18);
+        }
+        else if (slotIndex == 302)
+        {
+            newSlotIndex = new Vector2(14, 18);
+        }
+        else if (slotIndex == 303)
+        {
+            newSlotIndex = new Vector2(15, 18);
         }
         #endregion
         return newSlotIndex;
@@ -3816,16 +5331,15 @@ public class CombatGridManager : MonoBehaviour
         for (int i = 0; i < allCombatSlots.Count; i++)
         {
             if (toggle)
-                allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha(1);
+            {
+                if (allCombatSlots[i].walkable)
+                    allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha(1);
+                else
+                    allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha(0);
+            }
             else
                 allCombatSlots[i].GetComponent<UIElement>().UpdateAlpha(0);
         }
-        /*
-        if (toggle)
-            combatGrid.UpdateAlpha(1);  
-        else
-            combatGrid.UpdateAlpha(0);
-        */
     }
 
     public void ToggleCombatGrid2(bool toggle = true)
@@ -3848,5 +5362,8 @@ public class CombatGridManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        ToggleCombatUIElement(false);
+        ToggleScaleButtons(false);
     }
 }

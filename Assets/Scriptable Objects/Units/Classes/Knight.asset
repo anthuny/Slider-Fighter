@@ -25,6 +25,7 @@ MonoBehaviour:
   startingPower: 35
   startingHealingPower: 0
   startingMaxHealth: 1050
+  startingMaxMovements: 2
   speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 2

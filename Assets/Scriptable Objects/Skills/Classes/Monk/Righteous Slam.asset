@@ -27,13 +27,14 @@ MonoBehaviour:
   skillRangeHitAreas:
   - {x: 0, y: 0}
   - {x: 0, y: 1}
+  - {x: 0, y: 2}
   skillAreaHitCount: 1
   attackAllSelected: 0
   attackAllUnits: 0
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 2
-  curSkillRange: 2
+  startingSkillRange: 3
+  curSkillRange: 3
   skillSprite: {fileID: 21300000, guid: 3227576ce7bc408468136036d5ab4ce1, type: 3}
   skillName: RIGHTEOUS SLAM
   skillDescr: Target 1x2 area, dealing damage. Each hit has a 25% chance to cleanse

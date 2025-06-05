@@ -96,7 +96,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 248
+  m_SortingOrder: 137
   m_TargetDisplay: 0
 --- !u!1 &4185668162183826524
 GameObject:
@@ -214,10 +214,12 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
   itemName: 
+  gearName: 
   rarityBorderUI: {fileID: 0}
   slot: {fileID: 0}
   skillUpgradesUI: {fileID: 0}
@@ -227,6 +229,16 @@ MonoBehaviour:
   isEnabled: 0
   displayingAlert: 0
   raceIconEffectBG: {fileID: 0}
+  commonRarityBG: {fileID: 0}
+  rareRarityBG: {fileID: 0}
+  epicRarityBG: {fileID: 0}
+  legendaryRarityBG: {fileID: 0}
+  selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!225 &2370200593698301044
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -258,5 +270,5 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 371
+  m_SortingOrder: 138
   m_TargetDisplay: 0

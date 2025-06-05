@@ -32,8 +32,8 @@ MonoBehaviour:
   attackAllUnits: 0
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 1
-  curSkillRange: 1
+  startingSkillRange: 2
+  curSkillRange: 2
   skillSprite: {fileID: 21300000, guid: 9f003367cde8e914cadd39e9903c2904, type: 3}
   skillName: QUICK SLASH
   skillDescr: Target 1x1 area, dealing damage

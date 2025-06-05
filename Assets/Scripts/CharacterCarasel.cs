@@ -130,10 +130,19 @@ public class CharacterCarasel : MonoBehaviour
             // Play unit attack animation
             allAlliesMenu[0].StartAttackAnim();
 
+            StartCoroutine(SoundDelay());
             button.buttonLocked = true;
 
             button.StartCoroutine("MenuUnitSelection");
         }
+    }
+
+    IEnumerator SoundDelay()
+    {
+        yield return new WaitForSeconds(0.6f);
+        AudioManager.Instance.Play(allAllies[0].GetCurSkills()[0].skillLaunch.name);
+        yield return new WaitForSeconds(0.45f);
+        AudioManager.Instance.Play(allAllies[0].GetCurSkills()[0].skillHit.name);
     }
 
     public void SpinCarasel(bool leftDir)
@@ -274,6 +283,8 @@ public class CharacterCarasel : MonoBehaviour
 
         PostBattle.Instance.toMapButton.postBattleButtonPressed = false;
         PostBattle.Instance.ToggleToMapButton(false);
+
+        MapManager.Instance.unitMapIcon.ToggleVisibility(false);
     }
 
     public void UpdateAllyDisplayName(UnitData unit, bool locked = false)

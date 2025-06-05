@@ -275,8 +275,8 @@ public class UIElement : MonoBehaviour
 
     public void SetYPosition()
     {
-        //gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0, originalYPos);
-        //gameObject.transform.position = new Vector3(0, originalYPos, transform.position.z);
+        gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0, originalYPos);
+        gameObject.transform.position = new Vector3(0, originalYPos, transform.position.z);
     }
 
     public void GetOriginalYPosition()
@@ -791,9 +791,15 @@ public class UIElement : MonoBehaviour
         if (GetComponent<Image>())
         {
             if (alpha == 1)
+            {
                 GetComponent<Image>().raycastTarget = true;
+                GetComponent<Image>().maskable = true;
+            }
             else
+            {
                 GetComponent<Image>().raycastTarget = false;
+                GetComponent<Image>().maskable = false;
+            }
         }
 
         if (GetComponent<Button>())
