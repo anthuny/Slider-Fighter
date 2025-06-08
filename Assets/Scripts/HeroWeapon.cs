@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class HeroWeapon : MonoBehaviour
 {
-    public int lineSpeed;
+    public float lineSpeed;
     public string ownedUnitName;
     public Transform hitLine;
     public Transform topBarBorder;

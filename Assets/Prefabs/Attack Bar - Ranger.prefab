@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 2905890678032249884}
   - component: {fileID: 5864118596491854697}
   - component: {fileID: 5617403381232171966}
+  - component: {fileID: 101060497466145332}
   m_Layer: 5
   m_Name: Hit Alert Text
   m_TagString: Untagged
@@ -173,7 +174,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9021570472787931060}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -328,6 +329,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -363,7 +365,28 @@ CanvasGroup:
   m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 1
+  m_IgnoreParentGroups: 0
+--- !u!223 &101060497466145332
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91784910078476824}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 530
+  m_TargetDisplay: 0
 --- !u!1 &214590937517541384
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,6 +946,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -3760,7 +3784,7 @@ RectTransform:
   - {fileID: 4010741577823008591}
   - {fileID: 3842812811835194633}
   m_Father: {fileID: 8093244032927774790}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4313,12 +4337,11 @@ RectTransform:
   - {fileID: 9021570472423453295}
   - {fileID: 9021570471515245347}
   - {fileID: 2012759835949866706}
-  - {fileID: 331422402384081907}
   - {fileID: 9021570472138097837}
   - {fileID: 9025662570535514125}
   - {fileID: 5409622087214755489}
   m_Father: {fileID: 9021570472787931060}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4427,6 +4450,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -5451,7 +5475,7 @@ RectTransform:
   m_GameObject: {fileID: 6074497649269379806}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1.0340635}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9025662570535514125}
@@ -5564,6 +5588,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -5614,7 +5639,7 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 1
+  m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
@@ -5973,7 +5998,7 @@ RectTransform:
   m_Children:
   - {fileID: 7698544194150566598}
   m_Father: {fileID: 8093244032927774790}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6888,6 +6913,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -6938,6 +6964,7 @@ GameObject:
   - component: {fileID: 5618772290829436202}
   - component: {fileID: 1216779240955831731}
   - component: {fileID: 4574551198249605112}
+  - component: {fileID: 7276090684058208951}
   m_Layer: 5
   m_Name: Hits Accumulated Text
   m_TagString: Untagged
@@ -6959,7 +6986,7 @@ RectTransform:
   m_Children:
   - {fileID: 4931553252117186647}
   m_Father: {fileID: 9021570472787931060}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7114,6 +7141,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -7146,10 +7174,31 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7205679065593895551}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 1
+  m_IgnoreParentGroups: 0
+--- !u!223 &7276090684058208951
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7205679065593895551}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 530
+  m_TargetDisplay: 0
 --- !u!1 &7278755994238276047
 GameObject:
   m_ObjectHideFlags: 0
@@ -7401,7 +7450,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &588155381628431311
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7416,7 +7465,7 @@ RectTransform:
   m_Children:
   - {fileID: 3342089649465099610}
   m_Father: {fileID: 9021570472787931060}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7571,6 +7620,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -7915,7 +7965,7 @@ RectTransform:
   m_GameObject: {fileID: 7706660116727322252}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25011033, y: 0.25011033, z: 1.0014484}
+  m_LocalScale: {x: 0.9504192, y: 0.9504192, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 743835508601191224}
@@ -7923,12 +7973,12 @@ RectTransform:
   - {fileID: 3904666031594607751}
   - {fileID: 680562253873073037}
   - {fileID: 3643509880219444130}
-  m_Father: {fileID: 8093244032927774790}
-  m_RootOrder: 3
+  m_Father: {fileID: 9021570472787931060}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7, y: 194.34212}
+  m_AnchoredPosition: {x: 15.40003, y: 580.5001}
   m_SizeDelta: {x: 402.63, y: 0.808}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3658306324824575322
@@ -9174,7 +9224,7 @@ RectTransform:
   - {fileID: 7972804956372802539}
   - {fileID: 5669369123601386978}
   m_Father: {fileID: 8093244032927774790}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9378,6 +9428,7 @@ RectTransform:
   - {fileID: 4821495744111998506}
   - {fileID: 2304798067636499833}
   - {fileID: 4293551590760430919}
+  - {fileID: 331422402384081907}
   - {fileID: 8093244032927774790}
   - {fileID: 985991706030385431}
   - {fileID: 588155381628431311}
@@ -9410,7 +9461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce057cb7a92f504abcb83f7987acbaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineSpeed: 9
+  lineSpeed: 650
   ownedUnitName: Ranger
   hitLine: {fileID: 331422402384081907}
   topBarBorder: {fileID: 9021570472423453295}

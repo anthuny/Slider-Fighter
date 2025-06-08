@@ -763,6 +763,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         GameManager.Instance.UpdateAllyVisibility(false);
         // Reset room, enemes only
         GameManager.Instance.ResetRoom(true);
+
+        GameManager.Instance.ToggleCombatSkillIcons(false);
     }
 
     public void ResetMasteryTree()

@@ -116,6 +116,22 @@ public class MapManager : MonoBehaviour
     public Sprite invisSprite;
     int allowBossRoom = 0;
     [SerializeField] private float mapMovementAmount = 1;
+    [SerializeField] private UIElement buttonArrowUpMapScroll;
+    [SerializeField] private UIElement buttonArrowDownMapScroll;
+
+    public void ToggleButtonArrowMapScroll(bool toggle = true)
+    {
+        if (toggle)
+        {
+            buttonArrowUpMapScroll.ToggleButton(toggle);
+            buttonArrowDownMapScroll.ToggleButton(toggle);
+        }
+        else
+        {
+            buttonArrowUpMapScroll.ToggleButton(toggle);
+            buttonArrowDownMapScroll.ToggleButton(toggle);
+        }
+    }
 
     public void MoveMapUp()
     {
@@ -301,6 +317,8 @@ public class MapManager : MonoBehaviour
                 selectedRoom.UpdateIsCompleted(true);
                 GameManager.Instance.ToggleMap(true, false);
             }
+
+            roomStarted = false;
         }
         // If player lost
         else
@@ -465,6 +483,7 @@ public class MapManager : MonoBehaviour
     {
         if (toggle)
         {
+            ToggleButtonArrowMapScroll(true);
             StartCoroutine(PostBattle.Instance.ToggleButtonPostBattleMap(false));
             roomStarted = false;
             OverlayUI.Instance.ToggleShopDetailsBanner(false);
@@ -634,14 +653,19 @@ public class MapManager : MonoBehaviour
             SkillsTabManager.Instance.ToggleSkillUpgradesClickable(false);
 
             TeamGearManager.Instance.ToggleNextFighterArrow(false);
+
+            CombatGridManager.Instance.ToggleCombatSlotsInput(false);
+            GameManager.Instance.ToggleCombatSkillIcons(false);
         }
         else
         {
+            ToggleButtonArrowMapScroll(false);
             //GameManager.Instance.UpdateAllyVisibility(true);
             FighterInventorManager.Instance.ResetFighterInventorySelections();
             map.UpdateAlpha(0);
             //ToggleMapScroll(false);
             MapOverlay.Instance.ToggleMapOverlay(false);
+            GameManager.Instance.ToggleCombatSkillIcons(true);
         }
     }
 
@@ -765,6 +789,14 @@ public class MapManager : MonoBehaviour
         unitMapIcon.UpdateUnitPosition(startingRoom.transform.localPosition);
 
         SetPathsZvalue();
+        ResetMapYPosition();
+        //StartCoroutine(WaitTime());
+    }
+
+    public IEnumerator WaitTime()
+    {
+        yield return new WaitForSeconds(1.5f);
+
     }
 
     void SaveFloor()

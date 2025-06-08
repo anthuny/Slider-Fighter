@@ -276,13 +276,13 @@ public class UIElement : MonoBehaviour
     public void SetYPosition()
     {
         gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0, originalYPos);
-        gameObject.transform.position = new Vector3(0, originalYPos, transform.position.z);
+        gameObject.transform.localPosition = new Vector3(0, originalYPos, transform.localPosition.z);
     }
 
     public void GetOriginalYPosition()
     {
         //originalYPos = gameObject.GetComponent<RectTransform>().localPosition.y;
-        originalYPos = gameObject.transform.position.y;
+        originalYPos = gameObject.transform.localPosition.y;
     }
 
     /*

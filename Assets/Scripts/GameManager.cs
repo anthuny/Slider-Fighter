@@ -255,6 +255,53 @@ public class GameManager : MonoBehaviour
     public UnitFunctionality prevUnit;
     public bool isAttacking = false;
 
+    public void ToggleCombatSkillIcons(bool toggle = true)
+    {
+        skill0Button.GetComponent<Button>().interactable = toggle;
+        skill0Button.GetComponent<CanvasGroup>().interactable = toggle;
+        skill0Button.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+        skill0Button.GetComponent<GraphicRaycaster>().ignoreReversedGraphics = toggle;
+        skill1Button.GetComponent<Button>().interactable = toggle;
+        skill1Button.GetComponent<CanvasGroup>().interactable = toggle;
+        skill1Button.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+        skill1Button.GetComponent<GraphicRaycaster>().ignoreReversedGraphics = toggle;
+        skill2Button.GetComponent<Button>().interactable = toggle;
+        skill2Button.GetComponent<CanvasGroup>().interactable = toggle;
+        skill2Button.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+        skill2Button.GetComponent<GraphicRaycaster>().ignoreReversedGraphics = toggle;
+        skill3Button.GetComponent<Button>().interactable = toggle;
+        skill3Button.GetComponent<CanvasGroup>().interactable = toggle;
+        skill3Button.GetComponent<CanvasGroup>().blocksRaycasts = toggle;
+        skill3Button.GetComponent<GraphicRaycaster>().ignoreReversedGraphics = toggle;
+
+        if (toggle)
+        {
+            skill0Button.GetComponent<UIElement>().UpdateAlpha(1);
+            skill1Button.GetComponent<UIElement>().UpdateAlpha(1);
+            skill2Button.GetComponent<UIElement>().UpdateAlpha(1);
+            skill3Button.GetComponent<UIElement>().UpdateAlpha(1);
+            skill0Button.GetComponent<UIElement>().ToggleButton(true);
+            skill1Button.GetComponent<UIElement>().ToggleButton(true);
+            skill2Button.GetComponent<UIElement>().ToggleButton(true);
+            skill3Button.GetComponent<UIElement>().ToggleButton(true);
+        }
+        else
+        {
+            skill0Button.GetComponent<UIElement>().UpdateAlpha(0);
+            skill1Button.GetComponent<UIElement>().UpdateAlpha(0);
+            skill2Button.GetComponent<UIElement>().UpdateAlpha(0);
+            skill3Button.GetComponent<UIElement>().UpdateAlpha(0);
+            skill0Button.GetComponent<UIElement>().ToggleButton(false);
+            skill1Button.GetComponent<UIElement>().ToggleButton(false);
+            skill2Button.GetComponent<UIElement>().ToggleButton(false);
+            skill3Button.GetComponent<UIElement>().ToggleButton(false);
+            skill0Button.GetComponent<CanvasGroup>().alpha = 0;
+            skill1Button.GetComponent<CanvasGroup>().alpha = 0;
+            skill2Button.GetComponent<CanvasGroup>().alpha = 0;
+            skill3Button.GetComponent<CanvasGroup>().alpha = 0;
+        }
+    }
+
     public void ToggleSkillsItemToggleButton(bool toggle = true)
     {
         if (toggle)
@@ -1256,7 +1303,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             map.ToggleMapVisibility(true, generateMap, increaseFloor);
 
-            ToggleMainSlotVisibility(true);
+            ToggleMainSlotVisibility(false);
 
             MapManager.Instance.UpdateEnterRoomButton();
 
@@ -1913,7 +1960,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Toggle post battle ui on
         postBattleUI.TogglePostBattleUI(true);
 
-        OverlayUI.Instance.ToggleOverlay(false);
+
 
         yield return new WaitForSeconds(.3f);
 
@@ -2246,6 +2293,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // If room type is enemy, spawn enemy room
         if (room.curRoomType == RoomMapIcon.RoomType.ENEMY || room.curRoomType == RoomMapIcon.RoomType.HERO || room.curRoomType == RoomMapIcon.RoomType.BOSS || room.curRoomType == RoomMapIcon.RoomType.ITEM)
         {
+            GameManager.Instance.ToggleCombatSkillIcons(true);
+
             // Stop Map music
             AudioManager.Instance.PauseMapMusic(true);
 
@@ -2461,6 +2510,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 unitFunctionality.ResetPosition();
                 unitFunctionality.UpdateUnitName(unit.unitName);
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
+                CombatGridManager.Instance.UpdateCameraToUnit(unitFunctionality);
 
                 if (unit.curRaceType == UnitData.RaceType.HUMAN)
                 {
@@ -2656,6 +2706,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // If room type is shop, spawn shop room
         else if (room.curRoomType == RoomMapIcon.RoomType.SHOP)
         {
+
             ToggleDetailsBanner(false);
             CombatGridManager.Instance.DisableAllButtons();
             ShopManager.Instance.ToggleInventoryUI(true);
@@ -2722,7 +2773,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             transitionSprite.AllowFadeOut();
 
-
+            GameManager.Instance.ToggleCombatSkillIcons(false);
             return;
         }
     }
@@ -4655,6 +4706,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (allyCount == 0)
         {
+            OverlayUI.Instance.ToggleOverlay(false);
             CombatGridManager.Instance.ToggleCombatGrid(false);
             CombatGridManager.Instance.ToggleCombatUIElement(false);
             playerInCombat = false;
@@ -4664,6 +4716,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else if (enemyCount == 0)
         {
+            OverlayUI.Instance.ToggleOverlay(false);
             playerInCombat = false;
             //if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO)
             CombatGridManager.Instance.ToggleCombatGrid2(false);
@@ -4691,9 +4744,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ITEM || RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
             {
+                GameManager.Instance.ToggleEndTurnButton(false);
                 HideMainSlotDetails();
                 ResetFallenEnemies();
                 SetupItemRewards();
+                GameManager.Instance.ToggleEndTurnButton(false);
             }
             else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
             {
@@ -4730,6 +4785,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         CombatGridManager.Instance.ToggleTabButtons("Skills");
         CombatGridManager.Instance.ToggleTabButtons("Movement");
 
+        GridTargetGroup.Instance.UpdateTargets();
+
         if (combatOver)
             return;
 
@@ -4765,6 +4822,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().ToggleUnitMoveActiveArrows(false);
 
         GetActiveUnitFunctionality().lastUsedSkill = null;
+
+        if (GetActiveUnitFunctionality())
+            GridTargetGroup.Instance.RemoveTarget(GetActiveUnitFunctionality());
 
         for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
         {
@@ -5787,7 +5847,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 if (toggle)
                 {
                     if (!delay)
+                    {
+                        endTurnButtonUI.GetComponent<CanvasGroup>().ignoreParentGroups = true;
                         endTurnButtonUI.UpdateAlpha(1);
+                    }
+
                 }
                 else
                     endTurnButtonUI.UpdateAlpha(0);
@@ -5805,7 +5869,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else
         {
             if (!toggle)
+            {
+                endTurnButtonUI.GetComponent<CanvasGroup>().ignoreParentGroups = false;
                 endTurnButtonUI.UpdateAlpha(0);
+            }
+
         }
     }
 
@@ -5814,7 +5882,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         yield return new WaitForSeconds(0.6f);
 
         if (!GetActiveUnitFunctionality().isDead && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+        {
+            endTurnButtonUI.GetComponent<CanvasGroup>().ignoreParentGroups = true;
             endTurnButtonUI.UpdateAlpha(1);
+        }
+
     }
 
     public void ToggleUIElement(UIElement uiElement, bool toggle)
@@ -7706,7 +7778,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     //ToggleSelectingUnits(false);
                     ToggleAllowSelection(false);
                     HideMainSlotDetails();
-                    PlayerAttack();
+                    PlayerAttack(unit);
                     return;
                 }
 
@@ -7932,12 +8004,17 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         return selectingUnitsAllowed;
     }
 
-    public void PlayerAttack()
+    public void PlayerAttack(UnitFunctionality unit = null)
     {
         if (isAttacking)
             return;
 
         isAttacking = true;
+
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+            CombatGridManager.Instance.UpdateCameraToUnit(unit, true);
+        else
+            CombatGridManager.Instance.UpdateCameraToUnit(unit, false);
 
         DisableButton(skill1Button);
         DisableButton(skill2Button);

@@ -530,7 +530,10 @@ public class ShopManager : MonoBehaviour
     public void ToggleShopVisibility(bool toggle)
     {
         if (toggle)
+        {
+            CombatGridManager.Instance.ResetVCamera();
             shop.UpdateAlpha(1);
+        }
         else
             shop.UpdateAlpha(0);
     }

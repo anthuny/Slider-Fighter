@@ -75,6 +75,11 @@ public class CombatGridManager : MonoBehaviour
     public bool spawnedGhostTiles = false;
     bool moved = false;
 
+    public void ResetVirtCam()
+    {
+        virtCam.Follow = null;
+    }
+
     public List<CombatSlot> FindPath(CombatSlot start, CombatSlot end)
     {
         CombatSlot startSlot = start;
@@ -262,19 +267,52 @@ public class CombatGridManager : MonoBehaviour
             scaleButton.ToggleButton(false);
             deScaleButton.UpdateAlpha(0);
             deScaleButton.ToggleButton(false);
+
+            scalingButtonParent.SetParent(BotScalingLocation);
+            scalingButtonParent.localPosition = Vector3.zero;
         }
     }
 
-    public void UpdateCameraToUnit(UnitFunctionality unit = null)
+    public bool doingCoroutine = false;
+
+    Coroutine coroutine = null;
+    public void UpdateCameraToUnit(UnitFunctionality unit = null, bool attack = false)
     {
-        //mainCam.transform.position = unit.transform.position;
-        //mainCam.transform.position = new Vector3(mainCam.transform.position.x, mainCam.transform.position.y, 0);
+        // If unit is more then 2 tiles away from existing target, do not add new unit
+        if (targetedCombatSlots.Count > 0)
+        {
+            for (int i = 0; i < targetedCombatSlots.Count; i++)
+            {
+                if (targetedCombatSlots[i].GetRangeFromActiveCombatSlot(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) <= 2)
+                    return;
 
-        virtCam.Follow = unit.transform;
+            }
+        }
 
-        StartCoroutine(StopFollowingUnit());
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            GetComponent<ScrollRect>().enabled = false;
+
+
+        GridTargetGroup.Instance.AddTarget(unit);
+        virtCam.Follow = GridTargetGroup.Instance.GetTargetGroupTrans();
+        if (!attack)
+        {
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+                StartCoroutine(StopFollowingUnit());
+
+        }
+
     }
 
+    IEnumerator StopFollowingUnit()
+    {
+        //doingCoroutine = true;
+        yield return new WaitForSeconds(.35f);
+
+        GetComponent<ScrollRect>().enabled = true;
+        virtCam.Follow = null;
+        //doingCoroutine = false;
+    }
     public void ResetVCamera()
     {
         virtCam.ForceCameraPosition(Vector3.zero, Quaternion.identity);
@@ -319,11 +357,7 @@ public class CombatGridManager : MonoBehaviour
         }
     }
 
-    IEnumerator StopFollowingUnit()
-    {
-        yield return new WaitForSeconds(0.35f);
-        virtCam.Follow = null;
-    }
+
 
     public void ToggleCombatUIElement(bool toggle = true)
     {
@@ -374,9 +408,18 @@ public class CombatGridManager : MonoBehaviour
         ToggleButton(GetButtonSkills(), false);
     }
 
-    public void ToggleTabButtons(string tabName = "")
+    public void ToggleTabButtons(string tabName = "", bool flag = false)
     {
-        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+        if (!GameManager.Instance.GetActiveUnitFunctionality())
+        {
+            ToggleButton(GetButtonAttack(), false, false);
+            ToggleButton(GetButtonSkills(), false, false);
+            ToggleButton(GetButtonMovement(), false, false);
+            ToggleButton(GetButtonItems(), false, false);
+            return;
+        }
+
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY || flag)
         {
             ToggleButton(GetButtonAttack(), false, false);
             ToggleButton(GetButtonSkills(), false, false);
@@ -888,6 +931,9 @@ public class CombatGridManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (virtCam.transform.localPosition.z != 5)
+            virtCam.transform.localPosition = new Vector3(virtCam.transform.localPosition.x, virtCam.transform.localPosition.y, 5);
+
         if (allowMovement)
         {
             moveTimer += Time.deltaTime * unitMoveSpeed;
@@ -907,8 +953,10 @@ public class CombatGridManager : MonoBehaviour
                 // Update unit look direction
                 //movingUnit.UpdateUnitLookDirection();
 
-                UpdateCameraToUnit(movingUnit);
-
+                if (movingUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    UpdateCameraToUnit(movingUnit, true);
+                else
+                    UpdateCameraToUnit(movingUnit, false);
 
 
                 movingUnit.skill1OutOfRange = false;
@@ -2312,6 +2360,8 @@ public class CombatGridManager : MonoBehaviour
 
     public void UpdateUnitMoveRange(UnitFunctionality unit)
     {
+        isCombatMode = false;
+
         UnselectAllSelectedCombatSlots();
 
         if (unit.GetCurMovementUses() <= 0)

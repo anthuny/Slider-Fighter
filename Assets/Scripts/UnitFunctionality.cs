@@ -4974,6 +4974,8 @@ public class UnitFunctionality : MonoBehaviour
         {
             selectionCircle.UpdateAlpha(1);
 
+
+
             ToggleUnitStatBarAlpha(true);
         }
         else

@@ -76,6 +76,16 @@ public class WeaponManager : MonoBehaviour
     public bool autoHitBad;
     public bool autoHitMiss;
 
+    public UIElement lineSpeedText;
+
+    public bool stopMoving;
+    public Canvas canvas;
+
+    public void UpdateLineSpeedText()
+    {
+        lineSpeedText.UpdateContentText(weaponLineSpeed.ToString());
+    }
+
     private void Awake()
     {
         Instance = this;
@@ -268,16 +278,10 @@ public class WeaponManager : MonoBehaviour
             autoHitGood = true;
         }
         // Bad
-        else if (rand > 48 && rand <= 95)
+        else if (rand > 48 && rand <= 100)
         {
             curHitAreaType = HitAreaType.BAD;
             autoHitBad = true;
-        }
-        // Miss
-        else if (rand > 95 && rand <= 100) // old miss 92
-        {
-            curHitAreaType = HitAreaType.MISS;
-            autoHitMiss = true;
         }
         
         //Debug.Log("rand = " + rand);
@@ -372,6 +376,8 @@ public class WeaponManager : MonoBehaviour
 
     public void SetHeroWeapon(string unitName)
     {
+        UpdateLineSpeedText();
+
         // Disable all weapons
         for (int x = 0; x < heroWeapons.Count; x++)
         {
@@ -632,19 +638,37 @@ public class WeaponManager : MonoBehaviour
         weaponUI.AnimateUI(false);
     }
 
-
+    public float t = 0;
 
     void MoveHitLine()
     {
         if (!isStopped)
         {
-            FlipHitLineDirection();
-
+            CheckToFlipHitLineDirection();
+            Transform trans = hitLine.GetChild(1);
             if (goingUp)
-                hitLine.Translate((Vector2.up * weaponLineSpeed) * Time.deltaTime);
-            else
-                hitLine.Translate((Vector2.down * weaponLineSpeed) * Time.deltaTime);
+            {
+                //stopMoving = true;
+                //goingUp = false;
+                //hitLine.Translate(Vector2.up * weaponLineSpeed * Time.deltaTime);
+                //hitLine.GetComponent<Rigidbody2D>().velocity = new Vector2(0, weaponLineSpeed);
+                //Vector2 targetPos = hitLine.GetComponent<Rigidbody2D>().position + Vector2.up * weaponLineSpeed * Time.fixedDeltaTime;
+                //float canvasScale = canvas.scaleFactor;
 
+                //Vector2 newPosition = Vector2.MoveTowards(trans.position, topBarBorder.position, weaponLineSpeed * Time.fixedDeltaTime);
+                //Vector2 targetPosition = new Vector2(newPosition.x, newPosition.y * canvasScale);
+                t += weaponLineSpeed * Time.fixedDeltaTime;
+                //hitLine.GetComponent<Rigidbody2D>().MovePosition(newPosition);
+                hitLine.position = Vector2.Lerp(botBarBorder.position, topBarBorder.position, t);
+            }
+            else
+            {
+                //stopMoving = true;
+                //goingUp = true;
+                //hitLine.Translate(Vector2.down * weaponLineSpeed * Time.deltaTime);
+                t += weaponLineSpeed * Time.fixedDeltaTime;
+                hitLine.position = Vector2.Lerp(topBarBorder.position, botBarBorder.position, t);
+            }
         }
     }
 
@@ -679,25 +703,57 @@ public class WeaponManager : MonoBehaviour
         attackButton.raycastTarget = toggle;
     }
 
-    void FlipHitLineDirection()
+    void CheckToFlipHitLineDirection()
     {
+        Transform trans = hitLine.GetChild(1);
         if (goingUp)
         {
-            if (Vector2.Distance(topBarBorder.position, hitLine.position) <= minDistanceBorderTrigger)
+            if (Mathf.Abs(topBarBorder.position.y - trans.position.y) <= 3)
+            {
                 goingUp = false;
+                t = 0;
+                return;
+                //hitLine.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                //hitLine.GetComponent<Rigidbody2D>().AddForce(Vector2.up * weaponLineSpeed * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                //stopMoving = false;
+            }
 
             // If line is above top border
-            if (topBarBorder.position.y < hitLine.position.y)
+            if (topBarBorder.position.y <= trans.position.y)
+            {
                 goingUp = false;
+                t = 0;
+                return;
+                //hitLine.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                //hitLine.GetComponent<Rigidbody2D>().angularVelocity = 0;
+                //stopMoving = false;
+            }
+
         }
         else
         {
-            if (Vector2.Distance(botBarBorder.position, hitLine.position) <= minDistanceBorderTrigger)
+            if (Mathf.Abs(botBarBorder.position.y - trans.position.y) <= 3)
+            {
                 goingUp = true;
+                t = 0;
+                return;
+                //hitLine.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                //hitLine.GetComponent<Rigidbody2D>().angularVelocity = 0;
+                //stopMoving = false;
+            }
+
 
             // If line is below bottom border
-            if (botBarBorder.position.y > hitLine.position.y)
+            if (botBarBorder.position.y >= trans.position.y)
+            {
                 goingUp = true;
+                t = 0;
+                return;
+                //hitLine.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                //hitLine.GetComponent<Rigidbody2D>().angularVelocity = 0;
+                //stopMoving = false;
+            }
+
         }
     }
     public void StartHitLine(bool resetAcc = true)
@@ -706,6 +762,7 @@ public class WeaponManager : MonoBehaviour
             return;
         else if (GameManager.Instance.GetActiveItem() == null && !GameManager.Instance.isSkillsMode)
             return;
+
 
         //Debug.Log("starting hit line");
         isStopped = false;
@@ -809,7 +866,6 @@ public class WeaponManager : MonoBehaviour
                         hitAccuracy += 2;
                         hitAccuracy += GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
                         acc += 1;
-                        accFloat = -2.5f;
                         AudioManager.Instance.IncreaseAttackBarTrackPitch(0.05f);
 
                         StartCoroutine(HitsAccumuatedPopup(2 + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount));
@@ -820,7 +876,7 @@ public class WeaponManager : MonoBehaviour
                         hitAccuracy += 1;
                         hitAccuracy += GameManager.Instance.GetActiveSkill().upgradeIncHitsCount;
                         acc += 1;
-                        accFloat = -1f;
+                        accFloat = .25f;
                         AudioManager.Instance.IncreaseAttackBarTrackPitch(0.1f);
                         hitsPerformed++;
                         StartCoroutine(HitsAccumuatedPopup(1 + GameManager.Instance.GetActiveSkill().upgradeIncHitsCount));
@@ -830,6 +886,7 @@ public class WeaponManager : MonoBehaviour
                     {
                         hitAccuracy += 1;
                         acc += 1;
+                        accFloat = .5f;
                         hitsPerformed++;
                         AudioManager.Instance.IncreaseAttackBarTrackPitch(0.125f);
                         StartCoroutine(HitsAccumuatedPopup(1));
@@ -1045,6 +1102,8 @@ public class WeaponManager : MonoBehaviour
             //else
                 //isStopped = false;
         }
+
+        UpdateLineSpeedText();
 
         if (stopHitLine && hitsRemaining <= 0 && GameManager.Instance.activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.ENEMY ||
             stopHitLine && GameManager.Instance.activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER)

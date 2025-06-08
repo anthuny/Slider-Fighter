@@ -331,11 +331,18 @@ public class OverlayUI : MonoBehaviour
     {
         if (toggle)
         {
+            GameManager.Instance.ToggleCombatSkillIcons(true);
             cg.alpha = 1;
         }
         else
         {
             cg.alpha = 0;
+            CombatGridManager.Instance.ResetVirtCam();
+            GameManager.Instance.ToggleCombatSkillIcons(false);
+            CombatGridManager.Instance.ToggleTabButtons("", true);
+            CombatGridManager.Instance.ToggleScaleButtons(false);
+            GameManager.Instance.ToggleEndTurnButton(false);
+            CombatGridManager.Instance.DisableAllButtons();
         }
     }
 
