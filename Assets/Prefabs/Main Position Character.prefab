@@ -229,6 +229,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -248,6 +249,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!114 &5327878770732334197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,6 +410,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -423,6 +430,11 @@ MonoBehaviour:
   epicRarityBG: {fileID: 0}
   legendaryRarityBG: {fileID: 0}
   selection: {fileID: 0}
+  linkedGearPiece: {fileID: 0}
+  linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
+  isEmpty: 1
+  isEquipped: 0
 --- !u!223 &5789137698856299066
 Canvas:
   m_ObjectHideFlags: 0
@@ -562,7 +574,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 31001
+  m_SortingOrder: 31010
   m_TargetDisplay: 0
 --- !u!1 &8648429512500235734
 GameObject:
@@ -660,7 +672,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 31001
+  m_SortingOrder: 31010
   m_TargetDisplay: 0
 --- !u!1 &8974590763603742560
 GameObject:

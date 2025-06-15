@@ -54,4 +54,9 @@ public class GridTargetGroup : MonoBehaviour
                 RemoveTarget(camFocusedUnits[i]);
         }
     }
+
+    public void ClearTargets()
+    {
+        camFocusedUnits.Clear();
+    }
 }

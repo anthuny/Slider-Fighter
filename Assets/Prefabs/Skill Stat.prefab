@@ -103,7 +103,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 265
+  m_SortingOrder: 31009
   m_TargetDisplay: 0
 --- !u!114 &1422483734219903222
 MonoBehaviour:
@@ -388,6 +388,7 @@ MonoBehaviour:
   isStatButton: 1
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!225 &4397650663968181873
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -814,7 +815,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 265
+  m_SortingOrder: 31009
   m_TargetDisplay: 0
 --- !u!1 &9148743046425628559
 GameObject:
@@ -924,6 +925,10 @@ PrefabInstance:
     - target: {fileID: 1920209895518195566, guid: dee26bd5d4278b04bb74511252a33b93, type: 3}
       propertyPath: m_Name
       value: Stat Tooltip
+      objectReference: {fileID: 0}
+    - target: {fileID: 5503519667292204663, guid: dee26bd5d4278b04bb74511252a33b93, type: 3}
+      propertyPath: m_SortingOrder
+      value: 31010
       objectReference: {fileID: 0}
     - target: {fileID: 9023739305905932001, guid: dee26bd5d4278b04bb74511252a33b93, type: 3}
       propertyPath: m_Pivot.x

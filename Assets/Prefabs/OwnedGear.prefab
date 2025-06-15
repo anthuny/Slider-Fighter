@@ -190,6 +190,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -211,7 +212,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &3718657310061081098
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -296,7 +299,7 @@ RectTransform:
   m_GameObject: {fileID: 2663448481380380229}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5779455883251686368}
@@ -355,6 +358,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &2663448481380380238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,6 +531,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -548,7 +553,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &2914078834039567977
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,6 +676,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -690,7 +698,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!95 &3391284612123565811
 Animator:
   serializedVersion: 4
@@ -885,6 +895,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -906,7 +917,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &6533004875944880402
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1084,6 +1097,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &4239900317674384749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1176,6 +1190,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1197,7 +1212,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &6936333663621279895
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1378,6 +1395,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1399,7 +1417,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &5708663613112706092
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1526,6 +1546,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1547,7 +1568,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &1507075558001027333
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1708,6 +1731,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1729,7 +1753,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &6151540024578073427
 GameObject:
   m_ObjectHideFlags: 0
@@ -1886,6 +1912,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1907,7 +1934,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &3891830942255159829
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2173,6 +2202,7 @@ MonoBehaviour:
   selectable: 1
   selectBorder: {fileID: 8844219337109568658}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 1215810184228664305}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2194,7 +2224,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!114 &2829809881091383309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2215,6 +2247,7 @@ MonoBehaviour:
   curGearOwnedBy: 0
   curSlotPosition: 3
   curSlotType: 0
+  curSlotType2: 0
   skill: {fileID: 0}
   slotUI: {fileID: 1799372229995533476}
   slotSelectionUI: {fileID: 8844219337109568658}
@@ -2425,7 +2458,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 31015
+  m_SortingOrder: 31030
   m_TargetDisplay: 0
 --- !u!114 &4306977089301429433
 MonoBehaviour:
@@ -2463,6 +2496,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2484,7 +2518,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &7608528657237354258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2886,6 +2922,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2907,7 +2944,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &8561344292944666592
 GameObject:
   m_ObjectHideFlags: 0
@@ -3134,7 +3173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7320469904212443066, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d7ac84033711b54b8ee8dc047354bae, type: 3}
@@ -3786,6 +3825,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2198779717224622378}
     m_Modifications:
+    - target: {fileID: 3546691620217904277, guid: d86ddb2b8d1ee0d4faea21eb31df2fda, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3546691620217904277, guid: d86ddb2b8d1ee0d4faea21eb31df2fda, type: 3}
+      propertyPath: m_fontSize
+      value: 165
+      objectReference: {fileID: 0}
     - target: {fileID: 6625543128425256542, guid: d86ddb2b8d1ee0d4faea21eb31df2fda, type: 3}
       propertyPath: m_Name
       value: Item Rarity Text

@@ -17,8 +17,12 @@ public class CharacterAnimation : MonoBehaviour {
         On_Front_Back(Front_Back);
         ChangeRotate(Left_Right);
 
-        unit = GetComponentInParent<UnitFunctionality>();
-        unit.characterAnimation = this;
+        if (unit)
+        {
+            unit = GetComponentInParent<UnitFunctionality>();
+            unit.characterAnimation = this;
+        }
+
     }
     public void On_Front_Back(bool flg) {
         Front_Back = flg;

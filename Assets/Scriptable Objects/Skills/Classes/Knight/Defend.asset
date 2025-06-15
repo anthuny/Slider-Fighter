@@ -27,12 +27,11 @@ MonoBehaviour:
   skillRangeHitAreas:
   - {x: 0, y: 0}
   skillAreaHitCount: 1
-  attackAllSelected: 0
-  attackAllUnits: 0
+  attackAllInRange: 1
   canTargetSelf: 1
   skillIgnoreRange: 0
-  startingSkillRange: 3
-  curSkillRange: 3
+  startingSkillRange: 5
+  curSkillRange: 5
   skillSprite: {fileID: 21300000, guid: dce558576a4749e438749fd10a6f3757, type: 3}
   skillName: DEFENSE UP
   skillDescr: Target 1x1 area, apply effect Defense Up
@@ -44,7 +43,7 @@ MonoBehaviour:
   curSkillPower: 0
   skillAttackAccMult: 1
   skillBaseHitOutput: 0
-  skillHitAttempts: 1
+  skillHitAttempts: 3
   projectileSpeed: 10
   skillCooldown: 2
   curCooldown: 0

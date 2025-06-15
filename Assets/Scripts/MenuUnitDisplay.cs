@@ -45,13 +45,16 @@ public class MenuUnitDisplay : MonoBehaviour
 
     public void ToggleFighterRaceIcon(bool toggle = true)
     {
-        if (toggle)
+        if (raceIcon)
         {
-            raceIcon.UpdateAlpha(1);
-        }
-        else
-        {
-            raceIcon.UpdateAlpha(0);
+            if (toggle)
+            {
+                raceIcon.UpdateAlpha(1);
+            }
+            else
+            {
+                raceIcon.UpdateAlpha(0);
+            }
         }
     }
     // Start is called before the first frame update
@@ -100,7 +103,7 @@ public class MenuUnitDisplay : MonoBehaviour
         unitLevel.UpdateContentSubTextTMP(newLevel.ToString());
     }
 
-    public void UpdateUnitDisplay(string unitName, bool fallenFighter = false)
+    public void UpdateUnitDisplay(string unitName, bool fallenFighter = false, bool slot = false)
     {
         this.unitName = unitName;
 
@@ -123,8 +126,36 @@ public class MenuUnitDisplay : MonoBehaviour
             }
             else
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(10, 0);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(16, -15);
+
+                if (transform.GetComponentInParent<CombatSlot>())
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(3.3f, 3.3f);
+
+                    if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Left" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpLeft" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownLeft")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                    }
+                    else if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Right" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpRight" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownRight")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().GetLookDirection() > 0)
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                        else
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
+                }
             }
 
             if (!fallenFighter)
@@ -153,8 +184,36 @@ public class MenuUnitDisplay : MonoBehaviour
             }
             else
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 55);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(16, 25f);
+
+                if (transform.GetComponentInParent<CombatSlot>())
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.05f, 4.05f);
+
+                    if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Left" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpLeft" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownLeft")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                    }
+                    else if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Right" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpRight" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownRight")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().GetLookDirection() > 0)
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                        else
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5, 5);
+                }
             }
 
             if (!fallenFighter)
@@ -182,8 +241,42 @@ public class MenuUnitDisplay : MonoBehaviour
             }
             else
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.087784f, 4.087784f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-5, 55);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(16, 30);
+
+                if (transform.GetComponentInParent<CombatSlot>())
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(3f, 4.5f);
+
+                    if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Left" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpLeft" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownLeft")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                    }
+                    else if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Right" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpRight" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownRight")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().GetLookDirection() > 0)
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                        else
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                }
+
+                if (GameManager.Instance.playerInCombat)
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(16, 30);
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(3.5f, 4.5f);
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4, 4);
+                }
             }
 
             if (!fallenFighter)
@@ -212,8 +305,37 @@ public class MenuUnitDisplay : MonoBehaviour
             }
             else
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(20, 55);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(16, 25);
+
+                if (transform.GetComponentInParent<CombatSlot>())
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.05f, 4.05f);
+
+                    if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Left" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpLeft" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownLeft")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                    }
+                    else if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Right" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpRight" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownRight")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().GetLookDirection() > 0)
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                        else
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5, 5);
+                }
+
             }
 
             if (!fallenFighter)
@@ -242,8 +364,36 @@ public class MenuUnitDisplay : MonoBehaviour
             }
             else
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5.3f, 5.3f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(5, 5);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(16, 0);
+
+                if (transform.GetComponentInParent<CombatSlot>())
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(4.05f, 4.05f);
+
+                    if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Left" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpLeft" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownLeft")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                    }
+                    else if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Right" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpRight" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownRight")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().GetLookDirection() > 0)
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                        else
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5, 5);
+                }
             }
 
             if (!fallenFighter)
@@ -272,8 +422,36 @@ public class MenuUnitDisplay : MonoBehaviour
             }
             else
             {
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(-15f, 15f);
-                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(-13f, -25);
+                animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector2(16, -4);
+
+                if (transform.GetComponentInParent<CombatSlot>())
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(3.75f, 3.75f);
+
+                    if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Left" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpLeft" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownLeft")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                    }
+                    else if (transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "Right" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "UpRight" ||
+                        transform.GetComponentInParent<CombatSlot>().GetDirection(GameManager.Instance.GetActiveUnitFunctionality().GetActiveCombatSlot()) == "DownRight")
+                    {
+                        animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.GetActiveUnitFunctionality().GetLookDirection() > 0)
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(false);
+                        else
+                            animator.gameObject.transform.GetComponent<CharacterAnimation>().ToggleUnitXAxis(true);
+                    }
+                }
+                else
+                {
+                    animator.gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector2(5, 5);
+                }
             }
 
             if (!fallenFighter)
@@ -303,7 +481,7 @@ public class MenuUnitDisplay : MonoBehaviour
 
         }
 
-        StartIdleAnim();
+        StartIdleAnim(slot);
     }
 
     public void ResetUnitStats()
@@ -423,20 +601,31 @@ public class MenuUnitDisplay : MonoBehaviour
         else
             unitImage.color = CharacterCarasel.Instance.unlockedUnitColour;
 
-        if (displayQuestionMark)
-            unitQuestionMarkImage.UpdateAlpha(1);
-        else
-            unitQuestionMarkImage.UpdateAlpha(0);
+        if (unitQuestionMarkImage)
+        {
+            if (displayQuestionMark)
+                unitQuestionMarkImage.UpdateAlpha(1);
+            else
+                unitQuestionMarkImage.UpdateAlpha(0);
+        }
+
     }
 
     public bool GetLocked()
     {
         return unitLocked;
     }
-    public void StartIdleAnim()
+    public void StartIdleAnim(bool ghost = false)
     {
-        animator.SetBool("MoveFlg", false);
-        animator.SetBool("AttackFlg", false);
+        if (!ghost)
+        {
+            animator.SetBool("MoveFlg", false);
+            animator.SetBool("AttackFlg", false);
+        }
+        else
+        {
+            animator.SetBool("IsGhost", true);
+        }
     }
 
     public void StartWalkAnim()

@@ -323,6 +323,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -344,7 +345,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &1135544769983597868
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -393,6 +396,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -414,7 +418,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &2274002338907401502
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,6 +496,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -511,7 +518,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &5318057463364546203
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -734,6 +743,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -755,7 +765,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &3665959063296941076
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,6 +911,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &7940373072052295796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,6 +1004,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1012,7 +1026,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &139784354561599443
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1156,6 +1172,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1177,7 +1194,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &4474914444454684668
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1309,6 +1328,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1330,7 +1350,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!95 &6175672780187415552
 Animator:
   serializedVersion: 4
@@ -1550,6 +1572,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &4402806483487106173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1722,6 +1745,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -1743,7 +1767,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!114 &5887925854217615233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1946,6 +1972,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &4402806483487106061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2038,6 +2065,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2059,7 +2087,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &4402806483487106916
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2411,6 +2441,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2432,7 +2463,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &4402806483487105494
 GameObject:
   m_ObjectHideFlags: 0
@@ -2531,6 +2564,7 @@ MonoBehaviour:
   selectable: 1
   selectBorder: {fileID: 4402806483487106204}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 4402806483487107035}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2552,7 +2586,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!114 &4402806483487106112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2858,6 +2894,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -2879,7 +2916,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &4402806483487106939
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3027,6 +3066,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -3048,7 +3088,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &2266855385515825238
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3271,6 +3313,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -3292,7 +3335,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!1 &6018639589702818106
 GameObject:
   m_ObjectHideFlags: 0
@@ -3532,7 +3577,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 31008
+  m_SortingOrder: 31004
   m_TargetDisplay: 0
 --- !u!114 &3875573269345702567
 MonoBehaviour:
@@ -3572,6 +3617,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &287401364676148888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3664,6 +3710,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -3685,7 +3732,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &4114197471355283016
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3842,6 +3891,7 @@ GameObject:
   - component: {fileID: 71480557434705979}
   - component: {fileID: 6787538443379880850}
   - component: {fileID: 8645846747744114379}
+  - component: {fileID: 4727786947799642247}
   m_Layer: 0
   m_Name: Alert Bag Sprite
   m_TagString: Untagged
@@ -3944,6 +3994,7 @@ MonoBehaviour:
   selectable: 0
   selectBorder: {fileID: 0}
   statPointsAdded: 0
+  extraHitsPointsAdded: 0
   lockedImage: {fileID: 0}
   unlockedPointsThreshhold: 0
   isLocked: 0
@@ -3965,7 +4016,9 @@ MonoBehaviour:
   selection: {fileID: 0}
   linkedGearPiece: {fileID: 0}
   linkedItemPiece: {fileID: 0}
+  linkedUnit: {fileID: 0}
   isEmpty: 1
+  isEquipped: 0
 --- !u!225 &8645846747744114379
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3978,6 +4031,27 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!223 &4727786947799642247
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8535266006042626065}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 31005
+  m_TargetDisplay: 0
 --- !u!1 &8813120187504306533
 GameObject:
   m_ObjectHideFlags: 0

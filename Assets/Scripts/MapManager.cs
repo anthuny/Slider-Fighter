@@ -228,6 +228,8 @@ public class MapManager : MonoBehaviour
 
     public void Setup()
     {
+        CombatGridManager.Instance.UpdateActiveCombatGrid();
+
         OwnedLootInven.Instance.ResetOwnedGear();
         OwnedLootInven.Instance.ResetOwnedItems();
 
@@ -301,6 +303,7 @@ public class MapManager : MonoBehaviour
         // If player won
         if (playerWon)
         {
+            GridTargetGroup.Instance.ClearTargets();
             RoomManager.Instance.IncrementDefaultRoomsCleared();
 
             if (RoomManager.Instance.GetActiveRoom().GetRoomType() == RoomMapIcon.RoomType.BOSS)
@@ -348,6 +351,8 @@ public class MapManager : MonoBehaviour
             AdManager.Instance.ShowSkippableAd();
 
         RoomManager.Instance.ResetFloorCount();
+
+        GridTargetGroup.Instance.ClearTargets();
 
         GameManager.Instance.ToggleFighterCarasel(true);
         CharacterCarasel.Instance.ResetMenu();
@@ -655,6 +660,7 @@ public class MapManager : MonoBehaviour
             TeamGearManager.Instance.ToggleNextFighterArrow(false);
 
             CombatGridManager.Instance.ToggleCombatSlotsInput(false);
+            CombatGridManager.Instance.ResetSlotCovers();
             GameManager.Instance.ToggleCombatSkillIcons(false);
         }
         else

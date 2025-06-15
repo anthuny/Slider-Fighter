@@ -27,8 +27,7 @@ MonoBehaviour:
   skillRangeHitAreas:
   - {x: 0, y: 0}
   skillAreaHitCount: 1
-  attackAllSelected: 0
-  attackAllUnits: 0
+  attackAllInRange: 0
   canTargetSelf: 0
   skillIgnoreRange: 0
   startingSkillRange: 4
@@ -46,7 +45,7 @@ MonoBehaviour:
   curSkillPower: 25
   skillAttackAccMult: 1
   skillBaseHitOutput: 0
-  skillHitAttempts: 1
+  skillHitAttempts: 3
   projectileSpeed: 9
   skillCooldown: 1
   curCooldown: 0

@@ -415,6 +415,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
         if (combatSlot)
         {
+
+
             //CombatGridManager.Instance.ResetAllowedSlotAnims();
 
             if (!CombatGridManager.Instance.isCombatMode)
@@ -437,7 +439,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
                         if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
                         {
-                            if (!CombatGridManager.Instance.spawnedGhostTiles || !CombatGridManager.Instance.GetSelectedCombatSlotMove().movementSelected)
+                            if (!CombatGridManager.Instance.spawnedGhostTiles || !CombatGridManager.Instance.GetSelectedCombatSlotMove().ghostDisplaying)
                                 CombatGridManager.Instance.SetGhostTiles(GameManager.Instance.GetActiveUnitFunctionality());
                             else
                                 CombatGridManager.Instance.StartCoroutine(CombatGridManager.Instance.MoveUnitToNewSlot(GameManager.Instance.GetActiveUnitFunctionality()));
@@ -528,7 +530,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                             selectedUnit = combatSlot.GetFallenUnits()[0];
                     }
 
-                    if (!GameManager.Instance.GetActiveSkill().attackAllSelected)
+                    if (!GameManager.Instance.GetActiveSkill().attackAllInRange)
                     {
                         if (selectedUnit || combatSlot.GetFallenUnits().Count > 0 && 
                             GameManager.Instance.GetActiveSkill().curskillSelectionAliveType == SkillData.SkillSelectionAliveType.DEAD)
@@ -2194,6 +2196,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             CombatGridManager.Instance.ToggleTabButtons("Attack");
         }
+
+        OverlayUI.Instance.UpdateCombatBorderColour();
     }
     public void ButtonCombatMovementTab()
     {
@@ -2336,6 +2340,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
             }
         }
+
+        OverlayUI.Instance.UpdateCombatBorderColour();
     }
 
     public void ButtonCombatSkillsTab()
@@ -2383,6 +2389,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             CombatGridManager.Instance.ToggleTabButtons("Skills");
         }
+
+        OverlayUI.Instance.UpdateCombatBorderColour();
     }
 
     public void SelectMainIcon1()

@@ -25,7 +25,7 @@ MonoBehaviour:
   startingPower: 35
   startingHealingPower: 0
   startingMaxHealth: 1050
-  startingMaxMovements: 2
+  startingMaxMovements: 3
   speedIncPerLv: 1
   powerIncPerLv: 1
   healingPowerIncPerLv: 2
@@ -40,7 +40,7 @@ MonoBehaviour:
   curSkills:
   - {fileID: 11400000, guid: 9f6a8465294f1d84186371c85c004e82, type: 2}
   - {fileID: 11400000, guid: 210dbf9b1bfecd54f867b0a4d6661ec8, type: 2}
-  - {fileID: 11400000, guid: dd8256fe076a447499e0a7736e72c57d, type: 2}
   - {fileID: 11400000, guid: e7a970b667a73384f8266eb6ae66a8cf, type: 2}
+  - {fileID: 11400000, guid: dd8256fe076a447499e0a7736e72c57d, type: 2}
   deathClip: {fileID: 8300000, guid: 2ee8bb7478e1f704992347ee205d7b67, type: 3}
   hitRecievedClip: {fileID: 8300000, guid: 1f91da09a3e411d4283247c2a4fd67b8, type: 3}

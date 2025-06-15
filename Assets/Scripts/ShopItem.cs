@@ -553,5 +553,7 @@ public class ShopItem : MonoBehaviour
             OverlayUI.Instance.UpdateShopDetailsBanner(null, linkedGearPiece, null);
         else if (linkedItemPiece)
             OverlayUI.Instance.UpdateShopDetailsBanner(null, null, linkedItemPiece);
+
+        OverlayUI.Instance.ToggleCombatBorder(false);
     }
 }

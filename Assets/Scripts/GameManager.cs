@@ -254,6 +254,7 @@ public class GameManager : MonoBehaviour
     public bool isSkillsMode = true;
     public UnitFunctionality prevUnit;
     public bool isAttacking = false;
+    public bool combatStarted = false;
 
     public void ToggleCombatSkillIcons(bool toggle = true)
     {
@@ -601,6 +602,8 @@ public class GameManager : MonoBehaviour
 
         ToggleMap(false);
         postBattleUI.TogglePostBattleUI(false);
+        CombatGridManager.Instance.UpdateActiveCombatGrid();
+        CombatGridManager.Instance.Setup();
 
         StartRoom(RoomManager.Instance.GetActiveRoom(), RoomManager.Instance.GetActiveFloor());
     }
@@ -2293,6 +2296,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // If room type is enemy, spawn enemy room
         if (room.curRoomType == RoomMapIcon.RoomType.ENEMY || room.curRoomType == RoomMapIcon.RoomType.HERO || room.curRoomType == RoomMapIcon.RoomType.BOSS || room.curRoomType == RoomMapIcon.RoomType.ITEM)
         {
+
+
             GameManager.Instance.ToggleCombatSkillIcons(true);
 
             // Stop Map music
@@ -2314,6 +2319,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             CombatGridManager.Instance.ToggleCombatSlotsInput(true);
 
             //CombatGridManager.Instance.GetButtonAttackMovement().ButtonCombatAttackMovement(true);
+
+
 
             // Combat battle music
             AudioManager.Instance.Play("Combat");
@@ -2510,7 +2517,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 unitFunctionality.ResetPosition();
                 unitFunctionality.UpdateUnitName(unit.unitName);
                 unitFunctionality.UpdateUnitSprite(unit.characterPrefab);
-                CombatGridManager.Instance.UpdateCameraToUnit(unitFunctionality);
+
 
                 if (unit.curRaceType == UnitData.RaceType.HUMAN)
                 {
@@ -2648,6 +2655,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 else
                 {
                     activeRoomAllUnitFunctionalitys[x].ToggleUnitHitsRemaining(false);
+                    CombatGridManager.Instance.UpdateCameraToUnit(activeRoomAllUnitFunctionalitys[x], false);
                 }
 
                 // Update unit energy bar on
@@ -2700,13 +2708,14 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             //MapManager.Instance.ToggleButtonItemsTabCombat(true);
 
 
+            CombatGridManager.Instance.ToggleScrollRect(true);
             UpdateTurnOrder(false);
         }
 
         // If room type is shop, spawn shop room
         else if (room.curRoomType == RoomMapIcon.RoomType.SHOP)
         {
-
+            CombatGridManager.Instance.UpdateActiveCombatGrid(true);
             ToggleDetailsBanner(false);
             CombatGridManager.Instance.DisableAllButtons();
             ShopManager.Instance.ToggleInventoryUI(true);
@@ -2774,6 +2783,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             transitionSprite.AllowFadeOut();
 
             GameManager.Instance.ToggleCombatSkillIcons(false);
+
+            CombatGridManager.Instance.ToggleCombatSlotsInput(false);
+            CombatGridManager.Instance.ToggleCombatSlotsInput2(false);
+            CombatGridManager.Instance.ToggleScrollRect(false);
+            CombatGridManager.Instance.ResetSlotCovers();
             return;
         }
     }
@@ -3965,7 +3979,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     if (prevUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
                     {
                         prevUnit = null;
-                        ToggleEndTurnButton(true, true);
+                        ToggleEndTurnButton(true, false);
                     }
                     else
                         ToggleEndTurnButton(true, false);
@@ -4706,6 +4720,8 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (allyCount == 0)
         {
+            combatStarted = false;
+            CombatGridManager.Instance.ResetSlotCovers();
             OverlayUI.Instance.ToggleOverlay(false);
             CombatGridManager.Instance.ToggleCombatGrid(false);
             CombatGridManager.Instance.ToggleCombatUIElement(false);
@@ -4716,6 +4732,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else if (enemyCount == 0)
         {
+            combatStarted = false;
+            CombatGridManager.Instance.ResetSlotCovers();
+            //OverlayUI.Instance.ToggleEnemiesRemainingText(false);
             OverlayUI.Instance.ToggleOverlay(false);
             playerInCombat = false;
             //if (RoomManager.Instance.GetActiveRoom().curRoomType != RoomMapIcon.RoomType.HERO)
@@ -4785,7 +4804,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         CombatGridManager.Instance.ToggleTabButtons("Skills");
         CombatGridManager.Instance.ToggleTabButtons("Movement");
 
-        GridTargetGroup.Instance.UpdateTargets();
+        CombatGridManager.Instance.ResetSlotDirArrow();
+        CombatGridManager.Instance.ResetAllGhosts();
+        CombatGridManager.Instance.ResetCombatSlotMovementSelected();
 
         if (combatOver)
             return;
@@ -4868,27 +4889,30 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().skill3OutOfRange = false;
         GetActiveUnitFunctionality().skill4OutOfRange = false;
 
+        combatStarted = true;
+
         CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), false, false);
 
+
+
+        int enemyCount = 0;
+
+        for (int i = 0; i < activeRoomAllUnitFunctionalitys.Count; i++)
+        {
+            if (activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.ENEMY &&
+                !activeRoomAllUnitFunctionalitys[i].isDead)
+            {
+                enemyCount++;
+            }
+        }
+
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            OverlayUI.Instance.UpdateEnemiesRemainingText(enemyCount);
+        else
+            OverlayUI.Instance.UpdateEnemiesRemainingText(enemyCount);
+
+        GridTargetGroup.Instance.UpdateTargets();
         CombatGridManager.Instance.UpdateCameraToUnit(GetActiveUnitFunctionality());
-        /*
-        //// Choose new skill after skill land
-        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
-        {
-            GetActiveUnitFunctionality().UpdateChosenSkill(GetActiveUnitFunctionality().ChooseSkill());
-            UpdateActiveSkill(GetActiveUnitFunctionality().GetChosenSkill(), true);
-        }
-        */
-
-        /*
-        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER && GetActiveUnitFunctionality().isDead)
-        {
-            UpdateTurnOrder();
-            //combatOver = true;
-            return;
-        }
-        */
-
         // Only decrease skill CDs during combat
         GetActiveUnitFunctionality().DecreaseSkill0Cooldown();
         GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
@@ -4932,7 +4956,6 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         // Toggle player UI accordingly if it's their turn or not
         if (activeRoomAllUnitFunctionalitys[0].curUnitType == UnitFunctionality.UnitType.PLAYER || activeRoomAllUnitFunctionalitys[0].reanimated)
         {
-
             OverlayUI.Instance.ToggleSkillItemSwitchButton(true);
 
             playerUIElement.UpdateAlpha(1);
@@ -4947,6 +4970,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
+            OverlayUI.Instance.ToggleCombatBorder(false);
             OverlayUI.Instance.ToggleSkillItemSwitchButton(false);
 
             HideMainSlotDetails();
@@ -5020,6 +5044,15 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
             CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
+        if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            StartCoroutine(UpdateTurnOrderCo());
+    }
+
+    IEnumerator UpdateTurnOrderCo()
+    {
+        yield return new WaitForSeconds(.35f);
+        OverlayUI.Instance.ToggleCombatBorder(true);
     }
 
     public void ToggleAllUnitButtons(bool toggle = true)
@@ -5848,8 +5881,72 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 {
                     if (!delay)
                     {
-                        endTurnButtonUI.GetComponent<CanvasGroup>().ignoreParentGroups = true;
-                        endTurnButtonUI.UpdateAlpha(1);
+                        if (!isSkillsMode && CombatGridManager.Instance.isCombatMode)
+                        {
+                            if (GetActiveUnitFunctionality().teamIndex == 0)
+                            {
+                                int count = 0;
+
+                                for (int i = 0; i < OwnedLootInven.Instance.GetWornItemMainAlly().Count; i++)
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemMainAlly()[i].GetRemainingUses() > 0 &&
+                                        OwnedLootInven.Instance.GetWornItemMainAlly()[i].linkedItemPiece.curItemCombatType
+                                        == ItemPiece.ItemCombatType.CONSUMABLE )
+                                        count++;
+                                }
+
+                                if (count == 0)
+                                {
+                                    StartCoroutine(ToggleEndTurnButtonWait());
+                                    return;
+                                }
+                            }
+                            else if (GetActiveUnitFunctionality().teamIndex == 1)
+                            {
+                                int count = 0;
+
+                                for (int i = 0; i < OwnedLootInven.Instance.GetWornItemSecondAlly().Count; i++)
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemSecondAlly()[i].GetRemainingUses() > 0 &&
+                                        OwnedLootInven.Instance.GetWornItemMainAlly()[i].linkedItemPiece.curItemCombatType
+                                        == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        count++;
+                                }
+
+                                if (count == 0)
+                                {
+                                    StartCoroutine(ToggleEndTurnButtonWait());
+                                    return;
+                                }
+
+                            }
+                            else if (GetActiveUnitFunctionality().teamIndex == 2)
+                            {
+                                int count = 0;
+
+                                for (int i = 0; i < OwnedLootInven.Instance.GetWornItemThirdAlly().Count; i++)
+                                {
+                                    if (OwnedLootInven.Instance.GetWornItemThirdAlly()[i].GetRemainingUses() > 0 &&
+                                        OwnedLootInven.Instance.GetWornItemMainAlly()[i].linkedItemPiece.curItemCombatType
+                                        == ItemPiece.ItemCombatType.CONSUMABLE)
+                                        count++;
+                                }
+
+                                if (count == 0)
+                                {
+                                    StartCoroutine(ToggleEndTurnButtonWait());
+                                    return;
+                                }
+
+                            }
+                        }
+
+
+                        if (combatStarted)
+                        {
+                            endTurnButtonUI.GetComponent<CanvasGroup>().ignoreParentGroups = true;
+                            endTurnButtonUI.UpdateAlpha(1);
+                        }
                     }
 
                 }
@@ -5879,12 +5976,16 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
     IEnumerator ToggleEndTurnButtonWait()
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(1);
 
         if (!GetActiveUnitFunctionality().isDead && GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
         {
-            endTurnButtonUI.GetComponent<CanvasGroup>().ignoreParentGroups = true;
-            endTurnButtonUI.UpdateAlpha(1);
+            if (combatStarted)
+            {
+                endTurnButtonUI.GetComponent<CanvasGroup>().ignoreParentGroups = true;
+                endTurnButtonUI.UpdateAlpha(1);
+            }
+
         }
 
     }
@@ -8049,6 +8150,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             else
                 GetActiveUnitFunctionality().UpdateUnitLookDirection(true);
         }
+
+
+        OverlayUI.Instance.ToggleEnemiesRemainingText(false);
 
         StartCoroutine(AttackButtonCont());
     }

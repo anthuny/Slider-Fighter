@@ -332,9 +332,9 @@ public class UIElement : MonoBehaviour
 
             }
 
-            if (statPointsAdded >= 3)
+            if (statPointsAdded >= 2)
             {
-                if (statPointsAdded % 3 == 0)
+                if (statPointsAdded % 2 == 0)
                 {
                     contentImageUI.UpdateContentText(extraHitsPointsAdded.ToString());
 

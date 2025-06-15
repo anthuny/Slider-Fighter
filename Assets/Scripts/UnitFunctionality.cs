@@ -330,12 +330,12 @@ public class UnitFunctionality : MonoBehaviour
     }
 
     public void UpdateUnitLookDirection(bool right = false)
-    {     
+    {
         if (right)
             ToggleUnitVisualsXAxis(true);
         else
-            ToggleUnitVisualsXAxis(false);  
-        
+            ToggleUnitVisualsXAxis(false);
+
         if (GetUnitName() == "Dragonborn")
         {
             if (right)
@@ -344,9 +344,15 @@ public class UnitFunctionality : MonoBehaviour
                 ToggleUnitVisualsXAxis(true);
         }
     }
+
+    public float GetLookDirection()
+    {
+        return characterAnimation.transform.localScale.x;
+    }
     public void ToggleUnitVisualsXAxis(bool toggle = true)
     {
-        characterAnimation.ToggleUnitXAxis(toggle);
+        if (characterAnimation)
+            characterAnimation.ToggleUnitXAxis(toggle);
     }
     public void ToggleUnitButton(bool toggle = true)
     {
@@ -4925,7 +4931,9 @@ public class UnitFunctionality : MonoBehaviour
 
     public string GetUnitName()
     {
+        //Debug.Log(gameObject.name + " name test");
         return gameObject.name;
+
     }
 
     public void UpdateUnitSprite(GameObject spriteGO)
@@ -4936,6 +4944,7 @@ public class UnitFunctionality : MonoBehaviour
         go.transform.localScale = new Vector3(1, 1, 1);
 
         animator = go.GetComponent<Animator>();
+        characterAnimation = go.GetComponent<CharacterAnimation>();
     }
 
     public void UpdateUnitType(string unitType)
@@ -5060,6 +5069,22 @@ public class UnitFunctionality : MonoBehaviour
         if (curHealth <= 0 && !isDead)
         {
             isDead = true;
+
+            if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.PLAYER)
+            {
+                int enemyCount = 0;
+
+                for (int i = 0; i < GameManager.Instance.activeRoomAllUnitFunctionalitys.Count; i++)
+                {
+                    if (GameManager.Instance.activeRoomAllUnitFunctionalitys[i].curUnitType == UnitFunctionality.UnitType.ENEMY &&
+                        !GameManager.Instance.activeRoomAllUnitFunctionalitys[i].isDead)
+                    {
+                        enemyCount++;
+                    }
+                }
+
+                OverlayUI.Instance.UpdateEnemiesRemainingText(enemyCount);
+            }
 
             ToggleUnitStatBarAlpha(false, true);
 

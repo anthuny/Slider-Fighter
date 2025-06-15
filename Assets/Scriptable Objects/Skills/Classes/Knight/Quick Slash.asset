@@ -23,17 +23,15 @@ MonoBehaviour:
   curSkillActiveType: 0
   curClassType: 0
   curSkillSelectionType: 1
-  skillRangeHitArea: {x: 2, y: 1}
+  skillRangeHitArea: {x: 1, y: 1}
   skillRangeHitAreas:
   - {x: 0, y: 0}
-  - {x: 1, y: 0}
   skillAreaHitCount: 1
-  attackAllSelected: 0
-  attackAllUnits: 0
+  attackAllInRange: 1
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 2
-  curSkillRange: 2
+  startingSkillRange: 1
+  curSkillRange: 1
   skillSprite: {fileID: 21300000, guid: 9f003367cde8e914cadd39e9903c2904, type: 3}
   skillName: QUICK SLASH
   skillDescr: Target 1x1 area, dealing damage
@@ -45,7 +43,7 @@ MonoBehaviour:
   curSkillPower: 13
   skillAttackAccMult: 1
   skillBaseHitOutput: 0
-  skillHitAttempts: 1
+  skillHitAttempts: 3
   projectileSpeed: 1
   skillCooldown: 0
   curCooldown: 0

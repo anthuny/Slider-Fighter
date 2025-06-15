@@ -36,6 +36,92 @@ public class CombatSlot : MonoBehaviour
     public int fCost;
     public bool movementSelected;
 
+    [SerializeField] private UIElement slotCover;
+    public bool coverOn;
+    [SerializeField] private UIElement slotDirArrow;
+    public bool arrowDisplayed = false;
+    [SerializeField] private MenuUnitDisplay unitDisplayGhost;
+
+    public bool ghostDisplaying = false;
+
+    public void ToggleUnitDisplayGhost(bool toggle)
+    {
+        if (toggle)
+        {
+            CombatGridManager.Instance.ResetAllGhosts();
+        }
+
+        ghostDisplaying = toggle;
+
+        if (toggle)
+        {
+            if (GameManager.Instance.GetActiveUnitFunctionality())
+            {
+                if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.ENEMY)
+                    return;
+            }
+
+            UpdateUnitDisplayGhost();
+            unitDisplayGhost.GetComponent<UIElement>().UpdateAlpha(1);
+        }
+        else
+            unitDisplayGhost.GetComponent<UIElement>().UpdateAlpha(0);
+    }
+
+    public void UpdateUnitDisplayGhost()
+    {
+        for (int i = 0; i < GameManager.Instance.activeTeam.Count; i++)
+        {
+            if (GameManager.Instance.GetActiveUnitFunctionality().GetUnitName() == GameManager.Instance.activeTeam[i].unitName)
+            {
+                unitDisplayGhost.UpdateUnitDisplay(GameManager.Instance.activeTeam[i].unitName, true, true);
+                break;
+            }
+        }
+    }
+
+    public void UpdateSlotDirArrow(Sprite sprite)
+    {
+        ToggleSlotDirArrow(true);
+
+        slotDirArrow.UpdateContentImage(sprite);
+    }
+
+    public void ToggleSlotDirArrow(bool toggle = true)
+    {
+        if (toggle)
+        {
+            slotDirArrow.UpdateAlpha(1);
+            slotDirArrow.AnimateUI(false);
+            arrowDisplayed = true;
+        }
+        else
+        {
+            slotDirArrow.UpdateAlpha(0);
+            arrowDisplayed = false;
+        }
+    }
+
+    public void ToggleSlotCover(bool toggle = true)
+    {
+        if (!slotCover)
+            return;
+
+        if (toggle)
+        {
+            if (GameManager.Instance.combatStarted && !PostBattle.Instance.isInPostBattle)
+            {
+                coverOn = true;
+                slotCover.UpdateAlpha(1);
+            }
+        }
+        else
+        {
+            coverOn = false;
+            slotCover.UpdateAlpha(0);
+        }
+    }
+
     public void ToggleMovementSelected(bool toggle = false)
     {
         movementSelected = toggle;
@@ -111,9 +197,80 @@ public class CombatSlot : MonoBehaviour
     {
         return bottomSelectBorder;
     }
+    
+    public void UpdateSlotBorderColour()
+    {
+        if (CombatGridManager.Instance.isCombatMode)
+        {
+            if (GameManager.Instance.isSkillsMode)
+            {
+                if (GameManager.Instance.GetActiveSkill())
+                {
+                    if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                    {
+                        GetTopSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                        GetBottomSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                        GetLeftSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                        GetRightSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    }
+                    else
+                    {
+                        GetTopSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                        GetBottomSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                        GetLeftSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                        GetRightSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                    }
+                }
+                else
+                {
+                    GetTopSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    GetBottomSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    GetLeftSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    GetRightSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                }
+            }
+            else
+            {
+                if (GameManager.Instance.GetActiveItem())
+                {
+                    if (GameManager.Instance.GetActiveItem().curItemType == ItemPiece.ItemType.OFFENSE)
+                    {
+                        GetTopSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                        GetBottomSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                        GetLeftSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                        GetRightSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    }
+                    else
+                    {
+                        GetTopSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                        GetBottomSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                        GetLeftSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                        GetRightSelectBorder().UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                    }
+                }
+                else
+                {
+                    GetTopSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    GetBottomSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    GetLeftSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                    GetRightSelectBorder().UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                }
+            }
+        }
+        else
+        {
+            GetTopSelectBorder().UpdateColour(GameManager.Instance.movementDetailsTabColour);
+            GetBottomSelectBorder().UpdateColour(GameManager.Instance.movementDetailsTabColour);
+            GetLeftSelectBorder().UpdateColour(GameManager.Instance.movementDetailsTabColour);
+            GetRightSelectBorder().UpdateColour(GameManager.Instance.movementDetailsTabColour);
+        }
+    }
 
     public void ToggleSelectBorder(UIElement selectBorder, bool toggle = true)
     {
+        if (toggle)
+            UpdateSlotBorderColour();
+
         if (selectBorder == GetTopSelectBorder())
         {
             if (toggle)
@@ -287,7 +444,7 @@ public class CombatSlot : MonoBehaviour
     {
         effectDisplayAnimator.runtimeAnimatorController = ac;
 
-        //effectDisplayAnimator.SetTrigger("animate");
+        effectDisplayAnimator.SetTrigger("animate");
         //UpdateIconSize();
         //StartWalkAnim();
     }
@@ -312,8 +469,43 @@ public class CombatSlot : MonoBehaviour
             else
                 ToggleSlotSelected(false);
 
-            slotUI.UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
-            UpdateSlotSelectedColour(CombatGridManager.Instance.slotAggressiveColour);
+            if (CombatGridManager.Instance.isCombatMode)
+            {
+                if (GameManager.Instance.isSkillsMode)
+                {
+                    if (GameManager.Instance.GetActiveSkill())
+                    {
+                        if (GameManager.Instance.GetActiveSkill().curSkillType == SkillData.SkillType.OFFENSE)
+                        {
+                            slotUI.UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                            UpdateSlotSelectedColour(CombatGridManager.Instance.slotAggressiveColour);
+                        }
+                        else
+                        {
+                            slotUI.UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                            UpdateSlotSelectedColour(CombatGridManager.Instance.slotSupportColour);
+                        }
+                    }
+                }
+                else if (!GameManager.Instance.isSkillsMode)
+                {
+                    if (GameManager.Instance.GetActiveItem())
+                    {
+                        if (GameManager.Instance.GetActiveItem().curItemType == ItemPiece.ItemType.OFFENSE)
+                        {
+                            slotUI.UpdateColour(CombatGridManager.Instance.slotAggressiveColour);
+                            UpdateSlotSelectedColour(CombatGridManager.Instance.slotAggressiveColour);
+                        }
+                        else
+                        {
+                            slotUI.UpdateColour(CombatGridManager.Instance.slotSupportColour);
+                            UpdateSlotSelectedColour(CombatGridManager.Instance.slotSupportColour);
+                        }
+                    }
+                }
+            }
+
+
             ToggleTransparentBG(true);
         }
         else
@@ -481,7 +673,7 @@ public class CombatSlot : MonoBehaviour
         else if (fromSlot.GetSlotIndex().x < GetSlotIndex().x &&
             fromSlot.GetSlotIndex().y > GetSlotIndex().y)
         {
-            return "Upleft";
+            return "UpLeft";
         }
         else if (fromSlot.GetSlotIndex().x > GetSlotIndex().x &&
             fromSlot.GetSlotIndex().y < GetSlotIndex().y)
@@ -500,6 +692,14 @@ public class CombatSlot : MonoBehaviour
         else if (fromSlot.GetSlotIndex().x < GetSlotIndex().x)
         {
             return "Left";
+        }
+        else if (fromSlot.GetSlotIndex().y > GetSlotIndex().y)
+        {
+            return "Up";
+        }
+        else if (fromSlot.GetSlotIndex().y < GetSlotIndex().y)
+        {
+            return "Down";
         }
         else
             return "";

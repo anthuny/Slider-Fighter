@@ -23,23 +23,20 @@ MonoBehaviour:
   curSkillActiveType: 0
   curClassType: 0
   curSkillSelectionType: 0
-  skillRangeHitArea: {x: 1, y: 2}
+  skillRangeHitArea: {x: 1, y: 1}
   skillRangeHitAreas:
   - {x: 0, y: 0}
-  - {x: 0, y: 1}
-  - {x: 0, y: 2}
   skillAreaHitCount: 1
-  attackAllSelected: 0
-  attackAllUnits: 0
+  attackAllInRange: 1
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 3
-  curSkillRange: 3
+  startingSkillRange: 2
+  curSkillRange: 2
   skillSprite: {fileID: 21300000, guid: 3227576ce7bc408468136036d5ab4ce1, type: 3}
   skillName: RIGHTEOUS SLAM
-  skillDescr: Target 1x2 area, dealing damage. Each hit has a 25% chance to cleanse
+  skillDescr: Target 1x1 area, dealing damage. Each hit has a 25% chance to cleanse
     1 debuff from Monk's Holy Link.
-  skillTabDescr: Target 1x2 area, dealing damage. Each hit has a 25% chance to cleanse
+  skillTabDescr: Target 1x1 area, dealing damage. Each hit has a 25% chance to cleanse
     1 debuff from Monk's Holy Link.
   startingSkillLevel: 0
   curSkillLevel: 0
@@ -48,10 +45,10 @@ MonoBehaviour:
   curSkillPower: 14
   skillAttackAccMult: 1
   skillBaseHitOutput: 0
-  skillHitAttempts: 1
+  skillHitAttempts: 3
   projectileSpeed: 0
   skillCooldown: 0
-  curCooldown: 1
+  curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   isSpecial: 0

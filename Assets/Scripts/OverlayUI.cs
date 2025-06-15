@@ -82,7 +82,85 @@ public class OverlayUI : MonoBehaviour
     public UIElement buttonSellItemDetails;
     public UIElement sellItemCostText;
 
-    private int oldHits;
+    [SerializeField] private UIElement combatBorderParent;
+    [SerializeField] private UIElement topBorder;
+    [SerializeField] private UIElement botBorder;
+    [SerializeField] private UIElement leftBorder;
+    [SerializeField] private UIElement rightBorder;
+
+    [SerializeField] private UIElement enemiesRemainingText;
+
+    public void UpdateEnemiesRemainingText(int count)
+    {
+        if (count != 0)
+        {
+            ToggleEnemiesRemainingText(true);
+
+            if (enemiesRemainingText.contentText.text != count.ToString())
+                enemiesRemainingText.AnimateUI(true);
+
+            enemiesRemainingText.UpdateContentText(count.ToString());
+        }
+        else
+        {
+            ToggleEnemiesRemainingText(false);
+            enemiesRemainingText.UpdateContentText("");
+        }
+
+    }
+
+    public void ToggleEnemiesRemainingText(bool toggle = true)
+    {
+        if (toggle)
+        {
+            enemiesRemainingText.UpdateAlpha(1);
+        }
+        else
+        {
+            enemiesRemainingText.UpdateAlpha(0);
+        }
+    }
+
+    public void ToggleCombatBorder(bool toggle = true)
+    {
+        if (toggle)
+        {
+            UpdateCombatBorderColour();
+            combatBorderParent.UpdateAlpha(1);
+        }
+        else
+        {
+            combatBorderParent.UpdateAlpha(0);
+        }
+    }
+
+    public void UpdateCombatBorderColour()
+    {
+        if (CombatGridManager.Instance.isCombatMode)
+        {
+            if (GameManager.Instance.isSkillsMode)
+            {
+                topBorder.UpdateColour(GameManager.Instance.skillsDetailsTabColour);
+                botBorder.UpdateColour(GameManager.Instance.skillsDetailsTabColour);
+                leftBorder.UpdateColour(GameManager.Instance.skillsDetailsTabColour);
+                rightBorder.UpdateColour(GameManager.Instance.skillsDetailsTabColour);
+            }
+            else
+            {
+                topBorder.UpdateColour(GameManager.Instance.itemsDetailsTabColour);
+                botBorder.UpdateColour(GameManager.Instance.itemsDetailsTabColour);
+                leftBorder.UpdateColour(GameManager.Instance.itemsDetailsTabColour);
+                rightBorder.UpdateColour(GameManager.Instance.itemsDetailsTabColour);
+            }
+        }
+        else
+        {
+            topBorder.UpdateColour(GameManager.Instance.movementDetailsTabColour);
+            botBorder.UpdateColour(GameManager.Instance.movementDetailsTabColour);
+            leftBorder.UpdateColour(GameManager.Instance.movementDetailsTabColour);
+            rightBorder.UpdateColour(GameManager.Instance.movementDetailsTabColour);
+        }
+    }
 
     public void ToggleShopDetailsActiveGearType(bool toggle = true)
     {
@@ -522,6 +600,7 @@ public class OverlayUI : MonoBehaviour
         buttonSellItemDetails.UpdateAlpha(0);
         buttonSellItemDetails.ToggleButton(false);
 
+        CombatGridManager.Instance.ResetSlotCovers();
         FighterInventorManager.Instance.ResetSelectedInventorySlot();
     }
 

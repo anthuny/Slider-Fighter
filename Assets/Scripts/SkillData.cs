@@ -43,9 +43,7 @@ public class SkillData : ScriptableObject
     public List<Vector2> skillRangeHitAreas = new List<Vector2>();
     public int skillAreaHitCount = 1;
     [Tooltip("When on, all allowed slots in combat for skill will an attack slot")]
-    public bool attackAllSelected = false;
-    [Tooltip("When on, all units in allowed combat slots, are selected")]
-    public bool attackAllUnits = false;
+    public bool attackAllInRange = false;
     public bool canTargetSelf = false;
     public int skillIgnoreRange = 0;
     public int startingSkillRange = 1;
@@ -146,10 +144,6 @@ public class SkillData : ScriptableObject
     public int GetCalculatedSkillSelectionCount()
     {
         int val = skillSelectionCount + upgradeIncTargetCount;
-
-        if (val > 6)
-            val = 6;
-
         return val;
     }
 

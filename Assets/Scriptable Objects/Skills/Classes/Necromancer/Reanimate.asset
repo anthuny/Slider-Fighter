@@ -27,12 +27,11 @@ MonoBehaviour:
   skillRangeHitAreas:
   - {x: 0, y: 0}
   skillAreaHitCount: 1
-  attackAllSelected: 0
-  attackAllUnits: 0
+  attackAllInRange: 1
   canTargetSelf: 0
   skillIgnoreRange: 0
-  startingSkillRange: 6
-  curSkillRange: 6
+  startingSkillRange: 8
+  curSkillRange: 8
   skillSprite: {fileID: 21300000, guid: dc7f4ebb9a8d17c47b07e8d9b8190d87, type: 3}
   skillName: REANIMATE
   skillDescr: Target 1 defeated enemy, Reviving them, healing 10% max health base,
@@ -46,10 +45,10 @@ MonoBehaviour:
   curSkillPower: 0
   skillAttackAccMult: 1
   skillBaseHitOutput: 0
-  skillHitAttempts: 1
+  skillHitAttempts: 3
   projectileSpeed: 0
   skillCooldown: 0
-  curCooldown: 1
+  curCooldown: 0
   skillSelectionCount: 1
   isSelfCast: 0
   isSpecial: 0
