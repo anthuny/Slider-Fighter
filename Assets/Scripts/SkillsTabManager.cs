@@ -185,10 +185,10 @@ public class SkillsTabManager : MonoBehaviour
             {
                 selectedSkillBase.UpdateSkillLevelText(activeSkillBase.curSkillLevel);
 
-                UpdateSkillUpgradesText();
+
 
                 SkillAddPoint();
-
+                UpdateSkillUpgradesText();
                 UpdateSkillStatDetails();
                 return;
             }
@@ -255,9 +255,9 @@ public class SkillsTabManager : MonoBehaviour
 
     public void UpdateSkillUpgradesText()
     {
-        selectedSkillBase.skillUpgradesUI.UpdateContentText(activeSkillBase.upgradeIncTargetCount.ToString());
-        selectedSkillBase.skillUpgradesUI.UpdateContentText2(activeSkillBase.GetCalculatedSkillPower().ToString());
-        selectedSkillBase.skillUpgradesUI.UpdateContentText3(activeSkillBase.GetCalculatedSkillEffectChance().ToString());
+        //selectedSkillBase.skillUpgradesUI.UpdateContentText(activeSkillBase.upgradeIncTargetCount.ToString());
+        selectedSkillBase.skillUpgradesUI.UpdateContentText2((activeSkillBase.upgradeIncHitsCount).ToString());
+        selectedSkillBase.skillUpgradesUI.UpdateContentText3(activeSkillBase.GetCalculatedSkillPower().ToString());
 
         //Debug.Log(activeSkillBase.GetCalculatedSkillSelectionCount().ToString());
     }
@@ -581,13 +581,13 @@ public class SkillsTabManager : MonoBehaviour
         //skillBase4.UpdateStatPoindsAdded(false, true);
 
         skillBase1.statPointsAdded = unit.GetSkill(0).upgradeIncPowerCount;
-        skillBase1.extraHitsPointsAdded = unit.GetSkill(0).upgradeIncPowerCount / 3;
+        skillBase1.extraHitsPointsAdded = unit.GetSkill(0).upgradeIncPowerCount / 2;
         skillBase2.statPointsAdded = unit.GetSkill(1).upgradeIncPowerCount;
-        skillBase2.extraHitsPointsAdded = unit.GetSkill(1).upgradeIncPowerCount / 3;
+        skillBase2.extraHitsPointsAdded = unit.GetSkill(1).upgradeIncPowerCount / 2;
         skillBase3.statPointsAdded = unit.GetSkill(2).upgradeIncPowerCount;
-        skillBase3.extraHitsPointsAdded = unit.GetSkill(2).upgradeIncPowerCount / 3;
+        skillBase3.extraHitsPointsAdded = unit.GetSkill(2).upgradeIncPowerCount / 2;
         skillBase4.statPointsAdded = unit.GetSkill(3).upgradeIncPowerCount;
-        skillBase4.extraHitsPointsAdded = unit.GetSkill(3).upgradeIncPowerCount / 3;
+        skillBase4.extraHitsPointsAdded = unit.GetSkill(3).upgradeIncPowerCount / 2;
 
         skillBase1.UpdateStatPoindsAdded(true, false, 0, false, true);
         skillBase2.UpdateStatPoindsAdded(true, false, 0, false, true);
@@ -810,7 +810,7 @@ public class SkillsTabManager : MonoBehaviour
 
         if (slot.skill)
         {
-            if (slot.skill.upgradeIncPowerCount >= 3)
+            if (slot.skill.upgradeIncPowerCount >= 2)
                 slot.GetComponent<UIElement>().contentImageUI.UpdateAlpha(1);
             else
                 slot.GetComponent<UIElement>().contentImageUI.UpdateAlpha(0);

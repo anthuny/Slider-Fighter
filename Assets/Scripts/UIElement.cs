@@ -364,25 +364,25 @@ public class UIElement : MonoBehaviour
                 if (curStatType == StatType.SKILLSLOT1)
                 {
                     SkillsTabManager.Instance.GetActiveUnit().skill1PowerInc = GetStatPointsAdded();
-                    SkillsTabManager.Instance.GetActiveUnit().skill1ExtraHits = extraHitsPointsAdded;
+                    SkillsTabManager.Instance.GetActiveUnit().skill1ExtraHits = GetStatPointsAdded()/2;
                 }
                 else if (curStatType == StatType.SKILLSLOT2)
                 {
                     SkillsTabManager.Instance.GetActiveUnit().skill2PowerInc = GetStatPointsAdded();
-                    SkillsTabManager.Instance.GetActiveUnit().skill2ExtraHits = extraHitsPointsAdded;
+                    SkillsTabManager.Instance.GetActiveUnit().skill2ExtraHits = GetStatPointsAdded() / 2;
                 }
                 else if (curStatType == StatType.SKILLSLOT3)
                 {
                     SkillsTabManager.Instance.GetActiveUnit().skill3PowerInc = GetStatPointsAdded();
-                    SkillsTabManager.Instance.GetActiveUnit().skill3ExtraHits = extraHitsPointsAdded;
+                    SkillsTabManager.Instance.GetActiveUnit().skill3ExtraHits = GetStatPointsAdded() / 2;
                 }
                 else if (curStatType == StatType.SKILLSLOT4)
                 {
                     SkillsTabManager.Instance.GetActiveUnit().skill4PowerInc = GetStatPointsAdded();
-                    SkillsTabManager.Instance.GetActiveUnit().skill4ExtraHits = extraHitsPointsAdded;
+                    SkillsTabManager.Instance.GetActiveUnit().skill4ExtraHits = GetStatPointsAdded() / 2;
                 }
 
-                SkillsTabManager.Instance.activeSkillBase.upgradeIncHitsCount = extraHitsPointsAdded;
+                SkillsTabManager.Instance.activeSkillBase.upgradeIncHitsCount = GetStatPointsAdded() / 2;
                 SkillsTabManager.Instance.activeSkillBase.upgradeIncPowerCount = GetStatPointsAdded();
             }
         }

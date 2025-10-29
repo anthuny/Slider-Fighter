@@ -8,6 +8,8 @@ public class HeroWeapon : MonoBehaviour
     public float lineSpeed;
     public string ownedUnitName;
     public Transform hitLine;
+    public Transform leftArrow;
+    public Transform rightArrow;
     public Transform topBarBorder;
     public Transform botBarBorder;
     public List<WeaponHitArea> weaponHitAreas = new List<WeaponHitArea>();

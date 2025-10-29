@@ -33,6 +33,7 @@ public class CombatGridManager : MonoBehaviour
 
     public float moveTimer = 0;
     public float unitMoveSpeed = 1;
+    public float unitMovingStopTime = .25f;
     [SerializeField] private ButtonFunctionality buttonSkills;
     [SerializeField] private ButtonFunctionality buttonItems;
     [SerializeField] private ButtonFunctionality buttonAttack;
@@ -367,8 +368,8 @@ public class CombatGridManager : MonoBehaviour
 
             if (unit.curUnitType == UnitFunctionality.UnitType.ENEMY && GridTargetGroup.Instance.camFocusedUnits[0].curUnitType == UnitFunctionality.UnitType.ENEMY)
             {
-                if (unit.GetActiveCombatSlot().GetRangeFromActiveCombatSlot(GridTargetGroup.Instance.camFocusedUnits[0].GetActiveCombatSlot()) >= 4)
-                    return;
+                //if (unit.GetActiveCombatSlot().GetRangeFromActiveCombatSlot(GridTargetGroup.Instance.camFocusedUnits[0].GetActiveCombatSlot()) >= 4)
+                  //  return;
             }
         }
 
@@ -404,6 +405,11 @@ public class CombatGridManager : MonoBehaviour
     public void ResetVCamera()
     {
         virtCam.ForceCameraPosition(Vector3.zero, Quaternion.identity);
+    }
+
+    public void ResetGridScale()
+    {
+        GetGridParent().localScale = Vector3.one;
     }
 
     public void UpdateGridScale(bool inc = true, UIElement ui = null)
@@ -642,26 +648,18 @@ public class CombatGridManager : MonoBehaviour
                     //GameManager.Instance.ResetSelectedUnits();
 
                     if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() == 0
+                        && GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() <= 0
                         && GameManager.Instance.GetActiveUnitFunctionality().hasAttacked
                         && !hasItem
                         && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
                     {
-                        StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().UnitEndTurn(true, true));
-                        //GameManager.Instance.ToggleEndTurnButton(true);
-                    }
-                    else if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER
-                        && GameManager.Instance.GetActiveUnitFunctionality().GetCurMovementUses() <= -1
-                        && !GameManager.Instance.GetActiveUnitFunctionality().hasAttacked
-                        && !hasItem
-                        && !GameManager.Instance.GetActiveUnitFunctionality().reanimated)
-                    {
-                        StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().UnitEndTurn(true, true));
+                        GameManager.Instance.UpdateEndTurnButton(false);
+                        StartCoroutine(GameManager.Instance.GetActiveUnitFunctionality().UnitEndTurn(true, false));
                         //GameManager.Instance.ToggleEndTurnButton(true);
                     }
                     else
                     {
-                        GameManager.Instance.ToggleEndTurnButton(true);
+                        GameManager.Instance.UpdateEndTurnButton(true);
                         GameManager.Instance.UpdateMainIconDetails(null, GameManager.Instance.GetActiveItem());
                     }
 
@@ -705,7 +703,7 @@ public class CombatGridManager : MonoBehaviour
                     ToggleButton(GetButtonItems(), false, true);
 
                 if (!GameManager.Instance.GetActiveUnitFunctionality().hasAttacked)
-                    GameManager.Instance.ToggleEndTurnButton(true);
+                    GameManager.Instance.UpdateEndTurnButton(true);
             }
         }
         
@@ -1055,7 +1053,10 @@ public class CombatGridManager : MonoBehaviour
                 //movingUnit.UpdateUnitLookDirection();
 
                 if (movingUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
-                    UpdateCameraToUnit(movingUnit, true);
+                {
+                    if (GameManager.Instance.GetActiveUnitFunctionality() == movingUnit)
+                        UpdateCameraToUnit(movingUnit, true);
+                }
                 else
                     UpdateCameraToUnit(movingUnit, false);
 
@@ -2399,7 +2400,7 @@ public class CombatGridManager : MonoBehaviour
             finalPath.RemoveAt(0);
         }
 
-        GameManager.Instance.ToggleEndTurnButton(false);
+        GameManager.Instance.UpdateEndTurnButton(false);
 
 
 
@@ -2483,7 +2484,7 @@ public class CombatGridManager : MonoBehaviour
 
                     movingUnit.UpdateActiveCombatSlot(finalPath[i]);
                     movingUnit.SetParent(finalPath[i].transform);
-                    yield return new WaitForSeconds(.5f);
+                    yield return new WaitForSeconds(unitMovingStopTime);
                     CheckToUnlinkCombatSlot();
                 }
                 else
@@ -2532,7 +2533,8 @@ public class CombatGridManager : MonoBehaviour
             unit.UnitMove();
         }
 
-        GameManager.Instance.ToggleEndTurnButton(true);
+        if (!GameManager.Instance.GetActiveUnitFunctionality().hasAttacked)
+            GameManager.Instance.UpdateEndTurnButton(true);
     }
 
     public void ResetSlotDirArrow()

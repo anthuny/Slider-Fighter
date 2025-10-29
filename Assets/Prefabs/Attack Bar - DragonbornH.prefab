@@ -8486,7 +8486,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8169303134026729424}
   m_Enabled: 1
-  m_Alpha: 0.6
+  m_Alpha: 0.5
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -9398,6 +9398,8 @@ MonoBehaviour:
   lineSpeed: 650
   ownedUnitName: Dragonborn
   hitLine: {fileID: 331422402384081907}
+  leftArrow: {fileID: 6822892465741960792}
+  rightArrow: {fileID: 3904666031594607751}
   topBarBorder: {fileID: 9021570472423453295}
   botBarBorder: {fileID: 9021570471515245347}
   weaponHitAreas:

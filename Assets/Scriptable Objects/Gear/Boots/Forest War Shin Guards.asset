@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0659ce007fba754eac8559e8266c4d7, type: 3}
   m_Name: Forest War Shin Guards
   m_EditorClassIdentifier: 
-  gearName: Drowning War Shin Guards
+  gearName: Forest War Shin Guards
   gearType: boots
   gearRarity: epic
   gearIcon: {fileID: 21300000, guid: 567716065b75dfd43a0d2fcc63d945b4, type: 3}

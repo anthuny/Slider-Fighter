@@ -17,11 +17,22 @@ public class HeroRoomManager : MonoBehaviour
 
     private bool playerOffered;
     public bool spawnedFighter;
+    public UnitFunctionality spawnedFighterUnit;
     public bool playerInHeroRoomView;
 
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void UpdateSpawnedFighterUnit(UnitFunctionality unit)
+    {
+        spawnedFighterUnit = unit;
+    }
+
+    public void ClearSpawnedFighterUnit()
+    {
+        spawnedFighterUnit = null;
     }
 
     public void UpdateHero(UIElement ui)
@@ -36,11 +47,13 @@ public class HeroRoomManager : MonoBehaviour
 
     public void SpawnHero()
     {
+        playerInHeroRoomView = true;
+
         GameManager.Instance.SpawnFighter(true);
 
         GameManager.Instance.UpdateAllysPositionCombat();
 
-        playerInHeroRoomView = true;
+
 
         GameManager.Instance.EnsureHeroIsDead();
         StartCoroutine(GameManager.Instance.HeroRetrievalScene(false));

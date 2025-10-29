@@ -1827,6 +1827,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
             OverlayUI.Instance.UpdateShopDetailsBanner(null, null, uielement.linkedItemPiece);
 
             OverlayUI.Instance.ToggleShopDetailsBanner(true);
+
+            OverlayUI.Instance.ToggleSellButton(true);
         }
         else if (uielement.linkedGearPiece)
         {
@@ -1844,6 +1846,8 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
 
             OverlayUI.Instance.UpdateShopDetailsBanner(null, uielement.linkedGearPiece);
             OverlayUI.Instance.ToggleShopDetailsBanner(true);
+
+            OverlayUI.Instance.ToggleSellButton(true);
         }
 
 
@@ -2036,7 +2040,7 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
                 // Button Click SFX
                 AudioManager.Instance.Play("Button_Click");
 
-                GameManager.Instance.ToggleEndTurnButton(false);
+                GameManager.Instance.UpdateEndTurnButton(false);
 
                 GameManager.Instance.UpdateTurnOrder();
             }
@@ -2163,6 +2167,13 @@ public class ButtonFunctionality : MonoBehaviour, IPointerDownHandler, IPointerU
     {
         // Button Click SFX
         AudioManager.Instance.Play("Button_Click");
+
+        if (HeroRoomManager.Instance.spawnedFighterUnit)
+        {
+            GridTargetGroup.Instance.RemoveTarget(HeroRoomManager.Instance.spawnedFighterUnit);
+            HeroRoomManager.Instance.ClearSpawnedFighterUnit();
+        }
+
 
         HeroRoomManager.Instance.TogglePrompt(false, false, true);
     }

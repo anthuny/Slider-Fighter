@@ -631,6 +631,8 @@ public class GameManager : MonoBehaviour
                 // If spawning hero ally from end of hero room
                 if (spawnFighterAlly)
                 {
+                    CombatGridManager.Instance.ResetGridScale();
+
                     List<string> ownedUnitNames = new List<string>();
 
                     for (int x = 0; x < activeTeam.Count; x++)
@@ -661,6 +663,8 @@ public class GameManager : MonoBehaviour
                             unit = CharacterCarasel.Instance.GetAlly(randIndex);    // Reference a unit that is not on the current ally team
 
                             UnitFunctionality unitFunct = go.GetComponent<UnitFunctionality>();
+
+                            HeroRoomManager.Instance.UpdateSpawnedFighterUnit(unitFunct);
 
                             unitFunct.UpdateUnitName(unit.unitName);
 
@@ -695,6 +699,9 @@ public class GameManager : MonoBehaviour
                             SkillsTabManager.Instance.ResetAllySkllls(unitFunct);
 
                             unitFunct.UpdateFighterPosition();
+                            GridTargetGroup.Instance.UpdateTargets();
+                            GridTargetGroup.Instance.ClearTargetGroupMembers(GetActiveUnitFunctionality());
+                            CombatGridManager.Instance.UpdateCameraToUnit(unitFunct);
                             break;
                         }
                     }
@@ -1708,7 +1715,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             combatOver = true;
             playerInCombat = false;
 
-
+            CombatGridManager.Instance.ResetGridScale();
 
             if (!playerWon)
             {
@@ -1745,7 +1752,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 activeRoomAllUnitFunctionalitys[i].ToggleUnitMoveActiveArrows(false);
             }
 
-            ToggleEndTurnButton(false);
+            UpdateEndTurnButton(false);
             CombatGridManager.Instance.DisableAllButtons();
 
             // Re-order activeroomallunitfunctionality order to default team order after a combat win
@@ -2129,7 +2136,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             for (int i = 0; i < activeRoomHeroes.Count; i++)
             {
                 if (!activeRoomHeroes[i].isDead)
+                {
                     activeRoomHeroes[i].ToggleUnitLevelImage(true);
+                    activeRoomHeroes[i].UpdateUnitLookDirection(true);
+                }
+
             }
 
             // Set correct post battle UI
@@ -2158,7 +2169,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         ToggleUIElement(playerAbilities, false);
         ToggleUIElement(fighterSelectedMainSlotDesc, false);
 
-        ToggleEndTurnButton(false);
+        UpdateEndTurnButton(false);
     }
 
     public void SetupPlayerSkillsUI(SkillData activeSkill = null)
@@ -2222,7 +2233,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         SetActiveWeapon();
 
         ToggleUIElement(playerWeaponBackButton, true);
-        ToggleEndTurnButton(false);
+        UpdateEndTurnButton(false);
 
         WeaponManager.Instance.ToggleAttackButtonInteractable(true);
     }
@@ -2303,7 +2314,10 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             // Stop Map music
             AudioManager.Instance.PauseMapMusic(true);
 
+
+
             OverlayUI.Instance.ToggleCombatDetailsParent();
+
 
             if (room.curRoomType != RoomMapIcon.RoomType.ITEM)
                 playerInCombat = true;
@@ -3552,7 +3566,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                 GetActiveUnitFunctionality().GetCurMovementUses() > -1
                 && !GetActiveUnitFunctionality().reanimated)
             {
-                ToggleEndTurnButton(false);
+                UpdateEndTurnButton(false);
                 StartCoroutine(GetActiveUnitFunctionality().UnitEndTurn(true));
                 return;
             }
@@ -3979,13 +3993,13 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     if (prevUnit.curUnitType == UnitFunctionality.UnitType.ENEMY)
                     {
                         prevUnit = null;
-                        ToggleEndTurnButton(true, false);
+                        UpdateEndTurnButton(true, false);
                     }
                     else
-                        ToggleEndTurnButton(true, false);
+                        UpdateEndTurnButton(true, false);
                 }
                 else
-                    ToggleEndTurnButton(true, false);
+                    UpdateEndTurnButton(true, false);
             }
             
         }
@@ -4721,10 +4735,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         if (allyCount == 0)
         {
             combatStarted = false;
+
             CombatGridManager.Instance.ResetSlotCovers();
             OverlayUI.Instance.ToggleOverlay(false);
             CombatGridManager.Instance.ToggleCombatGrid(false);
             CombatGridManager.Instance.ToggleCombatUIElement(false);
+            CombatGridManager.Instance.DisableAllButtons();
             playerInCombat = false;
             playerWon = false;
             StartCoroutine(PlayerLostWait());
@@ -4733,6 +4749,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else if (enemyCount == 0)
         {
             combatStarted = false;
+
+            if (GameManager.Instance.GetActiveUnitFunctionality())
+                GridTargetGroup.Instance.ClearTargetGroupMembers(GameManager.Instance.GetActiveUnitFunctionality());
+
+            CombatGridManager.Instance.DisableAllButtons();
             CombatGridManager.Instance.ResetSlotCovers();
             //OverlayUI.Instance.ToggleEnemiesRemainingText(false);
             OverlayUI.Instance.ToggleOverlay(false);
@@ -4763,11 +4784,11 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
             if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.ITEM || RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.BOSS)
             {
-                GameManager.Instance.ToggleEndTurnButton(false);
+                GameManager.Instance.UpdateEndTurnButton(false);
                 HideMainSlotDetails();
                 ResetFallenEnemies();
                 SetupItemRewards();
-                GameManager.Instance.ToggleEndTurnButton(false);
+                GameManager.Instance.UpdateEndTurnButton(false);
             }
             else if (RoomManager.Instance.GetActiveRoom().curRoomType == RoomMapIcon.RoomType.HERO)
             {
@@ -4891,6 +4912,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
         combatStarted = true;
 
+        WeaponManager.Instance.ResetAcc();
         CombatGridManager.Instance.ToggleButton(CombatGridManager.Instance.GetButtonMovement(), false, false);
 
 
@@ -4911,8 +4933,9 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         else
             OverlayUI.Instance.UpdateEnemiesRemainingText(enemyCount);
 
-        GridTargetGroup.Instance.UpdateTargets();
+
         CombatGridManager.Instance.UpdateCameraToUnit(GetActiveUnitFunctionality());
+        GridTargetGroup.Instance.UpdateTargets();
         // Only decrease skill CDs during combat
         GetActiveUnitFunctionality().DecreaseSkill0Cooldown();
         GetActiveUnitFunctionality().DecreaseSkill1Cooldown();
@@ -4929,18 +4952,22 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         GetActiveUnitFunctionality().usedExtraMove = false;
 
         GetActiveUnitFunctionality().enemyMoved = false;
+        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+        CombatGridManager.Instance.ToggleCombatGrid(true);
+
 
         CombatGridManager.Instance.UpdateUnitMoveRange(GetActiveUnitFunctionality());
-
+        if (GetActiveUnitFunctionality().curUnitType == UnitFunctionality.UnitType.PLAYER)
+            CombatGridManager.Instance.ToggleTabButtons("Movement");
         CombatGridManager.Instance.ToggleScaleButtons(true);
 
         //GetActiveUnitFunctionality().ToggleTextAlert(false);
 
-        CombatGridManager.Instance.ToggleCombatGrid(true);
+
         CombatGridManager.Instance.ToggleCombatUIElement(true);
         CombatGridManager.Instance.CheckToUnlinkCombatSlot();
 
-        CombatGridManager.Instance.UnselectAllSelectedCombatSlots();
+
 
         GetActiveUnitFunctionality().skillRangeIssue = false;
 
@@ -4977,7 +5004,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
             GetActiveUnitFunctionality().ToggleIdleBattle(true);
             playerUIElement.UpdateAlpha(0);
 
-            ToggleEndTurnButton(false);      // Toggle End Turn Button on
+            UpdateEndTurnButton(false);      // Toggle End Turn Button on
 
             //UpdateEnemyPosition(false);
 
@@ -5869,7 +5896,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         return activeRoomHeroes[0];
     }
 
-    public void ToggleEndTurnButton(bool toggle, bool delay = false)
+    public void UpdateEndTurnButton(bool toggle, bool delay = false)
     {
         if (GetActiveUnitFunctionality())
         {
@@ -5883,6 +5910,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
                     {
                         if (!isSkillsMode && CombatGridManager.Instance.isCombatMode)
                         {
+                            /*
                             if (GetActiveUnitFunctionality().teamIndex == 0)
                             {
                                 int count = 0;
@@ -5897,7 +5925,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                                 if (count == 0)
                                 {
-                                    StartCoroutine(ToggleEndTurnButtonWait());
+                                    endTurnButtonUI.UpdateAlpha(0);
                                     return;
                                 }
                             }
@@ -5915,7 +5943,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                                 if (count == 0)
                                 {
-                                    StartCoroutine(ToggleEndTurnButtonWait());
+                                    endTurnButtonUI.UpdateAlpha(0);
                                     return;
                                 }
 
@@ -5934,11 +5962,12 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
 
                                 if (count == 0)
                                 {
-                                    StartCoroutine(ToggleEndTurnButtonWait());
+                                    endTurnButtonUI.UpdateAlpha(0);
                                     return;
                                 }
 
                             }
+                            */
                         }
 
 
@@ -7469,7 +7498,7 @@ activeRoomAllUnitFunctionalitys[0].transform.position = allyPositions.GetChild(0
         }
         else
         {
-            GameManager.Instance.ToggleEndTurnButton(true);
+            GameManager.Instance.UpdateEndTurnButton(true);
         }
 
         CheckToEndCombat();

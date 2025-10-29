@@ -206,6 +206,11 @@ public class OverlayUI : MonoBehaviour
             combatDetailsParent.UpdateAlpha(0);
     }
 
+    public void ToggleCombatDetailsGO(bool toggle = true)
+    {
+        combatDetailsParent.transform.gameObject.SetActive(toggle);
+    }
+
     private void Start()
     {
         ToggleShopDetailsBanner(false);
@@ -222,17 +227,6 @@ public class OverlayUI : MonoBehaviour
 
             buttonCloseDetails.UpdateAlpha(1);
             buttonCloseDetails.ToggleButton(true);
-
-            if (FighterInventorManager.Instance.GetSelectedInventorySlot())
-            {
-                buttonSellItemDetails.UpdateAlpha(1);
-                buttonSellItemDetails.ToggleButton(true);
-            }
-            else
-            {
-                buttonSellItemDetails.UpdateAlpha(0);
-                buttonSellItemDetails.ToggleButton(false);
-            }
 
             ToggleShopDetailsActiveGearType(true);
             ToggleShopDetailsItemRarityText(true);
@@ -252,6 +246,20 @@ public class OverlayUI : MonoBehaviour
         }
     }
 
+    public void ToggleSellButton(bool toggle = true)
+    {
+        if (toggle)
+        {
+            buttonSellItemDetails.UpdateAlpha(1);
+            buttonSellItemDetails.ToggleButton(toggle);
+        }
+        else
+        {
+            buttonSellItemDetails.UpdateAlpha(0);
+            buttonSellItemDetails.ToggleButton(toggle);
+        }
+    }
+
     public void ToggleCombatDetailsBanner(bool toggle = true)
     {
         if (toggle)
@@ -261,8 +269,8 @@ public class OverlayUI : MonoBehaviour
             buttonCloseDetails.UpdateAlpha(1);
             buttonCloseDetails.ToggleButton(true);
 
-            buttonSellItemDetails.UpdateAlpha(1);
-            buttonSellItemDetails.ToggleButton(true);
+            buttonSellItemDetails.UpdateAlpha(0);
+            buttonSellItemDetails.ToggleButton(false);
         }
         else
         {
@@ -419,7 +427,7 @@ public class OverlayUI : MonoBehaviour
             GameManager.Instance.ToggleCombatSkillIcons(false);
             CombatGridManager.Instance.ToggleTabButtons("", true);
             CombatGridManager.Instance.ToggleScaleButtons(false);
-            GameManager.Instance.ToggleEndTurnButton(false);
+            GameManager.Instance.UpdateEndTurnButton(false);
             CombatGridManager.Instance.DisableAllButtons();
         }
     }

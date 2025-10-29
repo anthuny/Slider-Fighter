@@ -711,10 +711,14 @@ public class CombatSlot : MonoBehaviour
 
     private void Start()
     {
-        ToggleSlotAllowed(false);
-        ToggleSlotSelected(false);
+        if (!GameManager.Instance.playerInCombat)
+        {
+            ToggleSlotAllowed(false);
+            ToggleSlotSelected(false);
 
-        //UpdateSlotSelectedColour(CombatGridManager.Instance.slotUnSelectedColour);
-        slotUI.UpdateColour(CombatGridManager.Instance.slotNotAllowedColour);
+            //UpdateSlotSelectedColour(CombatGridManager.Instance.slotUnSelectedColour);
+            slotUI.UpdateColour(CombatGridManager.Instance.slotNotAllowedColour);
+        }
+
     }
 }

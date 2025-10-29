@@ -152,7 +152,7 @@ public class SkillData : ScriptableObject
 
     public int GetCalculatedSkillPower()
     {
-        float val = upgradeIncHitsCount;
+        float val = upgradeIncPowerCount;
 
         return (int)val;
     }

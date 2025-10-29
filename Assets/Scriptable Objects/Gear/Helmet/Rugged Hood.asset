@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0659ce007fba754eac8559e8266c4d7, type: 3}
   m_Name: Rugged Hood
   m_EditorClassIdentifier: 
-  gearName: Rugged Head Guard
+  gearName: Rugged Hood
   gearType: helmet
   gearRarity: common
   gearIcon: {fileID: 21300000, guid: 1d33d2a0cc7d1e44b9866682bf1484a5, type: 3}

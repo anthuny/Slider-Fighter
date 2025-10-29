@@ -1542,6 +1542,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &5259889019705451123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2218,6 +2219,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &2349162183982141653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2433,7 +2435,7 @@ MonoBehaviour:
   contentImageUI: {fileID: 0}
   contentImage2UI: {fileID: 0}
   contentText: {fileID: 5175577135997222088}
-  contentText2: {fileID: 8468759559782208587}
+  contentText2: {fileID: 622400475874870787}
   contentText3: {fileID: 622400475874870787}
   contentSubText: {fileID: 0}
   contentSubTextTMP: {fileID: 0}
@@ -2605,6 +2607,7 @@ MonoBehaviour:
   isStatButton: 0
   selectBorder: {fileID: 0}
   postBattleButtonPressed: 0
+  enterRoomButtonPressed: 0
 --- !u!114 &8469674519051125405
 MonoBehaviour:
   m_ObjectHideFlags: 0

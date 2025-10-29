@@ -5061,6 +5061,13 @@ public class UnitFunctionality : MonoBehaviour
         selectUnitButton.ToggleButton(false);
     }
 
+    IEnumerator RemoveFromCamView()
+    {
+        yield return new WaitForSeconds(0.75f);
+
+        GridTargetGroup.Instance.RemoveTarget(this);
+    }
+
     IEnumerator EnsureUnitIsDead(bool effect = false)
     {
         //Debug.Log("ensuring health");
@@ -5069,6 +5076,8 @@ public class UnitFunctionality : MonoBehaviour
         if (curHealth <= 0 && !isDead)
         {
             isDead = true;
+
+            StartCoroutine(RemoveFromCamView());
 
             if (GameManager.Instance.GetActiveUnitFunctionality().curUnitType == UnitType.PLAYER)
             {

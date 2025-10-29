@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0659ce007fba754eac8559e8266c4d7, type: 3}
   m_Name: Drowning Robe
   m_EditorClassIdentifier: 
-  gearName: Arcane Robe
+  gearName: Drowning Robe
   gearType: chestpiece
   gearRarity: rare
   gearIcon: {fileID: 21300000, guid: 0496a54c34717494ba4a9d429bde316b, type: 3}

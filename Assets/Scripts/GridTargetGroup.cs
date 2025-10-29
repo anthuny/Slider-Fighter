@@ -26,6 +26,7 @@ public class GridTargetGroup : MonoBehaviour
         if (camFocusedUnits.Contains(unit))
             return;
 
+
         if (camFocusedUnits.Count == 1)
         {
             if (playSFX)
@@ -33,6 +34,7 @@ public class GridTargetGroup : MonoBehaviour
         }
 
         camFocusedUnits.Add(unit);
+
 
         targetGroup.AddMember(unit.transform, 1, 1);
     }
@@ -46,13 +48,22 @@ public class GridTargetGroup : MonoBehaviour
         targetGroup.RemoveMember(unit.transform);
     }
 
+    public void ClearTargetGroupMembers(UnitFunctionality unit)
+    {
+        //targetGroup.RemoveMember(unit.transform);
+        RemoveTarget(unit);
+    }
+
     public void UpdateTargets()
     {
         for (int i = 0; i < camFocusedUnits.Count; i++)
         {
-            if (GameManager.Instance.GetActiveUnitFunctionality() != camFocusedUnits[i])
-                RemoveTarget(camFocusedUnits[i]);
+            targetGroup.RemoveMember(camFocusedUnits[i].transform);
         }
+
+        ClearTargets();
+
+        AddTarget(GameManager.Instance.GetActiveUnitFunctionality());
     }
 
     public void ClearTargets()
