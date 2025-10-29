@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8681802738831219650}
   - component: {fileID: 7273192731706651818}
   - component: {fileID: 226142028865594135}
+  - component: {fileID: 8499986478931054491}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -210,6 +211,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 98
   m_TargetDisplay: 0
+--- !u!210 &8499986478931054491
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630937645752751270}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 98
 --- !u!1 &667085387429350178
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,6 +238,7 @@ GameObject:
   - component: {fileID: 2000188855117406217}
   - component: {fileID: 308700166349256483}
   - component: {fileID: 7411157984644037521}
+  - component: {fileID: 5291230120328680712}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -420,6 +433,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 98
   m_TargetDisplay: 0
+--- !u!210 &5291230120328680712
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667085387429350178}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 98
 --- !u!1 &1262735447166751905
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,7 +651,7 @@ SortingGroup:
   m_Enabled: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
 --- !u!1 &2072478875935218752
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,6 +837,7 @@ GameObject:
   - component: {fileID: 8676833574248539271}
   - component: {fileID: 6521718780275414439}
   - component: {fileID: 4057437394048984218}
+  - component: {fileID: 6921248348669665022}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -885,7 +910,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2334467293871070136}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -899,6 +924,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 8
   m_TargetDisplay: 0
+--- !u!210 &6921248348669665022
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2334467293871070136}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 8
 --- !u!1 &2491868500224058125
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,6 +951,7 @@ GameObject:
   - component: {fileID: 121481472398545547}
   - component: {fileID: 473122682867404842}
   - component: {fileID: 4222493650789453128}
+  - component: {fileID: 1335480219258161590}
   m_Layer: 5
   m_Name: Top
   m_TagString: Untagged
@@ -1109,6 +1146,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 98
   m_TargetDisplay: 0
+--- !u!210 &1335480219258161590
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2491868500224058125}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 98
 --- !u!1 &2766887214137695448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,6 +1170,7 @@ GameObject:
   - component: {fileID: 2884256904058416487}
   - component: {fileID: 1211459166837437693}
   - component: {fileID: 911955616124656555}
+  - component: {fileID: 4619006501905712549}
   m_Layer: 5
   m_Name: Effect Display
   m_TagString: Untagged
@@ -1228,6 +1277,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 500
   m_TargetDisplay: 0
+--- !u!210 &4619006501905712549
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2766887214137695448}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 500
 --- !u!1 &3151053558168430550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,6 +1676,7 @@ GameObject:
   - component: {fileID: 3640532591041720341}
   - component: {fileID: 8604822309931870993}
   - component: {fileID: 5584275426007897973}
+  - component: {fileID: 6575307314992606063}
   m_Layer: 5
   m_Name: Main Position Character
   m_TagString: Untagged
@@ -1811,6 +1872,17 @@ MonoBehaviour:
   Front_Back: 0
   Left_Right: 0
   unit: {fileID: 0}
+--- !u!210 &6575307314992606063
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3409267204475577545}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 99
 --- !u!1 &4240995801096649247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1827,6 +1899,7 @@ GameObject:
   - component: {fileID: 2183952538872259340}
   - component: {fileID: 9054951343489561148}
   - component: {fileID: 2488080128583242789}
+  - component: {fileID: 3940313446763790367}
   m_Layer: 5
   m_Name: bottom
   m_TagString: Untagged
@@ -2021,6 +2094,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 98
   m_TargetDisplay: 0
+--- !u!210 &3940313446763790367
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4240995801096649247}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 98
 --- !u!1 &4538243385677512231
 GameObject:
   m_ObjectHideFlags: 0
@@ -2035,6 +2119,7 @@ GameObject:
   - component: {fileID: 1617598650801591961}
   - component: {fileID: 8763946861147527864}
   - component: {fileID: 3915483975708085370}
+  - component: {fileID: 3158620827171408110}
   m_Layer: 5
   m_Name: Slot Cover
   m_TagString: Untagged
@@ -2194,6 +2279,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 10
   m_TargetDisplay: 0
+--- !u!210 &3158620827171408110
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4538243385677512231}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
 --- !u!1 &5661237333104950466
 GameObject:
   m_ObjectHideFlags: 0
@@ -2286,6 +2382,7 @@ GameObject:
   - component: {fileID: 6251458287965743144}
   - component: {fileID: 6062765145897469746}
   - component: {fileID: 7380630802837651345}
+  - component: {fileID: 2077856805276018016}
   m_Layer: 5
   m_Name: Button - Select Slot
   m_TagString: Untagged
@@ -2559,6 +2656,17 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!210 &2077856805276018016
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5848260858332842118}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 260
 --- !u!1 &6351760096144127355
 GameObject:
   m_ObjectHideFlags: 0
@@ -2569,6 +2677,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2439603580111875979}
   - component: {fileID: 5619375720303761368}
+  - component: {fileID: 70625590841853745}
   m_Layer: 5
   m_Name: Visual Effect
   m_TagString: Untagged
@@ -2618,6 +2727,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 500
   m_TargetDisplay: 0
+--- !u!210 &70625590841853745
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6351760096144127355}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 500
 --- !u!1 &7059630093038822104
 GameObject:
   m_ObjectHideFlags: 0
@@ -2633,6 +2753,7 @@ GameObject:
   - component: {fileID: 5006465193208744431}
   - component: {fileID: 4036640401739130107}
   - component: {fileID: 582994631257009743}
+  - component: {fileID: 2104404034851370139}
   m_Layer: 5
   m_Name: Directional Arrow
   m_TagString: Untagged
@@ -2812,6 +2933,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!210 &2104404034851370139
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7059630093038822104}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 9
 --- !u!1 &8397929344789955709
 GameObject:
   m_ObjectHideFlags: 0
@@ -2826,6 +2958,7 @@ GameObject:
   - component: {fileID: 7084261613589775062}
   - component: {fileID: 5995266431058340651}
   - component: {fileID: 6980286777703857686}
+  - component: {fileID: 5212802741933155822}
   m_Layer: 5
   m_Name: Slot Sprite
   m_TagString: Untagged
@@ -2986,6 +3119,17 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!210 &5212802741933155822
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8397929344789955709}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 7
 --- !u!1 &9066146308467568648
 GameObject:
   m_ObjectHideFlags: 0

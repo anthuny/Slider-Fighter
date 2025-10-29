@@ -1002,6 +1002,7 @@ public class CombatGridManager : MonoBehaviour
             GetAllCombatSlots()[i].ToggleSlotAllowed(false, false);
             GetAllCombatSlots()[i].ToggleSlotSelected(false);
             GetAllCombatSlots()[i].ToggleSlotSelectedSize(true);
+            //GetAllCombatSlots()[i].uiele(true);
         }
     }
 
@@ -2631,6 +2632,20 @@ public class CombatGridManager : MonoBehaviour
         }
 
         UpdateCombatSlotOutlines(allowedSlots, false, true);
+
+        DisableSlotsCanvas();
+    }
+
+    public void DisableSlotsCanvas()
+    {
+        // if slot is not allowed, disable canvas for it
+        for (int i = 0; i < GetAllCombatSlots().Count; i++)
+        {
+            if (!GetAllCombatSlots()[i].GetAllowed())
+            {
+                GetAllCombatSlots()[i].UpdateAllowed(false);
+            }
+        }
     }
 
     public void ResetCombatSlotMovementSelected()
@@ -2771,6 +2786,7 @@ public class CombatGridManager : MonoBehaviour
         UpdateCombatSlotOutlines(allowedSlots, false);
 
         UpdateUnitAttackHitArea(unit, slot);
+                DisableSlotsCanvas();
     }
 
     public bool done = false;
@@ -4133,6 +4149,8 @@ public class CombatGridManager : MonoBehaviour
         {
             StartCoroutine(unit.UnitEndTurn(true));
         }
+
+        DisableSlotsCanvas();
 
         // If a dead unit is somehow selected, whilst a skill that only target alive units is selected. Force end turn.
         for (int i = 0; i < GetTargetCombatSlots().Count; i++)

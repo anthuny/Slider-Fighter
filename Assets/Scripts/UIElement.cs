@@ -8,6 +8,7 @@ using DG.Tweening;
 public class UIElement : MonoBehaviour
 {
     private CanvasGroup cg;
+    private Canvas canvas;
     private TextMeshProUGUI mainText;
 
     public enum StatType { SKILLSLOT1, SKILLSLOT2, SKILLSLOT3, SKILLSLOT4, BG };
@@ -236,6 +237,9 @@ public class UIElement : MonoBehaviour
         cg = GetComponent<CanvasGroup>();
         mainText = GetComponent<TextMeshProUGUI>();
         rt = GetComponent<RectTransform>();
+
+        if (GetComponent<Canvas>())
+            canvas = GetComponent<Canvas>();
 
         if (startHidden)
             UpdateAlpha(0);
@@ -739,9 +743,46 @@ public class UIElement : MonoBehaviour
             rt.sizeDelta = pos;
     }
 
-    public void UpdateColour(Color colour)
+    public void UpdateColour(Color colour, bool toggle = true)
     {
         contentImage.color = colour;
+
+        if (!toggle)
+        {
+            ToggleCanvas(false);
+
+            /*
+            if (gameObject.name.Contains("Combat Slot"))
+            {
+                Debug.Log(gameObject.name + " canvas Disabled");
+            }
+            */
+        }
+        else
+        {
+            ToggleCanvas(true);
+            /*
+            if (gameObject.name.Contains("Combat Slot"))
+            {
+                Debug.Log(gameObject.name + " canvas Enabled");
+            }
+            */
+        }
+    }
+
+    public void ToggleCanvas(bool toggle = true)
+    {
+        if (canvas)
+        {
+            canvas.enabled = toggle;
+        }
+
+        /*
+        if (toggle)
+            Debug.Log("toggling " + this.gameObject.name + "'s canvas ON");
+        else
+            Debug.Log("toggling " + this.gameObject.name + "'s canvas OFF");
+        */
     }
 
     public void UpdateAlpha2(float alpha)
@@ -779,6 +820,8 @@ public class UIElement : MonoBehaviour
                 cg.interactable = true;
                 cg.blocksRaycasts = true;
             }
+
+            ToggleCanvas(true);
         }
         else
         {
@@ -786,6 +829,8 @@ public class UIElement : MonoBehaviour
 
             cg.interactable = false;
             cg.blocksRaycasts = false;
+
+            ToggleCanvas(false);
         }
 
         if (GetComponent<Image>())
